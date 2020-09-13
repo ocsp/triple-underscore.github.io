@@ -1,0 +1,1809 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — WebSocket（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'network',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'ws':
+	if(indicator === '@'){
+		text += `（<a href="${link_map['ws0.' + key] || '#'}">参照</a>）`;
+	}
+	break;
+case 'mc':
+	text = 'constructor';
+	href = `#dom-${key.toLowerCase()}`;
+	break;
+case 'm':
+case 'hd': // event handler
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'sc':
+	text += ':';
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-08-18
+trans_update:2020-08-19
+source_checked:191126
+page_state_key:HTML
+original_url:https://html.spec.whatwg.org/multipage/web-sockets.html
+spec_status:LS
+site_nav:comms,network,html
+nav_prev:HTMLsse
+nav_next:WORKERS
+
+
+●●class_map
+e:element
+a:attr
+et:event-type
+sc:scheme
+E:error
+h:header
+
+●●tag_map
+I:code
+m:code
+hd:code
+c:code
+e:code
+a:code
+sc:code
+et:code
+h:code
+E:code
+v:var
+i:i
+cite:cite
+
+●●original_urls
+_websocket-terms:https://html.spec.whatwg.org/multipage/infrastructure.html
+
+●●original_id_map
+
+●●mdn_urls
+websocket:API/WebSocket
+closeevent:API/CloseEvent
+	closeeventinit:API/CloseEventInit
+	binarytype:API/BinaryType
+
+event-open:API/WebSocket/open_event
+event-message:API/WebSocket/message_event
+event-error:API/WebSocket/error_event
+event-close:API/WebSocket/close_event
+
+●●link_map
+
+	●IDL
+E.SyntaxError:~WEBIDL#syntaxerror
+
+I.WebSocket:#websocket
+I.CloseEvent:#closeevent
+I.CloseEventInit:#closeeventinit
+I.BinaryType:#binarytype
+
+I.EventHandler:~WAPI#eventhandler
+I.Window:~WINDOW#window
+I.MessageEvent:~HTMLcomms#messageevent
+I.Document:~HTMLdom#document
+I.Event:~DOM4#interface-event
+I.EventInit:~DOM4#dictdef-eventinit
+I.EventTarget:~DOM4#interface-eventtarget
+I.Blob:~FILEAPI#blob
+I.URL:~URL1#dom-url
+I.ArrayBuffer:~WEBIDL#idl-ArrayBuffer
+I.ArrayBufferView:~WEBIDL#ArrayBufferView
+I.USVString:~WEBIDL#idl-USVString
+
+constructor:~DOM4#concept-event-constructor
+
+m.wasClean:#dom-closeevent-wasclean
+m.code:#dom-closeevent-code
+m.reason:#dom-closeevent-reason
+
+m.onclose:#handler-websocket-onclose
+m.onerror:#handler-websocket-onerror
+m.onmessage:#handler-websocket-onmessage
+m.onopen:#handler-websocket-onopen
+
+m.new WebSocket:#dom-websocket
+	constructor:#dom-websocket
+m.binaryType:#dom-websocket-binarytype
+m.bufferedAmount:#dom-websocket-bufferedamount
+m.close:#dom-websocket-close
+m.extensions:#dom-websocket-extensions
+m.protocol:#dom-websocket-protocol
+m.readyState:#dom-websocket-readystate
+m.send:#dom-websocket-send
+m.url:#dom-websocket-url
+m.CLOSED:#dom-websocket-closed
+m.CLOSING:#dom-websocket-closing
+m.CONNECTING:#dom-websocket-connecting
+m.OPEN:#dom-websocket-open
+
+m.data:~HTMLcomms#dom-messageevent-data
+m.origin:~HTMLcomms#dom-messageevent-origin
+
+l.blob:#dom-binarytype-blob
+l.arraybuffer:#dom-binarytype-arraybuffer
+
+et.open:#event-open
+et.message:#event-message
+et.error:#event-error
+et.close:#event-close
+
+
+	●用語
+~url:#concept-websocket-url
+後述のように:#closeWebSocket
+~WebSocket~task源:#websocket-task-source
+消滅させる:#make-disappear
+満杯~flag:#concept-websocket-close-fail
+
+	●外部
+~event~handler~event型:~WAPI#event-handler-event-type
+~event~handler:~WAPI#event-handlers
+~event~handler~IDL属性:~WAPI#event-handler-idl-attributes
+~event~loop:~WAPI#event-loop
+最初の段:~WAPI#step1
+~task源:~WAPI#task-source
+~queueされ:~WAPI#queue-a-task
+~taskを~queueする:~WAPI#queue-a-task
+~task~queue:~WAPI#task-queue
+~task:~WAPI#concept-task
+入口~設定群~obj:~WAPI#entry-settings-object
+関連な~Realm:~WAPI#concept-relevant-realm
+
+並列的:~HTMLINFRA#in-parallel
+
+生成元を直列化する:~ORIGIN#ascii-serialisation-of-an-origin
+
+~BOMはそのままに~UTF-8復号する:~ENCODING#utf-8-decode-without-bom
+~UTF-8符号化する:~ENCODING#utf-8-encode
+
+~URL~record:~URL1#concept-url
+~URL構文解析する:~URL1#concept-url-parser
+~URLを直列化する:~URL1#concept-url-serializer
+url.素片:~URL1#concept-url-fragment
+url.~scheme:~URL1#concept-url-scheme
+url.生成元:~URL1#concept-url-origin
+
+~eventを発火する:~DOM4#concept-event-fire
+
+	●WebSocket
+~WebSocket接続を確立する:~FETCH#concept-websocket-establish
+
+ws.状態s~code:#_ws-status-code
+
+ws.~WebSocket接続は確立-済み:#concept-websocket-established
+ws.確立され:#concept-websocket-established
+ws.~WebSocket接続を失敗させる:#concept-websocket-fail
+ws.~WebSocket~closing~handshakeは開始-済み:#concept-websocket-closing-handshake
+ws.~WebSocket~closing~handshakeを開始した:#concept-websocket-closing-handshake
+ws.~WebSocket~closing~handshakeを開始する:#concept-websocket-start-closing-handshake
+ws.~WebSocket~messageを送信する:#concept-websocket-send
+ws.~WebSocket~messageを受信した:#concept-websocket-message-received
+ws.~WebSocket接続を~closeする:#concept-websocket-close
+ws.~closeされ:#concept-websocket-closed
+ws.~WebSocket接続は~close済み:#concept-websocket-closed
+ws.~WebSocket接続~close~code:#concept-websocket-close-code
+ws.~WebSocket接続~close事由:#concept-websocket-close-reason
+ws.~cleanに~closeされた:#_ws-closed-cleanly
+ws.下位protocol:#_ws-subprotocol
+ws.下位protocol名:#_ws-subprotocol-name
+ws.利用-中の下位protocol:#concept-websocket-subprotocol
+ws.利用-中の拡張:#concept-websockets-active-extensions
+ws.Close ~frame:#_ws-frame-type-Close
+ws.Close ~message:#_ws-frame-type-Close
+ws.Ping ~frame:#_ws-frame-type-Ping
+ws.Pong ~frame:#_ws-frame-type-Pong
+ws.~opcode:#_ws-data-opcode
+ws.~payload~data:#_ws-data-Payload
+ws.~app~data:#_ws-data-Application
+ws.~text~data:#_ws-data-Text
+ws.~binary~data:#_ws-data-Binary
+ws.~frame種別:#_ws-frame-type
+ws.~Sec-WebSocket-Protocol~header:#http-sec-websocket-protocol
+
+ws0.状態s~code:~RFC6455#section-7.4
+ws0.~WebSocket接続は確立-済み:~RFC6455#dfn-established
+ws0.~WebSocket接続を失敗させる:~RFC6455#dfn-to-fail
+ws0.~WebSocket~closing~handshakeを開始する:~RFC6455#dfn-to-start-closing-handshake
+ws0.~WebSocket~closing~handshakeは開始-済み:~RFC6455#dfn-closing-handshake-started
+ws0.~WebSocket~messageを送信する:~RFC6455#dfn-to-send
+ws0.~WebSocket~messageを受信した:~RFC6455#dfn-received
+ws0.~WebSocket接続を~closeする:~RFC6455#dfn-to-close
+ws0.~WebSocket接続は~close済み:~RFC6455#dfn-closed
+ws0.~cleanに~closeされた:~RFC6455#dfn-closed-cleanly
+ws0.~WebSocket接続~close~code:~RFC6455#dfn-close-code
+ws0.~WebSocket接続~close事由:~RFC6455#dfn-close-reason
+ws0.下位protocol:~RFC6455#section-1.9
+ws0.下位protocol名:~RFC6455#section-11.5
+ws0.利用-中の下位protocol:~RFC6455#dfn-subprotocol-in-use
+ws0.利用-中の拡張:~RFC6455#dfn-extensions-in-use
+ws0.Close ~frame:~RFC6455#section-5.5.1
+ws0.Ping ~frame:~RFC6455#section-5.5.2
+ws0.Pong ~frame:~RFC6455#section-5.5.3
+ws0.~opcode:~RFC6455#data-opcode
+ws0.~payload~data:~RFC6455#data-Payload
+ws0.~app~data:~RFC6455#data-Application
+ws0.~text~data:~RFC6455#data-Text
+ws0.~binary~data:~RFC6455#data-Binary
+ws0.~frame種別:~RFC6455#frame-type
+ws0.~Sec-WebSocket-Protocol~header:~RFC6455#section-11.3.4
+
+
+
+●●words_table1
+
+RFC6455:RFC6455-ja.html
+Sec-WebSocket-Protocol:<code class="header">Sec-WebSocket-Protocol</code> 
+
+●●words_table
+
+	●ws／network
+WebSocket:
+status::::ステータス
+close:
+	~close済み:closed
+open:
+closing:
+	~closeするための
+opening:
+	~openするための
+ping:
+pong:
+opcode:
+clean:
+body::::ボディ
+	確立-済み:established
+handshake::::ハンドシェイク
+	~frame法:framing
+下位protocol:subprotocol:::下位プロトコル
+payload::::ペイロード
+local::::ローカル
+buffering::::バッファ処理
+packet::::パケット
+route:
+	~proxy法:proxying
+受信:receive::~
+証明書:certificate::~
+状態探針:status probing::~
+接続維持:keep-alive::~
+双方向-:bidirectional::~
+	~~計測:instrumentation
+	待時間:latency metric
+NATmapping:NAT mapping:::NAT マッピング
+
+	●IDL／型／構造
+
+	設定し直-:reset
+
+
+	●処理
+main::::メイン
+spool::::スプール
+process::::プロセス
+
+突如:abruptに:~
+競争:race condition::~
+満杯:full:~
+背後:background:~
+停滞-:stall::~
+入口:entry::~
+切替えた:switchした:切り替えた
+頻度:rate:~
+準備-:prepare:~
+準備:preparation:~
+
+	速すぎ:too fast
+	追いつける:can handle
+	常時:over time
+	消え去る:go away
+
+	●仕様
+	利用-中:in use
+	利用:
+繊細:subtle:~
+拒否-:refuse:~
+	後述する:described below
+	-:optionally
+	~~通常:
+	参照:
+	注意:
+	注記:
+	可能性も少なからず:quite possible
+
+	●未分類（動詞
+請求-:solicite:~
+	請求されていない:unsolicited
+到着-:arrive:~
+保つ:keepする:~
+形:form:~
+消滅-:disappear:~
+選択-:select:~
+探査-:probe::~
+選取る:pickする:選び取る
+	成す:comprise
+	構成:comprised of
+	伝え:convey
+	課される:incurred by
+	-:applying
+
+	●未分類
+overhead::::オーバーヘッド
+BOM:
+RAM:
+disk::::ディスク
+memory::::メモリ
+鼓動:heart-beats:単方向の鼓動
+生の:raw:~
+	在る:
+
+	●指示語
+	this particular
+	2 個目:second
+	結果:
+	後者:
+	後述:
+	最終的:eventually
+	最後:
+	最初:
+	時点:
+	自体:
+	数値:number
+	直前:
+	時機
+	the following list
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる HTML 仕様の
+<a href="~SPEC_URL">§ Web sockets</a>
+を日本語に翻訳したものです。
+（公開：<time>2012-06-14</time> （ <a href="https://www.w3.org/TR/websockets/">W3C 版</a> として））
+</p>
+
+</script>
+
+
+</head>
+<body>
+
+<header>
+	<hgroup>
+<h1 title="The WebSocket API">WebSocket</h1>
+
+	</hgroup>
+
+
+</header>
+
+<main id="MAIN" hidden>
+
+	<section id="network">
+<h2 title="Web sockets">9.3. Web sockets</h2>
+
+		<section id="network-intro">
+<h3 title="Introduction">9.3.1. 序論</h3>
+
+~INFORMATIVE
+
+<p>
+この仕様は、~web~appが~server側~processとの双方向-通信を可能化するための,
+`WebSocket$I ~interfaceを導入する。 
+◎
+To enable web applications to maintain bidirectional communications with server-side processes, this specification introduces the WebSocket interface.
+</p>
+
+<p class="note">注記：
+この~interfaceは、下層の~networkへの生の~accessを許容するものではない。
+例えば，~custom~serverを介した~messageの~proxy法を利用しない限り、この~interfaceを IRC ~clientの実装に利用することはできない。
+◎
+This interface does not allow for raw access to the underlying network. For example, this interface could not be used to implement an IRC client without proxying messages through a custom server.
+</p>
+
+		</section>
+		<section id="_conventions">
+<h3>【この訳に固有の表記規約】</h3>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, ~IF, ~THROW 等々）の意味や定義の詳細は，~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+<section id="_websocket-terms">
+
+<p>
+以下の用語は、 ~WebSocket~protocol仕様 `WSP$r にて定義される（この訳では、日本語訳へのリンクを “参照” として与える）：
+</p>
+
+<ul><li>`状態s~code@ws（ HTTP 応答~状態s~codeではないことに注意）
+</li><li>`~WebSocket接続は確立-済み@ws
+</li><li>`~WebSocket接続を失敗させる@ws
+</li><li>`~WebSocket~closing~handshakeを開始する@ws
+</li><li>`~WebSocket~closing~handshakeは開始-済み@ws
+</li><li>`~WebSocket~messageを送信する@ws
+</li><li>`~WebSocket~messageを受信した@ws
+</li><li>`~WebSocket接続を~closeする@ws
+</li><li>`~WebSocket接続は~close済み@ws
+</li><li>`~cleanに~closeされた@ws
+</li><li>`~WebSocket接続~close~code@ws
+</li><li>`~WebSocket接続~close事由@ws
+</li><li>`下位protocol@ws
+</li><li>`下位protocol名@ws
+</li><li>`利用-中の下位protocol@ws
+</li><li>`利用-中の拡張@ws
+</li><li>`~Sec-WebSocket-Protocol~header@ws
+</li><li>`Close ~frame@ws
+</li><li>`Ping ~frame@ws
+</li><li>`Pong ~frame@ws
+</li><li>`~opcode@ws
+</li><li>`~payload~data@ws
+</li><li>`~app~data@ws
+</li><li>`~text~data@ws
+</li><li>`~binary~data@ws
+</li><li>`~frame種別@ws
+</li></ul>
+
+</section>
+
+		</section>
+		<section id="the-websocket-interface">
+<h3 title="The WebSocket interface">9.3.2. `WebSocket^I ~interface</h3>
+
+<pre class="idl">
+enum `BinaryType@I { `blob$l, `arraybuffer$l };
+[Exposed=(Window,Worker)]
+
+interface `WebSocket@I : `EventTarget$I {
+  `WebSocket$mc(USVString %url, optional (DOMString or sequence&lt;DOMString&gt;) %protocols = []);
+
+  readonly attribute USVString `url$m;
+
+  // ready state
+  const unsigned short `CONNECTING$m = 0;
+  const unsigned short `OPEN$m = 1;
+  const unsigned short `CLOSING$m = 2;
+  const unsigned short `CLOSED$m = 3;
+  readonly attribute unsigned short `readyState$m;
+  readonly attribute unsigned long long `bufferedAmount$m;
+
+  // networking
+           attribute `EventHandler$I `onopen$m;
+           attribute `EventHandler$I `onerror$m;
+           attribute `EventHandler$I `onclose$m;
+  readonly attribute DOMString `extensions$m;
+  readonly attribute DOMString `protocol$m;
+  undefined `close$m(optional [Clamp] unsigned short %code, optional `USVString$I %reason);
+
+  // messaging
+           attribute `EventHandler$I `onmessage$m;
+           attribute `BinaryType$I `binaryType$m;
+  undefined `send$m(`USVString$I %data);
+  undefined `send$m(`Blob$I %data);
+  undefined `send$m(`ArrayBuffer$I %data);
+  undefined `send$m(`ArrayBufferView$I %data);
+};
+</pre>
+
+
+<p>
+各 `WebSocket$I ~objには、
+`~url@
+（`~URL~record$）が結付けられる
+◎
+Each WebSocket object has an associated url (a URL record).
+</p>
+
+<dl class="domintro">
+	<dt>%socket = `new WebSocket(url [, protocols ] )$m</dt>
+	<dd>
+新たな `WebSocket$I ~objを作成した上で、結付けらた~WebSocket接続を即時に確立する。
+◎
+Creates a new WebSocket object, immediately establishing the associated WebSocket connection.
+</dd>
+	<dd>
+%url は文字列をとり、それが与える`~URL~record$に向けて，接続が確立される。
+許容される~schemeは
+`ws^l, `wss^l いずれかに限られ、他に対しては
+`SyntaxError$E が投出される。
+~URLに`素片$urlが伴われる場合もそれが投出される。
+◎
+url is a string giving the URL over which the connection is established. Only "ws" or "wss" schemes are allowed; others will cause a "SyntaxError" DOMException. URLs with fragments will also cause such an exception.
+</dd>
+	<dd>
+%protocols （省略可）は、文字列, または 文字列の配列をとり、［
+省略-時は空な配列 ／
+文字列ならば，その文字列のみからなる配列
+］に等価になる。
+配列~内の各 文字列は`下位protocol名$wsを表す。
+接続が`確立され$wsるのは、~serverが，これらの`下位protocol$wsの一つを応答に選択して返したときに限られることになる。
+どの下位protocol名も、［
+`The WebSocket protocol^cite `WSP$r
+に定義される，
+`~Sec-WebSocket-Protocol~header$wsの値を成す各~protocol要素に課される要件
+］に合致する必要がある。
+◎
+protocols is either a string or an array of strings. If it is a string, it is equivalent to an array consisting of just that string; if it is omitted, it is equivalent to the empty array. Each string in the array is a subprotocol name. The connection will only be established if the server reports that it has selected one of these subprotocols. The subprotocol names have to match the requirements for elements that comprise the value of Sec-WebSocket-Protocol fields as defined by The WebSocket protocol. [WSP]
+</dd>
+
+	<dt>%socket . `send( data )$m</dt>
+	<dd>
+~WebSocket接続を利用して %data を伝送する。
+%data は［
+文字列, `Blob$I, `ArrayBuffer$I, `ArrayBufferView$I
+］のいずれかをとり得る。
+◎
+Transmits data using the WebSocket connection. data can be a string, a Blob, an ArrayBuffer, or an ArrayBufferView.
+</dd>
+
+	<dt>%socket . `close( [ code ] [, reason ] )$m</dt>
+	<dd>
+~WebSocket接続を~closeする。
+%code は`~WebSocket接続~close~code$wsとして，
+%reason は`~WebSocket接続~close事由$wsとして利用される（いずれも省略可）。
+◎
+Closes the WebSocket connection, optionally using code as the the WebSocket connection close code and reason as the the WebSocket connection close reason.
+</dd>
+
+	<dt>%socket . `url$m</dt>
+	<dd>
+~WebSocket接続を確立するときに利用された`~url$を返す。
+◎
+Returns the URL that was used to establish the WebSocket connection.
+</dd>
+
+	<dt>%socket . `readyState$m</dt>
+	<dd>
+`WebSocket$I ~objの接続の状態を返す。
+とり得る値は後述する。
+◎
+Returns the state of the WebSocket object's connection. It can have the values described below.
+</dd>
+
+	<dt>%socket . `bufferedAmount$m</dt>
+	<dd>
+`send()$m を利用して~queueされたが, まだ
+~networkに伝送されていない，`~app~data$ws（~UTF-8~text／~binary~data）を成す~byte数を返す。
+◎
+Returns the number of bytes of application data (UTF-8 text and binary data) that have been queued using send() but not yet been transmitted to the network.
+</dd>
+	<dd>
+~WebSocket接続が`~closeされ$wsている場合、この属性の値は，
+`send()$m ~methodが~callされる度に増えることになる（この数値は、接続が`~closeされ$wsても， 0 に設定し直されることはない）。 
+◎
+If the WebSocket connection is closed, this attribute's value will only increase with each call to the send() method. (The number does not reset to zero once the connection closes.)
+</dd>
+
+	<dt>%socket . `extensions$m</dt>
+	<dd>
+~serverにより選択された拡張があれば，それを返す。
+◎
+Returns the extensions selected by the server, if any.
+</dd>
+
+	<dt>%socket . `protocol$m</dt>
+	<dd>
+~serverにより選択された`下位protocol$wsを（もしあれば）返す。
+これは、下位protocolの折衝を遂行するために，構築子の（配列~形にされた） 2 個目の引数と併用され得る。
+◎
+Returns the subprotocol selected by the server, if any. It can be used in conjunction with the array form of the constructor's second argument to perform subprotocol negotiation.
+</dd>
+
+	<dt>%socket . `binaryType$m [ = %value ]</dt>
+	<dd>
+<p>
+この `WebSocket$I ~objからの~binary~dataが~scriptにどう公開されるかを指示する文字列を返す：
+◎
+Returns a string that indicates how binary data from the WebSocket object is exposed to scripts:
+</p>
+		<dl class="switch">
+			<dt>`blob$l</dt>
+			<dd>
+~binary~dataは `Blob$I 形で返された。
+◎
+Binary data is returned in Blob form.
+</dd>
+
+			<dt>`arraybuffer$l</dt>
+			<dd>
+~binary~dataは `ArrayBuffer$I 形で返された。
+◎
+Binary data is returned in ArrayBuffer form.
+</dd>
+		</dl>
+	</dd>
+	<dd>
+設定して，返される~binary~dataがどう公開されるかを変更できる。
+既定では `blob$l になる。
+◎
+Can be set, to change how binary data is returned. The default is "blob".
+</dd>
+</dl>
+
+<div class="algo">
+<p>
+`new WebSocket(url, protocols)@m
+構築子~手続きは：
+◎
+The WebSocket(url, protocols) constructor, when invoked, must run these steps:
+</p>
+<ol>
+	<li>
+%~url~record ~LET `~URL構文解析する$( %url )
+◎
+Let urlRecord be the result of applying the URL parser to url.
+</li>
+	<li>
+~IF［
+%~url~record ~EQ `失敗^i
+］
+⇒
+~THROW `SyntaxError$E
+◎
+If urlRecord is failure, then throw a "SyntaxError" DOMException.
+</li>
+	<li>
+~IF［
+%~url~record の`~scheme$url ~NIN { `ws^l, `wss^l}
+］
+⇒
+~THROW `SyntaxError$E
+◎
+If urlRecord's scheme is not "ws" or "wss", then throw a "SyntaxError" DOMException.
+</li>
+	<li>
+~IF［
+%~url~record の`素片$url ~NEQ ~NULL
+］
+⇒
+~THROW `SyntaxError$E
+◎
+If urlRecord's fragment is non-null, then throw a "SyntaxError" DOMException.
+</li>
+	<li>
+~IF［
+%protocols は文字列である
+］
+⇒
+%protocols ~SET その文字列 1 個からなる配列
+◎
+If protocols is a string, set protocols to a sequence consisting of just that string.
+</li>
+	<li>
+~IF［
+%protocols 内に重複する値がある
+］~OR［
+%protocols 内の値に［
+`The WebSocket protocol^cite `WSP$r
+に定義される，
+`~Sec-WebSocket-Protocol~header$wsの値を成す各~protocol要素に課される要件
+］を満たさないものがある
+］
+⇒
+~THROW `SyntaxError$E
+◎
+If any of the values in protocols occur more than once or otherwise fail to match the requirements for elements that comprise the value of Sec-WebSocket-Protocol fields as defined by The WebSocket protocol, then throw a "SyntaxError" DOMException. [WSP]
+</li>
+	<li>
+<p>
+この段は`並列的$に走らす
+⇒
+`~WebSocket接続を確立する$( %~url~record, %protocols, `入口~設定群~obj$ )
+`FETCH$r
+◎
+Run this step in parallel:
+• Establish a WebSocket connection given urlRecord, protocols, and the entry settings object. [FETCH]
+</p>
+
+<p class="note">注記：
+`~WebSocket接続を確立する$のに失敗した場合
+⇒
+それにより，`~WebSocket接続を失敗させる$ws~algoが誘発され
+⇒
+それにより，`~WebSocket接続を~closeする$ws~algoが呼出され
+⇒
+それにより，`~WebSocket接続は~close済み$wsになり
+⇒
+それに伴い，`後述のように$ `close$et ~eventが発火されることになる。
+◎
+If the establish a WebSocket connection algorithm fails, it triggers the fail the WebSocket connection algorithm, which then invokes the close the WebSocket connection algorithm, which then establishes that the WebSocket connection is closed, which fires the close event as described below.
+</p>
+	</li>
+	<li>
+コレの`~url$ ~SET %~url~record
+◎
+Return a new WebSocket object whose url is urlRecord.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`url@m
+取得子~手続きは
+⇒
+~RET `~URLを直列化する$( この `WebSocket$I ~objの`~url$ )
+◎
+The url attribute's getter must return this WebSocket object's url, serialized.
+</div>
+
+<p>
+`readyState@m
+属性は、接続の状態を表す：
+◎
+The readyState attribute represents the state of the connection.＼
+</p>
+<ul>
+	<li>
+<p>
+次に挙げる値をとり得る：
+◎
+It can have the following values:
+</p>
+		<dl>
+			<dt>`CONNECTING@m （数値 0 ）</dt>
+			<dd>
+`~WebSocket接続は確立-済み$wsでない。
+◎
+The connection has not yet been established.
+</dd>
+
+			<dt>`OPEN@m （数値 1 ）</dt>
+			<dd>
+`~WebSocket接続は確立-済み$wsであり，通信は可能である。
+◎
+The WebSocket connection is established and communication is possible.
+</dd>
+
+			<dt>`CLOSING@m （数値 2 ）</dt>
+			<dd>
+接続は~handshakeの~close中にあるか、または
+`close()$m ~methodが呼出されている。
+◎
+The connection is going through the closing handshake, or the close() method has been invoked.
+</dd>
+
+			<dt>`CLOSED@m （数値 3 ）</dt>
+			<dd>
+接続はすでに`~closeされ$wsたか, または~openできなかった。
+◎
+The connection has been closed or could not be opened.
+</dd>
+		</dl>
+	</li>
+	<li>
+コレの作成-時には、この属性は `CONNECTING$m に設定されるモノトスル。
+◎
+When the object is created its readyState must be set to CONNECTING (0).
+</li>
+</ul>
+
+<p>
+`extensions@m
+属性は、初期~時には空~文字列を返すモノトスル。
+その値は、~WebSocket接続が`確立され$wsた後に，
+<a href="#feedback-from-the-protocol">§ ~protocolからの~feedback</a>
+にて定義されるように，変更され得る。
+◎
+The extensions attribute must initially return the empty string. After the WebSocket connection is established, its value might change, as defined below.
+</p>
+
+<p>
+`protocol@m
+属性は、初期~時には空~文字列を返すモノトスル。
+その値は、~WebSocket接続が`確立され$wsた後に，
+<a href="#feedback-from-the-protocol">§ ~protocolからの~feedback</a>
+にて定義されるように，変更され得る。
+◎
+The protocol attribute must initially return the empty string. After the WebSocket connection is established, its value might change, as defined below.
+</p>
+
+<div class="algo">
+<p>
+`close(code, reason)@m
+~method~手続きは：
+◎
+The close(code, reason) method, when invoked, must run these steps:
+</p>
+<ol>
+	<li>
+~IF［
+%code ~NEQ ε
+］~AND［
+%code ~NIN { 1000, 3000 ～ 4999 }
+］
+⇒
+~THROW `InvalidAccessError^E
+◎
+If code is present, but is neither an integer equal to 1000 nor an integer in the range 3000 to 4999, inclusive, throw an "InvalidAccessError" DOMException.
+</li>
+	<li>
+<p>
+~IF［
+%reason ~NEQ ε
+］：
+◎
+If reason is present, then run these substeps:
+</p>
+		<ol>
+			<li>
+%reason ~SET `~UTF-8符号化する$( %reason )
+◎
+Let reasonBytes be the result of encoding reason.
+</li>
+			<li>
+~IF［
+%reason を成す~byte数 ~GT 123
+］
+⇒
+~THROW `SyntaxError$E
+◎
+If reasonBytes is longer than 123 bytes, then throw a "SyntaxError" DOMException.
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+~IF［
+`readyState$m 属性 ~IN { `CLOSING$m, `CLOSED$m }
+］
+⇒
+~RET
+◎
+Run the first matching steps from the following list:
+◎
+If the readyState attribute is in the CLOSING (2) or CLOSED (3) state
+• Do nothing.
+</p>
+
+<p class="note">注記：
+接続は、~closeしつつあるか, すでに~close済みである。
+~close済みでない場合、最終的には，`後述のように$ `close$et ~eventが発火されることになる。
+◎
+The connection is already closing or is already closed. If it has not already, a close event will eventually fire as described below.
+</p>
+	</li>
+	<li>
+<p>
+~ELIF［
+`~WebSocket接続は確立-済み$wsでない
+］
+⇒＃
+`~WebSocket接続を失敗させる$ws；
+`readyState$m 属性~値 ~SET `CLOSING$m
+◎
+If the WebSocket connection is not yet established [WSP]
+• Fail the WebSocket connection and set the readyState attribute's value to CLOSING (2). [WSP]
+</p>
+
+<p class="note">注記：
+`~WebSocket接続を失敗させる$ws~algoは
+⇒
+`~WebSocket接続を~closeする$ws~algoを呼出す
+⇒
+それにより，`~WebSocket接続は~close済み$wsになる
+⇒
+それに伴い，`後述のように$ `close$et ~eventが発火されることになる。
+◎
+The fail the WebSocket connection algorithm invokes the close the WebSocket connection algorithm, which then establishes that the WebSocket connection is closed, which fires the close event as described below.
+</p>
+	</li>
+	<li>
+<p>
+~ELIF［
+`~WebSocket~closing~handshakeは開始-済み$wsでない
+］：
+◎
+If the WebSocket closing handshake has not yet been started [WSP]
+</p>
+		<ol>
+			<li>
+<p>
+`~WebSocket~closing~handshakeを開始する$ws：
+◎
+Start the WebSocket closing handshake and set the readyState attribute's value to CLOSING (2). [WSP]
+</p>
+				<ul>
+					<li>
+<p>
+［
+%code ~EQ ε
+］~AND［
+%reason ~EQ ε
+］ならば
+⇒
+`Close ~message$wsは，~bodyを持たないモノトスル。
+◎
+If neither code nor reason is present, the WebSocket Close message must not have a body.
+</p>
+
+<p class="note">注記：
+`The WebSocket protocol^cite は、`~WebSocket~closing~handshakeを開始する$ws~algoに状態s~codeが要求されるものと，誤って言明している。
+◎
+WebSocket Protocol erroneously states that the status code is required for the start the WebSocket closing handshake algorithm.
+</p>
+					</li>
+					<li>
+［
+%code ~NEQ ε
+］ならば
+⇒
+`Close ~message$wsに利用する`状態s~code$wsは、
+%code に与えられた整数にするモノトスル。
+◎
+If code is present, then the status code to use in the WebSocket Close message must be the integer given by close. [WSP]
+</li>
+					<li>
+［
+%code ~NEQ ε
+］~AND［
+%reason ~NEQ ε
+］ならば
+⇒
+`Close ~message$wsには，`状態s~code$wsに加えて %reason も供するモノトスル。
+◎
+If reason is also present, then reasonBytes must be provided in the Close message after the status code. [WSP]
+</li>
+				</ul>
+			</li>
+			<li>
+<p>
+`readyState$m 属性~値 ~SET `CLOSING$m
+◎
+↑</p>
+			</li>
+		</ol>
+
+<p class="note">注記：
+`~WebSocket~closing~handshakeを開始する$ws~algoは
+⇒
+最終的には`~WebSocket接続を~closeする$ws~algoを呼出すことになる
+⇒
+それにより，`~WebSocket接続は~close済み$wsになる
+⇒
+それに伴い，`後述のように$ `close$et ~eventが発火されることになる。
+◎
+The start the WebSocket closing handshake algorithm eventually invokes the close the WebSocket connection algorithm, which then establishes that the WebSocket connection is closed, which fires the close event as described below.
+</p>
+	</li>
+	<li>
+<p>
+~ELSE
+⇒
+`readyState$m 属性~値 ~SET `CLOSING$m
+◎
+Otherwise
+• Set the readyState attribute's value to CLOSING (2).
+</p>
+
+<p class="note">注記：
+`~WebSocket~closing~handshakeは開始-済み$wsであり
+⇒
+最終的には`~WebSocket接続を~closeする$ws~algoを呼出すことになる
+⇒
+それにより，`~WebSocket接続は~close済み$wsになる
+⇒
+それに伴い，`後述のように$ `close$et ~eventが発火されることになる。
+◎
+The WebSocket closing handshake is started, and will eventually invoke the close the WebSocket connection algorithm, which will establish that the WebSocket connection is closed, and thus the close event will fire, as described below.
+</p>
+	</li>
+</ol>
+
+<p class="note">注記：
+`close()$m ~methodは、`~WebSocket~closing~handshakeを開始する$ws以前に送信した~messageを破棄するものではない
+— 仮に，~UAがそのような~messageをまだ送信-中であったとしても、~handshakeは，その~messageが送信された後にのみ開始されることになる。
+◎
+The close() method does not discard previously sent messages before starting the WebSocket closing handshake — even if, in practice, the user agent is still busy sending those messages, the handshake will only start after the messages are sent.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`bufferedAmount@m
+取得子~手続きは、
+`send()$m により~queueされているが，`~event~loop$がその`最初の段$に最後に達した時点では，~networkにまだ伝送されていない、`~app~data$ws（~UTF-8`~text~data$wsか, または`~binary~data$ws）の~byte数を返す。
+（したがって これは、現在の~taskの実行-中に伝送された~textを含む
+— ~UAが~script実行と`並列的$に，背後で~textを伝送できるかどうかにかかわらず。）
+これには、~protocolから課される~frame法の~overheadや, ~OSや~network~hardwareによる~bufferingは含まれない。
+◎
+The bufferedAmount attribute must return the number of bytes of application data (UTF-8 text and binary data) that have been queued using send() but that, as of the last time the event loop reached step 1, had not yet been transmitted to the network. (This thus includes any text sent during the execution of the current task, regardless of whether the user agent is able to transmit text in the background in parallel with script execution.) This does not include framing overhead incurred by the protocol, or buffering done by the operating system or network hardware.
+</p>
+</div>
+
+<div class="example">
+<p>
+次の単純な例では、 `bufferedAmount$m 属性を利用して、毎 50ms ごとに一回の頻度で（あるいは，速すぎて~networkが追いつかない場合は追いつける頻度で）更新を送信する。
+◎
+In this simple example, the bufferedAmount attribute is used to ensure that updates are sent either at the rate of one update every 50ms, if the network can handle that rate, or at whatever rate the network can handle, if that is too fast.
+</p>
+
+<pre class="lang-js">
+var %socket = new WebSocket('ws://game.example.com:12010/updates');
+%socket.onopen = function () {
+  setInterval(function() {
+    if (%socket.bufferedAmount == 0) {
+      %socket.send(getUpdateData());
+    }
+  }, 50);
+};
+</pre>
+<p>
+`bufferedAmount$m 属性を利用すれば、~networkが追いつかない頻度で~dataを送信しなくとも，~networkを使い切れるようになる（その属性の値を常時~注意深く監視する必要はあるが）。
+◎
+The bufferedAmount attribute can also be used to saturate the network without sending the data at a higher rate than the network can handle, though this requires more careful monitoring of the value of the attribute over time.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`binaryType@m
+属性は：
+◎
+↓</p>
+<ul>
+	<li>
+コレの作成-時には、文字列 `blob^l に設定するモノトスル。
+◎
+When a WebSocket object is created, its binaryType IDL attribute must be set to the string "blob".＼
+</li>
+	<li>
+取得子~手続きは、最後に設定された値を返す。
+◎
+On getting, it must return the last value it was set to.＼
+</li>
+	<li>
+設定子~手続きは、この属性の値を所与の値に設定する。
+◎
+On setting, the user agent must set the IDL attribute to the new value.
+</li>
+</ul>
+
+<p class="note">注記：
+~UAは、受信した~binary~dataを取扱う方法~用の~hintとして，この属性を利用できる：
+この属性が `blob^l にされている場合、~dataは~diskへ安全に~spoolするに適するものになる。
+`arraybuffer^l にされている場合、より効率的に~memory内に保つに適するものになる。
+もちろん，~UAには、受信した~dataを~memory内に保つかどうか裁定するときに，より繊細な経験則を利用することが推奨される
+— 例：~data量や［
+直前における，~scriptによるこの属性に対する変更の頻度
+］を基準にするなど。
+この後者の側面は、特に重要になる
+— ~UAが［
+~dataを受信した後, かつ それ用の~eventを発火する前
+］に，この属性が変更される可能性も少なからずあるので。
+◎
+User agents can use the binaryType attribute as a hint for how to handle incoming binary data: if the attribute is set to "blob", it is safe to spool it to disk, and if it is set to "arraybuffer", it is likely more efficient to keep the data in memory. Naturally, user agents are encouraged to use more subtle heuristics to decide whether to keep incoming data in memory or not, e.g. based on how big the data is or how common it is for a script to change the attribute at the last minute. This latter aspect is important in particular because it is quite possible for the attribute to be changed after the user agent has received the data but before the user agent has fired the event for it.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`send(data)@m
+~methodは、接続を利用して~dataを伝送する。
+その~method~手続きは：
+◎
+The send(data) method transmits data using the connection.＼
+</p>
+<ol>
+	<li>
+~IF［
+`readyState$m 属性 ~EQ `CONNECTING$m
+］
+⇒
+~THROW `InvalidStateError^E
+◎
+If the readyState attribute is CONNECTING, it must throw an "InvalidStateError" DOMException. Otherwise, the user agent must run the appropriate set of steps from the following list:
+</li>
+	<li>
+<p>
+~IF［
+`~WebSocket接続は確立-済み$wsである
+］~AND［
+`~WebSocket~closing~handshakeは開始-済み$wsでない
+【すなわち `readyState$m 属性は `OPEN$m 】
+］
+⇒
+%data 引数の型に応じて，下の表に与えられる［
+`~opcode$ws, および`~payload~data$ws
+］から構成される`~WebSocket~messageを送信する$ws
+⇒
+~bufferを要する所で~bufferが満杯になっているなどの~~理由で，~dataを送信できない場合
+⇒
+この接続の`満杯~flag$を ON にした上で， `~WebSocket接続を~closeする$ws。
+</p>
+
+<table><thead><tr><th>引数の型
+<th>`~opcode$ws
+<th>`~payload~data$ws
+</thead>
+
+<tbody><tr><th><code>DOMString</code>
+<td>~text~frame（数値 1 ）
+<td>
+`~UTF-8符号化する$( %data ) の結果。
+`UNICODE$r
+`ENCODING$r
+
+<tr><th>`Blob$I
+<td rowspan="3">~binary~frame（数値 2 ）
+<td>
+%data が表現する生~data。
+`FILEAPI$r
+
+<tr><th>`ArrayBuffer$I
+<td>
+%data が表現する~bufferに格納されている~data。
+
+<tr><th>`ArrayBufferView$I
+<td>
+%data が参照している，下層の `ArrayBuffer$I ~objが格納する~bufferの中の一区分。
+</tbody></table>
+
+<p class="trans-note">【
+ここの訳は、原文の同じ文言の繰り~~返しを集約して再構成している。
+】</p>
+
+◎
+If the argument is a string
+• If the WebSocket connection is established and the WebSocket closing handshake has not yet started, then the user agent must send a WebSocket Message comprised of the data argument using a text frame opcode; if the data cannot be sent, e.g. because it would need to be buffered but the buffer is full, the user agent must flag the WebSocket as full and then close the WebSocket connection. Any invocation of this method with a string argument that does not throw an exception must increase the bufferedAmount attribute by the number of bytes needed to express the argument as UTF-8. [UNICODE] [ENCODING] [WSP]
+◎
+If the argument is a Blob object
+• If the WebSocket connection is established, and the WebSocket closing handshake has not yet started, then the user agent must send a WebSocket Message comprised of data using a binary frame opcode; if the data cannot be sent, e.g. because it would need to be buffered but the buffer is full, the user agent must flag the WebSocket as full and then close the WebSocket connection. The data to be sent is the raw data represented by the Blob object. Any invocation of this method with a Blob argument that does not throw an exception must increase the bufferedAmount attribute by the size of the Blob object's raw data, in bytes. [WSP] [FILEAPI]
+◎
+If the argument is an ArrayBuffer object
+• If the WebSocket connection is established, and the WebSocket closing handshake has not yet started, then the user agent must send a WebSocket Message comprised of data using a binary frame opcode; if the data cannot be sent, e.g. because it would need to be buffered but the buffer is full, the user agent must flag the WebSocket as full and then close the WebSocket connection. The data to be sent is the data stored in the buffer described by the ArrayBuffer object. Any invocation of this method with an ArrayBuffer argument that does not throw an exception must increase the bufferedAmount attribute by the length of the ArrayBuffer in bytes. [WSP]
+◎
+If the argument is an object that matches the ArrayBufferView type definition
+• If the WebSocket connection is established, and the WebSocket closing handshake has not yet started, then the user agent must send a WebSocket Message comprised of data using a binary frame opcode; if the data cannot be sent, e.g. because it would need to be buffered but the buffer is full, the user agent must flag the WebSocket as full and then close the WebSocket connection. The data to be sent is the data stored in the section of the buffer described by the ArrayBuffer object that data references. Any invocation of this method with this kind of argument that does not throw an exception must increase the bufferedAmount attribute by the length of data's buffer in bytes. [WSP]
+</li>
+	<li>
+【！この~methodの被呼出時に，例外を投出しない場合は、】
+`bufferedAmount$m 属性の値 ~INCBY 前~段による`~payload~data$wsに要する~byte数
+◎
+↑</li>
+</ol>
+</div>
+
+<p>
+`WebSocket$I ~interfaceを実装する~objは、次の表に与える［
+`~event~handler$, および
+対応する `~event~handler~event型$
+］を，`~event~handler~IDL属性$として~supportするモノトスル ：
+◎
+The following are the event handlers (and their corresponding event handler event types) that must be supported, as event handler IDL attributes, by all objects implementing the WebSocket interface:
+</p>
+
+<table><thead><tr><th>`~event~handler$
+<th>`~event~handler~event型$
+</thead>
+
+<tbody><tr><td>`onopen@m
+<td>`open@et（<a href="~HTMLindex#event-open">参照</a>）
+
+<tr><td>`onmessage@m
+<td>`message@et（<a href="~HTMLindex#event-message">参照</a>）
+
+<tr><td>`onerror@m
+<td>`error@et（<a href="~HTMLindex#event-error">参照</a>）
+
+<tr><td>`onclose@m
+<td>`close@et（<a href="~HTMLindex#event-close">参照</a>）
+
+</tbody></table>
+
+		</section>
+		<section id="feedback-from-the-protocol">
+<h3 title="Feedback from the protocol">9.3.3. ~protocolからの~feedback</h3>
+
+<div class="algo">
+<p>
+~UAは、~WebSocket接続が`確立され$wsたときは，次の手続きを走らす`~taskを~queueする$モノトスル：
+◎
+When the WebSocket connection is established, the user agent must queue a task to run these steps:
+</p>
+<ol>
+	<li>
+%O ~LET 当の `WebSocket$I ~obj
+◎
+↓</li>
+	<li>
+%O の `readyState$m 属性~値 ~SET `OPEN$m
+◎
+Change the readyState attribute's value to OPEN (1).
+</li>
+	<li>
+~IF［
+`利用-中の拡張$ws ~NEQ ~NULL 値
+］
+⇒
+%O の `extensions$m 属性~値 ~SET その値
+◎
+Change the extensions attribute's value to the extensions in use, if it is not the null value. [WSP]
+</li>
+	<li>
+~IF［
+`利用-中の下位protocol$ws ~NEQ ~NULL 値
+］
+⇒
+%O の `protocol$m 属性~値 ~SET その値
+◎
+Change the protocol attribute's value to the subprotocol in use, if it is not the null value. [WSP]
+</li>
+	<li>
+%O に向けて，名前 `open$et の`~eventを発火する$
+◎
+Fire an event named open at the WebSocket object.
+</li>
+</ol>
+
+<p class="note">注記：
+上の~algoは、~taskとして`~queueされ$るので、`確立され$wsている~WebSocket接続と,
+`open$et ~event用に~event~listenerを設定しておく~scriptとの間で競争が生じることはない。
+【 すなわち、 `new WebSocket()$m を呼出した<em>後に</em> 同期的に登録された~event~listenerが，~serverからの初期~messageを受け取り損ねることはない。】
+◎
+Since the algorithm above is queued as a task, there is no race condition between the WebSocket connection being established and the script setting up an event listener for the open event.
+</p>
+</div>
+
+<hr>
+
+<div class="algo">
+<p>
+~UAは，［
+`~frame種別$ws %type の~data %data
+］を伴う`~WebSocket~messageを受信した$wsときは、次の手続きを走らす`~taskを~queueする$モノトスル：
+◎
+When a WebSocket message has been received with type type and data data, the user agent must queue a task to follow these steps: [WSP]
+</p>
+
+<ol>
+	<li>
+%O ~LET 当の `WebSocket$I ~obj
+◎
+↓</li>
+	<li>
+~IF［
+%O の `readyState$m 属性~値 ~NEQ `OPEN$m
+］
+⇒
+~RET
+◎
+If the readyState attribute's value is not OPEN (1), then return.
+</li>
+	<li>
+<p>
+%~event用の~data ~LET
+%type が指示する~dataの種別に応じて，次で与えられる値：
+◎
+Let dataForEvent be determined by switching on type and binaryType:
+</p>
+		<dl class="switch">
+			<dt>`Text^i</dt>
+			<dd>
+%data を内容とする，新たな `DOMString^I
+◎
+type indicates that the data is Text
+◎
+• a new DOMString containing data
+</dd>
+
+			<dt>`Binary^i</dt>
+			<dd>
+<p>
+%O の `binaryType$m の値に応じて，次で与えられる値：
+</p>
+
+				<dl class="switch">
+					<dt>`blob@l</dt>
+					<dd>
+生~dataが %data を表現する様な，新たな `Blob$I ~obj
+`FILEAPI$r
+</dd>
+
+					<dt>`arraybuffer@l</dt>
+					<dd>
+%data を内容とする，新たな `ArrayBuffer$I ~obj
+</dd>
+				</dl>
+<p>
+いずれの~objも， %O に`関連な~Realm$内に作成されるとする。
+</p>
+◎
+type indicates that the data is Binary and binaryType is "blob"
+◎
+• a new Blob object, created in the relevant Realm of the WebSocket object, that represents data as its raw data [FILEAPI]
+◎
+type indicates that the data is Binary and binaryType is "arraybuffer"
+◎
+• a new ArrayBuffer object, created in the relevant Realm of the WebSocket object, whose contents are data
+</dd>
+		</dl>
+	</li>
+	<li>
+%O に向けて，名前 `message$et の`~eventを発火する$
+— `MessageEvent$I を利用し，次のように初期化して
+⇒＃
+`origin$m 属性 ~SET `生成元を直列化する$( %O の`~url$の`生成元$url ),
+`data$m 属性 ~SET %~event用の~data
+◎
+Fire an event named message at the WebSocket object, using MessageEvent, with the origin attribute initialized to the serialization of the WebSocket object's url's origin, and the data attribute initialized to dataForEvent.
+</li>
+</ol>
+
+<p class="note">注記：
+~UAには、上で~queueした`~task$ %~task の手続きを効率的に遂行できるかどうか，
+%~task を走らす前に検査しておくことが推奨される
+— 効率的に遂行できないなら、~bufferを準備する間，他の`~task~queue$から~taskを選取る等。
+例えば，［
+~dataの到着-時には、 `binaryType$m 属性が `blob^l に設定されていて，~UAがすべての~dataを~diskへ~spoolしていた
+］が［
+その~message用に %~task を走らす直前に，~scriptが `binaryType$m を `arraybuffer^l に切替えた
+］場合、~UAは
+— `ArrayBuffer$I ~objを作成している間に~main~threadが停滞しないよう —
+%~task を走らす前に~dataを~RAMに戻したいと求めるであろう。
+◎
+User agents are encouraged to check if they can perform the above steps efficiently before they run the task, picking tasks from other task queues while they prepare the buffers if not. For example, if the binaryType attribute was set to "blob" when the data arrived, and the user agent spooled all the data to disk, but just before running the above task for this particular message the script switched binaryType to "arraybuffer", the user agent would want to page the data back to RAM before running this task so as to avoid stalling the main thread while it created the ArrayBuffer object.
+</p>
+</div>
+
+<div class="example">
+<p>
+~text~frameの場合に `message$et ~event用に~handlerを定義する例：
+◎
+Here is an example of how to define a handler for the message event in the case of text frames:
+</p>
+
+<pre class="lang-js">
+mysocket.onmessage = function (event) {
+  if (event.data == 'on') {
+    turnLampOn();
+  } else if (event.data == 'off') {
+    turnLampOff();
+  }
+};
+</pre>
+
+<p>
+ここでの~protocolは、~serverが "on" または "off" ~messageを送信するだけの単純なもの，とする。
+◎
+The protocol here is a trivial one, with the server just sending "on" or "off" messages.
+</p>
+</div>
+
+<hr>
+
+<div class="algo">
+<p>
+~UAは、`~WebSocket~closing~handshakeを開始した$wsときは，次を走らす`~taskを~queueする$モノトスル：
+◎
+When the WebSocket closing handshake is started, the user agent must＼
+</p>
+
+<ol>
+	<li>
+当の `WebSocket$I ~objの `readyState$m 属性~値 ~SET `CLOSING$m
+◎
+queue a task to change the readyState attribute's value to CLOSING (2).＼
+</li>
+</ol>
+
+<p>
+（ `close()$m ~methodが~callされていた場合、 `readyState$m 属性~値は，この~taskを走らす時点で，すでに `CLOSING$m に設定されていることになる。）
+◎
+(If the close() method was called, the readyState attribute's value will already be set to CLOSING (2) when this task runs.) [WSP]
+</p>
+</div>
+
+<hr>
+
+<div class="algo">
+<p id="closeWebSocket">
+~UAは、`~WebSocket接続を~closeする$wsときは（`~cleanに~closeされた$ws場合も含め），次の手続きを走らす`~taskを~queueする$モノトスル：
+◎
+When the WebSocket connection is closed, possibly cleanly, the user agent must queue a task to run the following substeps:
+</p>
+<ol>
+	<li>
+%O ~LET 当の `WebSocket$I ~obj
+◎
+↓</li>
+	<li>
+%O の `readyState$m 属性~値 ~SET `CLOSED$m
+◎
+Change the readyState attribute's value to CLOSED (3).
+</li>
+	<li>
+~IF［
+~UAは`~WebSocket接続を失敗させる$ws必要がある
+］~OR［
+~WebSocket接続は その
+`満杯~flag@
+が ON にされた上で`~closeされ$wsた
+］
+⇒
+%O に向けて，名前 `error$et の`~eventを発火する$
+◎
+If the user agent was required to fail the WebSocket connection, or if the the WebSocket connection was closed after being flagged as full, fire an event named error at the WebSocket object. [WSP]
+</li>
+	<li>
+<p>
+%O に向けて，名前 `close$et の`~eventを発火する$
+— `CloseEvent$I を利用し，次のように初期化して
+⇒＃
+`wasClean$m 属性 ~SET ［ 接続は`~cleanに~closeされた$wsならば ~T ／ ~ELSE_ ~F ］,
+`code$m 属性 ~SET `~WebSocket接続~close~code$ws,
+`reason$m 属性 ~SET `~BOMはそのままに~UTF-8復号する$( `~WebSocket接続~close事由$ws )
+◎
+Fire an event named close at the WebSocket object, using CloseEvent, with the wasClean attribute initialized to true if the connection closed cleanly and false otherwise, the code attribute initialized to the WebSocket connection close code, and the reason attribute initialized to the result of applying UTF-8 decode without BOM to the WebSocket connection close reason. [WSP]
+</li>
+</ol>
+</div>
+
+<div class="warning">
+
+<p>警告：
+~UAは、次に挙げる状況を判別し得るような失敗~情報は，~script側に伝えないモノトスル。
+◎
+User agents must not convey any failure information to scripts in a way that would allow a script to distinguish the following situations:
+</p>
+<ul>
+	<li>
+~serverの~host名を解決できなかった。
+◎
+A server whose host name could not be resolved.
+</li>
+	<li>
+~serverへ~packetを成功裡に~routeできなかった。
+◎
+A server to which packets could not successfully be routed.
+</li>
+	<li>
+指定された~portへの接続を~serverが拒否した。
+◎
+A server that refused the connection on the specified port.
+</li>
+	<li>
+~serverとの TLS ~handshakeを正しく遂行できなかった（例：~serverの証明書を検証yできなかった）。
+◎
+A server that failed to correctly perform a TLS handshake (e.g., the server certificate can't be verified).
+</li>
+	<li>
+~serverが~opening~handshakeを完了しなかった（例：~serverが~WebSocket~serverではなかった）。
+◎
+A server that did not complete the opening handshake (e.g. because it was not a WebSocket server).
+</li>
+	<li>
+~WebSocket~serverは正しい~opening~handshakeを送信したが、それが指定する~optionにより，~clientは接続を落とした（例：~serverは~clientが提供しなかった`下位protocol$wsを指定してきた）。
+◎
+A WebSocket server that sent a correct opening handshake, but that specified options that caused the client to drop the connection (e.g. the server specified a subprotocol that the client did not offer).
+</li>
+	<li>
+~WebSocket~serverは~opening~handshakeを成功裡に完了した後に突如，接続を~closeした。
+◎
+A WebSocket server that abruptly closed the connection after successfully completing the opening handshake.
+</li>
+</ul>
+
+<p>
+これらのどの事例でも、`~WebSocket接続~close~code$wsは 1006 になる
+—
+`The WebSocket protocol^cite `WSP$r
+から要求されるように。
+◎
+In all of these cases, the the WebSocket connection close code would be 1006, as required by WebSocket Protocol. [WSP]
+</p>
+
+<p>
+~scriptがこれら各~事例を判別できるようになると、攻撃の準備として，利用者の~local~networkを探査することを~scriptに許容することになる。
+◎
+Allowing a script to distinguish these cases would allow a script to probe the user's local network in preparation for an attack.
+</p>
+
+<p class="note">注記：
+特に，このことは、~code 1015 は，~UAからは利用されないことを意味する（もちろん、~serverが `Close ~frame$wsに誤って利用した場合は除く）。
+◎
+In particular, this means the code 1015 is not used by the user agent (unless the server erroneously uses it in its close frame, of course).
+</p>
+</div>
+
+<p>
+この節にて`~queueされ$る どの`~task$も，その`~task源$は
+`~WebSocket~task源@
+とする。
+◎
+The task source for all tasks queued in this section is the WebSocket task source.
+</p>
+
+		</section>
+		<section id="ping-and-pong-frames">
+<h3 title="Ping and Pong frames">9.3.4. Ping および Pong ~frame</h3>
+
+<p>
+`The WebSocket protocol^cite は、［
+接続維持, 鼓動, ~network状態探針, 待時間の~~計測, 等々
+］に利用できる［
+`Ping ~frame$ws,
+`Pong ~frame$ws
+］を定義する。
+これらは、現時点では~APIに公開されていない。
+◎
+The WebSocket protocol defines Ping and Pong frames that can be used for keep-alive, heart-beats, network status probing, latency instrumentation, and so forth. These are not currently exposed in the API.
+</p>
+
+<p>
+~UAは、欲されるなら［
+`Ping ~frame$ws ／ 請求されていない `Pong ~frame$ws
+］を送信してもヨイ
+— 例えば［
+~local~network~NATmappingを保守する／
+接続を検出する／
+利用者に待時間を表示する
+］などの試みの一環として。
+~UAは、これらの~frameを~serverの援助-用として利用しないモノトスル
+— ~serverは、必要に応じて適切な時機に~pongを請求するものと見做されているので。
+◎
+User agents may send ping and unsolicited pong frames as desired, for example in an attempt to maintain local network NAT mappings, to detect failed connections, or to display latency metrics to the user. User agents must not use pings or unsolicited pongs to aid the server; it is assumed that servers will solicit pongs whenever appropriate for the server's needs.
+</p>
+
+		</section>
+		<section id="the-closeevent-interfaces">
+<h3 title="The CloseEvent interface">9.3.5. `CloseEvent^I ~interface</h3>
+
+<p>
+`WebSocket$I ~objは、その `close$et ~event用に
+`CloseEvent$I ~interfaceを利用する：
+◎
+WebSocket objects use the CloseEvent interface for their close events:
+</p>
+
+<pre class="idl">
+[Exposed=(Window,Worker)]
+interface `CloseEvent@I : `Event$I {
+  `constructor$(DOMString %type, optional `CloseEventInit$I %eventInitDict = {});
+
+  readonly attribute boolean `wasClean$m;
+  readonly attribute unsigned short `code$m;
+  readonly attribute USVString `reason$m;
+};
+
+dictionary `CloseEventInit@I : `EventInit$I {
+  boolean wasClean = false;
+  unsigned short code = 0;
+  USVString reason = "";
+};
+</pre>
+
+<dl class="domintro">
+	<dt>%event . `wasClean$m</dt>
+	<dd>
+［
+接続は`~cleanに~closeされた$wsなら ~T ／
+~ELSE_ ~F
+］を返す。
+◎
+Returns true if the connection closed cleanly; false otherwise.
+</dd>
+
+	<dt>%event . `code$m</dt>
+	<dd>
+~serverから供された`~WebSocket接続~close~code$wsを返す。
+◎
+Returns the WebSocket connection close code provided by the server.
+</dd>
+
+	<dt>%event . `reason$m</dt>
+	<dd>
+~serverから供された`~WebSocket接続~close事由$wsを返す。
+◎
+Returns the WebSocket connection close reason provided by the server.
+</dd>
+</dl>
+
+<div class="algo">
+`wasClean@m
+取得子~手続きは、初期化-時の値を返す。
+それは、接続が`~cleanに~closeされた$wsかどうかを表現する。
+【！ term-closed-cleanly 】
+◎
+The wasClean attribute must return the value it was initialized to.＼
+It represents whether the connection closed cleanly or not.
+</div>
+
+<div class="algo">
+`code@m
+取得子~手続きは、初期化-時の値を返す。
+それは、~serverから供された `~WebSocket接続~close~code$wsを表現する。
+◎
+The code attribute must return the value it was initialized to.＼
+It represents the WebSocket connection close code provided by the server.
+</div>
+
+<div class="algo">
+`reason@m
+取得子~手続きは、初期化-時の値を返す。
+それは、~serverから供された`~WebSocket接続~close事由$wsを表現する。
+◎
+The reason attribute must return the value it was initialized to.＼
+It represents the WebSocket connection close reason provided by the server.
+</div>
+
+		</section>
+		<section id="garbage-collection-2">
+<h3 title="Garbage collection">9.3.6. ~garbage収集</h3>
+
+<p>
+次のいずれかに該当する `WebSocket$I ~objは、~garbage収集しないモノトスル：
+◎
+↓</p>
+
+<ul>
+	<li>
+<p>
+`~event~loop$がその`最初の段$に最後に達した時点で、 `readyState$m 属性が［
+次の表の 1 列目に挙げる値
+］にされていて，［
+同じ行の 2 列目に示される~event型に対し登録されている~event~listenerが在る
+］もの。
+</p>
+
+<table>
+<thead><tr><th>`readyState$m
+<th>`~event~handler~event型$
+</thead>
+
+<tbody><tr><td>`CONNECTING$m (0)
+<td>`open$et, `message$et, `error$et, `close$et
+
+<tr><td>`OPEN$m (1)
+<td>`message$et, `error$et, `close$et
+
+<tr><td>`CLOSING$m (2)
+<td>`error$et, `close$et
+
+</tbody></table>
+
+◎
+A WebSocket object whose readyState attribute's value was set to CONNECTING (0) as of the last time the event loop reached step 1 must not be garbage collected if there are any event listeners registered for open events, message events, error events, or close events.
+◎
+A WebSocket object whose readyState attribute's value was set to OPEN (1) as of the last time the event loop reached step 1 must not be garbage collected if there are any event listeners registered for message events, error, or close events.
+◎
+A WebSocket object whose readyState attribute's value was set to CLOSING (2) as of the last time the event loop reached step 1 must not be garbage collected if there are any event listeners registered for error or close events.
+</li>
+	<li>
+`~WebSocket接続は確立-済み$wsであり，~network伝送-用に~dataが~queueされているもの。
+◎
+A WebSocket object with an established connection that has data queued to be transmitted to the network must not be garbage collected. [WSP]
+</li>
+</ul>
+
+
+<p>
+接続が~openしているにもかかわらず， `WebSocket$I ~objが~garbage収集された場合、~UAは，`~WebSocket~closing~handshakeを開始する$wsモノトスル。
+このときの `Close ~message$wsは、`状態s~code$wsを伴わないものとする。
+◎
+If a WebSocket object is garbage collected while its connection is still open, the user agent must start the WebSocket closing handshake, with no status code for the Close message. [WSP]
+</p>
+
+<hr>
+
+<div class="algo">
+<p>
+~UAは， `WebSocket$I ~objを
+`消滅させる@
+必要が生じたとき（これは `Document$I ~objが消え去るとき起こる）は、次を走らすモノトスル：
+◎
+If a user agent is to make disappear a WebSocket object (this happens when a Document object goes away), the user agent must follow the first appropriate set of steps from the following list:
+</p>
+
+<ol>
+	<li>
+~IF［
+`~WebSocket接続は確立-済み$wsでない
+］
+⇒
+`~WebSocket接続を失敗させる$ws
+◎
+If the WebSocket connection is not yet established [WSP]
+• Fail the WebSocket connection. [WSP]
+</li>
+	<li>
+~ELIF［
+`~WebSocket~closing~handshakeは開始-済み$wsでない
+］
+⇒
+`~WebSocket~closing~handshakeを開始する$ws
+— `Close ~message$wsに利用する`状態s~code$wsは 1001 とする
+◎
+If the WebSocket closing handshake has not yet been started [WSP]
+• Start the WebSocket closing handshake, with the status code to use in the WebSocket Close message being 1001. [WSP]
+◎
+Otherwise
+• Do nothing.
+</li>
+</ol>
+</div>
+
+		</section>
+	</section>
+</main>

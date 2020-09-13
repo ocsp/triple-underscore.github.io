@@ -1,0 +1,6133 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Paged Media Module Level 3 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+
+<style>
+th, td {
+	vertical-align: top;
+}
+
+#margin-box-def th:first-child,
+#margin-box-def td:first-child {
+	max-width: 3em;
+	white-space: nowrap;
+}
+#margin-box-def th:nth-child(n+2),
+#margin-box-def td:nth-child(n+2) {
+	padding-top: 2em;
+}
+
+#margin-box-def td:nth-child(3) {
+	min-width: 200px;
+}
+
+#margin-box-def figure {
+	margin: 0.2em;
+}
+#margin-box-def figcaption {
+	display: none;
+}
+
+#margin-box-def svg {
+	width: 200px;
+}
+
+svg[id^="_dgm-header-ex"] {
+	width: 700px;
+}
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		collectParts: Util.collectParts,
+		generate: expand,
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	let prop_context = '';
+
+	return this.html.replace(
+		/%[\w~一-鿆あ-ん]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'p':
+	if(indicator === '@') {
+		prop_context = `#valdef-${key}-`;
+	}
+	break;
+case 'd':
+	if(indicator === '@') {
+		prop_context = `#valdef-page-${key}-`;
+	}
+	break;
+case 'vt':
+	text = `&lt;${key}&gt;`;
+	href = prop_context + key; // for length
+	break;
+case 'v':
+	href = prop_context + key; // for none/auto
+	break;
+case 'ps':
+	text = `:${key}`;
+	break;
+case 'pe':
+	text = `::${key}`;
+	break;
+case 'at':
+	text = `@${key}`;
+	href = `#at-ruledef-${key}`;
+	break;
+case 'f':
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+case 'dgm':
+	return `<a id="_dgm-${key}">＊</a>`;
+	break;
+}
+
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Paged Media Module Level 3
+spec_date:2020-03-26
+trans_update:2020-03-27
+source_checked:180705
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-page-3/
+	abbr_url:CSSPAGE
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:css-gnerated,css
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2015-02-25
+
+
+●●class_map
+p:property
+ps:pseudo
+pe:pseudo
+t:type
+at:at-rule
+vt:type
+css:css
+d:descriptor
+f:func
+e:element
+u:unit
+v:value
+op:op
+
+●●tag_map
+p:code
+pe:code
+ps:code
+at:code
+t:var
+vt:var
+css:code
+d:code
+e:code
+u:code
+f:code
+v:code
+V:var
+op:span
+em:em
+
+●●original_id_map
+
+●●mdn_urls
+	propdef-page:CSS/page
+
+valdef-page-left:CSS/:left
+valdef-page-right:CSS/:right
+	valdef-page-blank:CSS/:blank
+valdef-page-first:CSS/:first
+
+at-ruledef-page:CSS/@page
+descdef-page-size:CSS/@page/size
+descdef-page-marks:CSS/@page/marks
+descdef-page-bleed:CSS/@page/bleed
+
+	at-ruledef-bottom-center:CSS/@page#page-margin-box-type
+	...
+
+●●link_map
+
+
+	●ps/pe
+ps.left:#valdef-page-left
+ps.right:#valdef-page-right
+ps.blank:#valdef-page-blank
+ps.first:#valdef-page-first
+ps.recto:~CSSLOGICAL#valdef-logical-page-selector-recto
+ps.verso:~CSSLOGICAL#valdef-logical-page-selector-verso
+
+pe.before:~CSSPSEUDO#selectordef-before
+pe.after:~CSSPSEUDO#selectordef-before
+
+	●at/d
+
+at.page:#at-ruledef-page
+at.bottom-center:#at-ruledef-bottom-center
+at.bottom-left:#at-ruledef-bottom-left
+at.bottom-left-corner:#at-ruledef-bottom-left-corner
+at.bottom-right-corner:#at-ruledef-bottom-right-corner
+at.bottom-right:#at-ruledef-bottom-right
+at.left-bottom:#at-ruledef-left-bottom
+at.left-middle:#at-ruledef-left-middle
+at.left-top:#at-ruledef-left-top
+at.right-bottom:#at-ruledef-right-bottom
+at.right-middle:#at-ruledef-right-middle
+at.right-top:#at-ruledef-right-top
+at.top-center:#at-ruledef-top-center
+at.top-left:#at-ruledef-top-left
+at.top-left-corner:#at-ruledef-top-left-corner
+at.top-right:#at-ruledef-top-right
+at.top-right-corner:#at-ruledef-top-right-corner
+
+at.viewport:~CSSWG/css-device-adapt-1/#at-ruledef-viewport
+	~TR/css-device-adapt/#the-viewport-rule
+
+d.size:#descdef-page-size
+d.marks:#descdef-page-marks
+d.bleed:#descdef-page-bleed
+d.page-orientation:#descdef-page-page-orientation
+
+d.width:~MQ4#width
+d.height:~MQ4#height
+d.device-width:~MQ4#device-width
+d.device-height:~MQ4#device-height
+d.aspect-ratio:~MQ4#aspect-ratio
+d.device-aspect-ratio:~MQ4#device-aspect-ratio
+d.orientation:~MQ4#orientation
+
+	●p
+p.page:#propdef-page
+p.display:~CSSDISP#propdef-display
+	p.display:~CSS2VISUREN#propdef-display
+p.height:~CSS2VISUDET#propdef-height
+	p.height:~CSS2VISUDET#the-height-property
+p.margin-bottom:~CSSBOX#propdef-margin-bottom
+p.margin-left:~CSSBOX#propdef-margin-left
+p.margin-right:~CSSBOX#propdef-margin-right
+p.margin-top:~CSSBOX#propdef-margin-top
+p.margin:~CSSBOX#propdef-margin
+p.max-height:~CSS2VISUDET#propdef-max-height
+p.max-width:~CSS2VISUDET#propdef-max-width
+p.min-height:~CSS2VISUDET#propdef-min-height
+p.min-width:~CSS2VISUDET#propdef-min-width
+p.padding-bottom:~CSSBOX#propdef-padding-bottom
+p.padding-top:~CSSBOX#propdef-padding-top
+p.page-break-after:~CSS22/page.html#propdef-page-break-after
+p.page-break-before:~CSS22/page.html#propdef-page-break-before
+p.vertical-align:~CSSINLINE#propdef-vertical-align
+	p.vertical-align:~CSS2VISUDET#line-height
+p.line-height:~CSS2VISUDET#propdef-line-height
+	p.line-height:~CSS2VISUDET#line-height
+p.visibility:~CSS2VISUFX#propdef-visibility
+p.width:~CSS2VISUDET#propdef-width
+p.z-index:~CSS2VISUREN#propdef-z-index
+p.position:~CSSPOS#propdef-position
+p.quotes:~CSSCONTENT#propdef-quotes
+	p.quotes:~CSS22/generate.html#quotes-specify
+	p.color:~CSS22/colors.html#propdef-color
+p.direction:~CSSWM#propdef-direction
+p.font-size:~CSSFONT#propdef-font-size
+p.content:~CSSCONTENT#propdef-content
+	p.content:~CSS22/generate.html#propdef-content
+p.text-align:~CSSTEXT#propdef-text-align
+p.white-space:~CSSTEXT#propdef-white-space
+p.writing-mode:~CSSWM#propdef-writing-mode
+p.background-attachment:~CSSBG#propdef-background-attachment
+p.background-clip:~CSSBG#propdef-background-clip
+p.background-origin:~CSSBG#propdef-background-origin
+p.border-bottom-width:~CSSBG#propdef-border-bottom-width
+p.border-top-width:~CSSBG#propdef-border-top-width
+p.break-after:~CSSBREAK#propdef-break-after
+p.break-before:~CSSBREAK#propdef-break-before
+	p.counter-increment:~CSS22/generate.html#propdef-counter-increment
+p.counter-increment:~CSSLIST#propdef-counter-increment
+	p.counter-reset:~CSS22/generate.html#propdef-counter-reset
+p.counter-reset:~CSSLIST#propdef-counter-reset
+
+p.orphans:~CSSBREAK#propdef-orphans
+p.widows:~CSSBREAK#propdef-widows
+p.overflow:~CSSOVERFLOW3#propdef-overflow
+
+	●t/u/v/f
+t.custom-ident:~CSSVAL#identifier-value
+t.length:~CSSVAL#length-value
+
+t.compound-selector:~SELECTORS4#typedef-compound-selector
+t.declaration-list:~CSSSYN#typedef-declaration-list
+t.ident-token:~CSSSYN#typedef-ident-token
+
+t.page-size:#typedef-page-size-page-size
+t.page-selector:#typedef-page-selector
+t.page-selector-list:#typedef-page-selector-list
+t.pseudo-page:#typedef-pseudo-page
+
+f.counter():~CSSLIST#funcdef-counter
+f.counters():~CSSLIST#funcdef-counters
+
+u.em:~CSSVAL#em
+u.ex:~CSSVAL#ex
+
+	v.pre:~CSSTEXT#valdef-white-space-pre
+	v.left:~CSSBREAK#valdef-break-before-left
+	v.right:~CSSBREAK#valdef-break-before-right
+	v.recto:~CSSBREAK#valdef-break-before-recto
+	v.verso:~CSSBREAK#valdef-break-before-verso
+	portrait
+
+
+v.inherit:~CASCADE#valdef-all-inherit
+	~CSS22/cascade.html#value-def-inherit
+
+	v.auto:#valdef-page-size-auto
+v.landscape:#valdef-page-size-landscape
+v.portrait:#valdef-page-size-portrait
+
+	vt.length:#valdef-page-size-length
+
+v.A5:#valdef-page-size-a5
+v.A4:#valdef-page-size-a4
+v.A3:#valdef-page-size-a3
+v.B5:#valdef-page-size-b5
+v.B4:#valdef-page-size-b4
+v.JIS-B5:#valdef-page-size-jis-b5
+v.JIS-B4:#valdef-page-size-jis-b4
+v.letter:#valdef-page-size-letter
+v.legal:#valdef-page-size-legal
+v.ledger:#valdef-page-size-ledger
+
+
+	v.none:#valdef-page-marks-none
+v.crop:#valdef-page-marks-crop
+v.cross:#valdef-page-marks-cross
+	v.auto:#valdef-page-bleed-auto
+	vt.length:#valdef-page-bleed-length
+
+	@page Descriptors:#page-descriptor-table
+
+	v.none:~CSSCONTENT#valdef-content-none
+	v.normal:~CSSCONTENT#valdef-content-normal
+
+v.rotate-left:#valdef-page-orientation-rotate-left
+v.rotate-right:#valdef-page-orientation-rotate-right
+v.upright:#valdef-page-orientation-upright
+
+v.list-item:~CSSLIST#valdef-counter-increment-list-item
+
+
+	●用語
+始端~pageV:#start-page-value
+終端~pageV:#end-page-value
+
+~page~header:#page-header
+~page~footer:#page-footer
+
+可用な縦幅:#available-height
+可用な横幅:#available-width
+綴じ辺:#binding-edge
+裁切り区画:#bleed-area
+包含塊:#containing-block
+無内容~page:#content-empty
+無内容:#content-empty
+
+V.~flex係数:#flex-factor
+V.~flex空間:#flex-space
+生成され:#generated
+
+~margin~at-rule:#margin-at-rule
+~margin文脈:#margin-context
+~page~prop:#page-property
+~page-margin~prop:#page-margin-property
+
+合致する:#match
+最大-内容 横幅:#max-content-width
+最小-内容 横幅:#min-content-width
+	有名~page種別:#using-named-pages
+有名~page:#named-page
+外縁~横幅:#outer-width
+外縁 最小-横幅:#outer-min-width
+外縁 最大-横幅:#outer-max-width
+
+縦置き方位:#portrait
+横置き方位:#landscape
+両面印刷:#duplex-printing
+対向~page:#facing-pages
+
+~page区画:#page-area
+~page方位:#page-orientation
+~page~box:#page-box
+	~page~box:#page-box-page-rule
+~page分断~s:#page-breaks
+~page文脈:#page-context
+~page~model:#page-model
+~page進行:#page-progression
+~page疑似類:#page-pseudo-class
+~page選択子:#page-selector
+用紙:#page-sheet
+~page種別~選択子:#page-type-selector
+~page-margin~box:#page-margin-boxes
+~page選択子~文法:#page_selector
+左page:#left-page
+右page:#right-page
+
+	左~対向~page:#left-page
+	右~対向~page:#right-page
+
+印刷-可能な区画:#printable-area
+印刷-不能な区画:#printable-area
+
+上端左:#top-left-box-def
+上端中央:#top-center-box-def
+上端右:#top-right-box-def
+
+下端左:#bottom-left-box-def
+下端中央:#bottom-center-box-def
+下端右:#bottom-right-box-def
+
+左端下:#left-bottom-box-def
+左端中段:#left-middle-box-def
+左端上:#left-top-box-def
+
+右端下:#right-bottom-box-def
+右端中段:#right-middle-box-def
+右端上:#right-top-box-def
+
+左上隅:#top-left-corner-box-def
+左下隅:#bottom-left-corner-box-def
+右下隅:#bottom-right-corner-box-def
+右上隅:#top-right-corner-box-def
+
+
+詳細度:#specificity
+折丁:#signature
+
+	●
+選択子~list:#_selector-list
+宣言~block:#_declaration-block
+	~CSS22/syndata.html#x14
+~page種別~名:#_page-type-name
+拘束され過ぎ:#_over-constrained
+
+	付録 A:#properties-list
+	~size~and方位:#page-size
+	ATKEYWORD:#specializatons-of-ATKEYWORD
+	:#flex-fit
+	§:#page-property-list
+	§:#margin-property-list
+	§:#margin-dimension
+	§:#page-size
+	§:#painting
+	§:#page-based-counters
+	§:#renderingpages
+	§:#content-outside-box
+	§:#variable-auto-sizing
+	§:#page-properties
+
+
+	●用語 CSS2
+無視する:~CSS2CONFORM#ignore
+~ASCII大小無視:~CSS22/syndata.html#characters
+~CSS識別子:~CSS22/syndata.html#value-def-identifier
+構文解析-時の~error取扱い規則:~CSS22/syndata.html#parsing-errors
+規則~集合:~CSS22/syndata.html#rule-sets
+
+表示域:~CSS2VISUREN#viewport
+積層~文脈:~CSS2VISUREN#stacking-context
+
+各種~双向性~prop:~CSS2VISUREN#direction
+各種~背景~prop:~CSSBG#backgrounds
+各種~border~prop:~CSSBG#borders
+各種~margin~prop:~CSSBOX#margin-properties
+各種~padding~prop:~CSSBOX#padding-properties
+各種~font~prop:~CSS22/fonts.html#fonts
+各種~counter~prop:~CSS22/generate.html#counters
+各種~outline~prop:~CSS22/ui.html#dynamic-outlines
+各種~text~prop:~CSS22/text.html#text
+
+	文書~内の要素と同様に:~CSS22/cascade.html#value-stages
+	→#computed-value
+	~table~cellに指定される:~CSS22/tables.html#height-layout
+	:~CSS2VISUDET#min-max-heights
+	:~CSS2VISUDET#min-max-widths
+	:~CSS2VISUDET#blockwidth
+
+	●用語（CSS
+
+連続的~媒体:~MQ4#continuous-media
+~paged媒体:~MQ4#paged-media
+
+疑似類:~SELECTORS4#pseudo-classes
+	詳細度:~SELECTORS4#specificity
+
+~cascade:~CASCADE#cascade
+継承-:~CASCADE#inheritance
+
+外縁~辺:~CSSBOX#outer-edge
+~CSS~box:~CSSBOX#box-model
+
+背景~塗ng区画:~CSSBG#background-painting-area
+背景~位置決め区画:~CSSBG#background-positioning-area
+
+A類~分断点:~CSSBREAK#btw-blocks
+強制d~page分断:~CSSBREAK#forced-break
+
+最大-内容~size:~SIZING#max-content
+最小-内容~size:~SIZING#min-content
+
+構文解析-:~CSSSYN#parse-grammar
+	~CSSSYN#css-parse-something-according-to-a-css-grammar
+~at-rule:~CSSSYN#at-rule
+表示域~百分率による長さ:~CSSVAL#viewport-relative-lengths
+
+	~DISPLAY#
+	決定-:~CSSWM#page-direction
+行内~基底~方向:~CSSWM#inline-base-direction
+塊~flow方向:~CSSWM#block-flow-direction
+首要な書字~mode:~CSSWM#principal-writing-mode
+
+	§:~CSS22/generate.html#scope
+	§:~CSS22/syndata.html#counter
+
+	●補完
+
+媒体~query:~MQ4#media
+基本版面:~TR/2012/NOTE-jlreq-20120403/ja/#elements_of_kihonhanmen
+生成d内容:~CSS22/generate.html
+	~CSSCONTENT
+初期~包含塊:~CSSDISP#initial-containing-block
+	内在的~sizing:~SIZING#
+	塊:~CSSDISP#block
+~canvas:~CSS2CONFORM#canvas
+	行内:~CSSDISP#inline
+	内容:~CSSDISP#inline-level
+塊~box:~CSSDISP#block-box
+		~CSS2VISUREN#block-boxes
+
+
+
+●●words_table1
+
+
+
+WIKICSSUI:https://wiki.csswg.org/spec/css3-ui
+LISTw3org:https://lists.w3.org/Archives/Public/www-style
+
+
+●●words_table
+
+
+	●layout／幾何
+flex:
+	~sizeし直:resize
+cell::::セル
+gap:
+線幅:width::~
+縦横比:aspect ratio::~
+幅広:wide::~
+平行:parallel::~
+横並び:side-to-side:~
+整列-:align::~
+整列:alignment::~
+	揃え
+垂直:perpendicular::~
+埋める:fillする::~
+収まる:fitする::~
+収まら:fitし::~
+	収切:fit し切::収まり切
+収める:fitさせる::~
+収容-:accomodate::~
+側:side::~
+拡縮-:scale::~
+接合-:flush:~
+矩形:rectangle:~
+矩形な:rectangularな:~
+短い:short:~
+置く:placeする:~
+置かれ:placeされ:~
+進行-:progress::~
+進行:progression::~
+部位:portion:~
+配分-:distribute:~
+重合する:overlapする::重なり合う
+重合n:overlap::重なり合い
+切分ける:sliceする:切り分ける
+延長:extension:~
+拡がり:extent:~
+拡がる:extendする:~
+嵌込まれ:anchorされ:嵌め込まれ
+時計回り:clockwise:~
+反時計回り:counter-clockwise:~
+	左回り:to the left
+	右回り:to the right
+合間:between:~
+
+	拘束され過ぎ:over-constrained
+	〜に向かって:toward
+	がある側の:encapsulating
+	まで:and not overflow
+	まで拡がる:extent 〜 cross
+	より大:larger
+	より長い:longer
+	より高い:higher
+	大:large
+	高い:high
+	小さい／狭い:small
+	手前:in front of
+	近辺:near
+	位置~的:positional
+	~layout後:post-layout
+	90° :quarter-turn
+
+	●書字
+書字:writing::~
+縦組みの:vertical-set::~
+横組みの:horizontally-set::~
+横書きの:horizontally written::~
+縦書きの:vertically written::~
+横書き:horizontal::~
+縦書き:vertical::~
+横方向:horizontal::~
+縦方向:vertical::~
+Arabic:::アラビア語
+日本語:Japanese::~
+英語:English::~
+双向性:bidi::~
+側転:sideways::~
+正立:upright::~
+
+	●~page
+footer::::フッタ
+欄外見出し:running headers and footers:~
+区分-:divide:~
+反対:opposite:~
+
+右:right::~
+左:left::~
+右向き:left-to-right::左から右
+左向き:right-to-left::右から左
+
+隅:corner::~
+右上:top right::~
+右下:bottom right::~
+左上:top left::~
+左下:bottom left::~
+右上隅:top-right corner::~
+右下隅:bottom-right corner::~
+左上隅:top-left corner::~
+左下隅:bottom-left corner::~
+
+	上端:top::~
+上端中央:top-center::~
+上端右:top-right::~
+上端左:top-left::~
+
+中段:middle::~
+
+	下端:bottom::~
+下端左:bottom-left::~
+下端右:bottom-right::~
+下端中央:bottom-center::~
+中央:center::~
+中央化-:center::中央寄せに
+中央寄せ:centering::中央寄せ
+
+	右端:right::~
+右端上:right-top::~
+右端下:right-bottom::~
+右端中段:right-middle::~
+	左端:left::~
+左端上:left-top::~
+左端下:left-bottom::~
+左端中段:left-middle::~
+
+左右端の:left and right::~
+左右端:left and right::~
+左右の:left and right::~
+左右:left and right::~
+上下:top and bottom::~
+上下端の:top and bottom::~
+上下端:top and bottom::~
+
+	~page割り:paginate
+左page:left page:::左ページ
+右page:right page:::右ページ
+page-margin::::ページマージン
+pageV: <code class="property">page</code> value:<code class="property">page</code> 値
+
+切取られ:clipされ::切り取られ
+切取る:clipする::切り取る
+
+可変size:scalable::可変サイズ
+可変:variable::~
+固定d:fixed::固定
+	固定d~sizeの:fixed-size
+
+横幅可変の:variable-width::~
+縦幅可変の:variable-height::~
+
+最大-:max-::~
+最小-:min-::~
+	max():maximum
+外方:outward:~
+分割-:split:~
+係数:factor:~
+
+正方形:square:~
+白紙:blank::~
+総和:sum:~
+
+基本版面:kihon-hanmen:~
+
+連続する:sequentialな:~
+	順番:sequence
+	交互に来る:followed by 〜 and vice versa
+	並べられ:sequence
+
+	●塗り
+描く:drawする:~
+描かれ:drawされ:~
+背景:background::~
+最下層:bottommost:~
+積層:stacking::~
+塗ng:painting::塗り
+塗られ:paintされ::~
+
+
+	●~page媒体
+	sheet:::シート
+	~page~sheet
+
+用紙:sheet::~
+tray::::トレイ
+	letter:
+	ledger:
+	legal:
+北米:North American:~
+
+横置き:landscape::~
+	reverse-landscape
+縦置き:portrait::~
+短辺:short edge::~
+長辺:long edge::~
+
+両面:double-sided::~
+両面印刷-:duplex print::~
+両面印刷:duplex printing::~
+
+印刷-:print::~::プリント
+印刷ng:printing::印刷::プリント
+印刷機:printer::~::プリンタ
+	印刷-不能な:unprintable
+	印刷-不能:non-printable
+
+裁切り:bleed::裁ち切り
+裁切れる:bleedできる::裁ち切れる
+刷れ:markでき::~
+	mark:::マーク
+十字mark:cross marks::十字マーク
+断裁mark:crop marks::断裁マーク
+見当mark:registration marks::見当マーク
+綴じ:binding::~
+綴られ:bindされ::綴じられ
+裁断:trimming::~
+裁断-:trim::~
+オモテ:front::表
+ウラ:back::裏
+見開き:spread::~
+転送ng:transferring::転送
+折丁:signature::~
+対向:facing::~
+片面:single-sided::~
+面:surface:~
+領域:region:~
+物理素材:material:~
+PDF:
+
+	●counter／付番
+付番:numbering::~
+増分:increment::~
+増大-:increase::~
+番号:number::~
+隠蔽-:obscure:~
+
+	●分断
+span:
+強制d:forced::強制
+	強制d分断:forced-break
+分断点:break point::~
+分断:break::~
+断片:fragment::~
+	断片~化:fragmented
+	〜類:class
+末端:end:~
+
+	●内容／構造
+無内容:content-empty::~
+
+	最も深い:deepest
+	最も近い:nearest
+
+	●構文
+comma::::カンマ
+space:
+区切りの:-separated:~
+	文字:char
+文:statement:~
+	overconstrained
+
+	●CSS
+outline:
+	cascade法:cascading
+inch::::インチ
+	style上の:stylistic
+table::::テーブル
+切詰める:clampする:切り詰める
+For:for:用途
+	算出-法:computing
+	medium
+単位:unit:~
+条件付き:conditional::~
+絶対化:absolute 化::~
+紙:paper::~
+連続的:continuous::~
+詳細度:specificity::~
+	置換されない:non-replaced
+首要:principal::主要
+
+	●仕様
+概ね:roughに:~
+不都合:inconvenient:~
+主体の:predominate:~
+優先度:priority:~
+補足:supplementary:~
+違法:illegal:~
+真の:real:~
+責務:responsibility:~
+漸進的:gradual:~
+省略可:optional:~
+機構:mechanism:~
+仮想の:imaginary:~
+不用意:accidental:~
+品質:quality:~
+
+呼ぶ:callする:~
+呼ばれ:callされ:~
+取込んだ:importした:取り込んだ
+上限:limit:~
+適応-:adapt:~
+	-:accompany
+分類-:classify:~
+順守-:observe:~
+説明0:description:説明
+觝触-:violate:~
+選ばれ:chooseされ:~
+選ぶ:chooseする:~
+選べる:chooseできる:~
+模倣-:simulate:~
+	simulation
+機能:function:~
+読替えた:replaceした:読み替えた
+解かれ:solveされ:~
+手助け:facilitate:~
+
+	scoping
+	あり得る:possibilities
+	高~level:high-level
+	~~目的の:target
+	節:section
+	でも:nevertheless
+	一方で:whereas
+	仮の:tentative
+	前任編集者:former editor
+	併用で:in conjunction with
+	図:illustration
+	多様な:range of different
+	多様な:varying
+	まちまちな-:differing／:differently-
+	多種多様:many different
+	専門家貢献者たち:expert contributors
+	必然はない:not necessarily
+	慣例として:customarily
+	用例:usage example
+	用例集:collection of examples of 〜usage
+	preferentially
+	させなくする:suppress
+	必要:necessary
+	~~依然として:remains
+	~~区別しない:makes no distinction
+	~~指示を仰ぐ:wish to consult
+	優先される:win
+	問い合わせて:wish to consult
+	減らした:reduce
+	示す:illustrate
+	称され:said to be
+	読み易さ:ease of reading
+	〜を~~基準に:with respect to
+	関しては:respects
+	でき-:capable of
+	~~実際に:indeed
+	その逆も同様:vice versa
+	-:emerge
+	-:illustration
+	-:imply
+	acknowledge
+	acknowledgement
+	fall
+	lies outside the scope
+	suppress
+	助ける:helpする
+	選べる:chooseでき
+	比較的:relativeに
+	普及している:popularな
+	特に:notably
+	多少余計な手間:awkward contortions
+	能力に劣る:less-capable
+	“つなぎ”:stop-gap
+
+	●未分類（動詞
+形:form:~
+先行-:precede:~
+前置-:precede:~
+出会う:meetする:~
+回転-:rotate:~
+回転:rotation:~
+	回転されない:unrotated
+	所在:located at
+差挟む:interleaveする:差し挟む
+差挟まれ:interleaveされ:差し挟まれ
+覆う:coverする:~
+覆い:coverし:~
+	計算し直され:recalculation
+遭遇-:encounter:~
+数える:countする:~
+参照r:refer:参照
+選抜-:qualify:~
+	unqualified
+移転-:transpose:~
+折畳んで:foldして:折り畳んで
+消費:consumption:~
+	拡充-法:populating
+	一致-:coincide
+命令:instruction:~
+	処理時:processing
+切替える:switchする:切り替える
+
+	trim
+	~PLUS:plus
+	~MINUS:populating
+	come
+	follow
+	followed by
+	go
+	having
+	~~置く:put
+	与えられ:given
+	伝:tell
+	伸ばした:extension
+	何も刷らずに:without placing any ink
+	入り切る:fall
+	写す:map する
+	出る:end up
+	別に設定:-set aside
+	同じ:tied
+	書:write
+	失われ:loss of
+	始-:begin
+	現れる:appear
+繰返し:繰り返し
+	繰返し:repeated occurrence
+	読まれる:reading
+	超えて:past
+	除いて:minus
+	あてがわれ:achieve
+	戻すよう:back to
+
+	●未分類
+album::::アルバム
+meter::::メートル
+公式:formula:~
+等式:equality:~
+一対一対応:one-to-one correspondence:~
+写真:photo:~
+工程:process:~
+数量:quantity:~
+
+緑色:green:~
+赤色:red:~
+青色:blue:~
+
+出力先の:destination:~
+比例する:proportionalな:~
+混成:mix:~
+
+	-:pair
+	表:table
+	~graphic的:graphical
+	Level:
+	OHP:transparencies
+
+	●
+	-:across
+	対し:against
+	among
+	auto
+	chapter
+	ever
+	made
+	mm:millimeter
+	mm:mm
+	non-
+	onto
+	put
+	quote
+	respect
+	respective
+	thereby
+	time
+	type-
+	we
+	~~断片:pieces
+	まま:left
+	下地:underneath
+	世界中で:People around the world
+	数:number
+	本:book
+	番号は偶数に:even-numbered
+	節:Section
+
+	●指示語
+一定の:certain:~
+別物:distinct:~
+最終的:ultimate:~
+	以前の:previous
+	三つの:the three
+	neither
+	〜からなる:consists
+	ある:sometime
+	とで:together with
+	まとめて:together
+	他すべて:everything else
+	以上:greater than or equal to
+	下:below:
+	先に来る:earlier
+	各部:parts
+	後に来る:later
+	後続する:succeeding
+	後続の:subsequent
+	様々な:variable
+	次の:next
+	真中:middle
+	種々の:various
+	総:total
+	部分／:part
+	間で:among
+	非:non
+	高-:high-
+
+●●ref_normative
+
+[CSS-BACKGROUNDS-3]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. 17 October 2017. CR. URL: https://www.w3.org/TR/css-backgrounds-3/ 
+[CSS-BOX-3]
+    Elika Etemad. CSS Box Model Module Level 3. 18 December 2018. WD. URL: https://www.w3.org/TR/css-box-3/ 
+[CSS-BREAK-3]
+    Rossen Atanassov; Elika Etemad. CSS Fragmentation Module Level 3. 4 December 2018. CR. URL: https://www.w3.org/TR/css-break-3/ 
+[CSS-BREAK-4]
+    Rossen Atanassov; Elika Etemad. CSS Fragmentation Module Level 4. 18 December 2018. WD. URL: https://www.w3.org/TR/css-break-4/ 
+[CSS-CASCADE-4]
+    Elika Etemad; Tab Atkins Jr.. CSS Cascading and Inheritance Level 4. 28 August 2018. CR. URL: https://www.w3.org/TR/css-cascade-4/ 
+[CSS-CONTENT-3]
+    Elika Etemad; Dave Cramer. CSS Generated Content Module Level 3. 2 August 2019. WD. URL: https://www.w3.org/TR/css-content-3/ 
+[CSS-DEVICE-ADAPT]
+    Rune Lillesveen; Florian Rivoal; Matt Rakow. CSS Device Adaptation Module Level 1. 29 March 2016. WD. URL: https://www.w3.org/TR/css-device-adapt-1/ 
+[CSS-DISPLAY-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Display Module Level 3. 11 July 2019. CR. URL: https://www.w3.org/TR/css-display-3/ 
+[CSS-FONTS-3]
+    John Daggett; Myles Maxfield; Chris Lilley. CSS Fonts Module Level 3. 20 September 2018. REC. URL: https://www.w3.org/TR/css-fonts-3/ 
+[CSS-INLINE-3]
+    Dave Cramer; Elika Etemad; Steve Zilles. CSS Inline Layout Module Level 3. 8 August 2018. WD. URL: https://www.w3.org/TR/css-inline-3/ 
+[CSS-POSITION-3]
+    Rossen Atanassov; Arron Eicholz. CSS Positioned Layout Module Level 3. 17 May 2016. WD. URL: https://www.w3.org/TR/css-position-3/ 
+[CSS-SIZING-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Intrinsic & Extrinsic Sizing Module Level 3. 22 May 2019. WD. URL: https://www.w3.org/TR/css-sizing-3/ 
+[CSS-SYNTAX-3]
+    Tab Atkins Jr.; Simon Sapin. CSS Syntax Module Level 3. 16 July 2019. CR. URL: https://www.w3.org/TR/css-syntax-3/ 
+[CSS-TEXT-3]
+    Elika Etemad; Koji Ishii; Florian Rivoal. CSS Text Module Level 3. 13 November 2019. WD. URL: https://www.w3.org/TR/css-text-3/ 
+[CSS-TEXT-4]
+    Elika Etemad; et al. CSS Text Module Level 4. 13 November 2019. WD. URL: https://www.w3.org/TR/css-text-4/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS-WRITING-MODES-3]
+    Elika Etemad; Koji Ishii. CSS Writing Modes Level 3. 10 December 2019. REC. URL: https://www.w3.org/TR/css-writing-modes-3/ 
+[CSS-WRITING-MODES-4]
+    Elika Etemad; Koji Ishii. CSS Writing Modes Level 4. 30 July 2019. CR. URL: https://www.w3.org/TR/css-writing-modes-4/ 
+[CSS2]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[CSS4BACKGROUND]
+    Elika J. Etemad; Håkon Wium Lie. CSS Backgrounds and Borders Module Level 4. Proposal for a CSS module. URL: https://drafts.csswg.org/css4-background/ 
+[MEDIAQ]
+    Florian Rivoal; Tab Atkins Jr.. Media Queries Level 4. 5 September 2017. CR. URL: https://www.w3.org/TR/mediaqueries-4/ 
+[PWGMSN]
+    Ron Bergman; Tom Hastings. Media Standardized Names. 26 February 2002. IEEE ISTO Printer Working Group 5101.1-2002. URL: ftp://ftp.pwg.org/pub/pwg/candidates/cs-pwgmsn10-20020226-5101.1.pdf 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[SELECT]
+    Tantek Çelik; et al. Selectors Level 3. 6 November 2018. REC. URL: https://www.w3.org/TR/selectors-3/ 
+[SELECTORS-4]
+    Elika Etemad; Tab Atkins Jr.. Selectors Level 4. 21 November 2018. WD. URL: https://www.w3.org/TR/selectors-4/ 
+
+●●ref_informative
+
+[CSS-IMAGES-3]
+    Tab Atkins Jr.; Elika Etemad; Lea Verou. CSS Images Module Level 3. 10 October 2019. CR. URL: https://www.w3.org/TR/css-images-3/ 
+[CSS3GCPM]
+    Dave Cramer. CSS Generated Content for Paged Media Module. 13 May 2014. WD. URL: https://www.w3.org/TR/css-gcpm-3/ 
+[JLREQ]
+    Yasuhiro Anan; et al. Requirements for Japanese Text Layout. 3 April 2012. NOTE. URL: https://www.w3.org/TR/jlreq/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより作業草案として公開された
+<a href="~SPEC_URL">CSS Paged Media Module Level 3</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/css-page-3/
+以前のバージョン
+	https://www.w3.org/TR/2013/WD-css3-page-20130314/
+	https://www.w3.org/TR/2018/WD-css-page-3-20181018/
+
+テスト一式
+	http://test.csswg.org/suites/css-page-3_dev/nightly-unstable/
+
+最新の課題
+	<a href="https://www.w3.org/Style/CSS/Tracker/products/13">Tracker</a>
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-page-3">GitHub Issues</a>
+
+編集
+	<a href="http://fantasai.inkedblade.net/contact">Elika J. Etemad / fantasai</a> (Invited Expert, formerly Mozilla)
+	<a href="http://exyr.org/about/">Simon Sapin</a> (Mozilla, formerly Kozea)
+
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-page-3/Overview.bs">GitHub Editor</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-page-3
+
+</script>
+
+
+</head>
+<body>
+
+
+<!--%resource pool -->
+<div id="_persisted_parts" hidden>
+<!-- 
+<img id="_dgm-PageSheet"
+	src="css-page/PageSheet.svg"
+>
+ -->
+
+<svg
+	id="_dgm-PageBox"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	viewBox="0 0 300 270"
+	width="300" height="270"
+>
+<title>Page Sheet</title>
+<rect
+	x="0" y="0"
+	width="300" height="270"
+	stroke="none"
+	fill="white"
+/>
+<g transform="translate(10, 10)" >
+	<g
+		fill="black"
+		stroke="none"
+		font-size="12px"
+		text-anchor="start"
+	>
+<text x="0" y="0">ページボックス</text>
+<text x="175" y="0">ページマージン</text>
+<text x="175" y="45">ページボーダー</text>
+<text x="175" y="90">ページパディング</text>
+<text x="175" y="135">ページ内容区画</text>
+	</g>
+	<g
+		fill="none"
+		stroke="black"
+		stroke-width="1"
+	>
+<rect
+	x="0" y="10"
+	width="170" height="240"
+	stroke="red" stroke-dasharray="1,4"
+/>
+<rect
+	x="20" y="30"
+	width="130" height="200"
+/>
+<rect
+	x="30" y="40"
+	width="110" height="180"
+	fill="#DDD"
+	stroke="red" stroke-dasharray="1,4"
+/>
+
+<!-- angle: 2/5 -->
+<path d="M160,20 L210, 0" />
+<path d="M150,69 L210, 45" />
+<path d="M145,116 L210, 90" />
+<path d="M125,169 L210, 135" />
+	</g>
+</g>
+
+</svg>
+
+
+
+<!-- 16 page-margin-boxes -->
+
+<svg
+	id="_dgm-TopLeftCornerBox"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 0 200 56"
+>
+<image
+	xlink:href="css-page/PageMarginBoxes.svg"
+	width="200" height="256"
+/>
+<g
+	transform="translate(4, 4)"
+	fill="#EEE"
+	stroke="black"
+	stroke-width="1"
+>
+	<g transform="translate(0,0)">
+<rect x="4" y="4" width="24" height="24" />
+<rect x="8" y="8" width="16" height="16" stroke-dasharray="1,3" />
+	</g>
+</g>
+</svg>
+
+
+
+<svg
+	id="_dgm-TopLeftMarginBox"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 0 200 56"
+>
+<image
+	xlink:href="css-page/PageMarginBoxes.svg"
+	width="200" height="256"
+/>
+<g
+	transform="translate(4, 4)"
+	fill="#EEE"
+	stroke="black"
+	stroke-width="1"
+>
+	<g transform="translate(32,0)">
+<rect x="4" y="4" width="32" height="24" />
+<rect x="8" y="8" width="24" height="16" stroke-dasharray="1,3" />
+	</g>
+</g>
+</svg>
+
+
+<svg
+	id="_dgm-TopCenterMarginBox"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 0 200 56"
+>
+<image
+	xlink:href="css-page/PageMarginBoxes.svg"
+	width="200" height="256"
+/>
+<g
+	transform="translate(4, 4)"
+	fill="#EEE"
+	stroke="black"
+	stroke-width="1"
+>
+	<g transform="translate(72,0)">
+<rect x="4" y="4" width="40" height="24" />
+<rect x="8" y="8" width="32" height="16" stroke-dasharray="1,3" />
+	</g>
+</g>
+</svg>
+
+
+
+
+<svg
+	id="_dgm-TopRightMarginBox"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 0 200 56"
+>
+<image
+	xlink:href="css-page/PageMarginBoxes.svg"
+	width="200" height="256"
+/>
+<g
+	transform="translate(4, 4)"
+	fill="#EEE"
+	stroke="black"
+	stroke-width="1"
+>
+	<g transform="translate(120,0)">
+<rect x="4" y="4" width="32" height="24" />
+<rect x="8" y="8" width="24" height="16" stroke-dasharray="1,3" />
+	</g>
+</g>
+</svg>
+
+
+
+
+
+<svg
+	id="_dgm-TopRightCornerMarginBox"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 0 200 56"
+>
+<image
+	xlink:href="css-page/PageMarginBoxes.svg"
+	width="200" height="256"
+/>
+<g
+	transform="translate(4, 4)"
+	fill="#EEE"
+	stroke="black"
+	stroke-width="1"
+>
+	<g transform="translate(160,0)">
+<rect x="4" y="4" width="24" height="24" />
+<rect x="8" y="8" width="16" height="16" stroke-dasharray="1,3" />
+	</g>
+</g>
+</svg>
+
+
+
+
+<svg
+	id="_dgm-LeftMarginBoxes"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 0 200 256"
+>
+<image
+	xlink:href="css-page/PageMarginBoxes.svg"
+	width="200" height="256"
+/>
+<g
+	transform="translate(4, 4)"
+	fill="#EEE"
+	stroke="black"
+	stroke-width="1"
+>
+	<g transform="translate(0,32)">
+<rect x="4" y="4" width="24" height="48" />
+<rect x="8" y="8" width="16" height="40" stroke-dasharray="1,3" />
+	</g>
+	<g transform="translate(0,88)">
+<rect x="4" y="4" width="24" height="64" />
+<rect x="8" y="8" width="16" height="56" stroke-dasharray="1,3" />
+	</g>
+	<g transform="translate(0,160)">
+<rect x="4" y="4" width="24" height="48" />
+<rect x="8" y="8" width="16" height="40" stroke-dasharray="1,3" />
+	</g>
+</g>
+</svg>
+
+
+
+
+
+
+<svg
+	id="_dgm-RightMarginBoxes"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 0 200 256"
+>
+<image
+	xlink:href="css-page/PageMarginBoxes.svg"
+	width="200" height="256"
+/>
+<g
+	transform="translate(4, 4)"
+	fill="#EEE"
+	stroke="black"
+	stroke-width="1"
+>
+	<g transform="translate(160,32)">
+<rect x="4" y="4" width="24" height="48" />
+<rect x="8" y="8" width="16" height="40" stroke-dasharray="1,3" />
+	</g>
+	<g transform="translate(160,88)">
+<rect x="4" y="4" width="24" height="64" />
+<rect x="8" y="8" width="16" height="56" stroke-dasharray="1,3" />
+	</g>
+	<g transform="translate(160,160)">
+<rect x="4" y="4" width="24" height="48" />
+<rect x="8" y="8" width="16" height="40" stroke-dasharray="1,3" />
+	</g>
+</g>
+</svg>
+
+<!-- Bottom  -->
+
+
+<svg
+	id="_dgm-BottomLeftCornerBox"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 200 200 56"
+>
+<image
+	xlink:href="css-page/PageMarginBoxes.svg"
+	width="200" height="256"
+/>
+<g
+	transform="translate(4, 4)"
+	fill="#EEE"
+	stroke="black"
+	stroke-width="1"
+>
+	<g transform="translate(0,216)">
+<rect x="4" y="4" width="24" height="24" />
+<rect x="8" y="8" width="16" height="16" stroke-dasharray="1,3" />
+	</g>
+</g>
+</svg>
+
+
+
+<svg
+	id="_dgm-BottomLeftMarginBox"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 200 200 56"
+>
+<image
+	xlink:href="css-page/PageMarginBoxes.svg"
+	width="200" height="256"
+/>
+<g
+	transform="translate(4, 4)"
+	fill="#EEE"
+	stroke="black"
+	stroke-width="1"
+>
+	<g transform="translate(32,216)">
+<rect x="4" y="4" width="32" height="24" />
+<rect x="8" y="8" width="24" height="16" stroke-dasharray="1,3" />
+	</g>
+</g>
+</svg>
+
+
+<svg
+	id="_dgm-BottomCenterMarginBox"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 200 200 56"
+>
+<image
+	xlink:href="css-page/PageMarginBoxes.svg"
+	width="200" height="256"
+/>
+<g
+	transform="translate(4, 4)"
+	fill="#EEE"
+	stroke="black"
+	stroke-width="1"
+>
+	<g transform="translate(72,216)">
+<rect x="4" y="4" width="40" height="24" />
+<rect x="8" y="8" width="32" height="16" stroke-dasharray="1,3" />
+	</g>
+</g>
+</svg>
+
+
+
+
+<svg
+	id="_dgm-BottomRightMarginBox"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 200 200 56"
+>
+<image
+	xlink:href="css-page/PageMarginBoxes.svg"
+	width="200" height="256"
+/>
+<g
+	transform="translate(4, 4)"
+	fill="#EEE"
+	stroke="black"
+	stroke-width="1"
+>
+	<g transform="translate(120,216)">
+<rect x="4" y="4" width="32" height="24" />
+<rect x="8" y="8" width="24" height="16" stroke-dasharray="1,3" />
+	</g>
+</g>
+</svg>
+
+
+<svg
+	id="_dgm-BottomRightCornerMarginBox"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 200 200 56"
+>
+<image
+	xlink:href="css-page/PageMarginBoxes.svg"
+	width="200" height="256"
+/>
+<g
+	transform="translate(4, 4)"
+	fill="#EEE"
+	stroke="black"
+	stroke-width="1"
+>
+	<g transform="translate(160,216)">
+<rect x="4" y="4" width="24" height="24" />
+<rect x="8" y="8" width="16" height="16" stroke-dasharray="1,3" />
+	</g>
+</g>
+</svg>
+
+
+
+
+<!-- margin-headers -->
+
+<svg
+	id="_dgm-header-ex-1"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 0 830 150"
+>
+<image x="0" y="0" width="830" height="150" xlink:href="css-page/header-ex.svg" />
+
+<g
+	fill="blue"
+	stroke="none"
+	font-size="16px"
+	transform="translate(150, 77)"
+>
+
+<text x="113" y="30" text-anchor="start">左セル内のヘッダ</text>
+<text x="113" y="50" text-anchor="start" fill="gray">@top-left</text>
+<text x="265" y="40" text-anchor="middle"></text>
+<text x="417" y="40" text-anchor="end"></text>
+</g>
+
+</svg>
+
+<svg
+	id="_dgm-header-ex-2"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 0 830 150"
+>
+<image x="0" y="0" width="830" height="150" xlink:href="css-page/header-ex.svg" />
+
+<g
+	fill="blue"
+	stroke="none"
+	font-size="16px"
+	transform="translate(150, 77)"
+>
+
+<text x="113" y="40" text-anchor="start"></text>
+<text x="265" y="30" text-anchor="middle">中央セル内のヘッダ</text>
+<text x="265" y="50" text-anchor="middle" fill="gray">@top-center</text>
+<text x="417" y="40" text-anchor="end"></text>
+</g>
+
+</svg>
+
+
+
+<svg
+	id="_dgm-header-ex-3"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 0 830 150"
+>
+<image x="0" y="0" width="830" height="150" xlink:href="css-page/header-ex.svg" />
+
+<g
+	fill="blue"
+	stroke="none"
+	font-size="16px"
+	transform="translate(150, 77)"
+>
+
+<text x="113" y="40" text-anchor="start"></text>
+<text x="265" y="40" text-anchor="middle"></text>
+<text x="417" y="30" text-anchor="end">右セル内のヘッダ</text>
+<text x="417" y="50" text-anchor="end" fill="gray">@top-right</text>
+</g>
+
+</svg>
+
+
+<svg
+	id="_dgm-header-ex-4"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 0 830 150"
+>
+<image x="0" y="0" width="830" height="150" xlink:href="css-page/header-ex.svg" />
+
+<g
+	fill="blue"
+	stroke="none"
+	font-size="16px"
+	transform="translate(150, 77)"
+>
+
+<text x="113" y="30" text-anchor="start">左セル</text>
+<text x="113" y="50" text-anchor="start" fill="gray">@top-left</text>
+<text x="265" y="30" text-anchor="middle">中央セル内のヘッダ</text>
+<text x="265" y="50" text-anchor="middle" fill="gray">@top-center</text>
+<text x="417" y="40" text-anchor="end"></text>
+</g>
+
+</svg>
+
+
+<svg
+	id="_dgm-header-ex-5"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 0 830 150"
+>
+<image x="0" y="0" width="830" height="150" xlink:href="css-page/header-ex.svg" />
+
+<g
+	fill="blue"
+	stroke="none"
+	font-size="16px"
+	transform="translate(150, 77)"
+>
+
+<text x="113" y="40" text-anchor="start"></text>
+<text x="265" y="30" text-anchor="middle">中央セル内のヘッダ</text>
+<text x="265" y="50" text-anchor="middle" fill="gray">@top-center</text>
+<text x="417" y="30" text-anchor="end">右セル</text>
+<text x="417" y="50" text-anchor="end" fill="gray">@top-right</text>
+</g>
+
+</svg>
+
+<svg
+	id="_dgm-header-ex-6"
+	version="1.1"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	viewBox="0 0 830 150"
+>
+<image x="0" y="0" width="830" height="150" xlink:href="css-page/header-ex.svg" />
+
+<g
+	fill="blue"
+	stroke="none"
+	font-size="16px"
+	transform="translate(150, 77)"
+>
+
+<text x="113" y="30" text-anchor="start">上端左のヘッダ</text>
+<text x="113" y="50" text-anchor="start" fill="gray">@top-left</text>
+<!-- (右セルの倍の幅) -->
+<!-- 
+<text x="265" y="30" text-anchor="middle">中央</text>
+<text x="265" y="50" text-anchor="middle">(top-center)</text>
+ -->
+<text x="417" y="30" text-anchor="end">右セル</text>
+<text x="417" y="50" text-anchor="end" fill="gray">@top-right</text>
+</g>
+
+</svg>
+
+</div>
+
+<header>
+	<hgroup>
+<h1 id="title">ページ化媒体 — CSS Paged Media Module Level 3</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この~CSS~moduleは、断片~化された内容を~paged呈示に保持するために，~pageを生成して~lay-outする方法を指定する。
+それは、~pageの［
+~margin,
+~sizeと方位,
+~header＆~footer
+］を制御するための機能性に加えて，~pageの［
+付番,
+欄外見出し
+］も可能化するように，`生成d内容$を拡張する。
+~flowをそのように生成される一連の~pageに~page割りする処理-については、
+`CSS-BREAK-3$r
+が受持つ。
+◎
+This CSS module specifies how pages are generated and laid out to hold fragmented content in a paged presentation. It adds functionality for controlling page margins, page size and orientation, and headers and footers, and extends generated content to enable page numbering and running headers / footers. The process of paginating a flow into such generated pages is covered in [CSS-BREAK-3].
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の~~公な複製です…
+【以下，この節の他の内容は <a href="css-common-ja.html#status">~CSS日本語訳 共通~page</a>に委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+<p>
+`~paged媒体$（ `paged media^en ）（例：
+紙, OHP, 写真~album~page, ［
+印刷される出力を模倣するように~computer~screen上に表示される~page
+］など）は、文書の内容が 1 個~以上の離散的かつ静的な表示~面に分割される点で，`連続的~媒体$から相違する。
+~pageを取扱うため、この仕様は，次について制御する方法について述べる：
+◎
+Paged media (e.g., paper, transparencies, photo album pages, pages displayed on computer screens as printed output simulations) differ from continuous media in that the content of the document is split into one or more discrete static display surfaces. To handle pages, CSS3 Paged Media describes how:
+</p>
+
+<ul>
+
+	<li>
+<a href="#page-breaks">~page分断</a>を
+作成する／避ける。
+◎
+page breaks are created and avoided;
+</li>
+	<li>
+~size, 方位, ~margin, ~border, ~padding
+などの，各種 `~page~prop$を指定する。
+◎
+the page properties such as size, orientation, margins, border, and padding are specified;
+</li>
+	<li>
+~page~marginの中で，~headerと~footerを確立する。
+◎
+headers and footers are established within the page margins;
+</li>
+	<li>
+~page~counterなどの内容を
+~header／~footer
+内に置く。
+◎
+content such as page counters are placed in the headers and footers; and
+</li>
+	<li>
+`orphans$p と `widows$p 。
+【この仕様には述べられていない。 `CSS-BREAK-3$r に移動された。】
+◎
+orphans and widows can be controlled.
+</li>
+</ul>
+
+<p>
+この~moduleは、
+<a href="#page-model">~page~model</a>
+を定義する。
+それは、［
+<a href="#page-box-page-rule">~page~box</a>
+と呼ばれる，横幅も縦幅も有限な矩形な区画
+］の中で，文書を整形する方法を指定する。
+◎
+This module defines a page model that specifies how a document is formatted within a rectangular area, called the page box, that has finite width and height.
+</p>
+
+<p>
+CSS3 は、［
+~UAが，一連の~page~boxを各`用紙$へ転送する方法
+］については指定しないが，［
+用紙に意図される
+<a href="#page-size">~sizeと方位</a>について，~UAに~~伝える
+］ための一定の仕組みを含む。
+CSS3 では、［
+1 個の~page~boxは，類似な~sizeの 1 枚の面へ転送される
+］ものと一般に見做される。
+◎
+Although CSS3 does not specify how user agents transfer page boxes to sheets, it does include certain mechanisms for telling user agents about the intended page sheet size and orientation. In the general case, CSS3 assumes that one page box will be transferred to one surface of similar size.
+</p>
+
+<p>
+この仕様で定義されるすべての~propは， `inherit$v ~keywordも値に受容するが、可読性のため，明示的には挙げられない。
+◎
+All properties defined in this specification also accept the inherit keyword as their value, but for readability it has not been listed explicitly.
+</p>
+
+		<section id="values">
+<h3 title="Values Definitions">1.1. 値~定義</h3>
+
+<p class="trans-note">【
+この節の内容は
+<a href="css-common-ja.html#values">~CSS日本語訳 共通~page</a>
+に委譲。
+】</p>
+
+		</section>
+	</section>
+	<section id="page-terms">
+<h2 title="Page Terminology">2. ~pageに関する各種用語</h2>
+
+<p>
+~page~modelを述べ易くするため、以下の用語が定義される：
+◎
+The following terminology and accompanying diagrams help to describe the page model:
+</p>
+
+<dl>
+
+	<dt>`用紙@（ `page sheet^en, または単に `sheet^en ）</dt>
+	<dd>
+<p>
+用紙は、物理-媒体の 1 枚の【片側の】面である。
+【実際には、紙である必要も，物理-媒体である必要すらないが（ PDF など）、それらを代表して この訳では “~~用紙 ” と記すことにする。】
+【！The illustration to...】
+◎
+The page sheet is one surface of the physical medium. The illustration to the right shows a representation of the upper-left corner of a page sheet.
+</p>
+
+<figure>
+<!-- PageSheet^dgm -->
+<div style="width:220px; height:160px; overflow:hidden;">
+用紙
+<div style="border: solid gray 2px;width:220px; height:160px;padding:0.3em 0 0 0.3em;margin-top: 0.3em;background:#DDD">
+印刷-不能な区画
+<div style="border: dashed gray 2px;width:220px; height:160px;padding:0.3em 0 0 0.3em;margin-top: 0.3em; margin-left:2em; background:#EEE;">
+印刷-可能な区画
+</div></div></div>
+
+<figcaption>
+用紙の~~左上~隅の表現 —
+辺~付近の`印刷-不能な区画$と，その内側の`印刷-可能な区画$
+◎
+The corner of a page sheet with the non-printable area at the edge and printable area inside it
+</figcaption></figure>
+	</dd>
+
+	<dt>`印刷-可能な区画@ （ `printable area^en ）</dt> 
+	<dt>`印刷-不能な区画@ （ `non-printable area^en ）</dt>
+	<dd>
+印刷-不能な区画とは、［
+印刷機などの物理-機器が、通例的に 印刷機による紙の取扱い機構に因り，依拠-可能に刷れない
+］ような，用紙の区画である。
+その~sizeは，印刷機に依存し、通例的には用紙の各~辺に沿う，狭い領域である。
+印刷-可能な区画は、［
+印刷機が依拠-可能に`刷れる^emような用紙の区画
+］である。
+印刷-可能な区画の~sizeは、用紙の~sizeから，印刷-不能な区画の分だけ減らしたものである。
+~UAは、［
+特定0の印刷ng機器~用には，この区画の寸法を知り得ないこともある
+］が、寸法が既知であるときは，［
+内容が印刷-可能な区画に入り切るように，文書の整形を調整して
+］よい。
+この調整がどう成遂げられるかは、［
+<a href="#renderingpages">§ 用紙に収まらない~page~boxの描画</a>,
+<a href="#content-outside-box">§ ~page~boxの外側に来る内容</a>
+］に表出される拘束の下で，機器に依存する。
+◎
+The non-printable area is the area of a page sheet that a physical device such as a printer is not capable of marking reliably, usually due to the printer’s paper handling mechanism. This value is printer dependent and is usually a small region along each edge of the page sheet. The printable area is the area of page sheet that a printer is capable of marking reliably. The size of the printable area is the size of the page sheet reduced by the size of the non-printable area. A user agent may not know the dimensions of this area for a particular printing device; but when its dimensions are known, user agents may adjust the formatting of the document so that content falls within the printable area. How this adjustment is accomplished is device dependent within the constraints expressed in the sections § 7.4 Rendering page boxes that do not fit a page sheet and § 3.2 Content outside the page box.
+</dd>
+
+	<dt>`~page方位@ （ `page orientation^en ）</dt>
+	<dd>
+~page方位は、`~page~box$の各~辺の長さを比較することで定義される。
+~page~boxは、［
+長辺, 短辺
+］と呼ばれる，互いに垂直な辺がなす矩形である。
+長辺の長さは，常に短辺の長さ以上である。
+~page~boxが正方形のときは、両~辺の長さは同じであり，どちらの辺も長辺に利用し得る — もう片方は短辺になる。
+この仕様は、~page方位
+<!-- `size@d -->
+`portrait$v, `landscape$v
+【縦置き, 横置き】
+を定義する。
+◎
+The page orientation is defined by comparing the length of the edges of a page box. The page box is a rectangle with two perpendicular edges called the long edge and the short edge. The length of the long edge is always greater than or equal to the length of the short edge. When the page box is square, the two edges are of the same length and either can be used as the long edge with the other being the short edge. This specification defines page orientations of portrait and landscape.
+</dd>
+
+	<dt>`縦置き方位@ （ `portrait^en ）</dt>
+	<dd>
+縦置き~pageの縦幅は、その横幅~以上である。
+［
+横書き／縦書き
+］の要素は，［
+短辺／長辺
+］に平行になる。
+◎
+A portrait page’s height is greater than or equal to its width. Horizontal elements are parallel to the short edge and vertical elements to the long edge.
+</dd>
+
+	<dt>`横置き方位@ （ `landscape^en ）</dt>
+	<dd>
+横置き~pageの横幅は，その縦幅~以上である。
+［
+横書き／縦書き
+］の要素は，［
+長辺／短辺
+］に平行になる。
+◎
+A landscape page’s width is greater than or equal to its height. Horizontal elements are parallel to the long edge and vertical elements to the short edge.
+</dd>
+
+	<dd class="note">注記：
+CSS3 では、横置き方位と reverse-横置き方位【横置きの 180° 回転？】とは，~~区別されないことに注意。
+しかしながら、~CSSの将来~versionでは，~~区別されるかもしれない。
+~UAは、整形する際に，［
+`両面印刷$, `綴じ辺$, `~page進行$, ［
+描画を［
+横置き, reverse-横置き
+］いずれにするかを選ぶときの読み易さ
+］］を考慮するべきである。
+◎
+Note: Note that CSS3 makes no distinction between landscape and reverse-landscape orientations. However, future versions of CSS may do so. UAs should consider, when formatting for duplexed printing, the binding edge, page progression, and ease of reading when choosing between landscape and reverse-landscape renderings.
+</dd>
+
+	<dt>`両面印刷@ （ `duplex printing^en ）</dt>
+	<dd>
+両面印刷は、用紙のオモテ側もウラ側も利用し，各~側に 1 個ずつ~page~boxを印刷する。
+この~moduleは、文書を両面印刷するかどうか指定する能は供さないが
+— 実際にそうするかどうかに関わらず —
+文書は両面印刷される前提に基づいて，左右~pageの概念を供する。
+◎
+Duplex printing prints one page box per side of a page sheet and uses both sides of the page sheet. This module provides no ability to specify whether a document is duplex printed, but the concept of left and right pages is based on the assumption that the document is duplex printed, regardless of whether or not it actually is.
+</dd>
+
+	<dt>`綴じ辺@ （ `binding edge^en ）</dt>
+	<dd>
+綴じ辺は、物理素材が綴られるときの綴じへ向かう，~page~boxの辺である。
+綴じ辺~側の~marginは、綴じに利用される空間を供するため，反対~側の辺より大きくとられることが多い。
+綴じ辺は， 4 辺いずれにもなり得るが、~page~boxの方位が縦置きの場合には，慣例として，用紙は 綴じ辺が縦方向になるように綴られる。
+この~moduleは、綴じ辺を指定する~methodは供さない。
+`両面印刷$においては、左右~page用の綴じ辺は，~page~boxの互いに反対~側になる。
+◎
+The binding edge is the edge of the page box that is toward the binding if the material is bound. The binding edge often has a larger margin than the opposite edge to provide for the space used by the binding. The binding edge can be any of the four edges. However, page sheets are customarily bound so that the binding edge of page boxes with portrait orientation is vertical. This module provides no method to specify the binding edge. In duplex printing, the binding edge is on opposite sides of the page box for the left and right pages.
+</dd>
+
+	<dt>`対向~page@ （ `facing page^en ）</dt>
+	<dd>
+対向~pageとは、連続する 2 枚の~pageであって，文書が両面印刷されるときに，別々の用紙に分かれるものである。
+概して、先に来る~pageは一方の用紙のウラ側になり，後に来る~pageは他方のオモテ側になる。
+それらは、通例的には，［
+~pageが通常~読まれる方位に置かれたとき、対向~pageの各`綴じ辺$が，縦方向になる かつ互いに隣接する
+］ように~lay-outされる。
+◎
+Facing pages are two sequential pages such that when the document is duplex printed they are on separate sheets of paper. Typically, the earlier page will be the back side of one sheet and the later page will be the front side of another. They are usually laid out so that the binding edges of facing pages are vertical and adjacent when the pages are placed in their normal reading orientation.
+</dd>
+
+	<dt>`左page@ （ `left page^en ）</dt>
+	<dd>
+<!-- as typically -->
+`対向~page$のうち，左に~lay-outされる~page。
+`~page進行$が右向きの文書~用の~page~layoutでは、`対向~page$のうち，先に来る方が左になる。
+左pageに特有な規則は、 `left$ps `~page選択子$を利用して指定できる。
+◎
+A page that would be on the left if it is part of a pair of facing pages as typically laid out. Page layouts for documents using a left-to-right page progression have the earlier of the facing pages on the left. Rules specific to the left page can be specified using the :left page selector.
+</dd>
+
+	<dt>`右page@ （ `right page^en ）</dt>
+	<dd>
+`対向~page$のうち，右に~lay-outされる~page。
+`~page進行$が左向きの文書~用の~page~layoutでは、`対向~page$のうち，先に来る方が右になる。
+右pageに特有な規則は、 `right$ps `~page選択子$を利用して指定できる。
+◎
+A page that would be on the right if it is part of a pair of facing pages as typically laid out. Page layouts for documents using a right-to-left page progression have the earlier of the facing pages on the right. Rules specific to the right page can be specified using the :right page selector.
+</dd>
+
+</dl>
+
+	</section>
+	<section id="page-model">
+<h2 title="The Page Model">3. ~page~model</h2>
+
+<figure style="float: right;">`PageBox^dgm
+</figure>
+
+<p>
+`~paged媒体$ 整形~modelの下では、文書は，いくつかの~page~boxの中へ転送される。
+`~page~box@
+とは、［
+紙の~pageなどの，矩形な印刷-媒体~面
+］へ写すように特化された，`~CSS~box$である。
+それは概ね，`表示域$に相似的である。
+◎
+In the paged media formatting model, the document is transferred into one or more page boxes. The page box is a specialized CSS box that maps to a rectangular print media surface, such as a page of paper. It is roughly analogous to the viewport.
+</p>
+
+<p>
+他の`~CSS~box$と同様に、`~page~box$は［
+~margin, ~border, ~padding, 内容
+］区画からなる。
+`~page~box$の［
+内容／~margin
+］区画には、特別な機能がある：
+◎
+As with other CSS boxes, a page box consists of margin, border, padding, and content areas. The content and margin areas of a page box have special functions:
+</p>
+
+<p class="issue">
+CSS 2.1においては、［
+~page~box／~page区画
+］は単純な矩形であり，［
+~margin, ~border, ~padding
+］を伴わない`~CSS~box$である。
+この~CSS~boxは、［
+`~page~box$／`~page区画$
+］とは別物になるべきであり、【図の】［
+~margin区画／内容~区画
+］に~~対応するであろう。
+何か良い命名~案は？
+◎
+In CSS 2.1, both the page box and page area are simple rectangles. Neither is a CSS box with margins, borders, and padding. This CSS box should be distinct from the page box and page area, which would be its margin area and content area, respectively. Naming ideas?
+</p>
+
+<ul>
+
+	<li>
+`~page~box$の内容~区画は
+`~page区画@
+と呼ばれる。
+文書の内容は、 1 個~以上の~page~boxの中へ~flowされる。
+`~page区画$は、［
+所与の`~page~box$の中に~lay-outされる［
+根~要素と その子孫たちにより生成される~box
+］すべて
+］用の容器として動作する。
+最初の~page上の`~page区画$の各~辺は、文書の`初期~包含塊$となる矩形を確立する。
+◎
+The content area of a page box is called the page area. The content of the document is flowed into one or more page boxes. The page area acts as a container for all the boxes generated by the root element and its descendants that are laid out within a given page box. The edges of the page area on the first page establish the rectangle that is the initial containing block of the document.
+</li>
+	<li>
+`~page~box$の~margin区画は、 16 個の
+`~page-margin~box@
+に区分される。
+<a href="#margin-boxes">これらの~page-margin~box</a>は、それぞれが自前の［
+~margin, ~border, ~padding, 内容
+］区画を持ち，概して欄外見出しを表示するために利用される。
+◎
+The margin area of a page box is divided into 16 page-margin boxes. Each page-margin box has its own margin, border, padding and content areas. Page-margin boxes are typically used to display running headers and footers.
+</li>
+</ul>
+
+<p>
+`~page~box$の各種~propは、`~page文脈$の中で
+— すなわち， `page$at 規則の`宣言~block$の中で —
+宣言される各種~propから決定される。
+同様に，`~page-margin~box$の各種~propは、その`~margin文脈$の中で宣言される各種~propから決定される。
+~page文脈における各~宣言は、~page~boxに影響したり, 各 `~page-margin~box$に継承され得るが、文書の［
+根~要素や他の内容
+］に適用されたり, 継承されることはない。
+◎
+The properties of a page box are determined by properties declared within the page context, which is the declaration block of the @page rule. Similarly the properties of a page-margin box are determined by properties declared within its margin context. Declarations in the page context can affect the page box and/or inherit to the page-margin boxes, but they do not apply to or inherit into the document’s root element or other content.
+</p>
+
+<p>
+`~page~box$の
+<a href="~CSSDISP#containing-block">包含塊</a>
+は、`~page文脈$における `size$d ~propを利用して指定される。
+しかる後、`~page~box$の［
+横幅, 横方向~margin
+］が，
+<a href="~CSS2VISUDET#blockwidth">§ 通常~flow内にある塊~levelの置換されない要素</a>
+`CSS2$r
+に対するときと正確に同じように計算される。
+`~page~box$の［
+縦幅, 縦方向~margin
+］も，相似的に計算される（代わりに，塊~縦幅の公式を利用する）。
+いずれの場合も，`拘束され過ぎ$になる場合には、どの~marginも無視する代わりに，包含塊が`~page~box$の各側の~margin辺に一致するように~sizeし直される。
+◎
+The containing block of the page box is specified using the size property in the page context. The width and horizontal margins of the page box are then calculated exactly as for a non-replaced block element in normal flow. [CSS2] The height and vertical margins of the page box are calculated analogously (instead of using the block height formulas). In both cases if the values are over-constrained, instead of ignoring any margins, the containing block is resized to coincide with the margin edges of the page box.
+</p>
+
+		</section>
+		<section id="painting">
+<h3 title="Page Backgrounds and Painting Order">3.1. ~pageの背景と塗ng順序</h3>
+
+<p>
+~pageの内容を描くとき、各 ~page層は，次の塗ng順序で塗られる（最初の項目が最下層）：
+◎
+When drawing a page of content, the page layers are painted in the following painting order (bottommost first):
+</p>
+
+<ol>
+
+	<li>
+~pageの背景
+◎
+page background
+</li>
+	<li>
+文書の~canvas
+◎
+document canvas
+</li>
+	<li>
+~pageの各~border
+◎
+page borders
+</li>
+	<li>
+文書の内容
+◎
+document contents
+</li>
+	<li>
+各種 `~page-margin~box$
+◎
+page-margin boxes
+</li>
+</ol>
+
+<p>
+~page~modelにおいては、~page背景の挙動は，根の背景に類似する：
+`裁切り区画$が、その`背景~塗ng区画$を成し，（ `background-clip$p に関わらず）~marginも含む`~page~box$全体を覆う。
+~pageの背景は、既定では`~page~box$の~padding区画に嵌込まれる（また、~UAが `CSS-BACKGROUNDS-3$r を~supportするならば， `background-origin$p を尊守する）。
+しかしながら， `background-attachment$p が `fixed^v にされている場合、画像は，~marginを含む`~page~box$に相対的に位置される（すなわち、`背景~位置決め区画$は，~pageの~margin~boxになる）。
+◎
+In the page model, the page background behaves similar to the root background: its background painting area is the bleed area, which covers the entire page box, including its margins (regardless of background-clip). Page backgrounds are anchored within the page box’s padding area by default (and honor background-origin if the UA supports [CSS-BACKGROUNDS-3]). However if background-attachment is fixed then the image is positioned relative to the page box including its margins (i.e. the background positioning area is the page’s margin box).
+</p>
+
+<p>
+文書~canvasの背景は、`~page~box$の背景として描かれる：
+既定では、その`背景~塗ng区画$は，~page~boxの~border~boxを覆い、~UAが `CSS-BACKGROUNDS-3$r を~supportするならば，根~要素~上に指定された `background-clip$p 値に従う。
+しかしながら依然として、通例通り，根~要素または`~page区画$を~~基準に位置される【？】。
+◎
+The document canvas background is drawn as the page box’s background: by default its background painting area covers the page box’s border box, and for UAs that support [CSS-BACKGROUNDS-3], follows the background-clip value specified on the root element. It remains, however, positioned with respect to the root element or page area as usual.
+</p>
+
+<p>
+［
+文書~canvas ／
+~page~border ／
+すべての文書~内容
+］は、`~page-margin~box$に関して，［
+`z-index$p 値が `0^v にされた単独の要素であって, かつ
+`積層~文脈$ `CSS2$r を確立するもの
+］として扱われる：
+`~page-margin~box$は、決して［
+文書~内容の各部の合間にも,
+内容と~canvasの合間にも
+］，差挟まれない。
+それらが塗られてよいのは、［
+文書~内容の手前／文書~canvasの背後
+］に限られる。
+~pageの背景は、常に，他すべての下地に塗られる。
+◎
+With respect to the page-margin boxes, the document canvas, page borders, and all of the document contents are treated as a single element with a z-index value of 0 that establishes a stacking context [CSS2]: the page-margin boxes never interleave with parts of the document content or between the content and the canvas. They may only paint in front of the document content or behind the document canvas. The page background is always painted underneath everything else.
+</p>
+
+<p>
+`z-index$p ~propは、`~page-margin~box$にも適用される。
+`position$p ~propは，`~page-margin~box$には適用されないので、
+`position$p ~propの値に関わらず， `z-index$p は常に`~page-margin~box$に影響する
+— それらが有位置な要素であったかのように。
+`~page-margin~box$は、常に`積層~文脈$を確立する。
+◎
+The z-index property applies to page-margin boxes. Since the position property does not apply to page-margin boxes, z-index always affects page-margin boxes as if they were positioned elements regardless of the position property’s value. Each page-margin boxes always establishes a stacking context.
+</p>
+
+<p>
+各種 `~page-margin~box$の既定の塗ng順序
+— 
+<a href="~CSS22/zindex.html#elaborate-stacking-contexts">CSS2.1 付録 E</a>
+でいう “~tree順序” —
+は、次に従う：
+◎
+The default painting order, or CSS2.1 Appendix E "tree order", of page-margin boxes with respect to each other is as follows:
+</p>
+
+<ol ><li>`top-left-corner$at
+</li><li>`top-left$at
+</li><li>`top-center$at
+</li><li>`top-right$at
+</li><li>`top-right-corner$at
+</li><li>`right-top$at
+</li><li>`right-middle$at
+</li><li>`right-bottom$at
+</li><li>`bottom-right-corner$at
+</li><li>`bottom-right$at
+</li><li>`bottom-center$at
+</li><li>`bottom-left$at
+</li><li>`bottom-left-corner$at
+</li><li>`left-bottom$at
+</li><li>`left-middle$at
+</li><li>`left-top$at
+</li></ol>
+
+<p class="note">注記：
+`top-left-corner$at から，時計回りに進む。
+この順序は恣意的であるが， `z-index$p で上書きできる。
+順序による可視~効果は、`~page-margin~box$が互いに重合するときに限り~~生じる
+— ほとんどの事例では、そうは起こらないであろうが。
+◎
+Start with @top-left-corner, then go clockwise. This order is arbitrary but can be overridden with z-index. It only has a visible effect when page-margin boxes overlap, which should not happen in most cases.
+</p>
+
+		<section id="content-outside-box">
+<h3 title="Content outside the page box">3.2. ~page~boxの外側に来る内容</h3>
+
+<p>
+~page~modelにおいて内容を整形するとき、内容の一部が，`~page~box$の外側に出ることもある。
+例えば， `white-space$p ~propが `pre^v にされた要素は、`~page~box$より幅広な~boxを生成し得る。
+別の例として、~boxが絶対的に／相対的に位置されるときに “不都合な” 所在にもなり得る。
+例えば，画像は、`~page~box$の辺をまたぐように, あるいは 100000 ~meter下に置かれるかもしれない。
+◎
+When formatting content in the page model, some content may end up outside the page box. For example, an element whose white-space property has the value pre can generate a box that is wider than the page box. As another example, when boxes are positioned absolutely or relatively, they may end up in "inconvenient" locations. For example, images may be placed on the edge of the page box or 100,000 meters below the page box.
+</p>
+
+<p>
+そのような要素を正確に整形するための仕様は、この文書の視野~外である。
+しかしながら，作者／~UAには、次に挙げる［
+`~page~box$の外側に出ると懸念される内容についての，一般~原則
+］を順守することが推奨される：
+◎
+A specification for the exact formatting of such elements lies outside the scope of this document. However, it is recommended that authors and user agents observe the following general principles concerning content outside the page box:
+</p>
+
+<ul>
+
+	<li>
+~pageを “裁切れる” ように、`~page~box$を少しばかり超える内容も，許容されるべきである。
+◎
+Content should be allowed slightly beyond the page box to allow pages to "bleed".
+</li>
+	<li>
+<p>
+~UAは、要素の位置決めを尊守するために多数の無内容~pageを生成することは，避けるベキである（例：
+作者や利用者は、おそらく 100 ~pageもの白紙を印刷しようとは意図しないであろう）。
+~pageが
+`無内容@
+であるとは、［
+`~page区画$が，背景や~borderの他に印刷-可能な内容を包含しない
+］ような、`~page~box$である。
+`~page区画$が［
+`生成d内容$ ／
+`visibility$p が `hidden^v にされた内容 ／
+`zero-width space^en
+【おそらく幅ゼロの~space文字（ U+200B ） — 幅ゼロの “~~空間” ではなく】
+のような不可視な内容
+］を包含するような`~page~box$は、`無内容$でない。
+一方で，［
+背景, ~border, `~page-margin~box$の内容
+］しか包含しない~pageは、`無内容$`である^em。
+◎
+User agents SHOULD avoid generating a large number of content-empty pages to honor the positioning of elements (e.g., printing 100 blank pages is probably neither the author’s nor the user’s intent). A Content-empty page is a page box whose page area contains no printable content other than backgrounds and/or borders. A page box whose page area contains generated content, or content whose visibility is hidden, or invisible content such as a zero-width space is not a content-empty page. On the other hand, a page containing only a background and/or borders and/or page-margin box content is a content-empty page.
+</p>
+
+<p class="note">注記：
+しかしながら，［
+`page-break-before$p ／ `break-before$p 
+］や［
+`page-break-after$p ／ `break-after$p
+］用の強制d分断~値を尊守するために，少数の空な`~page~box$の生成が必要とされることもある。
+`CSS2$r
+`CSS-BREAK-3$r
+◎
+Note, however, that generating a small number of empty page boxes is sometimes necessary to honor the forced-break values for page-break-before/break-before and page-break-after/break-after. [CSS2] [CSS-BREAK-3]
+</p>
+	</li>
+	<li>
+<p>
+作者は、描画を避けるためだけに，要素を不都合な所在に位置させるベキでない。
+代わりに，次のいずれかを行うべきである：
+◎
+Authors SHOULD NOT position elements in inconvenient locations just to avoid rendering them. Instead:
+</p>
+		<ul>
+			<li>
+`display$p ~propを `none^v に設定して，~boxをまるごと生成させなくする。
+◎
+To suppress box generation entirely, set the display property to none.
+</li>
+			<li>
+`visibility$p を~propを設定して，~boxを不可視にする。
+◎
+To make a box invisible, set the visibility property.
+</li>
+		</ul>
+	</li>
+	<li>
+この仕様は、`~page~box$の外側に位置される~boxがどのように取扱われるか，については定義しない。
+それらを破棄したり，それら用の`~page~box$を文書の末端に作成するなどが、あり得る。
+◎
+This specification does not define how boxes positioned outside the page box are handled. Possibilities include discarding them or creating page boxes for them at the end of the document.
+</li>
+</ul>
+
+		</section>
+		<section id="progression">
+<h3 title="Page Progression">3.3. ~page進行</h3>
+
+<p>
+CSS では、両面印刷されるかどうかにかかわらず，すべての文書に対し，左pageと右pageとが判別される。
+左pageと右pageは【~page進行の順で】交互に来る。
+疑似類
+`left$ps, `right$ps
+を用いれば、左右の~pageに異なる~styleをあてがえる。
+◎
+CSS distinguishes between left pages and right pages on all documents, whether they are printed duplex or not. Each left page is followed by a right page and vice versa. Left and right pages can be styled differently with the :left and :right pseudo-classes.
+</p>
+
+<p>
+文書の最初の~pageが，左page, 右pageのいずれになるかは、文書の`~page進行$に依存する。
+`~page進行@
+とは、文書の印刷される~pageが横並びに~lay-outされるときに並べられていく方向である。
+例えば，英語や横組みの日本語では、概して 右向きへ進行する一方で、~Arabicや縦組みの日本語~pageでは，概して 左向きへ進行する。
+◎
+Whether the first page of a document is a left page or a right page depends on the page progression of the document. The page progression is the direction in which the printed pages of a document would be sequenced when laid out side-to-side. For example, English and horizontally-set Japanese typically progress from left to right, whereas Arabic and vertically-set Japanese pages typically progress from right to left.
+</p>
+
+<p>
+`~page進行$~方向は、次にしたがって決定される：
+◎
+The page progression direction is determined as follows:
+</p>
+
+<ul>
+
+	<li>
+~textが横書き行lに~lay-outされる場合：
+`~page進行$は、`行内~基底~方向$と同じである。
+◎
+If text is laid out in horizontal lines, the page progression is the same as the inline base direction.
+</li>
+	<li>
+~textが縦書き行lに~lay-outされる場合：
+`~page進行$は、`塊~flow方向$と同じである。
+◎
+If text is laid out in vertical lines, the page progression is the same as the block flow direction. 
+</li>
+</ul>
+
+<p>
+［
+`direction$p, `writing-mode$p
+］~prop `CSS-WRITING-MODES-3$r
+を~supportする~UAは、`~page進行$を`首要な書字~mode$から決定するモノトスル。
+◎
+If the UA supports the direction and writing-mode properties from the CSS 3 Writing Modes Module [CSS-WRITING-MODES-3], it must determine the page progression is determed by the principal writing mode.
+</p>
+
+<p>
+文書の最初の~pageは、`~page進行$が右向きならば右page, 左向きならば左pageになる。
+作者は，根まで伝播するような~page分断~値を
+`break-before$p `CSS-BREAK-3$r
+に指定することにより、文書の印刷ngを左page, または右pageから始めるように明示的に強制できる。
+この場合、~UAは，（空になる，）最初の~page（たち）（および，最初に印刷される~pageに合致する `first$ps 疑似類）を抑止するモノトスル。
+◎
+In documents with a left-to-right page progression the first page of the document is a right page, and vice versa. To explicitly force a document to begin printing on a left or right page, authors can specify a break-before value that that propagates a page break to the root. [CSS-BREAK-3] The UA must suppress the first (empty) page(s) in this case (and the :first pseudo-class matches the first printed page).
+</p>
+
+<div class="example">
+
+<pre class="lang-css">
+html { break-before: always }
+</pre>
+
+<p>
+`~page進行$が右向きの HTML 文書~用には、上の~style規則は，文書の最初の~pageを `left$ps ~pageに印刷させることになる。
+◎
+For an HTML document with a left-to-right page progression, the above style rule will cause the first page of the document to print on a ':left' page
+</p>
+
+<pre class="lang-css">
+html { break-before: left }
+</pre>
+
+<p>
+HTML 文書~用には、上の~style規則は，`~page進行$に関わらず，文書の最初の~pageを `left$ps ~pageに印刷させることになる。
+◎
+For an HTML document, the above style rule will cause the first page of the document to print on a ':left' page, regardless of the page progression.
+</p>
+
+</div>
+
+		</section>
+	</section>
+	<section id="page-selector-and-context">
+<h2 title="Page Selectors and the Page Context">4. ~page選択子と~page文脈</h2>
+
+		<section id="at-page-rule">
+<h3 title="The @page Rule">4.1. `page^at 規則</h3>
+
+<div class="p">
+<p id="page-box-page-rule">
+作者は、
+`page@at
+規則の中で，［
+寸法, 方位, ~margin
+］など，`~page~box$の種々の側面を指定できる。
+`page$at 規則は、`規則~集合$が許容される所ならどこでも許容される。
+`page$at 規則は、順に，次のものからなる：
+</p>
+
+<ol>
+	<li>
+~keyword `page$at
+</li>
+	<li>
+`選択子~list@
+（ `page-selector-list$t ）
+— 0 個以上の`~page選択子$からなる，~comma区切りの~list（省略可）
+</li>
+	<li>
+`宣言~block@
+— その~~内部（ `declaration-list$t ）は、
+`~page文脈@
+内にある，と称される。
+</li>
+</ol>
+
+<p>
+`page$at 規則には、他の~at-ruleも，各~宣言の合間に差挟むように包含できる。
+この仕様の現在の~levelでは、 `page$at の内側では，各種 `~margin~at-rule$のみが許容される。
+</p>
+◎
+Authors can specify various aspects of a page box, such as its dimensions, orientation, and margins, within an @page rule. @page rules are allowed wherever rule-sets are allowed. An @page rule consists of the keyword @page, an optional comma-separated list of page selectors and a block of declarations (said to be in the page context). An @page rule can also contain other at-rules, interleaved between declarations. The current level of this specification only allows margin at-rules inside @page.
+</div>
+
+<p>
+`選択子~list$を伴わない `page$at 規則は、どの~pageにも適用される。
+選択子~listを伴う `page$at 規則は，~list内のいずれかの選択子に`合致する$~pageに適用される。
+`~page文脈$の中で宣言された~propは、【その~at-ruleが適用される~pageの】`~page~box$に適用される。
+◎
+@page rules without a selector list apply to every page. Other @page rules apply to pages that match at least one of their selectors. Properties declared within the page context apply to the page box.
+</p>
+
+<p>
+`~page文脈$／`~margin文脈$
+の中で，`宣言~block$の処理~時に~errorに遭遇した場合、
+<a href="~CSS22/syndata.html#parsing-errors">構文解析-時の~error取扱い規則</a>
+が適用される
+— すなわち、~blockの中の妥当な宣言は，適用される。
+◎
+If an error is encountered during the processing of a declaration block within a page or a margin context, the Rules for handling parsing errors apply; that is, valid declarations within the block are applied.
+</p>
+
+		</section>
+		<section id="page-selectors">
+<h3 title="Page selectors">4.2. ~page選択子</h3>
+
+<p>
+`~page選択子@
+（ `page-selector$t ）は、［
+`~page種別~選択子$, または`~page疑似類$
+］, ［
+0 個以上の追加的な`~page疑似類$
+］の並びからなる。
+選択子の各~成分の合間には、空白は許容されない。
+`page-selector$t の文法とその例は、下にて見出せる。
+◎
+A page selector is made of either a page type selector or a page pseudo-class, followed by zero or more additional page pseudo-classes. No whitespace is allowed between components of a selector. The &lt;page-selector&gt; grammar and examples can be found below.
+</p>
+
+<p>
+`~page選択子$は、そのいずれの成分も所与の~pageに合致するとき，そのときに限り，
+その~pageに
+`合致する@
+とされる。
+◎
+A page selector is said to match a given page if and only if all of its components match the page.
+</p>
+
+<p>
+`~page種別~選択子@
+は、文字大小区別の `~CSS識別子$ `CSS2$r で与えられる
+<span class="trans-note">【
+この識別子（ `page-selector$t 内の `ident-token$t ）は、
+`~page種別~名@
+とも称される
+】</span>
+。
+それは、［
+`page$p ~propにより生成される
+<a href="#using-named-pages">名前を持つ~page</a>
+に`合致する$。
+<span id="page-selector-syntax-restrict">
+~page種別~名 `auto^v （`~ASCII大小無視$）は、規則を無効にはしないが，どの~pageにも合致しないモノトスル。
+</span>◎
+A page type selector is a case-sensitive CSS identifier [CSS2]. It matches pages of the named page type generated by the page property. A page type name of auto (ASCII case-insensitive) does not make the rule invalid, but must never match.
+</p>
+
+<p>
+`~page疑似類@
+（ `pseudo-page$t ）は， `~ASCII大小無視$であり、その構文は，定例の選択子における`疑似類$ `SELECT$r と同じである。
+以下に，種々の`~page疑似類$が定義される。
+◎
+A page pseudo-class is ASCII case-insensitive and has the same syntax as pseudo-classes in regular Selectors. [SELECT] The various page pseudo-classes are defined below.
+</p>
+
+			</section>
+			<section id="spread-pseudos">
+<h4 title="Spread pseudo-classes: :left, :right">4.2.1. 見開き疑似類： `left^ps, `right^ps</h4>
+
+<span id="left-right-first"></span>
+<p>
+両面~文書を印刷するとき，
+左page, 右page
+の整形は異なることが多い。
+これは
+`left$ps, `right$ps
+~page疑似類を利用して表出できる。
+◎
+When printing double-sided documents, left and right pages are often formatted differently. This can be expressed by using the :left and :right page pseudo-classes.
+</p>
+
+<p>
+すべての~pageは、`~page進行$に基づいて，~UAにより自動的に［
+左page, 右page
+］のいずれかに分類される。
+疑似類
+`left@ps, `right@ps
+は、順に
+`左page$, `右page$
+のみに`合致する$。
+◎
+All pages are automatically classified by user agents as either left pages or right pages, based on page progression. The :left and :right pseudo-classes only match left or right pages, respectively.
+</p>
+
+<p class="trans-note">【
+（参考）
+`~page進行$に相対的に合致する
+`recto$ps, `verso$ps
+疑似類もある。
+】</p>
+
+<div class="example">
+
+<p>
+次の例は、これらの疑似類を利用して，左右の`綴じ辺$を作成する：
+◎
+The following example creates left and right binding edges using these pseudo-classes:
+</p>
+
+<pre class="lang-css">
+@page :left {
+  margin-left: 3cm;
+  margin-right: 4cm;
+}
+
+@page :right {
+  margin-left: 4cm;
+  margin-right: 3cm;
+}
+</pre>
+
+</div>
+
+<p>
+左右の~page用に異なる宣言が与えられた場合、各`~page~box$を左右の用紙へ転送しないときでも，~UAは これらの宣言を尊守するモノトスル（すなわち，媒体の片~側のみに印刷するときでも，整形された出力を正しく生産するモノトスル）。
+◎
+If different declarations have been given for left and right pages, the user agent must honor these declarations even if the user agent does not transfer the page boxes to left and right sheets (i.e., a printer that only prints on one side of the medium must nevertheless produce correctly formatted output).
+</p>
+
+<p class="note">注記：
+`left$ps ／ `right$ps
+疑似類における宣言の有無を，文書を
+両面, 片面
+のいずれに印刷するかに波及させる必然はない（それは，この仕様の視野~外である）。
+◎
+Note. Adding declarations to the :left or :right pseudo-class does not necessarily influence whether the document comes out of the printer double- or single-sided (which is outside the scope of this specification).
+</p>
+
+			</section>
+			<section id="first-pseudo">
+<h4 title="First-page pseudo-class: :first">4.2.2. 最初の~page疑似類： `first^ps</h4>
+
+<p>
+`first@ps
+疑似類は、文書の最初に印刷される~pageに`合致する$。
+◎
+The :first pseudo-class matches the first printed page of a document.
+</p>
+
+<div class="example">
+
+<pre class="lang-css">
+@page {
+  margin: 2cm; /*
+    <span class="comment"
+	title="All margins set to 2cm">すべての~marginは 2cm に設定される</span> */
+}
+
+@page :first {
+  margin-top: 10cm; /*
+    <span class="comment"
+	title="Top margin on first page 10cm">最初の~pageだけ上端~marginを 10cm にする</span> */
+}
+</pre>
+</div>
+
+			</section>
+			<section id="blank-pseudo">
+<h4 title="Blank-page pseudo-class: :blank">4.2.3. 白紙~page 疑似類： `blank^ps</h4>
+
+<p>
+`blank@ps
+疑似類は、`強制d~page分断$の結果として現れる`無内容~page$たちに`合致する$。
+◎
+The :blank pseudo-class matches content-empty pages that appear as a result of forced page breaks.
+</p>
+
+<p class="note">注記：
+`blank$ps に合致する~pageを生成させ得るのは、
+`break-before$p ／ `break-after$p
+~propに対する［
+`left^v,
+`right^v,
+`recto^v,
+`verso^v
+］値に限られる。
+◎
+Only the left, right, recto and verso values of the break-before and break-after properties can generate pages that match :blank.
+</p>
+
+<div class="example">
+
+<p>
+次の例では、`強制d~page分断$が `h1^e 要素の前に生じ得る。
+◎
+In this example, forced page break may occur before h1 elements.
+</p>
+
+<pre class="lang-css">
+h1 {
+  break-before: left;
+}
+
+@page :blank {
+  @top-center {
+    content: "This page is intentionally left blank";
+    content: "この~pageは意図的に白紙のままにされている";
+  }
+}
+</pre>
+
+</div>
+
+<p>
+`blank$ps に合致した~pageは、他の~page疑似類にも合致し得る。
+◎
+A page matched by :blank can also be matched by other page pseudo-classes.
+</p>
+
+<div class="example">
+
+<p>
+すべての右page~上に~headerが指定された場合、白紙の右pageは， `blank^ps, `right^ps の両者に合致することになる。
+したがって、右pageに設定された各種 ~margin~boxは、それらが白紙~page上にも求まれていない限り，除去される必要がある。
+白紙~pageにて，~page番号を残しつつ, 上端中央（ `top-center^at ）~headerは除去する例を次に示す：
+◎
+If headers have been specified on all right pages, a blank right page will be matched by both :blank and :right. Therefore, margin boxes set on right pages will have to be removed unless they are wanted on blank pages. Here is an example where the top center header is removed from blank pages, while the page number remains:
+</p>
+
+<pre class="lang-css">
+h1 { break-before: left }
+
+@page :blank {
+  @top-center {
+    content: none
+  }
+}
+
+@page :right {
+  @top-center {
+    content: "Preliminary edition"; /* (1) */
+  }
+  @bottom-center {
+    content: counter(page); /* (2) */
+  }
+}
+</pre>
+
+<p>
+`blank^ps の`詳細度$は， `right^ps より高いので、上端中央~headerは
+(2) が (1) の前にあっても，除去される。
+◎
+Due to the higher specificity of :blank over :right, the top center header is removed even if content: none comes before content: "Preliminary edition".
+</p>
+
+</div>
+
+<p class="note">注記：
+CSSの将来~versionでは、~~新たな~page疑似類も~~追加され得る。
+◎
+Note. Future versions of CSS may include other page pseudo-classes.
+</p>
+
+		</section>
+		<section id="syntax-page-selector">
+<h3 title="@page rule grammar">4.3. `page^at 規則の文法</h3>
+
+<p>
+`page$at 規則は、次の文法, および下に注記される追加的な規則に則って，`構文解析-$される：
+◎
+@page rules are parsed according to the following grammar, plus the additional rules noted below:
+</p>
+
+<pre class="prod">
+@page
+    = @page `page-selector-list$t? { `declaration-list$t }
+`page-selector-list@t
+    = `page-selector$t#
+`page-selector@t
+    = [ `ident-token$t? `pseudo-page$t* ]!
+`pseudo-page@t
+    = ':' [ left | right | first | blank ]
+
+/* <span class="comment">
+~margin規則
+◎
+Margin rules
+</span> */
+`top-left-corner@at = @top-left-corner { `declaration-list$t };
+`top-left@at = @top-left { `declaration-list$t };
+`top-center@at = @top-center { `declaration-list$t };
+`top-right@at = @top-right { `declaration-list$t };
+`top-right-corner@at = @top-right-corner { `declaration-list$t };
+`bottom-left-corner@at = @bottom-left-corner { `declaration-list$t };
+`bottom-left@at = @bottom-left { `declaration-list$t };
+`bottom-center@at = @bottom-center { `declaration-list$t };
+`bottom-right@at = @bottom-right { `declaration-list$t };
+`bottom-right-corner@at = @bottom-right-corner { `declaration-list$t };
+`left-top@at = @left-top { `declaration-list$t };
+`left-middle@at = @left-middle { `declaration-list$t };
+`left-bottom@at = @left-bottom { `declaration-list$t };
+`right-top@at = @right-top { `declaration-list$t };
+`right-middle@at = @right-middle { `declaration-list$t };
+`right-bottom@at = @right-bottom { `declaration-list$t };
+</pre>
+
+<p>
+加えて，次の規則が適用される：
+◎
+In addition, the following rules apply:
+</p>
+
+<ul>
+	<li>
+`page-selector$t ／ `pseudo-page$t
+内の各 生成規則の合間には、空白は許容されない（ `compound-selector$t 用の規則と類似に）。
+◎
+No whitespace is allowed between the productions in &lt;page-selector&gt; or &lt;pseudo-page&gt; (similar to the rule for &lt;compound-selector&gt;).
+</li>
+	<li>
+`page$at 規則が包含できるのは、［
+`~page~prop$, `~margin~at-rule$
+］に限られる。
+◎
+The @page rule can only contain page properties and margin at-rules.
+</li>
+
+	<li>
+`~margin~at-rule$が包含できるのは、`~page-margin~prop$に限られる。
+◎
+The margin at-rules can only contain page-margin properties.
+</li>
+</ul>
+
+<div class="example">
+
+<p>
+各種 ~page選択子の例を次に示す（宣言~blockの中身は~~省略する）：
+◎
+The following are examples of page selectors (declaration block intentionally left blank)
+</p>
+
+<pre class="lang-css">
+@page { ... }
+@page :left { ... }
+@page :right { ... }
+@page LandscapeTable { ... }
+@page CompanyLetterHead:first { ... } /* <span class="comment"
+	title="identifier and pseudo page."
+	>識別子と疑似類。</span> */
+@page:first { ... }
+@page toc, index { ... }
+@page :blank:first { ... }
+</pre>
+
+<p>
+各種 `~page-margin~box$の例を次に示す（宣言~blockの~~中身は~~省略する）。
+◎
+The following are examples of page-margin boxes where the declaration blocks are intentionally left blank.
+</p>
+
+<pre class="lang-css">
+@page {
+  @top-left {
+    ... /* <span class="comment"
+	title="document name"
+	>文書~名</span> */
+  }
+  @bottom-center {
+    ... /* <span class="comment"
+	title="page number"
+	>~page番号</span> */
+  }
+}
+@page :left {
+  @left-middle {
+    ... /* <span class="comment"
+	title="page number in left margin"
+	>左端~margin内の~page番号</span> */ 
+  }
+}
+@page :right{
+  @right-middle {
+    ... /* <span class="comment"
+	title="page number in right margins of right pages"
+	>右pageの右端~margin内の~page番号</span> */
+  }
+}
+
+@page :left {
+  @bottom-left-corner {
+    ... /* <span class="comment"
+	title="left page numbers"
+	>左pageの番号</span> */ 
+  }
+}
+@page :right {
+  @bottom-right-corner {
+    ... /* <span class="comment"
+	title="right page numbers"
+	>右pageの番号</span> */ 
+  }
+}
+@page :first {
+  @bottom-left-corner {
+    ... /* <span class="comment"
+	title="empty footer on 1st page"
+	>最初の~pageの空【？】~footer</span> */ 
+  }
+@bottom-right-corner {
+    ... /* <span class="comment"
+	title="empty footer"
+	>空【？】~footer</span> */ 
+  }
+}
+</pre>
+
+</div>
+
+		</section>
+		<section id="cascading-and-page-context">
+<h3 title="Cascading in the page context">4.4. ~page文脈における~cascade法</h3>
+
+<p>
+［
+`~page文脈$／`~margin文脈$
+］内の宣言は、要素~用の~style規則~内の宣言とちょうど同じく`~cascade$する。
+◎
+Declarations in page and margin contexts cascade just like declarations in style rule for elements.
+</p>
+
+<p>
+~page選択子の
+`詳細度@
+は、 Selectors ~moduleにて定義される
+<a href="~SELECTORS4#specificity">詳細度</a>
+に相似的な方式で算出される：
+◎
+The specificity of page a selector is computed in a manner analogous to the computations defined in the Selectors module:
+</p>
+
+<ul>
+	<li>
+<p>
+`~page種別~名$の個数を数える（ ~EQ %f ）
+◎
+Count the number of page type names (= f)
+</p>
+
+<p class="note">注記：
+~page選択子の構文の下では、
+%f は、 0 か 1 のみをとり得る。
+◎
+Given the syntax of page selectors, f can only ever be 0 or 1.
+</p>
+	</li>
+	<li>
+`first$ps ／ `blank$ps 疑似類の個数（ ~EQ %g ）を数える
+◎
+Count the number of ':first' or ':blank' pseudo-classes (= g)
+</li>
+	<li>
+`left$ps ／ `right$ps 疑似類の個数 （ ~EQ %h ）を数える
+◎
+Count the number of ':left' or ':right' pseudo-classes (= h)
+</li>
+</ul>
+
+<p class="note">注記：
+同じ疑似類の繰返しも許容され，詳細度を増大させる。
+◎
+Note: Repeated occurrences of the same pseudo-classes are allowed and do increase specificity.
+</p>
+
+<p>
+実装は、~storage制限に応じて
+%f, %g, %h
+の~sizeに制限を設けてもヨイ。
+その場合、上限を超えた値は，その上限までに切詰めるモノトスル。
+◎
+Due to storage limitations, implementations may have limitations on the size of f, g, or h. If so, values higher than the limit must be clamped to that limit, and not overflow.
+</p>
+
+<p>
+詳細度は、 3 成分（ %f, %g, %h ）を順に比較することにより比較される：
+%f が大きいものほど詳細度が高く，
+%f が同じ場合は %g が大きいものほど詳細度が高く，
+%g も同じ場合は %h が大きいものほど詳細度が高く，
+%h も同じ場合は 詳細度は等しいとする。
+◎
+Specificities are compared by comparing the three components in order (f, g, h): the specificity with a larger f value is more specific; if the two f values are tied, then the two g values are compared, etc. If all the values are tied, the two specificities are equal.
+</p>
+
+<div class="example">
+
+<p>
+~page詳細度の計算~例：
+◎
+Some page specificity calculation examples follow:
+</p>
+
+<pre class="lang-css">
+@page { }             /* <span class="comment"
+	title="specificity = (0,0,0)"
+	>詳細度 ~EQ (0,0,0)</span> */
+@page :left { }       /* <span class="comment"
+	title="specificity = (0,0,1)"
+	>詳細度 ~EQ (0,0,1)</span> */
+@page :first { }      /* <span class="comment"
+	title="specificity = (0,1,0)"
+	>詳細度 ~EQ (0,1,0)</span> */
+@page :blank:left { } /* <span class="comment"
+	title="specificity = (0,1,1)"
+	>詳細度 ~EQ (0,1,1)</span> */
+@page artsy { }       /* <span class="comment"
+	title="specificity = (1,0,0)"
+	>詳細度 ~EQ (1,0,0)</span> */
+@page artsy:left { }  /* <span class="comment"
+	title="specificity = (1,0,1)"
+	>詳細度 ~EQ (1,0,1)</span> */
+@page artsy:first { } /* <span class="comment"
+	title="specificity = (1,1,0)"
+	>詳細度 ~EQ (1,1,0)</span> */
+</pre>
+
+</div>
+
+<div class="example">
+
+<p>
+次の用例を考える：
+◎
+Consider the following usage example:
+</p>
+
+<pre class="lang-css">
+@page :left {
+  margin-left: 4cm;
+}
+
+@page {
+  margin-left: 3cm;
+}
+</pre>
+
+<p>
+疑似類~選択子により，詳細度がより高くなることから、`左page$の左端~marginは 4cm になり，他の~page（`右page$）の左端~marginは 3cm になる。
+◎
+Due to the higher specificity of the pseudo-class selector, the left margin on left pages will be 4cm and all other pages (the right-facing pages) will have a left margin of 3cm.
+</p>
+
+</div>
+
+<div class="example">
+<p>
+次の例では、緑色（ `green^v ）規則の詳細度は，赤色（ `red^v ）規則より高いので より優先される。
+したがって最初の~pageの［
+上端左 `~page-margin~box$の~textは 青色（ `blue^v ）に,
+上端右 `~page-margin~box$の~textは 緑色になる
+］一方で、後続~pageの`~page-margin~box$の~textは，赤色になる。
+◎
+In this example, the higher specificity of the green rules wins over the red rule. Therefore the first page will have blue text in the top-left page-margin box and green text in the top-right page-margin box, while subsequent pages will have red text in the page-margin boxes.
+</p>
+
+<pre class="lang-css">
+@page :first {
+  color: green;
+
+  @top-left {
+    content: "foo";
+    color: blue;
+  }
+  @top-right {
+    content: "bar";
+  }
+}
+
+@page {
+  color: red;
+
+  @top-center {
+    content: "Page " counter(page);
+  }
+}
+</pre>
+
+</div>
+
+<div class="example">
+
+<p>
+`~page文脈$は~cascadeするので、次の~stylesheetは、各~pageの`~page-margin~box$にて，
+~marginに `25mm^v, ~font~sizeに `14pt^v をあてがうことになる：
+◎
+Page contexts cascade, so the following stylesheet would style pages with 25 millimeter margins and 14 point type in the page-margin boxes:
+</p>
+
+<pre class="lang-css">
+@page { margin: 25mm;}
+@page { font-size: 14pt;}
+</pre>
+
+</div>
+
+		</section>
+	</section>
+	<section id="margin-boxes">
+<h2 title="Page-Margin Boxes">5. ~page-margin~box</h2>
+
+<p>
+`~page-margin~box$は、~page~marginの中の~boxであり，疑似要素と同様に`生成d内容$も包含できる。
+◎
+Page-margin boxes are boxes within the page margin that, like pseudo-elements, can contain generated content.
+</p>
+
+<p>
+`~page-margin~box$を利用すれば、~pageの
+~header／~footer
+を作成できる
+— それらは、［
+~page番号や文書~titleなどの補足~情報
+］のために別に設定される，~pageの部位である。
+◎
+Page-margin boxes can be used to create page headers and footers, which are portions of the page set aside for supplementary information such as the page number or document title.
+</p>
+
+<div class="example">
+
+<p>
+`~page~header@
+の所在は、概して，
+書字~方向が横書き主体の文書においては，~pageの上端に ／
+書字~方向が縦書き主体の文書においては，`綴じ辺$の反対~側になる。
+横書きの文書~用の~page~headerの設計としては、上端~側の`~page-margin~box$（
+`top-left-corner$at,
+`top-left$at,
+`top-center$at,
+`top-right$at,
+`top-right-corner$at
+）を利用するものが挙げられる。
+縦書きの文書~用の設計としては、`右page$用には 右端~側の`~page-margin~box$（
+`right-top$at,
+`right-middle$at,
+`right-bottom$at
+），`左page$用には左端~側の`~page-margin~box$（
+`left-top$at,
+`left-middle$at,
+`left-bottom$at
+）を利用するものが挙げられる。
+◎
+Typically, a page header is located at the top of the page in documents with a predominately horizontal writing direction and on the side opposite the binding edge for documents with a predominately vertical writing direction. One possible design of page headers for horizontally written documents uses the @top-left-corner, @top-left, @top-center, @top-right and @top-right-corner page-margin boxes. Another design, for vertically written documents, could use the @right-top, @right-middle, and @right-bottom page-margin boxes for right facing pages and @left-top, @left-middle, and @left-bottom for left facing pages.
+</p>
+
+<p>
+`~page~footer@
+の所在は、概して，~page~headerから反対~側の ~pageの端になる。
+例えば，~page~headerが~pageの上端にある場合、横書きの文書に対する~page~footerの設計としては，下端~側の`~page-margin~box$（
+`bottom-left-corner$at,
+`bottom-left$at,
+`bottom-center$at,
+`bottom-right$at,
+`bottom-right-corner$at
+）を利用するものが挙げられる。
+縦書きの文書に対する~page~footerの設計としては、~pageの`綴じ辺$の所の`~page-margin~box$を利用するものが挙げられる。
+◎
+The page footer is typically at the opposite end of the page from the page header. For example, the design of a horizontally written document with a page header at the top of the page could use the @bottom-left-corner, @bottom-left, @bottom-center, @bottom-right and @bottom-right-corner page-margin boxes as the page footer. The design of a vertically written document could use the page-margin boxes of the binding edge of the page for the page footer.
+</p>
+
+</div>
+
+<p>
+どの`~page-margin~box$も、`~page区画$を~~基準に位置され，`~page方位$には依存しない
+— 例えば，上端の`~page-margin~box$は、
+`縦置き方位$, `横置き方位$
+のいずれにせよ，`~page区画$の上に来る。
+下の一覧に，各種 `~page-margin~box$の定義とその図式を示す：
+◎
+Page-margin boxes are positioned with respect to the page area and are independent of page orientation, for example the top page-margin boxes are above the page area in both portrait and landscape orientation. The various page-margin boxes are defined and illustrated in the diagram below:
+</p>
+
+<table id="margin-box-def">
+<caption>
+表 1. `~page-margin~box$の定義
+◎
+Table 1 Page-Margin Box Definitions
+</caption>
+
+<thead><tr><th>`~page-margin~box$（対応する`~margin~at-rule$）
+<th>説明0
+<th>配置~図
+</thead><tbody>
+
+<tr id="top-margin-boxes-def"><th>`左上隅@
+（ `top-left-corner$at ）
+<td>
+`~page~box$の［
+上端~margin, 左端~margin
+］の交差により定義される，固定d~sizeの~box
+◎
+a fixed-size box defined by the intersection of the top and left margins of the page box
+<td><figure>`TopLeftCornerBox^dgm
+<figcaption>
+~pageの［
+上端~margin, 左端~margin
+］の交差の中に入子にされた，［
+~margin, ~border, ~padding
+］を伴う，左上~隅の~box
+◎
+the top left corner box with margin, border, and padding, nested within intersection of the page’s top and left margins
+</figcaption></figure>
+
+<tr><th>`上端左@
+（ `top-left$at ）
+<td>
+上端 ~page~marginの中で，［
+左上隅, 上端中央
+］`~page-margin~box$の合間を埋めるような，横幅可変の~box
+◎
+a variable-width box filling the top page margin between the top-left-corner and top-center page-margin boxes
+<td><figure>`TopLeftMarginBox^dgm
+<figcaption>
+左上隅の~boxの隣にあり，
+~pageの上端~marginの中に入子にされた，［
+~margin, ~border, ~padding
+］を伴う，上端~左~box
+◎
+the top left box with margin, border, and padding, nested in the page’s top margin next to the top left corner box
+</figcaption></figure>
+
+<tr><th>`上端中央@
+（ `top-center$at ）
+<td>
+~pageの左右~border辺の合間で横方向に中央化され，
+~page上端~marginの中で，［
+上端左, 上端右
+］`~page-margin~box$の合間を埋めるような，横幅可変の~box
+◎
+a variable-width box centered horizontally between the page’s left and right border edges and filling the page top margin between the top-left and top-right page-margin boxes
+<td><figure>`TopCenterMarginBox^dgm
+<figcaption>
+~pageの上端~marginの中で中央化され，［
+~margin, ~border, ~padding
+］を伴う，上端中央~box
+◎
+the top center box with margin, border, and padding, centered within the page’s top margin
+</figcaption></figure>
+
+<tr><th>`上端右@
+（ `top-right$at ）
+<td>
+上端 ~page~marginの中で，［
+上端中央, 右上隅
+］`~page-margin~box$の合間を埋めるような，横幅可変の~box
+◎
+a variable-width box filling the top page margin between the top-center and top-right-corner page-margin boxes
+<td><figure>`TopRightMarginBox^dgm
+<figcaption>
+~pageの上端~marginの中に入子にされた，［
+~margin, ~border, ~padding
+］を伴う，上端右の~box
+◎
+the top right box with margin, border, and padding, nested within the page’s top margin
+</figcaption></figure>
+
+<tr><th>`右上隅@
+（ `top-right-corner$at ）
+<td>
+`~page~box$の［
+上端~margin, 右端~margin
+］の交差により定義される，固定d~sizeの~box
+◎
+a fixed-size box defined by the intersection of the top and right margins of the page box
+<td><figure>`TopRightCornerMarginBox^dgm
+<figcaption>
+~pageの［
+上端~margin, 右端~margin
+］の交差の中に入子にされた，［
+~margin, ~border, ~padding
+］を伴う，右上~隅の~box
+◎
+the top right corner box with margin, border, and padding, nested within the intersection of the page’s top and right margin
+</figcaption></figure>
+
+<tr id="left-margin-boxes-def"><th>`左端上@
+（ `left-top$at ）
+<td>
+左端 ~page~marginの中で，［
+左上隅, 左端中段
+］`~page-margin~box$の合間を埋めるような，縦幅可変の~box
+◎
+a variable-height box filling the left page margin between the top-left-corner and left-middle page-margin boxes
+<td rowspan="3"><figure>`LeftMarginBoxes^dgm
+<figcaption>
+`~page~box$の左端~marginの中の，［
+左端上, 左端中段, 左端下
+］`~page-margin~box$
+◎
+left-top, left-middle, and left-bottom page-margin boxes in the page box’s left margin
+</figcaption></figure>
+
+<tr><th>`左端中段@
+（ `left-middle$at ）
+<td>
+~pageの上下~border辺の合間に縦方向に中央化され，
+左端 ~page~marginの中で，［
+左端上, 左端下
+］`~page-margin~box$の合間のを埋めるような，縦幅可変の~box
+◎
+a variable-height box centered vertically between the page’s top and bottom border edges and filling the left page margin between the left-top and left-bottom page-margin boxes
+
+<tr><th>`左端下@
+（ `left-bottom$at ）
+<td>
+左端 ~page~marginの中で，［
+左端中段, 左下隅
+］`~page-margin~box$の合間を埋めるような，縦幅可変の~box
+◎
+a variable-height box filling the left page margin between the left-middle and bottom-left-corner page-margin boxes
+
+<tr id="right-margin-boxes-def"><th>`右端上@
+（ `right-top$at ）
+<td>
+右端 ~page~marginの中で，［
+右上隅, 右端中段
+］`~page-margin~box$の合間を埋めるような，縦幅可変の~box
+◎
+a variable-height box filling the right page margin between the top-right-corner and right-middle page-margin boxes
+<td rowspan="3"><figure>`RightMarginBoxes^dgm
+<figcaption>
+`~page~box$の右端~marginの中の，［
+右端上, 右端中段, 右端下
+］`~page-margin~box$
+◎
+right-top, right-middle, and right-bottom page-margin boxes in the page box’s right margin
+</figcaption></figure>
+
+<tr><th>`右端中段@
+（ `right-middle$at ）
+<td>
+~pageの上下~border辺の合間で縦方向に中央化され,
+右端 ~page~marginの中で，［
+右端上, 右端下
+］`~page-margin~box$の合間を埋めるような，縦幅可変の~box
+◎
+a variable-height box centered vertically between the page’s top and bottom border edges and filling the right page margin between the right-top and right-bottom page-margin boxes
+
+<tr><th>`右端下@
+（ `right-bottom$at ）
+<td>
+右端 ~page~marginの中で，［
+右端中段, 右下隅
+］`~page-margin~box$の合間を埋めるような，縦幅可変の~box
+◎
+a variable-height box filling the right page margin between the right-middle and bottom-right-corner page-margin boxes
+
+<tr id="bottom-margin-boxes-def"><th>`左下隅@
+（ `bottom-left-corner$at ）
+<td>
+`~page~box$の［
+下端~margin, 左端~margin
+］の交差により定義される，固定d~sizeの~box
+◎
+a fixed-size box defined by the intersection of the bottom and left margins of the page box
+<td><figure>`BottomLeftCornerBox^dgm
+<figcaption>
+~pageの［
+左端~margin, 下端~margin
+］の交差の中に入子にされた，［
+~margin, ~border, ~padding
+］を伴う，左下~隅の~box
+◎
+bottom left corner box with margin, border, and padding, nested within the page margin at the intersection of the left and bottom page margins
+</figcaption></figure>
+
+<tr><th>`下端左@
+（ `bottom-left$at ）
+<td>
+下端 ~page~marginの中で，［
+左下隅, 下端中央
+］`~page-margin~box$の合間を埋めるような，横幅可変の~box
+◎
+a variable-width box filling the bottom page margin between the bottom-left-corner and bottom-center page-margin boxes
+<td><figure>`BottomLeftMarginBox^dgm
+<figcaption>
+左下隅~boxの隣にあり，
+~pageの下端~marginの中に入子にされた，［
+~margin, ~border, ~padding
+］を伴う，下端左 ~page-margin~box
+◎
+bottom left page-margin box with margin, border, and padding, nested within the page’s bottom margin next to the bottom-left-corner box
+</figcaption></figure>
+
+<tr><th>`下端中央@
+（ `bottom-center$at ）
+<td>
+~pageの左右~border辺の合間で横方向に中央化され，
+下端 ~page~marginの中で，［
+下端左, 下端右
+］`~page-margin~box$の合間を埋めるような，横幅可変の~box
+◎
+a variable-width box centered horizontally between the page’s left and right border edges and filling the bottom page margin between the bottom-left and bottom-right page-margin boxes
+<td><figure>`BottomCenterMarginBox^dgm
+<figcaption>
+~pageの下端~marginの中に入子にされ, ~page上で中央化される，［
+~margin, ~border, ~padding
+］を伴う，下端~中央の~box
+◎
+bottom center box with margin, border, and padding, nested within the page’s bottom margin and centered on the page
+</figcaption></figure>
+
+<tr><th>`下端右@
+（ `bottom-right$at ）
+<td>
+下端 ~page~marginの中で，［
+下端中央, 右下隅
+］`~page-margin~box$の合間を埋めるような，横幅可変の~box
+◎
+a variable-width box filling the bottom page margin between the bottom-center and bottom-right-corner page-margin boxes
+<td><figure>`BottomRightMarginBox^dgm
+<figcaption>
+右下隅~boxの隣にあり，
+~pageの下端~marginの中に入子にされた，［
+~margin, ~border, ~padding
+］を伴う，右下の~page-margin~box
+◎
+bottom right page-margin box with margin, border, and padding, nested within the page’s bottom margin and next to the bottom-right-corner box
+</figcaption></figure>
+
+<tr><th>`右下隅@
+（ `bottom-right-corner$at ）
+<td>
+`~page~box$の［
+下端~margin, 右端~margin
+］の交差により定義される，固定d~sizeの~box
+◎
+a fixed-size box defined by the intersection of the bottom and right margins of the page box
+<td><figure>`BottomRightCornerMarginBox^dgm
+<figcaption>
+~pageの［
+右端~margin, 下端~margin
+］の交差の中に入子にされた，［
+~margin, ~border, ~padding
+］を伴う，右下~隅の~box
+◎
+bottom right corner box with margin, border, and padding, nested within the page margin at the intersection of the right and bottom page margins
+</figcaption></figure>
+</tbody></table>
+
+		<section id="margin-at-rules">
+<h3 title="At-rules for page-margin boxes">5.1. ~page-margin~box用の~at-rule</h3>
+
+<p>
+`~page-margin~box$は、`~page文脈$の内側にて，`~margin~at-rule$により作成される。
+作者は、これらの規則を，~page文脈~内のどの宣言よりも後に~~置くべきである
+— 旧来の~clientは、~margin~at-ruleの後に来る宣言を正しく取扱えないかもしれないので。
+◎
+Page-margin boxes are created by margin at-rules inside the page context. Authors should put these rules after any declarations in the page context as legacy clients may not handle declarations after margin at-rules correctly.
+</p>
+
+<p>
+`~margin~at-rule@
+は、順に，`~page-margin~box$を識別する`~at-rule$（例 `top-left$at ）, および
+記述子の~blockからなる。
+~blockの内側は
+`~margin文脈@
+内にあると称される。
+◎
+A margin at-rule is an at-rule that identifies the page-margin box (e.g. @top-left) and a block of descriptors (said to be in the margin context).
+</p>
+
+<div class="example">
+
+<p>
+次の~stylesheetは、~page~headerを確立する
+— 左~側に~title （ "<samp >Hamlet</samp>" ）, 右~側に~page番号（ "<samp >Page </samp>" が前置される）を包含するような：
+◎
+The following style sheet establishes a page header containing the title ("Hamlet") on the left side and the page number, preceded by "Page ", on the right side:
+</p>
+
+<pre class="lang-css">
+@page {
+  size: 8.5in 11in;
+  margin: 10%;
+
+  @top-left {
+    content: "Hamlet";
+  }
+  @top-right {
+    content: "Page " counter(page);
+  }
+}
+</pre>
+
+</div>
+
+		</section>
+		<section id="populating-margin-boxes">
+<h3 title="Populating page-margin boxes">5.2. ~page-margin~boxの拡充-法</h3>
+
+<p>
+`before$pe, `after$pe 疑似要素のときと同様に、`~page-margin~box$上の
+`content$p に対する指定d値 `normal^v は， `none^v に算出される。
+`~page-margin~box$は、その `content$p ~propの算出d値が `none$v でないとき, そのときに限り
+`生成され@
+る。
+他の場合、`display$p が `none^v にされた要素に対するときと同じ様に，~boxは生成されない。
+◎
+As with the :before and :after pseudo-elements, a specified content: normal on a page-margin box computes to none. A page-margin box is generated if and only if the computed value of its content property is not none. Otherwise, no box is generated, as for elements with display: none.
+</p>
+
+<p class="note">注記：
+`display$p ~propは、`~page-margin~box$には適用されない。
+◎
+The display property does not apply to page-margin boxes.
+</p>
+
+<div class="example">
+
+<p>
+次の~stylesheetは、~pageの左下隅を除く各~隅に緑色の~boxを作成する：
+◎
+The following style sheet creates a green box in each corner of the page except the bottom-left corner.
+</p>
+
+<pre class="lang-css">
+@page {
+  @top-left-corner {
+    content: " ";
+    border: solid green;
+  }
+  @top-right-corner {
+    content: url(foo.png);
+    border: solid green;
+  }
+  @bottom-right-corner {
+    content: counter(page);
+    border: solid green;
+  }
+  @bottom-left-corner {
+    content: <mark>normal</mark>;
+    border: solid green;
+  }
+}
+</pre>
+
+</div>
+
+		</section>
+		<section id="margin-dimension">
+<h3 title="Computing Page-margin Box Dimensions">5.3. ~page-margin~boxの寸法の算出-法</h3>
+
+<p>
+`~page-margin~box$の横幅, 縦幅は、下の規則により決定される。
+これらの規則は、`~page-margin~box$に対し，
+CSS2.1 § 10.3, § 10.6
+に等価なものを定義する。
+◎
+The width and height of each page-margin box is determined by the rules below. These rules define the equivalent of CSS2.1 Sections 10.3 and 10.6 for page-margin boxes.
+</p>
+
+<p>
+`min-height$p, `max-height$p, `min-width$p, `max-width$p
+`CSS2$r
+用に適用される規則は，`~page-margin~box$にも適用され、指定された
+`width$p ／ `height$p
+による結果の寸法が それらの拘束に觝触する場合、［
+横幅, 縦幅, ~margin
+］のうち，いくつかは計算し直される。
+`min-height$p ／ `min-width$p
+~propを~supportしない~UAは、その値が常に `0^v であるかのように挙動するモノトスル。
+◎
+The rules for applying min-height, max-height, min-width, and max-width [CSS2] do apply to page-margin boxes and may imply a recalculation of the width, height, and/or margins if the dimensions resulting from the specified width or height violate their constraints. If the UA does not support the min-height or min-width properties then it must behave as if min-height and min-width were always zero.
+</p>
+
+			</section>
+			<section id="margin-box-terms">
+<h4 title="Page-Margin Box Layout Terminology">5.3.1. ~page-margin ~box~layoutの各種用語</h4>
+
+<span id="max-margin-dimension"></span>
+
+<p>
+CSS2.1 `CSS2$r による~box~modelの定義と
+`CSS-SIZING-3$r による内在的~sizingの用語に加えて、以下に挙げる用語が定義され，後続の`~page-margin~box$の計算に利用される：
+◎
+In addition to the box model definitions in CSS2.1 [CSS2], and the sizing terms in CSS Sizing [CSS-SIZING-3], the following terms are defined for use in the subsequent page-margin box calculations:
+</p>
+
+<dl>
+	<dt>
+`可用な横幅@
+◎
+available width
+</dt>
+	<dd>
+~pageの［
+左端~border線幅, 左端~padding,
+`~page区画$の横幅,
+右端~padding, 右端~border線幅
+］の総和。
+言い換えれば，`~page~box$の左右~border辺の距離。
+◎
+The sum of the page’s left border width, left padding, page area width, right padding, and right border width. In other words, it is the distance between the page box’s left right border edges.＼
+</dd>
+	<dd>
+この数量は、上下端の`~page-margin~box$の寸法を計算するときに利用される。
+◎
+This quantity is used when calculating dimensions of the top and bottom page-margin boxes.
+</dd>
+
+	<dt>
+`可用な縦幅@
+◎
+available height
+</dt>
+	<dd>
+~pageの［
+上端~border線幅, 上端~padding,
+`~page区画$の縦幅,
+下端~padding, 下端~border線幅
+］の総和。
+言い換えれば，`~page~box$の上下~border辺の距離。
+◎
+The sum of the page’s top border width, top padding, page area height, bottom padding, and bottom border width. In other words, it is the distance between the page box’s top bottom border edges.＼
+</dd>
+	<dd>
+この数量は、左右端の`~page-margin~box$の寸法を計算するときに利用される。
+◎
+This quantity is used when calculating dimensions of the left and right page-margin boxes.
+</dd>
+
+	<dt>
+`外縁~横幅@
+◎
+outer width
+</dt>
+	<dd>
+`外縁~辺$の横幅。
+`CSS-BOX-3$r
+◎
+The width of the outer edge, as defined in [CSS-BOX-3].
+</dd>
+
+	<dt>
+`最小-内容 横幅@
+◎
+min-content width
+</dt>
+	<dd>
+物理-横幅の方の`最小-内容~size$。
+【物理-〜 — すなわち，~pageの方位に相対的な（縦置きならば短辺（とされる方）の横幅）】
+◎
+Whichever of min-content block size or min-content inline size is the physical width.
+</dd>
+
+	<dt>
+`最大-内容 横幅@
+◎
+max-content width
+</dt>
+	<dd>
+物理-横幅の方の`最大-内容~size$。
+◎
+Whichever of max-content block size or max-content inline size is the physical width.
+</dd>
+
+	<dt>
+`外縁 最小-横幅@
+◎
+outer min width
+</dt>
+	<dd>
+次を除いて、`外縁~横幅$と同様
+⇒
+`width$p の算出d値が `auto^v のときには、`最小-内容 横幅$が利用される
+◎
+Like the outer width, except the min-content width is used when the computed width is auto.
+</dd>
+
+	<dt>
+`外縁 最大-横幅@
+◎
+outer max width
+</dt>
+	<dd>
+次を除いて、`外縁~横幅$と同様
+⇒
+`width$p の算出d値が `auto^v のときには、`最大-内容 横幅$が利用される
+◎
+Like the outer width, except the max-content width is used when the computed width is auto.
+</dd>
+</dl>
+
+<p>
+`~page-margin~box$用の
+`包含塊@
+は、その所在に依存して決まる：
+◎
+The containing block for a page-margin box depends on its location:
+</p>
+
+<ul class="switch">
+	<li>
+隅の`~page-margin~box$用の`包含塊$は
+⇒
+その隅で出会う 2 本の~page~marginの交差で定義される矩形。
+◎
+For a corner page-margin box, it is the rectangle defined by the intersection of the two page margins meeting at that corner.
+</li>
+	<li>
+<p>
+他の`~page-margin~box$用の`包含塊$は
+⇒
+その~boxがある側の~page~marginから，［
+~boxの両隣にある隅の`~page-margin~box$の包含塊
+］を除いて形成される矩形。
+◎
+For all other page-margin boxes, the containing block is the rectangle formed by the encapsulating page margin minus the containing blocks of the adjacent corners' page-margin boxes.＼
+</p>
+
+<p>
+これは、この包含塊の~sizeが，［
+一方の寸法は使用 ~page~marginにより与えられ，他方の寸法は［
+`可用な横幅$（上下端の`~page-margin~box$の場合）／
+`可用な縦幅$（左右端の`~page-margin~box$の場合）
+］で与えられることを意味する。
+</p>
+◎
+This means that the size of this containing block is given in one dimension by the used page margin and in the other dimension by the available width (for top and bottom page-margin boxes) or available height (for left and right page-margin boxes).
+</li>
+</ul>
+
+			</section>
+			<section id="variable-sizing">
+<h4 title="Page-Margin Box Variable Dimension Computation Rules">5.3.2. ~page-margin~boxの可変~次元~用の算出~規則</h4>
+
+<p class="trans-note">【
+可変~次元 — すなわち，上下端の~margin~boxであれば 横方向の寸法, 左右端の~margin~boxであれば 縦方向の寸法。
+】</p>
+
+<p>
+以下の規則が［
+`上端左$, `上端中央$, `上端右$
+］の`~page-margin~box$（以下、順に
+%左~box, %中央~box, %右~box
+と記す）に適用される。
+◎
+The following rules apply to @top-left, @top-center and @top-right page-margin boxes, which are referred to as A, B, and C, respectively, in this section.
+</p>
+
+<p class="trans-note">【
+他の側の~boxについては、~~最後の
+<a href="#variable-mapping">§ 5.3.2.5</a>
+にて述べられる。
+】</p>
+
+				</section>
+				<section id="variable-auto-margins">
+<h5 title="Margins">5.3.2.1. ~margin</h5>
+
+<p>
+三つの~boxのいずれに対しても、算出d値が `auto^v になる
+`margin-left$p ／ `margin-right$p
+~propの使用~値は， `0^v になる。
+◎
+If the margin-left or margin-right property of any of the three boxes computes to auto, the used value is zero.
+</p>
+
+				</section>
+				<section id="variable-auto-sizing">
+<h5 title="Resolving auto widths">5.3.2.2. `auto^v 横幅の解決-法</h5>
+
+<p>
+次の~algoは、各~boxの使用【外縁】横幅を決定する。
+この目的においては、`生成され$ない~boxの［
+`width$p, `外縁~横幅$
+］は， 0 と見做す。
+◎
+The following algorithm determines the used width of each box. For this purpose, boxes that are not generated are assumed to have a width and an outer width of zero.
+</p>
+
+<p class="note">注記：
+より高~levelな目標は、内容の分量に比例するように空間を配分することにある
+— （優先度~順で）次を行うことにより
+⇒＃
+(1) ~overflow, 重合nを最小限にする／
+(2) %中央~box が生成されるときは中央化する
+◎
+Note: The high-level goals are (in order of priority) to center the middle box (B) if it is generated, to minimize overflow and overlap, and to distribute space proportionally to the amount of content.
+</p>
+
+<p id="flex-fit">
+%中央~box が`生成され$ない場合、`可用な横幅$を次に従って［
+%左~box, %右~box
+］に配分する：
+◎
+If the middle box (B) is not generated, distribute the available width to A and C as follows:
+</p>
+
+<ul>
+	<li>
+片方の~boxのみ `auto^v 横幅の場合（すなわち， `width^p の算出d値は `auto^v である）、その使用~値は，［
+両~boxの`外縁~横幅$の総和 ~EQ `可用な横幅$
+］になるように解決される。
+◎
+If only one box has 'width: auto', its used width is resolved so that the sum of the outer widths equals available width.
+</li>
+	<li>
+<div>
+<p>
+%左~box, %右~box ともに `auto^v 横幅の場合、次の式により，各~boxに空間を配分する
+⇒
+~boxの使用~外縁~横幅 ~EQ
+%W ~PLUS ( `~flex空間$V ~MUL ( `~flex係数$V ~DIV ( 両~boxの `~flex係数$V の総和 ) ) )
+</p>
+
+<p>
+ここで，
+`~flex空間@V, および~boxごとに異なり得る量［
+%W, `~flex係数@V
+］は、次で与えられる：
+</p>
+
+◎
+If A and C both have 'width: auto', distribute the space to each box as follows:
+◎
+↓</div>
+		<ol>
+			<li>
+`~flex空間$V ~SET
+`可用な横幅$ ~MINUS ( 両~boxの外縁 `最大-内容 横幅$の総和 )
+◎
+↓</li>
+			<li>
+<p>
+［
+`~flex空間$V ~GTE 0
+］ならば：
+</p>
+				<ul>
+					<li>
+`~flex係数$V ~SET
+~boxの外縁 `最大-内容 横幅$に比例する量
+</li>
+					<li>
+%W ~SET ~boxの`最大-内容 横幅$
+</li>
+				</ul>
+◎
+If the sum of the outer max-content widths is less than the available width, call that difference the flex space. Calculate each box’s flex factor as proportional to its outer max-content width, and set its used outer width to: max-content width + flex space × flex factor ÷ ∑flex factors
+</li>
+			<li>
+<p>
+他の場合：
+</p>
+				<ul>
+					<li>
+`~flex空間$V ~SET
+`可用な横幅$ ~MINUS ( 両~boxの外縁 `最小-内容 横幅$の総和 )
+</li>
+					<li>
+<p >
+`~flex係数$V ~SET 次で与えられる量：
+</p>
+						<ul>
+							<li>
+`~flex空間$V ~GTE 0 ならば：
+~boxの ( `最大-内容 横幅$ ~MINUS `最小-内容 横幅$ ) に比例する量
+</li>
+							<li>
+他の場合：
+~boxの外縁 `最小-内容 横幅$に比例する量
+</li>
+						</ul>
+					</li>
+					<li>
+%W ~SET ~boxの`最小-内容 横幅$
+</li>
+				</ul>
+◎
+Otherwise if the sum of the outer min-content widths is less than the available width, call that difference the flex space calculate each box’s flex factor as proportional to its max-content width minus min-content width, and set its used outer width to: min-content width + flex space × flex factor ÷ ∑flex factors
+◎
+Otherwise, calculate its outer size as in the previous case, but set each box’s flex factor as proportional to its outer min-content width.
+</li>
+			<li>
+ここで、両~boxの `~flex係数$V の総和が 0 になる場合
+⇒
+両~boxとも `~flex係数$V は 1 と見做す
+◎
+In each case, both flex factors are assumed to be 1 if their sum is equal to zero.
+</li>
+		</ol>
+	</li>
+</ul>
+
+<p>
+%中央~box が`生成され$る場合、［
+%左~box ／ %中央~box ／ %右~box
+］に対する `auto^v 横幅を次に従って決定する：
+◎
+If the middle box (B) is generated, determine the auto widths of A, B, and C as follows:
+</p>
+
+<ol>
+	<li>
+<p>
+まず、 %中央~box に対する `auto^v 横幅を解決する。
+ここでは，［
+%左~box, %右~box
+］の代わりに仮想の~box %左~右~box があって、その横幅は次を満たすと見做す（これは %中央~box の中央寄せを保全する）
+⇒
+%左~右~box の横幅 ~EQ `max^op( %左~box の横幅, %右~box の横幅 ) ~MUL 2
+</p>
+
+<p class="trans-note">【
+明示的に述べられていないが、
+`max^op() の中の横幅 `auto^v は無視し，両方とも `auto^v ならば結果は `auto^v と見做す下で，次を適用することになるであろう。
+】</p>
+
+<p>
+［
+%左~box, %右~box
+］に対し<a href="#flex-fit">中央~boxが生成されない場合</a>に述べたように，［
+%中央~box, %左~右~box
+］に空間を配分する。
+</p>
+
+◎
+First, resolve any auto width of the middle box (B): Assume there are two boxes, B and AC, where each of AC’s dimensions is double the maximum of A and C. (This preserves B’s centering.) Distribute the space to these two boxes (B and the imaginary AC) as described for A and C above.
+</li>
+	<li>
+次に、［
+%左~box ／ %右~box
+］に対する `auto^v 横幅を，次の式の結果に解決する
+⇒
+~boxの使用~外縁~横幅 ~EQ ( `可用な横幅$ ~MINUS %中央~box の使用~外縁~横幅 ) ~DIV 2
+◎
+Then, resolve any auto widths of the side boxes (A and C) by setting that box’s outer width to (available width − used outer widths of B) ÷ 2
+</li>
+</ol>
+
+				</section>
+				<section id="variable-minmax">
+<h5 title="Handling min-width and max-width">5.3.2.3. `min-width^p, `max-width^p の取扱い</h5>
+
+<p>
+`min-width$p, `max-width$p
+~prop `CSS2$r
+は、通常の要素に対するときと同様に，`~page-margin~box$の可変~寸法にも適用される
+— ただし、同じ側にある三つの~boxは，まとめて考慮される。
+◎
+The min-width and max-width properties [CSS2] apply to page-margin boxes in the variable dimension like on normal elements, except that the three boxes on the same side are considered together.
+</p>
+
+<p>
+より精確には：
+◎
+More precisely:
+</p>
+
+<ol>
+	<li>
+仮の使用~横幅は、【三つの~boxのそれぞれに対し，】
+<a href="#variable-auto-sizing">前節の規則</a>の下で（ `min-width$p, `max-width$p は織り込まずに）横幅を計算した結果とする。
+◎
+The tentative used widths are calculated (without min-width and max-width) following the rules under § 5.3.2.2 Resolving auto widths.
+</li>
+	<li>
+三つの~boxいずれかにおいて，仮の使用~横幅 ~GT `max-width$p ならば
+⇒
+【該当する~boxたちに限り】
+`width$p 用の算出d値に代えて `max-width$p の算出d値を利用する下で、前節の規則を再び適用する。
+◎
+If the tentative used width of any of the three boxes is greater than max-width, the rules above are applied again, but this time using the computed value of max-width as the computed value for width.
+</li>
+	<li>
+三つの~boxいずれかにおいて，前~段の結果の横幅 ~LT `min-width$p ならば
+⇒
+【該当する~boxたちに限り】
+`width$p 用の算出d値に代えて `min-width$p の算出d値を利用する下で、前節の規則を再び適用する。
+◎
+If the resulting width of any of the three boxes is smaller than min-width, the rules above are applied again, but this time using the value of min-width as the computed value for width.
+</li>
+</ol>
+
+				</section>
+				<section id="variable-position">
+<h5 title="Positioning">5.3.2.4. 位置決め</h5>
+
+<p>
+各~boxの寸法が決定されたなら、それらを，次に従って位置させる：
+◎
+Once the dimensions of the boxes are determined, they are positioned as follows:
+</p>
+
+<ul>
+
+	<li>
+%左~box の左端~外縁~辺は、包含塊の左端~辺に接合する。
+◎
+The left outer edge of A is flush with the left edge of the containing block
+</li>
+	<li>
+%中央~box の外縁~区画は、包含塊~内で中央化する。
+◎
+The outer area of B is centered in the containing block.
+</li>
+	<li>
+%右~box の右端~外縁~辺は、包含塊の右端~辺に接合する。
+◎
+The right outer edge of C is flush with the right edge of the containing block.
+</li>
+</ul>
+
+				</section>
+				<section id="variable-mapping">
+<h5 title="Boxes on other sides">5.3.2.5. 他の側の~box</h5>
+
+<p>
+他の側の`~page-margin~box$の使用~値は、次の規則により確立される：
+</p>
+
+<dl class="switch">
+	<dt>`下端左$, `下端中央$, `下端右$</dt>
+	<dd>
+順に［
+`上端左$,
+`上端中央$,
+`上端右$
+］用の規則と同じ規則により。
+◎
+The used values for @bottom-left, @bottom-center and @bottom-right page-margin boxes are established by the same rules as for @top-left, @top-center, and @top-right, respectively.
+</dd>
+	<dt>`左端上$, `左端中段$, `左端下$</dt>
+	<dd>
+同じ規則の［
+"width" ／ "left" ／ "center" ／ "right" （横幅／左端／中央／右端）
+］を，順に［
+"height" ／ "top" ／ "middle" ／ "bottom" （縦幅／上端／中段／下端）
+］に読替えた規則により。
+◎
+The used values for @left-top, @left-middle and @left-bottom boxes are established by the same rules, with "width" replaced by "height", "left" by "top", "right" by "bottom" and "center" by "middle".
+</dd>
+	<dt>`右端上$, `右端中段$, `右端下$</dt>
+	<dd>
+順に［
+`左端上$,
+`左端中段$,
+`左端下$
+］用の規則と同じ規則により。
+◎
+The used values for @right-top, @right-middle and @right-bottom page-margin boxes are established by the same rules as for @left-top, @left-middle and @left-bottom, respectively.
+</dd>
+
+</dl>
+
+			</section>
+			<section id="fixed-sizing">
+<h4 title="Page-Margin Box Fixed Dimension Computation Rules">5.3.3. ~page-margin~boxの固定d次元~用の算出~規則</h4>
+
+<p class="trans-note">【
+固定d次元 — すなわち，上下端の~margin~boxであれば 縦方向の寸法, 左右端の~margin~boxであれば 横方向の寸法。
+】</p>
+
+<p>
+以下の規則が、上端~側の`~page-margin~box$（`左上隅$, `上端左$, `上端中央$, `上端右$, `右上隅$）の［
+`height$p,
+`margin-top$p,
+`margin-bottom$p
+］~propの使用~値を計算する
+— すなわち， “不定” な値 `auto^v を解決する —
+ために利用される：
+◎
+The rules below are used to calculate the used values of each @top-left-corner, @top-left, @top-center, @top-right, and @top-right-corner page-margin box’s height, margin-top, and margin-bottom properties:
+</p>
+
+<div class="p">
+<p>
+以下では、~~目的の~page-margin~boxに~~関係する各種~propの値を次の変数で表す
+⇒＃
+%H = `height$p
+%mT = `margin-top$p
+%mB = `margin-bottom$p
+</p>
+
+<p>
+これらの値は、初期~時には，~propの算出d値に設定されているとする。
+これらは、次の等式を満たすように解決されなければナラナイ
+⇒
+%H ~PLUS %mT ~PLUS %mB ~EQ %M
+</p>
+
+<p>
+ここで %M は、上端~側の~page~margin（の縦幅）から［
+~page-margin~boxの，次に挙げる~propの算出d値の総和
+］を減算した結果とする
+⇒＃
+`border-top-width$p,
+`padding-top$p,
+`padding-bottom$p,
+`border-bottom-width$p
+</p>
+
+◎
+The following constraint must hold among the used values of the margin box’s properties:
+◎
+margin-top + border-top-width + padding-top + height + padding-bottom + border-bottom-width + margin-bottom = top page margin
+</div>
+
+<ol>
+	<li>
+［
+%H, %mT, %mB のうち，不定でないもの
+］の総和 ~GT %M ならば
+⇒
+不定な［
+%mT ／ %mB
+］は 0 に解決した上で，以下を適用する。
+◎
+If border-top-width + padding-top + height (if it is not auto) + padding-bottom + border-bottom-width, plus margin-top and/or margin-bottom if not auto, is larger than the height of the top page margin, then any auto values for margin-top or margin-bottom are, for the following rules, treated as zero.
+</li>
+	<li>
+<p>
+%H は不定でない場合：
+</p>
+		<ul class="switch">
+			<li>
+%mT, %mB とも不定でない
+⇒
+この事例は
+`拘束され過ぎ@
+と称される。
+%mT を不定と見做す下で， %mT について等式を解いて解決する。
+◎
+If at this point all of height, margin-top, and margin-bottom have a computed value other than auto, the values are said to be "over-constrained". In this case, the specified value of margin-top is treated as auto.
+</li>
+			<li>
+%mT, %mB のうち片方だけ不定
+⇒
+その片方について等式を解いて解決する。
+◎
+If there is now exactly one value specified as auto, its used value follows from the equality.
+</li>
+			<li>
+%mT, %mB とも不定
+⇒
+%mT = %mB と見做す下で等式を解いて，それらを解決する。
+これは、`~page-margin~box$内容を，上端 ~page~marginの中で縦方向に中央化する。
+◎
+↓If height is set to auto, any other auto values become 0 and height follows from the resulting equality
+◎
+If both margin-top and margin-bottom are auto, their used values are equal. This vertically centers the page-margin box content within the top page margin.
+</li>
+		</ul>
+	</li>
+	<li>
+他の場合（ %H は不定）
+⇒
+不定な［
+%mT ／ %mB
+］は 0 に解決した上で、
+%H について等式を解いて解決する。
+◎
+↑</li>
+</ol>
+
+<p class="trans-note">【
+見通しを良くするため、上の訳では，原文による場合分けを一部 組み替えている。
+】</p>
+
+<p>
+同じ規則は、下端の`~page-margin~box$（`左下隅$, `下端左$, `下端中央$, `下端右$, `右下隅$）に対しても適用される
+— ただし，`拘束され過ぎ$になる場合は、
+ %mT ではなく %mB を不定と~~見なす。
+◎
+The same rules apply to the bottom page-margin boxes (bottom-left-corner, bottom-left, bottom-center, bottom-right, and bottom-right-corner), except that in the overconstrained case, the margin-bottom is ignored rather than the margin-top.
+</p>
+
+<p>
+左右端の`~page-margin~box$（［
+`左上隅$, `左端上$, `左端中段$, `左端下$, `左下隅$
+］, ［
+`右上隅$, `右端上$, `右端中段$, `右端下$, `右下隅$
+］）用の `width$p に関する各種~propも，相似的な規則で統治される：
+［
+"top" ／ "bottom" ／ "height" （上端／下端／縦幅）
+］を順に［
+"left" ／ "right" ／ "width" （左端／右端／横幅）
+］に読替えた上で、［
+左端／右端
+］`~page-margin~box$が`拘束され過ぎ$になる事例では，［
+`margin-left$p ／ `margin-right$p
+］を不定と~~見なす。
+◎
+Analogous rules govern the properties for the left and right page-margin boxes with respect to width (top-left-corner, left-top, left-middle, left-bottom, and bottom-left-corner; top-right-corner, right-top, right-middle, right-bottom, bottom-right-corner), with "top" replaced by "left", "bottom" replaced by "right", and "height" replaced by "width". In the overconstrained case for left (right) page-margin boxes, the specified value of margin-left (margin-right) is ignored.
+</p>
+
+		</section>
+		<section id="margin-box-ex">
+<h3 title="Page-margin box examples">5.4. ~page-margin~boxの例</h3>
+
+<p>
+`~page-margin~box$ の用例集を以下に示す：
+◎
+The following is a collection of examples of page-margin box usage.
+</p>
+
+<div class="example">
+
+<p>
+上端左~headerのみを伴う~pageの例：
+◎
+Here is an example of a page with only a top-left header:
+</p>
+
+<pre class="lang-css">
+@page {
+  @top-left {
+    content: "~~左セル内のヘッダ";
+  }
+}
+</pre>
+<!-- 
+  @top-left { content: "Header in Left Cell (top-left)" }
+-->
+
+<p>
+上端中央／上端右
+の`~page-margin~box$用の内容は定義されていないので、上端左の`~page-margin~box$は，`~page~box$の中央まで拡がることも許容される。
+◎
+Because there are no contents defined for the top-center or the top-right page-margin boxes, the extent of the top-left page-margin box is allowed to cross the center of the page box.
+</p>
+
+<figure>`header-ex-1^dgm
+<figcaption>~header例 1</figcaption></figure>
+
+</div>
+
+<div class="example">
+
+<p>
+中央化された~headerを伴う~pageの例：
+◎
+The following is an example of a page with a centered header:
+</p>
+
+<pre class="lang-css">
+@page {
+  @top-center {
+    content: "~~中央セル内のヘッダ";
+  }
+}
+</pre>
+<!-- 
+  @top-center { content: "Header in Center Cell (top-center)" }
+-->
+
+<figure>`header-ex-2^dgm
+<figcaption>~header例 2</figcaption></figure>
+
+</div>
+
+<div class="example">
+
+<p>
+上端右 `~page-margin~box$内に単独の~headerを伴う~pageの例：
+◎
+The following is an example of a page with a single header in the top-right page-margin box:
+</p>
+
+<pre class="lang-css">
+@page {
+  @top-right {
+    content: "~~右セル内のヘッダ";
+  }
+}
+</pre>
+<!-- 
+  @top-right { content: "Header in Right Cell (top-right)" }
+-->
+
+<p>
+中央~cellの内容は空なので、上端右の`~page-margin~box$は，`~page~box$の中央まで拡がることも許容される。
+◎
+Because the content of the center cell is empty, the extent of the top-right page-margin box is allowed to cross the center of the page box.
+</p>
+
+<figure>`header-ex-3^dgm
+<figcaption>~header例 3</figcaption></figure>
+
+</div>
+
+<div class="example">
+
+<p>
+上端中央, 上端左の~headerを伴う~pageの例：
+◎
+The following is an example of a page with a top-center and a top-left header:
+</p>
+
+<pre class="lang-css">
+@page {
+  @top-left {
+    content: "~~左セル";
+  }
+  @top-center {
+    content: "~~中央セル内のヘッダ";
+  }
+}
+</pre>
+<!-- 
+  @top-left { content: "Left Cell (top-left)" }
+  @top-center { content: "Header in Center Cell (top-center)" }
+-->
+
+<figure>`header-ex-4^dgm
+<figcaption>~header例 4</figcaption></figure>
+
+</div>
+
+<div class="example">
+
+<p>
+上端中央, 上端右の~headerを伴う~pageの例：
+◎
+The following is an example of a page with a top-center and a top-right header:
+</p>
+
+<pre class="lang-css">
+@page {
+  @top-center {
+    content: "~~中央セル内のヘッダ";
+  }
+  @top-right {
+    content: "~~右セル";
+  }
+}
+</pre>
+
+<!-- 
+  @top-center { content: "Header in Center Cell (top-center)" }
+  @top-right { content: "Right Cell (top-right)" }
+
+＊？
+margin: 10%;
+-->
+
+<figure>`header-ex-5^dgm
+<figcaption>~header例 5</figcaption></figure>
+
+</div>
+
+<div class="example">
+
+<p>
+上端左, 上端右の~headerを伴う~pageの例：
+◎
+The following is an example of a page with top-left and top-right headers:
+</p>
+
+<pre class="lang-css">
+@page {
+  @top-left {
+    content: "~~上端左のヘッダ";
+  }
+  @top-right {
+    content: "~~右セル";
+  }
+}
+</pre>
+<!-- 
+  @top-left { content: "Header in top-left with approx. twice as many words as right cell." }
+  @top-right { content: "Right cell (top-right)" }
+-->
+
+<p>
+中央~cellの内容は無いので、上端左の`~page-margin~box$は，`~page~box$の中央まで拡がることも許容される。
+◎
+Because there are no center cell contents, the extent of the top-left is allowed to cross the center of the page box.
+</p>
+
+<figure>`header-ex-6^dgm
+<figcaption>~header例 6</figcaption></figure>
+
+</div>
+
+		</section>
+	</section>
+	<section id="page-properties">
+<h2 title="Page Properties">6. ~page~prop</h2>
+
+<p>
+~page~boxに適用される CSS 2.1 `CSS2$r ~propの規範的~listは、
+<a href="#page-property-list">付録 A にて定義される</a>。
+適合~UAは、これらの各~propに対し，`塊~box$上で~supportするならば`~page文脈$においても~supportするモノトスル。
+この仕様は、~page文脈に限り適用される `size$d ~propを追加的に定義する。
+◎
+Appendix A defines the normative list of CSS 2.1 [CSS2] properties that apply to page boxes. If a conforming user agent supports any of these properties on block boxes, then it must also support that property in the page context. This specification additionally defines the size property that only applies in the page context.
+</p>
+
+<p class="trans-note">【
+該当する~propには，他の~CSS~moduleにより拡張されているものもある。
+“~supportする” が、［
+そのような拡張を~UAが塊~box上で~supportするならば，~page文脈においても~supportする
+］ことまで含意するどうかは，はっきりしない。
+】</p>
+
+<p>
+`~page-margin~box$に適用される各種~propは、~page文脈の中でも設定できる：
+継承-可能なもの, または（`~margin文脈$における `inherit^v ~keywordにより）明示的に継承される場合、それらは，すべての`~page-margin~box$に継承されることになる。
+◎
+Properties that apply to the page-margin boxes can also be set within the page context: if inheritable or explicitly inherited (with the inherit keyword in the margin context), they will inherit to the page-margin boxes.
+</p>
+
+<p>
+~page-margin~boxに適用される CSS 2.1 `CSS2$r ~propの規範的~listも、
+<a href="#margin-property-list">付録 A にて定義される</a>。
+適合~UAは、これらの各~propに対し，`塊~box$上で~supportするならば`~margin文脈$においても~supportするモノトスル。
+◎
+The same appendix defines the normative list of CSS 2.1 [CSS2] properties that apply to page-margin boxes. If a conforming user agent supports any of these properties on block boxes, then it must also support that property in the margin context.
+</p>
+
+<p>
+`CSS2$r にて定義される 他の~propは、これらの文脈の下では適用されない。
+CSS 2.1 に含まれていない~propの挙動は未定義である。
+◎
+Other properties defined by [CSS2] do not apply in these contexts. Behavior for properties not included in CSS 2.1 is undefined.
+</p>
+
+<p class="note">注記：
+他の~propを未定義なままにする意図は、適切な CSS3 ~propを漸進的に追加できるようにすることにある
+— 各 追加ごとに，この仕様を更新せずに済むように。
+◎
+Note: The intent of leaving other properties undefined is to allow the gradual addition of appropriate CSS3 properties as they emerge, without having to update this specification with each addition.
+</p>
+
+<p>
+文書~内の要素と同様に
+`~page文脈$, `~margin文脈$
+のいずれも，各~propごとに
+<a href="~CASCADE#computed-value" >算出d値を持つ</a>
+<!-- ~CSS22/cascade.html#value-stages -->
+とされる
+— `~page~box$／`~page-margin~box$ に適用されない~propであっても。
+◎
+As with elements in the document, both the page context and the margin context have a computed value for every property, even if that property does not apply to the page or page-margin box.
+</p>
+
+<p>
+これらの~propにも，~CSS~prop用の通常の規則が適用される
+— ただし、次の例外を除く：
+◎
+The normal rules for CSS properties apply with the following exceptions:
+</p>
+
+<ul>
+
+	<li>
+`~page-margin~box$は，`~page文脈$を継承し、~page文脈は，根~要素を継承する。
+しかしながら、この仕様（ Level 3 ）の以前の改訂は，この点を指定していなかったので、~page文脈~内の継承d~propを（根~要素に対するときと同様に）その初期~値に設定する実装も、この仕様に適合tとする。
+この例外は、 Level 4 では除去されることになることに注意。
+◎
+page-margin boxes inherit from the page context. The page context inherits from the root element. However, since the previous revision of CSS Paged Media Level 3 did not specify this point, an implementation that sets inherited properties in the page context to their initial values (as for the root element) is also conformant to CSS Paged Media Level 3. Note that this exception will be removed in Level 4.
+</li>
+	<li>
+`em$u ／ `ex$u
+単位~付きの値は、それらの文脈に結付けられている~fontに相対的に解釈される：
+これらの単位が［
+`~margin文脈$／`~page文脈$
+］の下で `font-size$p ~propに対し利用された場合、［
+`~page文脈$／根~要素
+］の~fontに相対的になる。
+しかしながら、この仕様の以前の改訂は，この点について多義的であったので、
+`font-size$p 上の `em$u／`ex$u を初期~値に相対的として扱う実装も，この仕様に適合tとする。
+この例外は、 Level 4 では除去されることになることに注意。
+◎
+Values in units of em and ex are interpreted relative to the font associated with their context. When used on the font-size property in the margin context, they are relative to the font of the page context. When used on the font-size property in the page context, they are relative to the font-size of the root element. However, since a previous revision of CSS Paged Media Level 3 was ambiguous on this point, an implementation that treats em and ex on font-size as relative to the initial value is also conformant to CSS Paged Media Level 3. Note that this exception will be removed in Level 4.
+</li>
+	<li>
+~margin／~padding
+~propに対する百分率~値は、包含塊の寸法に相対的になる：
+［
+左右端／上下端
+］に対する百分率~値は，包含塊の［
+横幅／縦幅
+］に相対的になる。
+◎
+Percentage values on the margin and padding properties are relative to the dimensions of the containing block. For right and left values, percentages are relative to the width of the containing block; for top and bottom values, percentages are relative to the height of the containing block.
+</li>
+	<li>
+［
+`~page~box$／各種 `~page-margin~box$
+］用の［
+`width$p, `height$p
+］の使用~値には，特別な算出~規則がある
+—
+<a href="#page-size">§ ~page~size</a>
+および
+<a href="#margin-dimension">§ ~page-margin~box寸法の算出-法</a>
+を見よ。
+◎
+The used values of width and height have special computation rules for page boxes and page-margin boxes; see Page Size and Computing Page-Margin Box Dimensions.
+</li>
+	<li>
+~page背景は、
+<a href="#painting">前述のように</a>，位置され, 塗られる。
+◎
+The page background is positioned and painted as described above.
+</li>
+	<li>
+~counterの視野~用の規則は、
+<a href="#page-based-counters">後述するように</a>改変される。
+◎
+The rules for counter scoping are modified as described below.
+</li>
+	<li>
+`before$pe ／ `after$pe
+疑似要素に対するときと同様に、`~page-margin~box$上の `content$p ~propに対する `normal^v 値は， `none^v に算出される。
+◎
+As on the '::before' and '::after' pseudo-elements, the normal value of the content property computes to none on page-margin boxes.
+</li>
+	<li>
+`~page-margin~box$上では、 `vertical-align$p ~propは，
+<a href="~CSS22/tables.html#height-layout">~table~cellに指定される</a>
+ように挙動する。
+それは、書字~mode関わらず，`常に^em，縦方向に整列を遂行する。
+◎
+On page-margin boxes, the vertical-align property behaves as specified for table cells. It always performs alignment in the vertical dimension, regardless of writing mode.
+</li>
+</ul>
+
+<p>
+~UAは、~UA~stylesheetを介して，［
+`印刷-不能な区画$があれば それも含むような，既定の~page~margin
+］を確立するべきである。
+作者は、［
+既定の`~page区画$は，印刷-不能な領域を含まない
+］ものと見做すべきである。
+◎
+User agents should establish a default page margin via the user agent stylesheet that includes any non-printable area. Authors should assume that the default page area will not include unprintable regions.
+</p>
+
+		<section id="page-based-counters">
+<h3 title="Page-based counters">6.1. ~pageに基づく~counter</h3>
+
+<p>
+~counterは、 `page$at 規則の中でも定義して制御でき、`~page-margin~box$内の内容として利用できる。
+これは、~page数を保守するときに有用になる。
+◎
+Counters can be defined and controlled within an @page rule, and used as content in page-margin boxes. This is useful for maintaining a page count.
+</p>
+
+<p>
+`~page文脈$／`~margin文脈$
+の中の `counter-increment$p は、各`~page~box$の生成ごとに~counterを増分する。
+◎
+A counter-increment within either a page or margin context causes the counter to increment with the generation of each page box.
+</p>
+
+<p>
+`~page文脈$の中で
+設定し直される／増分される
+~counterは、すべての`~page-margin~box$の視野に入り，文書の中に同じ名前の~counterがあれば それらを隠蔽する。
+◎
+If a counter is reset or incremented within the page context, it is in scope for all page-margin boxes and obscures all counters of the same name within the document.
+</p>
+
+<p>
+`~margin文脈$の中で
+設定し直される／増分される
+~counterは、その`~page-margin~box$の視野に入り，`~page文脈$や文書の中に同じ名前の~counterがあれば それらを隠蔽する。
+◎
+If a counter is reset or incremented within a margin context, it is in scope for that page-margin box and obscures any counters of the same name in both the page context and the document.
+</p>
+
+<p>
+`~margin文脈$／`~page文脈$
+の中で，まだ設定し直されても増分されてもいない~counterが，`~margin文脈$ 内で
+`counter()$f や `counters()$f
+に利用された場合の結果の値は、正確に，`~page-margin~box$が，［
+文書の中で~pageの開始-の所にある要素
+］であって, かつ［
+~page分断【に？まで？を？】~spanするような，通常~flow内の最も深い要素の内側
+］であるかのようになる。
+この仕方で~counterを利用しても、~counterの値の計算に影響しない。
+◎
+If a counter that has not been reset or incremented within the margin context or the page context is used by counter() or counters() in the margin context, then the resultant value is exactly as if the page-margin box were an element within the document at the start of the page, inside the deepest element in the normal flow that spans the page break. Use of the counter in this way does not affect the calculation of the counter’s value.
+</p>
+
+<p>
+`page^v と命名される~counterは、自動的に作成される。
+それは、文書の毎~pageごとに 1 ずつ増分される
+— `counter-increment$p ~propが，`~page文脈$ 内で
+`page^v ~counter用に明示的に異なる増分を指定していない限り。
+暗黙の~counterである `page^v は，【 `list-item$v と同様に】真の~counterであり、
+`counter-increment$p, `counter-reset$p
+~prop内で明示的に命名することにより，直に影響させ得る。
+それは、
+`counter()$f ／ `counters()$f
+関数~形でも利用できる。
+◎
+A counter named page is automatically created and incremented by 1 on every page of the document, unless the counter-increment property in the page context explicitly specifies a different increment for the page counter. The implied page counter is a real counter, and can be directly affected using the counter-increment and counter-reset properties when named explicitly in those properties. It can also be used in the 'counter()' and 'counters()' function forms.
+</p>
+
+<div class="example">
+
+<p>
+次の規則による結果は、現在の~page番号を，各~pageの外側~marginの真中に配置する。
+◎
+The following rules result in the placement of the current page number in the middle of the outside margin of each page.
+</p>
+
+<pre class="lang-css">
+@page {
+  margin: 10%;
+
+  @top-center {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 2em;
+    content: counter(page);
+  }
+}
+</pre>
+
+<p>
+次の規則を追加すると，すべての~page番号は偶数にされる。
+◎
+Adding the following rule will make all pages even-numbered.
+</p>
+
+<pre class="lang-css">
+@page {
+  counter-increment: page 2;
+}
+</pre>
+
+</div>
+
+<p>
+加えて， `pages^v と命名される~counterも、~UAにより自動的に作成される。
+その値は，常に文書~内の総~page数になる（`連続的~媒体$においては、これは常に 1 になる）。
+`pages^v の値は操作できない：
+それを設定する
+`counter-reset$p ／ `counter-increment$p
+文は妥当であるが、効果を持たない。
+◎
+Additionally, a counter named pages is automatically created by the UA. Its value is always the total number of pages in the document. (In continuous media this is always 1.) The value of pages cannot be manipulated: while counter-reset and counter-increment statements that set it are valid, they have no effect.
+</p>
+
+<p>
+~pageに結付けられた他のすべての~counterに関しては、
+`CSS2$r による
+<a href="~CSS22/generate.html#scope">§ 入子の~counterとその視野</a>,
+および
+<a href="~CSS22/syndata.html#counter">§ ~counter</a>
+の記述に従って挙動する。
+【`CSS-LISTS-3^r においては<a href="~CSSLIST#nested-counters">§ 入子の~counterとその視野</a>, <a href="~CSSLIST#counter">§ ~counter</a> 】
+◎
+In all other respects, page-associated counters behave as described in [CSS2], Nested Counters and Scope and Counters.
+</p>
+
+		</section>
+		<section id="margin-text-alignment">
+<h3 title="Page-margin boxes and default values">6.2. 各種~page-margin~boxと既定~値</h3>
+
+<p>
+`~page文脈$／`~margin文脈$の中で利用される~propは，その初期~値を対応する~prop定義からとるが、次の表に挙げる値に対しては，~UAは，自身の既定の~stylesheet内の規則により確立されたかのように，挙動するモノトスル。
+◎
+Properties used within page or margin contexts take their initial values from their respective property definitions; however, user agents must behave as though the values in the following table were established by rules in the UA default style sheet.
+</p>
+
+<table class="data" id="margin-values">
+<caption>
+表 2. 各種~page-margin~box用の既定~値
+◎
+Table 2. Default values for Page-Margin Boxes
+</caption>
+
+<thead><tr><th>~page-margin ~box
+◎
+Page-margin box
+<th>`text-align$p
+<th>`vertical-align$p
+</thead>
+
+<tbody><tr><td>`左上隅$
+<td>`right^v
+<td>`middle^v
+
+<tr><td>`上端左$
+<td>`left^v
+<td>`middle^v
+
+<tr><td>`上端中央$
+<td>`center^v
+<td>`middle^v
+
+<tr><td>`上端右$
+<td>`right^v
+<td>`middle^v
+
+<tr><td>`右上隅$
+<td>`left^v
+<td>`middle^v
+
+<tr><td>`左端上$
+<td>`center^v
+<td>`top^v
+
+<tr><td>`左端中段$
+<td>`center^v
+<td>`middle^v
+
+<tr><td>`左端下$
+<td>`center^v
+<td>`bottom^v
+
+<tr><td>`右端上$
+<td>`center^v
+<td>`top^v
+
+<tr><td>`右端中段$
+<td>`center^v
+<td>`middle^v
+
+<tr><td>`右端下$
+<td>`center^v
+<td>`bottom^v
+
+<tr><td>`左下隅$
+<td>`right^v
+<td>`middle^v
+
+<tr><td>`下端左$
+<td>`left^v
+<td>`middle^v
+
+<tr><td>`下端中央$
+<td>`center^v
+<td>`middle^v
+
+<tr><td>`下端右$
+<td>`right^v
+<td>`middle^v
+
+<tr><td>`右下隅$
+<td>`left^v
+<td>`middle^v
+
+</tbody></table>
+
+<div class="example">
+
+<p>
+現在の chapter 名を伴う，中央化された~headerを作成するときには、次の~stylesheet例を利用できる：
+◎
+This example style sheet could be used to create a centered header with the current chapter name:
+</p>
+
+<pre class="lang-css">
+body {counter-reset: chapter;}
+div.chapter {counter-increment: chapter;}
+@page {
+  margin: 10%;
+  @top-center {
+    content: "Chapter" counter(chapter);
+  }
+}
+</pre>
+
+</div>
+
+		</section>
+	</section>
+	<section id="page-size">
+<h2 title="Page Size">7. ~page~size</h2>
+
+<p>
+世界中で多種多様な紙~sizeが利用されている。
+この仕様は、個々の紙~sizeに特有な~stylesheetを書かずとも，~web内容は，多様な~sizeに適応-可能になることを目標にしている。
+◎
+People around the world use many different paper sizes. It is a goal of this specification that web content should be adaptable to a range of different sizes without having to write a specific style sheet for each paper size.
+</p>
+
+<p>
+しかしながら，一定の~page~sizeに一定の~styleがあてがわれることが重要になる状況もある。
+この目標を達成するには， `size$d ~propを用立てる仕方がある
+— それは、文書が表示されるべき面~sizeについての選好を指示する。
+また、`媒体~query$ `MEDIAQ$r を利用する別の手法もある
+— それは、~page~sizeごとに異なる~stylesheetを適用できるようにする。
+◎
+However, in some situations it is important that a certain page size achieves a certain style. One way to achieve this goal is to utilize the size property, which indicates that the document should preferentially be displayed on a surface of a certain size; another method is to use Media Queries [MEDIAQ] which allow different style sheets to be applied to different page sizes.
+</p>
+
+		<section id="page-size-prop">
+<h3 title="Page size: the size property">7.1. ~page~size： `size^d ~prop</h3>
+
+◎述 `size@d
+◎用 `page$at
+◎値
+`length$vt{1,2} | `auto$v | [ `page-size$t || [ `portrait$v | `landscape$v ] ]
+◎初 `auto^v
+◎算
+指定d値 — ただし， `length$vt は絶対化される。
+◎
+specified value, with &lt;length&gt;s made absolute.
+◎表終
+
+<p>
+`size$d ~propは、`~page~box$の包含塊に対し，~~目的の~sizeと方位を指定する。
+加えて、一般の［
+1 個の`~page~box$が 1 枚の`用紙$上に描画される
+］場合には，出力先の用紙の~sizeも指示する。
+◎
+This property specifies the target size and orientation of the page box’s containing block. In the general case, where one page box is rendered onto one page sheet, the size property also indicates the size of the destination page sheet.
+</p>
+
+<p class="trans-note">【
+“記述子” でなく “~prop” と称されているわけは、~page~boxに適用される
+<a href="#page-properties">他の~propと同様に扱われる</a>
+ことによると見受けられる（
+`marks$d, `bleed$d, `page-orientation$d
+も同様に “~prop” と称されている）。
+】</p>
+
+<p>
+`~page~box$の~sizeは、
+“絶対的” （固定d~size）にも,
+“可変size”（すなわち，可用な用紙~sizeに収める）にもなり得る。
+可変sizeの`~page~box$を作成するときは、値［
+`auto$v ／ `portrait$v ／ `landscape$v
+］を利用できる。
+他の値は、固定d~sizeの`~page~box$を定義し，選好される出力~媒体~sizeを指示する。
+アリなときには、出力は，指示された媒体~size上に描画されるべきである。
+指定された~sizeが可用でない場合、
+<a href="#renderingpages">~page~boxを異なる~sizeへ移転するときの規則</a>
+が適用される。
+◎
+The size of a page box can either be "absolute" (fixed size) or "scalable" (i.e., fitting available sheet sizes). The first three values in the table below can be used to create scalable page boxes. Other values define a fixed-size page box, and thereby indicate the preferred output media size. When possible, output should be rendered on the media size indicated. If the specified size is not available, the rules for transposing a page box to a different size apply.
+</p>
+
+<p>
+`size$d ~prop宣言が，次のいずれかの`媒体~query$［
+`width$d,
+`height$d,
+`device-width$d,
+`device-height$d,
+`aspect-ratio$d,
+`device-aspect-ratio$d,
+`orientation$d
+］ `MEDIAQ$r
+（または 紙~sizeに対する他の条件付き規則）により選抜される場合、その宣言は`無視する$モノトスル
+— 媒体~queryは、 `size$d を尊守せず， `page$at 規則が一つも指定されなかったとするときに選ばれる紙~sizeであると見做す。
+◎
+If a size property declaration is qualified by a width, height, device-width, device-height, aspect-ratio, device-aspect-ratio or orientation media query [MEDIAQ] (or other conditional on the size of the paper), then the declaration must be ignored. Media queries do not honor size: they assume the paper size that would be chosen if no @page rules were specified.
+</p>
+
+<div class="issue">
+<p>
+媒体~queryが、少なくとも［
+選抜されない【所にある】 `page$at にて指定される~size
+］にも応答できるならば，有用になるであろう。
+◎
+It would be useful if media queries could respond at least to sizes specified on an unqualified @page.
+</p>
+
+<p>
+`viewport$at 規則 `CSS-DEVICE-ADAPT$r の様にする別の~optionもある：
+最初に、［
+~UAの既定の~page~sizeに対する，［
+媒体~query／`表示域~百分率による長さ$ `CSS-VALUES-3$r
+］］を利用して， `page$at 規則（どの選択子に合致する？）を適用する。
+結果の~page~sizeを “基底~page~size” として，~stylesheetの集合~全体を再び適用する
+— このときは，［
+“基底~page~size” に対する［
+媒体~query／表示域~百分率による長さ
+］］を利用して。【？】
+◎
+Another option could be to do like @viewport rules [CSS-DEVICE-ADAPT]: First apply @page rules (matching which selectors?), using the UA’s default page size for Media Queries and viewport-percentage lengths [CSS-VALUES-3]. The resulting page size is the "base page size". The entire set of stylesheets is applied again, this time using the "base page size" for Media Queries and viewport-percentage lengths.
+</p>
+
+</div>
+
+<div class="example">
+
+<p>
+次の例では：
+◎
+In the following example
+</p>
+
+<pre class="lang-css">
+@page {
+  size: 4in 6in;
+}
+
+@media (max-width: 6in) {
+  @page {
+    size: letter;
+  }
+}
+</pre>
+
+<p>
+2 個目の `size^d 宣言は無視される
+— すなわち， `size^d ~propの指定d値は `4in 6in^v になる。
+◎
+The second size declaration is ignored, i.e. the specified value of the size property is 4in 6in.
+</p>
+
+</div>
+
+<dl>
+
+	<dt>`auto@v</dt>
+	<dd>
+`~page~box$は、~UAにより選ばれる ~sizeと方位に設定される。
+通例的には、`~page~box$の~sizeと方位は，~~目的の媒体~用紙に合致するように選ばれる。
+◎
+The page box will be set to a size and orientation chosen by the UA. In the usual case, the page box size and orientation is chosen to match the target media sheet.
+</dd>
+
+	<dt>`landscape@v</dt>
+	<dd>
+~pageの内容は、`横置き方位$に印刷されることを指定する。
+`~page~box$のより長い側が横方向になる。
+`page-size$t が指定されていない場合、用紙の~sizeは，~UAにより選ばれる。
+◎
+Specifies that the page’s content be printed in landscape orientation. The longer sides of the page box are horizontal. If a &lt;page-size&gt; is not specified, the size of the page sheet is chosen by the UA.
+</dd>
+
+	<dt>`portrait@v</dt>
+	<dd>
+~pageの内容は、`縦置き方位$に印刷されることを指定する。
+`~page~box$の より短い側が横方向になる。
+`page-size$t が指定されていない場合、用紙の~sizeは，~UAにより選ばれる。
+◎
+Specifies that the page’s content be printed in portrait orientation. The shorter sides of the page box are horizontal. If a &lt;page-size&gt; is not specified, the size of the page sheet is chosen by the UA.
+</dd>
+
+	<dt id="valdef-page-size-length">`length$t</dt>
+	<dd>
+`~page~box$は、所与の絶対的~寸法に設定される。
+長さ値が 1 個だけ指定された場合、それが，`~page~box$の横幅＆縦幅を設定する（すなわち，~boxは正方形になる）。
+長さ値が 2 個 指定された場合、順に，`~page~box$の
+横幅, 縦幅
+を確立する。
+`em$u ／ `ex$u 単位~付きの値は、`~page文脈$の~fontを参照rする。
+負な長さは違法。
+◎
+The page box will be set to the given absolute dimension(s). If only one length value is specified, it sets both the width and height of the page box (i.e., the box is a square). If two length values are specified, the first establishes the page box width, and the second the page box height. Values in units of em and ex refer to the page context’s font. Negative lengths are illegal.
+</dd>
+
+	<dt>`page-size@t</dt>
+	<dd>
+<p>
+~page~sizeは、次の媒体~名のいずれかを利用して指定することもできる。
+これは、長さ値を利用して `size$d を指定することに等価である。
+媒体~名の定義は、［
+Media Standardized Names `PWGMSN$r
+］による。
+◎
+A page size can be specified using one of the following media names. This is the equivalent of specifying size using length values. The definition of the the media names comes from Media Standardized Names [PWGMSN].
+</p>
+
+		<dl>
+			<dt>`A5@v</dt>
+			<dd>
+ISO A5 ~size：
+幅 148mm × 高さ 210mm
+に等価。
+◎
+Equivalent to the size of ISO A5 media: 148mm wide and 210 mm high.
+</dd>
+
+			<dt>`A4@v</dt>
+			<dd>
+ISO A4 ~size：
+幅 210mm × 高さ 297mm
+に等価。
+◎
+Equivalent to the size of ISO A4 media: 210 mm wide and 297 mm high.
+</dd>
+
+			<dt>`A3@v</dt>
+			<dd>
+ISO A3 ~size：
+幅 297mm × 高さ 420mm
+に等価。
+◎
+Equivalent to the size of ISO A3 media: 297mm wide and 420mm high.
+</dd>
+
+			<dt>`B5@v</dt>
+			<dd>
+ISO B5 ~size：
+幅 176mm × 高さ 250mm
+に等価。
+◎
+Equivalent to the size of ISO B5 media: 176mm wide by 250mm high.
+</dd>
+
+			<dt>`B4@v</dt>
+			<dd>
+ISO B4 ~size：
+幅 250mm × 高さ 353mm
+に等価。
+◎
+Equivalent to the size of ISO B4 media: 250mm wide by 353mm high.
+</dd>
+
+			<dt>`JIS-B5@v</dt>
+			<dd>
+JIS B5 ~size：
+幅 182mm × 高さ 257mm
+に等価。
+◎
+Equivalent to the size of JIS B5 media: 182mm wide by 257mm high. 
+</dd>
+			<dt>`JIS-B4@v</dt>
+			<dd>
+JIS B4 ~size：
+幅 257mm × 高さ 364mm
+に等価。
+◎
+Equivalent to the size of JIS B4 media: 257mm wide by 364mm high.
+</dd>
+
+			<dt>`letter@v</dt>
+			<dd>
+北米 letter ~size：
+幅 8.5in × 高さ 11in （ in = ~inch ）
+に等価。
+◎
+Equivalent to the size of North American letter media: 8.5 inches wide and 11 inches high
+</dd>
+
+			<dt>`legal@v</dt>
+			<dd>
+北米 legal ~size：
+幅 8.5in × 高さ 14in
+に等価。
+◎
+Equivalent to the size of North American legal: 8.5 inches wide by 14 inches high.
+</dd>
+
+			<dt>`ledger@v</dt>
+			<dd>
+北米 ledger ~size：
+幅 11in × 高さ 17in
+に等価。
+◎
+Equivalent to the size of North American ledger: 11 inches wide by 17 inches high.
+</dd>
+		</dl>
+	</dd>
+</dl>
+
+<p>
+`page-size$t による名前は、［
+`landscape$v ／ `portrait$v
+］との併用で，~sizeと方位を指示するために利用できる。
+◎
+The &lt;page-size&gt; names can be used in conjunction with landscape or portrait to indicate both size and orientation.
+</p>
+
+<div class="example">
+
+<pre class="lang-css">
+@page {
+  size: A4 landscape;
+}
+</pre>
+
+<p>
+この例は、`~page~box$の横幅を 297mmに, 縦幅を 210mmに設定する。
+この例における`~page~box$は、
+~size 210mm × 297mm の用紙~上に描画されるべきである。
+◎
+The above example sets the width of the page box to be 297mm and the height to be 210mm. The page box in this example should be rendered on a page sheet size of 210 mm by 297 mm.
+</p>
+
+</div>
+
+<div class="example">
+
+<p>
+次の例では、`~page~box$の外縁~辺は、~pageに整列されることになる。
+`margin$p ~prop上の百分率~値は、~page~sizeに相対的なので、
+用紙の寸法が
+210mm × 297mm （ A4 ）ならば，~marginは
+21mm × 29.7mmになる。
+~UAの既定の~stylesheetに~pageの
+~border／~padding
+が設定されていないと見做した下での結果の`~page区画$は、
+( 210mm ~MINUS 21mm ) × ( 297mm ~MINUS 29.7mm ) ~EQ 189mm × 367.3mm
+になる。
+◎
+In the following example, the outer edges of the page box will align with the page. The percentage value on the margin property is relative to the page size so if the page sheet dimensions are 210mm x 297mm (i.e., A4), the margins are 21mm and 29.7mm. Assuming there are no page borders or padding set in the UA default style sheet, the resulting page area is 189mm by 367.3mm (210mm-21mm by 297mm-29.7mm).
+</p>
+
+<pre class="lang-css">
+@page {
+  size: auto;/* <span class="comment"
+	title="auto is the initial value"
+	>`auto^v が初期~値</span> */
+  margin: 10%;
+}
+</pre>
+
+</div>
+
+<div class="example">
+
+<pre class="lang-css">
+@page {
+  size: 8.5in 11in;/* <span class="comment"
+	title="width height"
+	>横幅 縦幅</span> */
+}
+</pre>
+
+<p>
+上の例は、`~page~box$の
+横幅 × 縦幅
+を 8.5 × 11 ~inchに設定する。
+これは、用紙の［
+~sizeは 8.5 × 11 ~inch,
+方位は `portrait$v
+］になるべきであることを指示する。
+◎
+The above example sets the width of the page box to be 8.5 inches and the height to be 11 inches. This indicates that the page sheet size should be 8.5"x11" and the orientation portrait.
+</p>
+
+</div>
+
+			<section id="page-size-media-query">
+<h4 title="Media Queries">7.1.1. 媒体~query</h4>
+
+~INFORMATIVE
+
+<p>
+`媒体~query$ `MEDIAQ$r を利用すれば、同じ~stylesheetで，~page~sizeごとに異なる~style上の選好を表出できる。
+次の例を考える：
+◎
+By using Media Queries [MEDIAQ], one style sheet can express different stylistic preferences for different page sizes. Consider this example:
+</p>
+
+<div class="example">
+
+<pre class="lang-css">
+/* <span class="comment"
+	title="style sheet for “A4” printing"
+	>“A4” 印刷ng用の~stylesheet</span> */
+@media print and (width: 21cm) and (height: 29.7cm) {
+  @page {
+     margin: 3cm;
+  }
+}
+
+/* <span class="comment"
+	title="style sheet for “letter” printing"
+	>“letter” 印刷ng用の~stylesheet</span> */
+@media print and (width: 8.5in) and (height: 11in) {
+  @page {
+    margin: 1in;
+  }
+}
+</pre>
+
+</div>
+
+<p>
+上の例では、 “A4” 用紙には `3cm^v の~page~marginが与えられ，
+“letter” 用紙には `1in^v の~page~marginが与えられる。
+◎
+In the example above, "A4" sheets are given a "3cm" page margin, and "letter" sheets are given a "1in" page margin.
+</p>
+
+			</section>
+			<section id="page-orientation-prop">
+<h4 title="Rotating The Printed Page: the page-orientation property">7.1.2. 印刷された~pageの回転-法： `page-orientation^d ~prop</h4>
+
+◎述 `page-orientation@d
+◎用 `page$at
+◎値 `upright$v | `rotate-left$v | `rotate-right$v
+◎初 `upright$v
+◎算 指定d値
+◎表終
+
+<p>
+高-品質な印刷ng実装は，多様な［
+~size, 方位
+］の~pageたちを取扱えるので、作者は，~pageの内容には何が最善かに則って~pageの~sizeを選べる。
+例えば、文書~内のほとんどの~pageには， `size$d に `letter portrait^v を利用しつつ、幅広な情報~tableを~lay-outするときは， `size$d を `letter landscape^v に切替えることもあろう。
+◎
+High-quality printing implementations can handle pages of varying sizes and orientations, so an author can choose the size of a page according to what’s best for that page’s content. For example, they might use size: letter portrait; for most pages in a document, but switch to size: letter landscape; to lay out a wide information table.
+</p>
+
+<p>
+しかしながら，横幅が まちまちな何~pageかに~flowしている内容の取扱いは，比較的~複階的な~taskであり、多くの普及している印刷ng実装（特に, ~web~browser）においては、まだ解かれていない。
+`page-orientation$d 記述子は，そのような実装を助けることが意図されており、
+各~pageを単独の一貫した~sizeで~lay-outしつつ，（~PDFなどの）出力~媒体においては
+— 異なる方位で表示するよう求まれる~pageが，それを行えるよう —
+~layout後に方位を変更することを許容する。
+◎
+However, handling content flowing across pages of differing widths is a relatively complex task, and is not yet solved in many popular printing implementations (notably, web browsers). The page-orientation descriptor is intended to help such implementations, allowing them to lay out pages in a single consistent size, but change the orientation post-layout in the output medium (such as PDF), so that pages which want to be displayed in a different orientation can do so.
+</p>
+
+<p>
+各種 値の定義は：
+◎
+Its values are defined as:
+</p>
+
+<dl>
+	<dt>`upright@v</dt>
+	<dd>
+特別な方位は適用されない
+— ~pageは通常通り~lay-outされ，整形される。
+◎
+No special orientation is applied; the page is laid out and formatted as normal.
+</dd>
+
+	<dt>`rotate-left@v</dt>
+	<dd>
+次を指示する：
+出力~媒体が回転を~supportする場合には、~pageは~lay-outされた後に，反時計回り（左回り）に 90° だけ回転して表示するモノトスル。
+◎
+After the page has been laid out, if the output medium supports rotation, this value indicates that the page must be displayed rotated a quarter turn to the left (counter-clockwise) of how it was laid out.
+</dd>
+
+	<dt>`rotate-right@v</dt>
+	<dd>
+反時計回りに代えて時計回り（右回り）に回転することを除いて，
+`rotate-left$v と同じ。
+◎
+Same as rotate-left, except the page must be displayed rotated a quarter turn to the right (clockwise) of how it was laid out.
+</dd>
+</dl>
+
+<p class="note">注記：
+~margin~boxや他の位置~的なものは、この~propとの特別な相互作用は無い。
+それらは、回転されない~page内に通常通り~lay-outされてから，他すべてとともに回転される。
+◎
+Note: Margin boxes and other positional things have no special interaction with this property; they’ll be laid out as normal in the unrotated page, then rotated along with everything else.
+</p>
+
+<div class="note">
+
+<p>注記：
+この~propは、能力に劣る実装~用の “つなぎ” として意図されており、実装が［
+~sizeが まちまちな何~pageかに内容を~flowする能
+］を備える前でも，［
+縦置き, 横置き
+］方位の混成による文書を印刷することを許容する。
+利用するには、多少余計な手間が要求される
+— 英語のみ包含している幅広な~tableが，実際には縦方向 `writing-mode$p で “側転（ `sideways^en ）” に~lay-outされるが、印刷された出力における可読性を得るため，回転して正立に戻すよう指定するなど。
+◎
+This property is intended as a stop-gap for less-capable implementations, allowing them to still print documents with a mix of portrait and landscape orientations before they have the ability to flow content across differently-size pages. It requires some awkward contortions to use, such as specifying that a wide table containing only English actually has a vertical writing-mode so it’ll lay out "sideways", but be rotated back to upright for readability in the printed output.
+</p>
+
+<p>
+高-品質な印刷ng実装においては、この~propを利用する必要はないはずである
+— 代わりに `size$d を利用して，~pageの方位を［
+`portrait$v, `landscape$v
+］どちらにするか制御すること。
+◎
+There should be no need to use this property in high-quality printing implementations; instead, use size to control portrait vs landscape orientation of a page.
+</p>
+</div>
+			</section>
+		</section>
+		<section id="marks">
+<h3 title="Crop and Registration Marks: the marks property">7.2. 断裁markと見当mark： `marks^d ~prop</h3>
+
+◎述 `marks@d
+◎用 `page$at
+◎値
+`none$v | [ `crop$v || `cross$v ]
+◎初 `none^v
+◎算 指定d値
+◎表終
+
+<p>
+この~propは、文書に，断裁markや見当mark【いわゆるトンボ】を追加する。
+これらは、用紙の裁断と整列を手助けするために，`~page~box$の外側に印刷される。
+各種 値の意味は：
+◎
+This property adds crop and/or registration marks to the document. These are printed outside the page box to facilitate the trimming and alignment of sheets of paper. Values have the following meanings:
+</p>
+
+<dl>
+
+	<dt>`none@v</dt>
+	<dd>
+断裁markも見当markも印刷されるべきでないことを指定する：
+`裁切り区画$の外側の区画は、完全に白紙になる。
+◎
+Specifies that neither crop marks nor registration marks should be printed: the area outside the bleed area will be completely blank.
+</dd>
+
+	<dt>`crop@v</dt>
+	<dd>
+断裁markが印刷されるべきであることを指定する。
+これらは概して、実質的に，`~page~box$の 4 辺の外側への延長に重なる短い線であり、`~page~box$の中や近辺には何も刷ることなく， 4 辺の精確な所在を指示する。
+◎
+Specifies that crop marks should be printed. These are typically short lines outside the page box that are effectively extensions of the page box’s four edges, thereby indicating the precise location of those edges without placing any ink near or within the page box itself.
+</dd>
+
+	<dt>`cross@v</dt>
+	<dd>
+見当markが印刷されるべきであることを指定する。
+これらは概して、`~page~box$の各~辺の外側にある十字markであり，印刷ng工程において用紙を互いに整列するために利用される。
+◎
+Specifies that registration marks should be printed. These are typically cross-shaped marks outside each edge of the page box used to align sheets of paper during the printing process.
+</dd>
+
+</dl>
+
+<p>
+断裁markと見当markは、`~page~box$が`印刷-可能な区画$より狭いときにのみ，可視になることに注意。
+◎
+Note that crop marks and registration marks are only visible if the page box is smaller than the printable area.
+</p>
+
+<div class="example">
+
+<p>
+次の~codeを利用すれば、文書~上に断裁markと十字markを設定できる：
+◎
+To set crop and cross marks on a document, this code can be used:
+</p>
+
+<pre class="lang-css">
+@page {
+    marks: crop cross;
+}
+</pre>
+
+</div>
+
+		</section>
+		<section id="bleed">
+<h3 title="Bleed Area: the bleed property">7.3.  裁切り区画： `bleed^d ~prop</h3>
+
+◎述 `bleed@d
+◎用 `page$at
+◎値 `auto$v | `length$vt
+◎初 `auto$v
+◎算 指定d値
+◎表終
+
+<p>
+この~propは、`~page~box$の外側へ拡がる
+`裁切り区画@
+— 言い換えれば、そこで~page描画が切取られるような，`~page~box$を超える拡がり —
+を指定する。
+各種 値の意味は：
+◎
+This property specifies the extent of the bleed area outside the page box; in other words the extent beyond the page box at which the page rendering is clipped. Values have the following meanings:
+</p>
+
+<dl>
+
+	<dt>`auto@v</dt>
+	<dd>
+［
+`marks$d が `crop^v ならば `6pt^v ／
+他の場合は `0^v
+］に算出される。
+◎
+Computes to 6pt if marks has crop and to zero otherwise.
+</dd>
+
+	<dt id="valdef-page-bleed-length">`length$t</dt>
+	<dd>
+各~方向について，`裁切り区画$が `~page~box$を超えて，どこまで外方へ拡がるかを指定する。
+値は負でもヨイが、実装に特有な制限sがあり得る。
+◎
+Specifies by how far outward, in each direction, the bleed area extends past the page box. Values may be negative, but there may be implementation-specific limits.
+</dd>
+
+</dl>
+
+		</section>
+		<section id="renderingpages">
+<h3 title="Rendering page boxes that do not fit a page sheet">7.4. 用紙に収まらない~page~boxの描画</h3>
+
+<p>
+`~page~box$が，~~目的の用紙~寸法に合致しない場合、~UAは，次のうちいずれか一つをすべきである（選好~順に挙げる）：
+◎
+If a page box does not match the target page sheet dimensions, the user agent should do one of the following (in order of preference):
+</p>
+
+<ol>
+	<li>
+より大きな用紙~上に，指示された~sizeで~page~boxを描画する。
+◎
+Render the page box at the indicated size on a larger page sheet.
+</li>
+	<li>
+~page~boxを 90° 回転したときに用紙に収まるならば，そうする。
+◎
+Rotate the page box 90° if this will make the page box fit the page sheet.
+</li>
+	<li>
+~page~boxを用紙に収まるように拡縮する（~page~boxの縦横比は保全されるべきである）。
+◎
+Scale the page box to fit the page sheet. (The aspect ratio of the page box should be preserved.)
+</li>
+	<li>
+複数の用紙に，~page~boxを~graphic的に “切分ける” 。
+◎
+Graphically "slice" the page box onto multiple page sheets.
+</li>
+	<li>
+~overflowした内容を切取る（最も選好されない）。
+◎
+Clip overflowed content (least preferred).
+</li>
+</ol>
+
+<p>
+~UAは、これらの演算を遂行する前に，利用者に~~指示を仰いでもよい。
+◎
+The user agent may wish to consult the user before performing these operations.
+</p>
+
+		</section>
+		<section id="positioning-page-box">
+<h3 title="Positioning the page box on the sheet">7.5. 用紙~上の~page~boxの位置決め</h3>
+
+<p>
+`~page~box$が用紙より小さいときは、~UAは，次のいずれかをすべきである：
+◎
+When the page box is smaller than the page sheet, the user agent should either:
+</p>
+
+<ul>
+
+	<li>
+~page~boxを用紙~上で中央化して，両面~pageを整列させ、用紙の辺~近くに印刷される情報が不用意に失われないようにするか、または
+◎
+center the page box on the sheet since this will align double-sided pages and avoid accidental loss of information that is printed near the edge of the sheet; or
+</li>
+	<li>
+~page~boxを用紙の~~左上~隅に（あるいは，~page~box の `direction$p と `writing-mode$p ~propに基づく別の隅に）位置させて、媒体の消費を最小限にする。
+◎
+position the page box in the upper left corner of the page sheet (or another corner, based on the direction and writing-mode properties of the page box) as this may minimize media consumption.
+</li>
+</ul>
+
+<p>
+~UAは、これに関して，利用者に~~指示を仰いでもよい。
+◎
+The user agent may wish to consult the user in this regard.
+</p>
+
+		</section>
+	</section>
+	<section id="page-breaks">
+<h2 title="Page Breaks ">8. ~page分断</h2>
+
+<span id="pg-br-before-after"></span>
+<span id="page-break-before"></span>
+<span id="page-break-after"></span>
+<span id="page-break-inside"></span>
+<span id="breaks-inside"></span>
+<span id="orphans"></span>
+<span id="widows"></span>
+<span id="allowed-pg-brk"></span>
+<span id="brk-btw-blocks"></span>
+<span id="brk-btw-lines"></span>
+<span id="brk-end-block"></span>
+<span id="forced-pg-brk"></span>
+<span id="best-pg-brk"></span>
+
+<p>
+CSS Fragmentation `CSS-BREAK-3$r ~moduleは、~page分断も含め，`~CSS~box$を，どこで, どのように `断片~化できるか^emを定義する。
+それは、［
+~UAが~pageを分断してもヨイ所／分断するモノトスル所
+］, および［
+後続の内容は 左page, 右pageどちらから再開するか
+］を指示する，少数の~propを定義する。
+各~page分断は、現在の`~page~box$における~layoutを終端させ、文書~treeの残りの~~断片を新たな`~page~box$内に~lay-outさせる。
+◎
+The CSS Fragmentation Module [CSS-BREAK-3] module defines how and where CSS boxes can be fragmented, including across page breaks. It defines a few properties that indicate where the user agent may or must break pages, and on what page (left or right) the subsequent content resumes. Each page break ends layout in the current page box and causes remaining pieces of the document tree to be laid out in a new page box.
+</p>
+
+		<section id="using-named-pages">
+<h3 title="Using named pages: page">8.1. 有名~pageの利用： `page^p</h3>
+
+◎名 `page@p
+◎値 `auto^v | `custom-ident$t
+◎初 `auto^v
+◎適
+`A類~分断点$を作成する†~box
+◎
+boxes that create class A break points
+◎継
+されない（ただし，注釈文を見よ）
+◎
+no (but see prose)
+◎百 受容しない
+◎算 指定d値
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p class="trans-note">【†
+“作成する” の定義がはっきりしない。
+分断点を~boxの前後に作成する？内側に作成する？
+あるいは、［
+分断点を合間に作成するような一連の~box
+］に適用される？
+】</p>
+
+<!-- 
+分断点を~boxの始端~側（のみ）に作成する？ 終端~側（のみ）に作成する？
+この両者は分けて考える必要がある？
+ -->
+
+<p>
+`page$p ~propは、要素が表示されるモノトスル~page
+—
+`有名~page@
+と呼ばれる，特定0の種別の【名前を持つ】~page —
+を指定するために利用される。
+必要なら，`強制d~page分断$が導入され、指定された種別の新たな~pageが生成される。
+◎
+The page property is used to specify a particular type of page (called a named page) on which an element must be displayed. If necessary, a forced page break is introduced and a new page generated of the specified type.
+</p>
+
+<p class="trans-note">【
+すなわち、 `page$p ~propが異なる要素どうしは 同じ~pageに置かれないように，（必要なら）改~pageさせる。
+<small >ゆえに、同じ要素が複数の種別~名を持てないようにされている。</small>
+】</p>
+
+<p class="note">注記：
+この~pageには、`~page選択子$にて同じ種別~名を利用して，~styleをあてがえる。
+◎
+Note: This page can be styled by using the same type name in a page selector.
+</p>
+
+<p>
+~pageの種別~名は、文字大小区別の識別子である。
+ただし，~CSS~keywordである `auto^v 値については、 `~ASCII大小無視$である。
+◎
+Page type names are case-sensitive identifiers. However the auto value, being a CSS keyword, is ASCII case-insensitive.
+</p>
+
+<p>
+`page$p ~propは継承されない。
+しかしながら，要素~上の `page$p 値が `auto^v の場合は、その使用~値は、非 `auto^v 値を伴う最も近い先祖~上に指定された値になる。
+根~要素~上に指定された `auto^v 用の使用~値は、空~文字列である。
+◎
+The page property does not inherit. However, if the page value on an element is auto, then its used value is the value specified on its nearest ancestor with a non-auto value. When specified on the root element, the used value for auto is the empty string.
+</p>
+
+<p>
+この仕様の以前の~versionでは，`page$p ~propは継承されるものと指示していたので、［
+`page$p ~propを継承させ, `auto^v は常に空~文字列による名前として扱う
+］ような実装も，この仕様に~~依然として適合tである。
+この例外は、 Level 4 では除去されることになることに注意。
+したがって作者は、非 `auto^v 値を伴う要素の子孫~上に `auto^v 値を明示的に指定するべきでない
+— 結果の挙動が予測-不能になるので。
+◎
+Because a previous version of this specification indicated that the page property is inherited, an implementation that inherits the page property and treats auto as always naming the empty string remains conformant to CSS Paged Media Level 3. Note that this exception will be removed in Level 4. Therefore authors should not explicitly specify the auto value on a descendant of an element with a non-auto value, as the resulting behavior will be unpredictable.
+</p>
+
+<p>
+`page$p ~propは、次に従って働く：
+◎
+The page property works as follows:
+</p>
+
+<ol>
+
+	<li>
+まず、【すべての~boxそれぞれに対し，】 `auto^v 値は，（上で指定されたように）非 `auto^v にされている先祖に対し解決される。
+◎
+First, any auto values are resolved against non-auto ancestors (as specified above).
+</li>
+	<li>
+<p>
+次に、【すべての~boxそれぞれに対し，】
+`始端~pageV@ ／ `終端~pageV@
+が次に従って決定される：
+~boxに［
+最初の／最後の
+］子~boxが在れば，その~boxから伝播され、無ければ，~box自身の `page$p ~propの使用~値になる。
+子~boxは、自身が `page$p ~propの適用-対象であるとき, そのときに限り，自前の［
+`始端~pageV$ ／ `終端~pageV$
+］を伝播する。
+◎
+Next, a start page value and end page value is determined for each box as the value (if any) propagated from its first or last child box (respectively), else the used value on the box itself. A child propagates its own start or end page value if and only if the page property applies to it.
+</p>
+
+<p class="note">注記：
+最初の（最後の）子~boxが，常に
+最初の（最後の）子 要素から生成されるとは限らない。
+例えば、最初の子~要素の `display^p が `none^v にされていたなら，~boxを生成しないので、最初の子~boxは，他（後続のいずれかの同胞）が生成するものになる。
+◎
+Note: A first or last child box is not always generated by a first or last child element. For example, an element could only have a previous sibling with 'display: none' which does not generate any box.
+</p>
+	</li>
+	<li>
+根の`始端~pageV$が、最初に印刷される~pageの種別になる。
+◎
+The first printed page’s type is the start page value of the root.
+</li>
+	<li>
+`A類~分断点$にて出会う 2 個の~boxに対し，［
+その分断に先行する~boxの`終端~pageV$と,
+その分断に後続する~boxの`始端~pageV$とが合致しない
+］場合、その 2 個の~boxの合間にて~page分断が強制され、分断の後の内容は，
+【後続する~boxの始端~pageVによる】
+有名~種別の`~page~box$上から再開する。
+◎
+If for any two boxes meeting at a class A break point, the end page value of the box preceding the break and start page value of the box succeeding the break do not match, then a page break is forced between the two boxes, and content after the break resumes on a page box of the named type.
+</li>
+</ol>
+
+<p class="note">注記：
+本質的に，比較される 2 個の `page$p 値は、`A類~分断点$にて出会う最も深い~boxによるものになる
+— `page$p ~propが適用されない~boxを根にするような下位treeは無視して。
+◎
+Note: Essentially, the two page values compared are those from the deepest boxes meeting at the class A break point, ignoring any subtrees rooted by boxes to which the page property does not apply.
+</p>
+
+<p>
+~page分断~用の追加的な詳細は
+`CSS-BREAK-3$r
+を見よ。
+◎
+See [CSS-BREAK-3] for additional details on page breaks.
+</p>
+
+<div class="example">
+
+<p>
+下の文書では、横置き~page上に 2 個の `table^e を描画する（~~実際に同じ~pageに収まるならば）：
+◎
+In this example, the two tables are rendered on landscape pages (indeed, on the same page, if they fit). The page type "narrow" is used for the &lt;p&gt; after the second table, as the page properties for the table element are no longer in effect:
+</p>
+
+<pre class="lang-css">
+@page narrow {
+    size: 9cm 18cm;
+}
+@page rotated {
+    size: landscape;
+}
+div {
+    page: narrow;
+}
+table {
+    page: rotated;
+}
+</pre>
+
+<p>
+`~page種別~名$ "`narrow^v" は， 2 個目の `table^e の後の `p^e に利用される
+—  `table^e 要素に対する `page^p ~propの効果は， `p^e には及ばないので：
+◎
+with this document:
+</p>
+
+<pre class="lang-css">
+&lt;div&gt;
+&lt;table&gt;...&lt;/table&gt;
+&lt;table&gt;...&lt;/table&gt;
+&lt;p&gt;This text is rendered on a 'narrow' page&lt;/p&gt;
+&lt;/div&gt;
+</pre>
+
+</div>
+
+<div class="example">
+
+<p>
+日本語~文書では、`基本版面$ `JLREQ$r が文書~内の部分ごとに異なることもよくある。
+この種の~layoutは、 `page$p ~propと `page$at 規則とで，部分ごとに異なる~page~sizeを指定すれば，収容できる：
+◎
+In Japanese documents, sometimes different parts of a single document will have different kihon hanmen. [JLREQ] The page property, together with @page rules specifying different page widths, can accomodate this type of layout:
+</p>
+
+<pre class="lang-html">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+  &lt;style&gt;
+    html   {
+      writing-mode: vertical-rl;
+      line-height: 1.6;
+    }
+    .main  {
+      page: main;
+      columns: 2;       /* <span class="comment">段数</span> */
+      column-gap: 1rem; /* <span class="comment">~gap</span> */
+    }
+    .index {
+      page: index;
+      columns: 3;
+      column-gap: 1rem;
+    }
+    @page {
+      margin: auto;  /* <span class="comment"
+	title="center kihon hanmen on page"
+	>基本版面を~page上の中央に</span> */
+      width:  40rem; /* <span class="comment"
+	title="1.6 × 25 lines"
+	>1.6 ~MUL 25 行l</span> */
+    }
+    @page main  {
+      height: 61rem; /* <span class="comment"
+	title="2 × 30 chars + 1 × gap"
+	>2 ~~段 ~MUL 30 文字 ~PLUS 1 ~MUL ~gap</span> */
+    }
+    @page index {
+      height: 62rem; /* <span class="comment"
+	title="3 × 20 chars + 2 × gap"
+	>3 ~~段 ~MUL 20 文字 ~PLUS 2 ~MUL ~gap</span> */
+    }
+  &lt;/style&gt;
+  &lt;section class="main"&gt; ... &lt;/section&gt;
+  &lt;section class="index"&gt; ... &lt;/section&gt;
+&lt;/html&gt;
+</pre>
+
+</div>
+
+		</section>
+	</section>
+	<section id="image-properties">
+<h2 title="Image Properties">9. 各種~画像~prop</h2>
+
+<p class="note">注記：
+この節は、 `CSS-IMAGES-3$r へ移動された。
+◎
+Note: This section has been moved to [CSS-IMAGES-3].
+</p>
+
+	</section>
+	<section id="properties-list">
+<h2 title="Appendix A: Applicable CSS2.1 Properties">付録 A： 適用-可能な各種 CSS2.1 ~prop</h2>
+
+		<section id="page-property-list">
+<h3 title="CSS 2.1 Properties that apply within the page context">~page文脈の中で適用される各種 CSS 2.1 ~prop</h3>
+
+<p>
+各種
+`~page~prop@
+は、以下に挙げるものとして定義される。
+これらについては、
+<a href="#page-properties">§ ~page~prop</a>
+にて述べられている：
+◎
+This list defines the page properties. They are further described in § 6 Page Properties.
+</p>
+
+<ul>
+<!-- 
+	<li>
+各種~双向性~prop
+<ul ><li>`direction^p
+</li></ul>
+	</li>
+ -->
+	<li><a href="~CSS2VISUREN#propdef-direction" >`direction^p</a></li>
+	<li>`各種~背景~prop$：
+<ul ><li>`background-color^p
+</li><li>`background-image^p
+</li><li>`background-repeat^p
+</li><li>`background-attachment^p
+</li><li>`background-position^p
+</li><li>`background^p
+</li></ul>
+	</li>
+	<li>`各種~border~prop$：
+<ul ><li>`border-top-width^p
+</li><li>`border-right-width^p
+</li><li>`border-bottom-width^p
+</li><li>`border-left-width^p
+</li><li>`border-width^p
+</li><li>`border-top-color^p
+</li><li>`border-right-color^p
+</li><li>`border-bottom-color^p
+</li><li>`border-left-color^p
+</li><li>`border-color^p
+</li><li>`border-top-style^p
+</li><li>`border-right-style^p
+</li><li>`border-bottom-style^p
+</li><li>`border-left-style^p
+</li><li>`border-short-style^p
+</li><li>`border-top^p
+</li><li>`border-right^p
+</li><li>`border-bottom^p
+</li><li>`border-left^p
+</li><li>`border^p
+</li></ul>
+	</li>
+
+	<li>`各種~counter~prop$：
+<ul ><li>`counter-reset^p
+</li><li>`counter-increment^p
+</li></ul>
+	</li>
+	<li><a href="~CSS22/colors.html#propdef-color">`color^p</a></li>
+	<li>`各種~font~prop$：
+<ul ><li>`font-family^p
+</li><li>`font-size^p
+</li><li>`font-style^p
+</li><li>`font-variant^p
+</li><li>`font-weight^p
+</li><li>`font^p
+</li></ul>
+	</li>
+
+	<li>各種~縦幅~prop：
+<!-- 
+CSS2VISUDET#the-height-property
+CSS2VISUDET#min-max-heights
+ -->
+<ul ><li>`height$p
+</li><li>`min-height$p
+</li><li>`max-height$p
+</li></ul>
+	</li>
+	<li>`line-height$p</li>
+	<li>`各種~margin~prop$：
+<ul ><li>`margin-top^p
+</li><li>`margin-right^p
+</li><li>`margin-bottom^p
+</li><li>`margin-left^p
+</li><li>`margin^p
+</li></ul>
+	</li>
+
+	<li>`各種~outline~prop$：
+<ul ><li>`outline-width^p
+</li><li>`outline-style^p
+</li><li>`outline-color^p
+</li><li>`outline^p
+</li></ul>
+	</li>
+
+	<li>`各種~padding~prop$：
+<ul ><li>`padding-top^p
+</li><li>`padding-right^p
+</li><li>`padding-bottom^p
+</li><li>`padding-left^p
+</li><li>`padding^p
+</li></ul>
+	</li>
+	<li><a href="~CSS22/generate.html#quotes-specify">`quotes^p</a></li>
+	<li>`各種~text~prop$：
+<ul ><li>`letter-spacing^p
+</li><li>`text-align^p
+</li><li>`text-decoration^p
+</li><li>`text-indent^p
+</li><li>`text-transform^p
+</li><li>`white-space^p
+</li><li>`word-spacing^p
+</li></ul>
+	</li>
+	<li>`visibility$p</li>
+	<li>各種~横幅~prop：
+<!-- 
+CSS2VISUDET#the-width-property
+CSS2VISUDET#min-max-widths
+ -->
+<ul ><li>`width$p
+</li><li>`min-width$p
+</li><li>`max-width$p
+</li></ul>
+	</li>
+</ul>
+
+		</section>
+		<section id="margin-property-list">
+<h3 title="CSS 2.1 properties that apply within the margin contexts">~margin文脈の中で適用される各種 CSS 2.1 ~prop</h3>
+
+<p>
+各種
+`~page-margin~prop@
+は、以下に挙げるものとして定義される。
+これらについては、
+<a href="#page-properties">§ ~page~prop</a>
+にて述べられている：
+◎
+This list defines the page-margin properties. They are further described in § 6 Page Properties.
+</p>
+
+<!-- 
+各種~双向性~prop
+-->
+<ul ><li><a href="#page-property-list">~page~boxに適用される各種~prop</a>
+</li><li><a href="~CSS2VISUREN#propdef-unicode-bidi" >`unicode-bidi^p</a>
+</li><li><a href="~CSS22/generate.html#propdef-content">`content^p</a>
+</li><li>`overflow$p
+</li><li><a href="~CSS2VISUDET#line-height">`vertical-align^p</a>
+</li><li>`visibility$p
+</li><li>`z-index$p
+</li></ul>
+
+<!-- 
+bidi properties 	direction
+unicode-bidi
+background properties 	background-color
+background-image
+background-repeat
+background-attachment
+background-position
+background
+border properties 	border-top-width
+border-right-width
+border-bottom-width
+border-left-width
+border-width
+border-top-color
+border-right-color
+border-bottom-color
+border-left-color
+border-color
+border-top-style
+border-right-style
+border-bottom-style
+border-left-style
+border-short-style
+border-top
+border-right
+border-bottom
+border-left
+border
+counter properties 	counter-reset
+counter-increment
+content
+color
+font properties 	font-family
+font-size
+font-style
+font-variant
+font-weight
+font
+height properties 	height
+min-height
+max-height
+line-height
+margin properties 	margin-top
+margin-right
+margin-bottom
+margin-left
+margin
+outline properties 	outline-width
+outline-style
+outline-color
+outline
+overflow
+padding properties 	padding-top
+padding-right
+padding-bottom
+padding-left
+padding
+quotes
+text properties 	letter-spacing
+text-align
+text-decoration
+text-indent
+text-transform
+white-space
+word-spacing
+vertical-align
+visibility
+width properties 	width
+min-width
+max-width
+z-index
+-->
+
+		</section>
+	</section>
+	<section id="transfer-possibilities">
+<h2 title="Appendix B: Transfer Possibilities">付録 B： ~page~boxから用紙への転送ng</h2>
+
+<p>
+常にではないが、`~page~box$と, 文書が最終的に描画される物理的な面とは，一対一対応になることが多い。
+CSS3 ~page~modelは，`~page~box$の中の整形を指定するが、`~page~box$から用紙へ転送することは，~UAの責務である。
+CSS3 により取組まれないような、~UAにより行われ得る転送には，次のものが挙げられる：
+◎
+Often, but not always, the page box has a one-to-one correspondence to the physical surface onto which the document is ultimately rendered. The CSS3 page model specifies formatting within the page box, but it is the user agent’s responsibility to transfer the page box to the sheet. Some user agent transfer possibilities that are not addressed by CSS3 include:
+</p>
+
+<ul id="complex-usecases">
+
+	<li>
+1 個の~page~boxから， 1 枚の用紙への転送ng（例： 片面~印刷ng）
+◎
+Transferring one page box to one sheet (e.g. single-sided printing);
+</li>
+	<li>
+2 個の~page~boxから，同じ用紙のオモテ面／ウラ面への転送ng（例： 両面~印刷ng）
+◎
+Transferring two page boxes to the front and back surfaces of the same sheet (e.g. double-sided printing);
+</li>
+	<li>
+N 個の（小さい）~page~boxから， 1 枚の用紙への転送ng（ “N-up” と呼ばれる）;
+◎
+Transferring N (small) page boxes to one sheet (called "N-up");
+</li>
+	<li>
+1 個の（大きい）~page~boxから， N ~MUL M 枚の用紙への転送ng（ “tiling” と呼ばれる）;
+◎
+Transferring one (large) page box to N x M sheets (called "tiling");
+</li>
+	<li>
+`折丁@
+を作成するとき。
+すなわち、［
+本の様に折畳んで一端を裁断したときに，各~pageが適正な順番で現れる
+］ように，一群の~pageを用紙~上に印刷する。
+◎
+Creating signatures. A signature is a group of pages printed on a sheet, which, when folded and trimmed like a book, appear in their proper sequence;
+</li>
+	<li>
+1 個の文書から複数の出力~trayへの印刷ng。
+◎
+Printing one document to multiple output trays;
+</li>
+	<li>
+印刷-命令を包含する~fileを生成する。
+◎
+Generating files containing print instructions.
+</li>
+</ul>
+
+	</section>
+	<section id="priv-sec">
+<h2 title="Privacy and Security Considerations">~privacyと~security上の考慮点</h2>
+
+<p>
+この仕様により導入される新たな
+~privacy／~security
+上の考慮点はない。
+◎
+This specification introduces no new privacy or security considerations.
+</p>
+
+	</section>
+	<section id="changes">
+<h2 title="Changes">変更点</h2>
+
+<p>
+<a href="http://www.w3.org/TR/2013/WD-css3-page-20130314/">2013 年 3月 14日付け作業草案</a>
+からの変更点は：
+◎
+Changes since the 14 March 2013 Working Draft are:
+</p>
+
+<ul>
+
+	<li>
+`CSS3GCPM$r から
+`marks$d, `bleed$d
+~propを取込んだ。
+◎
+Imported the marks and bleed properties from [CSS3GCPM].
+</li>
+	<li>
+`bleed$d の初期~値として `auto^v を追加して，
+`marks$d が `none^v のときでも適用できるようにした。
+◎
+Added auto as the initial value of bleed and allowed it to apply even when marks is none.
+</li>
+	<li>
+`JIS-B4^v, `JIS-B5^v を追加した。
+◎
+Added JIS-B4 and JIS-B5.
+</li>
+</ul>
+
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p>
+この~moduleの前任編集者たちに：
+</p>
+
+<p lang="en-x-a0">
+The CSS Working Group would like to give very special thanks to this module’s former editors: Robert Stevahn (Hewlett-Packard), Håkon Wium Lie (Opera Software), Jim Bigelow (Hewlett-Packard), Jacob Refstrup (Hewlett-Packard), and Melinda Grant (Hewlett-Packard).
+</p>
+
+<p>
+専門家貢献者たちに：
+</p>
+
+<p lang="en-x-a0">
+We would also like to acknowledge our expert contributors Michael Day (YesLogic), Shinyu Murakami (Antenna House), Peter Linss (Hewlett-Packard), and the other members of the CSS Working Group and www-style community who have provided review and comment on CSS Paged Media Level 3.
+</p>
+
+	</section>
+</main></div>

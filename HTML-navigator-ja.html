@@ -1,0 +1,2398 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — System state and capabilities（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+
+<style>
+
+.category-list {
+	column-width: 8em;
+}
+.category-list > li {
+	margin: 0;
+	margin-left: 0.5em;
+	word-break: break-all;
+}
+
+div {
+	clear: both; /* for ~FINGERPRINTING */
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'system-state-and-capabilities',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'm':
+case 'mA':
+case 'pA':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-08-18
+trans_update:2020-08-19
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/system-state.html
+	abbr_url:HTMLnavigator
+nav_prev:HTMLdynamic
+nav_next:HTMLcomms
+trans_1st_pub:2017-02-28
+
+
+●●class_map
+e:element
+a:attr
+et:event-type
+sc:scheme
+mt:mime-type
+h:header
+E:error
+
+●●tag_map
+I:code
+E:code
+m:code
+mA:code
+pA:code
+c:code
+s:samp
+e:code
+a:code
+sc:code
+mt:code
+et:code
+h:code
+sub:sub
+V:var
+i:i
+cite:cite
+
+●●original_id_map
+
+
+dom-window-navigator:dom-navigator
+
+●●mdn_urls
+mimetype:API/MimeType
+mimetypearray:API/MimeTypeArray
+navigator:API/Navigator
+	navigatorcontentutils:API/NavigatorContentUtils
+	navigatorcookies:API/NavigatorCookies
+navigatorid:API/NavigatorID
+	NavigatorID-partial:API/NavigatorID
+navigatorlanguage:API/NavigatorLanguage
+navigatorplugins:API/NavigatorPlugins
+dom-plugin:API/Plugin
+pluginarray:API/PluginArray
+
+●●link_map
+
+SameObject:~WEBIDLjs#SameObject
+LegacyUnenumerableNamedProperties:~WEBIDLjs#LegacyUnenumerableNamedProperties
+Exposed:~WEBIDLjs#Exposed
+
+
+h.Accept-Language:~HTTPrq#field.accept-language
+	h.Accept-Language:~RFC7231#section-5.3.5
+
+E.SecurityError:~WEBIDL#securityerror
+E.SyntaxError:~WEBIDL#syntaxerror
+
+	I.DOMException:~WEBIDL#idl-DOMException
+I.MimeType:#mimetype
+I.MimeTypeArray:#mimetypearray
+I.Navigator:#navigator
+I.NavigatorConcurrentHardware:~WORKERS#navigatorconcurrenthardware
+I.NavigatorContentUtils:#navigatorcontentutils
+I.NavigatorCookies:#navigatorcookies
+I.NavigatorID:#navigatorid
+	I.NavigatorID:#NavigatorID-partial
+I.NavigatorLanguage:#navigatorlanguage
+I.NavigatorOnLine:~HTMLLS/offline.html#navigatoronline
+I.NavigatorPlugins:#navigatorplugins
+I.Plugin:#dom-plugin
+I.PluginArray:#pluginarray
+I.Window:~WINDOW#window
+I.WorkerGlobalScope:~WORKERS#workerglobalscope
+I.WorkerNavigator:~WORKERS#workernavigator
+
+
+
+m.description:#dom-mimetype-description
+m.enabledPlugin:#dom-mimetype-enabledplugin
+m.filename:#dom-plugin-filename
+m.item:#dom-plugin-item
+m.length:#dom-plugin-length
+m.location.reload:~HISTORY#dom-location-reload
+m.name:#dom-plugin-name
+m.namedItem:#dom-plugin-nameditem
+m.suffixes:#dom-mimetype-suffixes
+m.type:#dom-mimetype-type
+m.~description0:#dom-plugin-description
+mA.item:#dom-mimetypearray-item
+mA.length:#dom-mimetypearray-length
+mA.namedItem:#dom-mimetypearray-nameditem
+pA.item:#dom-pluginarray-item
+pA.length:#dom-pluginarray-length
+pA.namedItem:#dom-pluginarray-nameditem
+pA.refresh:#dom-pluginarray-refresh
+m.PluginArray.refresh:#dom-pluginarray-refresh
+
+m.navigator:#dom-window-navigator
+m.appCodeName:#dom-navigator-appcodename
+m.appName:#dom-navigator-appname
+m.appVersion:#dom-navigator-appversion
+m.cookieEnabled:#dom-navigator-cookieenabled
+m.javaEnabled:#dom-navigator-javaenabled
+m.language:#dom-navigator-language
+m.languages:#dom-navigator-languages
+m.mimeTypes:#dom-navigator-mimetypes
+m.oscpu:#dom-navigator-oscpu
+m.platform:#dom-navigator-platform
+m.plugins:#dom-navigator-plugins
+m.product:#dom-navigator-product
+m.productSub:#dom-navigator-productsub
+m.registerProtocolHandler:#dom-navigator-registerprotocolhandler
+m.taintEnabled:#dom-navigator-taintenabled
+m.unregisterProtocolHandler:#dom-navigator-unregisterprotocolhandler
+m.userAgent:#dom-navigator-useragent
+m.vendor:#dom-navigator-vendor
+m.vendorSub:#dom-navigator-vendorsub
+
+
+e.iframe:~HEembed#the-iframe-element
+et.languagechange:~HTMLindex#event-languagechange
+	sc.sms::~RFCx/rfc5724#section-2
+
+
+
+~MimeTypeたち:#_MimeTypes
+隠されてない~MimeTypeたち:#_nohidden-MimeTypes
+pI.~MimeTypeたち:#_pligin-MimeTypes
+~Pluginたち:#_Plugins
+隠されてない~Pluginたち:#hidden-plugin
+
+確からしい言語:#a-plausible-language
+明示的に~support:#explicitly-supported
+
+	~hidden~plugin:#hidden-plugin
+隠されて:#hidden-plugin
+~navigator互換性~mode:#concept-navigator-compatibility-mode
+~protocol~handler~parameterを正規化する:#normalize-protocol-handler-parameters
+安全とされる~scheme:#safelisted-scheme
+
+	●用語（外部
+~live:~HTMLINFRA#live
+~plugin:~HTMLINFRA#plugin
+並列的:~HTMLINFRA#in-parallel
+
+相対的に構文解析-:~HTMLurl#parse-a-url
+結果の~URL~record:~HTMLurl#resulting-url-record
+結果の~URL文字列:~HTMLurl#resulting-url-string
+
+大域~taskを~queueする:~WAPI#queue-a-global-task
+~DOM操作~task源:~WAPI#dom-manipulation-task-source
+関連な設定群~obj:~WAPI#relevant-settings-object
+環境~設定群~obj:~WAPI#environment-settings-object
+報告される~MIME型たち:#reported-mime-types
+enV.生成元:~WAPI#concept-settings-object-origin
+
+~ASCII英小文字:~INFRA#ascii-lower-alpha
+~ASCII小文字~化する:~INFRA#ascii-lowercase
+実装定義:~INFRA#implementation-defined
+~privacyに重要:~INFRA#tracking-vector
+
+~eventを発火する:~DOM4#concept-event-fire
+
+~URL:~URL1#concept-url
+url.生成元:~URL1#concept-url-origin
+url.~scheme:~URL1#concept-url-scheme
+妥当な~URL文字列:~URL1#valid-url-string
+絶対~URL:~URL1#absolute-url-string
+	絶対~URL:~URL1#syntax-url-absolute
+文字列を~UTF-8~percent-符号化する:~URL1#string-utf-8-percent-encode
+成分~percent-符号化-集合:~URL1#component-percent-encode-set
+生成元:~URL1#concept-url-origin
+~URL構文解析する:~URL1#concept-url-parser
+~URLを直列化する:~URL1#concept-url-serializer
+
+閲覧文脈:~BROWSERS#browsing-context
+同一-生成元:~ORIGIN#same-origin
+~navigate:~NAVI#navigate
+	processing model for navigating across documents:browsers.html#navigate
+
+~HTTP_S~scheme:~FETCH#http-scheme
+既定の~User-Agent値:~FETCH#default-user-agent-value
+
+凍結d配列:~WEBIDL#dfn-frozen-array-type
+~supportする~prop~index:~WEBIDL#dfn-supported-property-indices
+~supportする~prop名:~WEBIDL#dfn-supported-property-names
+
+~MIME型:~MIMESNIFF#mime-type
+~parameterを伴わない妥当な~MIME型~文字列:~MIMESNIFF#valid-mime-type-with-no-parameters
+
+
+●●words_table1
+
+
+description0:description
+
+
+●●words_table
+
+
+
+	●仕様
+事実:fact:~
+対処:work around:~
+強いる:forceする:~
+普及した:popularな:~
+機会:opportunity:~
+相似する:analogousな:~
+稀:rare:~
+自明:trivial:~
+通常運用:normal operation:~
+準拠する:compliantな:~
+黙って:silentに:~
+上品:graceful:~
+大多数:majority:~
+助け:help:~
+
+
+	解する所の:understanding
+	:wish
+	場合もある:possibly
+	されないよう:avoid
+	さらに重要な点として:even more importantly
+	念頭に置く:bear-in-mind
+	したがって〜ことになる:forcibly
+	ある程度:To some extent,
+	easily
+	~~強く:highly
+	好きに:whatever they like
+	より~~正確には:or rather,
+	対策も講じておく:prepared to handle
+	周知:widely known
+	産業界:entire industry
+	整合しなくなる:appear inconsistent
+	にもかかわらず:despite of
+	必ずしも満足いくものには:entirely plausible
+	確からしい:plausible
+	可能性は高い:likely
+	対象になる:that they consider
+	要となる:key
+	おそらく／定かでない:Maybe
+	あり得る:potential
+	十中八九:in all likelihood
+	様々になる:variation
+	期待-:expectation
+	選ぶ:choice
+	強制される:forcibly
+
+	●network ／ 保安／環境
+User-Agent:
+HTTP_S:HTTP(S)
+下位domain:subdomain:::下位ドメイン
+username::::ユーザ名
+password::::パスワード
+IP-address-block:IP address block:::IP アドレスブロック
+navigator::::ナビゲータ
+profile::::プロファイル
+prompt::::
+remote::::リモート
+intranet::::イントラネット
+管理者:administrator:~
+	追跡し続ける:keep track
+読込直す:reloadする::読み込み直す::リロードする
+活動:activity:~
+濫用-:abuse:~
+	能力を備える:capable of
+	Cancel
+受認-:accept:~
+認証:authentication:~
+匿名性:anonymity:~
+匿名ng:anonymizing:匿名
+spam::::スパム
+	~spam的な:spamming
+乗取り:hijacking:乗っ取り
+同一性:identity:~
+crash::::クラッシュ
+buffer-overrun:buffer overrun:::バッファ溢れ
+online-telephone-messaging:online telephone messaging:::オンライン電話メッセージ用
+pornography::::ポルノ
+私的:private::~
+組織:organization:~
+
+	●plugin／handler
+MimeType:
+Plugin:
+filename::::ファイル名
+helper::::ヘルパー
+install::::インストール
+	安全とされる:safelisted
+選抜list:shortlist:::選抜リスト
+辞退-:decline:~
+隠す:hideする:~
+隠され:hideされ:~
+	登録-済み:registered
+	未登録に:unregister／deregistration
+経由-:route:~
+	〜し直され:reroute
+	〜し直されreconfigure
+拡張子:extension:~
+仮入力:placeholder::~::プレースホルダ
+
+	●未分類（動詞
+	再利用-:re-use
+	-:fail
+
+再生-:play:~
+	-:get
+合成-:synthesize:~
+増える:increaseする:~
+	-:check to see
+	加えて:In addition to
+手渡す:handする:~
+	頭部:starts with
+	探る:probe する
+
+	consist
+
+	押し出され:push off
+	とみなした:mark
+	されかねない:lead
+	保つ:keep
+	対応-:correspond
+	送られ:send
+	し続け:continue
+	渡-:pass
+	変わる:varies／vary
+	見当たらない:missing
+	現れる:occurrence
+	hidden
+	知る:know
+	長い:long
+	見る:view
+	束ねられ:binding
+	選ば:pick
+	出自を~~隠す:obfuscates the user's point of origin
+	'
+	置き換えられる:where to put :
+	送る:ship
+
+	●未分類
+英小文字:lower alpha:~
+percent-::: %-
+colon::::コロン
+comma::::カンマ
+	~comma区切り:comma-separated
+	error:not successful
+	-:the exact literal
+	time
+出自:origin:~
+数:number:~
+種類:kind:~
+繰返し:repeatedly:繰り返し
+	抗して／:against
+	頭部／:substring
+	-:accordingly
+	Tor
+	-:made
+	しばらく経ってから:...and then, much later
+	スープsoup
+	potentially
+	長過ぎる:over-long
+	-:Example
+	社:Company
+	-:Sample
+	using
+	指す:point
+	指して:pointing
+
+	-:naturally now the data is stale
+	happen
+	%正規化した~scheme:normalizedScheme
+	%正規化した~URL文字列:normalizedURLString
+	%符号化した~URL:encodedURL
+	%入力~URL:inputURL
+	%入力~URL文字列:inputURLString
+	%~handler~URL文字列:handlerURLString
+	%結果~URL:resultURL
+
+
+	●指示語
+近過去:recent:~
+	各部:parts
+	一連の:collection of
+	多数の:large number of
+	の集合:set of
+	何年も:many years
+	後続の:subsequent
+	それ以上:any more
+	を除き:beyond
+	以前の:previous
+	少ない:little
+	ごく:extreme に
+	-:prior to
+	単に:just
+	旧:old
+	non-
+	sometime
+	beyond
+	previous
+	re
+	whichever
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる
+HTML 仕様の
+<a href="~SPEC_URL">§ System state and capabilities</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+
+
+
+</head>
+<body>
+
+
+<header id="head">
+	<hgroup>
+<h1>システムの状態と能力 — System state and capabilities</h1>
+
+	</hgroup>
+
+</header>
+
+<main id="MAIN" hidden>
+
+		<section id="system-state-and-capabilities">
+<h2 title="System state and capabilities">8.9. ~systemの状態と能力</h2>
+
+			<section id="the-navigator-object">
+<h3 title="The Navigator object">8.9.1. `Navigator^I ~obj</h3>
+
+<p>
+`Window$I の
+`navigator@m
+取得子は、
+`Navigator$I ~interfaceの~instanceを返す
+— それは、~UA（~client）の同一性と状態を表現することに加え、~web~pageが あり得る~protocol~handlerとして，自身を登録することを許容する：
+◎
+The navigator attribute of the Window interface must return an instance of the Navigator interface, which represents the identity and state of the user agent (the client), and allows web pages to register themselves as potential protocol  handlers:
+</p>
+
+<pre class="idl">
+[Exposed=Window]
+interface `Navigator@I {
+  /* <span class="comment">
+この~interfaceを実装している~objは、下に与える~interfaceも実装する。
+◎
+objects implementing this interface also implement the interfaces given below
+</span> */
+};
+`Navigator$I includes `NavigatorID$I;
+`Navigator$I includes `NavigatorLanguage$I;
+`Navigator$I includes `NavigatorOnLine$I;
+`Navigator$I includes `NavigatorContentUtils$I;
+`Navigator$I includes `NavigatorCookies$I;
+`Navigator$I includes `NavigatorPlugins$I;
+`Navigator$I includes `NavigatorConcurrentHardware$I;
+</pre>
+
+<p>
+これらの~interface~mixinが別々に定義されるのは、
+`WorkerNavigator$I が `Navigator$I ~interfaceの各部を再利用できるようにするためである。
+◎
+These interface mixins are defined separately so that WorkerNavigator can re-use parts of the Navigator interface.
+</p>
+
+				<section id="client-identification">
+<h4 title="Client identification">8.9.1.1. ~clientの識別</h4>
+
+<pre class="idl">
+interface mixin `NavigatorID@I {
+  readonly attribute DOMString `appCodeName$m; /* <span class="comment">
+常に `Mozilla^l
+◎
+constant "Mozilla"
+</span> */
+  readonly attribute DOMString `appName$m; /* <span class="comment">
+常に `Netscape^l
+◎
+constant "Netscape"
+</span> */
+  readonly attribute DOMString `appVersion$m;
+  readonly attribute DOMString `platform$m;
+  readonly attribute DOMString `product$m; /* <span class="comment">
+常に `Gecko^l
+◎
+constant "Gecko"
+</span> */
+  [`Exposed$=Window] readonly attribute DOMString `productSub$m;
+  readonly attribute DOMString `userAgent$m;
+  [`Exposed$=Window] readonly attribute DOMString `vendor$m;
+  [`Exposed$=Window] readonly attribute DOMString `vendorSub$m; /* <span class="comment">
+常に空~文字列
+◎
+constant ""
+</span> */
+};
+</pre>
+
+<p>
+産業界における最善な労にもかかわらず，ある種の事例では、~web~browserには，~web作者に対処を強いるような~bugや制限がある。
+◎
+In certain cases, despite the best efforts of the entire industry, web browsers have bugs and limitations that web authors are forced to work around.
+</p>
+
+<p>
+この節では、これらの課題に対処するため，~scriptから利用-中の~UAの種類を決定するために利用できる 一連の属性を定義する。
+◎
+This section defines a collection of attributes that can be used to determine, from script, the kind of user agent in use, in order to work around these issues.
+</p>
+
+<p>
+~UAは、次のいずれかを値にとる
+`~navigator互換性~mode@
+を持つ
+⇒＃
+`Chrome^i,
+`Gecko^i,
+`WebKit^i
+◎
+The user agent has a navigator compatibility mode, which is either Chrome, Gecko, or WebKit.
+</p>
+
+<p class="note">注記：
+`~navigator互換性~mode$は、
+`NavigatorID$I ~interfaceにおける［
+各種 属性~値, ［
+`taintEnabled()$m ／ `oscpu$m
+］の有無
+］を，［
+既存の~web内容と互換であることが既知である組合n
+］に拘束する。
+◎
+The navigator compatibility mode constrains the NavigatorID interface to the combinations of attribute values and presence of taintEnabled() and oscpu that are known to be compatible with existing web content.
+</p>
+
+<p>
+~client検出は、常に，既知である現在の~versionを検出するものに制限されるベキである
+— 将来の／未知な~versionは、常に，全部的に準拠するものと見做されるベキである。
+◎
+Client detection should always be limited to detecting known current versions; future versions and unknown versions should always be assumed to be fully compliant.
+</p>
+
+<dl class="domintro">
+
+	<dt>%self . `navigator$m . `appCodeName$m</dt>
+	<dd>
+文字列 `Mozilla^l を返す。
+◎
+Returns the string "Mozilla".
+</dd>
+
+	<dt>%self . `navigator$m . `appName$m</dt>
+	<dd>
+文字列 `Netscape^l を返す。
+◎
+Returns the string "Netscape".
+</dd>
+
+	<dt>%self . `navigator$m . `appVersion$m</dt>
+	<dd>
+~browserの~versionを返す。
+◎
+Returns the version of the browser.
+</dd>
+
+	<dt>%self . `navigator$m . `platform$m</dt>
+	<dd>
+~platformの名前を返す。
+◎
+Returns the name of the platform.
+</dd>
+
+	<dt>%self . `navigator$m . `product$m</dt>
+	<dd>
+文字列 `Gecko^l を返す。
+◎
+Returns the string "Gecko".
+</dd>
+
+	<dt>%window . `navigator$m . `productSub$m</dt>
+	<dd>
+文字列［
+`20030107^l, `20100101^l
+］いずれかを返す。
+◎
+Returns either the string "20030107", or the string "20100101".
+</dd>
+
+	<dt>%self . `navigator$m . `userAgent$m</dt>
+	<dd>
+完全な `User-Agent^h ~headerを返す。
+◎
+Returns the complete `User-Agent` header.
+</dd>
+
+	<dt>%window . `navigator$m . `vendor$m</dt>
+	<dd>
+次のいずれかの文字列を返す
+⇒
+空~文字列, `Apple Computer, Inc.^l, `Google Inc.^l
+◎
+Returns either the empty string, the string "Apple Computer, Inc.", or the string "Google Inc.".
+</dd>
+
+	<dt>%window . `navigator$m . `vendorSub$m</dt>
+	<dd>
+空~文字列を返す。
+◎
+Returns the empty string.
+</dd>
+</dl>
+
+<p class="trans-note">【
+“%window . …” は `Window^I にのみ公開され，~worker環境では利用できない（ [`Exposed$=Window] ）。
+】</p>
+
+<div class="algo">
+`appCodeName@m
+取得子~手続きは、文字列 `Mozilla^l を返す。
+◎
+Must return the string "Mozilla".
+</div>
+
+<div class="algo">
+`appName@m
+取得子~手続きは、文字列 `Netscape^l を返す。
+◎
+Must return the string "Netscape".
+</div>
+
+<div class="algo">
+<p>
+`appVersion@m
+取得子~手続きは、［
+文字列 `4.0^l, または
+~browserの~versionを詳細に表現する文字列
+］を返す。
+◎
+Must return either the string "4.0" or a string representing the version of the browser in detail,＼
+</p>
+
+<p class="example">
+例：
+`1.0 (VMS; en-US) Mellblomenator/9000^l
+◎
+e.g. "1.0 (VMS; en-US) Mellblomenator/9000".
+</p>
+</div>
+
+<div class="algo">
+<p>
+`platform@m
+取得子~手続きは、［
+空~文字列, または
+~browserを実行している~platformを表現する文字列
+］を返す。
+◎
+Must return either the empty string or a string representing the platform on which the browser is executing,＼
+</p>
+
+<p class="example">
+例：
+`MacIntel^l ／
+`Win32^l ／
+`FreeBSD i386^l ／
+`WebTV OS^l
+◎
+e.g. "MacIntel", "Win32", "FreeBSD i386", "WebTV OS".
+</p>
+</div>
+
+<div class="algo">
+`product@m
+取得子~手続きは、文字列 `Gecko^l を返す。
+◎
+Must return the string "Gecko".
+</div>
+
+<div class="algo">
+`productSub@m
+取得子~手続きは、`~navigator互換性~mode$に応じて，次に与える文字列を返す
+⇒＃
+`Chrome^i ならば `20030107^l ／
+`WebKit^i ならば `20030107^l ／
+`Gecko^i ならば `20100101^l
+◎
+Must return the appropriate string from the following list:
+◎
+If the navigator compatibility mode is Chrome or WebKit
+• The string "20030107".
+◎
+If the navigator compatibility mode is Gecko
+• The string "20100101".
+</div>
+
+<div class="algo">
+`userAgent@m
+取得子~手続きは、`既定の~User-Agent値$を返す。
+◎
+Must return the default `User-Agent` value.
+</div>
+
+<div class="algo">
+`vendor@m
+取得子~手続きは、`~navigator互換性~mode$に応じて，次に与える文字列を返す
+⇒＃
+`Chrome^i ならば `Google Inc.^l ／
+`Gecko^i ならば 空~文字列 ／
+`WebKit^i ならば `Apple Computer, Inc.^l
+◎
+Must return the appropriate string from the following list:
+◎
+If the navigator compatibility mode is Chrome
+• The string "Google Inc.".
+◎
+If the navigator compatibility mode is Gecko
+• The empty string.
+◎
+If the navigator compatibility mode is WebKit
+• The string "Apple Computer, Inc.".
+</div>
+
+<div class="algo">
+`vendorSub@m
+取得子~手続きは、空~文字列を返す。
+◎
+Must return the empty string.
+</div>
+
+<p>
+［
+`~navigator互換性~mode$ ~EQ `Gecko^i
+］の場合、~UAは，次の部分的~interfaceも~supportするモノトスル：
+◎
+If the navigator compatibility mode is Gecko, then the user agent must also support the following partial interface:
+</p>
+
+<pre class="idl" id="NavigatorID-partial">
+partial interface mixin `NavigatorID$I {
+  [`Exposed$=Window] boolean `taintEnabled$m(); /* <span class="comment">
+常に ~F
+◎
+constant false
+</span> */
+  [`Exposed$=Window] readonly attribute DOMString `oscpu$m;
+};
+</pre>
+
+<div class="algo">
+`taintEnabled()@m
+取得子~手続きは、 ~F を返す。
+◎
+The taintEnabled() method must return false.
+</div>
+
+<div class="algo">
+<p>
+`oscpu@m
+取得子~手続きは、空~文字列 または
+~browserを実行している~platformを表現する文字列を返す。
+【"oscpu" = “OS ＋ CPU”】
+◎
+The oscpu attribute's getter must return either the empty string or a string representing the platform on which the browser is executing,＼
+</p>
+
+<p class="example">
+例：
+`Windows NT 10.0; Win64; x64^l ／
+`Linux x86_64^l
+◎
+e.g. "Windows NT 10.0; Win64; x64", "Linux x86_64".
+</p>
+</div>
+
+<p class="warning">
+~FINGERPRINTING
+この~APIにおける 利用者ごとに変わるような どの情報も、利用者を~profileするために利用され得る。
+事実，そのような情報が十分~可用にされた場合、利用者は実際に一意に識別され得る。
+この理由から、~UA実装者には，この~APIには アリな限り少ない情報を含めることが，強く督促される。
+◎
+(This is a tracking vector.)
+Any information in this API that varies from user to user can be used to profile the user. In fact, if enough such information is available, a user can actually be uniquely identified. For this reason, user agent implementers are strongly urged to include as little information in this API as possible.
+</p>
+
+				</section>
+				<section id="language-preferences">
+<h4 title="Language preferences">8.9.1.2. 言語~選好</h4>
+
+<pre class="idl">
+interface mixin `NavigatorLanguage@I {
+  readonly attribute DOMString `language$m;
+  readonly attribute FrozenArray&lt;DOMString&gt; `languages$m;
+};
+</pre>
+
+<dl class="domintro">
+
+	<dt>%self . `navigator$m . `language$m</dt>
+	<dd>
+利用者が最も選好する言語を表現する，言語~tagを返す。
+◎
+Returns a language tag representing the user's preferred language.
+</dd>
+
+	<dt>%self . `navigator$m . `languages$m</dt>
+	<dd>
+利用者が選好する言語たちを表現する，言語~tagからなる配列を返す
+— 最も選好する言語が最初に来る。
+◎
+Returns an array of language tags representing the user's preferred languages, with the most preferred language first.
+◎
+The most preferred language is the one returned by navigator.language.
+</dd>
+</dl>
+
+<p class="note">注記：
+`languagechange$et ~eventは、［
+~UAが解する所の，利用者が選好する言語
+］が変化したとき，［
+`Window$I ／ `WorkerGlobalScope$I
+］~objに向けて発火される。
+◎
+A languagechange event is fired at the Window or WorkerGlobalScope object when the user agent's understanding of what the user's preferred languages are changes.
+</p>
+
+<div class="algo">
+`language@m
+取得子~手続きは、`確からしい言語$，または，
+利用者が最も選好する言語を表現する，妥当な BCP 47 言語~tagを返す。
+`BCP47$r
+◎
+Must return a valid BCP 47 language tag representing either a plausible language or the user's most preferred language. [BCP47]
+</div>
+
+<div class="algo">
+<p>
+`languages@m
+取得子~手続きは、
+1 個~以上の［
+妥当な BCP 47 言語~tag `BCP47$r であって［
+`確からしい言語$, または
+利用者が選好する言語
+］を表現するもの
+］からなる，`凍結d配列$を返す
+— ~UAは、次に従うモノトスル：
+◎
+Must return a frozen array of valid BCP 47 language tags representing either one or more plausible languages, or the user's preferred languages,＼
+</p>
+<ul>
+	<li>
+それらの順序は、最も選好される言語からとする。
+◎
+ordered by preference with the most preferred language first.＼
+</li>
+	<li>
+［
+異なる言語~tag／異なる順序
+］で値を返す必要が生じるまでは、同じ~objを返す。
+◎
+The same object must be returned until the user agent needs to return different values, or values in a different order. [BCP47]
+</li>
+	<li>
+<p>
+［
+`Window$I ／ `WorkerGlobalScope$I
+］~obj %G 上のこの取得子が［
+新たな言語~tagの集合を返す
+］ようにする必要が生じたときは：
+</p>
+		<ul>
+			<li>
+次を走らす`大域~taskを~queueする$( `~DOM操作~task源$, %G )
+⇒
+%G に向けて，名前 `languagechange$et の`~eventを発火する$
+</li>
+			<li>
+新たな値を実際に返す前に，前項の~taskが実行されるのを待機する
+</li>
+		</ul>
+◎
+Whenever the user agent needs to make the navigator.languages attribute of a Window or WorkerGlobalScope object global return a new set of language tags, the user agent must queue a global task on the DOM manipulation task source given global to fire an event named languagechange at global, and wait until that task begins to be executed before actually returning a new value.
+</li>
+</ul>
+</div>
+
+<p>
+~UAは、
+`確からしい言語@
+を決定するときは，次を念頭に置くベキである：
+◎
+To determine a plausible language, the user agent should bear in mind the following:
+</p>
+<ul>
+	<li>
+~FINGERPRINTING
+この~APIにおける利用者ごとに変わるような情報は、利用者を［
+~profileする／識別する
+］ために利用され得る。
+◎
+(This is a tracking vector.)
+Any information in this API that varies from user to user can be used to profile or identify the user.
+</li>
+	<li>
+利用者が出自を~~隠す~service（例： Tor などの匿名性~network）を利用していない場合、出自が類似な利用者たち（例えば，同じ~IP-address-blockからの）が最も互いに判別されにくい値は，そのような利用者たちの大多数が利用している言語である。
+`TOR$r
+◎
+If the user is not using a service that obfuscates the user's point of origin (e.g. the Tor anonymity network), then the value that is least likely to distinguish the user from other users with similar origins (e.g. from the same IP address block) is the language used by the majority of such users. [TOR]
+</li>
+	<li>
+利用者が匿名ng~serviceを利用していて、互いの利用者が判別される可能性を抑制するためとして，同じ値を利用する場合、その値には， `en-US^l が示唆される。
+◎
+If the user is using an anonymizing service, then the value "en-US" is suggested; if all users of the service use that same value, that reduces the possibility of distinguishing the users from each other.
+</li>
+</ul>
+
+<p>
+~FINGERPRINTING
+これ以上の指紋収集~行路が導入されないよう、~UAは，この関数に定義される~APIに対しては，同じ~listを利用するベキである
+— ~HTTP `Accept-Language$h ~headerのときと同じく。
+◎
+(This is a tracking vector.)
+To avoid introducing any more fingerprinting vectors, user agents should use the same list for the APIs defined in this function as for the HTTP `Accept-Language` header.
+</p>
+
+				</section>
+				<section id="custom-handlers">
+<h4 title="Custom scheme handlers: the registerProtocolHandler() method">8.9.1.3. ~custom~scheme~handler： `registerProtocolHandler()^m ~method</h4>
+
+<pre class="idl">
+interface mixin `NavigatorContentUtils@I {
+  [SecureContext] undefined `registerProtocolHandler$m(DOMString %scheme, USVString %url);
+  [SecureContext] undefined `unregisterProtocolHandler$m(DOMString %scheme, USVString %url);
+};
+</pre>
+
+<dl class="domintro">
+	<dt>%window . `navigator$m . `registerProtocolHandler(scheme, url)$m</dt>
+	<dd>
+%url における %scheme 用の~handlerとして， %handler を登録する。
+例えば，~online-telephone-messaging~serviceは、自身を
+<a href="~RFCx/rfc5724#section-2">`sms:^sc</a>
+~scheme用の~handlerとして登録することもできる
+— 利用者がそのような~linkを~clickしたときに、その~web~siteを利用する機会が与えられるように。
+`SMS$r
+◎
+Registers a handler for scheme at url. For example, an online telephone messaging service could register itself as a handler of the sms: scheme, so that if the user clicks on such a link, they are given the opportunity to use that web site. [SMS]
+</dd>
+	<dd>
+%url 内の文字列 `%s^l は、［
+取扱われることになる内容の~URL
+］に置き換えられる仮入力として利用される。
+◎
+The string "%s" in url is used as a placeholder for where to put the URL of the content to be handled.
+</dd>
+	<dd>
+~UAが登録を阻止する場合、
+`SecurityError$E 例外が投出される（一例として， `http^sc 用の~handlerを登録しようと試行した場合）。
+◎
+Throws a "SecurityError" DOMException if the user agent blocks the registration (this might happen if trying to register as a handler for "http", for instance).
+</dd>
+	<dd>
+%url 内に文字列 `%s^l が見当たらない場合、
+`SyntaxError$E 例外が投出される。
+◎
+Throws a "SyntaxError" DOMException if the "%s" string is missing in url.
+</dd>
+
+	<dt>%window . `navigator$m . `unregisterProtocolHandler(scheme, url)$m</dt>
+	<dd>
+引数で記述される~handlerを未登録にする。
+◎
+Unregisters the handler given by the arguments.
+</dd>
+	<dd>
+~UAが未登録にするのを阻止する場合、
+`SecurityError$E が投出される（一例として，~schemeが妥当でない場合に起こり得る）。
+◎
+Throws a "SecurityError" DOMException if the user agent blocks the deregistration (this might happen if with invalid schemes, for instance).
+</dd>
+	<dd>
+%url 内に文字列 `%s^l が見当たらない場合、
+`SyntaxError$E 例外が投出される。
+◎
+Throws a "SyntaxError" DOMException if the "%s" string is missing in url.
+</dd>
+</dl>
+
+<div class="algo">
+<p>
+`registerProtocolHandler(scheme, url)@m
+~method手続きは：
+◎
+The registerProtocolHandler(scheme, url) method steps are:
+</p>
+<ol>
+	<li>
+( %正規化した~scheme, %正規化した~URL文字列 )
+~LET `~protocol~handler~parameterを正規化する$( %scheme, %url, 此れに`関連な設定群~obj$ )
+◎
+Let (normalizedScheme, normalizedURLString) be the result of running normalize protocol handler parameters with scheme, url, and this's relevant settings object.
+</li>
+	<li>
+<p>
+`並列的$に
+⇒
+( %正規化した~scheme, %正規化した~URL文字列 )
+用の~handlerを登録する：
+◎
+In parallel: register a handler for normalizedScheme and normalizedURLString.＼
+</p>
+
+<p>
+~UAは、以下に従うとする：
+◎
+＼
+</p>
+		<ul>
+			<li>
+<p>
+~handlerを登録するときは、他所に述べられる拘束の下で，好きに行ってヨイ。
+一例として、次を行うこともできる：
+◎
+User agents may, within the constraints described, do whatever they like. A user agent could, for instance,＼
+</p>
+				<ul>
+					<li>
+利用者に~promptして，［
+~handlerの選抜listに~siteを追加する ／
+既定の~handlerにする ／
+要請を取消す
+］機会を提供する。
+◎
+prompt the user and offer the user the opportunity to add the site to a shortlist of handlers, or make the handlers their default, or cancel the request.＼
+</li>
+					<li>
+黙って情報を収集しておいた上で、利用者に関連するときに限り，前項を供する。
+◎
+User agents could also silently collect the information, providing it only when relevant to the user.
+</li>
+				</ul>
+			</li>
+			<li>
+同じ要請が利用者に繰返し~promptされないよう，どの~siteが どの~handlerを登録したか追跡し続けるベキである（利用者が登録を辞退した場合も含めて）。
+◎
+User agents should keep track of which sites have registered handlers (even if the user has declined such registrations) so that the user is not repeatedly prompted with the same request.
+</li>
+			<li>
+<div class="algo">
+<p>
+登録した~handlerを所与の
+( `~URL$ %入力~URL )
+用に利用するときは：
+◎
+When the user agent uses this handler for a URL inputURL:
+</p>
+				<ol>
+					<li>
+~Assert：
+%入力~URL の`~scheme$url ~EQ %正規化した~scheme
+◎
+Assert: inputURL's scheme is normalizedScheme.
+</li>
+					<li>
+%入力~URL文字列 ~LET `~URLを直列化する$( %入力~URL )
+◎
+Let inputURLString be the serialization of inputURL.
+</li>
+					<li>
+%符号化した~URL ~LET `文字列を~UTF-8~percent-符号化する$( %入力~URL文字列, `成分~percent-符号化-集合$ )
+◎
+Let encodedURL be the result of running UTF-8 percent-encode on inputURLString using the component percent-encode set.
+</li>
+					<li>
+%~handler~URL文字列 ~LET %正規化した~URL文字列
+◎
+Let handlerURLString be normalizedURLString.
+</li>
+					<li>
+%~handler~URL文字列 の中の最初に現れる文字列 `%s^l を %符号化した~URL に置換する
+◎
+Replace the first instance of "%s" in handlerURLString with encodedURL.
+</li>
+					<li>
+%結果~URL ~LET `~URL構文解析する$( %~handler~URL文字列 )
+◎
+Let resultURL be the result of parsing handlerURLString.
+</li>
+					<li>
+適切な`閲覧文脈$を %結果~URL へ`~navigate$する
+◎
+Navigate an appropriate browsing context to resultURL.
+</li>
+				</ol>
+</div>
+
+<div class="example">
+<p>
+利用者が ~site `https://example.com/^c を訪問している間に，次が~callされたとする：
+◎
+If the user had visited a site at https://example.com/ that made the following call:
+</p>
+
+<pre class="lang-js">navigator.registerProtocolHandler('web+soup', 'soup?url=`%s^_', 'SoupWeb™')
+</pre>
+
+<p>
+しばらく経ってから
+`https://www.example.net/^c
+を訪問している間、次のような~linkを~clickしたとする：
+◎
+...and then, much later, while visiting https://www.example.net/, clicked on a link such as:
+</p>
+
+<pre class="lang-html">
+&lt;a href="web+soup:chickenkïwi.soup"&gt;チキンのキーウィスープをダウンロードする&lt;/a&gt;
+</pre>
+
+<p>
+このとき，~UAは、次の~URLへ~navigateするであろう：
+◎
+...then the UA might navigate to the following URL:
+</p>
+
+<pre>
+`https://example.com/soup?url=web+soup:chicken-k%C3%AFwi^l
+</pre>
+
+<p>
+この~siteは、何であれ `soup^c についての何かを行うこともできる（それを合成した上で，利用者に送るなど）。
+◎
+This site could then do whatever it is that it does with soup (synthesize it and ship it to the user, or whatever).
+</p>
+</div>
+
+<p>
+これは、当の~handlerがいつ利用されるかは，定義しない。
+文書~間を`~navigate$するときの処理~modelは、関連な事例を ある程度~定義するが、一般に，［
+さもなければ，~native~pluginや~helper~appに~schemeを手渡すことを考慮することになる所
+］では、~UAは，この情報を利用してもヨイ。
+◎
+This does not define when the handler is used. To some extent, the processing model for navigating across documents defines some cases where it is relevant, but in general user agents may use this information wherever they would otherwise consider handing schemes to native plugins or helper applications.
+</p>
+			</li>
+		</ul>
+	</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`unregisterProtocolHandler(scheme, url)@m
+~method手続きは：
+◎
+The unregisterProtocolHandler(scheme, url) method steps are:
+</p>
+<ol>
+	<li>
+( %正規化した~scheme, %正規化した~URL文字列 ) ~LET `~protocol~handler~parameterを正規化する$( %scheme, %url, 此れに`関連な設定群~obj$ )
+◎
+Let (normalizedScheme, normalizedURLString) be the result of running normalize protocol handler parameters with scheme, url, and this's relevant settings object.
+</li>
+	<li>
+`並列的$に
+⇒
+( %正規化した~scheme, %正規化した~URL文字列 )
+で記述される~handlerを未登録にする
+◎
+In parallel: unregister the handler described by normalizedScheme and normalizedURLString.
+</li>
+</ol>
+</div>
+
+<hr>
+
+<div class="algo">
+<p>
+`~protocol~handler~parameterを正規化する@
+ときは、所与の
+( 文字列 %~scheme, 文字列 %url, `環境~設定群~obj$ %環境 )
+に対し，次の手続きを走らす：
+◎
+To normalize protocol handler parameters, given a string scheme, a string url, and an environment settings object environment, run these steps:
+</p>
+
+<ol>
+	<li>
+%~scheme ~SET `~ASCII小文字~化する$( %~scheme )
+◎
+Set scheme to scheme, converted to ASCII lowercase.
+</li>
+	<li>
+<div class="p">
+<p>
+~IF［
+%~scheme は次のいずれでもない
+］…
+</p>
+
+<ul><li>`安全とされる~scheme$である
+</li><li>`web+^l から開始していて，後続する部分は 1 個以上の`~ASCII英小文字$のみからなる
+</li></ul>
+
+<p>
+…ならば
+⇒
+~THROW `SecurityError$E
+</p>
+
+◎
+If scheme is neither a safelisted scheme nor a string starting with "web+" followed by one or more ASCII lower alphas, then throw a "SecurityError" DOMException.
+</div>
+
+<p class="note">注記：
+%~scheme 内に~colonを含めると（例： `mailto:^l ），この段で投出されることになる。
+◎
+This means that including a colon in scheme (as in "mailto:") will throw.
+</p>
+
+<p>
+`安全とされる~scheme@
+は、次に挙げるものからなる：
+◎
+The following schemes are the safelisted schemes:
+</p>
+
+<ul class="category-list"><li>`bitcoin^sc
+</li><li>`geo^sc
+</li><li>`im^sc
+</li><li>`irc^sc
+</li><li>`ircs^sc
+</li><li>`magnet^sc
+</li><li>`mailto^sc
+</li><li>`mms^sc
+</li><li>`news^sc
+</li><li>`nntp^sc
+</li><li>`openpgp4fpr^sc
+</li><li>`sip^sc
+</li><li>`sms^sc
+</li><li>`smsto^sc
+</li><li>`ssh^sc
+</li><li>`tel^sc
+</li><li>`urn^sc
+</li><li>`webcal^sc
+</li><li>`wtai^sc
+</li><li>`xmpp^sc
+</li></ul>
+
+<p class="note">注記：
+この~listは変更され得る。
+追加されるべき~schemeがあれば、~feedbackを送られたし。
+◎
+This list can be changed. If there are schemes that ought to be added, please send feedback.
+</p>
+	</li>
+	<li>
+~IF［
+%url は文字列 `%s^l を包含していない
+］
+⇒
+~THROW `SyntaxError$E
+◎
+If url does not contain "%s", then throw a "SyntaxError" DOMException.
+</li>
+	<li>
+( %~URL~record, %~URL文字列 ) ~LET
+%url を %環境 に`相対的に構文解析-$した
+( `結果の~URL~record$, `結果の~URL文字列$ )
+◎
+Parse url relative to environment.
+</li>
+	<li>
+<p>
+~IF［
+%~URL~record ~EQ `失敗^i
+］
+⇒
+~THROW `SyntaxError$E
+◎
+If that fails, then throw a "SyntaxError" DOMException.
+</p>
+
+<p class="note">注記：
+仮入力 `%s^l が %url の［
+~host／~port
+］†内にある事例では、この段が強制される。
+【† <a href="https://github.com/web-platform-tests/wpt/pull/24886">~schemeが除外されている理由</a>】
+◎
+This is forcibly the case if the %s placeholder is in the host or port of the URL.
+</p>
+	</li>
+	<li>
+~IF［
+%~URL~record の`~scheme$url ~NEQ `https^l
+］~OR［
+( %~URL~record の`生成元$url, %環境 の`生成元$enV )
+は`同一-生成元$でない
+］
+⇒
+~THROW `SecurityError$E
+◎
+If the resulting URL record's scheme is not "https" or the resulting URL record's origin is not same origin with environment's origin, then throw a "SecurityError" DOMException.
+</li>
+	<li>
+<p>
+~RET ( %~scheme, %~URL文字列 )
+◎
+Return (scheme, resulting URL string).
+</p>
+
+<p class="note">注記：
+`結果の~URL文字列$は、~URL内では妥当な成分でない文字列 `%s^l を含むので，定義により`妥当な~URL文字列$にはならない。
+◎
+The resulting URL string will by definition not be a valid URL string as it includes the string "%s" which is not a valid component in a URL.
+</p>
+</li>
+</ol>
+</div>
+
+					<section id="security-and-privacy">
+<h5 title="Security and privacy">8.9.1.3.1. ~securityと~privacy</h5>
+
+<p>
+~custom~scheme~handlerは、いくつかの懸念
+— 特に~privacy上の懸念 —
+を導入し得る：
+◎
+Custom scheme handlers can introduce a number of concerns, in particular privacy concerns.
+</p>
+
+<dl>
+	<dt>すべての~web用法の乗取り</dt>
+	<dd>
+~UAは、`~HTTP_S~scheme$など，通常運用の要となる~schemeに対しては、第三者主体~siteに経由し直されることを許容するベキでない。
+これを許容すると、利用者の活動は自明に追跡され，~secureな接続であろうが 利用者~情報は収集されることになる。
+◎
+Hijacking all web usage. User agents should not allow schemes that are key to its normal operation, such as an HTTP(S) scheme, to be rerouted through third-party sites. This would allow a user's activities to be trivially tracked, and would allow user information, even in secure connections, to be collected.
+</dd>
+
+	<dt>既定に対する乗取り</dt>
+	<dd>
+~UAには、どの既定も自動的に変更しないことが強く督促される
+— そうすると，利用者が期待していない~remote~hostへ~dataが送信されかねないので。
+自身を登録している新たな~handlerに，自動的にその種の~siteを利用させることは、決して生じるベキでない。
+◎
+Hijacking defaults. User agents are strongly urged to not automatically change any defaults, as this could lead the user to send data to remote hosts that the user is not expecting. New handlers registering themselves should never automatically cause those sites to be used.
+</dd>
+
+	<dt>~spam的な登録</dt>
+	<dd>
+~UAは、ある~siteが多数の~handlerを登録しようと試みる可能性を考慮するベキである。
+複数の~domainから行われる場合もある（例えば、異なる~domain上にある 一連の~pageを通して~redirectして、複数の `web+mpeg^mt 用の~handlerを登録するなど
+— 他の~web~browser特能を濫用するような，相似する実施は、~pornography~web~siteにより何年も利用されている）。
+~UAは、そのような敵対的な試みを上品に取扱って，利用者を保護するベキである。
+◎
+Registration spamming. User agents should consider the possibility that a site will attempt to register a large number of handlers, possibly from multiple domains (e.g., by redirecting through a series of pages each on a different domain, and each registering a handler for web+spam: — analogous practices abusing other web browser features have been used by pornography web sites for many years). User agents should gracefully handle such hostile attempts, protecting the user.
+</dd>
+
+	<dt>敵対的~handler~metadata</dt>
+	<dd>
+~UAは、自身の~UI内に埋込まれる文字列を利用する代表的な攻撃に抗して，保護するベキである
+— 例えば、そのような文字列~内の~markupや文字~escapeは 実行されず,
+~NULL ~byteは 適正に取扱われ,
+長過ぎる文字列により~crashや~buffer-overrunは 生じないこと,
+等々を確保するなど。
+◎
+Hostile handler metadata. User agents should protect against typical attacks against strings embedded in their interface, for example ensuring that markup or escape characters in such strings are not executed, that null bytes are properly handled, that over-long strings do not cause crashes or buffer overruns, and so forth.
+</dd>
+
+	<dt>私的~dataの漏洩ng</dt>
+	<dd>
+~web~page作者は、私的と見なされる~URL~dataを利用して，~custom~scheme~handlerを参照することもあろう
+— 利用者が ある組織の内側にある~pageを指す~handlerを選ぶことを期待して，それにより、敏感な~dataは第三者主体に公開されないことが確保されるよう。
+しかしながら、利用者は，外部~siteを指している~handlerを登録するかもしれず、その場合，その第三者主体へ~dataが漏洩する。
+実装者は、［
+ある種の［
+下位domain／内容~型／~scheme
+］に対しては、【~intranetなどの】管理者が~custom~handlerを不能化できる
+］ようにしたいと考えるかもしれない。
+◎
+Leaking private data. Web page authors may reference a custom scheme handler using URL data considered private. They might do so with the expectation that the user's choice of handler points to a page inside the organization, ensuring that sensitive data will not be exposed to third parties. However, a user may have registered a handler pointing to an external site, resulting in a data leak to that third party. Implementors might wish to consider allowing administrators to disable custom handlers on certain subdomains, content types, or schemes.
+</dd>
+
+	<dt>資格証の漏洩ng</dt>
+	<dd>
+~UAは、［
+~URL内に~escapeして含められた~usernameや~password情報
+］は~handler~siteへは，決して送信されないようにするモノトスル。
+~UAは、~accessに認証を要求することが既知である資源の~URLに対しては，~webに基づく~handlerに渡そうと試みることさえ避けてもヨイ
+— そのような~siteは、利用者に資格証を~~入力してもらうよう自身を~promptすることなしには，当の資源に~accessできないので（それは、利用者が第三者主体の~handlerを信用するかどうかを知ること
+— 多くの利用者が下せないか理解できない裁定 —
+を要求する実施である）。
+◎
+Leaking credentials. User agents must never send username or password information in the URLs that are escaped and included sent to the handler sites. User agents may even avoid attempting to pass to web-based handlers the URLs of resources that are known to require authentication to access, as such sites would be unable to access the resources in question without prompting the user for credentials themselves (a practice that would require the user to know whether to trust the third-party handler, a decision many users are unable to make or even understand).
+</dd>
+
+	<dt>~UIへの干渉</dt>
+	<dd>
+~UAは、~methodに意図的に長い引数が渡されたときの~~対策も講じておくベキである。
+例えば、公開される~UI内に 2 個の~button［
+“受認-”, “否認-”
+］があって，~handlerの名前が “受認-” ~buttonに束ねられている場合、長い名前により “否認-” ~buttonが~screen外へ押し出されないようにすることが重要になる。
+◎
+Interface interference. User agents should be prepared to handle intentionally long arguments to the methods. For example, if the user interface exposed consists of an "accept" button and a "deny" button, with the "accept" binding containing the name of the handler, it's important that a long name not cause the "deny" button to be pushed off the screen.
+</dd>
+</dl>
+
+					</section>
+				</section>
+				<section id="cookies">
+<h4 title="Cookies">8.9.1.4. ~cookie</h4>
+
+<pre class="idl">
+interface mixin `NavigatorCookies@I {
+  readonly attribute boolean `cookieEnabled$m;
+};
+</pre>
+
+<dl class="domintro">
+
+	<dt>%window . `navigator$m . `cookieEnabled$m</dt>
+	<dd>
+~cookieを設定しても無視されるならば ~F ／
+~ELSE_ ~T
+を返す。
+◎
+Returns false if setting a cookie will be ignored, and true otherwise.
+</dd>
+</dl>
+
+<div class="algo">
+`cookieEnabled@m
+取得子~手続きは、~UAが［
+`HTTP State Management Mechanism^cite `COOKIES$r
+に則って~cookieを取扱うよう試みるならば ~T ／
+~ELSE_ すなわち~cookie変更-要請を無視するならば ~F
+］を返す。
+◎
+The cookieEnabled attribute must return true if the user agent attempts to handle cookies according to HTTP State Management Mechanism, and false if it ignores cookie change requests. [COOKIES]
+</div>
+
+				</section>
+				<section id="plugins-2">
+<h4 title="Plugins">8.9.1.5. ~plugin</h4>
+
+<pre class="idl">
+interface mixin `NavigatorPlugins@I {
+  [`SameObject$] readonly attribute `PluginArray$I `plugins$m;
+  [`SameObject$] readonly attribute `MimeTypeArray$I `mimeTypes$m;
+  boolean `javaEnabled()$m;
+};
+
+[Exposed=Window,
+`LegacyUnenumerableNamedProperties$]
+interface `PluginArray@I {
+  undefined `refresh$pA(optional boolean reload = false);
+  readonly attribute unsigned long `length$pA;
+  getter `Plugin$I? `item$pA(unsigned long index);
+  getter `Plugin$I? `namedItem$pA(DOMString name);
+};
+
+[Exposed=Window,
+`LegacyUnenumerableNamedProperties$]
+interface `MimeTypeArray@I {
+  readonly attribute unsigned long `length$mA;
+  getter `MimeType$I? `item$mA(unsigned long index);
+  getter `MimeType$I? `namedItem$mA(DOMString name);
+};
+
+[Exposed=Window,
+`LegacyUnenumerableNamedProperties$]
+interface `Plugin@I {
+  readonly attribute DOMString `name$m;
+  readonly attribute DOMString `~description0$m;
+  readonly attribute DOMString `filename$m;
+  readonly attribute unsigned long `length$m;
+  getter `MimeType$I? `item$m(unsigned long index);
+  getter `MimeType$I? `namedItem$m(DOMString name);
+};
+
+[Exposed=Window]
+interface `MimeType@I {
+  readonly attribute DOMString `type$m;
+  readonly attribute DOMString `description$m;
+  readonly attribute DOMString `suffixes$m; /* <span class="comment">
+~comma区切りの
+◎
+comma-separated
+</span> */
+  readonly attribute `Plugin$I `enabledPlugin$m;
+};
+</pre>
+
+<dl class="domintro">
+
+	<dt>%window . `navigator$m . `plugins$m . `refresh( [ refresh ] )$pA</dt>
+	<dd>
+当の~pageにて~supportされる［
+~pluginの~list, ~MIME型の~list
+］を更新した上で、いずれかの~listが変化していた場合には，~pageを読込直す。
+◎
+Updates the lists of supported plugins and MIME types for this page, and reloads the page if the lists have changed.
+</dd>
+
+	<dt>%window . `navigator$m . `plugins$m . `length$pA</dt>
+	<dd>
+~UAが報告する［
+`Plugin$I ~objで表現される~plugin
+］たちの個数を返す。
+◎
+Returns the number of plugins, represented by Plugin objects, that the user agent reports.
+</dd>
+
+	<dt>%plugin = %window . `navigator$m . `plugins$m . `item(index)$pA</dt>
+
+	<dt>%window . `navigator$m . `plugins$m[%index]</dt>
+	<dd>
+指定された `Plugin$I ~objを返す。
+◎
+Returns the specified Plugin object.
+</dd>
+
+	<dt>%plugin = %window . `navigator$m . `plugins$m . `item(name)$pA</dt>
+
+	<dt>%window . `navigator$m . `plugins$m[%name]</dt>
+	<dd>
+所与の名前を有する~pluginに対する
+`Plugin$I ~objを返す。
+◎
+Returns the Plugin object for the plugin with the given name.
+</dd>
+
+	<dt>%window . `navigator$m . `mimeTypes$m . `length$mA</dt>
+	<dd>
+~UAが報告する［
+各~pluginにより~supportされる `MimeType$I ~objで表現される~MIME型
+］の個数を返す。
+◎
+Returns the number of MIME types, represented by MimeType objects, supported by the plugins that the user agent reports.
+</dd>
+
+	<dt>%mimeType = %window . `navigator$m . `mimeTypes$m . `item(index)$mA</dt>
+	<dt>%window . `navigator$m . `mimeTypes$m[%index]</dt>
+	<dd>
+指定された `MimeType$I ~objを返す。
+◎
+Returns the specified MimeType object.
+</dd>
+
+	<dt>%mimeType = %window . `navigator$m . `mimeTypes$m . `item(name)$mA</dt>
+
+	<dt>%window . `navigator$m . `mimeTypes$m[%name]</dt>
+	<dd>
+所与の~MIME型に対する `MimeType$I ~objを返す。
+◎
+Returns the MimeType object for the given MIME type.
+</dd>
+
+	<dt>%plugin . `name$m</dt>
+	<dd>
+この~pluginの名前を返す。
+◎
+Returns the plugin's name.
+</dd>
+
+	<dt>%plugin . `~description0$m</dt>
+	<dd>
+この~pluginの記述を返す。
+◎
+Returns the plugin's description.
+</dd>
+
+	<dt>%plugin . `filename$m</dt>
+	<dd>
+現在の~platformにて適用-可能なら，この~plugin~libraryの~filenameを返す。
+◎
+Returns the plugin library's filename, if applicable on the current platform.
+</dd>
+
+	<dt>%plugin . `length$m</dt>
+	<dd>
+この~pluginが~supportする `MimeType$I ~objたちで表現される~MIME型の個数を返す。
+◎
+Returns the number of MIME types, represented by MimeType objects, supported by the plugin.
+</dd>
+
+	<dt>%mimeType = %plugin . `item(index)$m</dt>
+
+	<dt>%plugin[%index]</dt>
+	<dd>
+指定された `MimeType$I ~objを返す。
+◎
+Returns the specified MimeType object.
+</dd>
+
+	<dt>%mimeType = %plugin . `item(name)$m</dt>
+
+	<dt>%plugin[%name]</dt>
+	<dd>
+所与の~MIME型に対する `MimeType$I ~objを返す。
+◎
+Returns the MimeType object for the given MIME type.
+</dd>
+
+	<dt>%mimeType . `type$m</dt>
+	<dd>
+~MIME型を返す。
+◎
+Returns the MIME type.
+</dd>
+
+	<dt>%mimeType . `description$m</dt>
+	<dd>
+この~MIME型の記述を返す。
+◎
+Returns the MIME type's description.
+</dd>
+
+	<dt>%mimeType . `suffixes$m</dt>
+	<dd>
+この~MIME型の代表的な~file拡張子を
+~comma区切りの~listで返す。
+◎
+Returns the MIME type's typical file extensions, in a comma-separated list.
+</dd>
+
+	<dt>%mimeType . `enabledPlugin$m</dt>
+	<dd>
+この~MIME型を実装する `Plugin$I ~objを返す。
+◎
+Returns the Plugin object that implements this MIME type.
+</dd>
+
+	<dt>%window . `navigator$m . `javaEnabled()$m</dt>
+	<dd>
+~MIME型 `application/x-java-vm^l を~supportする~pluginがあるならば ~T を返す。
+◎
+Returns true if there's a plugin that supports the MIME type "application/x-java-vm".
+</dd>
+</dl>
+
+					<section id="_NavigatorPlugins">
+<h5>`NavigatorPlugins^I ~obj</h5>
+
+<div class="algo">
+`plugins@m
+取得子~手続きは、
+`PluginArray$I ~objを返す。
+◎
+The navigator.plugins attribute must return a PluginArray object.
+</div>
+
+<div class="algo">
+`mimeTypes@m
+取得子~手続きは、
+`MimeTypeArray$I ~objを返す。
+◎
+The navigator.mimeTypes attribute must return a MimeTypeArray object.
+</div>
+
+<p class="trans-note">【
+これらの属性は、 [SameObject] が付与されているので，常に同じ~objを返す。
+返される `PluginArray$I ~obj, `MimeTypeArray$I ~objは、同じ下層の~pluginたちに基づくことを通して，互いに関連する。
+】</p>
+
+					</section>
+					<section id="_PluginArray">
+<h5>`PluginArray^I ~obj</h5>
+
+<p>
+`PluginArray$I ~objは、
+`~Pluginたち@
+を持つ。
+それは，いくつかの［
+~UAが~supportする`~plugin$を表現する `Plugin$I ~obj
+］からなるが、［
+それらの`~plugin$のうち どれが実際に`~Pluginたち$に含められるか
+］は，~UAの裁量に委ねられる。
+加えて、これらの各`~plugin$（を表現する `Plugin$I ~obj）は，
+`隠されて@
+もヨイ。
+`隠されて$いる~pluginは、列挙されないが，それでも名前を利用して検分できる。
+◎
+A PluginArray object represents none, some, or all of the plugins supported by the user agent, each of which is represented by a Plugin object. Each of these Plugin objects may be hidden plugins. A hidden plugin can't be enumerated, but can still be inspected by using its name.
+</p>
+
+<p class="trans-note">【
+“~Pluginたち”
+は、~UAが~supportするあらゆる`~plugin$との区別を簡潔に表すため，この訳に導入した用語である。
+】【
+`~Pluginたち$のうち，`隠されて$いないものは、
+“隠されてない~Pluginたち”
+とも表記される。
+】</p>
+
+<p class="note">注記：
+`PluginArray$I ~objで表現される`~plugin$たちが［
+より少ない ／ より多く`隠されて$いる
+］ほど、利用者の~privacyは保護されることになる。
+より多くの~pluginが公開されるほど、指紋収集~用に導出される~bit数は増える。
+~pluginを隠すことは助けになるが，それでも、ごく稀な~pluginでない限り，~siteは、~pluginの~support有無を名前で探ることにより，~pluginの~listを決定できる可能性は高い（普及した~pluginの名前は周知なので）。
+したがって~pluginをまったく公開しないことが選好される。
+あいにく，多くの旧来の~siteは、この特能を利用して，例えば 動画の再生-にどの~pluginを利用するかを決定している。
+したがって，~pluginをまったく公開しないことは、必ずしも満足いくものにはならないかもしれない。
+◎
+The fewer plugins are represented by the PluginArray object, and of those, the more that are hidden, the more the user's privacy will be protected. Each exposed plugin increases the number of bits that can be derived for fingerprinting. Hiding a plugin helps, but unless it is an extremely rare plugin, it is likely that a site attempting to derive the list of plugins can still determine whether the plugin is supported or not by probing for it by name (the names of popular plugins are widely known). Therefore not exposing a plugin at all is preferred. Unfortunately, many legacy sites use this feature to determine, for example, which plugin to use to play video. Not exposing any plugins at all might therefore not be entirely plausible.
+</p>
+
+<p>
+~UAが作成した `PluginArray$I ~objは`~live$でないモノトスル
+— すなわち，その`~Pluginたち$は、
+`refresh()$pA ~methodで更新される前後を除き，~objの作成-後は変化しないモノトスル。
+◎
+The PluginArray objects created by a user agent must not be live. The set of plugins represented by the objects must not change once an object is created, except when it is updated by the refresh() method.
+</p>
+
+<p>
+`~Pluginたち$内の各 `Plugin$I が表現する`~plugin$は、何個かの`~MIME型$を~supportし得る。
+そのような各`~plugin$に対しては、~UAは，
+1 個~以上の`~MIME型$を
+`明示的に~support@
+するものとして選ぶモノトスル。
+◎
+Each plugin represented by a PluginArray can support a number of MIME types. For each such plugin, the user agent must pick one or more of these MIME types to be those that are explicitly supported.
+</p>
+
+<p class="note">注記：
+`~plugin$にて`明示的に~support$される`~MIME型$は、
+`Plugin$I ／ `MimeTypeArray$I
+~interfaceを通して公開される。
+`~plugin$自体と同様に，何が公開されるかが 利用者ごとに様々になる場合、~siteによる指紋収集が可能になる。
+したがって，~UAは、すべての`~plugin$利用者に対し
+— それが~supportする実際の型にかかわらず —
+同じ`~MIME型$を公開することが奨励される
+— 少なくとも，旧来の内容との互換性により課される拘束の中で。
+◎
+The explicitly supported MIME types of a plugin are those that are exposed through the Plugin and MimeTypeArray interfaces. As with plugins themselves, any variation between users regarding what is exposed allows sites to fingerprint users. User agents are therefore encouraged to expose the same MIME types for all users of a plugin, regardless of the actual types supported... at least, within the constraints imposed by compatibility with legacy content.
+</p>
+
+<p>
+~FINGERPRINTING
+`PluginArray$I ~objが`~supportする~prop~index$は、
+0 以上［
+~objの`隠されてない~Pluginたち$の個数
+］未満とする。
+◎
+(This is a tracking vector.)
+The supported property indices of a PluginArray object are the numbers from zero to the number of non-hidden plugins represented by the object, if any.
+</p>
+
+<div class="algo">
+~FINGERPRINTING
+`length@pA
+取得子~手続きは、此れの`隠されてない~Pluginたち$の個数を返す。
+◎
+(This is a tracking vector.)
+The length attribute must return the number of non-hidden plugins represented by the object.
+</div>
+
+<div class="algo">
+<p>
+`item(index)@pA
+~method手続きは：
+◎
+The item() method of a PluginArray object must＼
+</p>
+<ol>
+	<li>
+~IF［
+%index ~NIN { 此れが`~supportする~prop~index$ }
+］
+⇒
+~RET ~NULL
+◎
+return null if the argument is not one of the object's supported property indices, and otherwise must return the result of running the following steps, using the method's argument as index:
+</li>
+	<li>
+~RET ［
+此れの`隠されてない~Pluginたち$を，それぞれの `name$m の字句順に~sortした結果の~list
+］内の %index 番の~entry
+◎
+Let list be the Plugin objects representing the non-hidden plugins represented by the PluginArray object.
+◎
+Sort list alphabetically by the name of each Plugin.
+◎
+Return the indexth entry in list.
+</li>
+</ol>
+
+<p class="note">注記：
+~pluginの順序が，追加的な情報
+— 例えば~pluginが~installされた順序など —
+を漏洩しないことは、`~privacyに重要$である。
+◎
+It is important for privacy that the order of plugins not leak additional information, e.g., the order in which plugins were installed.
+</p>
+</div>
+
+<p>
+~FINGERPRINTING
+`PluginArray$I ~objが`~supportする~prop名$は、その`~Pluginたち$それぞれの `name$m 属性の値からなる。
+◎
+(This is a tracking vector.)
+The supported property names of a PluginArray object are the values of the name attributes of all the Plugin objects represented by the PluginArray object.
+</p>
+
+<div class="algo">
+<p>
+`namedItem(name)@pA
+~method手続きは
+⇒
+~RET ［
+%name ~NIN { 此れが`~supportする~prop名$ } ならば ~NULL ／
+~ELSE_ 此れの`~Pluginたち$内の［
+`name$m ~EQ %name
+］なる `Plugin$I ~obj
+］
+◎
+The namedItem() method of a PluginArray object must return null if the argument is not one of the object's supported property names, and otherwise must return the Plugin object, of those represented by the PluginArray object, that has a name equal to the method's argument.
+</p>
+
+<p class="trans-note">【
+すなわち、`~Pluginたち$と, それらが表現する~pluginの名前の集合は、一対一に対応する（ことが暗黙的に規定されていると見受けられる）。
+】</p>
+</div>
+
+<div class="algo">
+<p>
+`refresh(reload)@pA
+~method手続きは：
+◎
+The refresh() method of the PluginArray object of a Navigator object, when invoked, must＼
+</p>
+<ol>
+	<li>
+<p>
+~IF［
+~UAが此れを作成した後に、ある`~plugin$が［
+~installされた, または 環境設定し直された
+］］~AND［
+%reload ~EQ ~T
+］：
+</p>
+		<ol>
+			<li>
+`location.reload()$m ~methodが~callされたかのように動作する
+</li>
+			<li>
+~RET
+</li>
+		</ol>
+◎
+check to see if any plugins have been installed or reconfigured since the user agent created the PluginArray object. If so, and the method's argument is true, then＼
+the user agent must act as if the location.reload() method was called instead.＼
+</li>
+	<li>
+<p>
+［
+`plugins$m, `mimeTypes$m
+］属性~用に作成された，［
+此れの`~Pluginたち$ ／
+此れに関連な `MimeTypeArray$I ~objの`~MimeTypeたち$
+］を、次に従って更新する：
+◎
+Otherwise, the user agent must update the PluginArray object and MimeTypeArray object created for attributes of that Navigator object, and the Plugin and MimeType objects created for those PluginArray and MimeTypeArray objects, using＼
+</p>
+		<ul>
+			<li>
+`Plugin$I ~objのうち，更新-前後で `name$m が同じになるものは、そのまま残す
+◎
+the same Plugin objects for cases where the name is the same, and＼
+</li>
+			<li>
+`MimeType$I ~objのうち，更新-前後で `type$m が同じになるものは、そのまま残す
+◎
+the same MimeType objects for cases where the type is the same, and＼
+</li>
+			<li>
+更新-前（すなわち，この~methodが~callされる直前）には合致する~objがなかった［
+~plugin名／~MIME型
+］に対しては、新たな~objを作成する。
+◎
+creating new objects for cases where there were no matching objects immediately prior to the refresh() call.＼
+</li>
+			<li>
+更新-前からそのまま残された，各［
+`Plugin$I ／ `MimeType$I
+］~objの各種 属性は、更新-前の時点と同じ値を返し続けるモノトスル
+— 更新-前と後の~dataは，整合しなくなるかもしれないが（例えば，そのような `MimeType$I ~obj %T の `enabledPlugin$m が返す `Plugin$I ~objが更新-後に~supportする~MIME型たちには、最早 %T が表現する~MIME型は含まれていないかもしれない）。
+◎
+Old Plugin and MimeType objects must continue to return the same values that they had prior to the update, though naturally now the data is stale and may appear inconsistent (for example, an old MimeType entry might list as its enabledPlugin a Plugin object that no longer lists that MimeType as a supported MimeType).
+</li>
+		</ul>
+	</li>
+</ol>
+</div>
+
+					</section>
+					<section id="_MimeTypeArray">
+<h5>`MimeTypeArray^I ~obj</h5>
+
+<p>
+`MimeTypeArray$I ~objは、~UAが~supportする`~plugin$により`明示的に~support$される`~MIME型$を表現する
+— そのそれぞれは、 `MimeType$I ~objにより表現される。
+◎
+A MimeTypeArray object represents the MIME types explicitly supported by plugins supported by the user agent, each of which is represented by a MimeType object.
+</p>
+
+<p>
+~UAが作成した `MimeTypeArray$I ~objは`~live$でないモノトスル。
+この~objが表現する~MIME型の集合は、
+`refresh()$pA ~methodで更新される前後を除き，~objの作成-後は変化しないモノトスル。
+◎
+The MimeTypeArray objects created by a user agent must not be live. The set of MIME types represented by the objects must not change once an object is created, except when it is updated by the PluginArray object's refresh() method.
+</p>
+
+<p>
+`MimeTypeArray$I ~objの［
+`~MimeTypeたち@
+／
+`隠されてない~MimeTypeたち@
+］は、［［
+関連な `PluginArray$I ~objの［
+`~Pluginたち$ ／ `隠されてない~Pluginたち$
+］により`明示的に~support$される`~MIME型$
+］を表現している `MimeType$I ~objたちからなるとする。
+【これらは、以下を簡潔に記すために，この訳に導入した定義である。】
+</p>
+
+<p>
+~FINGERPRINTING
+`MimeTypeArray$I ~objが`~supportする~prop~index$は、
+0 以上［
+その`隠されてない~MimeTypeたち$の個数
+］未満とする。
+◎
+(This is a tracking vector.)
+The supported property indices of a MimeTypeArray object are the numbers from zero to the number of MIME types explicitly supported by non-hidden plugins represented by the corresponding PluginArray object, if any.
+</p>
+
+<div class="algo">
+~FINGERPRINTING
+`length@mA
+取得子~手続きは、此れの`隠されてない~MimeTypeたち$の個数を返す。
+◎
+(This is a tracking vector.)
+The length attribute must return the number of MIME types explicitly supported by non-hidden plugins represented by the corresponding PluginArray object, if any.
+</div>
+
+<div class="algo">
+<p>
+`item(index)@mA
+~method手続きは：
+◎
+The item() method of a MimeTypeArray object must return null if the argument is not one of the object's supported property indices, and otherwise must return the result of running the following steps, using the method's argument as index:
+</p>
+<ol>
+	<li>
+~IF［
+%index ~NIN { 此れが`~supportする~prop~index$ }
+］
+⇒
+~RET ~NULL
+◎
+↑</li>
+	<li>
+~RET ［
+此れの`隠されてない~MimeTypeたち$を，それぞれの `type$m 値による字句順に~sortした結果の~list
+］の %index 番の~entry
+◎
+Let list be the MimeType objects representing the MIME types explicitly supported by non-hidden plugins represented by the corresponding PluginArray object, if any.
+◎
+Sort list alphabetically by the type of each MimeType.
+◎
+Return the indexth entry in list.
+</li>
+</ol>
+
+<p class="note">注記：
+~MIME型の順序が，追加的な情報
+— 例えば~pluginが~installされた順序など —
+を漏洩しないことは、`~privacyに重要$である。
+◎
+It is important for privacy that the order of MIME types not leak additional information, e.g. the order in which plugins were installed.
+</p>
+</div>
+
+<p>
+~FINGERPRINTING
+`MimeTypeArray$I ~objが`~supportする~prop名$は、その`~MimeTypeたち$の `type$m 属性の値からなる。
+◎
+(This is a tracking vector.)
+The supported property names of a MimeTypeArray object are the values of the type attributes of all the MimeType objects represented by the MimeTypeArray object.
+</p>
+
+<div class="algo">
+<p>
+`namedItem(name)@mA
+~method手続きは
+⇒
+~RET ［
+%name ~NIN { 此れが`~supportする~prop名$ } ならば ~NULL ／
+~ELSE_ 此れの`~MimeTypeたち$内の［
+`type$m ~EQ %name
+］なる `MimeType$I ~obj
+］
+◎
+The namedItem() method of a MimeTypeArray object must return null if the argument is not one of the object's supported property names, and otherwise must return the MimeType object that has a type equal to the method's argument.
+</p>
+
+<p class="trans-note">【
+すなわち、`~MimeTypeたち$と, それらが表現する~MIME型の集合は、一対一に対応する（ことが暗黙的に規定されていると見受けられる）。
+】</p>
+</div>
+
+					</section>
+					<section id="_Plugin">
+<h5>`Plugin^I ~obj</h5>
+
+<p>
+`Plugin$I ~objは、`~plugin$を表現する。
+それは、いくつかの属性により，その~pluginについての詳細を供して、`明示的に~support$する`~MIME型$の~listを得するために列挙できる。
+◎
+A Plugin object represents a plugin. It has several attributes to provide details about the plugin, and can be enumerated to obtain the list of MIME types that it explicitly supports.
+</p>
+
+<p>
+~UAにより作成される `Plugin$I ~objは、`~live$でないモノトスル。
+この~objが表現する~MIME型の集合は、
+`refresh()$pA ~methodで更新される前後を除き，~objの作成-後は変化しないモノトスル。
+◎
+The Plugin objects created by a user agent must not be live. The set of MIME types represented by the objects, and the values of the objects' attributes, must not change once an object is created, except when updated by the PluginArray object's refresh() method.
+</p>
+
+<p>
+`Plugin$I ~objにより
+`報告される~MIME型たち@
+は、この~objが最も近過去に［
+作成された, または `refresh()$pA ~methodにより更新された
+］時点で，~objが表現している`~plugin$により`明示的に~support$される`~MIME型$たちである。
+◎
+The reported MIME types for a Plugin object are the MIME types explicitly supported by the corresponding plugin when this object was last created or updated by refresh(), whichever happened most recently.
+</p>
+
+<p>
+`Plugin$I ~objの
+`~MimeTypeたち@pI
+は、［
+~objにより`報告される~MIME型たち$を表現している `MimeType$I ~objたち
+］からなるとする。
+【これは、以下を簡潔に記すために，この訳に導入した定義である。】
+</p>
+
+<p>
+~FINGERPRINTING
+`Plugin$I ~objが`~supportする~prop~index$は、
+0 以上［
+その`~MimeTypeたち$pIの個数
+］未満とする。
+【原文は “未満” が抜けていると見受けられる。】
+◎
+(This is a tracking vector.)
+The supported property indices of a Plugin object are the numbers from zero to the number of reported MIME types.
+</p>
+
+<div class="algo">
+~FINGERPRINTING
+`length@m
+取得子は、此れの`~MimeTypeたち$pIの個数を返す。
+◎
+(This is a tracking vector.)
+The length attribute must return the number of reported MIME types.
+</div>
+
+<div class="algo">
+`item(index)@m
+<p>
+~method手続きは：
+◎
+The item() method of a Plugin object must＼
+</p>
+<ol>
+	<li>
+~IF［
+%index ~NIN { 此れが`~supportする~prop~index$ }
+］
+⇒
+~RET ~NULL
+◎
+return null if the argument is not one of the object's supported property indices, and otherwise must return the result of running the following steps, using the method's argument as index:
+</li>
+	<li>
+~RET ［
+此れの`~MimeTypeたち$pIを，それぞれの `type$m 値による字句順に~sortした結果の~list
+］の %index 番の~entry
+◎
+Let list be the MimeType objects representing the reported MIME types.
+◎
+Sort list alphabetically by the type of each MimeType.
+◎
+Return the indexth entry in list.
+</li>
+</ol>
+
+<p class="note">注記：
+~MIME型の順序が，追加的な情報
+— 例えば~pluginが~installされた順序など —
+を漏洩しないことは、`~privacyに重要$である。
+◎
+It is important for privacy that the order of MIME types not leak additional information, e.g. the order in which plugins were installed.
+</p>
+</div>
+
+<p>
+~FINGERPRINTING
+`Plugin$I ~objが`~supportする~prop名$は、その`~MimeTypeたち$pIの `type$m 属性の値からなる。
+◎
+(This is a tracking vector.)
+The supported property names of a Plugin object are the values of the type attributes of the MimeType objects representing the reported MIME types.
+</p>
+
+<div class="algo">
+`namedItem(name)@m
+~method手続きは
+⇒
+~RET［
+%name ~NIN { 此れが`~supportする~prop名$ } ならば ~NULL ／
+~ELSE_ `MimeType$I ~objのうち［
+`type$m ~EQ %name
+］なるもの
+］を返すモノトスル。
+◎
+The namedItem() method of a Plugin object must return null if the argument is not one of the object's supported property names, and otherwise must return the MimeType object that has a type equal to the method's argument.
+</div>
+
+<div class="algo">
+`name@m
+取得子~手続きは、`~plugin$の名前を返す。
+◎
+The name attribute must return the plugin's name.
+</div>
+
+<div class="algo">
+<p>
+`~description0@m
+取得子~手続き／
+`filename@m
+取得子~手続きは、どちらも，`実装定義$な（または十中八九，`~plugin$により定義される）文字列を返す。
+`refresh()$pA ~methodにより更新される前後を除き、毎回 同じ文字列を返すモノトスル。
+◎
+The description and filename attributes must return implementation-defined (in all likelihood, plugin-defined) strings. In each case, the same string must be returned each time, except that the strings returned may change when the refresh() method updates the object.
+</p>
+
+<p class="warning">
+~FINGERPRINTING
+これらの取得子が返す値が`~plugin$の~version間で変わる場合、それらは指紋収集~行路に利用され得ることに加え、より重要な点として，`~plugin$が有し得る~securityの脆弱性（したがって，~browserの脆弱性）を決定する自明な仕方にも利用され得る。
+したがって［
+`~description0$m 取得子は 単に `name$m 取得子と同じ結果 ／
+`filename$m 取得子は空~文字列
+］を返すことが~~強く推奨される。
+◎
+(This is a tracking vector.)
+If the values returned by the description or filename attributes vary between versions of a plugin, they can be used both as a fingerprinting vector and, even more importantly, as a trivial way to determine what security vulnerabilities a plugin (and thus a browser) may have. It is thus highly recommended that the description attribute just return the same value as the name attribute, and that the filename attribute return the empty string.
+</p>
+</div>
+
+					</section>
+					<section id="_MimeType">
+<h5>`MimeType^I ~obj</h5>
+
+<p>
+`MimeType$I ~objは、`~plugin$により`明示的に~support$されている／されていた
+`~MIME型$を表現する。
+◎
+A MimeType object represents a MIME type that is, or was, explicitly supported by a plugin.
+</p>
+
+<p>
+~UAが作成した `MimeType$I ~objは`~live$でないモノトスル。
+この~objの属性~値は、
+`refresh()$pA ~methodで更新される前後を除き，~objの作成-後は変化しないモノトスル。
+◎
+The MimeType objects created by a user agent must not be live. The values of the objects' attributes must not change once an object is created, except when updated by the PluginArray object's refresh() method.
+</p>
+
+<div class="algo">
+`type@m
+取得子~手続きは、`~MIME型$を記述している`~parameterを伴わない妥当な~MIME型~文字列$を返す。
+◎
+The type attribute must return the valid MIME type string with no parameters describing the MIME type.
+</div>
+
+<div class="algo">
+<p>
+`description@m
+取得子~手続き／
+`suffixes@m
+取得子~手続きは、どちらも，`実装定義$な（または十中八九，`~plugin$により定義される）文字列を返す。
+`refresh()$pA ~methodにより更新される前後を除き、毎回 同じ文字列を返すモノトスル。
+◎
+The description and suffixes attributes must return user-agent-defined (or, in all likelihood, plugin-defined) strings. In each case, the same string must be returned each time, except that the strings returned may change when the refresh() method updates the object.
+</p>
+
+<p class="warning">
+~FINGERPRINTING
+これらの取得子が返す値が`~plugin$の~version間で変わる場合、それらは指紋収集~行路に利用され得ることに加え、より重要な点として，`~plugin$が有し得る~securityの脆弱性（したがって，~browserの脆弱性）を決定する自明な仕方にも利用され得る。
+したがって［
+`description$m 取得子は 単に `type$m 取得子と同じ値 ／
+`suffixes$m 取得子は空~文字列
+］を返すことが~~強く推奨される。
+◎
+(This is a tracking vector.)
+If the values returned by the description or suffixes attributes vary between versions of a plugin, they can be used both as a fingerprinting vector and, even more importantly, as a trivial way to determine what security vulnerabilities a plugin (and thus a browser) may have. It is thus highly recommended that the description attribute just return the same value as the type attribute, and that the suffixes attribute return the empty string.
+</p>
+
+<p class="note">注記：
+`suffixes$m 取得子が返す結果~内の~commaは、互いの~filename拡張子を分離するものと解釈される
+— `htm,html^l のように。
+◎
+Commas in the suffixes attribute are interpreted as separating subsequent filename extensions, as in "htm,html".
+</p>
+</div>
+
+<div class="algo">
+<p>
+`enabledPlugin@m
+取得子~手続きは、此れが最も近過去に［
+作成された, または `refresh()$pA により更新された
+］時点での，［
+`~Pluginたち$のうち，此れが表現する`~MIME型$を`明示的に~support$する`~plugin$を表現するもの
+］を返す。
+◎
+The enabledPlugin attribute must return the Plugin object that represents the plugin that explicitly supported the MIME type that this MimeType object represents when this object was last created or updated by refresh(), whichever happened most recently.
+</p>
+
+<p class="trans-note">【
+複数の~pluginが同じ~MIME型を~supportする場合にどうなるかは、述べられていない。
+】</p>
+</div>
+
+					</section>
+					<section id="_javaEnabled">
+<h5>`javaEnabled()^m ~method</h5>
+
+<div class="algo">
+~FINGERPRINTING
+`NavigatorPlugins$I の
+`javaEnabled()@m
+~method手続きは
+⇒
+~RET ~UAは［
+`~MIME型$ `application/x-java-vm^l を~supportする`~plugin$
+］を~supportするならば ~T ／
+~ELSE_ ~F
+］
+◎
+(This is a tracking vector.)
+The navigator.javaEnabled() method must return true if the user agent supports a plugin that supports the MIME type "application/x-java-vm"; otherwise it must return false.
+</div>
+
+					</section>
+				</section>
+			</section>
+		</section>
+</main>

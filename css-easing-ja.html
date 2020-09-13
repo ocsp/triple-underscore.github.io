@@ -1,0 +1,1229 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Easing Functions Level 1 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script >
+
+Util.ready = function(){
+	const source_data = {
+		collectParts: Util.collectParts,
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w~一-鿆あ-ん]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r': // ref
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	key = key.replace(/\s?\[.+/, '');
+	break;
+case 'dgm':
+	return `<a id="_dgm-${key}">＊</a>`;
+	break;
+}
+
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Easing Functions Level 1
+spec_date:2020-04-19
+trans_update:2020-04-20
+source_checked:160612
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-easing/
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:css-anim,css
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2017-01-20
+
+
+●●class_map
+p:property
+css:css
+f:func
+e:element
+v:value
+t:type
+op:op
+
+●●tag_map
+p:code
+t:var
+vt:var
+css:code
+e:code
+v:code
+f:code
+c:code
+V:var
+op:span
+
+●●original_id_map
+
+●●mdn_urls
+typedef-easing-function:CSS/easing-function
+	typedef-cubic-bezier-easing-function:CSS/？
+	typedef-step-easing-function:CSS/？
+	typedef-step-position:CSS/？
+
+funcdef-cubic-bezier-easing-function-cubic-bezier:CSS/easing-function#cubic-bezier()
+funcdef-step-easing-function-steps:CSS/easing-function#steps()
+
+
+●●link_map
+
+p.animation-delay:~CSSANIM#propdef-animation-delay
+p.animation-fill-mode:~CSSANIM#propdef-animation-fill-mode
+
+f.cubic-bezier:#funcdef-cubic-bezier-easing-function-cubic-bezier
+f.cubic-bezier():#funcdef-cubic-bezier-easing-function-cubic-bezier
+f.steps:#funcdef-step-easing-function-steps
+f.steps():#funcdef-step-easing-function-steps
+
+t.cubic-bezier-easing-function:#typedef-cubic-bezier-easing-function
+t.integer:~CSSVAL#integer-value
+t.number:~CSSVAL#number-value
+t.step-easing-function:#typedef-step-easing-function
+t.easing-function:#typedef-easing-function
+t.step-position:#typedef-step-position
+
+v.ease-in-out:#valdef-cubic-bezier-easing-function-ease-in-out
+v.ease-in:#valdef-cubic-bezier-easing-function-ease-in
+v.ease-out:#valdef-cubic-bezier-easing-function-ease-out
+v.ease:#valdef-cubic-bezier-easing-function-ease
+v.linear:#valdef-easing-function-linear
+v.step-end:#valdef-step-easing-function-step-end
+v.step-start:#valdef-step-easing-function-step-start
+
+v.jump-start:#valdef-steps-jump-start
+v.jump-end:#valdef-steps-jump-end
+v.jump-none:#valdef-steps-jump-none
+v.jump-both:#valdef-steps-jump-both
+v.start:#valdef-steps-start
+v.end:#valdef-steps-end
+
+~easing関数:#easing-function
+線型~easing関数:#linear-easing-function
+~cubic~Bezier~easing関数:#cubic-bzier-easing-function
+階段~easing関数:#step-easing-function
+
+入力~進捗~値:#input-progress-value
+出力~進捗~値:#output-progress-value
+段数:#steps
+段~位置:#step-position
+直前~flag:#before-flag
+
+
+●●words_table1
+
+
+
+●●words_table
+
+	●仕様
+数学的:mathematical:~
+省略可能:optional:~
+	生じる:arise
+	例で示す:example 〜 illustrate
+	~~論じられ:covered
+	欲され:desirable
+	後述する:subsequently
+	対応する:associated
+	ことも ときには:alternatively, it is sometimes
+	図示-:illustrate
+	種々の:different
+	異らせる:differentiate
+	~~働く:serve
+	大概は:most commonly
+	言葉:language
+	~~改称:Reworded specification to refer to
+
+	●easing
+Bezier:Bézier::ベジェ
+cubic:::3 次
+easing:
+x:
+時区間:interval::~
+時間軸:time::~
+制御点:control point::~
+固定的な:fixed:~
+変形-:transform::~
+変形n:transformation::変形
+恒等:identity::~
+接線:tangent::~
+曲線:curve:~
+点:point:~
+率:rate:~
+直線:straight line:~
+端点:endpoint:~
+線型:linear::~
+階段:step::~
+段数:step 数::~
+段差:rise:~
+段差数:jumps:~
+相:phase:~
+整数:integer:~
+	整数である:integral
+	等分-:divide 〜 that are equal in duration
+	通る:pass through
+ 	数:number
+	実数:real number
+	最も近い:closest
+	-:mod
+
+	●animation／効果
+延伸-:fill::~
+回転-:rotate::~
+動き:movement:~
+動く:moveする:~
+勢い:momentum:~
+慣性:momentum:~
+cartoon-props:cartoon props:::アニメ
+robot::::ロボット
+感覚:sense::~
+	加速-:increasing the speed
+形状:shape::~
+真似た:mimicした:~
+現象:phenomena:~
+重さ:weight::~
+カクカク:discrete stepsで:~
+
+gradient:
+	凹凸:concave or convex
+	面:surface
+	縞模様の:striped
+	本物らしく:convincing 〜 counterparts
+	次第に／徐々に:gradual
+	飛び飛びに動く:move forwards in distinct steps
+	低速:slow
+	早く:quickに
+	歯:segment
+	歯車:segmented wheel
+
+	●未分類
+評価法:evaluation:~
+	始-:begin
+	現れ:appear
+	増す:increasing
+	種:type
+	単に:simply
+	-:reach
+	-:forwards
+	-:start
+	-:scale
+	-:condition
+	-:end
+	-:language
+	-:set
+	-:gather
+	-:list
+	-:true:::
+	UI:interface
+	横軸:domain
+	corresponding
+	hence:::
+	time:::
+	-:whilst
+	-:fill
+	-:reference
+	-:mod
+	-:backward
+	下段／上段:row
+	とも:both
+	-:between
+
+
+●●ref_normative
+
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+
+●●ref_informative
+
+[CSSOM]
+    Simon Pieters; Glenn Adams. CSS Object Model (CSSOM). 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-1/ 
+[FUND-COMP-GRAPHICS]
+    Peter Shirley; Michael Ashikhmin; Steve Marschner. Fundamentals of Computer Graphics. 2009. 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Easing Functions Level 1</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/css-easing-1/
+編集者草案
+	https://drafts.csswg.org/css-easing/
+以前のバージョン
+	https://www.w3.org/TR/2018/WD-css-easing-1-20181009/
+	https://www.w3.org/TR/2018/WD-css-easing-1-20180926/
+	https://www.w3.org/TR/2017/WD-css-easing-1-20170221/
+
+編集
+	<a href="mailto:bbirtles@mozilla.com">Brian Birtles</a> (Mozilla)
+	<a href="mailto:dino@apple.com">Dean Jackson</a> (Apple Inc)
+	Matt Rakow (Microsoft)
+前任編集者
+	<a href="mailto:shans@google.com">Shane Stephens</a> (Google Inc)
+
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-easing-1">GitHub Issues</a>
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-easing-1/Overview.bs">GitHub Editor</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-easing-1
+Participate
+	IRC: <a href="ircs://irc.w3.org:6667/css">#css</a> on W3C’s IRC
+Tests
+	https://github.com/web-platform-tests/wpt/tree/master/css/css-easing
+実装報告
+	（まだない）
+</script>
+
+</head>
+<body>
+
+<!--%resource pool -->
+<div id="_persisted_parts" hidden>
+
+<img
+	id="_dgm-easing-function-example"
+	src="css-easing/easing-function-example.svg"
+	width="350"
+	height="333"
+	alt="Example of an easing function that produces an ease-in effect."
+>
+
+<img
+	id="_dgm-cubic-bezier-easing-curve"
+	src="css-easing/cubic-bezier-easing-curve.svg"
+	width="500"
+	height="477"
+	alt="A cubic Bezier curve used as an easing function."
+>
+
+<img
+	id="_dgm-curve-keywords"
+	src="css-easing/curve-keywords.svg"
+	width="500"
+	height="539"
+	alt="The easing functions produced by keyword values."
+>
+
+<img
+	id="_dgm-step-easing-keyword-examples"
+	src="css-easing/step-easing-keyword-examples.svg"
+	width="500"
+	alt="Example step easing keywords."
+>
+
+<img
+	id="_dgm-step-easing-func-examples"
+	src="css-easing/step-easing-func-examples.svg"
+	width="500"
+	alt="Example step easing functions."
+>
+
+</div>
+
+<header>
+	<hgroup>
+<h1>CSS Easing Functions Level 1</h1>
+	</hgroup>
+</header>
+
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この~CSS~moduleは、作者が，値の変化~率を制御する変形nを定義する仕方を述べる。
+~animationに適用された場合、そのような変形nを利用すれば，慣性などの物理的な現象を真似たり, ~robotの様にカクカク動く~animationを生産できる。
+◎
+This CSS module describes a way for authors to define a transformation that controls the rate of change of some value. Applied to animations, such transformations can be used to produce animations that mimic physical phenomena such as momentum or to cause the animation to move in discrete steps producing robot-like movement.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+この節では、発行時点における…
+【！これは編集者草案の公の複製です…】
+【以下，この節の他の内容は <a href="css-common-ja.html#status">CSS 日本語訳 共通ページ</a>／冒頭の仕様メタデータに委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="introduction">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+何らかの値の変化~率を制御したいと欲されることは多い。
+例えば、動きが加速され，次第に勢いが増す要素には、重さがあるような感覚を与えれる。
+これを利用すれば、直感的な~UI要素や，物理的に本物らしく挙動する~cartoon-propsを生産できる。
+また、歯が常に同じ位置に現れるように回転する歯車など，飛び飛びに動く~animationが欲されることも ときにはある。
+◎
+It is often desirable to control the rate at which some value changes. For example, gradually increasing the speed at which an element moves can give the element a sense of weight as it appears to gather momentum. This can be used to produce intuitive user interface elements or convincing cartoon props that behave like their physical counterparts. Alternatively, it is sometimes desirable for animation to move forwards in distinct steps such as a segmented wheel that rotates such that the segments always appear in the same position.
+</p>
+
+<p>
+同様に，~gradient補間の変化~率の制御を利用すれば、［
+面の凹凸を示唆する／縞模様の効果
+］などの種々の視覚的な効果を生産できる。
+◎
+Similarly, controlling the rate of change of gradient interpolation can be used to produce different visual effects such as suggesting a concave or convex surface, or producing a striped effect.
+</p>
+
+<p>
+`~easing関数$は、入力~進捗~値から対応する出力~進捗~値を生産することにより，そのような値を変形する手段を供する。
+◎
+Easing functions provide a means to transform such values by taking an input progress value and producing a corresponding transformed output progress value.
+</p>
+
+<figure>`easing-function-example^dgm
+<figcaption>
+`ease-in^v 効果を生産する~easing関数の例。
+この~easing関数は、入力~進捗~値 0.7 に対しては，出力~進捗 0.52 を生産する。
+この~easing関数を~animationに適用すれば、~animationは，最初は低速に, 徐々に早く進捗するようになる。
+◎
+Example of an easing function that produces an ease-in effect. Given an input progress of 0.7, the easing function scales the value to produce an output progress of 0.52. Applying this easing function to an animation would cause it to progress more slowly at first but then gradually progress more quickly.
+</figcaption></figure>
+
+		<section id="values">
+<h3 title="Value Definitions">1.1. 値~定義</h3>
+
+<p class="trans-note">【
+この節の内容は <a href="css-common-ja.html#values">~CSS日本語訳 共通~page</a>に委譲。
+】</p>
+
+		</section>
+	</section>
+	<section id="easing-functions">
+<h2 title="Easing functions">2. ~easing関数</h2>
+
+<p>
+`~easing関数@
+【 “加減速” 関数】は、`入力~進捗~値$から`出力~進捗~値$を生産する。
+◎
+An easing function takes an input progress value and produces an output progress value.
+</p>
+
+<p class="trans-note">【
+特に~animationの文脈（各種~animation関連~仕様など）においては、`~easing関数$は，計時~関数（ `timing function^en ）と称される。
+】</p>
+
+<p>
+`~easing関数$は、純粋な関数でなければナラナイ
+— すなわち、同じ入力に対しては，常に同じ`出力~進捗~値$を生産する。
+◎
+An easing function must be a pure function meaning that for a given set of inputs, it always produces the same output progress value.
+</p>
+
+
+<p>
+`入力~進捗~値@
+は，範囲 [−∞, ∞] に入る実数であり。
+その範囲は概して [0, 1] になるが、複数の`~easing関数$が連鎖される事例ではそうなるとは限らない。
+◎
+The input progress value is a real number in the range [-∞, ∞]. Typically, the input progress value is in the range [0, 1] but this may not be the case when easing functions are chained together.
+</p>
+
+
+<p>
+`出力~進捗~値@
+は，範囲 [−∞, ∞] に入る実数である。
+◎
+The output progress value is a real number in the range [-∞, ∞].
+</p>
+
+<p>
+一部の種の~easing関数は、後述する追加的な`直前~flag$も入力にとる。
+◎
+Some types of easing functions also take an additional boolean before flag input which is defined subsequently.
+</p>
+
+<p>
+この仕様は、以下に与える 4 種の~easing関数を定義する。
+◎
+This specification defines four types of easing functions whose definitions follow.
+</p>
+
+<p>
+`~easing関数$を指定するための構文は、次に従う：
+◎
+The syntax for specifying an easing function is as follows:
+</p>
+
+<pre class="prod">
+`easing-function@t
+    = `linear$v
+    | `cubic-bezier-easing-function$t
+    | `step-easing-function$t
+</pre>
+
+		<section id="the-linear-easing-function">
+<h3 title="The linear easing function: linear">2.1. 線型~easing関数： `linear$v</h3>
+
+<p>
+`線型~easing関数@
+は、恒等~関数である
+— すなわち、どの入力に対しても，`入力~進捗~値$と`出力~進捗~値$は等しくなる。
+◎
+The linear easing function is an identity function meaning that its output progress value is equal to the input progress value for all inputs.
+</p>
+
+<p>
+`線型~easing関数$の構文は、単に
+`linear@v
+~keywordである。
+◎
+The syntax for the linear easing function is simply the linear keyword.
+</p>
+
+
+		</section>
+		<section id="cubic-bezier-easing-functions">
+<h3 title="Cubic Bézier easing functions: ease, ease-in, ease-out, ease-in-out, cubic-bezier()">2.2. ~cubic~Bezier~easing関数： `ease$v, `ease-in$v, `ease-out$v, `ease-in-out$v, `cubic-bezier()$f</h3>
+
+
+<p>
+`~cubic~Bezier~easing関数@
+は、`~easing関数$の一種であり，~cubic~Bezier曲線の
+2 個の制御点 %P1, %P2  を指定する 4 個の実数で定義される。
+曲線の端点 %P0, %P3 は、順に固定的な点
+( 0, 0 ), ( 1, 1 )
+で与えられる。
+%P1, %P2 の~x座標は、範囲 [0, 1] に制約される。
+◎
+A cubic Bézier easing function is a type of easing function defined by four real numbers that specify the two control points, P1 and P2, of a cubic Bézier curve whose end points P0 and P3 are fixed at (0, 0) and (1, 1) respectively. The x coordinates of P1 and P2 are restricted to the range [0, 1].
+</p>
+
+<figure>`cubic-bezier-easing-curve^dgm
+<figcaption>
+~easing関数として利用される~cubic~Bezier曲線。
+曲線の形状は、制御点 %P1, %P2 の所在により決定される。
+入力~進捗~値／出力~進捗~値
+は、曲線の
+%x 値 ／ %y 値
+として~~働く。
+◎
+A cubic Bézier curve used as an easing function. The shape of the curve is determined by the location of the control points P1 and P2. Input progress values serve as x values of the curve, whilst the y values are the output progress values.
+</figcaption></figure>
+
+<p>
+`~cubic~Bezier~easing関数$の構文は、次で与えられる（ `CSS-VALUES-3$r による記法を利用して）：
+◎
+A cubic Bézier easing function has the following syntax (using notation from [CSS-VALUES-3]):
+</p>
+
+<pre class="prod">
+`cubic-bezier-easing-function@t
+    = `ease$v
+    | `ease-in$v
+    | `ease-out$v
+    | `ease-in-out$v
+    | `cubic-bezier$f(`number [0,1]$t, `number$t, `number [0,1]$t, `number$t)
+</pre>
+
+<p>
+各種 値の意味は、次に従う：
+◎
+The meaning of each value is as follows:
+</p>
+
+<dl>
+	<dt>`ease@v</dt>
+	<dd>
+`cubic-bezier(0.25, 0.1, 0.25, 1)^v
+に等価。
+◎
+Equivalent to cubic-bezier(0.25, 0.1, 0.25, 1).
+</dd>
+
+	<dt>`ease-in@v</dt>
+	<dd>
+`cubic-bezier(0.42, 0, 1, 1)^v
+に等価。
+◎
+Equivalent to cubic-bezier(0.42, 0, 1, 1).
+</dd>
+
+	<dt>`ease-out@v</dt>
+	<dd>
+`cubic-bezier(0, 0, 0.58, 1)^v
+に等価。
+◎
+Equivalent to cubic-bezier(0, 0, 0.58, 1).
+</dd>
+
+	<dt>`ease-in-out@v</dt>
+	<dd>
+`cubic-bezier(0.42, 0, 0.58, 1)^v
+に等価。
+◎
+Equivalent to cubic-bezier(0.42, 0, 0.58, 1).
+</dd>
+
+	<dt><code class="value">`cubic-bezier@f(`number [0,1]$t, `number$t, `number [0,1]$t, `number$t) </code></dt>
+	<dd>
+`~cubic~Bezier~easing関数$を指定する。
+4 個の実数は、順に
+( %x1, %y1, %x2, %y2 )
+として、曲線の点 %P1, %P2  を指定する。
+%x1, %x2 とも範囲 [0, 1] に入っていなければナラナイ
+— さもなければ定義は無効になる。
+◎
+Specifies a cubic Bézier easing function. The four numbers specify points P1 and P2 of the curve as (x1, y1, x2, y2). Both x values must be in the range [0, 1] or the definition is invalid.
+</dd>
+</dl>
+
+<p>
+上に挙げた~keyword値を下の例で示す：
+◎
+The keyword values listed above are illustrated below.
+</p>
+
+<figure>`curve-keywords^dgm
+<figcaption>
+各 ~cubic~Bezier~easing関数~keyword値により生産される，~easing関数。
+◎
+The easing functions produced by each of the cubic Bézier easing function keyword values.
+</figcaption></figure>
+
+			<section id="cubic-bezier-algo">
+<h4 title="Output of a cubic bézier easing function">2.2.1. ~cubic~Bezier~easing関数の出力</h4>
+
+<p>
+入力~進捗から出力~進捗への対応付けは、所与の`入力~進捗~値$ %x に対し，対応する`出力~進捗~値$ %y を決定することにより遂行される。
+この曲線の評価法は、 `FUND-COMP-GRAPHICS$r などの多くの資料で~~論じられている。
+◎
+The mapping from input progress to output progress is performed by determining the corresponding y value (output progress value) for a given x value (input progress value). The evaluation of this curve is covered in many sources such as [FUND-COMP-GRAPHICS].
+</p>
+
+<p>
+範囲 [0, 1] に入らない`入力~進捗~値$に対しては、曲線は，次に従って得られる［
+曲線の端点のうち近い方における接線
+］を利用して無限に伸ばされる：
+◎
+For input progress values outside the range [0, 1], the curve is extended infinitely using tangent of the curve at the closest endpoint as follows:
+</p>
+
+<ul>
+	<li>
+<p>
+0 未満の`入力~進捗~値$に対しては：
+◎
+For input progress values less than zero,
+</p>
+
+		<ol>
+			<li>
+%P1 の~x座標 ~GT 0 ならば：
+%P1, %P0 を通る直線を接線に利用する。
+◎
+If the x value of P1 is greater than zero, use a straight line that passes through P1 and P0 as the tangent.
+</li>
+			<li>
+他の場合， %P2 の~x座標 ~GT 0 ならば：
+%P2, %P0 を通る直線を接線に利用する。
+◎
+Otherwise, if the x value of P2 is greater than zero, use a straight line that passes through P2 and P0 as the tangent.
+</li>
+			<li>
+他の場合、範囲 [−∞, 0) 内のすべての`入力~進捗~値$に対し，`出力~進捗~値$は 0 になる。
+◎
+Otherwise, let the output progress value be zero for all input progress values in the range [-∞, 0).
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+1 を超える`入力~進捗~値$に対しては：
+◎
+For input progress values greater than one,
+</p>
+		<ol>
+			<li>
+%P2 の~x座標 ~LT 1 ならば：
+%P2, %P3 を通る直線を接線に利用する。
+◎
+If the x value of P2 is less than one, use a straight line that passes through P2 and P3 as the tangent.
+</li>
+	<li>
+他の場合， %P1 の~x座標 ~LT 1 ならば：
+%P1, %P3 を通る直線を接線に利用する
+◎
+Otherwise, if the x value of P1 is less than one, use a straight line that passes through P1 and P3 as the tangent.
+</li>
+	<li>
+他の場合、範囲 (1, ∞] 内のすべての`入力~進捗~値$に対し，`出力~進捗~値$は 1 とする。
+◎
+Otherwise, let the output progress value be one for all input progress values in the range (1, ∞].
+</li>
+		</ol>
+	</li>
+</ul>
+
+			</section>
+		</section>
+		<section id="step-easing-functions">
+<h3 title="Step easing functions: step-start, step-end, steps()">2.3. 階段~easing関数： `step-start$v, `step-end$v, `steps()$f</h3>
+
+<p>
+`階段~easing関数@
+は、`~easing関数$の一種であり，入力~時間軸を指定された個数の時区間に等分する。
+それは［
+`段数$,
+`段~位置$
+］で定義される。
+その構文は：
+◎
+A step easing function is a type of easing function that divides the input time into a specified number of intervals that are equal in length. It is defined by a number of steps, and a step position. It has following syntax:
+</p>
+
+<pre class="prod">
+`step-easing-function@t
+    = `step-start$v
+    | `step-end$v
+    | `steps$f(`integer$t[, `step-position$t]?)
+`step-position@t
+    = `jump-start$v
+    | `jump-end$v
+    | `jump-none$v
+    | `jump-both$v
+    | `start$v
+    | `end$v
+</pre>
+
+<p>
+各種 値の意味は、次に従う：
+◎
+The meaning of each value is as follows:
+</p>
+
+<dl>
+	<dt>`step-start@v</dt>
+	<dd>
+`steps(1, start)^v
+に算出される。
+◎
+Computes to steps(1, start)
+</dd>
+
+	<dt>`step-end@v</dt>
+	<dd>
+`steps(1, end)^v
+に算出される。
+◎
+Computes to steps(1, end)
+</dd>
+	<dd>
+<figure>`step-easing-keyword-examples^dgm
+<figcaption>
+階段~easing関数の各種~keyword値の例。
+◎
+Example step easing function keyword values.
+</figcaption></figure>
+
+	</dd>
+
+	<dt><code class="value">`steps@f(`integer$t[, `step-position$t ]?)</code></dt>
+	<dd>
+1 個目の~parameterは、
+`段数@
+を与え，関数における時区間の個数を指定する。
+値は［
+2 個目の~parameterが `jump-none$v の場合は 2 以上 ／
+~ELSE_ 1 以上
+］の整数でなければナラナイ。
+◎
+The first parameter specifies the number of intervals in the function. It must be a positive integer greater than 0 unless the second parameter is jump-none in which case it must be a positive integer greater than 1.
+</dd>
+	<dd>
+<p>
+省略可能な 2 個目の~parameterは、次に挙げるいずれかの値を利用して
+`段~位置@
+を指定する
+— それは、`入力~進捗~値$［
+0 の所, 1 の所
+］で “段差” （出力~進捗~値の変化）が生じるかどうかを定義する：
+◎
+The second parameter, which is optional, specifies the step position using one of the following values:
+</p>
+		<dl>
+			<dt>`jump-start@v</dt>
+			<dd>
+`入力~進捗~値$［
+0 ／ 1
+］の所で段差は［
+生じる／生じない
+］。
+◎
+The first rise occurs at input progress value of 0.
+</dd>
+
+			<dt>`jump-end@v</dt>
+			<dd>
+`入力~進捗~値$［
+0 ／ 1
+］の所で段差は［
+生じない／生じる
+］。
+◎
+The last rise occurs at input progress value of 1.
+</dd>
+
+			<dt>`jump-none@v</dt>
+			<dd>
+`入力~進捗~値$［
+0 ／ 1
+］の所で段差は生じる。
+◎
+All rises occur within the range (0, 1).
+</dd>
+
+			<dt>`jump-both@v</dt>
+			<dd>
+`入力~進捗~値$［
+0 ／ 1
+］の所で段差は生じない。
+◎
+The first rise occurs at input progress value of 0 and the last rise occurs at input progress value of 1.
+</dd>
+
+			<dt>`start@v</dt>
+			<dd>
+`jump-start$v として挙動する。
+◎
+Behaves as jump-start.
+</dd>
+
+			<dt>`end@v</dt>
+			<dd>
+`jump-end$v として挙動する。
+◎
+Behaves as jump-end.
+</dd>
+		</dl>
+
+<p>
+2 個目の~parameterが省略された場合、 `end$v と見做される。
+◎
+If the second parameter is omitted, the value end is assumed.
+</p>
+
+<p>
+これらの値を下に図示する：
+◎
+These values are illustrated below:
+</p>
+
+<figure>`step-easing-func-examples^dgm
+<figcaption>
+階段~easing関数の例。
+◎
+Example step easing functions.
+</figcaption></figure>
+
+	</dd>
+</dl>
+
+			<section id="step-easing-algo">
+<h4 title="Output of a step easing function">2.3.1. 階段~easing関数の出力</h4>
+
+<p>
+段の境目における`階段~easing関数$の結果は，概念的には 境目の直後の段に対応するが、入力として追加的な
+`直前~flag@
+が ~T にされて渡された場合の結果は，境目の直前の段に対応する。
+◎
+At the exact point where a step occurs, the result of the function is conceptually the top of the step. However, an additional before flag passed as input to the step easing function, if true, will cause the result of the function to correspond to the bottom of the step at the step point.
+</p>
+
+<div class="example">
+
+<div class="p">
+<p>
+`直前~flag$が この関数の挙動にどう影響するかの例として、次のようにされた~animationを考える：
+</p>
+
+<ul><li>`段~位置$は `start$v にされた`階段~easing関数$を利用する
+</li><li>`animation-fill-mode$p は `backwards^v
+</li><li>`animation-delay$p は正な値
+</li></ul>
+
+◎
+As an example of how the before flag affects the behavior of this function, consider an animation with a step easing function whose step position is start and which has a positive delay and backwards fill.
+</div>
+
+<p>
+例えば、次の~CSS~animationを利用した場合：
+◎
+For example, using CSS animation:
+</p>
+
+<pre class="lang-css">animation: moveRight 5s 1s steps(5, start);
+</pre>
+
+<p>
+遅延~相における`入力~進捗~値$は 0 になるが、~animation時区間にまだ達していないことを指示するため，`直前~flag$は ~T にされ†、~easing関数が生産する`出力~進捗~値$は，最初の境目の直前に対応する 0 になる。
+【† どこでそのように規定されている？（次の段落も）】
+◎
+During the delay phase, the input progress value will be zero but if the before flag is set to indicate that the animation has yet to reach its animation interval, the easing function will produce zero as its output progress value, i.e. the bottom of the first step.
+</p>
+
+<p>
+~animationの時区間が始まる正確な瞬間における`入力~進捗~値$も，依然として 0 になるが、`直前~flag$は ~F にされるので，~easing関数の結果は 最初の境目の直後に対応することになる。
+◎
+At the exact moment when the animation interval begins, the input progress value will still be zero, but the before flag will not be set and hence the result of the easing function will correspond to the top of the first step.
+</p>
+
+</div>
+
+<p>
+下に与える~algoに見られるように，`出力~進捗~値$を計算する目的においては、
+`段~位置$［
+`start$v は `jump-start$v と等価 ／
+`end$v は `jump-end$v と等価
+］と見なされる。
+◎
+For the purposes of calculating the output progress value, the step position start is considered equivalent to jump-start. Likewise end is considered equivalent to jump-end. As a result, the following algorithm does not make explicit reference to start or end.
+</p>
+
+<p class="note">注記：
+~UAは、直列化の目的においては，依然として
+`jump-start$v, `start$v
+に対する結果を異らせるモノトスル（
+<a href="#serialization">§ 直列化</a>
+を見よ）。
+◎
+Note: User agents must still differentiate between jump-start and start for the purpose of serialization (see § 2.4 Serialization).
+</p>
+
+<p>
+`出力~進捗~値$は、所与の
+( `入力~進捗~値$, `直前~flag$ )
+から，次に従って計算される：
+◎
+The output progress value is calculated from the input progress value and before flag as follows:
+</p>
+
+<ol>
+	<li>
+%段~位置 ~LET `段~位置$に応じて
+⇒＃
+`start$v ならば `jump-start$v ／
+`end$v ならば `jump-end$v ／
+~ELSE_ `段~位置$
+◎
+↑</li>
+	<li>
+%現在の段 ~LET ( `入力~進捗~値$ ~MUL `段数$ ) を超えない最~大な整数
+◎
+Calculate the current step as floor(input progress value × steps).
+</li>
+	<li>
+~IF［
+%段~位置 ~IN { `jump-start$v, `jump-both$v }
+］
+⇒
+%現在の段 ~INCBY 1
+◎
+If the step position property is one of:
+• jump-start,
+• jump-both,
+◎
+increment current step by one.
+</li>
+	<li>
+~IF［
+`直前~flag$ ~EQ ~T
+］~AND［
+( `入力~進捗~値$ ~MUL `段数$ ) は整数である
+］
+⇒
+%現在の段 ~DECBY 1
+◎
+If both of the following conditions are true:
+• the before flag is set, and
+• input progress value × steps mod 1 equals zero (that is, if input progress value × steps is integral), then
+◎
+decrement current step by one.
+</li>
+	<li>
+~IF［
+`入力~進捗~値$ ~GTE 0
+］~AND［
+%現在の段 ~LT 0
+］
+⇒
+%現在の段 ~SET 0
+◎
+If input progress value ≥ 0 and current step &lt; 0, let current step be zero.
+</li>
+	<li>
+%段差数 ~LET %段~位置 に応じて
+⇒＃
+`jump-start$v または `jump-end$v ならば`段数$ ／
+`jump-none$v ならば`段数$ ~MINUS 1 ／
+`jump-both$v ならば`段数$ ~PLUS 1 ／
+◎
+Calculate jumps based on the step position as follows:
+• jump-start or jump-end
+•• steps
+• jump-none
+•• steps - 1
+• jump-both
+•• steps + 1
+</li>
+	<li>
+<p>
+~IF［
+`入力~進捗~値$ ~LTE 1
+］~AND［
+%現在の段 ~GT %段差数 
+］
+⇒
+%現在の段 ~LET %段差数
+◎
+If input progress value ≤ 1 and current step &gt; jumps, let current step be jumps.
+</p>
+
+<div class="note">
+
+<p>注記：
+この段と 2 つ前の段は、所与の［
+範囲 [0, 1] に入る`入力~進捗~値$
+］に対し，階段~easing関数が［
+範囲 [0, 1] に入らない`出力~進捗~値$
+］を生産しないこと確保する。
+◎
+Steps 4 and 6 in this procedure ensure that given an input progress value in the range [0, 1], a step easing function does not produce an output progress value outside that range.
+</p>
+
+<p>
+例えば，`段~位置$が `jump-start$v にされた階段~easing関数は、数学的には［
+`入力~進捗~値$ ~EQ 1
+］のときにも 境目の直後の段に上がる（すなわち 1 を超える）と直感的に期待できようが、そのような~easing関数は，~animationが前方へ延伸するとき（ `animation-fill-mode$p は `forwards^v ）には、`出力~進捗~値$として 1 を生産することが期待される。
+◎
+For example, although mathematically we might expect that a step easing function with a step position of jump-start would step up (i.e. beyond 1) when the input progress value is 1, intuitively, when we apply such an easing function to a forwards-filling animation, we expect it to produce an output progress value of 1 as the animation fills forwards.
+</p>
+
+<p>
+類似な状況は、`段~位置$が `jump-end$v にされた階段~easing関数が，~animationの遅延~相（ `animation-delay$p ）に適用されたときにも生じる。
+◎
+A similar situation arises for a step easing function with a step position of jump-end when applied to an animation during its delay phase.
+</p>
+</div>
+
+	</li>
+	<li>
+~RET %現在の段 ~DIV %段差数
+◎
+The output progress value is current step / jumps.
+</li>
+</ol>
+
+			</section>
+		</section>
+		<section id="serialization">
+<h3 title="Serialization">2.4. 直列化</h3>
+
+
+<p>
+~easing関数は
+`CSSOM$r に定義される
+共通な直列化~patternに加えて，次の追加的な要件を利用して直列化される：
+◎
+Easing functions are serialized using the common serialization patterns defined in [CSSOM] with the following additional requirements:
+</p>
+
+<ul>
+	<li>
+~keyword値［
+`ease$v, `linear$v, `ease-in$v, `ease-out$v, `ease-in-out$v
+］は、同じ文字列に直列化する
+— 等価な `cubic-bezier()$f 関数には<em>変換されない</em>。
+◎
+The keyword values ease, linear, ease-in, ease-out, and ease-in-out are serialized as-is, that is, they are not converted to the equivalent cubic-bezier() function before serializing.
+</li>
+	<li>
+<p>
+階段~easing関数［
+`steps()$f 関数 ／ `step-start$v ／ `step-end$v
+］は、`段~位置$に応じて，次の形に直列化する：
+◎
+Step easing functions, whether they are specified using the steps() function or either of the step-start or step-end keywords, are serialized as follows:
+</p>
+		<ul class="switch">
+			<li>
+`jump-end$v ／ `end$v ならば
+⇒
+<code class="value">`steps$f(`integer$t)</code>
+◎
+If the step position is jump-end or end, serialize as steps(&lt;integer&gt;).
+</li>
+			<li>
+~ELSE_
+⇒
+<code class="value">`steps$f(`integer$t, `step-position$t)</code>
+◎
+Otherwise, serialize as steps(&lt;integer&gt;, &lt;step-position&gt;).
+</li>
+		</ul>
+	</li>
+</ul>
+
+		</section>
+	</section>
+	<section id="priv-sec">
+<h2 title="Privacy and Security Considerations">3. ~privacy／~securityの考慮点</h2>
+
+<p>
+この仕様は、他の仕様から参照できる共通な定義を供するものであり，~Web~platformに新たな能力を直に導入することはないので、~privacy／~securityの新たな懸念を導入することはない。
+◎
+This specification does not directly introduce any new capabilities to the Web platform but rather provides common definitions that may be referenced by other specifications. As a result, it does not introduce any new privacy and security concerns.
+</p>
+
+<p>
+~easing関数は、大概は，範囲 [0, 1] に入る`入力~進捗~値$をとり, 範囲 [0, 1] に入る`出力~進捗~値$を生産するが、常に，とは限らない。
+この仕様に定義される特能を参照している仕様は、それを考慮するベキである
+— ~easing関数の応用は、入力や出力がこの範囲に入らないときの挙動を定義して，新たな~security考慮点を導入しないことを確保するベキである。
+◎
+Specifications referencing the features defined in this specification should consider that while easing functions most commonly take an input progress value in the range [0,1] and produce an output progress value in the range [0, 1], this is not always the case. Applications of easing functions should define the behavior for inputs and outputs outside this range to ensure they do not introduce new security considerations.
+</p>
+
+	</section>
+	<section id="changes">
+<h2 title="Changes since last publication">4. 最後の発行版からの変更点</h2>
+
+<p>
+<a href="TR/2018/WD-css-easing-1-20181009/">2018年 10月 9日 作業草案</a>
+からの変更点は：
+◎
+The following changes have been made since the 9 October 2018 Working Draft:
+</p>
+
+<ul>
+	<li>
+“`timing^en 関数（計時~関数）” を “~easing関数” に~~改称し、これらの関数が~animationのみに適用されると見做されないよう，もっと一般的な~~言葉で言い直した。
+◎
+Reworded specification to refer to “easing functions” rather than “timing functions” and use more general language that does not assume these functions are only applied to animations.
+</li>
+</ul>
+
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p>
+この仕様は、
+L.  David Baron, Dean Jackson, David Hyatt, Chris Marrin.
+各氏により編集された
+<a href="https://www.w3.org/TR/css3-transitions/">CSS Transitions</a> 
+仕様に基づいている。
+次の方々からの~feedbackと貢献にも感謝する：
+◎
+This specification is based on the CSS Transitions specification edited by L. David Baron, Dean Jackson, David Hyatt, and Chris Marrin.
+</p>
+
+<p lang="en-x-a0">
+The editors would also like to thank 
+
+Douglas Stockwell,
+Steve Block,
+Tab Atkins,
+Rachel Nabors,
+Martin Pitt,
+<a href="https://damp-lake-50659.herokuapp.com/">Animation at Work</a> slack
+community
+
+for their feedback and contributions.
+</p>
+
+	</section>
+</main></div>

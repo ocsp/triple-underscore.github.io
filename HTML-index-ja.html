@@ -1,0 +1,1812 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Index （後半）（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+<style>
+
+#ix-event-handlers td:nth-child(2){
+	white-space: nowrap;
+}
+
+@supports (display: grid) and (display: contents) {
+
+#event-table {
+	min-width: 45em;
+}
+
+#event-table tr {
+	grid-template-areas:
+		"event interface 標的"
+		"event 説明 説明"
+	;
+	grid-template-columns: 15em 15em 1fr;
+}
+
+#event-table tr > *:nth-child(1) {
+	grid-area: event;
+	border-left-width: 0;
+}
+
+#event-table tr > *:nth-child(2) {
+	grid-area: interface;
+}
+
+#event-table tr > *:nth-child(3) {
+	grid-area: 標的;
+}
+
+#event-table tr > *:nth-child(4) {
+	grid-area: 説明;
+	padding: 0.5em;
+}
+
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN',
+		generate: expand
+	};
+
+	const link_map = Util.get_mapping(PAGE_DATA.link_map);
+	source_data.link_map1 = Util.get_mapping(PAGE_DATA.link_map);
+	delete PAGE_DATA.link_map;
+
+	const data_map = 
+	source_data.data_map = Object.create(null);
+
+	data_map.interface_list =
+	PAGE_DATA.interface_list.replace(
+/\n(\w+)(＋)?/g, function(m, I, partial){
+		return (
+`<li><a href="${link_map['I.' + I]}"><code>${I}</code></a>`
+			+ ( partial?
+`, <a href="~HTMLLS/obsolete.html#${I}-partial">部分的</a>` : ''
+			)
+		);
+	});
+	delete PAGE_DATA.interface_list;
+
+	data_map.element_interfaces = PAGE_DATA.element_interfaces
+	.replace( /\n(\w+)(.+)/g, function(m, elem, ifcs){
+		return (
+`<tr><td><a href="${link_map['e.' + elem]}"><code class="element">${elem}</code></a><td>` + 
+			ifcs.replace( /\w+/g, function(m){
+				return (
+`<a href="${link_map['I.' + m]}"><code>${m}</code></a>`
+				);
+			})
+		);
+	});
+	delete PAGE_DATA.element_interfaces;
+
+	data_map.event_handlers_ca = PAGE_DATA.event_handlers_ca
+	.replace( /\n(\w+)(＃)?/g, function(m, ev, w){
+		return (
+'<tr>' +
+( w ?
+`<th id="ix-handler-window-on${ev}"><code>on${ev}</code>
+<td><a href="~WAPI#handler-window-on${ev}"><code class="element">body</code></a>
+` : 
+`<th id="ix-handler-on${ev}"><code>on${ev}</code>
+<td><a href="~WAPI#handler-on${ev}">~HTML要素</a>
+` )
++ `<td><a href="${link_map['et.' + ev]}"><code class="event-type">${ev}</code></a> ~event~handler`
++ ( w ?
+' — <a href="~WINDOW#window"><code>Window</code></a> ~obj用'
+: '' )
+		);
+	});
+	delete PAGE_DATA.event_handlers_ca;
+
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map1;//
+	const data_map = this.data_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+var text = key;
+var href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'm':
+	var n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'data': 
+	return data_map[key];
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-08-13
+trans_update:2020-08-15
+source_checked:180817
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/indices.html
+	abbr_url:HTMLindex
+trans_1st_pub:2016-10-02
+
+
+●●class_map
+e:element
+a:attr
+et:event-type
+mt:mime-type
+E:error
+
+●●tag_map
+I:code
+m:code
+E:code
+c:code
+e:code
+a:code
+et:code
+mt:code
+v:code
+i:i
+
+●●original_id_map
+
+
+●●words_table1
+
+
+HTMLindex1:HTML-index1-ja.html
+UIEVENTS-A:uievents-appendix-ja.html
+math:MathML <code class="element">math</code>
+svg:SVG <code class="element">svg</code>
+
+
+●●words_table
+
+
+	●仕様
+未取扱い:unhandled:~
+
+
+	生じ:occur
+	示す:show
+
+	●UI／form
+clipboard::::クリップボード
+commit::::コミット
+押下げて:pressして:~
+DnD:drag＆drop:::ドラッグ＆ドロップ
+閉じら:closeさ:~
+開かれ:openされ:~
+prompt:
+警告:warning:~
+選択-:select:~
+選択:selection:~
+
+
+	●network
+offline::::オフライン
+server-sent:
+streaming::::
+manifest::::マニフェスト
+
+
+	●内容／媒体
+聴取:auditing::~
+混在:mixed::~
+
+	●
+逆直列化-:deserialize::~::逆シリアル化
+標的:target::~::ターゲット
+消去る:go awayする:消え去る
+合成的に:syntheticに:合成により
+unload:
+
+	●未分類
+CSP:Content Security Policy:CSP
+JSlegacy:JavaScript (legacy type):JavaScript （旧来の型）
+
+	成功-:successful
+終了-:terminate:~
+microdata:
+割当され:assignされ::あてがわれ
+
+	終え:finish
+
+●●mdn_urls
+
+	event-abort:API/Window/abort_event
+event-domcontentloaded:API/Document/DOMContentLoaded_event
+event-afterprint:API/Window/afterprint_event
+event-beforeprint:API/Window/beforeprint_event
+event-beforeunload:API/Window/beforeunload_event
+event-blur:API/Element/blur_event
+event-cancel:API/HTMLDialogElement/cancel_event
+event-change:API/HTMLElement/change_event
+event-close:API/HTMLDialogElement/close_event
+	event-close:API/WebSocket/close_event
+event-workerglobalscope-connect:API/SharedWorkerGlobalScope/connect_event
+event-contextmenu:API/Element/contextmenu_event
+event-copy:API/Element/copy_event
+event-cut:API/Element/cut_event
+	event-error:API/XXX/error_event
+event-focus:API/Element/focus_event
+event-formdata:API/HTMLFormElement/formdata_event
+event-hashchange:API/Window/hashchange_event
+event-input:API/HTMLElement/input_event
+event-invalid:API/HTMLElement/invalid_event
+event-languagechange:API/Window/languagechange_event
+event-load:API/Window/load_event
+	event-message:API/XXX/message_event
+	event-messageerror:API/XXX/messageerror_event
+event-offline:API/Window/offline_event
+event-online:API/Window/online_event
+event-open:API/EventSource/open_event
+	event-open:API/WebSocket/open_event
+event-pagehide:API/Window/pagehide_event
+event-pageshow:API/Window/pageshow_event
+event-paste:API/Element/paste_event
+event-popstate:API/Window/popstate_event
+event-readystatechange:API/Document/readystatechange_event
+	event-rejectionhandled:API/PromiseRejectionEvent/rejectionhandled_event
+event-reset:API/HTMLFormElement/reset_event
+	event-securitypolicyviolation:API/Element/securitypolicyviolation_event
+event-select:API/Element/select_event
+event-slotchange:API/HTMLSlotElement/slotchange_event
+event-storage:API/Window/storage_event
+event-submit:API/HTMLFormElement/submit_event
+event-toggle:API/HTMLDetailsElement/toggle_event
+	event-unhandledrejection:API/PromiseRejectionEvent/unhandledrejection_event
+event-unload:API/Window/unload_event
+
+●●link_map
+
+	●event
+et.abort:#event-abort
+et.DOMContentLoaded:#event-domcontentloaded
+et.afterprint:#event-afterprint
+et.beforeprint:#event-beforeprint
+et.beforeunload:#event-beforeunload
+et.blur:#event-blur
+et.cancel:#event-cancel
+et.change:#event-change
+et.close:#event-close
+et.connect:#event-workerglobalscope-connect
+et.contextmenu:#event-contextmenu
+et.copy:#event-copy
+et.cut:#event-cut
+et.error:#event-error
+et.focus:#event-focus
+et.formdata:#event-formdata
+et.hashchange:#event-hashchange
+et.input:#event-input
+et.invalid:#event-invalid
+et.languagechange:#event-languagechange
+et.load:#event-load
+et.message:#event-message
+et.messageerror:#event-messageerror
+et.offline:#event-offline
+et.online:#event-online
+et.open:#event-open
+et.pagehide:#event-pagehide
+et.pageshow:#event-pageshow
+et.paste:#event-paste
+et.popstate:#event-popstate
+et.readystatechange:#event-readystatechange
+et.rejectionhandled:#event-rejectionhandled
+et.reset:#event-reset
+et.securitypolicyviolation:#event-securitypolicyviolation
+et.select:#event-select
+et.slotchange:#event-slotchange
+et.storage:#event-storage
+et.submit:#event-submit
+et.toggle:#event-toggle
+et.unhandledrejection:#event-unhandledrejection
+et.unload:#event-unload
+
+et.auxclick:~UIEVENTS#event-type-auxclick
+et.click:~UIEVENTS#event-type-click
+et.canplay:~HEmedia#event-media-canplay
+et.canplaythrough:~HEmedia#event-media-canplaythrough
+et.cuechange:~HEtrack#event-media-cuechange
+et.dblclick:~UIEVENTS#event-type-dblclick
+et.drag:~HTMLdnd#event-dnd-drag
+et.dragend:~HTMLdnd#event-dnd-dragend
+et.dragenter:~HTMLdnd#event-dnd-dragenter
+et.dragleave:~HTMLdnd#event-dnd-dragleave
+et.dragover:~HTMLdnd#event-dnd-dragover
+et.dragstart:~HTMLdnd#event-dnd-dragstart
+et.drop:~HTMLdnd#event-dnd-drop
+et.durationchange:~HEmedia#event-media-durationchange
+et.emptied:~HEmedia#event-media-emptied
+et.ended:~HEmedia#event-media-ended
+et.keydown:~UIEVENTS#event-type-keydown
+et.keypress:~UIEVENTS-A#event-type-keypress
+et.keyup:~UIEVENTS#event-type-keyup
+et.loadeddata:~HEmedia#event-media-loadeddata
+et.loadedmetadata:~HEmedia#event-media-loadedmetadata
+et.loadstart:~HEmedia#event-media-loadstart
+et.mousedown:~UIEVENTS#event-type-mousedown
+et.mouseenter:~UIEVENTS#event-type-mouseenter
+et.mouseleave:~UIEVENTS#event-type-mouseleave
+et.mousemove:~UIEVENTS#event-type-mousemove
+et.mouseout:~UIEVENTS#event-type-mouseout
+et.mouseover:~UIEVENTS#event-type-mouseover
+et.mouseup:~UIEVENTS#event-type-mouseup
+et.pause:~HEmedia#event-media-pause
+et.play:~HEmedia#event-media-play
+et.playing:~HEmedia#event-media-playing
+et.progress:~HEmedia#event-media-progress
+et.ratechange:~HEmedia#event-media-ratechange
+et.resize:~CSSOMVIEW#eventdef-window-resize
+et.scroll:~CSSOMVIEW#eventdef-document-scroll
+et.seeked:~HEmedia#event-media-seeked
+et.seeking:~HEmedia#event-media-seeking
+et.stalled:~HEmedia#event-media-stalled
+et.suspend:~HEmedia#event-media-suspend
+et.timeupdate:~HEmedia#event-media-timeupdate
+et.volumechange:~HEmedia#event-media-volumechange
+et.waiting:~HEmedia#event-media-waiting
+et.wheel:~UIEVENTS#event-type-wheel
+
+
+	●IDL
+I.ApplicationCache:~HTMLLS/offline.html#applicationcache
+I.AudioTrack:~HEmedia#audiotrack
+I.AudioTrackList:~HEmedia#audiotracklist
+I.BarProp:~WINDOW#barprop
+I.BeforeUnloadEvent:~NAVI#beforeunloadevent
+I.BroadcastChannel:~HTMLcomms#broadcastchannel
+I.CanvasGradient:~HEcanvas#canvasgradient
+I.CanvasPattern:~HEcanvas#canvaspattern
+I.CanvasRenderingContext2D:~HEcanvas#canvasrenderingcontext2d
+I.CloseEvent:~WEBSOCKET#closeevent
+I.CustomElementRegistry:~HEcustom#customelementregistry
+I.DOMStringList:~HTMLcdom#domstringlist
+I.DOMStringMap:~HTMLdom#domstringmap
+I.DataTransfer:~HTMLdnd#datatransfer
+I.DataTransferItem:~HTMLdnd#datatransferitem
+I.DataTransferItemList:~HTMLdnd#datatransferitemlist
+I.DedicatedWorkerGlobalScope:~WORKERS#dedicatedworkerglobalscope
+I.Document:~HTMLdom#document
+I.DOMParser:~HTMLdynamic#domparser
+I.DragEvent:~HTMLdnd#dragevent
+I.ElementInternals:~HEcustom#elementinternals
+I.ErrorEvent:~WAPI#errorevent
+I.EventSource:~HTMLsse#eventsource
+I.External:~HTMLLS/obsolete.html#external
+I.FormDataEvent:~HTMLforms#formdataevent
+I.HTMLAllCollection:~HTMLLS/common-dom-interfaces.html#htmlallcollection
+I.HTMLAnchorElement:~HEtextlevel#htmlanchorelement
+I.HTMLAreaElement:~HEimages#htmlareaelement
+I.HTMLAudioElement:~HEmedia#htmlaudioelement
+I.HTMLBRElement:~HEtextlevel#htmlbrelement
+I.HTMLBaseElement:~HEmetadata#htmlbaseelement
+I.HTMLBodyElement:~HEsections#htmlbodyelement
+I.HTMLButtonElement:~HEforms#htmlbuttonelement
+I.HTMLCanvasElement:~HEcanvas#htmlcanvaselement
+I.HTMLDListElement:~HEgrouping#htmldlistelement
+I.HTMLDataElement:~HEtextlevel#htmldataelement
+I.HTMLDataListElement:~HEforms#htmldatalistelement
+I.HTMLDetailsElement:~HEinteractive#htmldetailselement
+I.HTMLDialogElement:~HEinteractive#htmldialogelement
+I.HTMLDirectoryElement:~HTMLLS/obsolete.html#htmldirectoryelement
+I.HTMLDivElement:~HEgrouping#htmldivelement
+I.HTMLElement:~HTMLdom#htmlelement
+I.HTMLEmbedElement:~HEembed#htmlembedelement
+I.HTMLFieldSetElement:~HEforms#htmlfieldsetelement
+I.HTMLFontElement:~HTMLLS/obsolete.html#htmlfontelement
+I.HTMLFormControlsCollection:~HTMLcdom#htmlformcontrolscollection
+I.HTMLFormElement:~HEforms#htmlformelement
+I.HTMLFrameElement:~HTMLLS/obsolete.html#htmlframeelement
+I.HTMLFrameSetElement:~HTMLLS/obsolete.html#htmlframesetelement
+I.HTMLHRElement:~HEgrouping#htmlhrelement
+I.HTMLHeadElement:~HEmetadata#htmlheadelement
+I.HTMLHeadingElement:~HEsections#htmlheadingelement
+I.HTMLHtmlElement:~HEmetadata#htmlhtmlelement
+I.HTMLIFrameElement:~HEembed#htmliframeelement
+I.HTMLImageElement:~HEimages#htmlimageelement
+I.HTMLInputElement:~HEinput#htmlinputelement
+I.HTMLLIElement:~HEgrouping#htmllielement
+I.HTMLLabelElement:~HEforms#htmllabelelement
+I.HTMLLegendElement:~HEforms#htmllegendelement
+I.HTMLLinkElement:~HEmetadata#htmllinkelement
+I.HTMLMapElement:~HEimages#htmlmapelement
+I.HTMLMarqueeElement:~HTMLLS/obsolete.html#htmlmarqueeelement
+I.HTMLMediaElement:~HEmedia#htmlmediaelement
+I.HTMLMenuElement:~HEgrouping#htmlmenuelement
+I.HTMLMetaElement:~HEmetadata#htmlmetaelement
+I.HTMLMeterElement:~HEforms#htmlmeterelement
+I.HTMLModElement:~HEedits#htmlmodelement
+I.HTMLOListElement:~HEgrouping#htmlolistelement
+I.HTMLObjectElement:~HEembed#htmlobjectelement
+I.HTMLOptGroupElement:~HEforms#htmloptgroupelement
+I.HTMLOptionElement:~HEforms#htmloptionelement
+I.HTMLOptionsCollection:~HTMLcdom#htmloptionscollection
+I.HTMLOutputElement:~HEforms#htmloutputelement
+I.HTMLParagraphElement:~HEgrouping#htmlparagraphelement
+I.HTMLParamElement:~HEembed#htmlparamelement
+I.HTMLPictureElement:~HEimages#htmlpictureelement
+I.HTMLPreElement:~HEgrouping#htmlpreelement
+I.HTMLProgressElement:~HEforms#htmlprogresselement
+I.HTMLQuoteElement:~HEgrouping#htmlquoteelement
+I.HTMLScriptElement:~HEscripting#htmlscriptelement
+I.HTMLSelectElement:~HEforms#htmlselectelement
+I.HTMLSlotElement:~HEscripting#htmlslotelement
+I.HTMLSourceElement:~HEimages#htmlsourceelement
+I.HTMLSpanElement:~HEtextlevel#htmlspanelement
+I.HTMLStyleElement:~HEmetadata#htmlstyleelement
+I.HTMLTableCaptionElement:~HEtables#htmltablecaptionelement
+I.HTMLTableCellElement:~HEtables#htmltablecellelement
+I.HTMLTableColElement:~HEtables#htmltablecolelement
+I.HTMLTableElement:~HEtables#htmltableelement
+I.HTMLTableRowElement:~HEtables#htmltablerowelement
+I.HTMLTableSectionElement:~HEtables#htmltablesectionelement
+I.HTMLTemplateElement:~HEscripting#htmltemplateelement
+I.HTMLTextAreaElement:~HEforms#htmltextareaelement
+I.HTMLTimeElement:~HEtextlevel#htmltimeelement
+I.HTMLTitleElement:~HEmetadata#htmltitleelement
+I.HTMLTrackElement:~HEtrack#htmltrackelement
+I.HTMLUListElement:~HEgrouping#htmlulistelement
+I.HTMLUnknownElement:~HTMLdom#htmlunknownelement
+I.HTMLVideoElement:~HEmedia#htmlvideoelement
+I.HashChangeEvent:~NAVI#hashchangeevent
+I.History:~HISTORY#history-3
+I.ImageBitmap:~HTMLGAPI#imagebitmap
+I.ImageBitmapRenderingContext:~HEcanvas#imagebitmaprenderingcontext
+I.ImageData:~HEcanvas#imagedata
+I.Location:~HISTORY#location
+I.MediaError:~HEmedia#mediaerror
+I.MessageChannel:~HTMLcomms#messagechannel
+I.MessageEvent:~HTMLcomms#messageevent
+I.MessagePort:~HTMLcomms#messageport
+I.MimeType:~HTMLnavigator#mimetype
+I.MimeTypeArray:~HTMLnavigator#mimetypearray
+I.MouseEvent:~UIEVENTS#mouseevent
+I.Navigator:~HTMLnavigator#navigator
+I.NavigatorID:~HTMLnavigator#navigatorid
+I.OffscreenCanvas:~HEcanvas#offscreencanvas
+I.OffscreenCanvasRenderingContext2D:~HEcanvas#offscreencanvasrenderingcontext2d
+I.PageTransitionEvent:~NAVI#pagetransitionevent
+I.Path2D:~HEcanvas#path2d
+I.Plugin:~HTMLnavigator#dom-plugin
+	原文誤＊I.Plugin:~HTMLINFRA#plugin
+I.PluginArray:~HTMLnavigator#pluginarray
+I.PopStateEvent:~NAVI#popstateevent
+I.PromiseRejectionEvent:~WAPI#promiserejectionevent
+I.RadioNodeList:~HTMLcdom#radionodelist
+I.ServiceWorkerContainer:~SW1#serviceworkercontainer
+I.SharedWorker:~WORKERS#sharedworker
+I.SharedWorkerGlobalScope:~WORKERS#sharedworkerglobalscope
+I.Storage:~WEBSTORAGE#storage-2
+I.StorageEvent:~WEBSTORAGE#storageevent
+I.SubmitEvent:~HTMLforms#submitevent
+I.TextMetrics:~HEcanvas#textmetrics
+I.TextTrack:~HEtrack#texttrack
+I.TextTrackCue:~HEtrack#texttrackcue
+I.TextTrackCueList:~HEtrack#texttrackcuelist
+I.TextTrackList:~HEtrack#texttracklist
+I.TimeRanges:~HEmedia#timeranges
+I.TrackEvent:~HEmedia#trackevent
+I.ValidityState:~HEforms#validitystate
+I.VideoTrack:~HEmedia#videotrack
+I.VideoTrackList:~HEmedia#videotracklist
+I.WebSocket:~WEBSOCKET#websocket
+I.Window:~WINDOW#window
+I.Worker:~WORKERS#worker
+I.WorkerGlobalScope:~WORKERS#workerglobalscope
+I.WorkerLocation:~WORKERS#workerlocation
+I.WorkerNavigator:~WORKERS#workernavigator
+
+I.Event:~DOM4#interface-event
+I.ProgressEvent:~XHR#interface-progressevent
+
+m.localStorage:~WEBSTORAGE#dom-localstorage
+m.sessionStorage:~WEBSTORAGE#dom-sessionstorage
+
+	●要素
+e.a:~HEtextlevel#the-a-element
+e.abbr:~HEtextlevel#the-abbr-element
+e.b:~HEtextlevel#the-b-element
+e.bdi:~HEtextlevel#the-bdi-element
+e.bdo:~HEtextlevel#the-bdo-element
+e.br:~HEtextlevel#the-br-element
+e.cite:~HEtextlevel#the-cite-element
+e.code:~HEtextlevel#the-code-element
+e.data:~HEtextlevel#the-data-element
+e.dfn:~HEtextlevel#the-dfn-element
+e.em:~HEtextlevel#the-em-element
+e.i:~HEtextlevel#the-i-element
+e.kbd:~HEtextlevel#the-kbd-element
+e.mark:~HEtextlevel#the-mark-element
+e.q:~HEtextlevel#the-q-element
+e.rp:~HEtextlevel#the-rp-element
+e.rt:~HEtextlevel#the-rt-element
+e.ruby:~HEtextlevel#the-ruby-element
+e.s:~HEtextlevel#the-s-element
+e.samp:~HEtextlevel#the-samp-element
+e.small:~HEtextlevel#the-small-element
+e.span:~HEtextlevel#the-span-element
+e.strong:~HEtextlevel#the-strong-element
+e.sub:~HEtextlevel#the-sub-and-sup-elements
+e.sup:~HEtextlevel#the-sub-and-sup-elements
+e.time:~HEtextlevel#the-time-element
+e.u:~HEtextlevel#the-u-element
+e.var:~HEtextlevel#the-var-element
+e.wbr:~HEtextlevel#the-wbr-element
+
+e.blockquote:~HEgrouping#the-blockquote-element
+e.div:~HEgrouping#the-div-element
+e.dl:~HEgrouping#the-dl-element
+e.dd:~HEgrouping#the-dd-element
+e.dt:~HEgrouping#the-dt-element
+e.figure:~HEgrouping#the-figure-element
+e.figcaption:~HEgrouping#the-figcaption-element
+e.hr:~HEgrouping#the-hr-element
+e.li:~HEgrouping#the-li-element
+e.main:~HEgrouping#the-main-element
+e.menu:~HEgrouping#the-menu-element
+e.ol:~HEgrouping#the-ol-element
+e.p:~HEgrouping#the-p-element
+e.pre:~HEgrouping#the-pre-element
+e.ul:~HEgrouping#the-ul-element
+
+e.del:~HEedits#the-del-element
+e.ins:~HEedits#the-ins-element
+
+e.address:~HEsections#the-address-element
+e.article:~HEsections#the-article-element
+e.aside:~HEsections#the-aside-element
+e.body:~HEsections#the-body-element
+e.footer:~HEsections#the-footer-element
+e.header:~HEsections#the-header-element
+e.hgroup:~HEsections#the-hgroup-element
+e.nav:~HEsections#the-nav-element
+e.section:~HEsections#the-section-element
+e.h1:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h2:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h3:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h4:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h5:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h6:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+
+e.base:~HEmetadata#the-base-element
+e.head:~HEmetadata#the-head-element
+e.html:~HEmetadata#the-html-element
+e.link:~HEmetadata#the-link-element
+e.meta:~HEmetadata#the-meta-element
+e.style:~HEmetadata#the-style-element
+e.title:~HEmetadata#the-title-element
+
+e.noscript:~HEscripting#the-noscript-element
+e.script:~HEscripting#the-script-element
+e.slot:~HEscripting#the-slot-element
+e.template:~HEscripting#the-template-element
+e.canvas:~HEcanvas#the-canvas-element
+
+e.input:~HEinput#the-input-element
+e.button:~HEforms#the-button-element
+e.datalist:~HEforms#the-datalist-element
+e.fieldset:~HEforms#the-fieldset-element
+e.form:~HEforms#the-form-element
+e.legend:~HEforms#the-legend-element
+e.label:~HEforms#the-label-element
+e.meter:~HEforms#the-meter-element
+e.output:~HEforms#the-output-element
+e.optgroup:~HEforms#the-optgroup-element
+e.option:~HEforms#the-option-element
+e.progress:~HEforms#the-progress-element
+e.select:~HEforms#the-select-element
+e.textarea:~HEforms#the-textarea-element
+
+e.details:~HEinteractive#the-details-element
+e.dialog:~HEinteractive#the-dialog-element
+e.summary:~HEinteractive#the-summary-element
+
+e.area:~HEimages#the-area-element
+e.img:~HEimages#the-img-element
+e.map:~HEimages#the-map-element
+e.source:~HEimages#the-source-element
+e.picture:~HEimages#the-picture-element
+
+e.embed:~HEembed#the-embed-element
+e.iframe:~HEembed#the-iframe-element
+e.object:~HEembed#the-object-element
+e.param:~HEembed#the-param-element
+
+e.audio:~HEmedia#the-audio-element
+e.video:~HEmedia#the-video-element
+e.track:~HEtrack#the-track-element
+
+e.table:~HEtables#the-table-element
+e.td:~HEtables#the-td-element
+e.th:~HEtables#the-th-element
+e.tr:~HEtables#the-tr-element
+e.caption:~HEtables#the-caption-element
+e.colgroup:~HEtables#the-colgroup-element
+e.tbody:~HEtables#the-tbody-element
+e.tfoot:~HEtables#the-tfoot-element
+e.thead:~HEtables#the-thead-element
+e.col:~HEtables#the-col-element
+
+	●MIME
+
+mt.application/atom+xml:#application/atom+xml
+mt.application/ecmascript:#application/ecmascript
+mt.application/javascript:#application/javascript
+mt.application/json:#application/json
+mt.application/x-ecmascript:#application/x-ecmascript
+mt.application/x-javascript:#application/x-javascript
+	mt.application/octet-stream:#application/octet-stream
+mt.application/rss+xml:#application/rss+xml
+mt.application/xml:#application/xml
+mt.image/gif:#image/gif
+mt.image/jpeg:#image/jpeg
+mt.image/png:#image/png
+mt.image/svg+xml:#image/svg+xml
+mt.multipart/form-data:#multipart/form-data
+mt.multipart/mixed:#multipart/mixed
+mt.text/css:#text/css
+mt.text/ecmascript:#text/ecmascript
+mt.text/javascript:#text/javascript
+mt.text/javascript1.0:#text/javascript1.0
+mt.text/javascript1.1:#text/javascript1.1
+mt.text/javascript1.2:#text/javascript1.2
+mt.text/javascript1.3:#text/javascript1.3
+mt.text/javascript1.4:#text/javascript1.4
+mt.text/javascript1.5:#text/javascript1.5
+mt.text/jscript:#text/jscript
+mt.text/json:#text/json
+mt.text/livescript:#text/livescript
+	mt.text/plain:#text/plain
+mt.text/uri-list:#text/uri-list
+mt.text/vcard:#text/vcard
+mt.text/vtt:#text/vtt
+mt.text/x-ecmascript:#text/x-ecmascript
+mt.text/x-javascript:#text/x-javascript
+mt.text/xml:#text/xml
+	mt.video/mp4:#video/mp4
+mt.video/mpeg:#video/mpeg
+
+mt.application/microdata+json:~HTMLiana#application/microdata+json
+mt.application/xhtml+xml:~HTMLiana#application/xhtml+xml
+mt.multipart/x-mixed-replace:~HTMLiana#multipart/x-mixed-replace
+mt.text/cache-manifest:~HTMLiana#text/cache-manifest
+mt.text/event-stream:~HTMLiana#text/event-stream
+mt.text/html:~HTMLiana#text/html
+mt.text/ping:~HTMLiana#text/ping
+mt.application/x-www-form-urlencoded:~URL1#concept-urlencoded
+
+mt.application/octet-stream:~RFCx/rfc2046#section-4.5.1
+mt.text/plain:~RFCx/rfc2046#section-4.1.3
+mt.video/mp4:~RFCx/rfc4337#section-3
+
+
+	●用語
+
+~URL:~DOM4#concept-document-url
+作動化の挙動:~DOM4#eventtarget-activation-behavior
+割当された~nodeたち:~DOM4#slot-assigned-nodes
+
+素片:~URL1#concept-url-fragment
+
+~event~handler内容~属性:~WAPI#event-handler-content-attributes
+現在の~entry:~HISTORY#current-entry
+~session履歴:~HISTORY#session-history
+~app~cache~event:~HTMLLS/offline.html#appcacheevents
+~DnD~event:~HTMLdnd#dndevents
+~focusされ:~HTMLinteraction#focused
+	~focusを失った
+~focusを得た:~HTMLinteraction#gains-focus
+再設定-:~HTMLforms#concept-form-reset
+提出-:~HTMLforms#concept-form-submit
+~entry~listを構築する:~HTMLforms#constructing-the-form-data-set
+
+		media element events:
+		~HEmedia#event-media-loadstart
+		~HEmedia#event-media-progress
+		~HEmedia#mediaevents
+
+~interface~mixin:~WEBIDL#interface-mixin
+部分的~interface定義:~WEBIDL#dfn-partial-interface
+
+
+●●element_interfaces
+
+
+<table><caption>要素~用~interfaceの一覧</caption>
+<thead><tr><th>要素
+<th>~interface</thead>
+<tbody>
+a           HTMLAnchorElement : HTMLElement
+abbr        HTMLElement
+address     HTMLElement
+area        HTMLAreaElement : HTMLElement
+article     HTMLElement
+aside       HTMLElement
+audio       HTMLAudioElement : HTMLMediaElement : HTMLElement
+b           HTMLElement
+base        HTMLBaseElement : HTMLElement
+bdi         HTMLElement
+bdo         HTMLElement
+blockquote  HTMLQuoteElement : HTMLElement
+body        HTMLBodyElement : HTMLElement
+br          HTMLBRElement : HTMLElement
+button      HTMLButtonElement : HTMLElement
+canvas      HTMLCanvasElement : HTMLElement
+caption     HTMLTableCaptionElement : HTMLElement
+cite        HTMLElement
+code        HTMLElement
+col         HTMLTableColElement : HTMLElement
+colgroup    HTMLTableColElement : HTMLElement
+data        HTMLDataElement : HTMLElement
+datalist    HTMLDataListElement : HTMLElement
+dd          HTMLElement
+del         HTMLModElement : HTMLElement
+details     HTMLDetailsElement : HTMLElement
+dfn         HTMLElement
+dialog      HTMLDialogElement : HTMLElement
+div         HTMLDivElement : HTMLElement
+dl          HTMLDListElement : HTMLElement
+dt          HTMLElement
+em          HTMLElement
+embed       HTMLEmbedElement : HTMLElement
+fieldset    HTMLFieldSetElement : HTMLElement
+figcaption  HTMLElement
+figure      HTMLElement
+footer      HTMLElement
+form        HTMLFormElement : HTMLElement
+h1          HTMLHeadingElement : HTMLElement
+h2          HTMLHeadingElement : HTMLElement
+h3          HTMLHeadingElement : HTMLElement
+h4          HTMLHeadingElement : HTMLElement
+h5          HTMLHeadingElement : HTMLElement
+h6          HTMLHeadingElement : HTMLElement
+head        HTMLHeadElement : HTMLElement
+header      HTMLElement
+hgroup      HTMLElement
+hr          HTMLHRElement : HTMLElement
+html        HTMLHtmlElement : HTMLElement
+i           HTMLElement
+iframe      HTMLIFrameElement : HTMLElement
+img         HTMLImageElement : HTMLElement
+input       HTMLInputElement : HTMLElement
+ins         HTMLModElement : HTMLElement
+kbd         HTMLElement
+label       HTMLLabelElement : HTMLElement
+legend      HTMLLegendElement : HTMLElement
+li          HTMLLIElement : HTMLElement
+link        HTMLLinkElement : HTMLElement
+main        HTMLElement
+map         HTMLMapElement : HTMLElement
+mark        HTMLElement
+menu        HTMLMenuElement : HTMLElement
+meta        HTMLMetaElement : HTMLElement
+meter       HTMLMeterElement : HTMLElement
+nav         HTMLElement
+noscript    HTMLElement
+object      HTMLObjectElement : HTMLElement
+ol          HTMLOListElement : HTMLElement
+optgroup    HTMLOptGroupElement : HTMLElement
+option      HTMLOptionElement : HTMLElement
+output      HTMLOutputElement : HTMLElement
+p           HTMLParagraphElement : HTMLElement
+param       HTMLParamElement : HTMLElement
+picture     HTMLPictureElement : HTMLElement
+pre         HTMLPreElement : HTMLElement
+progress    HTMLProgressElement : HTMLElement
+q           HTMLQuoteElement : HTMLElement
+rp          HTMLElement
+rt          HTMLElement
+ruby        HTMLElement
+s           HTMLElement
+samp        HTMLElement
+script      HTMLScriptElement : HTMLElement
+section     HTMLElement
+select      HTMLSelectElement : HTMLElement
+slot        HTMLSlotElement : HTMLElement
+small       HTMLElement
+source      HTMLSourceElement : HTMLElement
+span        HTMLSpanElement : HTMLElement
+strong      HTMLElement
+style       HTMLStyleElement : HTMLElement
+sub         HTMLElement
+summary     HTMLElement
+sup         HTMLElement
+table       HTMLTableElement : HTMLElement
+tbody       HTMLTableSectionElement : HTMLElement
+td          HTMLTableCellElement : HTMLElement
+template    HTMLTemplateElement : HTMLElement
+textarea    HTMLTextAreaElement : HTMLElement
+tfoot       HTMLTableSectionElement : HTMLElement
+th          HTMLTableCellElement : HTMLElement
+thead       HTMLTableSectionElement : HTMLElement
+time        HTMLTimeElement : HTMLElement
+title       HTMLTitleElement : HTMLElement
+tr          HTMLTableRowElement : HTMLElement
+track       HTMLTrackElement : HTMLElement
+u           HTMLElement
+ul          HTMLUListElement : HTMLElement
+var         HTMLElement
+video       HTMLVideoElement : HTMLMediaElement : HTMLElement
+wbr         HTMLElement
+</tbody></table>
+
+
+●●interface_list
+
+
+<ul>
+
+
+ApplicationCache
+AudioTrack
+AudioTrackList
+BarProp
+BeforeUnloadEvent
+BroadcastChannel
+CanvasGradient
+CanvasPattern
+CanvasRenderingContext2D
+CloseEvent
+CustomElementRegistry
+DOMStringList
+DOMStringMap
+DataTransfer
+DataTransferItem
+DataTransferItemList
+DedicatedWorkerGlobalScope
+Document＋
+DOMParser
+DragEvent
+ElementInternals
+ErrorEvent
+EventSource
+External
+FormDataEvent
+HTMLAllCollection
+HTMLAnchorElement＋
+HTMLAreaElement＋
+HTMLAudioElement
+HTMLBRElement＋
+HTMLBaseElement
+HTMLBodyElement＋
+HTMLButtonElement
+HTMLCanvasElement
+HTMLDListElement＋
+HTMLDataElement
+HTMLDataListElement
+HTMLDetailsElement
+HTMLDialogElement
+HTMLDirectoryElement
+HTMLDivElement＋
+HTMLElement
+HTMLEmbedElement＋
+HTMLFieldSetElement
+HTMLFontElement
+HTMLFormControlsCollection
+HTMLFormElement
+HTMLFrameElement
+HTMLFrameSetElement
+HTMLHRElement＋
+HTMLHeadElement
+HTMLHeadingElement＋
+HTMLHtmlElement＋
+HTMLIFrameElement＋
+HTMLImageElement＋
+HTMLInputElement＋
+HTMLLIElement＋
+HTMLLabelElement
+HTMLLegendElement＋
+HTMLLinkElement＋
+HTMLMapElement
+HTMLMarqueeElement
+HTMLMediaElement
+HTMLMenuElement＋
+HTMLMetaElement＋
+HTMLMeterElement
+HTMLModElement
+HTMLOListElement＋
+HTMLObjectElement＋
+HTMLOptGroupElement
+HTMLOptionElement
+HTMLOptionsCollection
+HTMLOutputElement
+HTMLParagraphElement＋
+HTMLParamElement＋
+HTMLPictureElement
+HTMLPreElement＋
+HTMLProgressElement
+HTMLQuoteElement
+HTMLScriptElement＋
+HTMLSelectElement
+HTMLSlotElement
+HTMLSourceElement
+HTMLSpanElement
+HTMLStyleElement＋
+HTMLTableCaptionElement＋
+HTMLTableCellElement＋
+HTMLTableColElement＋
+HTMLTableElement＋
+HTMLTableRowElement＋
+HTMLTableSectionElement＋
+HTMLTemplateElement
+HTMLTextAreaElement
+HTMLTimeElement
+HTMLTitleElement
+HTMLTrackElement
+HTMLUListElement＋
+HTMLUnknownElement
+HTMLVideoElement
+HashChangeEvent
+History
+ImageBitmap
+ImageBitmapRenderingContext
+ImageData
+Location
+MediaError
+MessageChannel
+MessageEvent
+MessagePort
+MimeType
+MimeTypeArray
+Navigator
+OffscreenCanvas
+OffscreenCanvasRenderingContext2D
+PageTransitionEvent
+Path2D
+Plugin
+PluginArray
+PopStateEvent
+PromiseRejectionEvent
+RadioNodeList
+SharedWorker
+SharedWorkerGlobalScope
+Storage
+StorageEvent
+SubmitEvent
+TextMetrics
+TextTrack
+TextTrackCue
+TextTrackCueList
+TextTrackList
+TimeRanges
+TrackEvent
+ValidityState
+VideoTrack
+VideoTrackList
+WebSocket
+Window＋
+Worker
+WorkerGlobalScope
+WorkerLocation
+WorkerNavigator
+</ul>
+
+
+●●event_handlers_ca
+
+
+<table id="ix-event-handlers"><caption>~event~handler内容~属性の一覧</caption><thead><tr><th>属性
+<th>要素
+<th>~~説明
+</thead><tbody>
+
+abort
+auxclick
+afterprint＃
+beforeprint＃
+beforeunload＃
+blur
+cancel
+canplay
+canplaythrough
+change
+click
+close
+contextmenu
+copy
+cuechange
+cut
+dblclick
+drag
+dragend
+dragenter
+dragleave
+dragover
+dragstart
+drop
+durationchange
+emptied
+ended
+error
+focus
+formdata
+hashchange＃
+input
+invalid
+keydown
+keypress
+keyup
+languagechange＃
+load
+loadeddata
+loadedmetadata
+loadstart
+message＃
+messageerror＃
+mousedown
+mouseenter
+mouseleave
+mousemove
+mouseout
+mouseover
+mouseup
+offline＃
+online＃
+pagehide＃
+pageshow＃
+paste
+pause
+play
+playing
+popstate＃
+progress
+ratechange
+reset
+resize
+rejectionhandled＃
+scroll
+securitypolicyviolation
+seeked
+seeking
+select
+slotchange
+stalled
+storage＃
+submit
+suspend
+timeupdate
+toggle
+unhandledrejection＃
+unload＃
+volumechange
+waiting
+wheel
+</tbody></table>
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる HTML 仕様の一部である
+<a href="~SPEC_URL">§ Index</a>
+の後半部分を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+
+</head>
+
+<body>
+
+<header id="head">
+	<hgroup>
+<h1 id="index">索引（イベントハンドラ内容属性／インタフェース／イベント／MIME 型） — Index</h1>
+
+	</hgroup>
+
+</header>
+
+<main id="MAIN" hidden>
+
+<p>
+以下の節が対象にするのは、適合する［
+要素 ／ 特能
+］に限られる。
+◎
+The following sections only cover conforming elements and features.
+</p>
+
+		<section id="elements-3">
+<h2 title="Elements">要素</h2>
+
+<p class="trans-note">【
+この節の和訳は、
+<a href="~HTMLindex1#elements-3">別ページ</a>
+にて。
+】</p>
+
+
+		</section>
+		<section id="element-content-categories">
+<h2 title="Element content categories">要素~内容の分類</h2>
+
+<p class="trans-note">【
+この節の和訳は、
+<a href="~HTMLindex1#element-content-categories">別ページ</a>
+にて。
+】</p>
+
+		</section>
+		<section id="attributes-3">
+<h2 title="Attributes">属性</h2>
+
+<p class="trans-note">【
+この節の他の内容の和訳は、
+<a href="~HTMLindex1#attributes-3">別ページ</a>
+にて。
+】</p>
+
+<h3>~event~handler内容~属性</h3>
+
+<p class="trans-note">【
+“値” の列は省略する（すべて， “`~event~handler内容~属性$” ）。
+】</p>
+
+
+`event_handlers_ca^data
+
+		</section>
+		<section id="element-interfaces">
+<h2 title="Element Interfaces">要素~interface</h2>
+
+~INFORMATIVE
+
+`element_interfaces^data
+
+		</section>
+		<section id="all-interfaces">
+<h2 title="All Interfaces">すべての~interface</h2>
+
+~INFORMATIVE
+
+<p class="trans-note">【
+`~interface~mixin$は含まれていない。
+“部分的” は、`部分的~interface定義$（ほとんどは、廃用にされた特能を定義するためのもの）。
+】</p>
+
+`interface_list^data
+
+		</section>
+		<section id="events-2">
+<h2 title="Events">~event</h2>
+
+~INFORMATIVE
+
+<table id="event-table" class="grid-table">
+<caption>
+~event一覧
+◎
+List of events
+</caption>
+
+<thead><tr><th>~event
+<th>~interface
+<th>
+標的
+◎
+Interesting target
+<th>~~説明
+</thead><tbody>
+
+<tr><td> `abort@et
+<td>`Event$I
+<td>`Window$I
+<td>
+~downloadが利用者により中止されたとき，
+`Window$I  に向けて発火される。
+◎
+Fired at the Window when the download was aborted by the user
+
+<tr><td>`DOMContentLoaded@et
+<td>`Event$I
+<td>`Document$I
+<td>
+構文解析器が終えたとき， `Document$I に向けて発火される。
+◎
+Fired at the Document once the parser has finished
+
+<tr><td>`afterprint@et
+<td>`Event$I
+<td>`Window$I
+<td>
+印刷した後に `Window$I に向けて発火される。
+◎
+Fired at the Window after printing
+
+<tr><td>`beforeprint@et
+<td>`Event$I
+<td>`Window$I
+<td>
+印刷する前に `Window$I  に向けて発火される。
+◎
+Fired at the Window before printing
+
+<tr><td>`beforeunload@et
+<td>`BeforeUnloadEvent$I
+<td>`Window$I
+<td>
+~pageが~unloadされようとするとき，~pageが警告~promptを示したいとしている事例において
+`Window$I に向けて発火される。
+◎
+Fired at the Window when the page is about to be unloaded, in case the page would like to show a warning prompt
+
+<tr><td>`blur@et
+<td>`Event$I
+<td>`Window$I, 要素
+<td>
+~nodeが`~focusされ$なくなったとき，~nodeに向けて発火される。
+◎
+Fired at nodes when they stop being focused
+
+<tr><td>`cancel@et
+<td>`Event$I
+<td>`dialog$e 要素
+<td>
+利用者により `dialog$e 要素が取消されたとき，それに向けて発火される。
+（例： <kbd >Escape</kbd> ~Keyを押下げて）
+◎
+Fired at dialog elements when they are canceled by the user (e.g. by pressing the Escape key)
+
+<tr><td>`change@et
+<td>`Event$I
+<td>~form~control
+<td>
+利用者が値の変更を~commitしたとき，~controlに向けて発火される。
+（ `input$et ~eventも見よ）
+◎
+Fired at controls when the user commits a value change (see also the input event)
+
+<tr><td>`click$et
+<td>`MouseEvent$I
+<td>要素
+<td>
+通常は、~mouse~eventにより要素に向けて発火される。
+また，要素が~pointerでない入力~装置（例：~keyboard）から作動化されたときは、その`作動化の挙動$が走る前に，合成的に発火される。
+◎
+Normally a mouse event; also synthetically fired at an element before its activation behavior is run, when an element is activated from a non-pointer input device (e.g. a keyboard)
+
+<tr><td>`close@et
+<td>`Event$I ／ `CloseEvent$I
+<td>`dialog$e 要素, `WebSocket$I
+<td>
+`dialog$e 要素が閉じられたとき，それに向けて発火される。
+また、 `WebSocket$I ~objに向けて，その接続が終了されたときに発火される。
+◎
+Fired at dialog elements when they are closed, and at WebSocket elements when the connection is terminated
+
+<tr><td>`connect@et
+<td>`MessageEvent$I
+<td>`SharedWorkerGlobalScope$I
+<td>
+新たな~clientが共用~workerに接続したとき，~workerの大域~視野に向けて発火される。
+◎
+Fired at a shared worker's global scope when a new client connects
+
+<tr><td>`contextmenu@et
+<td>`MouseEvent$I
+<td>要素
+<td>
+利用者が文脈~menuを要請したとき，要素に向けて発火される。
+◎
+Fired at elements when the user requests their context menu
+
+<tr><td>`copy@et
+<td>`Event$I
+<td>要素
+<td>
+利用者が~dataを~clipboardに複製したとき，要素に向けて発火される。
+◎
+Fired at elements when the user copies data to the clipboard
+
+<tr><td>`cut@et
+<td>`Event$I
+<td>要素
+<td>
+利用者が文書から選択された~dataを~clipboard内に複製して選択を除去したとき，要素に向けて発火される。
+◎
+Fired at elements when the user copies the selected data on the clipboard and removes the selection from the document
+
+<tr><td>`error@et
+<td>`Event$I ／ `ErrorEvent$I
+<td>大域~視野~obj, `Worker$I ~obj, 要素, ~networkingに関係する~obj
+<td>
+予期されない~errorが生じたとき，発火される（例：
+~networking~error, ~script~error, 復号-時の~error）。
+◎
+Fired when unexpected errors occur (e.g. networking errors, script errors, decoding errors)
+
+<tr><td>`focus@et
+<td>`Event$I
+<td>`Window$I, 要素
+<td>
+~nodeが`~focusを得た$とき，それに向けて発火される。
+◎
+Fired at nodes gaining focus
+
+<tr><td>`formdata@et
+<td>`FormDataEvent$I
+<td>`form$e 要素
+<td>
+`form$e 要素~用に`~entry~listを構築する$とき，要素に向けて発火される。
+◎
+Fired at a form element when it is constructing the entry list
+
+<tr><td>`hashchange@et
+<td>`HashChangeEvent$I
+<td>`Window$I
+<td>
+文書の`~URL$の`素片$が変化したとき， `Window$I に向けて発火される。
+◎
+Fired at the Window when the fragment part of the document's URL changes
+
+<tr><td>`input@et
+<td>`Event$I
+<td>~form~control
+<td>
+利用者が値を変更したとき，~controlに向けて発火される（ `change$et ~eventも見よ）。
+◎
+Fired at controls when the user changes the value (see also the change event)
+
+<tr><td>`invalid@et
+<td>`Event$I
+<td>~form~control
+<td>
+~controlが検証の間に自身による拘束を満たさないとき，~controlに向けて発火される。
+◎
+Fired at controls during form validation if they do not satisfy their constraints
+
+<tr><td>`languagechange@et
+<td>`Event$I
+<td>大域~視野~obj
+<td>
+利用者の選好する言語が変更されたとき、大域~視野~objに向けて発火される。
+◎
+Fired at the global scope object when the user's preferred languages change
+
+<tr><td>`load@et
+<td>`Event$I
+<td>`Window$I, 要素
+<td>
+文書が読込ngを終えたとき `Window$I に向けて発火される。
+また、資源を包含している要素（例： `img$e, `embed$e ）が読込ngを終えたとき，要素に向けて発火される。
+◎
+Fired at the Window when the document has finished loading; fired at an element containing a resource (e.g. img, embed) when its resource has finished loading
+
+<tr><td>`message@et
+<td>`MessageEvent$I
+<td>`Window$I, `EventSource$I, `WebSocket$I, `MessagePort$I, `BroadcastChannel$I, `DedicatedWorkerGlobalScope$I, `Worker$I, `ServiceWorkerContainer$I
+<td>
+~objが~messageを受取ったとき，~objに向けて発火される。
+◎
+Fired at an object when it receives a message
+
+<tr><td>`messageerror@et
+<td>`MessageEvent$I
+<td>`Window$I, `MessagePort$I, `BroadcastChannel$I, `DedicatedWorkerGlobalScope$I, `Worker$I, `ServiceWorkerContainer$I
+
+<td>
+~objが逆直列化できない~messageを受取ったとき，~objに向けて発火される。
+◎
+Fired at an object when it receives a message that cannot be deserialized
+
+<tr><td>`offline@et
+<td>`Event$I
+<td>大域~視野~obj
+<td>
+~network接続に失敗したとき，大域~視野~objに向けて発火される。
+◎
+Fired at the global scope object when the network connections fails
+
+<tr><td>`online@et
+<td>`Event$I
+<td>大域~視野~obj
+<td>
+~network接続が返ってきたとき，大域~視野~objに向けて発火される。
+◎
+Fired at the global scope object when the network connections returns
+
+<tr><td>`open@et
+<td>`Event$I
+<td>`EventSource$I, `WebSocket$I
+<td>
+接続が確立されたとき，~networkingに関係する~objに向けて発火される。
+◎
+Fired at networking-related objects when a connection is established
+
+<tr><td>`pagehide@et
+<td>`PageTransitionEvent$I
+<td>`Window$I
+<td>
+`~session履歴$内の~pageの~entryが`現在の~entry$でなくなったとき，
+`Window$I に向けて発火される。
+◎
+Fired at the Window when the page's entry in the session history stops being the current entry
+
+<tr><td>`pageshow@et
+<td>`PageTransitionEvent$I
+<td>`Window$I
+<td>
+`~session履歴$内の~pageの~entryが`現在の~entry$になったとき，
+`Window$I に向けて発火される。
+◎
+Fired at the Window when the page's entry in the session history becomes the current entry
+
+<tr><td>`paste@et
+<td>`Event$I
+<td>要素
+<td>
+利用者が~clipboard~dataを所与の文脈にて~supportされる最も相応しい形式（もしあれば）で挿入することになるとき、要素に向けて発火される。
+◎
+Fired at elements when the user will insert the clipboard data in the most suitable format (if any) supported for the given context
+
+<tr><td>`popstate@et
+<td>`PopStateEvent$I
+<td>`Window$I
+<td>
+利用者が`~session履歴$を~navigateするとき， `Window$I に向けて発火される。
+◎
+Fired at the Window when the user navigates the session history
+
+<tr><td>`readystatechange@et
+<td>`Event$I
+<td>`Document$I
+<td>
+
+`Document$I の構文解析を終えたとき，および
+その下位資源すべての読込ngを終えたときにも再度，
+`Document$I に向けて発火される。
+◎
+Fired at the Document when it finishes parsing and again when all its subresources have finished loading
+
+<tr><td>`rejectionhandled@et
+<td>`PromiseRejectionEvent$I
+<td>大域~視野~obj
+<td>
+未取扱いにされていた~promise却下が取扱われたとき、大域~視野~objに向けて発火される。
+◎
+Fired at global scope objects when a previously-unhandled promise rejection becomes handled
+
+<tr><td>`reset@et
+<td>`Event$I
+<td>`form$e 要素
+<td>
+`form$e 要素が`再設定-$されたとき，それに向けて発火される。
+◎
+Fired at a form element when it is reset
+
+<tr><td>`securitypolicyviolation@et
+<td>`Event$I
+<td>要素
+<td>
+~CSP違反が生成されたとき，要素に向けて発火される。
+`CSP$r
+◎
+Fired at elements when a Content Security Policy violation is generated [CSP]
+
+<tr><td>`select@et
+<td>`Event$I
+<td>~form~control
+<td>
+~text選択が調整されたとき、当の~form~controlに向けて発火される（ ~API, 利用者のいずれによるかにかかわらず）。
+◎
+Fired at form controls when their text selection is adjusted (whether by an API or by the user)
+
+<tr><td>`slotchange@et
+<td>`Event$I
+<td>`slot$e 要素
+<td>
+`割当された~nodeたち$が変化したとき，当の `slot$e 要素に向けて発火される。
+◎
+Fired at slot elements when their assigned nodes change
+
+<tr><td>`storage@et
+<td>`StorageEvent$I
+<td>`Window$I
+<td>
+`Window$I の［
+`localStorage$m ／ `sessionStorage$m
+］~storage区画に変更が加えられたとき，発火される。
+【同じ~storageを共有する他の各~文書に向けて。】 
+◎
+Fired at Window event when the corresponding localStorage or sessionStorage storage areas change
+
+<tr><td>`submit@et
+<td>`Event$I
+<td>`form$e 要素
+<td>
+`form$e 要素が`提出-$されるとき，それに向けて発火される。
+◎
+Fired at a form element when it is submitted
+
+<tr><td>`toggle@et
+<td>`Event$I
+<td>`details$e 要素
+<td>
+`details$e 要素が開かれた／閉じられたとき、それに向けて発火される。
+◎
+Fired at details elements when they open or close
+
+<tr><td>`unhandledrejection@et
+<td>`PromiseRejectionEvent$I
+<td>大域~視野~obj
+<td>
+~promise却下が未取扱いにされたとき†、大域~視野~objに向けて発火される。
+【†すなわち、その却下を取扱う~handlerが与えられてない下で、~promiseが却下されたとき。】
+◎
+Fired at global scope objects when a promise rejection goes unhandled
+
+<tr><td>`unload@et
+<td>`Event$I
+<td>`Window$I
+<td>
+~pageが消去るとき、 `Window$I ~objに向けて発火される。
+◎
+Fired at the Window object when the page is going away
+</tbody></table>
+
+<p class="note">
+<a href="~HEmedia#mediaevents">~media要素~event</a>,
+`~app~cache~event$,
+`~DnD~event$
+も見よ。
+◎
+See also media element events, application cache events, and drag-and-drop events.
+</p>
+
+
+		</section>
+		<section id="mime-types-2">
+<h2 title="MIME Types">~MIME型</h2>
+
+~INFORMATIVE
+<p>
+この仕様では、次の~MIME型が言及されている
+◎
+The following MIME types are mentioned in this specification:
+</p>
+
+<dl>
+<dt>`application/atom+xml@mt
+</dt><dd>Atom `ATOM$r
+
+</dd><dt>`application/ecmascript@mt
+<dd>~JSlegacy `JAVASCRIPT$r
+
+</dd><dt>`application/javascript@mt
+<dd>~JSlegacy `JAVASCRIPT$r
+
+</dd><dt>`application/json@mt
+<dd>JSON `JSON$r
+
+</dd><dt>`application/x-ecmascript@mt
+<dd>~JSlegacy `JAVASCRIPT$r
+
+</dd><dt>`application/x-javascript@mt
+<dd>~JSlegacy `JAVASCRIPT$r
+
+</dd><dt id="application/octet-stream">`application/octet-stream$mt
+<dd>汎用な~binary~data `RFC2046$r
+◎
+Generic binary data [RFC2046]
+
+</dd><dt>`application/microdata+json$mt
+<dd>JSON としての~microdata
+◎
+Microdata as JSON
+
+</dd><dt>`application/rss+xml@mt
+<dd>RSS
+
+</dd><dt>`application/x-www-form-urlencoded$mt
+<dd>~form提出
+◎
+Form submission
+
+</dd><dt>`application/xhtml+xml$mt
+<dd>HTML
+
+</dd><dt>`application/xml@mt
+<dd>XML `XML$r
+`RFC7303$r
+◎
+XML [XML] [RFC7303]
+
+</dd><dt>`image/gif@mt
+<dd>GIF 画像 `GIF$r
+◎
+GIF images [GIF]
+
+</dd><dt>`image/jpeg@mt
+<dd>JPEG 画像 `JPEG$r
+◎
+JPEG images [JPEG]
+
+</dd><dt>`image/png@mt
+<dd>PNG 画像 `PNG$r
+◎
+PNG images [PNG]
+
+</dd><dt>`image/svg+xml@mt
+<dd>SVG 画像 `SVG$r
+◎
+SVG images [SVG]
+
+</dd><dt>`multipart/form-data@mt
+<dd>~form提出 `RFC7578$r
+◎
+Form submission [RFC7578]
+
+</dd><dt>`multipart/mixed@mt
+<dd>汎用な混在~内容 `RFC2046$r
+◎
+Generic mixed content [RFC2046]
+
+</dd><dt>`multipart/x-mixed-replace$mt
+<dd>~streaming~server~push
+◎
+Streaming server push
+
+</dd><dt>`text/cache-manifest$mt
+<dd>~offline~appの~cache~manifest
+◎
+Offline application cache manifests
+
+</dd><dt>`text/css@mt
+<dd>CSS `CSS$r
+
+</dd><dt>`text/ecmascript@mt
+<dd>~JSlegacy `JAVASCRIPT$r
+
+</dd><dt>`text/event-stream$mt
+<dd>~server-sent~event~stream
+◎
+Server-sent event streams
+
+</dd><dt>`text/javascript@mt
+<dd>~JS `JAVASCRIPT$r
+
+</dd><dt>`text/javascript1.0@mt
+<dd>~JSlegacy `JAVASCRIPT$r
+
+</dd><dt>`text/javascript1.1@mt
+<dd>~JSlegacy `JAVASCRIPT$r
+
+</dd><dt>`text/javascript1.2@mt
+<dd>~JSlegacy `JAVASCRIPT$r
+
+</dd><dt>`text/javascript1.3@mt
+<dd>~JSlegacy `JAVASCRIPT$r
+
+</dd><dt>`text/javascript1.4@mt
+<dd>~JSlegacy `JAVASCRIPT$r
+
+</dd><dt>`text/javascript1.5@mt
+<dd>~JSlegacy `JAVASCRIPT$r
+
+</dd><dt>`text/jscript@mt
+<dd>~JSlegacy `JAVASCRIPT$r
+
+</dd><dt>`text/json@mt
+<dd>JSON（旧来の型）
+◎
+JSON (legacy type)
+
+</dd><dt>`text/livescript@mt
+<dd>~JSlegacy `JAVASCRIPT$r
+
+</dd><dt id="text/plain">`text/plain$mt
+<dd>汎用な素な~text `RFC2046$r
+`RFC3676$r
+◎
+Generic plain text [RFC2046] [RFC3676]
+
+</dd><dt>`text/html$mt
+<dd>HTML
+
+</dd><dt>`text/ping$mt
+<dd>~hyperlink聴取
+◎
+Hyperlink auditing
+
+</dd><dt>`text/uri-list@mt
+<dd>~URLの~list `RFC2483$r
+◎
+List of URLs [RFC2483]
+
+</dd><dt>`text/vcard@mt
+<dd>vCard `RFC6350$r
+
+</dd><dt>`text/vtt@mt
+<dd>WebVTT `WEBVTT$r
+
+</dd><dt>`text/x-ecmascript@mt
+<dd>~JSlegacy `JAVASCRIPT$r
+
+</dd><dt>`text/x-javascript@mt
+<dd>~JSlegacy `JAVASCRIPT$r
+
+</dd><dt>`text/xml@mt
+<dd>XML `XML$r `RFC7303$r
+
+</dd><dt id="video/mp4">`video/mp4@mt
+<dd>MPEG-4 動画 `RFC4337$r
+
+</dd><dt>`video/mpeg@mt
+<dd>MPEG 動画 `RFC2046$r
+
+</dd></dl>
+
+		</section>
+
+</main>

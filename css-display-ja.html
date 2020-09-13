@@ -1,0 +1,3330 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Display Module Level 3 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+
+<style>
+#display-mapping tbody > tr:first-child {
+	border-top: solid black 2px;
+}
+
+samp.text {
+	white-space: normal;
+	font-family: sans-serif;
+	color: brown;
+}
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		collectParts: Util.collectParts,
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'p':
+	const i = key.indexOf(':');
+	if(i > 0) {
+		key = text.slice(0, i);
+		text = `${key}: <code class="value">${text.slice(i + 1)}</code>`;
+	}
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'v':
+	href = `#valdef-display-${key}`;
+	break;
+case 'pe':
+	text = `::${key}`;
+	break;
+case 'dgm':
+	return `<a id="_dgm-${key}">＊</a>`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+case 'issWD':
+	text = `課題 #${key}`;
+	href= `https://drafts.csswg.org/css-display/issues-wd-2017#issue-${key}`;
+	// css-display-3
+	break;
+case 'issue':
+	text = `課題 #${key}`;
+	href = `~CSSissue/${key}`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+
+return text;
+
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Display Module Level 3
+spec_date:2020-06-06
+trans_update:2020-06-08
+source_checked:180319
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-display-3/
+	https://www.w3.org/TR/css-display-3/
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:layout,css
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2014-07-23
+
+●●class_map
+p:property
+pe:pseudo
+t:type
+v:value
+e:element
+a:attr
+css:css
+
+●●tag_map
+p:code
+pe:code
+t:var
+v:code
+css:code
+e:code
+a:code
+c:code
+em:em
+
+●●original_id_map
+
+●●mdn_urls
+propdef-display:CSS/display
+
+●●link_map
+
+pe.marker:~CSSPSEUDO#selectordef-marker
+pe.before:~CSSPSEUDO#selectordef-before
+pe.after:~CSSPSEUDO#selectordef-after
+pe.first-letter:~CSSPSEUDO#selectordef-first-letter
+pe.first-line:~CSSPSEUDO#selectordef-first-line
+
+p.contain:~CSSCONTAIN#propdef-contain
+p.display:#propdef-display
+p.width:~CSS2VISUDET#propdef-width
+p.overflow:~CSSOVERFLOW3#propdef-overflow
+	~CSS2VISUFX#propdef-overflow
+p.counter-increment:~CSSLIST#propdef-counter-increment
+p.list-style:~CSSLIST#propdef-list-style
+	~CSS22/generate.html#propdef-list-style
+p.float:~CSS2VISUREN#propdef-float
+	p.clear:
+p.position:~CSSPOS#propdef-position
+p.border:~CSSBG#propdef-border
+p.align-content:~CSSALIGN#propdef-align-content
+
+t.display-box:#typedef-display-box
+t.display-inside:#typedef-display-inside
+t.display-internal:#typedef-display-internal
+t.display-legacy:#typedef-display-legacy
+t.display-listitem:#typedef-display-listitem
+t.display-outside:#typedef-display-outside
+
+v.absolute:~CSSPOS#valdef-position-absolute
+v.fixed:~CSSPOS#valdef-position-fixed
+
+e.audio:~HEmedia#the-audio-element
+e.body:~HEsections#the-body-element
+e.br:~HEtextlevel#the-br-element
+e.button:~HEforms#the-button-element
+e.canvas:~HEcanvas#the-canvas-element
+e.col:~HEtables#the-col-element
+e.colgroup:~HEtables#the-colgroup-element
+e.details:~HEinteractive#the-details-element
+e.embed:~HEembed#the-embed-element
+e.fieldset:~HEforms#the-fieldset-element
+e.iframe:~HEembed#the-iframe-element
+e.img:~HEimages#the-img-element
+e.input:~HEinput#the-input-element
+e.legend:~HEforms#the-legend-element
+e.meter:~HEforms#the-meter-element
+e.object:~HEembed#the-object-element
+e.progress:~HEforms#the-progress-element
+e.select:~HEforms#the-select-element
+e.summary:~HEinteractive#the-summary-element
+e.td:~HEtables#the-td-element
+e.textarea:~HEforms#the-textarea-element
+e.th:~HEtables#the-th-element
+e.video:~HEmedia#the-video-element
+e.wbr:~HEtextlevel#the-wbr-element
+
+e.frame:~HTMLobs#frame
+e.frameset:~HTMLobs#frameset
+
+e.svg:~SVGstruct#elementdef-svg
+e.pattern:~SVGpservers#elementdef-pattern
+e.symbol:~SVGstruct#elementdef-symbol
+e.text:~SVGtext#elementdef-text
+e.tspan:~SVGtext#elementdef-tspan
+e.textPath:~SVGtext#elementdef-textPath
+e.use:~SVGstruct#elementdef-use
+
+a.src:~HEimages#attr-img-src
+
+c.getComputedStyle():~CSSOM1#dom-window-getcomputedstyle
+
+	●用語
+要素:#elements
+~text~node:#text-nodes
+~text連なり:#text-run
+~tree:#element-tree
+要素~tree:#element-tree
+~box:#box
+~box~tree:#box-tree
+親~box:#css-parent-box
+匿名~box:#anonymous
+匿名:#anonymous
+
+表示~型:#display-type
+外縁~表示~型:#outer-display-type
+内縁~表示~型:#inner-display-type
+~flow~layout:#flow-layout
+
+内部~table要素:#internal-table-element
+内部~table~box:#internal-table-box
+~table~caption~box:#table-caption-box
+内部~ruby要素:#internal-ruby-element
+内部~ruby~box:#internal-ruby-box
+
+同行見出し~box:#run-in
+同行見出し列:#run-in-sequence
+塊~化:#blockify
+行内~化:#inlinify
+
+~layoutに特有な内部~box:#layout-specific-display
+~layout内部:#layout-internal
+
+行内~levelの~box:#inline-level-box
+塊~levelの~box:#block-level-box
+行内~塊:#inline-block
+
+	●用語集
+
+首要~box:#principal-box
+
+行内~level:#inline-level
+行内:#inline
+行内~box:#inline-box
+根~行内~box:~CSSINLINE#root-inline-box
+不可分な行内:#atomic-inline
+
+塊~level:#block-level
+塊~容器:#block-container
+塊~容器~box:#block-container
+塊~box:#block-box
+塊:#block
+
+置換され:#replaced-element
+非~置換d:#non-replaced
+置換d要素:#replaced-element
+
+包含塊:#containing-block
+包含塊~連鎖:#containing-block-chain
+初期~包含塊:#initial-containing-block
+
+整形~文脈:#formatting-context
+塊~整形~文脈:#block-formatting-context
+行内~整形~文脈:#inline-formatting-context
+塊~整形~文脈~根:#block-formatting-context-root
+独立な整形~文脈:#independent-formatting-context
+独立な整形~文脈を確立-:#establish-an-independent-formatting-context
+
+~BFC:#bfc
+
+~flow外:#out-of-flow
+~flow内:#in-flow
+
+文書~順序:#document-order
+
+
+	●外部
+絶対的に位置され:~CSSPOS#absolute-position
+
+空白:~CSSTEXT#white-space
+
+断片化:~CSSBREAK#fragmentation
+~box断片:~CSSBREAK#box-fragment
+断片:~CSSBREAK#fragment
+
+算出d値:~CASCADE#computed-value
+略式~prop:~CASCADE#shorthand-property
+下位prop:~CASCADE#longhand
+継承:~CASCADE#inheritance
+継承される~prop:~CASCADE#inherited-property
+
+辺:~CSSBOX#box-edge
+
+~overflow:~CSSOVERFLOW3#overflow
+
+柱~box:~CSSMCOL#column-box
+~spanner:~CSSMCOL#spanner
+
+双向性:~CSSWM#bidirectionality
+
+~page~box:~CSSPAGE#page-box
+~page区画:~CSSPAGE#page-area
+
+~table~cell~box:~CSS22/tables.html#table-display
+~table~row~box:~CSS22/tables.html#table-display
+首要~塊~box:~CSS2VISUREN#principal-box
+
+疑似要素:~SELECTORS4#pseudo-element
+文書~言語:~SELECTORS4#document-language
+
+~flex~layout:~CSSFLEX#flex-layout
+~flex容器:~CSSFLEX#flex-container
+~flex整形~文脈:~CSSFLEX#flex-formatting-context
+
+格子~容器:~CSSGRID#grid-container
+格子~整形~文脈:~CSSGRID#grid-formatting-context
+下位格子:~CSSWG/css-grid-2/#subgrid
+
+~ruby容器:~CSSRUBY#ruby-container
+~ruby整形~文脈:~CSSRUBY#ruby-formatting-context
+~ruby基底~容器:~CSSRUBY#ruby-base-container-box
+
+整形される最初の行l:~CSSPSEUDO#first-formatted-line
+
+~marker~box:~CSSLIST#marker
+	~marker~box:~CSS22/generate.html#lists
+塊＆行内~layout:~CSS2VISUREN#visuren
+
+排他~box:~CSSEXCLUSION#exclusion-box
+~canvas:~CSS2CONFORM#canvas
+
+~table包装~box:~CSSTABLE#table-wrapper-box
+~table格子~box:~CSSTABLE#table-grid-box
+
+~scroll容器:~CSSOVERFLOW3#scroll-container
+
+連続的~媒体:~MQ4#continuous-media
+~paged媒体:~MQ4#paged-media
+
+提出-可能な要素:~HEforms#category-submit
+
+
+容器~要素:~SVGstruct#TermContainerElement
+~text内容~子~要素:~SVGtext#TermTextContentChildElement
+呈示~属性:~SVGstyling#TermPresentationAttribute
+描画-可能:~SVGrender#TermRenderableElement
+描画され:~SVGrender#TermRenderedElement
+	描画されない:~SVGrender#TermNonRenderedElement
+●●words_table1
+
+	SVG2:https://www.w3.org/TR/svg2
+
+
+●●words_table
+
+
+	●~tree
+連なり:run::~
+首要:principal::主要
+修復-:fix up::~
+修復:fixup::~
+	fix-up
+入子化:nested::入れ子
+	~layout上の親が違えられ:reparented
+	親が違えられ:misparented
+	親を違える~~処理:re-parenting
+	親の親:grandparent
+親子関係:parentage::~
+
+	生成-法:generating
+	additionally-generated:追加で生成される
+併合-:merge::~
+包装:wrapper::~
+marker::::マーカ
+中間:intermediary:~
+中間的:intermediary:~
+共存-:co-exist:~
+差挟まれ:interleaveされ:差し挟まれ
+	挟まれて:intervening
+重層-:overlay::~
+深い:deepな:~
+
+	独立でない:non-independent
+	置換されない:non-replaced
+	繰り替える:mungling
+		原文誤？munging
+	最も深い:deepest
+	連続する:contiguous／consecutive
+	~box生成:box-generation
+
+	●表示~型
+柱:column::::カラム
+table::::テーブル
+column:
+row:
+cell::::セル
+flex::::フレックス
+格子:grid::~::グリッド
+下位格子:subgrid::~::下位グリッド
+ruby::::ルビ
+同行見出し:run-in::~::ランイン
+	同行見出しになる:running-in
+	~flow内:in-flow
+	~flow外:out-of-flow
+役割:role:~
+	ロール
+浮動:floating::~
+浮動体:float::~
+浮動-:float::~
+不可分:atomic::~
+可分:non-atomic::~
+排他:exclusion::~
+
+	塊~化:blockification
+	行内~化:inlinification
+
+	●layout
+BFC:
+	layout-specific
+分断-:break:~
+矩形:rectangle:~
+相殺-:collapse::~
+相殺:collapsing::~
+
+先頭字:first letter::~
+縦横比:ratio::~
+	placement
+断片:fragment::~
+断片化:fragmentation::~
+
+双向性:bidi::~
+双方向-:bidirectional::~
+分割-:split:~
+分割:splitting:~
+spanner:
+複柱:multi-column::複 column::複カラム
+
+	後ろに回す:leave behind
+	突き出た:protrude
+
+	●CSS
+	laying
+	単体のキーワード:single-keyword
+	~cascade法:cascading
+継承関係:inheritance::~
+使用-:use:~
+	~animate可能:animatable
+紙:paper:~
+	描画されない:non-rendered
+	決して描画されない:never-rendered
+
+聴覚:aural::~
+発話:speech::~
+時間:time:~
+選択-:select:~
+連続的:continuous:~
+	留まる:abiding
+
+	●仕様
+CSS2:
+案:案
+hack::::ハック
+	ly
+表題:headline:~
+用語集:glossary:~
+略称:abbreviation:~
+	機密的
+形容詞:adjective:~
+基本的性質:basic quality:~
+非通例的:unusual:通例でない
+根本的:fundamental:~
+句:phrase:~
+paradigm::::パラダイム
+緩めら:relaxさ:~
+規定-:dictate:~
+推定-:infer:~
+正され:correctされ:~
+緩めら:relaxさ:~
+創出-:create:~
+修正-:fix:~
+修正点:fixes:~
+設計者:designer:~
+限定-:confine:~
+
+	-:variant
+	多義的にならない:unambiguous
+	し易く:easier
+	できる:possible
+	いわゆる:aka
+	短い:compact
+	people
+	over the years
+	の類い:similar things
+	本当は:really
+	better
+	多少無作為に:somewhat random
+	このこと:This statement
+	他にも 〜 案もある:Another alternative
+	特に変わった:magical
+	ごく大雑把に:very loosely
+	とは言えないので:definitely not
+	誤り:error
+	自由を与える:allow〜freedom
+	別として:Aside from
+	~~容赦なき~~考査:relentless assault
+	~~分別:separate out
+	させなく-／できなく-:prevent
+	妨げる:impede
+	〜にならなく:inhibit〜
+	普通でない:where it wouldn’t ordinarily
+	繊細な区別:fine distinctions
+	選り分け:tease apart
+	ではなく:as opposed to
+	-:status
+	主要な:major
+	残念ながら:regrettable 
+	特に:notably
+	求まれな:unwanted
+	~~完全には定義できないmore-or-less undefined 
+	意図する所:intention
+	見つけ:find
+	視野から外れる:outside the scope
+	指す:designate
+	ある:available
+	満たされ:satisfy
+	論をもっと深めるため:in order to provide time for futher discussion
+	伝える:contact
+	省かれ:elide
+	rather
+	外へ~~波及:escape
+	primed
+	something needed to be done
+	固まる:ironed out
+	注意するように:with caution
+	merge
+	選び取られ:picked
+	切り替え:switch
+	整備-:tightened up
+	無かった:missing
+	何も起きない:no-op
+	させようと:ask
+	〜にされた:making
+	場合がある:not necessarily
+	周知:aka
+
+	●未分類
+変形n:transformation::変形
+形:form:~
+構成済み:compose 済み:~
+	Precomposed
+巻上げる:hoistする:巻き上げる
+巻上げ:hoisting:巻き上げ
+剥取っ:stripし:剥ぎ取っ
+剥取られ:stripされ:剥ぎ取られ
+古い:older:~
+組織化-:organize:~
+再帰性:recursion:~
+住まう:liveする:~
+MathML:
+legend:
+bitmap::::ビットマップ
+空内容の:blankな:~
+種類:kind:~
+優先順位:precedence:~
+預金残高:bank balance:~
+図形:shape:~
+
+	引き抜かれ:extract
+	~~剥ぎ取る:un-boxed
+	合致しない:mismatched
+	再帰的に行われる:recurse
+	参照:cross-reference
+	失う:losing
+	現れる:appear
+	欠いて:lack
+	閉鎖:closed off
+	外す:left out
+	周り:around
+	無くす:eliminate
+	:separate
+	置かれ:placed
+	大きくされ:grow
+	挙げられ:listed
+	based
+	making
+	行われる:take place
+	〜しながら:as it goes
+	戻した:pushed 〜 back
+	転換-:turn into
+	伝播:bubbling
+	基準:basis
+	基準に:with respect to
+	基準点:point of reference
+	一連の:sequence
+	並び:sequence
+	指す:referring to 
+	単位:unit
+	~~複合的な値:multi-value
+	の一種:a type of
+	screen
+	paper
+	kind
+	whether
+	though
+	memory
+	set
+	none
+	like
+	need
+	often
+	word
+	many
+	call
+
+	●指示語
+周囲の:surrounding:~
+	一連の:sequence
+	あるいは:otherwise
+	後続:follow／following／after／subsequent
+	先行-:precede
+	元から:originally
+	最終的な:final
+	part
+	whose
+	anywhere
+	囲う:around
+	周囲に:around
+	~~先行する:earlier
+	先頭に来る:earliest
+	あり続ける:continue
+	狭間:between
+	細かい:minor
+	単に:just
+	類の:sort
+	他の，:anything else
+	こともある:sometimes
+	-:thing
+	上方:up
+	全く:totally
+	その前に:first
+	数多の:dozens of
+
+●●ref_normative
+
+[CSS-ALIGN-3]
+    Elika Etemad; Tab Atkins Jr.. CSS Box Alignment Module Level 3. 21 April 2020. WD. URL: https://www.w3.org/TR/css-align-3/ 
+[CSS-BACKGROUNDS-3]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. 17 October 2017. CR. URL: https://www.w3.org/TR/css-backgrounds-3/ 
+[CSS-BREAK-4]
+    Rossen Atanassov; Elika Etemad. CSS Fragmentation Module Level 4. 18 December 2018. WD. URL: https://www.w3.org/TR/css-break-4/ 
+[CSS-CASCADE-4]
+    Elika Etemad; Tab Atkins Jr.. CSS Cascading and Inheritance Level 4. 28 August 2018. CR. URL: https://www.w3.org/TR/css-cascade-4/ 
+[CSS-CONTAIN-2]
+    Tab Atkins Jr.; Florian Rivoal; Vladimir Levin. CSS Containment Module Level 2. 3 June 2020. WD. URL: https://www.w3.org/TR/css-contain-2/ 
+[CSS-GRID-2]
+    Tab Atkins Jr.; Elika Etemad; Rossen Atanassov. CSS Grid Layout Module Level 2. 3 December 2019. WD. URL: https://www.w3.org/TR/css-grid-2/ 
+[CSS-INLINE-3]
+    Dave Cramer; Elika Etemad; Steve Zilles. CSS Inline Layout Module Level 3. 4 June 2020. WD. URL: https://www.w3.org/TR/css-inline-3/ 
+[CSS-OVERFLOW-3]
+    David Baron; Elika Etemad; Florian Rivoal. CSS Overflow Module Level 3. 3 June 2020. WD. URL: https://www.w3.org/TR/css-overflow-3/ 
+[CSS-POSITION-3]
+    Elika Etemad; et al. CSS Positioned Layout Module Level 3. 19 May 2020. WD. URL: https://www.w3.org/TR/css-position-3/ 
+[CSS-PSEUDO-4]
+    Daniel Glazman; Elika Etemad; Alan Stearns. CSS Pseudo-Elements Module Level 4. 25 February 2019. WD. URL: https://www.w3.org/TR/css-pseudo-4/ 
+[CSS-SPEECH-1]
+    Daniel Weck. CSS Speech Module. 10 March 2020. CR. URL: https://www.w3.org/TR/css-speech-1/ 
+[CSS-TABLES-3]
+    François Remy; Greg Whitworth; David Baron. CSS Table Module Level 3. 27 July 2019. WD. URL: https://www.w3.org/TR/css-tables-3/ 
+[CSS-TEXT-3]
+    Elika Etemad; Koji Ishii; Florian Rivoal. CSS Text Module Level 3. 29 April 2020. WD. URL: https://www.w3.org/TR/css-text-3/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS2]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[CSS3-BREAK]
+    Rossen Atanassov; Elika Etemad. CSS Fragmentation Module Level 3. 4 December 2018. CR. URL: https://www.w3.org/TR/css-break-3/ 
+[CSS3-CASCADE]
+    Elika Etemad; Tab Atkins Jr.. CSS Cascading and Inheritance Level 3. 28 August 2018. CR. URL: https://www.w3.org/TR/css-cascade-3/ 
+[CSS3-FLEXBOX]
+    Tab Atkins Jr.; et al. CSS Flexible Box Layout Module Level 1. 19 November 2018. CR. URL: https://www.w3.org/TR/css-flexbox-1/ 
+[CSS3-GRID-LAYOUT]
+    Tab Atkins Jr.; Elika Etemad; Rossen Atanassov. CSS Grid Layout Module Level 1. 14 December 2017. CR. URL: https://www.w3.org/TR/css-grid-1/ 
+[CSS3PAGE]
+    Elika Etemad; Simon Sapin. CSS Paged Media Module Level 3. 18 October 2018. WD. URL: https://www.w3.org/TR/css-page-3/ 
+[CSS3RUBY]
+    Elika Etemad; et al. CSS Ruby Layout Module Level 1. 29 April 2020. WD. URL: https://www.w3.org/TR/css-ruby-1/ 
+[CSSOM]
+    Simon Pieters; Glenn Adams. CSS Object Model (CSSOM). 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-1/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[MEDIAQUERIES-4]
+    Florian Rivoal; Tab Atkins Jr.. Media Queries Level 4. 5 September 2017. CR. URL: https://www.w3.org/TR/mediaqueries-4/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[SELECTORS-4]
+    Elika Etemad; Tab Atkins Jr.. Selectors Level 4. 21 November 2018. WD. URL: https://www.w3.org/TR/selectors-4/ 
+[SVG2]
+    Amelia Bellamy-Royds; et al. Scalable Vector Graphics (SVG) 2. 4 October 2018. CR. URL: https://www.w3.org/TR/SVG2/ 
+
+●●ref_informative
+
+[CSS3-EXCLUSIONS]
+    Rossen Atanassov; Vincent Hardy; Alan Stearns. CSS Exclusions Module Level 1. 15 January 2015. WD. URL: https://www.w3.org/TR/css3-exclusions/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Display Module Level 3</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/css-display-3/
+編集者草案
+	https://drafts.csswg.org/css-display/
+以前のバージョン
+	https://www.w3.org/TR/2019/CR-css-display-3-20190711/
+	https://www.w3.org/TR/2018/CR-css-display-3-20180828/
+	https://www.w3.org/TR/2018/WD-css-display-3-20180809/
+	https://www.w3.org/TR/2018/WD-css-display-3-20180420/
+	https://www.w3.org/TR/2017/WD-css-display-3-20170720/
+	https://www.w3.org/TR/2017/WD-css-display-3-20170126/
+	https://www.w3.org/TR/2015/WD-css-display-3-20151015/
+	https://www.w3.org/TR/2015/WD-css-display-3-20150721/
+	https://www.w3.org/TR/2014/WD-css-display-3-20140911/
+
+テスト一式
+	http://test.csswg.org/suites/css-display-3_dev/nightly-unstable/
+実装報告（暫定的）
+	http://test.csswg.org/harness/results/css-display-3_dev/grouped/
+編集
+	<a href="http://xanthir.com/contact/">Tab Atkins Jr.</a> (Google)
+	<a href="http://fantasai.inkedblade.net/contact">Elika J. Etemad / fantasai</a> (Invited Expert)
+
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-display-3">GitHub Issues</a>
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-display-3/Overview.bs">GitHub Editor</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-display-3
+
+</script>
+
+</head>
+
+<body>
+
+<div id="_persisted_parts" hidden>
+
+<pre
+	id="_dgm-run-in-1"
+	class="lang-html"
+>
+&lt;dl class='dict'&gt;
+  &lt;dt&gt;<samp class="text">パラドクス</samp>
+  &lt;dd&gt;<samp class="text">一般に容認される前提から、反駁し難い推論によって、一般に容認し難い結論を導く論説。逆理。</samp>
+  &lt;dt&gt;<samp class="text">ジレンマ</samp>
+  &lt;dd&gt;<samp class="text">前提を受け入れると、二つの選択肢の導く結論がともに受け入れ難いものになること。両刀論法。</samp>
+&lt;/dl&gt;
+&lt;style&gt;
+.dict &gt; dt {
+  display: run-in;
+}
+.dict &gt; dt::after {
+  content: "："
+}
+&lt;/style&gt;
+</pre>
+
+<!-- 
+
+dictionary
+	a book that lists the words of a language in alphabetical
+	order and gives their meaning, or that gives the equivalent
+	words in a different language.
+glossary
+	an alphabetical list of terms or words found in or relating
+	to a specific subject, text, or dialect, with explanations; a
+	brief dictionary.
+
+ -->
+
+<pre
+	id="_dgm-run-in-2"
+>
+<samp class="text"><b>パラドクス：</b>一般に容認される前提から、反駁し難い推論によって、一般に容認し難い結論を導く論説。逆理。</samp>
+
+<samp class="text"><b>ジレンマ：</b>前提を受け入れると、二つの選択肢の導く結論がともに受け入れ難いものになること。両刀論法。</samp>
+</pre>
+
+
+</div>
+
+<header>
+	<hgroup>
+<h1 id="title">CSS Display Module Level 3</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この~moduleは、文書の要素~treeから~CSS整形`~box~tree$がどう生成されるかについて述べ、それを制御する `display$p ~propを定義する。
+◎
+This module describes how the CSS formatting box tree is generated from the document element tree and defines the display property that controls it.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは、編集者草案の公な複製です…
+【以下，この節の他の内容は <a href="css-common-ja.html#status">~CSS日本語訳 共通~page</a>／冒頭の仕様~metadataに委譲。】
+</p>
+
+<p>
+次の特能は~risk下にあり、勧告候補の期間中に落とされるかもしれません：
+◎
+The following features are at-risk, and may be dropped during the CR period:
+</p>
+
+<ul>
+	<li>
+同行見出しが在る下での `first-letter$pe の適用。
+◎
+Application of ::first-letter in the presence of run-ins
+</li>
+	<li>
+`display:run-in$p
+◎
+display: run-in
+</li>
+	<li>
+`display$p に対する複数~個の~keywordからなる値
+◎
+All multi-keyword values of display
+</li>
+</ul>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+<p>
+`この節は規範的である。^em
+◎
+This section is normative.
+</p>
+
+<p>
+~CSSは、いくつかの［
+`要素@
+（ `element^en ）,
+`~text~node@
+（ `text node^en ）
+］が成す
+`~tree@
+（ `tree^en ）として組織化されている~source文書を（ ~screen／紙／音声~streamなどとして）
+`~canvas$上に具現化する（
+`render^en する
+— ~~描画する, ~~音声化する, 等々）。
+（~DOMなどの一部の~source文書は、もっと複階的な~treeから開始し，~commentなど他の型の~nodeも有し得る
+— ~CSSの目的においては、これらの追加的な型の~nodeすべては，存在しなかったかのように無視される。）
+◎
+CSS takes a source document, organized as a tree of elements and text nodes, and renders it onto a canvas (such as your screen, a piece of paper, or an audio stream). (Some source documents start from more complex trees, such as the DOM, which can have comment nodes and other types of things. For the purposes of CSS, all of these additional types of nodes are ignored, as if they didn’t exist.)
+</p>
+
+<p>
+これを行うため、
+`~box~tree@
+（ `box tree^en ）と呼ばれる中間~構造を生成する。
+それは、具現化される文書の整形~構造を表現する。
+`~box~tree$を成す各
+`~box@
+（ `box^en ）は、対応する`要素$（または`疑似要素$）を~canvas上の空間や時間において表現する。
+同様に，`~box~tree$を成す各
+`~text連なり@
+（ `text run^en ）は、対応する`~text~node$たちの内容を表現する。
+◎
+To do this, it generates an intermediary structure, the box tree, which represents the formatting structure of the rendered document. Each box in the box tree represents its corresponding element (or pseudo-element) in space and/or time on the canvas, while each text run in the box tree likewise represents the contents of its corresponding text nodes.
+</p>
+
+<p>
+~CSSは，`~box~tree$を作成するに先立って、先ず
+<a href="~CASCADE#intro">~cascade法と継承</a>
+を利用して，~source~tree内の各［
+`要素$／`~text~node$
+］の各~CSS~propに`算出d値$をアテガう（ `CSS3-CASCADE$r を見よ）。
+◎
+To create the box tree, CSS first uses cascading and inheritance, to assign a computed value for each CSS property to each element and text node in the source tree. (See [CSS3-CASCADE].)
+</p>
+
+<p>
+次に、各`要素$に対し，その `display$p ~propの指定d値に従って，
+0 個以上の`~box$を生成する。
+概して、要素は単独の~box
+— `首要~box$ —
+を生成する
+— それは、要素~自身を表現し，`~box~tree$内で要素の内容を包含する。
+しかしながら、一部の `display$p 値（例： `list-item$v ）は 複数の~box（例：`首要~塊~box$と子`~marker~box$ ）を生成させる。
+一部の値（ `none$v, `contents$v など）は、`要素$やその子孫に全く`~box$を生成させなくする。
+`~box$は、その `display$p 型により~~言及されることが多い
+— 例えば `display:block$p にされた要素により生成される`~box$は、
+“塊~box” または単に “塊”
+とも呼ばれる。
+◎
+Then, for each element, CSS generates zero or more boxes as specified by that element’s display property. Typically, an element generates a single box, the principal box, which represents itself and contains its contents in the box tree. However, some display values (e.g. display: list-item) generate more than one box (e.g. a principal block box and a child marker box). And some values (such as none or contents) cause the element and/or its descendants to not generate any boxes at all. Boxes are often referred to by their display type—e.g. a box generated by an element with display: block is called a “block box” or just a “block”.
+</p>
+
+<p>
+他が指示されない限り、`~box$には，それを生成した`要素$と同じ~styleがアテガわれる。
+一般に，`継承される~prop$は、`首要~box$にアテガわれてから，同じ要素が生成する他のすべての~boxに
+— `~box~tree$を通して —
+継承される。
+継承されない~propは、既定では`首要~box$に適用されるが、要素が複数の~boxを生成するときには，異なる~boxに適用するよう定義されることもある：
+例えば，~table要素に適用される `border$p ~propは、その`首要~box$である`~table包装~box$ではなく，`~table格子~box$に適用される。
+値の算出~処理-がそれらの~boxの~styleを改めていて，当の要素の~styleが要請された場合（ `getComputedStyle()$c などを通して）、その要素は，各~propごとに，その~propが適用された~boxからの値を反映する。
+◎
+A box is assigned the same styles as its generating element, unless otherwise indicated. In general, inherited properties are assigned to the principal box, and then inherit through the box tree to any other boxes generated by the same element. Non-inherited properties default to applying to the principal box, but when the element generates multiple boxes, are sometimes defined to apply to a different box: for example, the border properties applied to a table element are applied to its table grid box, not to its principal table wrapper box. If the value computation process alters the styles of those boxes, and the element’s style is requested (such as through getComputedStyle()), the element reflects, for each property, the value from the box to which that property was applied.
+</p>
+
+<p>
+同様に，各［
+互いに同胞かつ連続している，一連の`~text~node$
+］は、その~text内容を包含する`~text連なり$を生成し，それを生成している`~text~node$たちと同じ~styleがアテガわれる。
+ただし，包含する~textが無い場合、`~text連なり$は生成されない。
+◎
+Similarly, each contiguous sequence of sibling text nodes generates a text run containing their text contents, which is assigned the same styles as the generating text nodes. If the sequence contains no text, however, it does not generate a text run.
+</p>
+
+<p>
+~box~treeを構築するとき、要素が生成する~boxは，先祖~要素の`首要~box$の子孫になる。
+一般の事例においては、要素が生成する`首要~box$の直な
+`親~box@
+（ `parent box^en ）は、［
+要素の先祖であって `~box$を生成する要素のうち，要素に最も近いもの
+］が生成する`首要~box$になる。
+しかしながら、［
+`run-in$v ~box用のそれ／
+複数の容器~boxを生成する`表示~型$（~tableなど）／
+`匿名~box$が挟まれている
+］など，例外もある。
+◎
+In constructing the box tree, boxes generated by an element are descendants of the principal box of any ancestor elements. In the general case, the direct parent box of an element’s principal box is the principal box of its nearest ancestor element that generates a box; however, there are some exceptions, such as for run-in boxes, display types (like tables) that generate multiple container boxes, and intervening anonymous boxes.
+</p>
+
+<p>
+`匿名~box@
+（ `anonymous box^en ）とは、どの要素にも結付けられていない~boxである。
+`匿名~box$は、［
+特定0の入子化~構造が要求される状況下で，それが`要素~tree$から生成される~boxたちから供されていないとき
+］に，`~box~tree$を修復するために生成される。
+例えば，`~table~cell~box$は、特定0の型の親~box（`~table~row~box$）を要求する。
+その親が`~table~row~box$でない場合、自身の周りに`匿名$な `~table~row~box$を生成することになる（
+`CSS2$r <a href="~CSS22/tables.html#anonymous-boxes">§ 匿名~table~obj</a>
+を見よ）。
+要素から生成される~boxは，その~styleを厳密に要素~treeを通して継承するが、（`~box~tree$にのみ存在する）`匿名~box$は，`~box~tree$の親子関係を通して~styleを<a href="~CASCADE#inheriting">継承する</a>。
+◎
+An anonymous box is a box that is not associated with any element. Anonymous boxes are generated in certain circumstances to fix up the box tree when it requires a particular nested structure that is not provided by the boxes generated from the element tree. For example, a table cell box requires a particular type of parent box (the table row box), and will generate an anonymous table row box around itself if its parent is not a table row box. (See [CSS2] § 17.2.1.) Unlike element-generated boxes, whose styles inherit strictly through the element tree, anonymous boxes (which only exist in the box tree) inherit through their box tree parentage.
+</p>
+
+<p>
+`~box$や`~text連なり$は、~layoutに伴って，複数の`断片$に分断されることもある。
+これは例えば、`断片化$と呼ばれる処理-において，［
+`行内~box$や`~text連なり$
+］が何~行lかに分断されるときや, `塊~box$が何個かの［
+`~page~box$／`柱~box$
+］に分断されるときに起こる。
+それはまた、~textにおける`双向性$による並替ng（
+<a href="~CSSWM#bidi-algo">双方向-並替ng~algoの適用-法</a>
+）や，より高~levelな`表示~型$~boxの分割（例：
+<a href="~CSS2VISUREN#anon-block">行内にある匿名~塊による分割</a> ／
+複柱~容器~内の`~spanner$による塊の分割
+）に因っても起こる。
+したがって、`~box$は 1 個以上の`~box断片$からなり，`~text連なり$は 1 個以上の~text`断片$からなる。
+`断片化$についての更なる情報は、 `CSS3-BREAK$r を見よ。
+◎
+In the course of layout, boxes and text runs can be broken into multiple fragments. This happens, for example, when an inline box and/or text run is broken across lines, or when a block box is broken across pages or columns, in a process called fragmentation. It can also happen due to bidi reordering of text (see Applying the Bidirectional Reorderign Algorithm in CSS Writing Modes) or higher-level display type box splitting, e.g. block-in-inline splitting (see CSS2§9.2) or column-spanner-in-block splitting (see CSS Multi-column Layout). A box therefore consists of one or more box fragments, and a text run consists of one or more text fragments. See [CSS3-BREAK] for more information on fragmentation.
+</p>
+
+<p class="note">注記：
+~CSS仕様には，ここに挙げる用語が固まる前に書かれていたり, 正しい用語を指していないものもあるので、これらの用語を利用している古い仕様を読むときは，注意するように。
+それらが本当はどの用語を意味するかは，文脈から推定できるべきである。
+仕様に誤りを見つけた方は、正されるように，
+<a href="#_gh-issues">報告されたし</a>。
+<!-- #status -->
+◎
+Note: Many of the CSS specs were written before this terminology was ironed out, or refer to things incorrectly, so view older specs with caution when they’re using these terms. It should be possible to infer from context which term they really mean. Please report errors in specs when you find them, so they can be corrected.
+</p>
+
+<p class="note">注記：
+“聴覚” ~box~treeについての更なる情報と その `display$p ~propとの相互作用については、
+`CSS-SPEECH-1$r
+にて見られる。
+◎
+Note: Further information on the “aural” box tree and its interaction with the display property can be found in the CSS Speech Module. [CSS-SPEECH-1]
+</p>
+
+		<section id="placement">
+<h3 title="Module interactions">1.1. ~module間の相互作用</h3>
+
+<p>
+この~moduleは、
+`CSS2$r <a href="~CSS2VISUREN#display-prop">§ `display^p ~prop</a>
+にて定義される `display$p ~propの定義を置換し, 拡張する。
+◎
+This module replaces and extends the definition of the display property defined in [CSS2] section 9.2.4.
+</p>
+
+<p>
+この~moduleにおけるどの~propも，疑似要素
+`first-line$pe ／ `first-letter$pe
+には適用されない。
+◎
+None of the properties in this module apply to the ::first-line or ::first-letter pseudo-elements.
+</p>
+
+		</section>
+		<section id="values">
+<h3 title="Values Definitions">1.2. 値~定義</h3>
+
+<p class="trans-note">【
+この節の内容は
+<a href="css-common-ja.html#values">~CSS日本語訳 共通~page</a>
+に委譲
+】</p>
+
+		</section>
+	</section>
+	<section id="the-display-properties">
+<h2 title="Box Layout Modes: the display property">2. ~boxの~layout~mode： `display^p ~prop</h2>
+
+◎名 `display@p
+◎値 
+[ `display-outside$t || `display-inside$t ]
+| `display-listitem$t
+| `display-internal$t
+| `display-box$t
+| `display-legacy$t
+◎初 `inline$v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 各種~仕様の注釈文を見よ。
+◎
+see prose in a variety of specs
+◎順 文法に従う
+◎ア ~animate不可
+◎表終
+
+<p>
+~UAには、視覚的でないものも含む すべての媒体~上で，この~propを~supportすることが期待される。
+◎
+User Agents are expected to support this property on all media, including non-visual ones.
+</p>
+
+<p>
+`display$p ~propは、要素の
+`表示~型@
+（ `display type^en ）を定義する。
+表示~型は、要素がどのような~boxを生成するかについての，二つの基本的性質からなる：
+◎
+The display property defines an element’s display type, which consists of the two basic qualities of how an element generates boxes:
+</p>
+
+<dl class="def-list">
+	<dt>
+`内縁~表示~型@
+（ `inner display type^en ）
+</dt>
+	<dd>
+（`置換され$ない）要素が生成する`整形~文脈$の種類を定義し，その子孫~boxをどう~lay-outするかを~~指示する。
+（`置換され$る要素の内縁~表示~型は、~CSSの視野から外れる。）
+
+◎
+the inner display type, which defines (if it is a non-replaced element) the kind of formatting context it generates, dictating how its descendant boxes are laid out. (The inner display of a replaced element is outside the scope of CSS.)
+</dd>
+	<dd>【“〜~layout” （例： “~flex~layout” ）と記されたときは、概ね，この表示~型を指している。】</dd>
+
+	<dt>`外縁~表示~型@
+（ `outer display type^en ）
+</dt>
+	<dd>
+要素が生成する`首要~box$自身が`~flow~layout$にどう関与するかを規定する。
+◎
+the outer display type, which dictates how the principal box itself participates in flow layout.
+</dd>
+	<dd>【“［行内／塊］~levelの~box（あるいは要素, 内容）” と記されたときは、この表示~型を指している。】</dd>
+</dl>
+
+<p>
+`~text連なり$には、`表示~型$は無い。
+◎
+Text runs have no display type.
+</p>
+
+<p>
+一部の `display$p 値には、追加的な副作用が伴われる：
+例えば `list-item$v は `marker$pe 疑似要素も生成し， `none$v は 要素の下位treeをまるごと~box~treeから外す。
+◎
+Some display values have additional side-effects: such as list-item, which also generates a ::marker pseudo-element, and none, which causes the element’s entire subtree to be left out of the box tree.
+</p>
+
+<p class="advisement">
+`display$p ~propによる要素の意味論に対する効果は無い。
+意味論は、`文書~言語$により定義され，`~CSSからは影響されない^em。
+値 `none$v は別として（それは、聴覚／発話 `CSS-SPEECH-1$r の出力や，要素, その子孫の対話性にも影響する）、
+`display$p ~propが影響するのは，視覚-~layoutに限られる。
+その目的は、［
+下層~文書の意味論に`影響することなく^em 要素の~layoutの挙動を変更する
+］自由を，設計者に与えることにある。
+◎
+The display property has no effect on an element’s semantics: these are defined by the document language and are not affected by CSS. Aside from the none value, which also affects the aural/speech output [CSS-SPEECH-1] and interactivity of an element and its descendants, the display property only affects visual layout: its purpose is to allow designers freedom to change the layout behavior of an element without affecting the underlying document semantics.
+</p>
+
+<p>
+各種 値は、次に従って定義される：
+◎
+Values are defined as follows:
+</p>
+
+<pre class="prod">
+`display-outside@t
+    = `block$v
+    | `inline$v
+    | `run-in$v
+
+`display-inside@t
+    = `flow$v
+    | `flow-root$v
+    | `table$v
+    | `flex$v
+    | `grid$v
+    | `ruby$v
+
+`display-listitem@t
+    = `display-outside$t? &amp;&amp; [ `flow$v | `flow-root$v ]? &amp;&amp; `list-item$v
+
+`display-internal@t
+    = `table-row-group$v
+    | `table-header-group$v
+    | `table-footer-group$v
+    | `table-row$v
+    | `table-cell$v
+    | `table-column-group$v
+    | `table-column$v
+    | `table-caption$v
+    | `ruby-base$v
+    | `ruby-text$v
+    | `ruby-base-container$v
+    | `ruby-text-container$v
+
+`display-box@t
+    = `contents$v
+    | `none$v
+
+`display-legacy@t
+    = `inline-block$v
+    | `inline-table$v
+    | `inline-flex$v
+    | `inline-grid$v
+</pre>
+
+<p>
+次の一覧（参考）に，各種 `display$p 値を要約する：
+◎
+The following informative table summarizes the values of display:
+</p>
+
+<table class="data">
+
+<thead><tr><th style="min-width:8em;">短い~~表記◎ Short display
+<th style="min-width:10em;">全部的な~~表記◎ Full display
+<th>生成される~box◎ Generated box
+
+</thead><tbody title="Box Suppression Display Types">
+
+<tr><td>`none$v
+<td>左に同じ
+<td>
+要素の下位treeは、`~box~tree$から取り除かれる（~boxを生成しない）
+◎
+subtree omitted from box tree
+
+<tr><td>`contents$v
+<td>左に同じ
+<td>
+`~box~tree$内では、要素は，その内容に置換される（要素~自身は~boxを生成しない）
+◎
+element replaced by contents in box tree
+
+</tbody><tbody title="Flow Layout Display Types">
+
+<tr><td>`block$v
+<td>`block flow^v
+<td>
+`塊~level$の`塊~容器$（単に`塊~box$とも呼ばれる）
+◎
+block-level block container aka block box
+
+<tr><td>`flow-root$v
+<td>`block flow-root^v
+<td>
+新たな `塊~整形~文脈$（ `~BFC$ ）を確立するような，`塊~level$の`塊~容器$
+◎
+block-level block container that establishes a new block formatting context (BFC)
+
+<tr><td>`inline$v
+<td>`inline flow^v
+<td>
+`行内~box$
+◎
+inline box aka inline block
+
+<tr><td>`inline-block$v
+<td>`inline flow-root^v
+<td>
+`行内~level$の`塊~容器$
+—
+`行内~塊@†
+（ `inline block^en ）
+としても周知
+【†原文では一つ上（ 行内~box ）に付記されているが、誤記であろう。】
+◎
+inline-level block container
+
+<tr><td>`run-in$v
+<td>`run-in flow^v
+<td>
+`同行見出し~box$（~box~treeを繰り替えるような特別な規則を伴う`行内~box$）
+◎
+run-in box (inline box with special box-tree-munging rules)
+
+<tr><td>`list-item$v
+<td>`block flow list-item^v
+<td>
+`~marker~box$も追加的に伴われるような`塊~box$
+◎
+block box with additional marker box
+
+<tr><td>`inline list-item^v
+<td>`inline flow list-item^v
+<td>
+`~marker~box$も追加的に伴われるような`行内~box$
+◎
+inline box with additional marker box
+
+</tbody><tbody title="Formatting Context Root Display Types">
+
+<tr><td>`flex$v
+<td>`block flex^v
+<td>
+`塊~level$の`~flex容器$
+◎
+block-level flex container
+
+<tr><td>`inline-flex$v
+<td>`inline flex^v
+<td>
+`行内~level$の`~flex容器$
+◎
+inline-level flex container
+
+<tr><td>`grid$v
+<td>`block grid^v
+<td>
+`塊~level$の`格子~容器$
+◎
+block-level grid container
+
+<tr><td>`inline-grid$v
+<td>`inline grid^v
+<td>
+`行内~level$の`格子~容器$
+◎
+inline-level grid container
+
+<tr><td>`ruby$v
+<td>`inline ruby^v
+<td>
+`行内~level$の`~ruby容器$
+◎
+inline-level ruby container
+
+<tr><td>`block ruby^v
+<td>`block ruby^v
+<td>
+`~ruby容器$を包含している`塊~box$
+◎
+block box containing ruby container
+
+<tr><td>`table$v
+<td>`block table^v
+<td>
+`~table格子~box$を包含している，`塊~level$の`~table包装~box$
+◎
+block-level table wrapper box containing table grid box
+
+<tr><td>`inline-table$v
+<td>`inline table^v
+<td>
+`~table格子~box$を包含している，`行内~level$の`~table包装~box$
+◎
+inline-level table wrapper box containing table grid box
+
+</tbody><tbody title="Layout-internal display types">
+
+<tr><td>`display-internal$t
+<td>左に同じ
+<td>
+`~layoutに特有な内部~box$
+◎
+layout-specific internal box 
+
+</tbody></table>
+
+<p class="note">注記：
+等価な `display$p 値の直列化においては、
+“最も後方-互換, 次に最短”
+による優先順位に~~則って，
+“短い~~表記” の列を利用する
+`CSSOM$r
+◎
+Note: Following the precedence rules of “most backwards-compatible, then shortest”, serialization of equivalent display values uses the “Short display” column. [CSSOM]
+</p>
+
+		<section id="outer-role">
+<h3 title="Outer Display Roles for Flow Layout: the block, inline, and run-in keywords">2.1. ~flow~layoutにおける外縁に対する表示の役割： `block^v, `inline^v, `run-in^v ~keyword</h3>
+
+<p>
+`display-outside$t を成す各~keywordは、要素の`外縁~表示~型$を指定する。
+それは、本質的には，`~flow~layout$における要素の`首要~box$の役割を与える。
+以下に従って定義される：
+◎
+The &lt;display-outside&gt; keywords specify the element’s outer display type, which is essentially its principal box’s role in flow layout. They are defined as follows:
+</p>
+
+<dl class="valdef">
+	<dt>`block@v</dt>
+	<dd>
+要素は~boxを生成し、`~flow~layout$内に配置されたときには
+`塊~levelの~box@
+（ `block-level box^en ）になる。
+`CSS2$r
+◎
+The element generates a box that is block-level when placed in flow layout. [CSS2]
+</dd>
+
+	<dt>`inline@v</dt>
+	<dd>
+要素は~boxを生成し、`~flow~layout$内に配置されたときには
+`行内~levelの~box@
+（ `inline-level box^en ）になる。
+`CSS2$r
+◎
+The element generates a box that is inline-level when placed in flow layout. [CSS2]
+</dd>
+
+	<dt>`run-in@v</dt>
+	<dd>
+要素は、`同行見出し~box$を生成する。
+それは，特別な挙動を伴う`行内~levelの~box$の一種であり、自身を，後続の塊~容器の中に併合させようと試みる。
+詳細は、<a href="#run-in-layout">§ 同行見出し~layout</a>に。
+◎
+The element generates an run-in box, which is a type of inline-level box with special behavior that attempts to merge it into a subsequent block container. See § 3 Run-In Layout for details.
+</dd>
+</dl>
+
+<p>
+`display-outside$t 値が指定されつつ, `display-inside$t は省略された場合、要素の`内縁~表示~型$は， `flow$v が既定になる。
+◎
+If a &lt;display-outside&gt; value is specified but &lt;display-inside&gt; is omitted, the element’s inner display type defaults to flow.
+</p>
+
+		</section>
+		<section id="inner-model">
+<h3 title="Inner Display Layout Models: the flow, flow-root, table, flex, grid, and ruby keywords">2.2. 内縁の表示~layout~model： `flow^v, `flow-root^v, `table^v, `flex^v, `grid^v, `ruby^v ~keyword</h3>
+
+<p>
+`display-inside$t は、（`置換され$ない）要素の`内縁~表示~型$を指定する。
+それは、要素の内容を~lay-outする`整形~文脈$の型を定義する。
+以下に従って定義される：
+◎
+The &lt;display-inside&gt; keywords specify the element’s inner display type, which defines the type of formatting context that lays out its contents (assuming it is a non-replaced element). They are defined as follows:
+</p>
+
+<dl class="valdef">
+	<dt>`flow@v</dt>
+	<dd>
+要素は、自身の内容を
+`~flow~layout@
+（`塊＆行内~layout$）を利用して~lay-outする。
+◎
+The element lays out its contents using flow layout (block-and-inline layout).
+</dd>
+	<dd class="trans-note">【
+概ね、内容を、互いが重なり合わないように, できるだけ詰めながら，文書~内に現れる順に、要素が生成する~boxの中に “流し込む（ `flow^en する）”。
+】</dd>
+
+	<dd>
+<p>
+要素が生成する~boxは：
+</p>
+
+		<ul>
+			<li>
+要素の`外縁~表示~型$が［
+`inline$v ／ `run-in$v
+］であって，要素は［
+`塊~整形~文脈$／`行内~整形~文脈$
+］（順不同）に関与しているならば、`行内~box$になる。
+◎
+If its outer display type is inline or run-in, and it is participating in a block or inline formatting context, then it generates an inline box.
+</li>
+			<li>
+他の場合、`塊~容器$~boxになる。
+◎
+Otherwise it generates a block container box.
+</li>
+		</ul>
+	</dd>
+
+	<dd>
+他の~prop（ `position$p, `float$p, `overflow$p など）の値, および
+自身が［
+`塊~整形~文脈$, `行内~整形~文脈$
+］どちらに関与しているかに依存して、要素は，自身の内容~用に新たな`塊~整形~文脈$を確立するか, または
+自身の内容を親の`整形~文脈$に統合する。
+`CSS2$r <a href="~CSS2VISUREN#visuren">§ 視覚-整形~model</a>
+を見よ。
+新たな`塊~整形~文脈$を確立する`塊~容器$の使用`内縁~表示~型$は、
+`flow-root$v になるものと見なされる。
+◎
+Depending on the value of other properties (such as position, float, or overflow) and whether it is itself participating in a block or inline formatting context, it either establishes a new block formatting context for its contents or integrates its contents into its parent formatting context. See CSS2.1 Chapter 9. [CSS2] A block container that establishes a new block formatting context is considered to have a used inner display type of flow-root.
+</dd>
+
+	<dt>`flow-root@v</dt>
+	<dd>
+<p>
+要素は：
+</p>
+
+<ul><li>`塊~容器$~boxを生成する。
+</li><li>`~flow~layout$を利用して自身の内容を~lay-outする。
+</li><li>自身の内容に対し、常に，新たな`塊~整形~文脈$を確立する。
+</li></ul>
+
+<p>
+`CSS2$r
+</p>
+
+◎
+The element generates a block container box, and lays out its contents using flow layout. It always establishes a new block formatting context for its contents. [CSS2]
+</dd>
+
+	<dt>`table@v</dt>
+	<dd>
+要素は、`首要~box$として，`~table包装~box$を生成する
+— それは、`塊~整形~文脈$を確立し，追加的に生成される`~table格子~box$を包含する。
+`CSS2$r
+◎
+The element generates a principal table wrapper box that establishes a block formatting context, and which contains an additionally-generated table grid box that establishes a table formatting context. [CSS2]
+</dd>
+
+	<dt>`flex@v</dt>
+	<dd>
+要素は、`首要~box$として，`~flex容器$~boxを生成する
+— それは、`~flex整形~文脈$を確立する。
+`CSS3-FLEXBOX$r
+◎
+The element generates a principal flex container box and establishes a flex formatting context. [CSS3-FLEXBOX] 
+</dd>
+
+	<dt>`grid@v</dt>
+	<dd>
+要素は、`首要~box$として，`格子~容器$~boxを生成する
+— それは、`格子~整形~文脈$を確立する。
+`CSS3-GRID-LAYOUT$r
+◎
+The element generates a principal grid container box, and establishes a grid formatting context. [CSS3-GRID-LAYOUT]
+</dd>
+
+	<dt>`ruby@v</dt>
+	<dd>
+要素は、`~ruby容器$~boxを生成し，~boxは`~ruby整形~文脈$を確立する。
+加えて，その基底~levelの内容は、［
+~boxは`行内$であるならば，親の`整形~文脈$ ／
+~ELSE_ 適切な`外縁~表示~型$の包装~box
+］の中に統合される。
+`CSS3RUBY$r
+◎
+The element generates a ruby container box and establishes a ruby formatting context in addition to integrating its base-level contents into its parent formatting context (if it is inline) or generating a wrapper box of the appropriate outer display type (if it is not). [CSS3RUBY]
+</dd>
+</dl>
+
+<p>
+`display-inside$t 値が指定されつつ, `display-outside$t は省略された場合、要素の`外縁~表示~型$は `block$v が既定になる
+— ただし、 `ruby$v に対しては `inline$v が既定になる。
+◎
+If a &lt;display-inside&gt; value is specified but &lt;display-outside&gt; is omitted, the element’s outer display type defaults to block—except for ruby, which defaults to inline.
+</p>
+
+		</section>
+		<section id="list-items">
+<h3 title="Generating Marker Boxes: the list-item keyword">2.3. ~marker~boxの生成-法： `list-item^v ~keyword</h3>
+
+<p>
+`list-item@v
+~keywordは、［
+その `list-style$p ~propで指定される内容を伴う `marker$pe 疑似要素
+`CSS-PSEUDO-4$r
+］を要素に生成させる（
+`CSS2$r <a href="~CSS22/generate.html#lists">§ ~list</a>
+）
+— 自前の内容~用には、指定された型の`首要~box$を生成するとともに。
+◎
+The list-item keyword causes the element to generate a ::marker pseudo-element [CSS-PSEUDO-4] with the content specified by its list-style properties (CSS 2.1§12.5 Lists) [CSS2] together with a principal box of the specified type for its own contents.
+</p>
+
+<p>
+`内縁~表示~型$を与える値が指定されていない場合、`首要~box$の`内縁~表示~型$は， `flow$v が既定になる。
+`外縁~表示~型$を与える値が指定されていない場合、`首要~box$の`外縁~表示~型$は， `block$v が既定になる。
+◎
+If no inner display type value is specified, the principal box’s inner display type defaults to flow. If no outer display type value is specified, the principal box’s outer display type defaults to block.
+</p>
+
+<p class="note">注記：
+この~levelでは，文法にて制約されるため、
+`list-item$v 用の表示~型は，`~flow~layout$用のそれ
+— `外縁~表示~型$は［
+`block$v ／ `inline$v ／ `run-in$v
+］かつ，`内縁~表示~型$は［
+`flow$v ／ `flow-root$v
+］（順不同） —
+に制限される。
+この制約は、この~moduleの将来~levelでは，緩められるかもしれない。
+◎
+Note: In this level, as restricted in the grammar, list-items are limited to the Flow Layout display types (block/inline/run-in with flow/flow-root inner types). This restriction may be relaxed in a future level of this module.
+</p>
+
+		</section>
+		<section id="layout-specific-display">
+<h3 title="Layout-Internal Display Types: the table-* and ruby-* keywords">2.4. ~layout内部の表示~型： `table-*^v, `ruby-*^v ~keyword</h3>
+
+<p>
+`table$v や `ruby$v などの一部の~layout~modelでは、その［
+子や子孫
+］たちが いくつか異なる役割を担うような，複雑な内部~構造を有する。
+この節では、この種の `display$v 値を定義する
+— この種の値による表示~型は
+“`~layout内部@”
+とも称され、そのような特定0の~layout~modeの中でのみ意味を持つ†。
+◎
+Some layout models, such as table and ruby, have a complex internal structure, with several different roles that their children and descendants can fill. This section defines those “layout-internal” display values, which only have meaning within that particular layout mode.
+</p>
+
+<p class="trans-note">【†
+その種の~layout~modeの外で用いられた場合の取扱いは、
+<a href="#transformations">§ ~box型の自動的な変形n</a>に見出せる。
+】</p>
+
+<p>
+他が指定されない限り、これらの `display$p 値を利用している要素の［
+`内縁~表示~型$／`外縁~表示~型$
+］は、所与の~keywordに設定される。
+◎
+Unless otherwise specified, both the inner display type and the outer display type of elements using these display values are set to the given keyword.
+</p>
+
+<p>
+`display-internal$t を成す各~keywordは、以下に従って定義される：
+◎
+The &lt;display-internal&gt; keywords are defined as follows:
+</p>
+
+<dl class="valdef">
+	<dt>`table-row-group@v</dt>
+	<dt>`table-header-group@v</dt>
+	<dt>`table-footer-group@v</dt>
+	<dt>`table-row@v</dt>
+	<dt>`table-cell@v</dt>
+	<dt>`table-column-group@v</dt>
+	<dt>`table-column@v</dt>
+	<dd>
+要素は
+`内部~table要素@
+（ `internal table element^en ）になる。
+それは、適切な
+`内部~table~box@
+を生成して，~table整形~文脈に関与する。
+`CSS2$r <a href="~CSS22/tables.html#table-display">§ ~CSS~table~model</a>
+を見よ。
+◎
+The element is an internal table element. It generates the appropriate internal table box which participates in a table formatting context. See CSS2§17.2 [CSS2]. 
+</dd>
+	<dd>
+`table-cell$v の`内縁~表示~型$は、 `flow-root$v になる。
+◎
+table-cell boxes have a flow-root inner display type.
+</dd>
+
+	<dt>`table-caption@v</dt>
+	<dd>
+要素は
+`~table~caption~box@
+（ `table caption box^en ）を生成する。
+それは、`塊~box$であり，~table／~table包装~boxに関して特別に挙動する。
+`CSS2$r <a href="~CSS22/tables.html#table-display">§ ~CSS~table~model</a>
+を見よ。
+◎
+The element generates a table caption box, which is a block box with special behavior with respect to table and table wrapper boxes. See CSS2§17.2 [CSS2]. 
+</dd>
+	<dd>
+`table-caption$v ~boxの`内縁~表示~型$は、 `flow-root$v になる。
+◎
+table-caption boxes have a flow-root inner display type.
+</dd>
+
+	<dt>`ruby-base@v</dt>
+	<dt>`ruby-text@v</dt>
+	<dt>`ruby-base-container@v</dt>
+	<dt>`ruby-text-container@v</dt>
+	<dd>
+要素は
+`内部~ruby要素@
+（ `internal ruby element^en ）になる。
+それは、適切な
+`内部~ruby~box@
+を生成して，`~ruby整形~文脈$に関与する。
+`CSS3RUBY$r
+◎
+ The element is an internal ruby element. It generates the appropriate internal ruby box which participates in a ruby formatting context. [CSS3RUBY]
+</dd>
+	<dd>
+`ruby-base$v, `ruby-text$v
+の`内縁~表示~型$は、 `flow$v になる。
+◎
+ruby-base and ruby-text have a flow inner display type.
+</dd>
+</dl>
+
+<p>
+~layoutに特有な表示~型を伴う~boxは、互換でない親の中に配置されるときに，自身の周りに`匿名$な包装~boxを生成する
+— それらを~~規定する仕様の定義に従って。
+◎
+Boxes with layout-specific display types generate anonymous wrapper boxes around themselves when placed in an incompatible parent, as defined by their respective specifications.
+</p>
+
+<div class="example">
+<p>
+例えば，~table~layoutでは、［
+`table-cell$v ~boxは `table-row$v ~boxを親に持つ
+］ことが要求されている。
+◎
+For example, Table Layout requires that a table-cell box must have a table-row parent box.
+</p>
+
+<p>
+次の様に親が違えられた場合：
+◎
+If it is misparented, like so:
+</p>
+
+<pre class="lang-html">
+&lt;div style="display:block;"&gt;
+  &lt;div style="display:table-cell"&gt;...&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+<p>
+自身の周りに包装~boxを生成して，次の様な構造を生産することになる：
+◎
+It will generate wrapper boxes around itself, producing a structure like:
+</p>
+
+<pre class="presentation">
+`block$v ~box
+└匿名 `table$v ~box
+ └匿名 `table-row-group$v ~box
+  └匿名 `table-row$v ~box
+   └`table-cell$v ~box
+</pre>
+<!-- 
+block box
+└anonymous table box
+ └anonymous table-row-group box
+  └anonymous table-row box
+   └table-cell box
+-->
+    <p>
+親が別の `内部~table要素$であっても，それが`正しいもの^emでない場合、包装~boxは，生成されることになる。
+例えば、次の様な~markupでは：
+◎
+Even if the parent is another internal table element, if it’s not the correct one, wrapper boxes will be generated. For example, in the following markup:
+</p>
+
+<pre class="lang-html">
+&lt;div style="display:table;"&gt;
+  &lt;div style="display:table-row"&gt;
+    &lt;div style="display:table-cell"&gt;...&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+<p>
+次のように`匿名$な包装~boxが生成されることになる：
+◎
+Anonymous wrapper box generation will produce:
+</p>
+
+<pre class="presentation">
+`table$v ~box
+└匿名 `table-row-group$v ~box
+ └`table-row$v ~box
+  └`table-cell$v ~box
+</pre>
+<!-- 
+table box
+└anonymous table-row-group box
+ └table-row box
+  └table-cell box
+-->
+<p>
+この “修復” は、~table~layoutの演算-~~対象の構造が予測-可能になることを確保する。
+◎
+This "fix-up" ensures that table layout has a predictable structure to operate on.
+</p>
+
+</div>
+
+		</section>
+		<section id="box-generation">
+<h3 title="Box Generation: the none and contents keywords">2.5. ~box生成： `none^v, `contents^v ~keyword</h3>
+
+<p>
+`display$p は、要素が生成する~boxの`表示~型$を制御できる一方で，要素が~box自体を生成するかどうかも制御できる。
+◎
+While display can control the types of boxes an element will generate, it can also control whether an element will generate any boxes at all.
+</p>
+
+<p>
+`display-box$t を成す各~keywordは、次に従って定義される：
+◎
+The &lt;display-box&gt; keywords are defined as follows:
+</p>
+
+<dl class="valdef">
+	<dt>`contents@v</dt>
+	<dd>
+要素~自身は~boxを全く生成しないが、要素の［
+一連の子, および `疑似要素$
+］は，依然として［
+`~box$や`~text連なり$
+］たちを通常通り生成する。
+~box生成／~layout
+の目的においては、要素は，`要素~tree$において 要素の内容に置換されたかのように扱うモノトスル（~~元の文書~treeにおける要素の子たちのみならず，要素を出自にする疑似要素
+— 前後に生成される `before$pe, `after$pe 疑似要素など —
+も含め）。
+◎
+The element itself does not generate any boxes, but its children and pseudo-elements still generate boxes and text runs as normal. For the purposes of box generation and layout, the element must be treated as if it had been replaced in the element tree by its contents (including both its source-document children and its pseudo-elements, such as ::before and ::after pseudo-elements, which are generated before/after the element’s children as normal). 
+</dd>
+	<dd class="note">注記：
+影響されるのは~box~treeに限られ、［
+選択子の照合／~eventの取扱い／~propの`継承$
+］などの 文書~treeに基づく意味論は，影響されない。
+<strong>
+…はずであるが，これを書いた時点では，主要な~browserは正しく実装していない（`3040$issue）。
+この特能を~Web上で利用するときは、~careを要する
+— ~accessibility~toolが要素の意味論に~accessできなくなり得るので。
+</strong>
+◎
+Note: As only the box tree is affected, any semantics based on the document tree, such as selector-matching, event handling, and property inheritance, are not affected. As of writing, however, this is not implemented correctly in major browsers, so using this feature on the Web must be done with care as it can prevent accessibility tools from accessing the element’s semantics.
+</dd>
+	<dd>
+この値は、［
+`置換され$る要素 ／
+具現化において~CSSからは制御されない部分がある他の要素（一部の~form~controlなど）
+］に対しては， `display:none$p に算出される。
+詳細は
+<a href="#unbox">非通例的~要素~上の `display:contents^p の効果</a>
+を見よ。
+◎
+This value computes to display: none on replaced elements and other elements whose rendering is not entirely controlled by CSS; see Appendix B: Effects of display: contents on Unusual Elements for details.
+</dd>
+	<dd class="note">注記：
+置換d要素や~form~controlが特別に扱われるわけは、要素が生成する自前の~boxだけ除去する演算を~~完全には定義できないためである。
+この挙動は，利用事例（および より精確な具現化~model）が開発されたときは精緻化され得る。
+前方-互換性を得るため、作者は，そのような要素の `display$p には `contents$v に代えて `none$v を利用するべきである。
+◎
+Note: Replaced elements and form controls are treated specially because removing only the element’s own generating box is a more-or-less undefined operation. As this behavior may be refined if use cases (and more precise rendering models) develop, authors should use display: none rather than display: contents on such elements for forward-compatibility.
+</dd>
+
+	<dt>`none@v</dt>
+	<dd>
+`要素$とその子孫は`~box$も`~text連なり$も生成しない。
+◎
+The element and its descendants generate no boxes or text runs.
+</dd>
+	<dd>
+同様に、［
+`display:none$p として挙動する
+］ように定義されている`~text~node$も，`~text連なり$を生成しない。
+◎
+Similarly, if a text node is defined to behave as display: none, it generates no text runs.
+</dd>
+</dl>
+
+<p>
+上に挙げたいずれかの値を伴う要素は、
+`内縁~表示~型$ ／ `外縁~表示~型$
+のいずれも持たない
+— ~boxを全く生成しないので。
+◎
+Elements with either of these values do not have inner or outer display types, because they don’t generate any boxes at all.
+</p>
+
+<p class="note">注記：
+これらの値は，影響された要素に~boxを生成させなくするので、`匿名~box$の生成~規則も，省かれた要素を~box~treeに存在しなかったかのように まるごと無視することになる。
+◎
+Note: As these values cause affected elements to not generate a box, anonymous box generation rules will ignore the elided elements entirely, as if they did not exist in the box tree.
+</p>
+
+<p>
+しかしながら これらの値が効果を及ぼすのは，もっぱら具現化-時なので、~markupに基づく関係性は影響されない。
+<span class="non-normative">
+例えばそれは，~table~cellが~column内に現れるかどうかには影響し得るが、特定0の~column要素【 `col$e や `colgroup$e 】にどの~table~cell【 `td$e や `th$e 】が結付けられるかには影響しない。
+同様に、［
+特定0の `details$e 要素にどの `summary$e 要素が結付けられるか ／
+`legend$e は特定0の `fieldset$e の内容を~labelするものと見なされるかどうか
+］に影響することはない。
+</span>
+◎
+Markup-based relationships, however, are not affected by these values, as they are solely rendering-time effects. For example, although they may affect which table cell appears in a column, they do not affect which table cell is associated with a particular column element. Similarly, they cannot affect which HTML summary element is associated with a particular table or whether a legend is considered to be labelling the contents of a particular fieldset.
+</p>
+
+		</section>
+		<section id="legacy-display">
+<h3 title="Precomposed Inline-level Display Values">2.6. 予め構成済みな，行内~levelの表示~型~値</h3>
+
+<p>
+~CSS level 2 では、 `display$p 用に単独の~keywordによる構文を利用していたため，同じ~layout~modeの［
+塊~level, 行内~level
+］それぞれに対し，別々の~keywordを要していた。
+これらの `display-legacy$t ~keywordは、次に従って対応付けられる：
+◎
+CSS level 2 used a single-keyword syntax for display, requiring separate keywords for block-level and inline-level variants of the same layout mode. These &lt;display-legacy&gt; keywords map as follows:
+</p>
+
+<dl class="valdef">
+	<dt>`inline-block@v</dt>
+	<dd>
+<span class="css">`inline$v `flow-root$v</span>
+として挙動する。
+◎
+Behaves as inline flow-root.
+</dd>
+
+	<dt>`inline-table@v</dt>
+	<dd>
+<span class="css">`inline$v `table$v</span>
+として挙動する。
+◎
+Behaves as inline table.
+</dd>
+
+	<dt>`inline-flex@v</dt>
+	<dd>
+<span class="css">`inline$v `flex$v</span>
+として挙動する。
+◎
+Behaves as inline flex.
+</dd>
+
+	<dt>`inline-grid@v</dt>
+	<dd>
+<span class="css">`inline$v `grid$v</span>
+として挙動する。
+◎
+Behaves as inline grid.
+</dd>
+</dl>
+
+		</section>
+		<section id="transformations">
+<h3 title="Automatic Box Type Transformations">2.7. ~box型の自動的な変形n</h3>
+
+<p>
+一部の~layout効果は、~boxの`表示~型$を［
+`塊~化@
+（ `blockification^en ）／
+`行内~化@
+（ `inlinification^en ）
+］することを要する
+— これは、~boxの`外縁~表示~型$を［
+`block$v ／ `inline$v
+］に設定する（これは、 `none$v や `contents$v などの~boxを全く生成しない`表示~型$には効果はない）。
+加えて：
+◎
+Some layout effects require blockification or inlinification of the box type, which sets the box’s outer display type to block or inline (respectively). (This has no effect on display types that generate no box at all, such as none or contents.) Additionally:
+</p>
+
+<ul>
+	<li>
+`block flow^v ~boxが`行内~化$される場合、その`内縁~表示~型$は `flow-root$v になる
+— ~boxは`塊~容器$であり続けるようにするため。
+◎
+If a block flow box is inlinified, its inner display type is set to flow-root so that it remains a block container.
+</li>
+	<li>
+`inline flow^v ~boxが`行内~化$される場合、その`~flow内$にある 各~子も，再帰的に`行内~化$される
+— ~boxの中に，［
+当の`行内~整形~文脈$を分断するような，その文脈に関与する塊~levelの子孫
+］は無いようにする必要があるので。
+◎
+If an inline flow box is inlinified, it recursively inlinifies all of its in-flow children, so that no block-level descendants break up the inline formatting context in which it participates.
+</li>
+	<li>
+旧来の理由から、 `inline flow-root^v ~box（いわゆる `inline-block$v ）は、`塊~化$された場合には `block$v ~boxになる（その `flow-root$v としての資質を失う）。
+一貫性を得るため、`run-in flow-root^v ~boxも `block$v ~boxに`塊~化$される。
+◎
+For legacy reasons, if an inline flow-root box (aka inline-block) is blockified, it becomes a block box (losing its flow-root nature). For consistency, a run-in flow-root box also blockifies to a block box.
+</li>
+	<li>
+`~layout内部$の~boxが`塊~化$される場合、その`内縁~表示~型$は `flow$v に変換され，~boxは`塊~容器~box$になる。
+`~layout内部$の~boxに対しては、`行内~化$による効果はない。
+（しかしながら，その種の行内~文脈~内に配置された~boxは、概して，適切な型の`匿名$な`行内~levelの~box$で包装されることになる。）
+◎
+If a layout-internal box is blockified, its inner display type converts to flow so that it becomes a block container. Inlinification has no effect on layout-internal boxes. (However, placement in such an inline context will typically cause them to be wrapped in an appropriately-typed anonymous inline-level box.)
+</li>
+</ul>
+
+<p class="note">注記：
+~boxが当の文脈に合致しないときにその表示~型を修復する手法は、ここに述べた［
+`塊~化$や`行内~化$による `display$p の`算出d値$の変形n
+］の他にもある。
+それは、（算出d値が決定された後の）
+<a href="#intro">~box~treeの構築</a>
+の間に行われる，中間的な`匿名~box$の作成であり、［
+<a href="~CSS22/tables.html#anonymous-boxes">~table</a> ／
+<a href="~CSSRUBY#box-fixup">~ruby</a> ／
+<a href="~CSS2VISUREN#box-gen">~flow</a>
+］~layout時に起こる。
+◎
+Note: There are two methods used to fix up box types when a box is mismatched to its context. One is transformation of the computed value of display, such as blockification and inlinification described here. The other, taking place during box tree construction (after computed values have been determined), is the creation of intermediary anonymous boxes, such as happens in tables, ruby, and flow layout.
+</p>
+
+<div class="example">
+<p>
+算出d値の修復には、例えば，次が挙げられる：
+◎
+Some examples of computed-value fixup include:
+</p>
+
+<ul>
+	<li>
+要素の絶対~位置決めや浮動は、~boxの`表示~型$を`塊~化$する。
+`CSS2$r
+◎
+Absolute positioning or floating an element blockifies the box’s display type. [CSS2]
+</li>
+	<li>
+`~ruby容器$への包含は、 `CSS3RUBY$r に述べられるように，~boxの`表示~型$を`行内~化$する。
+◎
+Containment in a ruby container inlinifies the box’s display type, as described in [CSS3RUBY].
+</li>
+	<li>
+`display$p 値が［
+`grid$v ／ `flex$v
+］にされた親は、子~boxの`表示~型$を`塊~化$する。
+`CSS3-GRID-LAYOUT$r `CSS3-FLEXBOX$r
+◎
+A parent with a grid or flex display value blockifies the box’s display type. [CSS3-GRID-LAYOUT] [CSS3-FLEXBOX]
+</li>
+</ul>
+
+</div>
+<p>
+根~要素の`表示~型$は，常に`塊~化$される。
+加えて、根~要素の `display$p に対する値 `contents$v は， `block$v に算出される。
+◎
+The root element’s display type is always blockified. Additionally, a display of contents computes to block on the root element.
+</p>
+
+		</section>
+	</section>
+	<section id="run-in-layout">
+<h2 title="Run-In Layout">3. 同行見出し~layout</h2>
+
+<p>
+`同行見出し~box@
+（ `run-in box^en ）とは、後続の塊に`併合される^emような~boxである
+— ~boxは塊の［
+行内~levelの内容
+］の先頭に挿入される。
+これは、短い表題や定義語の類いを整形するとき
+— DOM 構造においては，表題は 後続の注釈文より先行する方が適切でありつつ、表示においては，~textと伴に 行内~levelの表題として~lay-outする方が欲されるとき —
+に有用になる。
+◎
+A run-in box is a box that merges into a block that comes after it, inserting itself at the beginning of that block’s inline-level content. This is useful for formatting compact headlines, definitions, and other similar things, where the appropriate DOM structure is to have a headline preceding the following prose, but the desired display is an inline headline laying out with the text.
+</p>
+
+<div class="example">
+
+<p>
+例えば，辞書の見出し語は、その定義と伴に行内に整形されることが多い：
+◎
+For example, dictionary definitions are often formatted so that the word is inline with the definition:
+</p>
+
+`run-in-1^dgm
+
+<p>
+これは次のように整形される：
+◎
+Which is formatted as:
+</p>
+
+`run-in-2^dgm
+
+</div>
+
+<p>
+`同行見出し~box$の挙動は、次を除き，他の`行内~levelの~box$と同じになる：
+◎
+A run-in box behaves exactly as any other inline-level box, except:
+</p>
+
+<ul>
+	<li>
+`内縁~表示~型$が `flow$v にされた`同行見出し~box$は、その内容を`行内~化$する。
+◎
+A run-in box with a flow inner display type inlinifies its contents.
+</li>
+	<li>
+<p>
+`同行見出し列$の直後に［
+新たな`塊~整形~文脈$を確立しない`塊~box$
+］が来る場合、その列は，`塊~box$に直な子として挿入される
+— 挿入-箇所は、
+`marker$pe 疑似要素が生成する~box（もし在れば）より後, かつ
+塊の内容が生成する 他の~box（ `before$pe 疑似要素も含む）より前になる。
+この親を違える~~処理は、アリなら再帰的に行われる（同行見出しが、実質的に，その整形~文脈における最も深い後続の “段落” の一部を成すように
+— 他の同行見出しが新たに隣接するようになったなら，それらを収集しながら）。
+◎
+If a run-in sequence is immediately followed by a block box that does not establish a new block formatting context, it is inserted as direct children of that block box: after its ::marker pseudo-element’s boxes (if any), but preceding any other boxes generated by the contents of the block (including the box generated by the ::before pseudo-element, if any). This re-parenting recurses if possible (so that the run-in effectively becomes part of the deepest subsequent “paragraph” in its formatting context, collecting newly-adjacent run-ins as it goes).
+</p>
+
+<p>
+次に，~layout上の親が違えられた内容は、その親が元からそこに在ったかのように整形される。
+<span class="note">注記：
+~layout上の親子関係のみが影響され, 継承関係は影響されない
+— `匿名$でない~boxに対する~propの継承関係は要素~treeに基づくので。
+</span>
+◎
+The reparented content is then formatted as if originally parented there. Note that only layout is affected, not inheritance, because property inheritance for non-anonymous boxes is based only on the element tree.
+</p>
+
+	<li>
+他の場合（`同行見出し列$にそのような塊は後続しない場合）、［
+`同行見出し列$と,［
+その直後から連続する 行内~levelの内容~すべて —
+ただし，次の`同行見出し列$が在れば その手前まで
+］］の周囲に，`匿名$な`塊~box$が生成される。
+◎
+Otherwise (if the run-in sequence is not followed by such a block), an anonymous block box is generated around the run-in sequence and all immediately following inline-level content (up to, but not including, the next run-in sequence, if any).
+</li>
+</ul>
+
+<p>
+`同行見出し列@
+（ `run-in sequence^en ）とは、互いに同胞な`同行見出し~box$からなる，連続する（ただし，`空白$や`~flow外$にある~boxが挟まれてもよい）最長な並びである。
+◎
+A run-in sequence is a maximal sequence of consecutive sibling run-in boxes and intervening white space and/or out-of-flow boxes.
+</p>
+
+<p class="note">注記：
+この言明は、`~flow外$にある~boxは、 2 個の `run-in^v ~boxの間に挟まれている場合には，~layout上の親が違えられることを含意する。
+この案は，多少無作為に選び取られており、他にも，次に挙げる案がある
+— 実装者と作者には、選好する挙動があれば~CSS~WGに伝えることが奨励される
+⇒＃
+挟まれている~flow外にある~boxは、後ろに回す／
+~flow外にある~boxは、それに~~先行する `run-in^v ~boxが同行見出しになるのを妨げる
+◎
+Note: This statement implies that out-of-flow boxes are reparented if they are between two run-in boxes. Another alternative would be to leave behind the intervening out-of-flow boxes, or to have out-of-flow boxes impede the running-in of earlier boxes. Implementers and authors are encouraged to contact the CSSWG if they have a preferred behavior, as this one was picked somewhat at random.
+</p>
+
+<p>
+この修復は、
+`CSS2$r <a href="~CSS2VISUREN#box-gen">§ ~box生成の制御-法</a>
+に述べられる，`匿名$な塊と行内~boxの修復の前に生じ、影響される要素の`整形される最初の行l$の決定に影響する
+— `同行見出し列$が、~box~treeにおけるその最終的な所在に，元からあったかのように。
+◎
+This fixup occurs before the anonymous block and inline box fixup described in CSS2§9.2, and affects the determination of the first formatted line of the affected elements as if the run-in sequence were originally in its final location in the box tree.
+</p>
+
+<p class="note">注記：
+先頭に来る同行見出しは，その包含塊の`整形される最初の行l$上の最初の~textを表現するので、その塊~要素に適用される `first-letter$pe 疑似要素は、自前の内容の先頭字（ `first letter^en ）ではなく，その同行見出しの先頭字を選択する。
+◎
+Note: As the earliest run-in represents the first text on the first formatted line of its containing block, a ::first-letter pseudo-element applied to that block element selects the first letter of the run-in, rather than the first letter of its own contents.
+</p>
+
+<p class="note">注記：
+この同行見出し~modelは、以前の `CSS2$r 改訂版にて提案されたものから 少しばかり異なる。
+◎
+Note: This run-in model is slightly different from the one proposed in earlier revisions of [CSS2].
+</p>
+
+	</section>
+	<section id="glossary">
+<h2 title="Glossary">付録 A. 用語集</h2>
+
+<p>
+便宜を図るため、以下の用語を，ここに定義する：
+◎
+The following terms are defined here for convenience:
+</p>
+
+<dl>
+	<dt>`首要~box@ （ `principal box^en ）</dt>
+	<dd>
+<p>
+`要素$が 1 個~以上の`~box$を生成するとき、それらのうち 1 つが`首要~box$になり，それが：
+</p>
+		<ul>
+			<li>
+要素の［
+子孫~boxたち, 生成d内容
+］を包含する。
+</li>
+			<li>
+【 `position$p による】位置決め~schemeに孕まれる~boxになる。
+</li>
+		</ul>
+◎
+When an element generates one or more boxes, one of them is the principal box, which contains its descendant boxes and generated content, and is also the box involved in any positioning scheme.
+</dd>
+	<dd>
+<p>
+要素は，`首要~box$の他にも追加的な~boxを生成することもあり、それらは首要~boxを基準に配置される
+— 例：
+</p>
+		<ul>
+			<li>
+`list-item$v 要素は、追加的な~marker~boxを生成する。
+</li>
+			<li>
+`table$v 要素は、`首要~box$として`~table包装~box$を生成することに加え，追加的な`~table格子~box$も生成する。
+</li>
+		</ul>
+◎
+Some elements may generate additional boxes in addition to the principal box (such as list-item elements, which generate an additional marker box, or table elements, which generate a principal table wrapper box and an additional table grid box). These additional boxes are placed with respect to the principal box.
+</dd>
+
+	<dt>`行内~level@ （ `inline-level^en ）</dt>
+	<dd>
+行内~layoutに関与する内容。
+特定的には、`行内~levelの~box$, `~text連なり$。
+◎
+Content that participates in inline layout. Specifically, inline-level boxes and text runs.
+</dd>
+
+	<dt>`塊~level@ （ `block-level^en ）</dt>
+	<dd>
+塊~layoutに関与する内容。
+特定的には、`塊~levelの~box$。
+◎
+Content that participates in block layout. Specifically, block-level boxes.
+</dd>
+	<dd class="trans-note">【
+“〜に関与する（ `participate^en ）” ：
+生成される~boxが、［
+当の種別（ここでは，種別 “塊” ）であるような，`整形~文脈$
+］の一部を成していて，その種別の~layout規則に則って~layoutされることを意味する。
+整形~文脈を確立している~box自身（整形~文脈の根）は、自身が確立した整形~文脈に “関与する” とは言わない
+— それが関与するのは、親の整形~文脈になる。
+】【
+“X ~levelの Y”,
+“Y は X ~levelである”
+の様な句は、
+Y の外からは， Y は X であるかのように見える／扱われることを表す（一般に、 “~level” という語は外に対する関係を含意する）。
+“X ~levelの〜” は、 “〜は X ~levelである” を意味する形容詞としての用法になる（この場合、英文では `X-level^en のようにハイフンで連結されることが多い）。
+】</dd>
+
+	<dt>`行内~box@ （ `inline box^en ）【 “可分な行内（ `non-atomic inline^en ）” 】</dt>
+	<dd>
+`行内~level$の~boxのうち，［
+`内縁~表示~型$は `flow$v である, かつ`置換され$ない
+］もの。
+`行内~box$の内容は，~box自身と同じ`行内~整形~文脈$に関与する。
+◎
+A non-replaced inline-level box whose inner display type is flow. The contents of an inline box participate in the same inline formatting context as the inline box itself.
+</dd>
+
+	<dt>`行内@ （ `inline^en ）</dt>
+	<dd>
+多義的にならない所で、［
+`行内~box$, `行内~levelの~box$
+］いずれかの略語として利用される。
+形容詞として`行内~level$の意味でも利用されるが†、この用法は非推奨にされた。
+◎
+Used as a shorthand for inline box or inline-level box where unambiguous, or as an adjective meaning inline-level. The latter usage is deprecated.
+</dd>
+	<dd class="trans-note">【
+ここに述べたように，よく似た／多義的にも見える用語がいくつかある。
+】【†
+例えば、 “行内~内容”, “行内~要素” など， “行内” がどちらを意味するのか自明でないこともあり、ときには，仕様にも誤用がある（実に紛らわしい）。
+】</dd>
+
+	<dt>`不可分な行内@ （ `atomic inline^en ）</dt>
+	<dd>
+`行内~level$の~boxのうち，［
+`置換され$る（画像など）, または
+新たな`整形~文脈$を確立する（
+`inline-block$v や `inline-table$v など
+）
+］もの。
+（`行内~box$や`~ruby容器$のように）複数~行lに分割されることはない。
+◎
+An inline-level box that is replaced (such as an image) or that establishes a new formatting context (such as an inline-block or inline-table) and cannot split across lines (as inline boxes and ruby containers can).
+</dd>
+	<dd>
+`内縁~表示~型$が `flow$v でない 行内~levelの~boxは、指定された`内縁~表示~型$による新たな`整形~文脈$を確立する。
+◎
+Any inline-level box whose inner display type is not flow establishes a new formatting context of the specified inner display type.
+</dd>
+	<dd class="trans-note">【
+すなわち，`行内~level$の~boxは、二つの類型［
+`行内~box$, `不可分な行内$
+］に，排他的に分類される
+— `行内~box$を意図している “行内” は、実際には “可分な” （ “不可分な” の否定）が省略されている。
+】【
+“置換される” は、その内容の整形が~CSSの外で定義されるので，
+“新たな（未知な）整形~文脈を確立するようなもの”
+と解釈できる
+— この解釈の下では、［
+（可分な）行内／不可分な行内
+］の分類は、新たな整形~文脈を［
+確立しない／確立する
+］に捉え直すことができる。
+】</dd>
+
+	<dt>`塊~容器@ （ `block container^en ）</dt>
+	<dd>
+塊~容器は、`行内~整形~文脈$に関与する`行内~levelの~box$のみを包含するか, または
+`塊~整形~文脈$に関与する`塊~levelの~box$のみを包含する（場合によっては、この拘束を確保するため，`匿名$な`塊~box$を生成した上で）
+— `CSS2$r <a href="~CSS2VISUREN#anonymous-block-level">§ 匿名~塊~box</a>
+にて定義されるように。
+◎
+A block container either contains only inline-level boxes participating in an inline formatting context, or contains only block-level boxes participating in a block formatting context (possibly generating anonymous block boxes to ensure this constraint, as defined in CSS2§9.2.1.1).
+</dd>
+	<dd class="trans-note">【
+内容が空でも、塊~容器になり得る（ 0 個の~box “のみ” を包含する）。
+】</dd>
+	<dd>
+行内~levelの内容のみを包含する塊~容器は、新たな`行内~整形~文脈$を確立する。
+そのような要素は、自身の行内~内容すべてを包装する，`根~行内~box$も生成する。
+<span class="note">注記：
+この`根~行内~box$の概念は、実質的に
+`CSS2$r <a href="~CSS2VISUREN#anonymous-inline">§ 匿名~行内~box</a>
+にて導入された
+“匿名~行内~box”【！匿名~行内~要素】
+の概念を置換する。
+</span>
+◎
+A block container that contains only inline-level content establishes a new inline formatting context. The element then also generates a root inline box which wraps all of its inline content. Note, this root inline box concept effectively replaces the "anonymous inline element" concept introduced in CSS2§9.2.2.1.
+</dd>
+	<dd>
+塊~容器は、親の整形~文脈は`塊~整形~文脈$`でない^emならば，新たな`塊~整形~文脈$を確立する。
+他の場合，すなわち`塊~整形~文脈$に関与しているならば、自身の内容~用に新たな`塊~整形~文脈$を確立するか，ただ関与するものであり続ける
+— どちらになるかは、他の~prop（ `overflow$p や `align-content$p など）による拘束により決定される。
+◎
+A block container establishes a new block formatting context if its parent formatting context is not a block formatting context; otherwise, when participating in a block formatting context itself, it either establishes a new block formatting context for its contents or continues the one in which it participates, as determined by the constraints of other properties (such as overflow or align-content).
+</dd>
+	<dd class="note">注記：
+塊~容器~boxは、塊~整形~文脈と行内~整形~文脈を同時に確立することもある。
+◎
+Note: A block container box can both establish a block formatting context and an inline formatting context simultaneously.
+</dd>
+
+	<dt>`塊~box@ （ `block box^en ）</dt>
+	<dd>
+`塊~容器$であって，`塊~levelの~box$でもあるもの。
+◎
+A block-level box that is also a block container.
+</dd>
+	<dd class="note">注記：
+`塊~容器~box$であっても，`塊~levelの~box$になるとは限らない。
+例えば，`置換され$ない［
+`行内~塊$ ／~table~cell
+］は、塊~容器であるが，塊~levelの~boxではない。
+同様に、`塊~levelの~box$であっても，`塊~容器~box$になるとは限らない。
+例えば，［
+塊~levelの置換d要素（
+`display:block$p
+）／
+`~flex容器$（
+`display:flex$p
+）
+］は塊~容器でない。
+◎
+Note: Not all block container boxes are block-level boxes: non-replaced inline blocks and non-replaced table cells, for example, are block containers but not block-level boxes. Similarly, not all block-level boxes are block containers: block-level replaced elements (display: block) and flex containers (display: flex), for example, are not block containers.
+</dd>
+
+	<dt>`塊@ （ `block^en ）</dt>
+	<dd>
+多義的にならない所で、［
+`塊~box$, `塊~levelの~box$, `塊~容器~box$
+］いずれかの略語として利用される。
+◎
+Used as a shorthand for block box, block-level box, or block container box, where unambiguous.
+</dd>
+
+	<dt>`置換d要素@ （置換される要素, `replaced element^en ）</dt>
+	<dd>
+要素のうち，その内容は~CSS整形~modelの視野から外れるもの
+— 画像, 埋込まれた文書など。
+<span class="non-normative">
+例えば~HTML `img$e 要素の内容は、その `src$a 属性が指す画像に置換されることが多い。
+</span>
+置換d要素は、内在的~寸法
+— 内在的~横幅, 内在的~縦幅, 内在的~縦横比 —
+を持つことが多い。
+例えば、内在的［
+横幅, 縦幅
+］が絶対~単位で指定された~bitmap画像（内在的~縦横比も，それらから自明に決定できる）。
+他方、内在的~寸法を持たない文書もある（例えば空内容の~HTML文書）。
+◎
+An element whose content is outside the scope of the CSS formatting model, such as an image or embedded document. For example, the content of the HTML img element is often replaced by the image that its src attribute designates. Replaced elements often have intrinsic dimensions: an intrinsic width, an intrinsic height, and an intrinsic ratio. For example, a bitmap image has an intrinsic width and an intrinsic height specified in absolute units (from which the intrinsic ratio can obviously be determined). On the other hand, other documents may not have any intrinsic dimensions (for example, a blank HTML document).
+</dd>
+	<dd>
+~UAは、置換d要素の内在的~寸法を通して敏感な情報が第三者主体に漏洩され得ると予見される場合には、内在的~寸法を持たないものと見なしてヨイ。
+例えば~HTML文書において，利用者の預金残高に依存して内在的~sizeが変化する場合、~UAは，その資源は内在的~寸法を持たないかのように動作するよう求まれるかもしれない。
+◎
+User agents may consider a replaced element to not have any intrinsic dimensions if it is believed that those dimensions could leak sensitive information to a third party. For example, if an HTML document changed intrinsic size depending on the user’s bank balance, then the UA might want to act as if that resource had no intrinsic dimensions.
+</dd>
+	<dd>
+置換d要素の内容は、~CSS整形~modelの外にあると見なされる。
+しかしながら、その内在的~寸法は，様々な~layout計算に利用される。
+◎
+The content of replaced elements is not considered in the CSS formatting model; however, their intrinsic dimensions are used in various layout calculations.
+</dd>
+	<dd>
+`置換され$ない要素（ “`置換され$る” の否定）は、
+`非~置換d@
+（ `non-replaced^en ）要素とも称される
+— すなわち、その具現化は~CSS~modelにより規定される。
+【和訳では、単に`置換され$ないと記すことも多い。】
+◎
+A non-replaced element is one that is not replaced, i.e. whose rendering is dictated by the CSS model.
+</dd>
+
+	<dt>`包含塊@ （ `containing block^en ）</dt>
+	<dd>
+`~box$用の~sizingと位置決めの基準を形成するために，`~box$に結付けられる矩形。
+特に，`包含塊$は<em>`~box$ではない</em>（それは矩形である
+【言い換えれば、~boxを~lay-outするための座標系を成す】）。
+しかしながら，`包含塊$は、【当の~boxの先祖である】`~box$の寸法から導出されることが多い。
+各`~box$の位置は、~boxの`包含塊$を基準に与えられるが，この包含塊~内に限定されるわけではない
+— それは`~overflow$し得る。
+“~boxの包含塊”
+という句は、~boxがそれを生成したことではなく，~boxは
+“`包含塊$内に住まう”
+ことを意味する。
+◎
+A rectangle that forms the basis of sizing and positioning for the boxes associated with it. Notably, a containing block is not a box (it is a rectangle), however it is often derived from the dimensions of a box. Each box is given a position with respect to its containing block, but it is not confined by this containing block; it can overflow. The phrase “a box’s containing block” means “the containing block in which the box lives,” not the one it generates.
+</dd>
+	<dd>
+一般に，`~box$を成す各`辺$は、子孫~box用の`包含塊$として動作する。
+そのことを指して、［
+~boxは，その子孫~用に`包含塊$を “確立する（ `establish^en する）”
+］という。
+`包含塊$の~propが参照される場合、それは`包含塊$を生成した`~box$上の値を参照する（`初期~包含塊$用には、他が指定されない限り，値は根~要素から採られる）。
+◎
+In general, the edges of a box act as the containing block for descendant boxes; we say that a box “establishes” the containing block for its descendants. If properties of a containing block are referenced, they reference the values on the box that generated the containing block. (For the initial containing block, values are taken from the root element unless otherwise specified.)
+</dd>
+	<dd>
+詳細は
+`CSS2$r <a href="~CSS2VISUREN#containing-block">§ 包含塊</a>,
+`CSS2$r <a href="~CSS2VISUDET#containing-block-details">§ 包含塊の定義</a>,
+`CSS-POSITION-3$r
+<a href="~CSSPOS#def-cb">§ 有位置な~boxの包含塊</a>
+を見よ。
+◎
+See [CSS2] Section 9.1.2 and Section 10.1 and CSS Positioned Layout 3 §2.1 Containing Blocks of Positioned Boxes for details.
+</dd>
+
+	<dt>`包含塊~連鎖@（ `containing block chain^en ）</dt>
+	<dd>
+`包含塊$の関係を通して［
+先祖 ↔ 子孫
+］の連鎖を形成する，`包含塊$の連列。
+例えば、`行内~box$ B の包含塊は，
+B に最も近い先祖の`塊~容器$ C の内容~boxになる。
+C が`~flow内$にある`塊$であるならば、
+C の包含塊は， C の親である`塊~容器$ C1 により形成される。
+親の親である C1 が`絶対的に位置され$ているならば、
+C1 の包含塊は C1 に最も近い有位置な先祖（ C1 の親になるとは限らない）の~padding辺からなる, 等々。
+以下同様に、`初期~包含塊$に~~達するまで連鎖は続く。
+◎
+A sequence of successive containing blocks that form an ancestor-descendant chain through the containing block relation. For example, an inline box’s containing block is the content box of its closest block container ancestor; if that block container is an in-flow block, then its containing block is formed by its parent block container; if that grandparent block container is absolutely positioned, then its containing block is the padding edges of its closest positioned ancestor (not necessarily its parent), and so on up to the initial containing block.
+</dd>
+
+	<dt>`初期~包含塊@ （ `initial containing block^en ）</dt>
+	<dd>
+根~要素の`包含塊$。
+`連続的~媒体$用のそれは
+`CSS2$r <a href="~CSS2VISUDET#containing-block-details">§ 包含塊の定義</a>
+にて，`~paged媒体$用のそれは
+`CSS3PAGE$r
+にて定義される【`~page区画$として与えられる】。
+◎
+The containing block of the root element. See CSS2.1§10.1 for continuous media; and [CSS3PAGE] for paged media.
+</dd>
+
+	<dt>`整形~文脈@ （ `formatting context^en ）</dt>
+	<dd>
+関係する~boxたちを~lay-outするための環境。
+~lay-outするための規則は、`整形~文脈$の型ごとに異なる。
+例えば、`~flex整形~文脈$ `CSS3-FLEXBOX$r は，`~flex~layout$規則に則って~boxたちを~lay-outする一方で、`塊~整形~文脈$ `CSS2$r は，~boxたちを`塊＆行内~layout$の規則に則って~lay-outする。
+加えて，一部の型の`整形~文脈$たちは、互いに差挟まれたり共存することもある。
+例えば，`行内~整形~文脈$は、それを確立した要素が関与している`塊~整形~文脈$の中にあり，それと相互作用する。
+また，`~ruby容器$は、その`~ruby基底~容器$が関与している`行内~整形~文脈$越しに`~ruby整形~文脈$を重層する。
+◎
+A formatting context is the environment into which a set of related boxes are laid out. Different formatting contexts lay out their boxes according to different rules. For example, a flex formatting context lays out boxes according to the flex layout rules [CSS3-FLEXBOX], whereas a block formatting context lays out boxes according to the block-and-inline layout rules [CSS2]. Additionally, some types of formatting contexts interleave and co-exist: for example, an inline formatting context exists within and interacts with the block formatting context of the element that establishes it, and a ruby container overlays a ruby formatting context over the inline formatting context in which its ruby base container participates.
+</dd>
+	<dd>
+~boxは、新たな`独立な整形~文脈$を確立するか，自身の包含塊の`整形~文脈$を継続する。
+一部の事例では、それに加えて，他と共存する（独立でない）新たな整形~文脈を確立する。
+しかしながら，他が指定されない限り、新たな`整形~文脈$を確立したときには，`独立な整形~文脈$を作成する。
+~boxにより確立される整形~文脈の型は、~boxの`内縁~表示~型$により決定される。
+`display$p ~propを見よ。
+例えば
+⇒＃
+`格子~容器$は 新たな`格子~整形~文脈$を確立する ／
+`~ruby容器$は 新たな`~ruby整形~文脈$を確立する ／
+`塊~容器$は 新たな［`塊~整形~文脈$／`行内~整形~文脈$］を確立し得る
+◎
+A box either establishes a new independent formatting context or continues the formatting context of its containing block. In some cases, it might additionally establish a new (non-independent) co-existing formatting context. Unless otherwise specified, however, establishing a new formatting context creates an independent formatting context. The type of formatting context established by the box is determined by its inner display type. E.g. a grid container establishes a new grid formatting context, a ruby container establishes a new ruby formatting context, and a block container can establish a new block formatting context and/or a new inline formatting context. See the display property.
+</dd>
+
+	<dt>`独立な整形~文脈@ （ `independent formatting context^en ）</dt>
+	<dd>
+~boxが独立な整形~文脈を確立するときは、本質的に，他と独立な~layout環境を新たに作成する（自身の親の`整形~文脈$と同じ型かどうかに関わらず）：
+一般に、~box自身の~sizingによるものを除いて、その子孫の~layoutは，~boxの外側の`整形~文脈$による規則や内容からは影響されず, その逆も同様になる。
+◎
+When a box establishes an independent formatting context (whether that formatting context is of the same type as its parent or not), it essentially creates a new, independent layout environment: except through the sizing of the box itself, the layout of its descendants is (generally) not affected by the the rules and contents of the formatting context outside the box, and vice versa.
+</dd>
+	<dd class="trans-note">【
+言い換えれば，独立な整形~文脈は、`~box~tree$の中で［
+それを確立している~boxを根とする下位tree
+］が成す内容から，［
+新たに別の独立な整形~文脈を確立するような各 子孫~box
+］の内容すべてを除いた部分を表現する。
+】</dd>
+
+	<dd class="example">
+例えば，`塊~整形~文脈$の中の浮動体（浮動される~box）は、周囲の~boxの~layoutに影響するが，その効果が その`整形~文脈$の外へ~~波及することはない：
+その`整形~文脈$を確立している~box【の塊~size】は、浮動体を全部的に包含するように大きくされ，その~boxの外側の浮動体が［
+~box内に突き出たり，~boxの内側の内容に影響する
+］ことは許容されない。
+◎
+For example, in a block formatting context, floated boxes affect the layout of surrounding boxes. But their effects do not escape their formatting context: the box establishing their formatting context grows to fully contain them, and floats from outside that box are not allowed to protrude into and affect the contents inside the box.
+</dd>
+	<dd class="example">
+別の例として，~marginは、`整形~文脈$の境界をまたがって相殺されることはない。
+◎
+As another example, margins do not collapse across formatting context boundaries.
+</dd>
+	<dd class="note">注記：
+`排他~box$ `CSS3-EXCLUSIONS$r は、`独立な整形~文脈$の境界を超えて内容に影響できる（この仕様を書いている時点では、そのような~layout特能は，これに限られる）。
+◎
+Exclusions are able to affect content across independent formatting context boundaries. (At time of writing, they are the only layout feature that can.) [CSS3-EXCLUSIONS]
+</dd>
+
+	<dd>
+ある種の~propは、普通でない事例では，~boxに
+`独立な整形~文脈を確立-@
+するよう強制する。
+例えば，`~flow外$にされた~boxは、`塊~化$されるに伴い，`独立な整形~文脈を確立-$するようになる。
+別の例として、 `contain$p ~propのある種の値は，~boxに`独立な整形~文脈を確立-$させる。
+塊を`~scroll容器$に転換することは、それに`独立な整形~文脈を確立-$させることになる
+— しかしながら，`下位格子$を`~scroll容器$に転換しても そうはならず、下位格子として動作し続け，その内容は親の`格子~容器$の~layoutに関与し続ける。
+◎
+Certain properties can force a box to establish an independent formatting context in cases where it wouldn’t ordinarily. For example, making a box out-of-flow causes it to blockify as well as to establish an independent formatting context. As another example, certain values of the contain property can cause a box to establish an independent formatting context. Turning a block into a scroll container will cause it to establish an independent formatting context; however turning a subgrid into a scroll container will not—it continues to act as a subgrid, with its contents participating in the layout of its parent grid container.
+</dd>
+	<dd>
+`独立な整形~文脈を確立-$する`塊~box$は、自身の内容~用に新たな`塊~整形~文脈$を確立する。
+他のほとんどの事例では、~boxに`独立な整形~文脈を確立-$させようと強制しても，何も起きない
+— ~boxはすでに`独立な整形~文脈$を確立しているか（例：`~flex容器$），その型の~box上に全く独立な新たな整形~文脈を確立することはアリでない（例：置換されない`行内~box$）。
+◎
+A block box that establishes an independent formatting context establishes a new block formatting context for its contents. In most other cases, forcing a box to establish an independent formatting context is a no-op—either the box already establishes an independent formatting context (e.g. flex containers), or it’s not possible to establish a totally independent new formatting context on that type of box (e.g. non-replaced inline boxes).
+</dd>
+
+	<dt>`塊~整形~文脈@ （ `block formatting context^en ）</dt>
+	<dt>`行内~整形~文脈@ （ `inline formatting context^en ）</dt>
+	<dd>
+［
+`塊~整形~文脈$／`行内~整形~文脈$
+］は
+`CSS2$r <a href="~CSS2VISUREN#normal-flow">§ 通常~flow</a>
+にて定義される。
+`行内~整形~文脈$は、`塊~整形~文脈$の中に存在する（また、それを包含している`塊~整形~文脈$の一部を成す）
+— 例えば、`行内~整形~文脈$に属する行l~boxは、`塊~整形~文脈$に属する浮動体と相互作用する。
+◎
+Block and inline formatting contexts are defined in CSS 2.1 Section 9.4. Inline formatting contexts exist within (are part of their containing) block formatting contexts; for example, line boxes belonging to the inline formatting context interact with floats belonging to the block formatting context.
+</dd>
+
+	<dt>`塊~整形~文脈~根@ （ `block formatting context root^en ）</dt>
+	<dd>
+`塊~容器~box$であって，新たな`塊~整形~文脈$を確立するもの。
+◎
+A block container that establishes a new block formatting context. 
+</dd>
+
+	<dt><abbr title="block formatting context">`~BFC@</abbr></dt>
+	<dd>
+<p>
+［
+`塊~整形~文脈$, または
+`塊~整形~文脈~根$
+］の略称。
+［
+内部に浮動体を包含する／ 
+外部の浮動体を除外する／
+~margin相殺を抑止する
+］ような~boxを指すときなど，様々な非正式な定義があるため、特定的には次のいずれかを指し得る：
+◎
+Abbreviation for block formatting context or block formatting context root. Has various informal definitions referring to boxes which contain internal floats, exclude external floats, and suppress margin collapsing, and may therefore refer specifically to one of: 
+</p>
+
+		<ul>
+			<li>
+`塊~容器~box$であって，自身の内容に対し新たな`塊~整形~文脈$を確立するもの。
+◎
+a block container that establishes a new block formatting context for its contents
+</li>
+			<li>
+`塊~box$（すなわち，`塊~level$の`塊~容器$）であって，自身の内容に対し`塊~整形~文脈$を確立するもの（確立しない塊~boxと判別されるよう）。
+◎
+a block box (i.e. a block-level block container) that establishes a block formatting context for its contents (as distinguished from a block box which does not)
+</li>
+			<li>
+（ごく大雑把に、）`塊~levelの~box$であって，（`行内~整形~文脈$以外の）新たな`整形~文脈$を確立するもの。
+◎
+(very loosely) any block-level box that establishes a new formatting context (other than an inline formatting context)
+</li>
+		</ul>
+	</dd>
+
+	<dt>`~flow外@ （ `out-of-flow^en ）</dt>
+	<dt>`~flow内@ （ `in-flow^en ）</dt>
+	<dd>
+~boxが`~flow外$にあるとは、［
+それに期待される位置, その周囲の内容との相互作用
+］から引き抜かれ，［
+親~整形~文脈における通常の内容~flowの外側で，異なる~paradigmを利用して~lay-outされる
+］ことをいう。
+これは、~boxが（ `float$p を介して）浮動されるか，（ `position$p を介して）`絶対的に位置され$る場合に生じる。
+`~flow外$にない~boxは、`~flow内$にあるとされる。
+◎
+A box is out-of-flow if it is extracted from its expected position and interaction with surrounding content and laid out using a different paradigm outside the normal flow of content in its parent formatting context. This occurs if the box is floated (via float) or absolutely positioned (via position). A box is in-flow if it is not out-of-flow.
+</dd>
+	<dd class="note">注記：
+`整形~文脈$によっては、要素は，その `float$p が `none^v 以外でも浮動されず，`~flow外$にならなくなる場合がある。
+【例：格子~layout／~flex~layoutの中】
+◎
+Note: Some formatting contexts inhibit floating, so that an element with float: left is not necessarily out-of-flow.
+</dd>
+
+	<dt>`文書~順序@（ `document order^en, 略して “文書~順” ）</dt>
+	<dd>
+文書~内で，~boxや内容が生じる順序（具現化~用に現れる順序とは異なり得る）。
+疑似要素たちの順序を決定する目的においては、`~box~tree$による順序が利用される
+— <a href="~CSSPSEUDO#treelike">§ ~treeに留まる疑似要素</a>
+`CSS-PSEUDO-4$r を見よ。
+◎
+The order in which boxes or content occurs in the document (which can be different from the order in which it appears for rendering). For the purpose of determining the relative order of pseudo-elements, the box-tree order is used, see CSS Pseudo-Elements 4 §4 Tree-Abiding Pseudo-elements.
+</dd>
+</dl>
+
+<p>
+これらの用語の全部的な定義については
+`CSS2$r <a href="~CSS2VISUREN#visuren">§ 視覚-整形~model</a>
+を見よ。
+◎
+See [CSS2] Chapter 9 for a fuller definition of these terms.
+</p>
+
+	</section>
+	<section id="unbox">
+<h2 title=" Appendix B: Effects of display: contents on Unusual Elements">付録 B. 非通例的~要素~上の `display:contents^p の効果</h2>
+
+<p>
+`この節は、（現時点では）規範的でない。^em
+◎
+This section is (currently) non-normative.
+</p>
+
+<p>
+要素には、純粋に~CSS~boxの概念で具現化されないものもある。
+例えば：
+置換d要素（ `img$e など）,
+多くの~form~control（ `input$e など）,
+~SVG要素。
+◎
+Some elements aren’t rendered purely by CSS box concepts; for example, replaced elements (such as img), many form controls (such as input), and SVG elements.
+</p>
+
+<p>
+この付録は、
+`display:contents$p が，それらにどう相互作用するかを定義する。
+◎
+This appendix defines how they interact with display: contents.
+</p>
+
+		<section id="unbox-html">
+<h3 title="HTML Elements">~HTML要素</h3>
+
+<dl>
+	<dt>`br$e</dt>
+	<dt>`wbr$e</dt>
+	<dt>`meter$e</dt>
+	<dt>`progress$e</dt>
+	<dt>`canvas$e</dt>
+	<dt>`embed$e</dt>
+	<dt>`object$e</dt>
+	<dt>`audio$e</dt>
+	<dt>`iframe$e</dt>
+	<dt>`img$e</dt>
+	<dt>`video$e</dt>
+	<dt>`frame$e</dt>
+	<dt>`frameset$e</dt>
+	<dt>`input$e</dt>
+	<dt>`textarea$e</dt>
+	<dt>`select$e</dt>
+	<dd>
+`display:contents$p は、
+`display:none^p に算出される。
+◎
+display: contents computes to display: none.
+</dd>
+
+	<dt>`legend$e</dt>
+	<dd>
+~HTMLに従って，
+`display:contents$p にされた `legend$e は、
+<a href="~HTMLrendering#rendered-legend">具現化される~legend</a>
+にはならず，特に変わった挙動はない（したがって、
+`display:contents$p に対し，通常通り反応する）。
+◎
+Per HTML, a legend with display: contents is not a rendered legend, so it does not have magical display behavior. (Thus, it reacts to display: contents normally.)
+</dd>
+
+	<dt>`button$e</dt>
+	<dt>`details$e</dt>
+	<dt>`fieldset$e</dt>
+	<dd>
+これらの要素には、特別な挙動はない。
+`display:contents$p は、単純に要素の`首要~box$を除去し，その内容は通常通り具現化される。
+◎
+These elements don’t have any special behavior; display: contents simply removes their principal box, and their contents render as normal.
+</dd>
+
+	<dt>その他の~HTML要素</dt>
+	<dd>
+`display:contents$p は、通常通り挙動する。
+◎
+Behaves as normal for display: contents.
+</dd>
+</dl>
+
+		</section>
+		<section id="unbox-svg">
+<h3 title="SVG Elements">~SVG要素</h3>
+
+<dl>
+	<dt>
+~CSS~box~layoutを有する `svg$e 要素（これには、文書の根~要素に加えて，親は~HTML要素である `svg^e も含まれる）
+◎
+An svg element that has CSS box layout (this includes all svg whose parent is an HTML element, as well as document root elements)
+</dt>
+	<dd>
+`display:contents$p は、
+`display:none^p に算出される。
+◎
+display: contents computes to display: none.
+</dd>
+
+	<dt>
+他のすべての~SVG`容器~要素$のうち，`描画-可能$なもの
+◎
+All other SVG container elements that are also renderable elements
+</dt>
+	<dt>
+~SVG `~text内容~子~要素$
+◎
+SVG text content child elements
+</dt>
+	<dt>
+`use$e
+</dt>
+	<dd>
+`display:contents$p は、要素を整形~treeから剥取って，要素の内容を その箇所に表示するよう巻上げる。
+そのような内容には、 `use$e 用の Shadow DOM 内容も含まれる
+◎
+display: contents strips the element from the formatting tree, and hoists its contents up to display in its place. These contents include the shadow-DOM content for use.
+</dd>
+
+	<dt>
+その他の~SVG要素
+◎
+any other SVG elements
+</dt>
+	<dd>
+`display:contents$p は、
+`display:none^p に算出される。
+◎
+display: contents computes to display: none.
+</dd>
+</dl>
+
+<div class="note">
+
+<p>注記：
+これが意図する所は、要素の内側と外側における “描画~文脈” が異なるときには，
+`display:none$p の挙動を適用することである。
+要素の子~要素が要素の親の子として妥当にならない場合、単純にそれを整形~treeの~~上方へ巻上げることはできない。
+◎
+The intention here is that the display: none behavior applies whenever the "rendering context" inside the element is different than the context outside of it. If the element’s child elements would not be valid children of the element’s parent, you cannot simply hoist them up the formatting tree.
+</p>
+
+<p>
+例えば，~SVGにおける［
+~text内容／~text整形~要素
+］は、 `text$e 要素~文脈を要求する。
+`text$e を除去した場合、その子［
+~text内容／要素
+］は もはや妥当でなくなる。
+その理由から、 `text$e 上の `display:contents$p は，~text要素~全体を描画させなくする。
+対照的に，［
+`tspan$e ／ `textPath$e
+］には、巻上げの挙動が適用される
+— その内側にある妥当な内容は、親~text整形~文脈の内側でも妥当な内容になるので。
+◎
+For example, text content and text formatting elements in SVG require a text element context; if you remove a text, its child text content and elements are no longer valid. For that reason, display: contents on text prevents the entire text element from being rendered. In contrast, any valid content inside a tspan or textPath is also valid content inside the parent text formatting context, so the hoisting behavior applies for these elements.
+</p>
+
+<p>
+同様に，巻上げにより，`描画され$ない要素の子（例： `pattern$e や `symbol$e の内側にある図形）が`描画され$る要素（例： `svg$e の直な子である図形）に変換されることになる場合、描画~文脈の変化は妥当でない。
+したがって、決して描画されない容器~要素は，
+`display:contents$p で “~boxを~~剥ぎ取る” ことはできない。
+◎
+Similarly, if hoisting would convert the children from non-rendered elements (e.g., a shape inside a pattern or symbol) to rendered elements (e.g., a shape that is a direct child of the svg), that is an invalid change of rendering context. Never-rendered container elements therefore cannot be "un-boxed" by display: contents.
+</p>
+
+</div>
+
+<p>
+要素が整形~treeから剥取られたときは、その要素~上の~SVG属性のうち［
+~layout／ 視覚-整形
+］を制御するものは，内容を描画するときには無視される。
+しかしながら，~SVGの`呈示~属性$は、~CSS~propに対応付けられるので，値の処理と継承に影響し続ける
+`CSS3-CASCADE$r
+— そのような属性は、要素の子孫~上の そのような~propの値に波及することにより，子孫の［
+~layout／ 視覚-整形
+］に影響し得る。
+◎
+When an element is stripped from the formatting tree, then any SVG attributes on that element that control layout and visual formatting are ignored when rendering the contents. However, SVG presentation attributes—which map to CSS properties—continue to affect value processing and inheritance [CSS3-CASCADE]; thus such attributes can affect the layout and visual formatting of the element’s descendants by influencing the values of such properties on those descendants.
+</p>
+
+		</section>
+		<section id="unbox-mathml">
+<h3 title="MathML Elements">~MathML要素</h3>
+
+<p>
+どの~MathML要素に対しても、
+`display:contents$p は，
+`display:none^p に算出される。
+◎
+For all MathML elements, display: contents computes to display: none.
+</p>
+
+		</section>
+	</section>
+	<section id="box-guidelines">
+<h2 title=" Appendix C: Box Construction Guidelines for Spec Authors">付録 C. 仕様~策定者~向けの~box構築~指針</h2>
+
+<p>
+`この節は、仕様~策定者~向けの規範的でない指導である。^em
+◎
+This section is non-normative guidance for specification authors.
+</p>
+
+<ul>
+	<li>
+~boxを`塊~化$すると同時に`行内~化$することは できない。
+そのようになり得る場合、どっちになるか定義すること。
+◎
+A box cannot be blockified and inlinified at the same time; if such a thing would occur, define which wins over the other.
+</li>
+	<li>
+`塊~化$できるのは、`首要~box$か`匿名~box$に限られる：
+塊~化は、要素の算出d値に影響するので，その`首要~box$の型を決定する。
+◎
+Non-principal non-anonymous boxes can’t be blockified: blockification affects the element’s computed values and thus determines the type of its principal box.
+</li>
+	<li>
+自身の内容を`塊~化$する~boxは、`行内~level$の内容を直に包含できない。
+そのような要素の中で生成されるどの［
+~box／~text連なり
+］も，`塊~化$されるか, `匿名$な`塊~容器$内に包装されるモノトスル。
+◎
+Boxes which blockify their contents can’t directly contain inline-level content; any boxes or text runs generated within such an element must be blockified or wrapped in an anonymous block container.
+</li>
+	<li>
+自身の内容を`行内~化$する~boxは、`塊~level$の~boxを直に包含できない。
+そのような要素の中で生成されるどの~boxも`行内~level$になるモノトスル。
+◎
+Boxes which inlinify their contents can’t directly contain block-level boxes; any boxes generated within such an element must be inline-level.
+</li>
+	<li>
+~boxのうち，根本的に`独立な整形~文脈$を確立できないもの（置換されない行内など）は、`独立な整形~文脈を確立-$しないモノトスル。
+その前に塊~化するか，あるいは その~box型を`独立な整形~文脈$を確立できるものに変更すること。
+◎
+Boxes that fundamentally cannot establish an independent formatting context (such as non-replaced inlines) must not be asked to establish an independent formatting context. Blockify them first, or otherwise change their box type to one that can establish an independent formatting context.
+</li>
+</ul>
+
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p>
+年月に渡り，~box生成における異質な詳細を~~分別しようと試みてきた 多くの方々に。
+特に、目標達成には至らなかったが，現在の仕様の基礎になった，
+`Bert Bos^en 氏による `display-model^p, `display-role^p についての最後の試みに。
+`CSS2$r <a href="~CSS2VISUREN#visuren">§ 視覚-整形~model</a>
+に対する~~容赦なき~~考査により，混沌から~~一定の秩序を導き出された `Anton Prowse^en 氏に。
+この仕様における数多の繊細な区別と誤りを選り分けられた `Oriol Brufau^en 氏に。
+~feedbackを寄せられた、次の方々にも：
+◎
+We would like to thank the many people who have attempted to separate out the disparate details of box generation over the years, most particularly Bert Bos, whose last attempt with display-model and display-role didn’t get anywhere, but primed us for the current spec; Anton Prowse, whose relentless assault on CSS2.1 Chapter 9 forced some order out of the chaos; and Oriol Brufau, who teased apart dozens of fine distinctions and errors in this spec.＼
+</p>
+
+<p lang="en-x-a0">
+Honorable mentions also go to David Baron, Mats Palmgren, Ilya Streltsyn, and Boris Zbarsky for their feedback.
+</p>
+
+	</section>
+	<section id="changes">
+<h2 title="Changes">変更点</h2>
+
+<p>
+<a href="~TR/2019/CR-css-display-3-20190711/">2019年 7月 11日 勧告候補</a>
+からの変更点は【更新箇所の引用は省略する】：
+◎
+Changes since the 11 July 2019 Candidate Recommendation include:
+</p>
+
+<ul>
+	<li id="change-containing-block">
+`包含塊$の定義の中に，
+`CSS2$r から追加的な注釈文を併合した。
+◎
+Merged in additional prose from [CSS2] into the definition of containing block.
+</li>
+	<li id="change-dom-ignore">
+~CSSの目的においては、要素や~text以外の~DOM~nodeは無視されることを明確化した。
+◎
+Clarified that, for the purpose of CSS, DOM nodes other than elements and text are ignored.
+◎
+(Some source documents start from more complex trees, such as the DOM, which can have comment nodes and other types of things. For the purposes of CSS, all of these additional types of nodes are ignored, as if they didn’t exist.)
+</li>
+	<li>
+用語集~内の絶対~位置決めに関係する定義を［
+改善-／移動-
+］した
+◎
+Improved/moved glossary definitions relating to absolute positioning.
+</li>
+</ul>
+
+<p>
+<a href="~TR/2018/CR-css-display-3-20180828/">2018年 8 月 28日 勧告候補</a>
+からの変更点は：
+◎
+Changes since the 28 August 2018 Candidate Recommendation include:
+</p>
+
+<ul>
+	<li id="change-parent">
+~box~treeの親子関係を定義した。
+`親~box$を見よ。
+◎
+Defined box tree parentage; see parent box.
+</li>
+	<li id="change-abspos">
+用語集に`絶対的に位置され$た〜の定義を追加した（参照し易くするため
+<a href="~CSS2VISUREN#absolute-positioning">CSS2 から複製した</a>
+）。
+◎
+Added definition of absolutely positioned to the glossary; copied from CSS2 for easier referencing.
+</li>
+	<li id="change-bidi-fragment">
+<a href="#intro">§ 序論</a>
+にて、様々な形の断片化への参照を追加した。
+◎
+Added cross-references to various forms of fragmentation in § 1 Introduction.
+</li>
+	<li id="change-table-grid-box">
+“~table~box”
+を
+“~table格子~box”
+に改称して，
+“~table包装~box”
+と判別し易くした。
+◎
+Renamed “table box” to “table grid box” to more easily distinguish from “table wrapper box”.
+</li>
+	<li id="change-body-propagation">
+初期`包含塊$に対する根~要素からの~prop値の伝播に
+“他が指定されない限り”
+を追加した
+— 残念ながら，~HTML `body$e 要素~用に特別な例外があるので。
+◎
+Added “unless otherwise specified” to root → initial containing block propagation, since there are some regrettable special exceptions for the HTML body element.
+</li>
+</ul>
+
+		<section id="changes-wd">
+<h3 title="Changes Prior to Candidate Recommendation Status">勧告候補に先立つ変更点</h3>
+
+<p>
+<a href="~CSSWG/css-display-3/issues-wd-2017">各~commentに対する処置集</a>もある。
+◎
+A Disposition of Comments is available.
+</p>
+
+<p>
+<a href="https://www.w3.org/TR/2018/WD-css-display-3-20180420/">2018 年 4 月 20 日 作業草案</a>
+からの変更点は：
+◎
+Changes since the 20 April 2018 Working Draft include:
+</p>
+
+<ul>
+	<li>
+`display:contents$p にされた要素は、
+`display:none^p として`挙動するのではなく^em，今や `display:none^p に算出される。
+（`2755$issue）
+◎
+Elements with display: contents that behave as display: none now compute to display: none. (Issue 2755)
+</li>
+	<li>
+ある種の整形~文脈たちが成す層において、`独立な整形~文脈$と “新たな” `整形~文脈$とが判別されるようにした。
+（`2597$issue, `1457$issue）
+◎
+Distinguished “new” formatting context from independent formatting context since certain formatting contexts layer. (Issue 2597, Issue 1457)
+</li>
+	<li>
+`独立な整形~文脈$を確立する`塊~box$上の `display$p の使用~値は、基準点を供し易くするため，
+`flow-root$v になるものと定義した。
+（`1550$issue）
+◎
+Defined that block boxes that establish an independent formatting context have a used display of flow-root, to provide an easier point of reference. (Issue 1550)
+</li>
+	<li>
+`display$p は~animate可能でないことを明確化した（離散的に~animate可能ではなく）。
+（`2938$issue）
+◎
+Clarified that display is not animatable (as opposed to discretely animatable). (Issue 2938)
+</li>
+	<li>
+編集上の細かい修正点。
+◎
+Minor editorial fixes.
+</li>
+</ul>
+
+<p>
+<a href="~TR/2017/WD-css-display-3-20170720/">2017 年 7 月 20 日付 作業草案</a>
+からの変更点は：
+◎
+Changes since the 20 July 2017 Working Draft include:
+</p>
+
+<ul>
+	<li>
+CSS2 との互換性を確保するため、［
+`inline-block$v ／ `inline flow-root^v
+］に対する`塊~化$用の規則を整備した（`1246$issue）
+— それに伴い、 `run-in flow-root^v の取扱いを合致するように更新した（`1715$issue）。
+◎
+Tightened up rules for the blockification of inline-block / inline flow-root to ensure compatibility with CSS2. (Issue 1246) Updated handling of run-in flow-root to match. (Issue 1715)
+</li>
+	<li>
+`display$p に対する `list-item$v ~keywordは最後に来るよう，文法を調整した。
+これは、期待される直列化~順序に影響する。
+（`1621$issue）
+◎
+Adjusted grammar of display to list the list-item keyword last. This affects the expected serialization order. (Issue 1621)
+</li>
+	<li>
+行内~整形~文脈を確立している塊~容器~内での［
+`塊~整形~文脈$と`行内~整形~文脈$との相互作用
+］について，より良い定義を追加した。
+（`1553$issue）
+◎
+Added better definition of interaction between block formatting contexts and inline formatting contexts in block containers that establish inline formatting contexts. (Issue 1553)
+</li>
+	<li>
+要素とその~boxの間で~prop値が反映される仕方をより明瞭に定義した（要素が複数の~boxを生成する事例において）。
+（`1643$issue）
+◎
+More clearly defined the way property values are reflected between an element and its boxes (in the case of an element generating multiple boxes). (Issue 1643)
+</li>
+	<li>
+空~text~objは、~CSS具現化~用には無視されることを明確化した。
+（`1808$issue）
+◎
+Clarified that empty text objects are ignored for CSS rendering. (Issue 1808)
+</li>
+	<li>
+`display$p による文書~意味論に対する効果は無いことを明確化した
+— これは~UAに共通的な~bugなので。
+（`2355$issue）
+◎
+Clarified that display has no effect on document semantics, since this is a common bug in UAs. (Issue 2355)
+</li>
+	<li>
+`display$p の`算出d値$の定義における誤りを修正した（様々な~propにより誘発される`塊~化$, `行内~化$の規則に因り，それは
+“`as specified^en” 【指定されたとおり／指定d値】
+とは言えないので）。
+（`1716$issue）
+◎
+Fixed error in definition of display’s computed value (which is definitely not “as specified”, due to blockification and inlinification rules triggered by various properties). (Issue 1716)
+</li>
+	<li>
+`文書~順序$の定義を追加した。
+◎
+Added definition for document order.
+</li>
+	<li>
+<a href="#unbox">付録 B</a>
+の `display:contents$p に対する詳細~に無かった~SVG要素を追加した（`2118$issue）。
+~SVG属性による効果を明確化した（`2502$issue）。
+~MathML用の挙動も追加した（`2167$issue）。
+◎
+Added missing SVG elements to Appendix B’s details on display: contents (Issue 2118), clarified effect of SVG attributes (Issue 2502), and defined behavior for MathML (Issue 2167).
+</li>
+	<li>
+将来~仕様の策定者~向けに，`匿名~box$の構築~規則について いくつかの<a href="#box-guidelines">指針</a>を追加した。
+（`1643$issue）
+◎
+Added some guidance to future spec authors of anonymous box construction rules. (Issue 1643)
+</li>
+	<li>
+“整形~文脈になる”
+についての節を、それが利用されている
+<a href="~CSSCONTAIN#">CSS Containment</a>
+に戻した。
+【この用語は、その仕様からも除去された。】
+◎
+Pushed the section about “becoming a formatting context” back to CSS Containment where it is used.
+</li>
+	<li>
+様々な細かい言い回しの修正点と明確化。
+◎
+Various minor wording fixes and clarifications.
+</li>
+</ul>
+
+<p>
+<a href="~TR/2017/WD-css-display-3-20170126/">2017 年 1 月 26 日付 作業草案</a>
+からの変更点は：
+◎
+Changes since the 26 January 2017 Working Draft include:
+</p>
+
+<ul>
+	<li>
+`inline-list-item^v 値は除去した
+— `inline list-item^v に等価なので。
+◎
+Remove inline-list-item value that is equivalent to inline list-item.
+</li>
+	<li>
+`display:contents$p の文脈における挙動を定義するため、`要素~tree$に`~text~node$の観念を追加するとともに，`~box~tree$に`~text連なり$の観念を追加した。
+（`19$issWD, `32$issWD）
+◎
+Added the notion of “text nodes” to the element tree, and “text runs” to the box tree to define behavior in the context of display: contents. (Issue 19, Issue 32)
+</li>
+	<li>
+根~要素は “~flow内にある” ものと定義した。
+（`3$issWD）
+◎
+Defined that the root element is “in flow”. (Issue 3)
+</li>
+	<li>
+`first-line$pe, `first-letter$pe と `run-in$v との相互作用を定義した。
+（`5$issWD, `42$issWD）
+◎
+Defined interaction of ::first-line/::first-letter and run-in. (Issue 5, Issue 42)
+</li>
+	<li>
+［
+塊／行内／同行見出し
+］は、`~flow~layout$における挙動のみを規定することを明確化した。
+それは、他の文脈では無視される。
+◎
+Clarified that block/inline/run-in only dictates behavior in flow layout; it is ignored in other contexts.
+</li>
+	<li>
+同行見出しは行内~boxの一種である
+— 行内~boxの “様なもの” ではなく。
+◎
+Run-ins are a type of inline box, not just "like" an inline box.
+</li>
+	<li>
+同行見出しによる~box~treeの繰り替えが再帰性を欠いていたのを修正した。
+（`45$issWD）
+◎
+Fixed the lack of recursion in of run-in’s box-tree munging. (Issue 45)
+</li>
+	<li>
+`display:contents$p が
+“非通例的~要素” にどう働くかを~~述べる付録を追加した。
+（`8$issWD, `18$issWD）
+◎
+Added an appendix on how display: contents works on “unusual elements”. (Issue 8, Issue 18)
+</li>
+	<li>
+`塊~化$と`行内~化$の規則を
+— 特に~layout内部の表示~型の取扱いについて —
+修正した
+（`35$issWD, `57$issWD）
+◎
+Fix blockification and inlinification rules, particularly handling of layout-internal types. (Issue 35, Issue 57)
+</li>
+	<li>
+~box~treeにおける様々な修復の相互作用を明確化した。
+（`38$issWD, `48$issWD）
+◎
+Clarified interaction of various box tree fixups. (Issue 38, Issue 48)
+</li>
+	<li>
+整形~文脈になることの定義を追加した。
+◎
+Added the definition of becoming a formatting context.
+</li>
+	<li>
+諸々の細かい修正点や明確化。
+◎
+Miscellaneous minor fixes and minor clarifications.
+</li>
+</ul>
+
+<p>
+<a href="~CSSWG/css-display-3/issues-wd-2017">各~commentに対する処置集</a>
+もある。
+◎
+A Disposition of Comments is also available.
+</p>
+
+<p>
+<a href="~TR/2015/WD-css-display-3-20151015/">2015 年 10 月 15 日付 作業草案</a>
+からの変更点は：
+◎
+Changes since the 15 October 2015 Working Draft include:
+</p>
+
+<ul>
+	<li>
+`box-suppress^p （または `display-or-not^p ）
+~propは、利用事例に関する論をもっと深めるため，この仕様の次の~levelへ先送りされた。
+◎
+Deferred the box-suppress/display-or-not property to the next level of Display, in order to provide time for further discussion of use cases.
+</li>
+	<li>
+非通例的~要素
+— 置換d要素, ~form~controlなど —
+の内容に対する
+`display:contents$p による効果を指定した。
+◎
+Specified the effects of display: contents on unusual elements such as replaced elements and form controls.
+</li>
+	<li>
+`display:contents$p に因り，要素の~boxが生成されないとしても、依然として，要素に対する `before$pe `after$pe 疑似要素による自前の~boxは存在することを明確化した。
+◎
+Clarified that an element’s ::before and ::after pseudo-elements still exist if its own box is not generated due to display: contents.
+</li>
+	<li>
+`display:contents$p にされようが、~event伝播は影響されないことを明確化した。
+◎
+Clarified that event bubbling is not affected by display: contents.
+</li>
+	<li>
+［
+同行見出し, ~flow外の要素,  `first-letter$pe
+］の間の相互作用を明確化した。
+◎
+Clarified interaction of run-ins with out-of-flow elements and ::first-letter.
+</li>
+	<li>
+［
+`table-caption$v ／ `table-cell$v
+］の`内縁~表示~型$には `flow-root$v を利用するように切り替えた
+— それらは常に、整形~文脈の根を形成するので。
+◎
+Switched table-caption and table-cell to use flow-root as their inner display type, since they always form a formatting context root.
+</li>
+	<li>
+残りの課題は閉鎖して，~risk下~listを追加した。
+◎
+Closed off remaining issues and added at-risk list.
+</li>
+</ul>
+
+<p>
+<a href="http://www.w3.org/TR/2015/WD-css-display-3-20150721/">2015 年 7 月 21 日付 作業草案</a>
+からの変更点は：
+◎
+Changes since the 21 July 2015 Working Draft include:
+</p>
+
+<ul>
+	<li>
+`~flow内$, `~flow外$
+の定義を用語集に追加した。
+◎
+Added definitions for in-flow and out-of-flow to glossary.
+</ul>
+
+<p>
+<a href="http://www.w3.org/TR/2014/WD-css-display-3-20140911/">2014 年 9 月 11 日付 作業草案</a>
+からの変更点は：
+◎
+Changes since the 11 September 2014 Working Draft include:
+</p>
+
+<ul>
+	<li>
+`display-inside^p, `display-outside^p, `display-extras^p
+下位propを除去した
+— 単に `display^p が~~複合的な値をとるようにすることへの支持を受けて。
+（これは、何を組み合せれるかについて，拘束を課すことにより行われた。
+この仕様の将来~levelでは、不必要または求まれなくなったなら，これらの制約は緩められるかもしれない。）
+◎
+Removed display-inside, display-outside, and display-extras longhands, in favor of just making display multi-value. (This was done to impose constraints on what can be combined. Future levels of this specification may relax some or all of those restrictions if they become unnecessary or unwanted.)
+</li>
+	<li>
+［
+~flow~layout`表示~型$をより良く表し,
+要素を明示的に `~BFC$ 根に切り替えられるようにする
+］ための`内縁~表示~型$として、
+`flow$v, `flow-root$v
+が創出された。
+（これは、この目的を成遂げることを意図する
+<samp class="css">`after$pe { `clear^p: `both^v; }</samp>
+や
+<samp class="css">`overflow$p: `hidden^v</samp>
+の様な~hackの必要を無くすはずである。）
+◎
+Created the flow and flow-root inner display types to better express flow layout display types and to create an explicit switch for making an element a BFC root. (This should eliminate the need for hacks like ::after { clear: both; } and overflow: hidden that are intended to accomplish this purpose.)
+</li>
+</ul>
+
+		</section>
+	</section>
+	<section id="priv-sec">
+<h2 title="Privacy and Security Considerations">~privacyと~security上の考慮点</h2>
+
+<p>
+この仕様が導入する~privacyや~security上の新たな考慮点はない。
+◎
+This specification introduces no new privacy or security considerations.
+</p>
+
+	</section>
+</main></div>
+

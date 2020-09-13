@@ -1,0 +1,1020 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>Beacon （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-w3c.css" type="text/css" />
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+Util.ready = function(){
+	const source_data = {
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w~一-鿆あ-ん]+|`(.+?)([$@!\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#bib-${key.toLowerCase()}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'I':
+	href = `#${key}`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '!':
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+●●options
+
+spec_title:Beacon
+spec_date:2020-01-30
+trans_update:2020-02-01
+source_checked:160204
+page_state_key:TIMING
+original_url:https://w3c.github.io/beacon/
+spec_status:ED
+ref_id_prefix:bib-
+ref_id_lowercase:true
+copyright:2019,permissive
+trans_1st_pub:2014-04-22
+
+●●class_map
+E:error
+h:header
+st:status
+et:event-type
+M:method
+
+●●tag_map
+I:code
+m:code
+c:code
+et:code
+h:code
+E:code
+v:var
+st:code
+M:code
+b:b
+i:i
+
+●●original_id_map
+normative:normative-references
+informative:informative-references
+
+●●mdn_urls
+dom-navigator-sendbeacon:API/Navigator/sendBeacon
+
+●●link_map
+
+
+I.BodyInit:~FETCH#bodyinit
+I.USVString:~WEBIDL#idl-USVString
+I.Navigator:~HTMLnavigator#navigator
+I.Blob:~FILEAPI#blob
+
+sendBeacon:#dom-navigator-sendbeacon
+m.sendBeacon():#dom-navigator-sendbeacon
+m.visibilityState:~PAGE-VISIBILITY#dom-document-visibilitystate
+	:~PAGE-VISIBILITY#visibilitystate-attribute
+l.hidden:~PAGE-VISIBILITY#dom-visibilitystate-hidden
+
+v.data:#data-parameter
+v.url:#url-parameter
+
+et.visibilitychange:~PAGE-VISIBILITY#dfn-visibilitychange
+	＊？et.unload:~PAGE-VISIBILITY#dfn-unload
+
+h.Access-Control-Allow-Credentials:~FETCH#http-access-control-allow-credentials
+h.Access-Control-Allow-Headers:~FETCH#http-access-control-allow-headers
+h.Access-Control-Allow-Origin:~FETCH#http-access-control-allow-origin
+
+	~THROW:~WEBIDL#dfn-throw
+
+	文書:~DOM4#concept-document
+
+enV.~API用~基底~URL:~WAPI#api-base-url
+入口~設定群~obj:~WAPI#entry-settings-object
+生成元:~ORIGIN#concept-origin
+
+~CORS予行~要請:~FETCH#cors-preflight-request
+要請:~FETCH#concept-request
+~fetch:~FETCH#concept-fetch
+~HTTP~network-or-cache~fetch:~FETCH#http-network-or-cache-fetch
+~UAによる制限s:#_limits-on-amount-of-data
+本体と内容~型を抽出する:~FETCH#concept-bodyinit-extract
+~CORS安全とされる要請~header:~FETCH#cors-safelisted-request-header
+~URL構文解析する:~URL1#concept-url-parser
+~scheme:~URL1#concept-url-scheme
+~header~list:~FETCH#concept-header-list
+~headerを付加する:~FETCH#concept-header-list-append
+
+rq.~method:~FETCH#concept-request-method
+rq.~URL:~FETCH#concept-request-url
+rq.~header~list:~FETCH#concept-request-header-list
+rq.生成元:~FETCH#concept-request-origin
+rq.行先:~FETCH#concept-request-destination
+rq.本体:~FETCH#concept-request-body
+rq.~keepalive~flag:~FETCH#request-keepalive-flag
+rq.~mode:~FETCH#concept-request-mode
+rq.資格証~mode:~FETCH#concept-request-credentials-mode
+
+	~payload本体
+
+st.200:~HTTPrs#status.200
+st.204:~HTTPrs#status.204
+
+
+●●words_table1
+
+
+●●words_table
+
+	●netword／fetch
+Beacon:
+beacon:
+Fetch:
+IP:
+network-or-cache::::ネットワーク-or-キャッシュ
+payload::::ペイロード
+	payload:entity
+keepalive:
+予行:preflight::~
+宛先:destination:~
+発行-:issue::~
+発行:issuing::~
+	~~発行:make／publish
+伝送d:transmitted::伝送
+
+	●処理
+suspend:
+kill:
+消化-:flush:~
+発する:emitする:~
+schedule::::スケジュール
+	他を阻まない:non-blocking
+阻ng:blocking::他を阻む:他をブロックする
+集約-:coalesce:~
+競う:competeする:~
+	competing
+競合:contention:~
+稼働:running:~
+	^en:run to completion
+定期的:periodical:~
+素早く:quickに:~
+適時に:timely mannerで:~
+優先度:priority:~
+	高~優先度な:high-priority／higher priority／high priority
+	優先度をあてがう:prioritize
+	cancelling
+仕事:work:~
+間引く:skip または throttle する:~
+時間厳守な:time-criticalな:時間に厳しい
+時間:time:~
+	秒単位: in seconds
+処理待ちの:pending::~
+実行ng:executing:実行
+終了-:terminate:~
+
+	何もしない~loopを回す:inserting no-op busy loops
+	回す:spinning
+
+	●UX／保安／環境
+background::::バックグラウンド
+不定期:indefinite:~
+高価な:costly:~
+反応ng:reacting:反応
+CPU:
+投函-:post::~::ポスト
+害-:hurt:~
+offline::::オフライン
+	安全とされる:safelisted
+homescreen:
+	閲覧~browsing
+携帯:mobile::~::モバイル
+電力:energy:~
+	interactive
+in-flight:
+quota::::クォータ
+喪失:loss:~
+解析:analytics:~
+計測:measurement:~
+活動:activity:~
+
+	●仕様
+	-:algorithm
+不可欠:critical:~
+不一致:mismatch:~
+観点:perspective:~
+透明性:transparency:~
+	責を負う:responsible
+	引き換え:tradeoff
+	それ以上の:not subject to any additional
+	足りな:not have sufficient
+	渋々:tough choice
+	普及している:widespread
+
+	●仕様（動詞
+採用-:adopt:~
+	adoption
+壊され:breakされ:~
+	:breaking
+表面化-:surface:~
+極力抑える:minimalにする:~
+強いら:forceさ:~
+	:forcing
+
+	intent
+	-:indicate
+	選んでいる:opt for
+	し易く:help
+	不要にする:eliminate the need
+	できる-:enable
+	しないようにする:prevent
+	responsible
+
+	●未分類
+
+入口:entry::~
+率:rate:~
+unload:
+	-:byte stream
+property::::プロパティ
+一方向の:one-way:~
+切替えた:switchした:切り替えた
+計算-:compute:~
+超過-:exceed:~
+
+	●指示語
+	種々の:various
+	等しい:equal
+	他の:different
+	起-:happen
+	量:amount
+	高い／高:high／higher
+	field
+	lead
+	leave
+	ほとんど:most
+	parameter
+
+	run
+
+	true
+
+
+●●ref_normative
+
+[DOM]
+    DOM Standard. Anne van Kesteren. WHATWG. Living Standard. URL: https://dom.spec.whatwg.org/
+[FETCH]
+    Fetch Standard. Anne van Kesteren. WHATWG. Living Standard. URL: https://fetch.spec.whatwg.org/
+[HTML]
+    HTML Standard. Anne van Kesteren; Domenic Denicola; Ian Hickson; Philip Jägenstedt; Simon Pieters. WHATWG. Living Standard. URL: https://html.spec.whatwg.org/multipage/
+[PAGE-VISIBILITY-2]
+    Page Visibility Level 2. Ilya Grigorik; Arvind Jain; Jatinder Mann. W3C. 17 October 2017. W3C Proposed Recommendation. URL: https://www.w3.org/TR/page-visibility-2/
+[RFC2119]
+    Key words for use in RFCs to Indicate Requirement Levels. S. Bradner. IETF. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119
+[RFC8174]
+    Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words. B. Leiba. IETF. May 2017. Best Current Practice. URL: https://tools.ietf.org/html/rfc8174
+[URL]
+    URL Standard. Anne van Kesteren. WHATWG. Living Standard. URL: https://url.spec.whatwg.org/
+[WEBIDL]
+    Web IDL. Boris Zbarsky. W3C. 15 December 2016. W3C Editor's Draft. URL: https://heycam.github.io/webidl/
+
+●●ref_informative
+
+[SERVICE-WORKERS]
+    Service Workers 1. Alex Russell; Jungkee Song; Jake Archibald; Marijn Kruisselbrink. W3C. 19 November 2019. W3C Candidate Recommendation. URL: https://www.w3.org/TR/service-workers-1/
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">Beacon</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/beacon/
+最新の編集者草案
+	https://w3c.github.io/beacon/
+テスト一式
+	https://w3c-test.org/beacon/
+編集
+	<a href="igrigorik@gmail.com">Ilya Grigorik</a> (Google)
+	<a href="alois.reitbauer@compuware.com">Alois Reitbauer</a> ( Compuware Corp.)
+	<a href="arvind@google.com">Arvind Jain</a> (Google Inc.) (Until January 2015)
+	<a href="jmann@microsoft.com">Jatinder Mann</a> (Microsoft Corp.) (Until February 2014)
+Participate
+	<a href="https://github.com/w3c/beacon/">GitHub w3c/beacon</a>
+	<a href="https://github.com/w3c/beacon/issues">File a bug</a>
+	<a href="https://github.com/w3c/beacon/commits/gh-pages/index.html">Commit history.</a>
+	<a href="https://github.com/w3c/beacon/pulls/">Pull requests</a>
+Mailing list
+	<a href="https://lists.w3.org/Archives/Public/public-web-perf/">public-web-perf@w3.org</a>
+実装
+	<a href="http://caniuse.com/#feat=beacon">Can I use Beacon?</a>
+発行者
+	<a href="https://www.w3.org/webperf/">Web Performance</a> Working Group
+
+</script>
+
+</head>
+
+<body>
+
+<header>
+
+	<hgroup>
+<h1>Beacon</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この仕様は、［
+~dataの送達を，非同期的かつ他を阻まない（ `non-blocking^en ）ように~scheduleする
+］ために~site開発者が利用できる~interfaceを定義する。
+それは、他の時間厳守な演算との資源~競合を最小限にしつつ，そのような要請が処理され, 宛先へ送達されることを確保する。
+◎
+This specification defines an interface that web developers can use to schedule asynchronous and non-blocking delivery of data that minimizes resource contention with other time-critical operations, while ensuring that such requests are still processed and delivered to destination.
+</p>
+
+	</section>
+	<section id="sotd">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公の複製です…
+【以下、この節の他の内容は <a href="w3c-common-ja.html#status">W3C 日本語訳 共通ページ</a>／冒頭の仕様メタデータに委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="introduction">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+~web~appは、［
+~event ／ 状態の更新 ／ 解析
+］を~serverへ報告するために，~HTTP要請の発行を必要とすることが多い。
+そのような要請には、結果の~HTTP応答を~client上で処理することは，概して要求されない（例： 応答は、その~HTTP応答~codeは［
+`204$st ／ `200$st
+］で，本体は空）。
+また、［
+~network資源／計算-資源
+］を，［
+不可欠な資源の~fetching,
+入力に対する反応ng, ~animationの稼働
+］などの他の高~優先度な演算と競うべきでない。
+しかしながら、そのような一方向の要請（ ~beacon ）はまた，不可欠な［
+~app／計測
+］~dataを送達する責を負うので、開発者は，送達を確保するために，高価な~methodの利用を強いられている：
+◎
+Web applications often need to issue requests that report events, state updates, and analytics to one or more servers. Such requests typically do not require response processing on the client (e.g. result in 204, or 200 HTTP response codes with an empty response body), and should not compete for network and compute resources with other high priority operations such as fetching critical resources, reacting to input, running animations, and so on. However, such one-way requests (beacons), are also responsible for delivering critical application and measurement data, forcing developers to use costly methods to ensure their delivery:
+</p>
+
+<ul>
+	<li>
+開発者は、送達~率を改善するため，それらの送達を集約-／遅延する代わりに，各~beaconを即時に送達することを選んでいる。
+送達を遅延すると、~beacon要請を成功裡に完了するための時間が足りなくなり，重要な~app~dataを喪失するかもしれないので。
+◎
+Developers opt for immediate delivery of each beacon, instead of coalescing and deferring their delivery because this provides improved delivery rates. Deferring delivery may mean that the beacon request may not have sufficient time to complete successfully, which leads to loss of important application data.
+</li>
+	<li>
+開発者が阻ng要請の発行を選んでいる結果、利用者~体験が害されている。
+例えば、同期的 `XMLHttpRequest^I，あるいは
+~UAによる時間厳守な演算（例： `click^et, `unload^et, その他の~handler ）の実行ngを阻むような技法（何もしない~loopを回すなど）を利用して。
+阻ng挙動は、~pageが~systemにより［
+~unload ／ ~suspend ／ ~kill
+］されても， ~UA（または~OS）が要請を取消せないようにして、送達~率を改善するために利用されている。
+◎
+Developers opt for issuing blocking requests via synchronous XMLHttpRequest's, inserting no-op busy loops, or using other techniques that block the user agent from executing time-critical operations (e.g. click, unload, and other handlers) and hurt the user experience. The blocking behavior is used to provide improved delivery rate, as it prevents the user agent and the operating system from cancelling the request if the page is unloaded, suspended, or killed by the system.
+</li>
+</ul>
+
+<p>
+上述のように，送達~要件と処理~要件には不一致があるため、ほとんどの開発者たちは，［
+普及している，利用者~体験を害するような阻ng技法
+］を渋々採用している。
+この仕様は、~web開発者が［
+そのような要請が処理され, 宛先へ送達される
+］ことを確保しつつ［
+他の，時間厳守な演算との資源~競合
+］も最小限にするような，［
+非同期的かつ他を阻まない，~dataの送達
+］を~scheduleするために利用できる~interfaceを定義する：
+◎
+The mismatch between above delivery and processing requirements leaves most developers with a tough choice and widespread adoption of blocking techniques that hurt the user experience. This specification defines an interface that web developers can use to schedule asynchronous and non-blocking delivery of data that minimizes resource contention with other time-critical operations, while ensuring that such requests are still processed and delivered to destination:
+</p>
+
+<ul>
+	<li>
+~beacon要請には、［
+時間厳守な演算 ／ 高~優先度な~network要請
+］と競うことを避けるように優先度があてがわれる。
+◎
+Beacon requests are prioritized to avoid competing with time-critical operations and higher priority network requests.
+</li>
+	<li>
+携帯~機器~上の電力~利用を最適化するために、~UAは，~beacon要請を効率的に集約することもできる。
+◎
+Beacon requests may be efficiently coalesced by the user agent to optimize energy use on mobile devices.
+</li>
+	<li>
+~beacon要請は，~pageが~unloadされる前に起動されることが保証されるので、［
+阻ng要請や，利用者~対話~eventの処理を阻むような他の技法
+］を要求することなく，完了まで走る（ `run to completion^en ）ことが許容される。
+◎
+Beacon requests are guaranteed to be initiated before page is unloaded and are allowed to run to completion without requiring blocking requests or other techniques that block processing of user interactive events.
+</li>
+</ul>
+
+<div class="example">
+
+<p>
+`sendBeacon()$m ~methodを利用して，［
+~event ／ ~click ／ 解析
+］~dataを送達する例を示す：
+◎
+The following example shows use of the sendBeacon() method to deliver event, click, and analytics data:
+</p>
+
+<pre class="lang-html">
+&lt;html&gt;
+&lt;script&gt;
+  /* <span class="comment">
+~client側の~eventを記録するために，（他を阻まない）~beaconを発する
+◎
+emit non-blocking beacon to record client-side event
+</span> */
+  function reportEvent(%event) {
+    var %data = JSON.stringify({
+      event: %event,
+      time: performance.now()
+    });
+    navigator.sendBeacon('/collector', %data);
+  }
+
+  /* <span class="comment">
+~pageが~background状態に遷移する（ Page Visibility ~API）に伴い，~session解析を伴う（他を阻まない）~beaconを発する
+◎
+emit non-blocking beacon with session analytics as the page transitions to background state (Page Visibility API)
+</span> */
+
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'hidden') {
+      var %sessionData = buildSessionReport();
+      navigator.sendBeacon('/collector', %sessionData);
+    }
+  });
+&lt;/script&gt;
+
+&lt;body&gt;
+ &lt;a href='http://www.w3.org/' onclick='reportEvent(this)'&gt;
+ &lt;button onclick="reportEvent('some event')"&gt;Click me&lt;/button&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p>
+上のどの~beaconも，他を阻まない。
+</p>
+
+</div>
+
+<p class="note">
+上の例は、~session~dataの送達を誘発するために，
+`visibilitychange$et ~event `PAGE-VISIBILITY-2$r を利用する。
+この~eventは、~pageが~background状態に遷移するとき（例：
+利用者が他の~appに切替えたとき, ~homescreenに戻ったとき, 等々），あるいは~unloadされているとき，携帯~機器~上で発火されることが保証される唯一の~eventである。
+開発者は、 `unload^et ~eventに依拠するのは避けるべきである
+— それは、~pageが~background状態にあるとき（すなわち， `visibilityState$m は `hidden$l ）には発火されず，処理-は携帯~OSにより終了されるので。
+◎
+Above example uses visibilitychange event defined in [PAGE-VISIBILITY-2] to trigger delivery of session data. This event is the only event that is guaranteed to fire on mobile devices when the page transitions to background state (e.g. when user switches to a different application, goes to homescreen, etc), or is being unloaded. Developers should avoid relying on unload event because it will not fire whenever a page is in a background state (i.e. visibilityState equal to hidden) and the process is terminated by the mobile OS.
+</p>
+
+<p>
+`sendBeacon()$m ~methodを介して起動される要請は、時間厳守な仕事［
+を阻む／と競う
+］ことはない
+— ~UAは，~network効率性を改善するように優先度をあてがえるので、阻ng演算で~beacon~dataの送達を確保する必要はなくなる。
+◎
+The requests initiated via the sendBeacon() method do not block or compete with time-critical work, may be prioritized by the user agent to improve network efficiency, and eliminate the need to use blocking operations to ensure delivery of beacon data.
+</p>
+
+<p>
+`sendBeacon()$m は、次を意図するものではない：
+◎
+What sendBeacon() does not do and is not intended to solve:
+</p>
+
+<ul>
+	<li>
+~beacon要請は、~offline~storageや送達に対する特別な取扱いは供さない。
+それは，他の要請と同様であり、~offline機能性を供するために必要とあれば， `SERVICE-WORKERS$r と組合されてもよい。
+◎
+The sendBeacon() method does not provide special handling for offline storage or delivery. A beacon request is like any other request and may be combined with [SERVICE-WORKERS] to provide offline functionality where necessary.
+</li>
+	<li>
+~beacon要請は、~background同期法や, 転送~能力を供するために意図されたものではない。
+~beacon要請を素早くかつ適時に完了できることを確保するため、~UAは，受容する最大~payload~sizeを制約する。
+◎
+The sendBeacon() method is not intended to provide background synchronization or transfer capabilities. The user agent restricts the maximum accepted payload size to ensure that beacon requests are able to complete quickly and in a timely manner.
+</li>
+	<li>
+要請~methodを~custom化したり，要請／応答における他の
+<a href="#sec-processing-model">処理~prop</a>
+を変更する能は供さない。
+そのような要請~用に既定のものでない設定群を要する~appは、
+`FETCH$r ~APIを利用して，
+`~keepalive~flag$rqは ~T にするべきである。
+◎
+The sendBeacon() method does not provide ability to customize the request method, provide custom request headers, or change other processing properties of the request and response. Applications that require non-default settings for such requests should use the [FETCH] API with keep-alive flag set to true.
+</li>
+</ul>
+
+	</section>
+	<section id="conformance-requirements">
+<h2 title="Conformance requirements">2. 適合性の要件</h2>
+
+<p class="trans-note">【
+この節の他の内容は
+<a href="w3c-common-ja.html#conformance" >W3C 日本語訳 共通ページ</a>
+に委譲
+】</p>
+
+		<section id="terminology">
+<h3 title="Dependencies">2.1. 依存関係</h3>
+
+<p class="trans-note">【
+この節の内容は省略する。
+<a href="#references">他の仕様</a>が定義する用語への~~参照には、それらの仕様の中を指す~linkを直にあてがうことにする。
+】</p>
+
+		</section>
+	</section>
+	<section id="sec-beacon">
+<h2 title="Beacon">3. ~beacon</h2>
+
+		<section id="sec-sendBeacon-method">
+<h3 title="sendBeacon() Method">3.1. `sendBeacon()^m ~method</h3>
+
+<pre class="idl">
+partial interface `Navigator$I {
+    boolean `sendBeacon$(
+        `USVString$I %url,
+        optional `BodyInit$I? %data = null
+    );
+};
+</pre>
+
+<p>
+`sendBeacon()@m
+~methodは、次の規則に則って，［
+`data@v 引数（ `BodyInit$I 型）に供された~data
+］を［
+`url@v 引数（ `USVString$I 型）に供された~URL
+］へ向けて伝送する：
+◎
+The sendBeacon() method transmits data provided by the data parameter to the URL provided by the url parameter:
+</p>
+
+<ul>
+	<li id="_limits-on-amount-of-data">
+~UAは，~beacon要請が素早くかつ適時に完了することを確保するため、~fetchを起動する際には，要請の［
+`~keepalive~flag$rq ~SET ~T
+］にして，要請が~queueできる `data$v 量を制約するモノトスル。
+この量は、`~HTTP~network-or-cache~fetch$にて定義される。
+【具体的には、 64KiB】
+◎
+The user agent must initiate a fetch with keepalive flag set, which restricts the amount of data that can be queued by such requests to ensure that beacon requests are able to complete quickly and in a timely manner.
+</li>
+	<li>
+~UAは、文書の `visibilityState$m `PAGE-VISIBILITY$r が `hidden^l に遷移するときには、すべての~beacon要請に対し，即時に伝送を~scheduleした上で、そのような要請すべてが他の［
+時間厳守な／高~優先度な
+］仕事を阻むことなく，完了まで走る（ `run to completion^en ）ことを許容するモノトスル。
+◎
+The user agent must schedule immediate transmission of all beacon requests when the document visibilityState ([PAGE-VISIBILITY]) transitions to hidden, and must allow all such requests to run to completion without blocking other time-critical and high-priority work.
+</li>
+	<li>
+~UAは、他の［
+時間厳守な／高~優先度な
+］仕事との（ ~CPU ／ ~network の）資源~競合を最小限にするために，供された~dataの伝送を~scheduleするベキである。
+◎
+The user agent should schedule transmission of provided data to minimize resource (CPU and network) contention with other time-critical and high priority work.
+</li>
+	<li>
+~UAは、［
+~network／電力
+］効率性を最適化するために，供された~dataの伝送を遅延してもヨイ
+— 例えば、~network~interfaceが作動中ならば即時に送達し，そうでなければ作動中になるまで待機するなど。
+しかしながら，~UAは、伝送を不定期に遅延するベキでない
+— 他の~network活動がないときでも，処理待ちの伝送は定期的に消化されることを確保するベキである。
+◎
+The user agent may delay transmission of provided data to optimize network and energy efficiency - e.g. deliver immediately if the network is active, or wait until network interface is active. However, the user agent should not delay transmission indefinitely and ensure that pending transmissions are periodically flushed even if there is no other network activity.
+</li>
+</ul>
+
+<p class="note">注記：
+~Beacon~APIは、要請~callbackは供さない。
+~serverには、そのような要請に対する応答の本体は，省略することが奨励される（例えば、 `204$st <i>No Content</i> で応答するなど）。
+◎
+Beacon API does not provide a response callback. The server is encouraged to omit returning a response body for such requests (e.g. respond with 204 No Content).
+</p>
+
+<p>
+`sendBeacon()$m ~methodは、［
+伝送d~dataを~UAが成功裡に~queueできたならば ~T ／
+~ELSE_ ~F
+］を返す。
+◎
+Parameters
+◎
+url
+◎
+The url parameter indicates the URL where the data is to be transmitted.
+data
+◎
+The data parameter is the BodyInit data that is to be transmitted.
+◎
+The sendBeacon() method returns true if the user agent is able to successfully queue the data for transfer. Otherwise it returns false.
+</p>
+
+<p class="note">注記：
+~UAは、この~APIを介して送信できる~data量に制限sを課す：
+これは、そのような要請が成功裡に送達されつつ，利用者や~browserによる他の活動への影響iは極力抑えることを確保し易くするためである。
+~queueされる~data量が`~UAによる制限s$を超過することになる場合、この~methodは ~F を返す。
+返り値 ~T は、~browserが転送~用に~dataを~queueしたことを意味する。
+しかしながら、実際の~data転送は非同期的に行われる
+— この~methodは、~data転送が成功したかどうかについては，いかなる情報も供さない。
+◎
+The user agent imposes limits on the amount of data that can be sent via this API: this helps ensure that such requests are delivered successfully and with minimal impact on other user and browser activity. If the amount of data to be queued exceeds the user agent limit (as defined in http-network-or-cache-fetch), this method returns false; a return value of true implies the browser has queued the data for transfer. However, since the actual data transfer happens asynchronously, this method does not provide any information whether the data transfer has succeeded or not.
+</p>
+
+		</section>
+		<section id="sec-processing-model">
+<h3 title="Processing Model">3.2. 処理~model</h3>
+
+<p>
+<code>`sendBeacon$(%url, %data)</code>
+~method手続きは：
+◎
+On calling the sendBeacon() method with url and optional data, the following steps must be run:
+</p>
+
+<ol>
+	<li>
+%O ~LET `入口~設定群~obj$
+◎
+↓</li>
+	<li>
+%基底~URL ~LET %O の `~API用~基底~URL$enV
+◎
+Set base to the entry settings object's API base URL.
+</li>
+	<li>
+%生成元 ~LET %O の`生成元$
+◎
+Set origin to the entry settings object's origin.
+</li>
+	<li>
+%解析済み~URL ~LET `~URL構文解析する$( %url , %基底~URL )
+◎
+↓</li>
+	<li>
+~IF［
+%解析済み~URL ~EQ `失敗^i
+］~OR［
+%解析済み~URL の `~scheme$ ~NIN { `http^l, `https^l }
+］
+⇒
+~THROW `TypeError^E
+◎
+Set parsedUrl to the result of the URL parser steps with url and base. If the algorithm returns an error, or if parsedUrl's scheme is not "http" or "https", throw a "TypeError" exception and terminate these steps.
+</li>
+	<li>
+%~header~list ~LET 空な`~header~list$
+◎
+Let headerList be an empty list.
+</li>
+	<li>
+%~CORS~mode ~LET `no-cors^l
+◎
+Let corsMode be "no-cors".
+</li>
+	<li>
+( %伝送d~data, %内容~型 ) ~LET ( ~NULL, ~NULL )
+◎
+↓</li>
+	<li>
+<p>
+~IF［
+%data ~NEQ ~NULL
+］：
+◎
+If data is not null:
+</p>
+		<ol>
+			<li>
+( %伝送d~data, %内容~型 ) ~SET `本体と内容~型を抽出する$( %data, `~keepalive^i )
+◎
+Set transmittedData and contentType to the result of extracting data's byte stream with the keepalive flag set.
+</li>
+			<li>
+<p>
+~IF［
+%伝送d~data の量は［［
+`~keepalive~flag$rq が ~T にされた要請
+］が送信-用に~queueできる~data量に対する，`~UAによる制限s$
+］を超過している
+］
+⇒
+~RET ~F
+◎
+If the amount of data that can be queued to be sent by keepalive enabled requests is exceeded by the size of transmittedData (as defined in http-network-or-cache-fetch), set the return value to false and terminate these steps.
+</p>
+
+<p class="note">注記：
+~Beacon~APIを介して起動された要請に対しては、
+`~keepalive~flag$rq は自動的に ~T にされる。
+開発者は、~Fetch~APIの利用-時にも同じ~flagを手動で設定できる。
+この~flagが ~T にされたすべての要請は、~Fetch~APIの中で施行される，同じ~in-flight~quota制約を共有する。
+【すなわち、これらの処理待ち要請たちの総量にも一定の上限がある。】
+◎
+Requests initiated via the Beacon API automatically set the keepalive flag, and developers can similarly set the same flag manually when using the Fetch API. All requests with this flag set share the same in-flight quota restrictions that is enforced within the Fetch API.
+</p>
+			</li>
+			<li>
+<p>
+~IF［
+%内容~型 ~NEQ ~NULL
+］：
+◎
+If contentType is not null:
+</p>
+				<ol>
+					<li>
+~IF［
+%内容~型 は
+`Content-Type^h ~headerに対する`~CORS安全とされる要請~header$値でない
+］
+⇒
+%~CORS~mode ~SET `cors^l
+◎
+Set corsMode to "cors".
+◎
+If contentType value is a CORS-safelisted request-header value for the Content-Type header, set corsMode to "no-cors".
+</li>
+					<li>
+を %~header~list に`~headerを付加する$( `Content-Type^h / %内容~型 )
+◎
+Append a Content-Type header with value contentType to headerList.
+</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+	<li>
+~RET ~T
+— ただし、この手続きは並列的に継続する。
+◎
+Set the return value to true, return the sendBeacon() call, and continue to run the following steps in parallel:
+</li>
+	<li>
+%要請 ~LET 次の様に初期化された，新たな`要請$
+⇒＃
+`~method$rq ~SET `POST^M,
+`~URL$rq ~SET %解析済み~URL,
+`~header~list$rq ~SET %~header~list,
+`生成元$rq ~SET %生成元,
+`~keepalive~flag$rq ~SET ~T,
+`本体$rq ~SET %伝送d~data,
+`~mode$rq ~SET %~CORS~mode,
+`資格証~mode$rq ~SET `include^l
+◎
+Let req be a new request, initialized as follows:
+◎
+method
+• POST
+url
+• parsedUrl
+header list
+• headerList
+origin
+• origin
+keep-alive flag
+• true
+body
+• transmittedData
+mode
+• corsMode
+credentials mode
+• include
+</li>
+	<li>
+%要請 を用いて`~fetch$する
+◎
+Fetch req.
+</li>
+</ol>
+
+		</section>
+	</section>
+	<section id="privacy">
+<h2 title="Privacy and Security">4. ~privacyと~security</h2>
+
+<p>
+`sendBeacon()^m は、~data送達~用の非同期的かつ他を阻まない仕組みを供する。
+この~APIは、次に利用できる：
+◎
+The sendBeacon() interface provides an asynchronous and non-blocking mechanism for delivery of data. This API can be used to:
+</p>
+
+<ul>
+	<li>
+~client側の~eventを~serverに報告する。
+各 送達は、［
+他の対話的な仕事を阻まない, かつ~system資源が効率的に利用される
+］ように，~UAにより優先度があてがわれ, ~scheduleされる。
+◎
+Report client-side events to the server. The delivery is prioritized and scheduled by the user agent such that it does not block other interactive work and makes efficient use of system resources.
+</li>
+	<li>
+~pageが［
+~background状態に遷移する／~unloadされる
+］ときに、~UAを阻むことなく，~session~dataを報告する。
+◎
+Report session data when the page transitions to background state or is being unloaded, without blocking the user agent.
+</li>
+	<li>
+小さな~payloadの送達を要求するが，応答~callbackは期待しないような
+他の利用事例。
+◎
+Other use cases that require delivery of small payloads and do not expect a response callback.
+</li>
+</ul>
+
+<p>
+~serverへ送達される~dataは、敏感になり得る情報を包含し得る
+— 例えば，利用者の~web~page上での活動についての~dataなど。
+これには，利用者にとって~privacy上の含意があり得るが、既存の代替
+— 種々の高価な処理能と引き換えにしている，［
+~scriptによる~form提出- ／ 画像~beacon ／ XHR や~fetchによる要請
+］など —
+も似た能力を供する：
+要請は、開発者が，~UAによる他の~event処理を阻まない限り（例：同期的な要請を呼出したり，空~loopを回すなど），~UAにより中止され得る。
+~UAはまた、そのような要請に優先度をあてがったり, それらを集約して，~system資源の利用を最適化することができない。
+◎
+The delivered data might contain potentially sensitive information, for example, data about a user's activity on a web page, to a server. While this can have privacy implications for the user, existing methods, such as scripted form-submit, image beacons, and XHR/fetch requests provide similar capabilities, but come with various and costly performance tradeoffs: the requests can be aborted by the user agent unless the developer blocks the user agent from processing other events (e.g. by invoking a synchronous request, or spinning in an empty loop), and the user agent is unable to prioritize and coalesce such requests to optimize use of system resources.
+</p>
+
+<p>
+`sendBeacon()^m により起動される要請は、次に挙げる~propertyの~subjectになる：
+◎
+A request initiated by sendBeacon() is subject to following properties:
+</p>
+
+<ul>
+	<li>
+［
+要請が~payloadを包含していない ／
+要請の `Content-Type^h は`~CORS安全とされる要請~header$である
+］場合、要請の`~mode$rqは `no-cors^l になる
+— ［
+~scriptによる~form投函-／ XHR や~fetchによる要請
+］と同じ様に。
+◎
+If the request does not contain a payload, or the request Content-Type is a CORS-safelisted request-header, then the request mode is `no-cors`—similar to an image beacon or form-post respectively.
+</li>
+	<li>
+他の場合、`~CORS予行~要請$が~~発行される。
+そのような要請に対しては、~serverは先ず，次に挙げる適切な一式の~CORS~headerを返すことで，それを許容する必要がある
+⇒＃
+`Access-Control-Allow-Credentials$h,
+`Access-Control-Allow-Origin$h,
+`Access-Control-Allow-Headers$h
+◎
+Otherwise, a CORS preflight is made and the server needs to first allow such requests by returning the appropriate set of CORS headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin, Access-Control-Allow-Headers.
+</li>
+</ul>
+
+<p>
+そのようなわけで，~security上の観点からは、~Beacon~APIを~subjectとする~security用の施策は，開発者たちが利用中にある現在の手法に対するそれと同じになる。
+同様に~privacyの観点からも、結果の要請は［
+~APIが~callされる／
+~pageの可視性が変化する
+］と同時に即時に起動され、公開される情報（例： 利用者の~IP~address）を開発者から~access可能な既存の `lifecycle^en ~eventに制約する。
+しかしながら，~UAは、利用者に透明性を供するためとして，そのような要請を表面化させるための代替~手法を考慮するかもしれない。
+◎
+As such, from the security perspective, the Beacon API is subject to same security policies as the current methods in use by developers. Similarly, from the privacy perspective, the resulting requests are initiated immediately when the API is called, or upon a page visibility change, which restricts the exposed information (e.g. user's IP address) to existing lifecycle events accessible to the developers. However, user agents might consider alternative methods to surface such requests to provide transparency to users.
+</p>
+
+<p>
+`sendBeacon()^m ~APIには、上述の代替と比較して， 2 つの制約
+— ~callback~methodは無いこと, および
+~UAは~payload~sizeを制約できること —
+が適用される。
+それ以上の制約は課されない。
+~UAは、 `sendBeacon()^m ~callの処理を間引くべきでない
+— それらは不可欠な［
+~app状態 ／ ~event ／ 解析~data
+］を包含し得るので。
+同様に，~UAは、
+“私的閲覧中（ `private browsing^en ）” に等価な~mode下にあるときは、［
+~appが壊される ／
+利用者がそのような~mode下にあることが漏洩される
+］のを避けるため， `sendBeacon()^m を不能化するべき（ `ought^en ）でない。
+◎
+Compared to the alternatives, the sendBeacon() API does apply two restrictions: there is no callback method, and the payload size can be restricted by the user agent. Otherwise, the sendBeacon() API is not subject to any additional restrictions. The user agent ought not skip or throttle processing of sendBeacon() calls, as they can contain critical application state, events, and analytics data. Similarly, the user agent ought not disable sendBeacon() when in "private browsing" or equivalent mode, both to avoid breaking the application and to avoid leaking that the user is in such mode.
+</p>
+
+  	</section>
+
+</main></div><!-- id="MAIN"／MAIN0 -->
+
+	<section id="acknowledgments">
+<h3 title="Acknowledgments">謝辞</h3>
+
+<p>
+この仕事に貢献された次の方々に：
+</p>
+
+<p lang="en-x-a0">
+Thanks to Alois Reitbauer, Arvind Jain, Anne van Kesteren, Boris Zbarsky, Chase Douglas, Daniel Austin, Jatinder Mann, James Simonsen, Jason Weber, Jonas Sicking, Nick Doty, Philippe Le Hegaret, Todd Reifsteck, Tony Gentilcore, William Chan, and Yoav Weiss for their contributions to this work.
+</p>
+	</section>

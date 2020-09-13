@@ -1,0 +1,1540 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Web Storage（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'webstorage',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r': // ref
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l': // literal
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'm': // IDL member
+case 'mE':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-09-02
+trans_update:2020-08-19
+source_checked:200710
+page_state_key:HTML
+original_url:https://html.spec.whatwg.org/multipage/webstorage.html
+	abbr_url:WEBSTORAGE
+spec_status:LS
+site_nav:storage,html
+nav_prev:WORKERS
+nav_next:HTMLwriting
+
+
+●●class_map
+e:element
+a:attr
+E:error
+et:event-type
+h:header
+
+●●tag_map
+I:code
+m:code
+mE:code
+E:code
+c:code
+s:samp
+e:code
+a:code
+et:code
+h:code
+v:var
+i:i
+em:em
+
+●●original_id_map
+
+
+references:
+item-list:
+item:
+key:
+value:
+
+●●mdn_urls
+storage-2:API/Storage
+storageevent:API/StorageEvent
+	storageeventinit:API/StorageEventInit
+windowsessionstorage:API/WindowSessionStorage
+windowlocalstorage:API/WindowLocalStorage
+
+●●link_map
+
+I.Window:~WINDOW#window
+I.Document:~HTMLdom#document
+I.Event:~DOM4#interface-event
+I.EventInit:~DOM4#dictdef-eventinit
+	I.Node:~DOM4#node
+I.Storage:#storage-2
+I.StorageEvent:#storageevent
+I.StorageEventInit:#storageeventinit
+I.WindowSessionStorage:#windowsessionstorage
+I.WindowLocalStorage:#windowlocalstorage
+
+E.QuotaExceededError:~WEBIDL#quotaexceedederror
+E.SecurityError:~WEBIDL#securityerror
+
+m.initEvent:~DOM4#dom-event-initevent
+m.localStorage:#dom-localstorage
+m.sessionStorage:#dom-sessionstorage
+	Storage
+m.length:#dom-storage-length
+m.key:#dom-storage-key
+m.getItem:#dom-storage-getitem
+m.setItem:#dom-storage-setitem
+m.removeItem:#dom-storage-removeitem
+m.clear:#dom-storage-clear
+
+	StorageEvent
+mE.key:#dom-storageevent-key
+mE.oldValue:#dom-storageevent-oldvalue
+mE.newValue:#dom-storageevent-newvalue
+mE.url:#dom-storageevent-url
+mE.storageArea:#dom-storageevent-storagearea
+mE.initStorageEvent:#dom-storageevent-initstorageevent
+
+c.delete:~TC39#sec-delete-operator
+
+et.storage:~HTMLindex#event-storage
+
+e.iframe:~HEembed#the-iframe-element
+
+	●用語
+sG.~map:#concept-storage-map
+sG.種別:#concept-storage-type
+~storageを並替える:#concept-storage-reorder
+~storageを~broadcastする:#concept-storage-broadcast
+~session~storage保持体:#session-storage-holder
+局所~storage保持体:#local-storage-holder
+
+	●用語（HTML
+文書:~HTMLdom#the-document-object
+~window:~WINDOW#the-window-object
+
+関連な設定群~obj:~WAPI#relevant-settings-object
+関連な大域~obj:~WAPI#concept-relevant-global
+結付けられている文書:~WINDOW#concept-document-window
+~DOM操作~task源:~WAPI#dom-manipulation-task-source
+~event~loop:~WAPI#event-loop
+~task:~WAPI#concept-task
+大域~taskを~queueする:~WAPI#queue-a-global-task
+~task源:~WAPI#task-source
+tK.文書:~WAPI#concept-task-document
+
+閲覧文脈:~BROWSERS#browsing-context
+全部的に作動中:~BROWSERS#fully-active
+~top-level閲覧文脈:~BROWSERS#top-level-browsing-context
+作動中の文書:~BROWSERS#active-document
+新たな補助~閲覧文脈を作成する:~BROWSERS#creating-a-new-auxiliary-browsing-context
+	属する閲覧文脈:~BROWSERS#concept-document-bc
+入子にしている閲覧文脈:~BROWSERS#nested-browsing-context
+
+生成元:~ORIGIN#concept-origin
+不透明な生成元:~ORIGIN#concept-origin-opaque
+同一-生成元:~ORIGIN#same-origin
+
+enV.閲覧~session:~HISTORY#environment-browsing-session
+
+	●用語（外部
+実装定義:~INFRA#implementation-defined
+
+map.~entry:~INFRA#map-entry
+map.~key:~INFRA#map-key
+map.値:~INFRA#map-value
+map.~size:~INFRA#map-size
+map.~clearする:~INFRA#map-clear
+~key~listを取得する:~INFRA#map-getting-the-keys
+	~NEQ ε:~INFRA#map-exists
+	~SET:~INFRA#map-set
+	~SET ε:~INFRA#map-remove
+	~EACH:~INFRA#list-iterate
+	~EQ:~INFRA#string-is
+
+~storage~proxy~map:~STORAGE#storage-proxy-map
+~session~storage瓶~mapを得する:~STORAGE#obtain-a-session-storage-bottle-map
+局所~storage瓶~mapを得する:~STORAGE#obtain-a-local-storage-bottle-map
+
+~supportする~prop名:~WEBIDL#dfn-supported-property-names
+~eventを発火する:~DOM4#concept-event-fire
+doc.~URL:~DOM4#concept-document-url
+
+
+●●words_table1
+
+●●words_table
+
+	●storage／環境
+
+quota::::クォータ
+	~access不能:inaccessible
+transaction::::トランザクション
+持続的:persistent::~
+持続-:persist::~
+	格納-済み:stored
+	複数~pageを同時に処理する:multiprocess
+補助:auxiliary::~
+	:::ウィンドウ
+破壊的:disastrous:~
+	あてがわれ:have
+閲覧:browsing::~
+
+	●network
+pathname::::パス名
+
+	●IDL／型／構造
+保持体:holder::保持体
+並替える:reorderする::並び替える
+clear::::クリア
+瓶:bottle::~::ボトル
+
+	~entry:key/value pair
+
+	●処理
+broadcast::::ブロードキャスト
+remote::::リモート
+旧-:old:~
+新-:new:~
+
+	%旧-値:oldValue
+	%新-値:newValue:#2
+	%~remote~storage群:remoteStorages
+	%~remote~storage:~remoteStorage
+
+	●保安
+TLS:
+DNS:
+cross-directory::::クロスディレクトリ
+	敏感~性:sensitivity
+profile::::プロファイル
+証明書:certificate::~
+失効-:expire:~
+失効:expiration:~
+主体:entity::~::エンティティ
+超過-:exceed:~
+阻止list:blocklist::阻止 list:阻止リスト:ブロックリスト
+安全list:safe-listing::安全 list:安全リスト
+	safelisting
+
+訪問者:visitor:~
+関心:interests:~
+流布-:distribute:~
+広告主:advertiser:~
+広告:advertising:~
+	~~高度な:highly
+	絞り込み:targeted
+電子商取引:e-commerce:~
+認証情報:authenticated credentials::~
+認証-:authenticate::~
+不当な:oppressive:~
+団体:group:~
+標的に:target:~
+本当の:real:~
+身元:identity:~
+有用性:usefulness:~
+打破-:defeat:~
+迂回-:bypass:~
+転用-:repurpose:~
+被害者:victim:~
+危険:dangerous:~
+自明:trivial:~
+作業中の:work-in-progress:~
+文書作成:word-processing:~
+秘匿文書:confidential documents:~
+競合企業:competing company:~
+wishlist:::: “欲しいもの” リスト
+読取り:read:読み取り
+読取る:readする:読み取る
+読取っ:readし:読み取っ
+書込んだ:writeした:書き込んだ
+書込み:write:書き込み
+書戻す:write backする:書き戻す
+上書-:overwrite::上書き
+閉じた:closeした:~
+冗長backup:redundant backup:冗長 backup::冗長バックアップ
+個人識別情報:identifying information:~
+協力-:cooperate:~
+協力:cooperation:~
+遡及的:retroactive:~
+log-in::::ログイン
+提携:affiliated:~
+想定-:suppose:~
+	for:~~想定
+首尾一貫した:coherentな:~
+消去-:clear:~
+
+	（名前, カード番号, 住所など）:(names, credit card numbers, addresses
+	~~許可:authorize
+	もたらす~~影響:implications
+	~~材料:informed
+	~~協同:act together
+	築き上げ:build
+	高い:greater
+	購入予約:making a purchase
+	なり得る:potential
+	確証:sure
+	利する:on behalf of
+	差し障りない:innocuousな
+	メール, 予定表, 診断記録:emails, calendar appointments, health records
+
+	●仕様
+
+	●例
+checkbox::::チェックボックス
+check::::チェック
+mailbox::::メールボックス
+
+	購入 buy
+	~~閲覧:click
+
+	●未分類
+scripting::::スクリプティング
+
+megabyte::::メガバイト
+出自に:originate:~
+開かれ:openされ:~
+	在る／無い:exist
+	増やして:increment
+	似た〜:similarly-
+
+	●指示語
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる
+HTML 仕様の
+<a href="~SPEC_URL">§ Web Storage</a>
+を日本語に翻訳したものです。
+（公開：<time>2013-04-20</time> （ W3C 版））
+</p>
+
+</script>
+
+<body>
+
+<header>
+	<hgroup>
+<h1>Web Storage</h1>
+
+	</hgroup>
+
+</header>
+
+<main id="MAIN" hidden>
+
+<section id="webstorage">
+<h1>11. Web Storage</h1>
+
+	<section id="introduction-16">
+<h2 title="Introduction">11.1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+この仕様は、 HTTP ~session~cookie `COOKIES$r に類似な，~client側に
+( 名前, 値 )
+が成す~pairたちを格納するための，関係する 2 つの仕組みを導入する。
+◎
+This specification introduces two related mechanisms, similar to HTTP session cookies, for storing name-value pairs on the client side. [COOKIES]
+</p>
+
+<p>
+1 つ目の仕組みは、利用者が単独の~transactionで~dataをやりとりする局面を~~想定して設計されているが、異なる~window間で並行する複数の~transactionでやりとりすることもできる。
+◎
+The first is designed for scenarios where the user is carrying out a single transaction, but could be carrying out multiple transactions in different windows at the same time.
+</p>
+
+<p>
+~cookieは、この事例を上手く取扱えない。
+例えば利用者は、同じ~siteの 2 つの異なる~windowで航空機の搭乗券の購入を検討するかもしれない。
+~siteが，購入中の搭乗券の情報を~cookieに保ち続けている場合、利用者が両方の~windowで~pageから~pageへ~~閲覧を続けたときに，それらの搭乗券の情報が一方の~windowから他方へ “漏れ出す” 結果、同じ便の搭乗券を気付かないうちに重複して購入する羽目に陥り得る。
+◎
+Cookies don't really handle this case well. For example, a user could be buying plane tickets in two different windows, using the same site. If the site used cookies to keep track of which ticket the user was buying, then as the user clicked from page to page in both windows, the ticket currently being purchased would "leak" from one window to the other, potentially causing the user to buy two tickets for the same flight without really noticing.
+</p>
+
+<p>
+これに取組むため、この仕様は， `sessionStorage$m 取得子を導入する。
+~siteは~session~storageに~dataを追加でき，同じ~siteで開かれているどの~pageからも~access可能になる。
+◎
+To address this, this specification introduces the sessionStorage getter. Sites can add data to the session storage, and it will be accessible to any page from the same site opened in that window.
+</p> 
+
+<div class="example">
+
+<p>
+例えば~pageは、利用者が保険を希望する旨を指示する~checkboxを持つこともある：
+◎
+For example, a page could have a checkbox that the user ticks to indicate that they want insurance:
+</p>
+
+<pre class="lang-html">
+&lt;label&gt;
+ &lt;input
+   type="checkbox"
+   onchange="sessionStorage.insurance = checked ? 'true' : ''"
+ &gt;
+ <span class="comment">
+この旅行に保険を掛ける
+◎
+I want insurance on this trip.
+</span>
+&lt;/label&gt;
+</pre>
+
+<p>
+その~pageは、後で，利用者が~checkboxを~checkしたかどうか ~scriptから調べることもできる：
+◎
+A later page could then check, from script, whether the user had checked the checkbox or not:
+</p>
+
+<pre class="lang-js">
+if (sessionStorage.insurance) { ... }
+</pre>
+
+<p>
+利用者がその~site上で複数の~windowを開いたとき、それぞれの~windowは，自前の~session~storage~objの複製を持つ。
+◎
+If the user had multiple windows opened on the site, each one would have its own individual copy of the session storage object.
+</p>
+
+</div>
+
+
+<p>
+~storageの 2 つ目の仕組みは、複数の~window, 複数の~sessionに渡って残り続ける~storage用に設計されている。
+~web~appは、特に，~megabyte~~単位の利用者~data
+— 例えば 利用者が作成した文書~全体や, 利用者の~mailboxなど —
+に対しては，処理能の理由から~client側に保存するよう望むこともある。
+◎
+The second storage mechanism is designed for storage that spans multiple windows, and lasts beyond the current session. In particular, web applications might wish to store megabytes of user data, such as entire user-authored documents or a user's mailbox, on the client side for performance reasons.
+</p>
+
+<p>
+ここでも~cookieは、要請の度に伝送されるので，この用途には適さない。
+◎
+Again, cookies do not handle this case well, because they are transmitted with every request.
+</p>
+
+<p>
+`localStorage$m 取得子は、~pageの局所~storage区画への~accessに利用される。
+◎
+The localStorage getter is used to access a page's local storage area.
+</p>
+
+<div class="example">
+
+<p>
+`example.com^s の~siteは、~pageの末尾に次のような~codeを置いて，利用者が~pageを読込んだ回数を表示できる：
+◎
+The site at example.com can display a count of how many times the user has loaded its page by putting the following at the bottom of its page:
+</p>
+
+<pre class="lang-html">
+&lt;p&gt;
+  あなたがこのページを見たのは
+  &lt;span id="count"&gt;〜&lt;/span&gt;回目です。
+&lt;/p&gt;
+&lt;script&gt;
+  if (!localStorage.pageLoadCount)
+    localStorage.pageLoadCount = 0;
+  localStorage.pageLoadCount
+      = parseInt(localStorage.pageLoadCount) + 1;
+  document.getElementById('count').textContent
+      = localStorage.pageLoadCount;
+&lt;/script&gt;
+</pre>
+
+</div>
+
+<p>
+各~siteには，それぞれに自前の~storage区画があてがわれる。
+◎
+Each site has its own separate storage area.
+</p>
+
+<p class="warning">
+`localStorage$m 取得子は、共有されている状態への~accessを供する。
+この仕様は、複数の閲覧文脈を同時に処理する~UAにおける，閲覧文脈~間の相互作用は定義しない。
+よって，作者には、~lockする類の仕組みはないものと見做すことが奨励される。
+一例として，~siteは、ある~keyに対応する値を読取って, それを増やしてから，当の~session用の一意な識別子として書戻すこともできるが、これが 2 つの~windowで同時に行われた場合、両~session用に同じ “一意な” 識別子を利用する結果，破壊的な効果をもたらし得ることになる。
+◎
+The localStorage getter provides access to shared state. This specification does not define the interaction with other browsing contexts in a multiprocess user agent, and authors are encouraged to assume that there is no locking mechanism. A site could, for instance, try to read the value of a key, increment its value, then write it back out, using the new value as a unique identifier for the session; if the site does this twice in two different browser windows at the same time, it might end up using the same "unique" identifier for both sessions, with potentially disastrous effects.
+</p>
+
+	</section>
+	<section id="_conventions">
+<h2>【この訳に固有の表記規約】</h2>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, ~IF, ~THROW, 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+	</section>
+	<section id="storage">
+<h2 title="The API">11.2. ~API</h2>
+
+		<section id="the-storage-interface">
+<h3 title="The Storage interface">11.2.1. `Storage^I ~interface</h3>
+
+<pre class="idl">
+[Exposed=Window]
+interface `Storage@I {
+  readonly attribute unsigned long `length$m;
+  DOMString? `key$m(unsigned long %index);
+  getter DOMString? `getItem$m(DOMString %key);
+  setter undefined `setItem$m(DOMString %key, DOMString %value);
+  deleter undefined `removeItem$m(DOMString %key);
+  undefined `clear$m();
+};
+</pre>
+
+<dl class="domintro">
+	<dt>%storage . `length$m</dt>
+	<dd>
+`~map$sGを成す~entryの総数を返す。
+◎
+Returns the number of key/value pairs.
+</dd>
+
+	<dt>%storage . `key(index)$m</dt>
+	<dd>
+`~map$sG内の %index 番の~entryの~keyを返す
+— %index が~entryの総数~以上の場合， ~NULL を返す。
+◎
+Returns the name of the nth key, or null if n is greater than or equal to the number of key/value pairs.
+</dd>
+
+	<dt>%value = %storage . `getItem(key)$m</dt>
+	<dt>%value = %storage[%key]</dt>
+	<dd>
+`~map$sG内の %key で識別される~entryの現在の値を返す
+— 該当する~entryは無いならば ~NULL を返す。
+◎
+Returns the current value associated with the given key, or null if the given key does not exist.
+</dd>
+
+	<dt>%storage . `setItem(key, value)$m</dt>
+	<dt>%storage[%key] = %value</dt>
+	<dd>
+`~map$sG内の %key で識別される~entryの値を %value に設定する
+— 該当する~entryは無いならば、新たな~entryを作成した上で設定する。
+◎
+Sets the value of the pair identified by key to value, creating a new key/value pair if none existed for key previously.
+</dd>
+	<dd>
+値を設定できなかった場合、
+`QuotaExceededError$E 例外を投出する（例えば、利用者が当の~site用の~storageを不能化していた場合や, ~quotaを超過した場合）。
+◎
+Throws a "QuotaExceededError" DOMException exception if the new value couldn't be set. (Setting could fail if, e.g., the user has disabled storage for the site, or if the quota has been exceeded.)
+</dd>
+	<dd>
+等価な `Storage$I ~objを保持している`~window$に向けて，`storage$et ~eventを配送する。
+◎
+Dispatches a storage event on Window objects holding an equivalent Storage object.
+</dd>
+
+	<dt>%storage . `removeItem( key )$m</dt>
+	<dt>`delete$c %storage[%key]</dt>
+	<dd>
+`~map$sG内に %key で識別される~entryが在るならば、それを除去する。
+◎
+Removes the key/value pair with the given key, if a key/value pair with the given key exists.
+</dd>
+	<dd>
+等価な `Storage$I ~objを保持している`~window$たちに向けて，`storage$et ~eventを配送する。
+◎
+Dispatches a storage event on Window objects holding an equivalent Storage object.
+</dd>
+
+	<dt>%storage . `clear$m()</dt>
+	<dd>
+`~map$sGからすべての~entryを除去する。
+◎
+Removes all key/value pairs, if there are any.
+</dd>
+	<dd>
+等価な `Storage$I ~objを保持している`~window$たちに向けて，`storage$et ~eventを配送する。
+◎
+Dispatches a storage event on Window objects holding an equivalent Storage object.
+</dd>
+</dl>
+
+<p>
+各 `Storage$I ~objには次が結付けられる：
+◎
+A Storage object has an associated:
+</p>
+
+<dl class="def-list">
+	<dt>
+`~map@sG
+◎
+map
+</dt>
+	<dd>
+`~storage~proxy~map$
+◎
+A storage proxy map.
+</dd>
+
+	<dt>
+`種別@sG
+◎
+type
+</dt>
+	<dd>
+次のいずれか
+⇒＃
+`local^l,
+`session^l
+◎
+"local" or "session".
+</dd>
+</dl>
+
+<div class="algo">
+<p>
+`~storageを並替える@
+ときは、所与の
+( `Storage$I ~obj %~storage )
+に対し，`実装定義$な方式で
+%~storage の`~map$sGを成す`~entry$mapたちを並替える。
+◎
+To reorder a Storage object storage, reorder storage's map's entries in an implementation-defined manner.
+</p>
+
+<p class="note">注記：
+あいにく，反復~順序は定義されていない
+— ほとんどの変異に対し，順序は変化し得る。
+◎
+Unfortunate as it is, iteration order is not defined and can change upon most mutations.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`~storageを~broadcastする@
+ときは、所与の
+( `Storage$I ~obj %~storage, %~key, %旧-値, %新-値 )
+に対し，次の手続きを走らす：
+◎
+To broadcast a Storage object storage, given a key, oldValue, and newValue, run these steps:
+</p>
+<ol>
+	<li>
+%~url ~LET %~storage に`関連な大域~obj$に`結付けられている文書$の`~URL$doc
+【を直列化した結果】
+◎
+Let url be storage's relevant global object's associated Document's URL.
+</li>
+	<li>
+<p>
+%~remote~storage群 ~LET すべての `Storage$I ~objのうち，次をすべて満たす %S ：
+◎
+Let remoteStorages be all Storage objects excluding storage whose:
+</p>
+		<ul>
+			<li>
+%S ~NEQ %~storage
+◎
+↑</li>
+			<li>
+%S の`種別$sG ~EQ %~storage の`種別$sG
+◎
+type is storage's type
+</li>
+			<li>
+( %S に`関連な設定群~obj$の`生成元$, %~storage に`関連な設定群~obj$の`生成元$ )
+は`同一-生成元$である
+◎
+relevant settings object's origin is same origin with storage's relevant settings object's origin.
+</li>
+			<li>
+［
+%S の`種別$sG ~NEQ `session^l
+］~OR［
+%S に`関連な設定群~obj$の`閲覧~session$enV ~EQ %~storage に`関連な設定群~obj$の`閲覧~session$enV
+］
+◎
+and, if type is "session", whose relevant settings object's browsing session is storage's relevant settings object's browsing session.
+</li>
+		</ul>
+	</li>
+	<li>
+<p>
+%~remote~storage群 を成す
+~EACH( %~remote~storage )
+に対し
+⇒
+次を走らす`大域~taskを~queueする$( `~DOM操作~task源$, %~remote~storage に`関連な大域~obj$ )
+⇒
+%~remote~storage に`関連な大域~obj$に向けて，名前 `storage$et の`~eventを発火する$
+⇒
+`StorageEvent$I を利用し，次のように初期化して
+⇒＃
+`key$mE ~SET %~key,
+`oldValue$mE ~SET %旧-値,
+`newValue$mE ~SET %新-値,
+`url$mE ~SET %~url,
+`storageArea$mE ~SET %~remote~storage
+◎
+For each remoteStorage of remoteStorages: queue a global task on the DOM manipulation task source given remoteStorage's relevant global object to fire an event named storage at remoteStorage's relevant global object, using StorageEvent, with key initialized to key, oldValue initialized to oldValue, newValue initialized to newValue, url initialized to url, and storageArea initialized to remoteStorage.
+</p>
+
+<p class="note">注記：
+結果の`~task$の`文書$tKは，`全部的に作動中$とは限らないが、そのような~objに対し発火される~eventは，当の`文書$が再び`全部的に作動中$になるまで`~event~loop$において無視される。
+◎
+The Document object associated with the resulting task is not necessarily fully active, but events fired on such objects are ignored by the event loop until the Document becomes fully active again.
+</p>
+	</li>
+</ol>
+</div>
+
+<hr>
+
+<div class="algo">
+`length@m
+取得子~手続きは
+⇒
+~RET コレの`~map$sGの`~size$map
+◎
+The length getter steps are to return this's map's size.
+</div>
+
+<div class="algo">
+<p>
+`key(index)@m
+~method手続きは：
+◎
+The key(n) method steps are:
+</p>
+<ol>
+	<li>
+~IF［
+%index ~GTE コレの`~map$sGの`~size$map
+］
+⇒
+~RET ~NULL
+◎
+If n is greather than or equal to this's map's size, then return null.
+</li>
+	<li>
+%~key~list ~LET コレの`~map$sGの`~key~listを取得する$
+◎
+Let keys be the result of running get the keys on this's map.
+</li>
+	<li>
+~RET %~key~list[ %index ]
+◎
+Return keys[n].
+</li>
+</ol>
+</div>
+
+<p>
+`Storage$I ~obj %~storage が`~supportする~prop名$は、次の結果とする
+⇒
+%~storage の`~map$sGの`~key~listを取得する$
+◎
+The supported property names on a Storage object storage are the result of running get the keys on storage's map.
+</p>
+
+<div class="algo">
+<p>
+`getItem(key)@m
+~method手続きは：
+◎
+The getItem(key) method steps are:
+</p>
+<ol>
+	<li>
+~IF［
+コレの`~map$sG[ %key ] ~EQ ε
+］
+⇒
+~RET ~NULL
+◎
+If this's map[key] does not exist, then return null.
+</li>
+	<li>
+~RET コレの`~map$sG[ %key ]
+◎
+Return this's map[key].
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`setItem(key, value)@m
+~method手続きは：
+◎
+The setItem(key, value) method are:
+</p>
+<ol>
+	<li>
+%旧-値 ~LET ~NULL
+◎
+Let oldValue be null.
+</li>
+	<li>
+%並替える ~LET ~T
+◎
+Let reorder be true.
+</li>
+	<li>
+<p>
+~IF［
+コレの`~map$sG[ %key ] ~NEQ ε
+］：
+◎
+If this's map[key] exists:
+</p>
+		<ol>
+			<li>
+%旧-値 ~SET コレの`~map$sG[ %key ]
+◎
+Set oldValue to this's map[key].
+</li>
+			<li>
+~IF［
+%旧-値 ~EQ %value
+］
+⇒
+~RET
+◎
+If oldValue is value, then return.
+</li>
+			<li>
+%並替える ~SET ~F
+◎
+Set reorder to false.
+</li>
+		</ol>
+	</li>
+	<li>
+~IF［
+%value を格納できない
+］
+⇒
+~THROW `QuotaExceededError$E
+◎
+If value cannot be stored, then throw a "QuotaExceededError" DOMException exception.
+</li>
+	<li>
+コレの`~map$sG[ %key ] ~SET %value
+◎
+Set this's map[key] to value.
+</li>
+	<li>
+~IF［
+%並替える ~EQ ~T
+］
+⇒
+`~storageを並替える$( コレ )
+
+◎
+If reorder is true, then reorder this.
+</li>
+	<li>
+`~storageを~broadcastする$( コレ, %key, %旧-値, %value )
+◎
+Broadcast this with key, oldValue, and value.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`removeItem(key)@m
+~method手続きは：
+◎
+The removeItem(key) method steps are:
+</p>
+<ol>
+	<li>
+~IF［
+コレの`~map$sG[ %key ] ~EQ ε
+］
+⇒
+~RET ~NULL
+◎
+If this's map[key] does not exist, then return null.
+</li>
+	<li>
+%旧-値 ~SET コレの`~map$sG[ %key ]
+◎
+Set oldValue to this's map[key].
+</li>
+	<li>
+コレの`~map$sG[ %key ] ~SET ε
+◎
+Remove this's map[key].
+</li>
+	<li>
+`~storageを並替える$( コレ )
+◎
+Reorder this.
+</li>
+	<li>
+`~storageを~broadcastする$( コレ, %key, %旧-値, ~NULL )
+◎
+Broadcast this with key, oldValue, and null.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`clear()@m
+~method手続きは：
+◎
+The clear() method steps are:
+</p>
+<ol>
+	<li>
+コレの`~map$sGを`~clearする$map
+◎
+Clear this's map.
+</li>
+	<li>
+`~storageを~broadcastする$( コレ, ~NULL, ~NULL, ~NULL )
+◎
+Broadcast this with null, null, and null.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="the-sessionstorage-attribute">
+<h3 title="The sessionStorage getter">11.2.2. `sessionStorage^m 取得子</h3>
+
+<pre class="idl">
+interface mixin `WindowSessionStorage@I {
+  readonly attribute `Storage$I `sessionStorage$m;
+};
+`Window$I includes `WindowSessionStorage$I;
+</pre>
+
+<dl class="domintro">
+	<dt>%window . `sessionStorage$m</dt>
+	<dd>
+%window 【に`結付けられている文書$】の`生成元$の~session~storage区画に結付けられている `Storage$I ~objを返す。
+◎
+Returns the Storage object associated with that window's origin's session storage area.
+</dd>
+	<dd>
+次の場合、 `SecurityError$E 例外を投出する
+⇒＃
+%window に`結付けられている文書$【！`文書$】の`生成元$は`不透明な生成元$である ／
+その要請は施策~裁定に違反する（例：~UAは、~pageが~dataを持続するのを許容しないよう，環境設定されている）
+◎
+Throws a "SecurityError" DOMException if the Document's origin is an opaque origin or if the request violates a policy decision (e.g., if the user agent is configured to not allow the page to persist data).
+</dd>
+</dl>
+
+<p>
+各`文書$には、
+`~session~storage保持体@
+が結付けられる
+— それは、［
+~NULL ／ `Storage$I ~obj
+］であり，初期~時には ~NULL とする。
+◎
+A Document object has an associated session storage holder, which is null or a Storage object. It is initially null.
+</p>
+
+<div class="algo">
+<p>
+~FINGERPRINTING
+`sessionStorage@m
+取得子~手続きは：
+◎
+(This is a tracking vector.)
+The sessionStorage getter steps are:
+</p>
+<ol>
+	<li>
+%文書 ~LET コレに`結付けられている文書$
+◎
+↓</li>
+	<li>
+~IF［
+%文書 の`~session~storage保持体$ ~NEQ ~NULL
+］
+⇒
+~RET %文書 の`~session~storage保持体$
+◎
+If this's associated Document's session storage holder is non-null, then return this's associated Document's session storage holder.
+</li>
+	<li>
+%~map ~LET `~session~storage瓶~mapを得する$( コレに`関連な設定群~obj$, `sessionStorage^l )
+◎
+Let map be the result of running obtain a session storage bottle map with this's relevant settings object and "sessionStorage".
+</li>
+	<li>
+~IF［
+%~map ~EQ `失敗^i
+］
+⇒
+~THROW `SecurityError$E
+◎
+If map is failure, then throw a "SecurityError" DOMException.
+</li>
+	<li>
+%~storage ~LET 次のように設定された，新たな `Storage$I ~obj
+⇒
+`~map$sG ~SET %~map
+◎
+Let storage be a new Storage object whose map is map.
+</li>
+	<li>
+%文書 の`~session~storage保持体$ ~SET %~storage
+◎
+Set this's associated Document's session storage holder to storage.
+</li>
+	<li>
+~RET %~storage
+◎
+Return storage.
+</li>
+</ol>
+</div>
+
+<p class="note">注記：
+~session~storageは、`新たな補助~閲覧文脈を作成する$間に，
+<a href="~BROWSERS#copy-session-storage">複製される</a>。
+◎
+While creating a new auxiliary browsing context, the session storage is copied over.
+</p>
+
+		</section>
+		<section id="the-localstorage-attribute">
+<h3 title="The localStorage getter">11.2.3. `localStorage^m 取得子</h3>
+
+<pre class="idl">
+interface mixin `WindowLocalStorage@I {
+  readonly attribute `Storage$I `localStorage$m;
+};
+`Window$I includes `WindowLocalStorage$I;
+</pre>
+
+<dl class="domintro">
+	<dt>%window . `localStorage$m</dt>
+	<dd>
+%window 【に`結付けられている文書$】の`生成元$の局所~storage区画に結付けられている `Storage$I ~objを返す。
+◎
+Returns the Storage object associated with window's origin's local storage area.
+</dd>
+	<dd>
+次の場合、 `SecurityError$E 例外を投出する
+⇒＃
+%window に`結付けられている文書$【！`文書$】の`生成元$は`不透明な生成元$である ／
+その要請は施策~裁定に違反する（例：~UAは、~pageが~dataを持続するのを許容しないよう，環境設定されている）
+◎
+Throws a "SecurityError" DOMException if the Document's origin is an opaque origin or if the request violates a policy decision (e.g., if the user agent is configured to not allow the page to persist data).
+</dd>
+</dl>
+
+<p>
+各`文書$には、
+`局所~storage保持体@
+が結付けられる
+— それは、［
+~NULL ／ `Storage$I ~obj
+］であり，初期~時には ~NULL とする。
+◎
+A Document object has an associated local storage holder, which is null or a Storage object. It is initially null.
+</p>
+
+<div class="algo">
+<p>
+~FINGERPRINTING
+`localStorage@m
+取得子~手続きは：
+◎
+(This is a tracking vector.)
+The localStorage getter steps are:
+</p>
+<ol>
+	<li>
+%文書 ~LET コレに`結付けられている文書$
+◎
+↓</li>
+	<li>
+~IF［
+%文書 の`局所~storage保持体$ ~NEQ ~NULL
+］
+⇒
+~RET %文書 の`局所~storage保持体$
+◎
+If this's associated Document's local storage holder is non-null, then return this's associated Document's local storage holder.
+</li>
+	<li>
+%~map ~LET `局所~storage瓶~mapを得する$( コレに`関連な設定群~obj$, `localStorage^l )
+◎
+Let map be the result of running obtain a local storage bottle map with this's relevant settings object and "localStorage".
+</li>
+	<li>
+~IF［
+%~map ~EQ `失敗^i
+］
+⇒
+~THROW `SecurityError$E
+◎
+If map is failure, then throw a "SecurityError" DOMException.
+</li>
+	<li>
+%~storage ~LET 次のように設定された，新たな `Storage$I ~obj
+⇒
+`~map$sG ~SET %~map
+◎
+Let storage be a new Storage object whose map is map.
+</li>
+	<li>
+%文書 の`局所~storage保持体$ ~SET %~storage
+◎
+Set this's associated Document's local storage holder to storage.
+</li>
+	<li>
+~RET %~storage
+◎
+Return storage.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="the-storageevent-interface">
+<h3 title="The StorageEvent interface">11.2.4. `StorageEvent^I ~interface</h3>
+
+<pre class="idl">
+[Exposed=Window]
+interface `StorageEvent@I : `Event$I {
+  constructor(DOMString %type, optional `StorageEventInit$I %eventInitDict = {});
+
+  readonly attribute DOMString? `key$mE;
+  readonly attribute DOMString? `oldValue$mE;
+  readonly attribute DOMString? `newValue$mE;
+  readonly attribute USVString `url$mE;
+  readonly attribute `Storage$I? `storageArea$mE;
+
+  undefined `initStorageEvent$mE(DOMString %type, optional boolean %bubbles = false, optional boolean %cancelable = false, optional DOMString? %key = null, optional DOMString? %oldValue = null, optional DOMString? %newValue = null, optional USVString %url = "", optional Storage? %storageArea = null);
+};
+
+dictionary `StorageEventInit@I : `EventInit$I {
+  DOMString? key = null;
+  DOMString? oldValue = null;
+  DOMString? newValue = null;
+  USVString url = "";
+  `Storage$I? storageArea = null;
+};
+</pre>
+
+<dl class="domintro">
+	<dt>%event . `key$mE</dt>
+	<dd>
+変更された~entryの~keyを返す。
+◎
+Returns the key of the storage item being changed.
+</dd>
+
+	<dt>%event . `oldValue$mE</dt>
+	<dd>
+変更された~entryの旧-値を返す。
+◎
+Returns the old value of the key of the storage item whose value is being changed.
+</dd>
+
+	<dt>%event . `newValue$mE</dt>
+	<dd>
+変更された~entryの新-値を返す。
+◎
+Returns the new value of the key of the storage item whose value is being changed.
+</dd>
+
+	<dt>%event . `url$mE</dt>
+	<dd>
+変更された~entryを持つ~storageが属する文書の`~URL$docを返す。
+◎
+Returns the URL of the document whose storage item changed.
+</dd>
+
+	<dt>%event . `storageArea$mE</dt>
+	<dd>
+影響された `Storage$I ~objを返す。
+◎
+Returns the Storage object that was affected.
+</dd>
+</dl>
+
+
+<dl class="idl-def">
+	<dt>`key@mE</dt>
+	<dt>`oldValue@mE</dt>
+	<dt>`newValue@mE</dt>
+	<dt>`url@mE</dt>
+	<dt>`storageArea@mE</dt>
+	<dd>
+いずれも，取得子は、初期化-時の値を返すモノトスル。
+◎
+The key, oldValue, newValue, url, and storageArea attributes must return the values they were initialized to.
+</dd>
+
+	<dt>`initStorageEvent()@mE</dt>
+	<dd>
+この~methodは、似た名前の `initEvent()$m ~methodと相似的な方式で，~eventを初期化するモノトスル。
+`DOM$r
+【構築子と機能が重複する旧来の~method】
+◎
+The initStorageEvent() method must initialize the event in a manner analogous to the similarly-named initEvent() method. [DOM]
+</dd>
+</dl>
+
+		</section>
+	</section>
+	<section id="privacy">
+<h2 title="Privacy">11.3. ~privacy</h2>
+
+		<section id="user-tracking">
+<h3 title="User tracking">11.3.1. 利用者の追跡</h3>
+
+<p>
+第三者主体の広告主（あるいは，複数の~siteに内容を流布し得る任意の主体）は、利用者の関心~profileを築き上げ，より~~高度な絞り込み広告を可能にする~~目的で、局所~storage区画に一意な識別子を格納することにより，複数の~sessionに渡って利用者を追跡し得る。
+利用者の本当の身元を知っている~site（例えば認証情報を要する電子商取引~site）と~~連携した場合、不当な団体が，匿名な~web用法よりも高い正確度で個人を標的にすることも許容されてしまう。
+◎
+A third-party advertiser (or any entity capable of getting content distributed to multiple sites) could use a unique identifier stored in its local storage area to track a user across multiple sessions, building a profile of the user's interests to allow for highly targeted advertising. In conjunction with a site that is aware of the user's real identity (for example an e-commerce site that requires authenticated credentials), this could allow oppressive groups to target individuals with greater accuracy than in a world with purely anonymous web usage.
+</p>
+
+<p>
+利用者~追跡の~riskを軽減するために利用できる、いくつかの技法がある：
+◎
+There are a number of techniques that can be used to mitigate the risk of user tracking:
+</p>
+
+<dl>
+	<dt>
+第三者主体による~storage~~利用を阻止する
+◎
+Blocking third-party storage
+</dt>
+	<dd>
+~UAは、 `localStorage$m ~objへの~accessを，`~top-level閲覧文脈$にて`作動中の文書$の~domainを出自にしている~scriptに制約してもヨイ。
+一例として、［
+`iframe$e の中で走らせている 他の~domainからの~page
+］に対しては，~APIへの~accessを否認するなど。
+◎
+User agents may restrict access to the localStorage objects to scripts originating at the domain of the active document of the top-level browsing context, for instance denying access to the API for pages from other domains running in iframes.
+</dd>
+
+	<dt>
+格納-済み~dataを失効させる
+◎
+Expiring stored data
+</dt>
+	<dd>
+~UAは、
+— 場合によっては、利用者が環境設定する方式で —
+一定期間を経過した格納-済み~dataは，自動的に削除されるようにしてもヨイ。
+◎
+User agents may, possibly in a manner configured by the user, automatically delete stored data after a period of time.
+</dd>
+	<dd>
+例えば~UAは、第三者主体による局所~storage区画を~session用途のみと扱って，［
+利用者が［
+その~storageへ~accessし得るすべての`閲覧文脈$
+］を閉じた時点で，~dataは削除される
+］ように環境設定することもできる。
+◎
+For example, a user agent could be configured to treat third-party local storage areas as session-only storage, deleting the data once the user had closed all the browsing contexts that could access it.
+</dd>
+	<dd>
+これにより，［
+~siteが複数の~sessionに渡って利用者を追跡-可能になるのは、利用者が~site自身にて認証される場合（例えば購入予約や~serviceへの~log-inなど）に限られる
+］ことになるので、~siteが利用者を追跡する能を制約できるようになる。
+◎
+This can restrict the ability of a site to track a user, as the site would then only be able to track the user across multiple sessions when they authenticate with the site itself (e.g. by making a purchase or logging in to a service).
+</dd>
+	<dd>
+しかしながら、持続的~storageの仕組みから得られる~APIの有用性も抑制する。
+また、利用者が~dataの失効がもたらす~~影響について全部的に理解していない場合に，利用者の~dataを~riskにさらすことになる。
+◎
+However, this also reduces the usefulness of the API as a long-term storage mechanism. It can also put the user's data at risk, if the user does not fully understand the implications of data expiration.
+</dd>
+
+	<dt>
+持続的~storageを~cookie同様に扱う
+◎
+Treating persistent storage as cookies
+</dt>
+	<dd>
+利用者が［
+局所~storage区画に格納されている~dataは残しつつ，~cookieを消去する
+］ことで，自身の~privacyを保護する試みに対しては、~site側は［
+両~特能を利用して相互に冗長backupする
+］ことで打破できる。
+~UAは、［
+利用者が，この可能性について理解することを助ける仕方
+］で［
+持続的~storage特能における~dataすべてが，同時に削除されることが確保される
+］ようにする~UIを呈示するベキである。
+`COOKIES$r
+◎
+If users attempt to protect their privacy by clearing cookies without also clearing data stored in the local storage area, sites can defeat those attempts by using the two features as redundant backup for each other. User agents should present the interfaces for clearing these in a way that helps users to understand this possibility and enables them to delete data in all persistent storage features simultaneously. [COOKIES]
+</dd>
+
+	<dt>
+局所~storageに~accessするための~site別 安全list
+◎
+Site-specific safelisting of access to local storage areas
+</dt>
+	<dd>
+~UAは、~siteによる~session~storage区画への~accessは制約しない方式で，局所~storage区画への~accessについては 利用者からの~~許可を要するようにしてもヨイ。
+◎
+User agents may allow sites to access session storage areas in an unrestricted manner, but require the user to authorize access to local storage areas.
+</dd>
+
+	<dt>
+格納-済み~dataからの生成元の追跡
+◎
+Origin-tracking of stored data
+</dt>
+	<dd>
+~UAは、~dataを格納させた第三者主体の生成元からの内容を含んでいる~siteの`生成元$を記録してヨイ。
+◎
+User agents may record the origins of sites that contained content from third-party origins that caused data to be stored.
+</dd>
+	<dd>
+この情報を利用して，持続的~storage内の現在の~dataについての~viewを呈示すれば、利用者にとって，持続的~storageのどの部分を取り除くか裁定を下す~~材料になる。
+阻止listと併用すれば（
+“この~dataを削除して、この~domainが再び~dataを格納しないようにする”
+等）、利用者は，持続的~storageの利用を 信用できる~siteのみに制約できるようになる。
+◎
+If this information is then used to present the view of data currently in persistent storage, it would allow the user to make informed decisions about which parts of the persistent storage to prune. Combined with a blocklist ("delete this data and prevent this domain from ever storing data again"), the user can restrict the use of persistent storage to sites that they trust.
+</dd>
+
+	<dt>
+阻止listの共有-
+◎
+Shared blocklists
+</dt>
+	<dd>
+~UAは、利用者~間で持続的~storageに関する~domainの阻止listを共有できるようにしてもヨイ。
+◎
+User agents may allow users to share their persistent storage domain blocklists.
+</dd>
+	<dd>
+これにより、~communityは~privacy保護に向けて~~協同できるようになる。
+◎
+This would allow communities to act together to protect their privacy.
+</dd>
+</dl>
+
+<p>
+これらの示唆は、この~APIによる利用者~追跡~用の自明な利用は防止するが，まとめて阻止するものではない。
+~siteは、単独の~domain内では，~sessionに渡って利用者を追跡し続けることができ、その情報を~siteが得した個人識別情報（~~名前, カード番号, 住所など）と伴に第三者主体に渡すこともあり得る。
+第三者主体が，複数の~siteと協力してその種の情報を得したなら、依然として，~profileは作成され得る。
+◎
+While these suggestions prevent trivial use of this API for user tracking, they do not block it altogether. Within a single domain, a site can continue to track the user during a session, and can then pass all this information to the third party along with any identifying information (names, credit card numbers, addresses) obtained by the site. If a third party cooperates with multiple sites to obtain such information, a profile can still be created.
+</p>
+
+<p>
+しかしながら，利用者~追跡は、~UAからの協力が一切なくても，ある~~範囲までアリになる
+— 一例として，~URL内に~session識別子を利用するなど。
+この技法は、差し障りない目的で すでに共通的に利用されているが、利用者~追跡にも容易に（遡及的にすら）転用できる。
+しかる後，この情報は、他~siteと共有され得る
+— 訪問者の IP ~addressその他の，利用者に特有な~data（例： `User-Agent^h ~headerや環境設定）を利用して、別々の~sessionを首尾一貫した利用者~profileを成すように組合せることにより。
+◎
+However, user tracking is to some extent possible even with no cooperation from the user agent whatsoever, for instance by using session identifiers in URLs, a technique already commonly used for innocuous purposes but easily repurposed for user tracking (even retroactively). This information can then be shared with other sites, using visitors' IP addresses and other user-specific data (e.g. user-agent headers and configuration settings) to combine separate sessions into coherent user profiles.
+</p>
+
+		</section>
+		<section id="sensitivity-of-data">
+<h3 title="Sensitivity of data">11.3.2. ~dataの敏感~性</h3>
+
+<p>
+~UAは、持続的に格納された~dataを，敏感になり得るものと扱うベキである。
+この仕組みを通して，［
+メール, 予定表, 診断記録, その他の秘匿文書
+］が格納されることは、ごく~~普通にあり得る。
+◎
+User agents should treat persistently stored data as potentially sensitive; it's quite possible for emails, calendar appointments, health records, or other confidential documents to be stored in this mechanism.
+</p>
+
+<p>
+最後に，~UAは、~dataを削除する際には，下層の~storageからも~~即座に削除されることを確保するベキである。
+◎
+To this end, user agents should ensure that when deleting data, it is promptly deleted from the underlying storage.
+</p>
+
+		</section>
+	</section>
+	<section id="security-storage">
+<h2 title="Security">11.4. ~security</h2>
+
+		<section id="dns-spoofing-attacks">
+<h3 title="DNS spoofing attacks">11.4.1. ~DNS偽装~攻撃</h3>
+
+<p>
+~DNS偽装~攻撃の下では、一定の~domainに属すると主張する~hostが本当にその~domainからのものであるかどうか，保証できなくなる可能性がある。
+~TLSを利用すれば，これを軽減できる。
+~TLSを利用する~pageは、［［
+利用者, 利用者に利する~software, ［
+証明書を伴う~TLSを利用していて, 同じ~domainからであるものと識別される，他の~page
+］］のみが，それらの~storage区画に~access可能である
+］ことの確証を得られる。
+◎
+Because of the potential for DNS spoofing attacks, one cannot guarantee that a host claiming to be in a certain domain really is from that domain. To mitigate this, pages can use TLS. Pages using TLS can be sure that only the user, software working on behalf of the user, and other pages using TLS that have certificates identifying them as being from the same domain, can access their storage areas.
+</p>
+
+		</section>
+		<section id="cross-directory-attacks">
+<h3 title="Cross-directory attacks">11.4.2. ~cross-directory攻撃</h3>
+
+<p>
+同じ~host名を共有している作者たちは（例えば（今や~~機能しなくなったが） `geocities.com^s で内容を~hostしている作者たちなど）、全員が同じ局所~storage~objを共有することになる。
+~pathnameにより~accessを制約する特能はないので、彼らのうち誰もが他の作者の~dataを読取ったり, 上書することが可能になる。
+したがって，他者と~hostを共有している作者には、これらの特能の利用を避けることが督促される。
+◎
+Different authors sharing one host name, for example users hosting content on the now defunct geocities.com, all share one local storage object. There is no feature to restrict the access by pathname. Authors on shared hosts are therefore urged to avoid using these features, as it would be trivial for other authors to read the data and overwrite it.
+</p>
+
+<p class="note">注記：
+仮に~path制約の特能が可用にされたとしても、通例的な~DOM~scripting ~security~modelから、この保護を迂回して，任意の~pathからの~dataへ~accessすることは自明になる。
+◎
+Even if a path-restriction feature was made available, the usual DOM scripting security model would make it trivial to bypass this protection and access the data from any path.
+</p>
+
+		</section>
+		<section id="implementation-risks">
+<h3 title="Implementation risks">11.4.3. 実装における~risk</h3>
+
+<p>
+これらの持続的な~storage特能を実装するにあたっては、 2 つの首な~riskがある：
+◎
+The two primary risks when implementing these persistent storage features are＼
+</p>
+
+<ul>
+	<li>
+敵対的~siteが，他の~domainの情報を読取る~risk
+◎
+letting hostile sites read information from other domains, and＼
+</li>
+	<li>
+敵対的~siteが情報を書込んだ後，他の~siteがその情報を読取る~risk
+◎
+letting hostile sites write information that is then read from other domains.
+</li>
+</ul>
+
+<p>
+第三者主体~siteの~domainからの読取りは想定されていない~dataに，そのような読取りを許した場合、`情報~漏洩e^emになる。
+例えば，ある~domainの利用者の~wishlistは、他の~domainによる絞り込み広告に利用され得る。
+あるいは文書作成~siteにより格納された，利用者の作業中の秘匿文書が、競合企業の~siteに読まれてしまうなど。
+◎
+Letting third-party sites read data that is not supposed to be read from their domain causes information leakage, For example, a user's shopping wishlist on one domain could be used by another domain for targeted advertising; or a user's work-in-progress confidential documents stored by a word-processing site could be examined by the site of a competing company.
+</p>
+
+<p>
+第三者主体~siteに，他の~domainの持続的~storageへの~dataの書込みを許した場合、同等に危険な，`情報~偽装^em【なりすまし】が生じる。
+例えば、敵対的~siteが利用者の~wishlistに “~item” を付け加えるなど。
+あるいは，敵対的~siteにより利用者の~session識別子が既知な~IDに設定された場合、その~IDは被害者~siteにおける利用者の追跡に利用され得る。
+◎
+Letting third-party sites write data to the persistent storage of other domains can result in information spoofing, which is equally dangerous. For example, a hostile site could add items to a user's wishlist; or a hostile site could set a user's session identifier to a known ID that the hostile site can then use to track the user's actions on the victim site.
+</p>
+
+<p>
+したがって，この仕様に述べた`生成元$~modelに厳密に従うことは、利用者の~securityにとり重要になる。
+◎
+Thus, strictly following the origin model described in this specification is important for user security.
+</p>
+
+
+		</section>
+	</section>
+</section>
+</main>

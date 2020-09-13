@@ -1,0 +1,1155 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>High Resolution Time（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-w3c.css" type="text/css" />
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w~一-鿆]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#bib-${key.toLowerCase()}`;
+	break;
+case 'test': // tests
+	href = `https://wpt.fyi/hr-time/${key}.html`;
+	text = '【~test】';
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2019-11-21
+trans_update:2019-12-25
+source_checked:181031
+page_state_key:TIMING
+original_url:https://www.w3.org/TR/hr-time-2/
+	original_url:https://w3c.github.io/hr-time/
+	abbr_url:HRTIME
+spec_status:REC
+ref_id_prefix:bib-
+ref_id_lowercase:true
+conformance:w3c
+copyright:2019,permissive
+trans_1st_pub:2015-07-22
+
+
+●●class_map
+E:dom-error
+
+●●tag_map
+I:code
+m:code
+d:code
+c:code
+E:code
+v:var
+b:b
+i:i
+
+●●original_id_map
+
+●●mdn_urls
+dom-domhighrestimestamp:API/DOMHighResTimeStamp
+dfn-performance:API/Performance
+dom-windoworworkerglobalscope-performance:API/Window/performance
+	dom-windoworworkerglobalscope-performance:API/WorkerGlobalScope/performance
+dom-performance-now:API/Performance/now
+dom-performance-timeorigin:API/Performance/timeOrigin
+dom-performance-tojson:API/Performance/toJSON
+
+●●link_map
+
+
+Replaceable:~WEBIDLjs#Replaceable
+Exposed:~WEBIDLjs#Exposed
+Default:~WEBIDLjs#Default
+
+I.DOMHighResTimeStamp:#dom-domhighrestimestamp
+	#idl-def-domhighrestimestamp
+I.Performance:#dfn-performance
+	#idl-def-performance
+I.WindowOrWorkerGlobalScope:~HTMLGAPI#windoworworkerglobalscope
+	#dom-windoworworkerglobalscope-windoworworkerglobalscope
+I.WorkerGlobalScope:~WORKERS#workerglobalscope
+I.DOMTimeStamp:~WEBIDL#DOMTimeStamp
+
+I.Window:~WINDOW#window
+I.Worker:~WORKERS#worker
+I.SharedWorker:~WORKERS#sharedworker
+I.EventTarget:~DOM4#eventtarget
+I.BroadcastChannel:~HTMLcomms#broadcastchannel
+
+m.performance:#dom-windoworworkerglobalscope-performance
+m.now():#dom-performance-now
+m.performance.now():#dom-performance-now
+m.timeOrigin:#dom-performance-timeorigin
+m.toJSON():#dom-performance-tojson
+
+c.Date:~TC39#sec-date-objects
+c.Date.now():~TC39#sec-date.now
+
+外的な時計~調整:#_clock-adjustments
+時刻起点:#dfn-time-origin
+時刻起点~時刻印:#dfn-time-origin-timestamp
+現在の高分解能~時刻:#dfn-current-high-resolution-time
+単調増加~時計:#dfn-monotonic-clock
+大域的な単調増加~時計:#dfn-global-monotonic-clock
+
+公式的な作成~時点:~WORKERS#official-moment-of-creation
+閲覧文脈が作成され:~BROWSERS#creating-a-new-browsing-context
+関連な大域~obj:~WAPI#concept-relevant-global
+大域~obj:~WAPI#concept-realm-global
+結付けられている文書:~WINDOW#concept-document-window
+~navi:~NAVI#navigate
+~unloadを~promptする:~NAVI#prompt-to-unload-a-document
+
+既定の~toJSON手続き:~WEBIDLjs#default-tojson-steps
+~JS時刻:~TC39#sec-time-values-and-time-range
+
+
+●●words_table1
+
+●●words_table
+
+
+	●計時
+zero::::ゼロ
+時系列順:chronological::~
+時列線:timeline::~::タイムライン
+	計時~側からの:timing side-channel
+計測-:measure:~
+計測:measurement:~
+時間:time::~
+	時間~差:time 差
+時刻:time::~
+現在時:present time::~
+時刻起点:time origin::~
+分解能:resolution::~
+高分解能:high resolution::~
+時計:clock::~::クロック
+	従来の時計:time-of-day
+milli:milli-:::ミリ
+micro:micro-:::マイクロ
+	~milli秒:milliseconds
+	~milli秒より細かい:sub-millisecond
+	-:microseconds
+	秒:seconds
+単調増加:monotonic::~
+単調増加-:monotonic に increase::~
+減少-:decrease::~
+	正確aさに止める:inaccurate
+	正確aさ:accurate to
+rate::::レート
+費やさ:elapseさ:~
+暦:calendar::~
+	時間~差:duration
+epoch:
+周期的:periodic:~
+
+	絞る:throttle
+	挿入:cue
+	skew:::スキュー
+	長時間:longer time period
+	確度
+	高:high
+
+
+	●処理
+実行時:runtime::~
+再起動:restart:~
+	各~開始:restart
+	作成~時点:moment of creation
+
+	●保安
+schedule::::スケジュール
+timer::::タイマー
+統計的:statistical:~
+活動:activity:~
+速度:speed:~
+露呈-:reveal:~
+応答性:responsiveness:~
+協調-:coordinate:~
+退歩:regressions:~
+分析:analysis:~
+分析-:analyse:~
+音:sound:~
+見積もり:estimate:~
+機密的:confidential:~
+TCP:
+entropy::::エントロピー
+drift:::同期ずれ
+縛られ:tieされ:~
+分別-:differentiate:~
+低層:lower-layer:~
+読取る:readする::読み取る
+濫用:abuse:~
+抑制:reduction:~
+process::::プロセス
+無関係な:unrelatedな:~
+推定-:infer:~
+背景:background:~
+決定的:critical:~
+不可能:impossible:~
+	~~基盤:primitives
+	側からの:side channel
+	担当する:responsible
+	可能にする:enables
+	ゆらぎを加える:Added jitter
+	につながる:associated
+
+	●仕様
+生粋:genuine:純粋
+実用上の:practicalな:~
+助け:help:~
+確認-:confirm:~
+確認:confirmation:~
+未解決:unsolved:~
+発展途上の:evolve している:~
+	:evolving
+研究:research:~
+分野:area:~
+産業界:industry:~
+業界:industry:~
+同意:consensus:~
+権威ある:definitiveな:~
+
+	一方で:whereas
+	可能性がある:potentially
+	選ぶ:choose
+
+	●未分類（動詞
+unload:
+prompt:
+閲覧:browsing:~
+換算-:translate:~
+統一-:unify:~
+交換-:exchange:~
+推測-:guess:~
+
+	●未分類
+typedef:
+タブ:tab::~
+toJSON:
+cue:
+
+	文書~navi:navigating to a Document
+	細かさに:minimum 
+	~~背後に回され:backgrounded
+	量:amount
+	point
+	using
+	-:assert
+	基準:with respect to
+	across
+	incognito
+	過去現在未来:past, present, and future,
+	より長い:longer
+	:in place#1
+	against
+	変わり:vary
+	●指示語
+	以前:previously
+	, :both
+
+
+●●ref_normative
+
+[dom]
+    DOM Standard. Anne van Kesteren. WHATWG. Living Standard. URL: https://dom.spec.whatwg.org/
+[ECMA-262]
+    ECMAScript Language Specification. Ecma International. URL: https://tc39.es/ecma262/
+[HTML]
+    HTML Standard. Anne van Kesteren; Domenic Denicola; Ian Hickson; Philip Jägenstedt; Simon Pieters. WHATWG. Living Standard. URL: https://html.spec.whatwg.org/multipage/
+[RFC2119]
+    Key words for use in RFCs to Indicate Requirement Levels. S. Bradner. IETF. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119
+[RFC8174]
+    Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words. B. Leiba. IETF. May 2017. Best Current Practice. URL: https://tools.ietf.org/html/rfc8174
+[SPECTRE]
+    Spectre Attacks: Exploiting Speculative Execution. Paul Kocher; Jann Horn; Anders Fogh; Daniel Genkin; Daniel Gruss; Werner Haas; Mike Hamburg; Moritz Lipp; Stefan Mangard; Thomas Prescher; Michael Schwarz; Yuval Yarom. January 2018. URL: https://spectreattack.com/spectre.pdf
+[WEBIDL]
+    Web IDL. Boris Zbarsky. W3C. 15 December 2016. W3C Editor's Draft. URL: https://heycam.github.io/webidl/
+
+●●ref_informative
+
+[CACHE-ATTACKS]
+    The Spy in the Sandbox - Practical Cache Attacks in Javascript. Yossef Oren; Vasileios P. Kemerlis; Simha Sethumadhavan; Angelos D. Keromytis. March 2015. URL: https://arxiv.org/abs/1502.07373
+[HR-TIME-20121217]
+    High Resolution Time. Jatinder Mann. W3C. 17 December 2012. W3C Recommendation. URL: https://www.w3.org/TR/2012/REC-hr-time-20121217/
+[PERFORMANCE-TIMELINE-20131212]
+    Performance Timeline. Jatinder Mann; Zhiheng Wang. W3C. 12 December 2013. W3C Recommendation. URL: https://www.w3.org/TR/2013/REC-performance-timeline-20131212/
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより
+勧告として公開された
+<a href="~SPEC_URL">High Resolution Time</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+
+●●spec_metadata
+
+このバージョン
+	https://www.w3.org/TR/2019/REC-hr-time-2-20191121/
+最新発行バージョン
+	https://www.w3.org/TR/hr-time-2/
+編集者草案
+	https://w3c.github.io/hr-time/
+以前のバージョン
+	https://www.w3.org/TR/2019/PR-hr-time-2-20191015/
+テスト一式
+	https://wpt.fyi/hr-time/
+実装報告
+	https://wpt.fyi/hr-time/
+編集
+	<a href="mailto:igrgiroik@gmail.com">Ilya Grigorik</a> (Google Inc.)
+前任編集者
+	<a href="mailto:simonjam@google.com">James Simonsen</a> (Google Inc.) (Until January 2015)
+	<a href="mailto:jmann@microsoft.com">Jatinder Mann</a> (Microsoft Corp.) (Until February 2014)
+Participate
+	<a href="https://github.com/w3c/hr-time/">GitHub w3c/hr-time</a>
+	<a href="https://github.com/w3c/hr-time/issues/">File a bug</a>
+	<a href="https://github.com/w3c/hr-time/commits/gh-pages">Commit history</a>
+	<a href="https://github.com/w3c/hr-time/pulls/">Pull requests</a>
+ブラウザサポート
+	https://caniuse.com/high-resolution-time
+発行者
+	<a href="https://www.w3.org/webperf/">Web Performance Working Group</a>
+正誤表
+	https://w3c.github.io/hr-time/errata.html
+</script>
+
+</head>
+<body>
+
+<header>
+
+	<hgroup>
+<h1>高分解能な計時 — High Resolution Time</h1>
+	</hgroup>
+
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この仕様は、［
+~milli秒より細かい†（ `sub-millisecond^en ）分解能であって, かつ
+`外的な時計~調整$（ `system clock skew or adjustments^en ）の~subjectにされない
+］ような，`時刻起点$, 現在の時刻を供する~APIを定義する。
+【†<a href="#desired-resolution" >具体的な精度は決まっていない</a>。】
+◎
+This specification defines an API that provides the time origin, and current time in sub-millisecond resolution, such that it is not subject to system clock skew or adjustments.
+</p>
+
+	</section>
+	<section id="sotd">
+~STATUSofTHIS
+
+<p>
+この節では、発行時点における…
+【以下、この節の他の内容は <a href="w3c-common-ja.html#status">W3C 日本語訳 共通~page</a>／冒頭の仕様~metadataに委譲。】
+</p>
+
+<p>
+この~level 2 は、この仕様の最初の~version
+`PERFORMANCE-TIMELINE-20131212$r
+を置換し，次を含む：
+◎
+High Resolution Time Level 2 replaces the first version of High Resolution Time and includes:
+</p>
+
+<ul>
+	<li>
+処理能~時列線に関係するすべての仕様の目的~用の，`時刻起点$の精確な定義。
+◎
+A precise definition of time origin for the purpose of all performance timeline related specifications;
+</li>
+	<li>
+`Performance$I ~interfaceの `timeOrigin$m 属性は、大域的な~zero時刻を成す`時刻起点$を供する。
+◎
+Performance.timeOrigin, an attribute providing the global time of the zero time of time origin;
+</li>
+	<li>
+最初の~versionにて指定されていた `Performance$I ~interface用の基底を成す定義は、今やこの仕様へ移動され，今や `Worker$I における `now()$m ~method用の~supportを含む。
+◎
+The base definition for the Performance interface, previously specified in [PERFORMANCE-TIMELINE-20131212], is now moved to this specification and now includes support for the Performance.now method in Worker.
+</li>
+</ul>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="_conventions">
+<h2>【この訳に固有の表記規約】</h2>
+
+<ul>
+	<li>
+この訳の~algoや定義の記述に利用されている各種記号（ ~LET, コレ, ~IF, ~THROW 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+</li>
+	<li>
+`外的な時計~調整@
+— この訳では、原文の
+“`system clock adjustments^en”, “`system clock skew^en”
+の総称として，この語を用いることにする。
+原文には説明されていないが、
+`system clock adjustments^en は、 NTP などの外部の時計と~system時計とのずれを
+— 自動的に，場合によっては利用者が —
+補正することを指すようだ。
+`clock skew^en は、 Wikipedia によれば［
+熱などの物理的な／回路構成などの機械的な
+］要因による，~system内の複数箇所の間の~driftを意味するようだが、この語の用いられ方から，それに対処するために~system時計を補正することを指すようだ。
+</li>
+</ul>
+
+	</section>
+	<section id="introduction">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+ECMAScript 言語~仕様 `ECMA-262$r は、
+1970 年 1 月 1 日 UTC からの~milli秒~単位による時間を表現する時刻~値として，
+`Date$c ~objを定義する。
+この値は， 1970 年 1 月 1 日 UTC から約 28 万 5616 年間のどの時刻も~milli秒~単位で表現でき、ほとんどの目的においては，この定義で足りる。
+`DOMTimeStamp$I `WEBIDL$r も同様に定義されている。
+◎
+The ECMAScript Language specification [ECMA-262] defines the Date object as a time value representing time in milliseconds since 01 January, 1970 UTC. For most purposes, this definition of time is sufficient as these values represent time to millisecond precision for any instant that is within approximately 285,616 years from 01 January, 1970 UTC. The DOMTimeStamp is defined similarly [WEBIDL].
+</p>
+
+<p>
+これらの定義による時刻は、実施においては，`外的な時計~調整$の~subjectにもなる。
+時刻~値は常に単調増加するとは限らず，後続の値は減少したり, 同じままになることもある。
+◎
+In practice, these definitions of time are subject to both clock skew and adjustment of the system clock. The value of time may not always be monotonically increasing and subsequent values may either decrease or remain the same.
+</p>
+
+<div class="example">
+<p>
+例えば 次の~scriptは、
+%duration の計算結果として［
+正な値, 負な値, 0
+］いずれも記録し得る。
+◎
+For example, the following script may record a positive number, negative number, or zero for computed duration:
+◎
+Example 1
+</p>
+
+<pre class="lang-js">
+var %mark_start = Date.now();
+doTask(); // <span class="comment">何らかの~task</span>
+var %duration = Date.now() - %mark_start;
+</pre>
+
+</div>
+
+<p>
+この定義による時刻は、~milli秒より細かい分解能はなく, `外的な時計~調整$の~subjectにもなるので、ある種の~taskには不足する。
+例えば：
+◎
+For certain tasks this definition of time may not be sufficient as it does not allow for sub-millisecond resolution and is subject to system clock skew. For example:
+</p>
+
+<ul>
+	<li>
+文書~navi, 資源の~fetching, ~scriptの実行
+などに費やされた時間を正確aに計測しようと試みるとき、~milli秒より細かい分解能, かつ単調増加する時計が欲される。
+◎
+When attempting to accurately measure the elapsed time of navigating to a Document, fetching of resources or execution of script, a monotonically increasing clock with sub-millisecond resolution is desired.
+</li>
+	<li>
+~scriptから~animationの状態を計算するとき、~animationを次の場面へ適正に更新するためには，開発者は ~animationに費やされた時間の~~長さを正確aに知る必要がある。
+◎
+When calculating the animation state from script, developers will need to accurately know the amount of time that has elapsed in the animation in order to properly update the next scene of the animation.
+</li>
+	<li>
+~scriptに基づく~animationの~frame~rateを計算するとき、~animationが 60 FPS で描画されているかどうか決定するためには，~milli秒より細かい分解能が必要になる。
+~milli秒より細かくなければ、開発者は 58.8 FPS と 62.5 FPS を区別するのが限界になる。
+【1 ~frameあたり前者が 1/58.8 = 約 0.017 秒, 後者は 0.016 秒で，その差 1/1000 秒】
+◎
+When calculating the frame rate of a script based animation, developers will need sub-millisecond resolution in order to determine if an animation is drawing at 60 FPS. Without sub-millisecond resolution, a developer can only determine if an animation is drawing at 58.8 FPS or 62.5 FPS.
+</li>
+	<li>
+~animation内の特定の時点に音声を~cueしようと試みるときや,
+音声と~animationが同期するのを確保するためには、開発者は，~animationと音声に費やされる時間の~~長さを正確aに知る必要がある。
+◎
+When attempting to cue audio to a specific point in an animation or ensure that the audio is synchronized with the animation, developers will need to accurately know the amount of time elapsed in the animation and audio.
+</li>
+	<li>
+複数の文脈~下の作業を，~milli秒より細かい分解能で互いに同期させる必要があるとき（例：
+`Worker$I や `SharedWorker$I などの~workerを利用して，具現化器の文脈~下で~animation, 音声, 等々を駆動する）や、複数の文脈で生じた~eventたちが成す時列線の，統一された~viewを作成する必要があるとき。
+◎
+When multiple contexts need to synchronize work with sub-millisecond resolution (e.g. when using Worker or SharedWorker workers to drive animation, audio, etc., in a renderer context), or to create a unified view of the event timeline.
+</li>
+
+</ul>
+
+<p>
+この仕様は、 `Date.now()$c `ECMA-262$r の挙動を変更するよう提案するものではない。
+それは、暦における現在の時刻~値を決定する点においては生粋に有用であり，長い利用の歴史がある。
+`DOMHighResTimeStamp$I 型と
+`Performance$I ~interfaceの［
+`now()$m  ~method／
+`timeOrigin$m 属性
+］が、［
+単調増加する, ~milli秒より細かい分解能による時刻~値
+］を供することにより，上に挙げた課題を解決する。
+◎
+This specification does not propose changing the behavior of Date.now() [ECMA-262] as it is genuinely useful in determining the current value of the calendar time and has a long history of usage. The DOMHighResTimeStamp type, Performance.now method, and performance.timeOrigin attributes of the Performance interface resolve the above issues by providing monotonically increasing time values with sub-millisecond resolution.
+</p>
+
+		<section id="examples">
+<h3 title="Examples">1.1. 例</h3>
+
+~INFORMATIVE
+
+<p>
+開発者は、自身の~app全体にわたり，`時刻起点$が異なる［
+`Worker$I や `SharedWorker$I
+］からの~eventも含むような時列線†を構築したいと望むこともあろう。
+`timeOrigin$m 属性の助けを借りて 各~eventの `DOMHighResTimeStamp$I 値を換算すれば、~appは，そのような~eventたちを同じ時列線~上に表示できる。
+◎
+A developer may wish to construct a timeline of their entire application, including events from Worker or SharedWorker, which have different time origins. To display such events on the same timeline, the application can translate the DOMHighResTimeStamps with the help of the performance.timeOrigin attribute.
+</p>
+
+<p class="trans-note">【†
+時列線（ `timeline^en ）：
+生じた~eventをその時刻とともに時系列順に記録するもの（無数の時刻~値からなる昇順の並びが成す線）。
+】</p>
+
+<div class="example">
+
+<pre class="lang-js">
+// ---- worker.js -----------------------------
+/* <span class="comment">
+`SharedWorker$I 内の~script
+◎
+Shared worker script
+</span> */
+onconnect = function(%e) {
+  var %port = %e.ports[0];
+  %port.onmessage = function(%e) {
+    /* <span class="comment">
+~worker内での計時~task
+◎
+Time execution in worker
+</span> */
+    var %task_start = performance.now();
+    %result = runSomeWorkerTask();
+    var %task_end = performance.now();
+  }
+
+  /* <span class="comment">
+結果と, および~epochに相対的な時刻印を，別の文脈へ送信する
+◎
+Send results and epoch-relative timestamps to another context
+</span> */
+  %port.postMessage({
+     'task': 'Some worker task',
+     'start_time': %task_start + performance.timeOrigin,
+     'end_time': %task_end + performance.timeOrigin,
+     'result': %result
+  });
+}
+
+// ---- application.js ------------------------
+/* <span class="comment">
+文書~内での計時~task
+◎
+Timing tasks in the document
+</span> */
+var %task_start = performance.now();
+runSomeApplicationTask();
+var %task_end = performance.now();
+
+/* <span class="comment">
+実行時の処理能~dataを~uploadするために開発者が供した~method
+◎
+developer provided method to upload runtime performance data
+</span> */
+reportEventToAnalytics({
+  'task': 'Some document task',
+  'start_time': %task_start,
+  'duration': %task_end - %task_start
+});
+
+/* <span class="comment">
+~workerの時刻印を文書の`時刻起点$に換算する
+◎
+Translating worker timestamps into document's time origin
+</span> */
+var %worker = new SharedWorker('worker.js');
+%worker.port.onmessage = function (%event) {
+  var %msg = %event.data;
+
+  /* <span class="comment">
+~epochに相対的な時刻印を文書の`時刻起点$に換算する
+◎
+translate epoch-relative timestamps into document's time origin
+</span> */
+  %msg.start_time = %msg.start_time - performance.timeOrigin;
+  %msg.end_time = %msg.end_time - performance.timeOrigin;
+
+  reportEventToAnalytics(%msg);
+}
+</pre>
+
+</div>
+
+		</section>
+	</section>
+	<section id="sec-time-origin">
+<h2 title="Time Origin">2. 時刻起点</h2>
+
+<p>
+`時刻起点@
+（ `time origin^en ）とは、時間を計測する起点であり，所与の`大域~obj$に応じて，次で定義される時点になるモノトスル：
+◎
+The time origin is the time value from which time is measured:
+</p>
+
+<dl class="switch">
+	<dt>
+`Window$I ~objである場合：
+◎
+If the global object is a Window object, the time origin MUST be equal to: 
+</dt>
+	<dd>
+前の文書がない場合
+⇒
+最初に`閲覧文脈が作成され$た時点
+◎
+the time when the browsing context is first created if there is no previous document;
+</dd>
+	<dd>
+他の場合，前の文書が存在し, それが`~unloadを~promptする$間に利用者に確認~dialogが表示された場合
+⇒
+利用者が~naviを確認した時点
+◎
+otherwise, the time of the user confirming the navigation during the previous document's prompt to unload algorithm, if a previous document exists and if the confirmation dialog was displayed; 
+</dd>
+	<dd>
+他の場合
+⇒
+`Window$I ~objに`結付けられている文書$の読込ngを担当する`~navi$を開始した時点
+◎
+otherwise, the time of starting the navigation responsible for loading the Window object's newest Document object.
+</dd>
+
+	<dt>`WorkerGlobalScope$I ~objである場合：</dt>
+	<dd>
+~workerの`公式的な作成~時点$。
+◎
+If the global object is a WorkerGlobalScope object, the time origin MUST be equal to the official moment of creation of the worker.
+</dd>
+
+	<dt>他の場合：</dt>
+	<dd>
+未定義とする。
+◎
+Otherwise, the time origin is undefined.
+</dd>
+</dl>
+
+<p>
+`時刻起点~時刻印@
+は、`時刻起点$を指す
+【大域的な】
+時刻を与える，高分解能な時刻~値である。
+所与の`大域~obj$ %G の`時刻起点~時刻印$は：
+◎
+The time origin timestamp is the high resolution time value at which time origin is zero. To obtain the time origin timestamp given a global object (global):
+◎
+Assert that global's time origin is not undefined.
+</p>
+
+<ul>
+	<li>
+%G の`時刻起点$が未定義な場合は定義されない。
+</li>
+	<li>
+<p>
+他の場合、次の 2 つを加算した結果として定義される：
+</p>
+		<ul>
+			<li>
+［
+`大域的な単調増加~時計$が時刻 0 を指す時点
+］を高分解能な`~JS時刻$で表現している `DOMHighResTimeStamp$I 値
+◎
+Let t1 be the DOMHighResTimeStamp representing the high resolution time at which the global monotonic clock is zero.
+</li>
+			<li>
+`大域的な単調増加~時計$による［
+%G の`時刻起点$
+］の時刻を，高分解能で表現している `DOMHighResTimeStamp$I 値
+◎
+Let t2 be the DOMHighResTimeStamp representing the high resolution time value of the global monotonic clock at global's time origin.
+◎
+Return the sum of t1 and t2.
+</li>
+		</ul>
+	</li>
+</ul>
+
+<p class="note">注記：
+`時刻起点~時刻印$は、`外的な時計~調整$の~subjectでない`大域的な単調増加~時計$を基準に記録されるので，［
+`Date.now()$c を “~zero時刻”
+【すなわち、時刻起点】
+に実行したときの結果と相違し得る。
+<a href="#sec-monotonic-clock">単調増加~時計 節</a>
+を見よ。
+◎
+The time origin timestamp and the value returned by `Date.now()` executed at "zero time" can differ because the former is recorded with respect to a global monotonic clock that is not subject to system and user clock adjustments, clock skew, and so on—see § 6. Monotonic Clock.
+</p>
+
+<p>
+`現在の高分解能~時刻@
+は、`時刻起点$から現在時（概して， “今（ `now^en ）” とも呼ばれる）までの時間~差を，高分解能で表す時刻~値である。
+◎
+The current high resolution time is the high resolution time from the time origin to the present time (typically called "now").
+</p>
+
+	</section>
+	<section id="sec-domhighrestimestamp">
+<h2 title="The DOMHighResTimeStamp typedef">3. `DOMHighResTimeStamp^I ~typedef</h2>
+
+<div class="p">
+<p>
+`DOMHighResTimeStamp@I
+型は、次のいずれかを表現する，~milli秒~単位による値を格納するために利用される：
+</p>
+
+<ul ><li>`時刻起点$から相対的に計測された時刻
+</li><li>`大域的な単調増加~時計$から相対的に計測された時刻
+</li><li>2 つの `DOMHighResTimeStamp$I 値の時間~差
+</li></ul>
+◎
+The DOMHighResTimeStamp type is used to store a time value in milliseconds, measured relative from the time origin, global monotonic clock, or a time value that represents a duration between two DOMHighResTimeStamps.
+</div>
+
+<pre class="idl">
+typedef double `DOMHighResTimeStamp$I;
+</pre>
+
+<p id="desired-resolution">
+`DOMHighResTimeStamp$I 値は、~milli秒~単位の時間を，［
+計測には十分, かつ計時~攻撃は防止する
+］正確aさで表現するベキである。
+追加的な考慮点については、<a href="#clock-resolution">時計の分解能</a>節を見よ。
+◎
+A DOMHighResTimeStamp SHOULD represent a time in milliseconds accurate enough to allow measurement while preventing timing attacks - see 8.1 Clock resolution for additional considerations.
+</p>
+
+	</section>
+	<section id="sec-performance">
+<h2 title="The Performance interface">4. `Performance^I ~interface</h2>
+
+<pre class="idl">
+[`Exposed$=(Window,Worker)]
+interface `Performance@I : `EventTarget$I {
+    `DOMHighResTimeStamp$I `now()$m;
+    readonly attribute `DOMHighResTimeStamp$I `timeOrigin$m;
+    [`Default$] object `toJSON()$m;
+};
+</pre>
+
+<div class="algo">
+<p id="now-method">
+`now()@m
+~method~手続きは、`現在の高分解能~時刻$を返す。
+`basic.any$test
+`basic.any.worker$test
+</p>
+◎
+4.1 now() method
+◎
+The now() method MUST return the current high resolution time.
+</div>
+
+<div class="algo">
+<p id="timeorigin-attribute">
+`timeOrigin@m
+取得子~手続きは、コレに`関連な大域~obj$用の`時刻起点~時刻印$を高分解能で表現する， `DOMHighResTimeStamp$I 値を返す。
+`timeOrigin$test
+`window-worker-timeOrigin.window$test
+</p>
+◎
+4.2 timeOrigin attribute
+◎
+The timeOrigin attribute MUST return a DOMHighResTimeStamp representing the high resolution time of the time origin timestamp for the relevant global object of the Performance object.
+</div>
+
+<div class="algo">
+<p id="tojson-method">
+`toJSON()@m
+~method~手続きは、`既定の~toJSON手続き$ `WEBIDL$r で与えられる。
+`performance-tojson$test
+</p>
+◎
+4.3 toJSON() method
+◎
+When toJSON() is called, run [WEBIDL]'s default toJSON operation.
+</div>
+
+	</section>
+	<section id="extensions-to-windoworworkerglobalscope-mixin">
+<h2 title="Extensions to WindowOrWorkerGlobalScope mixin">5. `WindowOrWorkerGlobalScope^I ~mixinに対する拡張</h2>
+
+<p id="the-performance-attribute">
+`WindowOrWorkerGlobalScope$I の
+`performance@m
+属性は、`大域~obj$からの［
+処理能に関係する属性や~method
+］へ~accessできるようにする。
+◎
+5.1 The performance attribute
+◎
+The performance attribute on the interface mixin WindowOrWorkerGlobalScope allows access to performance related attributes and methods from the global object.
+</p>
+
+<pre class="idl">
+partial interface mixin `WindowOrWorkerGlobalScope$I {
+    [`Replaceable$] readonly attribute `Performance$I `performance$m;
+};
+</pre>
+
+	</section>
+	<section id="sec-monotonic-clock">
+<h2 title="Monotonic Clock">6. 単調増加~時計</h2>
+
+<div class="p">
+<p>
+［
+同じ`時刻起点$を共有する，各 `Performance$I ~obj
+］の `now()$m ~methodが返す時刻~値は、同じ`単調増加~時計$を利用するモノトスル。
+同じ `Performance$I ~objの `now()$m ~methodが返す，時系列順に記録された 2 つの時刻~値の差は、決して負にならないモノトスル。
+</p>
+
+<p>
+`単調増加~時計@
+とは、［
+`外的な時計~調整$の~subjectにされることなく，単調増加する
+］ような時計である。
+`monotonic-clock.any$test
+`monotonic-clock.any.worker$test
+</p>
+
+<p class="trans-note">【
+どの `Performance$I ~objたちが同じ`時刻起点$を共有するものとされるかは、ここには述べられていない。
+】</p>
+
+◎
+The time values returned when calling the now() method on Performance objects with the same time origin MUST use the same monotonic clock that is monotonically increasing and not subject to system clock adjustments or system clock skew. The difference between any two chronologically recorded time values returned from the Performance.now() method MUST never be negative if the two time values have the same time origin.
+</div>
+
+<div class="p">
+<p>
+`timeOrigin$m が返す時刻~値には、同じ`大域的な単調増加~時計$を利用するモノトスル†。
+`大域的な単調増加~時計@
+とは、
+`ECMA-262$r に定義される`~JS時刻$††を基準にする`単調増加~時計$であり，いくつかの`時刻起点$から共有される。
+<a href="#sec-privacy-security">~privacyと~security</a>
+を見よ。
+`test_cross_frame_start$test
+</p>
+
+<p class="trans-note">【
+どの`時刻起点$
+— 言い換えれば、`大域~obj$ —
+たちが同じこの時計を共有するものとされるかは，ここには定義されていないが、下の注記に見られるように，互いに情報をやりとりできる`大域~obj$どうしは共有することになるであろう。
+】【†
+この要件をより詳細に述べるなら、
+“2 つの`大域~obj$ %G1, %G2 が同じ`大域的な単調増加~時計$を共有するならば、
+%G1, %G2 の［
+`performance$m 属性が返す `Performance$I ~objの `timeOrigin$m が返す時刻~値
+］には，その時計を利用するモノトスル”
+となるであろう。
+】【††
+原文では単に `time^en だが、一般過ぎるので，この訳では “~JS” を付与する。
+~JS時刻は、以前までは（公式的な定義がない）
+<a href="https://en.wikipedia.org/wiki/Unix_time">Unix 時間</a>
+と称されていた。
+】</p>
+
+◎
+The time values returned when getting performance.timeOrigin MUST use the same global monotonic clock that is shared by time origins, is monotonically increasing and not subject to system clock adjustments or system clock skew, and whose reference point is the [ECMA-262] time definition - see § 7. Privacy and Security.
+</div>
+
+<p class="note">注記：
+~UAは、［
+~browserの各~再起動 ／
+他から隔離された閲覧~session（例： incognito 【private】
+または それに類似な閲覧~mode）の各~開始
+］ごとに，自身の`大域的な単調増加~時計$を設定し直せる。
+そのため，開発者は、［［
+過去現在未来すべての文脈にわたり，単調増加するような~prop
+］を保持する，絶対的な時刻
+］には，大域的な時刻印を利用するベキでない。
+実施において，単調増加する~propを適用できる用途は、［
+供されている~message法の仕組み
+— 例： `postMessage()^m, `BroadcastChannel$I, 等々 —
+を介して~messageを交換することにより，互いに他へ到達できるような文脈
+］に限られる。
+◎
+The user agent can reset its global monotonic clock across browser restarts, or whenever starting an isolated browsing session—e.g. incognito or similar browsing mode. As a result, developers should not use global timestamps as absolute time that holds its monotonic properties across all past, present, and future contexts; in practice, the monotonic properties only apply for contexts that can reach each other by exchanging messages via one of the provided messaging mechanisms - e.g. postMessage, BroadcastChannel, etc.
+</p>
+
+<p class="note">注記：
+ある種の局面においては（例：タブが~~背後に回されているとき）、~UAは，その文脈において［
+~timerを絞って，周期的な~callbackが走る~~頻度を~~抑える
+］ことを選ぶ，あるいは まるごと凍結することさえあろう。
+そのようにしたときでも、単調増加~時計が返す時刻の分解能や正確aさには影響するベキでない。
+◎
+In certain scenarios (e.g. when a tab is backgrounded), the user agent may choose to throttle timers and periodic callbacks run in that context or even freeze them entirely. Any such throttling should not affect the resolution or accuracy of the time returned by the monotonic clock.
+</p>
+
+	</section>
+	<section id="sec-privacy-security">
+<h2 title="Privacy and Security">7. ~privacyと~security</h2>
+
+		<section id="clock-resolution">
+<h3 title="Clock resolution">7.1. 時計の分解能</h3>
+
+<p>
+正確aな計時~情報への~accessは、計測と~schedule法の両~目的において，多くの~appに共通な要件である。
+例えば， ~animation, 音, その他の~page上の活動を協調させ，より良い利用者~体験を供するためには、高分解能な時間への~accessを要する。
+同様に，計測により、開発者は，~codeの決定的な部位における処理能を追跡したり, 退歩を検出する, 等々
+が可能になる。
+◎
+Access to accurate timing information, both for measurement and scheduling purposes, is a common requirement for many applications. For example, coordinating animations, sound, and other activity on the page requires access to high-resolution time to provide a good user experience. Similarly, measurement enables developers to track the performance of critical code components, detect regressions, and so on.
+</p>
+
+<p>
+しかしながら，その同じ正確aな計時~情報への~accessは、さもなければ攻撃者が見たり~accessできない~dataを推測して推定するような，悪意的な攻撃~目的にも利用され得る。
+例えば［
+~cache攻撃／
+統計的な指紋収集（ `statistical fingerprinting^en ）／
+CPU ~architectureに乗じる攻撃（ `microarchitectural attack^en ）
+］は、悪意的な~web~siteが［
+利用者たちを分別する／
+特定0の利用者を識別する ／
+同一-~process内の無関係な利用者~dataを露呈する
+］ために［
+~browserや~appから起動される様々な演算による，高分解能な計時~data
+］を利用し得るときの，~privacyと~security上の懸念である
+— さらなる背景は `CACHE-ATTACKS$r, `SPECTRE$r を見よ。
+◎
+However, access to the same accurate timing information can sometimes be also used for malicious purposes by an attacker to guess and infer data that they can't see or access otherwise. For example, cache attacks, statistical fingerprinting and microarchitectural attacks are a privacy and security concern where a malicious web site may use high resolution timing data of various browser or application-initiated operations to differentiate between subset of users, identify a particular user or reveal unrelated but same-process user data - see [CACHE-ATTACKS] and [SPECTRE] for more background.
+</p>
+
+<p>
+この仕様は、これまで `DOMTimeStamp$I に公開され可用であった~milli秒の分解能より正確aな，より細かい時間~分解能を供する~APIを定義する。
+しかしながら，この新たな~APIがなくとも、攻撃者は，~~反復~実行と統計的な分析を通して，高分解能な見積もりを得することはできる。
+新たな~APIにより，そのような攻撃の正確度や速度が有意に向上されないことを確保するため、
+`DOMHighResTimeStamp$I 型の分解能は，攻撃を防止するに十分な正確aさに止めるベキである：
+現時点では，分解能は 5 ~micro秒より細かくしないことが推奨される
+— ~architectureや~softwareの拘束, その他の考慮点に因り，~privacyと~securityの懸念に取組むため必要とされるならば、~UAは，もっと粗く設定するベキである。
+`timing-attack$test
+◎
+This specification defines an API that provides sub-millisecond time resolution, which is more accurate than the previously available millisecond resolution exposed by DOMTimeStamp. However, even without this new API an attacker may be able to obtain high-resolution estimates through repeat execution and statistical analysis. To ensure that the new API does not significantly improve the accuracy or speed of such attacks, the minimum resolution of the DOMHighResTimeStamp type should be inaccurate enough to prevent attacks: the current minimum recommended resolution is no less than 5 microseconds and, where necessary, should be set higher by the User Agent to address privacy and security concerns due to architecture or software constraints, or other considerations.
+</p>
+
+<p>
+~UAは、そのような攻撃を軽減するために必要と判断される技法があれば，配備してもヨイ。
+そのような技法の配備は、次に挙げるものに基づいて変わり得る
+⇒＃
+~browserの~architecture,
+利用者の機器,
+内容,
+内容が非同一-生成元~dataを悪意的に読取る能,
+その他の実用上の考慮点
+◎
+In order to mitigate such attacks user agents may deploy any technique they deem necessary. Deployment of those techniques may vary based on the browser's architecture, the user's device, the content and its ability to maliciously read cross-origin data, or other practical considerations.
+</p>
+
+<p>
+これらの技法には、次も含まれよう
+⇒＃
+分解能の抑制／
+ゆらぎを加える／
+濫用を検出して~API~callを絞る
+◎
+These techniques may include:
+• Resolution reduction.
+• Added jitter.
+• Abuse detection and/or API call throttling.
+</p>
+
+<p>
+そのような計時~側からの攻撃を まるごと軽減するのは、実用的には不可能である：
+そのためには，［
+すべての演算の実行~時間は，機密的な情報の値に応じて変わらないようにする
+］か［
+~appを，時間に関係するあらゆる~~基盤（時計, ~timer, ~counter, 等々）から隔離する
+］必要があるが、どちらも，［［
+~browser／~app
+］開発者にとっての複階性
+］および［
+~appの［
+処理能, 応答性
+］に対する負な効果
+］につながることに因り，実用的でない。
+◎
+Mitigating such timing side-channel attacks entirely is practically impossible: either all operations would have to execute in a time that does not vary based on the value of any confidential information, or the application would need to be isolated from any time-related primitives (clock, timers, counters, etc). Neither is practical due to the associated complexity for the browser and application developers and the associated negative effects on performance and responsiveness of applications.
+</p>
+
+<p class="note">注記：
+時計の分解能は，未解決かつ発展途上の研究~分野であり、すべての~browserに適用される既存の［
+業界~同意／権威ある推奨
+］は無い。
+<a href="https://github.com/w3c/hr-time/issues/79">Issue 79</a>
+にて，論点を追跡できる。
+◎
+Clock resolution is an unsolved and evolving area of research, with no existing industry consensus or definitive set of recommendations that applies to all browsers. To track the discussion, refer to Issue 79.
+</p>
+
+		</section>
+		<section id="clock-drift">
+<h3 title="Clock drift">7.2. 時計の~drift</h3>
+
+<p>
+この仕様は、［
+~milli秒より細かい分解能による`時刻起点~時刻印$
+］を供する~APIも定義する。
+~APIには［
+すべての~browser文脈にわたって共有されなければナラナイ，`大域的な単調増加~時計$
+］が要求され，それを~appに公開する。
+この時計は，物理的な時刻に縛られる必要はないが、新たな［
+利用者についての指紋収集-
+］~entropyを公開するのを避けるため，`~JS時刻$ `ECMA-262$r を基準に設定することが推奨される。
+~JS時刻は，すでに~appにより容易に得される一方で、新たな論理的~時計を公開するのは，新たな情報を供するに等しいので。
+◎
+This specification also defines an API that provides sub-millisecond time resolution of the zero time of the time origin, which requires and exposes a global monotonic clock to the application, and that must be shared across all the browser contexts. The global monotonic clock does not need to be tied to physical time, but is recommended to be set with respect to the [ECMA-262] definition of time to avoid exposing new fingerprint entropy about the user — e.g. this time can already be easily obtained by the application, whereas exposing a new logical clock provides new information.
+</p>
+
+<p>
+しかしながら，上述した仕組みの下でも、`大域的な単調増加~時計$は，
+<a href="https://en.wikipedia.org/wiki/Clock_drift">時計の~drift</a>
+（ `clock drift^en, “遅れ／進み” ）に関する分解能も供し得る。
+今日の~appは、同じ文脈の中の複数の時点で，［
+従来の時計による時刻印, 単調増加~時計による時刻印
+］を（順に， `Date.now()$c, `performance.now()$m を介して）得て，それらの間の~drift
+— 例えば`外的な時計~調整$に因るそれ —
+を観測できる。
+
+攻撃者はまた、
+`timeOrigin$m 属性から得られる［
+`大域的な単調増加~時計$から報告される`時刻起点~時刻印$
+］と, 従来の時計により［
+`大域的な単調増加~時計$が 0 を指すと現在~見積もられる時刻
+］（すなわち，
+`Date.now()^c − `performance.now()^m
+）とを，長時間にわたり比較して、これらの時計どうしの~driftを観測できる可能性がある。
+◎
+However, even with the above mechanism in place, the global monotonic clock may provide additional clock drift resolution. Today, the application can timestamp the time-of-day and monotonic time values (via Date.now() and Performance.now()) at multiple points within the same context and observe drift between them—e.g. due to automatic or user clock adjustments. With the Performance.timeOrigin attribute, the attacker can also compare the time at which time origin is zero, as reported by the global monotonic clock, against the current time-of-day estimate of when it is zero (i.e. the difference between Date.now()-performance.now() and performance.timeOrigin) and potentially observe clock drift between these clocks over a longer time period.
+</p>
+
+<p class="trans-note">【
+例えば暗号処理を考える。
+その処理の重さ（計算量）に因る CPU 熱は、`外的な時計~調整$（この事例では `clock skew^en ）をもたらす結果，時計の~driftに反映され得る。
+攻撃者は、いくつかの入力とその計算量との相関関係を分析して，ある程度の情報を推定できるかもしれない。
+】</p>
+
+<p>
+実施においては、~appは，同じ時刻~driftを複数回の~naviにわたり観測できる：
+~appは、各~文脈における論理的な時刻を記録し，
+~client／~server
+時刻~同期法の仕組みを利用して、利用者の時計における変化を推定できる。
+同様に~TCP時刻印などの低層の仕組みは、複数回の訪問を要することなく，同じ高分解能な情報を~serverに露呈し得る。
+そのようなわけで，この~APIにより供される情報は、有意な, あるいは以前までは可用でなかった，利用者についての~entropyを公開するベキでない。
+◎
+In practice, the same time drift can be observed by an application across multiple navigations: the application can record the logical time in each context and use a client or server time synchronization mechanism to infer changes in the user's clock. Similarly, lower-layer mechanisms such as TCP timestamps may reveal the same high-resolution information to the server without the need for multiple visits. As such, the information provided by this API should not expose any significant or previously unavailable entropy about the user.
+</p>
+
+		</section>
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p>
+この仕事に貢献された次の方々に感謝する：
+</p>
+
+<p lang="en-x-a0">
+Thanks to Arvind Jain, Angelos D. Keromytis, Boris Zbarsky, Jason Weber, Karen Anderson, Nat Duca, Philippe Le Hegaret, Ryosuke Niwa, Simha Sethumadhavan, Todd Reifsteck, Tony Gentilcore, Vasileios P. Kemerlis, Yoav Weiss, and Yossef Oren for their contributions to this work.
+</p>
+	</section>
+</main></div>

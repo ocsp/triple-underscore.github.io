@@ -1,0 +1,3023 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Fragmentation Module Level 4 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+<style>
+
+#_ex-margin-break > dd {
+	margin: 0;
+}
+.ex-margin-break {
+	display: table;
+	border: solid silver 0.2em;
+}
+
+.ex-margin-break > div {
+	display: table-cell;
+	padding: 0 0.5em;
+	width: 12em;
+	vertical-align: top;
+}
+.ex-margin-break > div > div {
+	height: 1.5em;
+}
+
+.ex-margin-break > div:last-child {
+	font-weight: bold;
+}
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script >
+Util.ready = function(){
+	const source_data = {
+		collectParts: Util.collectParts,
+		generate: expand,
+	};
+
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'dgm':
+	return `<a id="_dgm-${key}">＊</a>`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`
+	break;
+case 'issue': // css values
+	href = `~CSSissue/${key}`;
+	text = `課題 #${key}`;
+	break;
+default:
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+
+return text;
+
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+●●options
+
+spec_title:CSS Fragmentation Module Level 4
+spec_date:2020-05-25
+trans_update:2020-04-04
+source_checked:181218
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-break-4/
+	abbr_url:CSSBREAK
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:layout,css
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2014-08-15
+
+
+●●class_map
+p:property
+prod:production
+t:type
+v:value
+v0:value
+v1:value
+css:css
+
+●●tag_map
+p:code
+prod:code
+t:var
+v:code
+v0:code
+v1:code
+css:code
+V:var
+em:em
+
+●●original_id_map
+
+principal-box:
+
+●●mdn_urls
+propdef-box-decoration-break:CSS/box-decoration-break
+propdef-break-after:CSS/break-after
+propdef-break-before:CSS/break-before
+propdef-break-inside:CSS/break-inside
+	propdef-margin-break:CSS/margin-break
+propdef-orphans:CSS/orphans
+propdef-widows:CSS/widows
+
+●●link_map
+
+
+
+p.break-*:#break-between
+
+p.break-after:#propdef-break-after
+p.break-before:#propdef-break-before
+p.break-inside:#propdef-break-inside
+p.orphans:#propdef-orphans
+p.widows:#propdef-widows
+p.box-decoration-break:#propdef-box-decoration-break
+p.margin-break:#propdef-margin-break
+
+p.margin-trim:~CSSBOX#propdef-margin-trim
+p.direction:~CSSWM#propdef-direction
+p.border-radius:~CSSBG#propdef-border-radius
+p.border-image:~CSSBG#propdef-border-image
+p.box-shadow:~CSSBG#propdef-box-shadow
+p.overflow:~CSSOVERFLOW3#propdef-overflow
+
+p.page-break-after:~CSS22/page.html#propdef-page-break-after
+p.page-break-before:~CSS22/page.html#propdef-page-break-before
+p.page-break-inside:~CSS22/page.html#propdef-page-break-inside
+p.page:~CSSPAGE#propdef-page
+p.height:~CSS2VISUDET#propdef-height
+p.top:~CSSPOS#propdef-top
+
+t.integer:~CSSVAL#integer-value
+
+	v.scroll:~CSSOVERFLOW3#valdef-overflow-scroll
+	ltr:~CSSWM#valdef-direction-ltr
+
+v.auto:#valdef-break-before-auto
+v.avoid:#valdef-break-before-avoid
+v.always:#valdef-break-before-always
+v.all:#valdef-break-before-all
+v.any:#valdef-break-before-any
+v.avoid-page:#valdef-break-before-avoid-page
+v.page:#valdef-break-before-page
+v.left:#valdef-break-before-left
+v.right:#valdef-break-before-right
+v.recto:#valdef-break-before-recto
+v.verso:#valdef-break-before-verso
+v.avoid-column:#valdef-break-before-avoid-column
+v.column:#valdef-break-before-column
+v.avoid-region:#valdef-break-before-avoid-region
+v.region:#valdef-break-before-region
+v.inline-block:~CSSDISP#valdef-display-inline-block
+v.inline-table:~CSSDISP#valdef-display-inline-table
+v.~autoS:~SIZING#valdef-width-auto
+
+	break-inside
+
+v0.auto:#valdef-break-inside-auto
+v0.avoid:#valdef-break-inside-avoid
+v0.avoid-page:#valdef-break-inside-avoid-page
+v0.avoid-column:#valdef-break-inside-avoid-column
+v0.avoid-region:#valdef-break-inside-avoid-region
+
+v.clone:#valdef-box-decoration-break-clone
+v.slice:#valdef-box-decoration-break-slice
+
+v.discard:#valdef-margin-break-discard
+v.keep:#valdef-margin-break-keep
+v1.auto:#valdef-margin-break-auto
+
+~cloneされ:#valdef-box-decoration-break-clone
+
+~page割り:#pagination
+
+断片:#fragment
+断片化:#fragmentation
+断片化~容器:#fragmentation-container
+断片容器:#fragmentainer
+断片化~文脈:#fragmentation-context
+断片化d~flow:#fragmented-flow
+断片化~根:#fragmentation-root
+断片化~方向:#fragmentation-direction
+断片化~分断:#fragmentation-break
+
+
+~box断片:#box-fragment
+
+単体的:#monolithic
+残りの断片容器~塊~size:#remaining-fragmentainer-extent
+
+分断:#fragmentation-break
+分断強制~値:#forced-break-values
+分断回避~値:#avoid-break-values
+~page分断:#page-break
+見開き分断:#spread-break
+柱~分断:#column-break
+~region分断:#region-break
+強制d分断:#forced-break
+非強制d分断:#unforced-break
+アリな分断点:#possible-breaks
+許容される分断:#unforced-breaks
+分断-法の制御:#breaking-controls
+
+A類~分断点:#btw-blocks
+B類~分断点:#btw-lines
+C類~分断点:#end-block
+分断の型:#break-types
+
+伝播-:#propagate
+伝播:#propagate
+
+組み合せる:#forced-breaks
+	#box-splitting
+	浮動体~断片化:#varying-size-boxes
+	forced break:#forced-breaks
+並行する~flow:#parallel-flows
+首要~box:#principal-box
+
+
+	●外部
+~margin区画:~CSSBOX#margin-area
+~border区画:~CSSBOX#border-area
+~padding区画:~CSSBOX#padding-area
+~margin:~CSSBOX#margin
+
+	~transformされ/positioned content:transforms
+行l~box:~CSSINLINE#line-box
+
+複柱~layout:~CSSMCOL#multi-column-layout
+複柱~容器:~CSSMCOL#multi-column-container
+柱~box:~CSSMCOL#column-box
+~spanner:~CSSMCOL#spanner
+	~CSSMCOL#spanning-columns
+
+~region:~CSSREGION#regions
+~region連鎖:~CSSREGION#region-chain
+
+行l分断:~CSSTEXT#line-break
+
+行内~基底~方向:~CSSWM#inline-base-direction
+支配的~基底線:~CSSWM#dominant-baseline
+塊~flow方向:~CSSWM#block-flow-direction
+塊-終端:~CSSWM#block-end
+塊-始端:~CSSWM#block-start
+塊-軸:~CSSWM#block-axis
+塊~size:~CSSWM#block-size
+論理-縦幅:~CSSWM#logical-height
+行内~size:~CSSWM#inline-size
+双向性:~CSSWM#bidirectionality
+首要な書字mode:~CSSWM#principal-writing-mode
+
+	左横書き~left-to-right
+	右横書き~right-to-left
+
+~page進行:~CSSPAGE#page-progression
+~page~box:~CSSPAGE#page-box
+	＊TR/css3-page/#page-box
+
+	フロー
+収納伸張~size:~SIZING#stretch-fit-size
+最小-内容:~SIZING#min-content
+最大-内容:~SIZING#max-content
+
+	変形
+
+算出d値:~CASCADE#computed-value
+旧来の略式~prop:~CASCADE#legacy-shorthand
+
+行内~level:~CSSDISP#inline-level
+行内~box:~CSSDISP#inline-box
+	~CSS2VISUREN#inline-boxes
+	行内:~CSSDISP#inline
+	行内~内容:~CSSDISP#inline-level
+塊~容器:~CSSDISP#block-container
+塊~level:~CSSDISP#block-level
+塊~levelの~box:~CSSDISP#block-level-box
+	塊:~CSSDISP#block
+包含塊:~CSSDISP#containing-block
+表示~型:~CSSDISP#display-type
+整形~文脈:~CSSDISP#formatting-context
+独立な整形~文脈:~CSSDISP#independent-formatting-context
+行内~整形~文脈:~CSSDISP#inline-formatting-context
+~flow内:~CSSDISP#in-flow
+~flow外:~CSSDISP#out-of-flow
+	~CSS2VISUREN#positioning-scheme
+置換d要素:~CSSDISP#replaced-element
+	~CSS2CONFORM#replaced-element
+
+図形の基準~box:~CSSSHAPES#reference-box
+
+内部~ruby~box:~CSSDISP#internal-ruby-box
+	~CSSRUBY#internal-ruby-boxes
+
+無視する:~CSSSYN#css-ignored
+
+背景~位置決め区画:~CSSBG#background-positioning-area
+~mask位置決め区画:~MASKING1#mask-positioning-area
+
+連続的~媒体:~MQ4#continuous-media
+~paged媒体:~MQ4#paged-media
+
+浮動体:~CSS2VISUREN#floats
+
+●●words_table1
+
+autoS:auto
+
+
+●●words_table
+
+
+
+	●分断／断片化
+断片:fragment::~
+断片化-:fragment 化::~
+断片化:fragmentation::~
+断片化d:fragmented::断片化
+断片容器:fragmentainer::断片 container:断片コンテナ
+	断片化処理
+	断片化~可能:fragmentable
+	fragmenting
+	断片化でき:fragmentable
+	片:piece
+	合間:between
+分断:break::~
+分断-:break::~
+	分断されていない:unbroken
+	分断の型:type of break
+分断点:break point::~
+	breakpoint 4
+分断辺:broken edge::~
+	所まで／遡って:breaks~through
+強制d:forced::強制
+非強制d:unforced::非強制
+	任意／未強制
+	discouraged
+分断回避:avoid break::~
+分断強制:forced break::~
+単体的:monolithic::~::モノリシック
+機会:opportunity::~
+自動-:auto-::~
+分割-:split:~
+分割:splitting:~
+	分割-法:splitting
+区割り:division:~
+
+組立てる:assembleする:組み立てる
+組立て:assembly:組み立て
+組直して:reassembleして:組み直して
+
+進行-:progress:~
+進行:progression:~
+進捗量:progress:~
+
+	●CSS レイアウト
+	laid, laying
+
+region:
+複region:multi-region::複 region
+col:column
+柱:column::::カラム
+複柱:multi-column::複 column::複カラム
+spanner:
+spanning:
+row:
+table:
+cell:
+flex:
+格子:grid::~::グリッド
+駒:item:::アイテム
+ruby::::ルビ
+浮動体:float::~
+浮動-:float::~
+浮動d:floated::浮動
+
+span:
+
+	~flow内:in-flow
+首要:principal::主要
+	表示~型:display type
+	塊~levelの:block-level
+	行内~levelの:inline-level
+	行内にある塊による:block-in-inline
+	周囲を取り巻く:wrapping outside
+
+基底線:baseline::~::ベースライン
+
+連続性:continuity::~
+連続的:continuous::~
+不連続:non-contiguous:~
+	連続的でない:non-contiguous
+
+	連続
+	~contradictory:矛盾 1
+供与-:contribute::~
+支配的:dominant::~
+拡がる:extendする:~
+
+	~form:成す／ 2
+
+	左右に:〜 horizontally
+出自の:originating:~
+見開き:spread::~
+相殺-:collapse::~
+
+背景:background::~
+
+	●レイアウト
+	sizeが一様でない:varying-size:
+
+平行:parallel:~
+垂直:perpendicular:~
+	終わる:end up
+部屋:room:~
+回転-:rotate:~
+回転:rotation:~
+	~~直に:immediately-
+	直後:immediately after
+隣接な:adjacentな:隣接する
+連接-:adjoin::~
+接合法:joining::~
+接合わさ:glueさ:接ぎ合わさ
+整列-:align::~
+右寄せ:right-aligned:~
+中央寄せ:centered:~
+左寄せ:left-aligned:~
+	揃え？
+側:side:~
+
+	またがる／~span: 3.001
+原点:origin:~
+最小-:min-:~
+最大-:max-:~
+収納伸張:stretch-fit::~
+
+並行する:parallelな:~
+並行して:parallelに:~
+分離:separation:~
+
+固定d:fixed:固定
+固定-:fix:~
+伸張-:stretch:~
+移転:transfer:~
+変形:transform::~
+隙間:gap:~
+中途:halfway:~
+増大-:increase:~
+区分:partition:~
+横並び:side-by-side:~
+	整えるbalance
+	上側~above
+覆う:coverする:~
+切分けて:sliceして:切り分けて
+切分けら:sliceさ:切り分けら
+埋まる:fillされる:~
+埋める:fillする:~
+収まる:fitする:~
+収まり:fitし:~
+収まら:fitし:~
+
+溢れる:spillする:~
+回込む:wind upする:回り込む
+	押し出す
+追出す:pushする:追い出す
+追出され:pushされ:追い出され
+測定-:measure:~
+
+切落され:truncateされ:切り落とされ
+切落す:truncateする:切り落とす
+	~~先送りされ:forced down
+収容-:accommodate:~
+
+	増やす:increase
+	外側を切り取る:clipped
+	残す:left
+	始めから終わりまで／始めから:below the top
+	~towards
+	脇／傍ら:beside
+	先行の:earlier: 3
+	全体像:entirety
+	等しく:equally
+	~expand
+	~around
+	それぞれの原点を中心に:around its origin
+	増分:extra
+	最深の:deepest:最も深い
+	渡って:across
+	一連の〜に:across 〜s
+	~間に渡る
+	またがる~fall~across
+	任意の所:anywhere
+	現れる:appear
+	囲んでいる:enclosing
+	~insofar: 1
+	部屋は残して~leaving room: 1
+		placing
+	~put: 2
+	ずらす~shift~around: 1
+	離される:shifting away: 1
+	一緒に保たれkept together: 5
+	~glued: 3
+	~truncated: 1
+	points to:指す
+	~portion:一部／部分 3
+	losing off:はみ出る
+	占める:take up／-
+	前~側:earlier side
+	~size 0の:zero-sized
+
+
+	●CSS
+双向性:bidi::~
+双方向-:bidirectional::~
+書字mode:writing mode::書字 mode:書字モード
+左横書き:left-to-right:~
+右横書き:right-to-left:~
+装飾:decoration::~
+	子から親へ:child-to-parent
+	利用-済み:used
+
+	●仕様
+模倣:simulation:~
+影響下:influence 下:~
+総称:generic term:~
+理論上の:theoreticalな:~
+可能性:possibility:~
+一定の:certain:~
+見苦しい:awkward:~
+内来的:inherent:~
+
+	適切さ:appropriateness
+	参考:informatively
+	図式:Illustration／illustrate
+	必要なだけ:as necessary
+	必要に応じて:as necessary
+	必要に応じて:as needed
+	不足:not sufficient
+	〜でも可:possibly
+	より高~level:higher-level
+	どの〜についても:stay
+
+	●仕様（動詞
+課さな:imposeしな:~
+課され:imposeされ:~
+作用-:act:~
+競合-:conflict:~
+	conflicting
+適応-:adapt:~
+	implications
+	〜しないようにする:prevent
+	明瞭でない:unclear
+	as opposed to:対照的
+	~meanings
+	~~評価する:weigh
+	とする:suppose
+	説明図:illustration
+	予め定義-済み:pre-defined
+	~~順守-:observe
+	要する
+	満たす:satisfy
+
+	●未分類（動詞
+組成-:composite:~
+複数化-:duplicate:~
+保つ:keepする:~
+保たれ:keepされ:~
+選ぶ:chooseする:~
+描かれ:drawされ:~
+描く:drawする:~
+記憶-:memory:~
+
+印刷出力:printed output:~
+対向:facing::~
+	両面印刷の対 facing page
+	recording
+図形:shape:~
+
+	matching
+	再度~計算-:recalculate
+	加える:add
+	入子階層を遡って:through as many 〜  as
+	stop
+	~becomes
+	ensuing
+	始まって:began
+	属-:belong
+	~down
+	外され:drop
+	~lead
+	~fall
+
+	●未分類
+dataloss::::データロス
+	graphical
+mask::::マスク
+OHP:transparencies:~
+アルバム:album:~
+上限:limit:~
+紙:paper:~
+写真:photo:~
+表示面:display surfaces:~
+持分:share:~
+heading::見出し
+	別名~法:aliasing
+	優先順位:prioritization
+	量:amount
+	time
+
+	●指示語
+後続の:subsequent:~
+	同じ:single
+	~~後続の:later
+	同時に:simultaneous
+	~multi
+	最終的に、Finally,
+	最も近い:nearest
+	~sometimes
+	~sub
+	しかる後:afterward
+	自身の:own
+	~latest
+	唯:exactly
+	以下:hereafter
+	~few
+	少ない／:fewer
+	次の:next
+	as follows
+	neither
+	先行する:preceding
+	一連の:a series of
+	前の:previous
+	以前に:previously
+	様々になる:variable
+	種々の:various
+	一部を成す:part of
+	大き過ぎ:too large
+	-:itself
+	一致:identical
+	whichever
+	大部分:bulk
+	~non
+	~nor
+	~pre
+	~among
+	~against
+	~away
+	~off
+	~onto
+	~per
+
+●●ref_normative
+
+[CSS-BACKGROUNDS-3]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. 17 October 2017. CR. URL: https://www.w3.org/TR/css-backgrounds-3/ 
+[CSS-BOX-4]
+    Elika Etemad. CSS Box Model Module Level 4. 21 April 2020. WD. URL: https://www.w3.org/TR/css-box-4/ 
+[CSS-CASCADE-4]
+    Elika Etemad; Tab Atkins Jr.. CSS Cascading and Inheritance Level 4. 28 August 2018. CR. URL: https://www.w3.org/TR/css-cascade-4/ 
+[CSS-DISPLAY-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Display Module Level 3. 19 May 2020. CR. URL: https://www.w3.org/TR/css-display-3/ 
+[CSS-MASKING-1]
+    Dirk Schulze; Brian Birtles; Tab Atkins Jr.. CSS Masking Module Level 1. 26 August 2014. CR. URL: https://www.w3.org/TR/css-masking-1/ 
+[CSS-MULTICOL-1]
+    Håkon Wium Lie; Florian Rivoal; Rachel Andrew. CSS Multi-column Layout Module Level 1. 15 October 2019. WD. URL: https://www.w3.org/TR/css-multicol-1/ 
+[CSS-OVERFLOW-3]
+    David Baron; Elika Etemad; Florian Rivoal. CSS Overflow Module Level 3. 31 July 2018. WD. URL: https://www.w3.org/TR/css-overflow-3/ 
+[CSS-PAGE-3]
+    Elika Etemad; Simon Sapin. CSS Paged Media Module Level 3. 18 October 2018. WD. URL: https://www.w3.org/TR/css-page-3/ 
+[CSS-SHAPES-1]
+    Vincent Hardy; Rossen Atanassov; Alan Stearns. CSS Shapes Module Level 1. 20 March 2014. CR. URL: https://www.w3.org/TR/css-shapes-1/ 
+[CSS-SIZING-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Intrinsic & Extrinsic Sizing Module Level 3. 22 May 2019. WD. URL: https://www.w3.org/TR/css-sizing-3/ 
+[CSS-TRANSFORMS-1]
+    Simon Fraser; et al. CSS Transforms Module Level 1. 14 February 2019. CR. URL: https://www.w3.org/TR/css-transforms-1/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS-WRITING-MODES-3]
+    Elika Etemad; Koji Ishii. CSS Writing Modes Level 3. 10 December 2019. REC. URL: https://www.w3.org/TR/css-writing-modes-3/ 
+[CSS-WRITING-MODES-4]
+    Elika Etemad; Koji Ishii. CSS Writing Modes Level 4. 30 July 2019. CR. URL: https://www.w3.org/TR/css-writing-modes-4/ 
+[CSS2]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[CSS3-REGIONS]
+    Rossen Atanassov; Alan Stearns. CSS Regions Module Level 1. 9 October 2014. WD. URL: https://www.w3.org/TR/css-regions-1/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+
+●●ref_informative
+
+[CSS-FLEXBOX-1]
+    Tab Atkins Jr.; et al. CSS Flexible Box Layout Module Level 1. 19 November 2018. CR. URL: https://www.w3.org/TR/css-flexbox-1/ 
+[CSS-GRID-1]
+    Tab Atkins Jr.; Elika Etemad; Rossen Atanassov. CSS Grid Layout Module Level 1. 14 December 2017. CR. URL: https://www.w3.org/TR/css-grid-1/ 
+[CSS-POSITION-3]
+    Elika Etemad; et al. CSS Positioned Layout Module Level 3. 19 May 2020. WD. URL: https://www.w3.org/TR/css-position-3/ 
+[CSS-TEXT-3]
+    Elika Etemad; Koji Ishii; Florian Rivoal. CSS Text Module Level 3. 29 April 2020. WD. URL: https://www.w3.org/TR/css-text-3/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Fragmentation Module Level 4</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/css-break-4/
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-break-4">GitHub Issues</a>
+編集
+	<a href="mailto:ratan@microsoft.com">Rossen Atanassov</a> (Microsoft)
+	<a href="http://fantasai.inkedblade.net/contact">Elika J. Etemad / fantasai</a> (Invited Expert)
+Suggest an Edit for this Spec（編集者草案）
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-break-4/Overview.bs">GitHub Editor</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-break-4
+
+以前の発行バージョン（レベル 3）
+	https://www.w3.org/TR/css-break-3/
+草案の実装報告書（レベル 3）
+	http://test.csswg.org/harness/results/css-break-3_dev/grouped/
+テスト一式（レベル 3）
+	http://test.csswg.org/suites/css-break-3_dev/nightly-unstable/
+</script>
+
+</head>
+
+
+<body>
+
+<!--%resource pool -->
+<div id="_persisted_parts" hidden>
+<img
+	id="_dgm-Varying-Size-Fragmentainers"
+	src="css-break/Varying-Size-Fragmentainers.svg"
+	alt="例図：サイズが一様でない断片コンテナの分断／Illustration: Breaking in varying-size fragmentainers"
+	style="width:75%; max-width: 20em"
+>
+
+<img
+	id="_dgm-Remaining-Fragmentainer-Extent"
+	src="css-break/Remaining-Fragmentainer-Extent.svg"
+	style="width: 80%"
+	alt="例図：残りの断片コンテナを埋めるとき／Illustration: Filling remaining fragmentainer extent"
+>
+<img
+	id="_dgm-box-break"
+	src="css-break/box-break.png"
+	alt="図左：単独のボックスを，ページ分断により，テキスト行の合間で 2 つに切る。
+図右：ページ分断の前／後の 2 つのボックスは、両者とも，全周がボーダーで囲われ, 自身の背景~画像を伴う。"
+	title="Illustration: (1) a single box cut in two in between two lines of text by a page break and (2) two boxes, one before and one after the page break, both with a border all around and their own background image"
+>
+<img
+	id="_dgm-fragmented-transforms"
+	style="min-width:144px;"
+	alt="例図：断片化における overflow の変形／Illustration: Transformed overflow fragmentation"
+	src="css-break/fragmented-transforms.svg"
+>
+</div>
+
+
+<header>
+	<hgroup>
+<h1>CSS による断片化 — CSS Fragmentation Module Level 4</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+	<section id="abstract">
+~ABSTRACT
+
+<div>
+<p>
+この~moduleは、~flowを一連の［
+~page／柱／~region
+］に区分する，断片化~modelについて述べる。
+それは、 Page ~model~moduleを基に築かれ，断片化~modelを導入し, 定義する。
+それは、次のための機能性を加える：
+</p>
+
+<ul>
+	<li>
+~page割り
+</li>
+	<li>
+~sizeや方位が様々になる断片への分断-法
+</li>
+	<li>
+`widows^p ／ `orphans^p
+</li>
+</ul>
+
+◎
+This module describes the fragmentation model that partitions a flow into pages, columns, or regions. It builds on the Page model module and introduces and defines the fragmentation model. It adds functionality for pagination, breaking variable fragment size and orientation, widows and orphans.
+</div>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは、編集者草案の公な複製です…
+【以下，この節の他の内容は、<a href="css-common-ja.html#status">~CSS日本語訳~共通~page</a>／冒頭の仕様~metadataに委譲】
+</p>
+
+<p>
+次の特能は
+<a href="~CSS2CONFORM#at-risk">~risk下</a>
+にあり、勧告候補の期間内に落とされるかもしれません：
+◎
+The following features are at-risk, and may be dropped during the CR period:
+</p>
+
+<ul>
+	<li>
+［
+`break-before$p ／ `break-after$p
+］~propの `all$v 値。
+◎
+the all value of break-before/break-after 
+</li>
+</ul>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+`連続的~媒体$とは対照的に，`~paged媒体$（紙, ~OHP, 写真アルバム~page, 印刷出力の模倣として~computer~screenに表示される~page，など）においては、文書の内容を いくつかの別個の表示面に分割する。
+見苦しい分断（~text行lの中途など）を避けるため、~layout~engineは，内容における~page分断の~~位置を適当にずらすモノトスル。
+この処理nは
+`~page割り@
+と呼ばれる。
+◎
+In paged media (e.g., paper, transparencies, photo album pages, pages displayed on computer screens as printed output simulations), as opposed to continuous media, the content of the document is split into one or more discrete display surfaces. In order to avoid awkward breaks (such as halfway through a line of text), the layout engine must be able to shift around content that would fall across the page break. This process is called pagination.
+</p>
+
+<div>
+<p>
+~CSSにおいては、`~paged媒体$に加えて，
+`~region$ `CSS3-REGIONS$r
+や
+<a href="~CSSMCOL">複柱~layout</a> `CSS-MULTICOL-1$r
+などの一定の~layout特能が，同様に断片化される環境を作成する。
+<dfn>断片化</dfn>
+とは、内容を一連の容器に分断することを~~意味する総称である。
+この~moduleは、次について説明する：
+</p>
+
+<ul>
+	<li>
+内容を、一連の`断片容器$【！＊断片化~容器】
+— ~pageや柱など —
+に分断する方法。
+</li>
+	<li>
+作者がその種の分断を<a href="#breaking-controls">制御する</a>方法。
+</li>
+</ul>
+
+◎
+In CSS, in addition to paged media, certain layout features such as regions [CSS3-REGIONS] and multi-column layout [CSS-MULTICOL-1] create a similarly fragmented environment. The generic term for breaking content across containers is fragmentation. This module explains how content breaks across fragmentation containers (fragmentainers) such as pages and columns and how such breaks can be controlled by the author.
+</div>
+
+<p>
+この仕様は、次の追加を除いて
+<a href="~CSSWG/css-break-3/">CSS Fragmentation Level 3</a>
+に一致する
+⇒
+`margin-break$p ~prop,
+［
+`break-before$p ／ `break-after$p
+］~prop用の値［
+`always$v,
+`all$v
+］
+◎
+This specification is identical to CSS Fragmentation Level 3 except for the addition of the margin-break property and the always and all values of the break-before and break-after properties.
+</p>
+
+		<section id="placement">
+<h3 title="Module Interactions">1.1. ~module間の相互作用</h3>
+
+<p>
+この~moduleは、
+`CSS2$r
+<a href="~CSS22/page.html#page-breaks">§ 13.3</a>
+および
+`CSS-PAGE-3$r
+にて定義される~page割り制御を置換し, 拡張する。
+◎
+This module replaces and extends the pagination controls defined in [CSS2] section 13.3 and in [CSS-PAGE-3].
+</p>
+
+		</section>
+		<section id="values">
+<h3 title="Value Definitions">1.2. 値~定義</h3>
+
+<p class="trans-note">【
+この節の内容は <a href="css-common-ja.html#values">~CSS日本語訳 共通~page</a>に委譲。
+】</p>
+
+		</section>
+	</section>
+	<section id="fragmentation-model">
+<h2 title="Fragmentation Model and Terminology">2. 断片化の~modelとその各種用語</h2>
+
+<dl>
+	<dt>`断片容器@（ `fragmentainer^en ）</dt>
+	<dd class="trans-note">【
+`断片化~容器@
+（ `fragmentation container^en ）
+の略語
+】</dd>
+	<dd>
+`断片化d~flow$を成す一部（または全部）を包含する， 1 個の~box
+— `~page~box$, `柱~box$, `~region$ など。
+断片容器は、予め定義-済みか, または 必要に応じて生成される。
+分断-可能な内容が断片容器の塊~次元を~overflowするときには、代わりに
+その`断片化~文脈$における次の容器の中へ分断する。
+◎
+A box—such as a page box, column box, or region—that contains a portion (or all) of a fragmented flow. Fragmentainers can be pre-defined, or generated as needed. When breakable content would overflow a fragmentainer in the block dimension, it breaks into the next container in its fragmentation context instead.
+</dd>
+
+	<dt>`断片化~文脈@ （ `fragmentation context^en ）</dt>
+	<dd>
+順序付けられた一連の`断片容器$
+— 例えば，［
+`複柱~容器$ ／
+`~region連鎖$ `CSS3-REGIONS$r ／
+<a href="~CSSPAGE">~paged媒体~表示</a>
+］により作成されるものなど。
+所与の`断片化~文脈$における`塊~flow方向$は，そのすべての`断片容器$に渡って一定になる。
+（`断片化~根$の子孫の塊~flow方向は他になり得るが、断片化は，`断片化~根$に適用された塊~flow方向に則って~~進行する。）
+◎
+An ordered series of fragmentainers, such as created by a multi-column container, a chain of CSS regions, or a paged media display. A given fragmentation context can only have one block flow direction across all its fragmentainers. (Descendants of the fragmentation root may have other block flow directions, but fragmentation proceeds according to the block flow direction applied to the fragmentation root.)
+</dd>
+
+	<dt>`断片化d~flow@ （ `fragmented flow^en, 断片化される~flow ）</dt>
+	<dd>
+`断片化~文脈$の下で~lay-outされる内容。
+`断片化d~flow$は、
+`断片化~根@
+と呼ばれる~box（匿名も含む）の内容からなる。
+◎
+Content that is being laid out in a fragmentation context. The fragmented flow consists of the content of a (possibly anonymous) box called the fragmentation root.
+</dd>
+
+	<dt>`断片化~方向@ （ `fragmentation direction^en ）</dt>
+	<dd>
+`断片化~文脈$の`塊~flow方向$。
+すなわち，内容が断片化されていく方向（この~levelの~CSSにおいては、内容は一方の次元にのみ断片化される。）
+◎
+The block flow direction of the fragmentation context, i.e. the direction in which content is fragmented. (In this level of CSS, content only fragments in one dimension.)
+</dd>
+
+	<dt>`断片化@ （ `fragmentation^en ）</dt>
+	<dd>
+`断片化~文脈$を成す一連の`断片容器$に内容~flowを分割する処理n。
+◎
+The process of splitting a content flow across the fragmentainers that form a fragmentation context.
+</dd>
+
+	<dt>`~box断片@ または `断片@ （ `fragment^en ）</dt>
+	<dd>
+~boxの中で， 1 個の`断片容器$が占める部分。
+連続的~flowの下での~boxは、常に，唯 1 個の断片からなる。
+断片化d~flowの下での 1 個の~boxは、1 個以上の断片からなる。
+各~断片には、自前の持分として，~boxの［
+~border, ~padding, ~margin
+］
+— したがって［
+`~padding区画$, `~border区画$, `~margin区画$
+］ —
+があてがわれる（断片化がこれらにどう影響するかの制御については、 `box-decoration-break$p を見よ）。
+◎
+The portion of a box that belongs to exactly one fragmentainer. A box in continuous flow always consists of only one fragment. A box in a fragmented flow consists of one or more fragments. Each fragment has its own share of the box’s border, padding, and margin, and therefore has its own padding area, border area, and margin area. (See box-decoration-break, which controls how these are affected by fragmentation.)
+</dd>
+
+	<dt>`残りの断片容器~塊~size@</dt>
+	<dd>
+`断片容器$の中で、所与の要素に残されている，`塊-軸$にて可用な空間。
+すなわち，`断片容器$において要素に先行する内容の終端と, `断片容器$の終端~辺の合間。
+◎
+The remaining block-axis space in the fragmentainer available to a given element, i.e. between the end of preceding content in fragmentainer and the edge of the fragmentainer.
+</dd>
+</dl>
+
+<p>
+`断片化~分断@
+（以下，単に
+<dfn>分断</dfn>（ `break^en ）
+と称する）は、現在の`断片容器$内に~lay-outされる~boxを終端させ，断片化する。
+~boxの残りの内容は、次の`断片容器$の中に~lay-outされる。
+その場合、必要なら先送りされた内容を保持するために，新たな`断片容器$が生成されることもある。
+◎
+Each fragmentation break (hereafter, break) ends layout of the fragmented box in the current fragmentainer and causes the remaining content to be laid out in the next fragmentainer, in some cases causing a new fragmentainer to be generated to hold the deferred content.
+</p>
+
+<p class="note">注記：
+行内~内容を一連の行lへ分断すること【 “改行（行lの折り~~返し）” 】は，別の形の断片化であり、
+`行内~box$を一連の`行l~box$に分断するときに，上述と同様に 一連の~box断片を作成する。
+しかしながら，行内の分断-法については、この仕様では受持たない。
+`CSS2$r ／ `CSS-TEXT-3$r を見よ。
+◎
+Note: Breaking inline content into lines is another form of fragmentation, and similarly creates box fragments when it breaks inline boxes across line boxes. However, inline breaking is not covered here; see [CSS2]/[CSS-TEXT-3].
+</p>
+
+<p class="note">注記：
+~boxは、~textにおける`双向性$による並替ngに因り，複数の`断片$に分断されることもある（
+<a href="~CSSWM#bidi-algo">双方向-並替ng~algoの適用-法</a>
+`CSS-WRITING-MODES-4$r
+を見よ）。
+あるいは、より高~levelな`表示~型$~boxの分割に因り分断されることもある
+— 例：
+<a href="~CSS2VISUREN#anon-block">行内にある匿名~塊による分割</a>
+`CSS2$r ／
+複柱~容器~内の`~spanner$による塊の分割
+`CSS-MULTICOL-1$r
+。
+これらの事例における`~box断片$への区割りは、~layout（内容の~sizing／位置決め）に依存することなく生じる。
+◎
+Note: A box can be broken into multiple fragments also due to bidi reordering of text (see Applying the Bidirectional Reorderign Algorithm in CSS Writing Modes) or higher-level display type box splitting, e.g. block-in-inline splitting (see CSS2§9.2) or column-spanner-in-block splitting (see CSS Multi-column Layout). The division into box fragments in these cases does not depend on layout (sizing/positioning of content).
+</p>
+
+		<section id="parallel-flows">
+<h3 title="Parallel Fragmentation Flows">2.1. 並行する断片化~flow</h3>
+
+<p>
+複数の`整形~文脈$が互いに並行して~lay-outされる下では、断片化は，各~整形~文脈ごとに独立に行われる。
+例えば，要素が浮動されている場合、`浮動体$の内側にある`強制d分断$は，（浮動体の`塊~size$を増大させ得ることを除いて）浮動体の外側の内容の~layoutには，影響しないことになる。
+~UAは、互いに並行する整形~文脈~内の`非強制d分断$の配置を調整して，横並びになる内容を視覚的に整えてもヨイ
+— `強制d分断$に対しては、そのように調整してはならない。
+◎
+When multiple formatting contexts are laid out parallel to each other, fragmentation is performed independently in each formatting context. For example, if an element is floated, then a forced break inside the float will not affect the content outside the float (except insofar as it may increase the height of the float). UAs may (but are not required to) adjust the placement of unforced breaks in parallel formatting contexts to visually balance such side-by-side content, but must not do so to match a forced break.
+</p>
+
+<p>
+それぞれが独立に内容を断片化するような，並行する~flowの例には、次が挙げられる：
+◎
+The following are examples of parallel flows whose contents will fragment independently:
+</p>
+
+<ul>
+	<li>
+`浮動体$の内容と, その周囲を取り巻く内容。
+◎
+The contents of a float vs. the content wrapping outside the float.
+</li>
+	<li>
+`浮動体$の内容と, それに隣接な浮動体の内容。
+◎
+The contents of a float vs. the contents of an adjacent float.
+</li>
+	<li>
+同じ~table~row内の各~table~cellの内容。
+◎
+The contents of each table cell in a single table row.
+</li>
+	<li>
+同じ格子~row内の各~格子~駒の内容。
+◎
+The contents of each grid item in a single grid row.
+</li>
+	<li>
+~flex~layoutにおける同じ~row内の各~flex駒の内容。
+◎
+The contents of each flex item in a flex layout row.
+</li>
+	<li>
+各 絶対的に位置された要素の，内容
+— それらの`包含塊$の`断片化~文脈$が同じ範囲を覆うような。
+◎
+The contents of absolutely-positioned elements that cover the same range of their containing block’s fragmentation context.
+</li>
+</ul>
+
+<p>
+固定d~sizeにされた~boxの内容~辺を~overflowする内容は、その~boxに後続する内容に並行するものと見なされ，通常の断片化~規則に従う。
+~overflowする内容は，`断片化~根$~boxの~sizeには影響しないが、`断片化d~flow$の長さを増大させ，必要に応じて溢れるか追加的な`断片容器$を生成させる。
+◎
+Content overflowing the content edge of a fixed-size box is considered parallel to the content after the fixed-size box and follows the normal fragmentation rules. Although overflowing content doesn’t affect the size of the fragmentation root box, it does increase the length of the fragmented flow, spilling into or generating additional fragmentainers as necessary.
+</p>
+
+		</section>
+		<section id="nested-flows">
+<h3 title="Nested Fragmentation Flows">2.2. 入子にされた断片化~flow</h3>
+
+<p>
+`断片容器$ %F の分断-法は、実質的に， %F を 2 つの`断片容器$
+%F1, %F2
+に分割する。
+通常との唯一の相違は、`断片容器$ %F の内容に関して，
+%F1, %F2
+の合間の`分断の型$が
+— %F の自前の`断片化~文脈$により作成されるものではなく —
+%F を分割する`断片化~文脈$により作成される`分断の型$になることである。
+◎
+Breaking a fragmentainer F effectively splits the fragmentainer into two fragmentainers (F1 and F2). The only difference is that, with regards to the content of fragmentainer F, the type of break between the two pieces F1 and F2 is the type of break created by the fragmentation context that split F, not the type of break normally created by F’s own fragmentation context.
+</p>
+
+<div class="example"><p>
+例えば、~region~boxが~page境界で分断された場合、その~regionの内容は，その地点で~page分断から影響されることになる（が、~region分断からは影響されない）。
+◎
+For example, if a region box is broken at a page boundary, then the content of the region will be affected by a page break at that point (but not by a region break).
+</p></div>
+
+<p class="note">注記：
+`複柱~容器$が何~pageかに分断されるときは、［
+`複柱~容器$の中の~page分断は、常に，~page分断かつ柱~分断になる
+］よう，残りの内容~用の新たな［
+柱たちが成す~row
+］が次~page以降に生成される。
+◎
+Note that when a multi-column container breaks across pages, it generates a new row of columns on the next page for the rest of its content, so that a page break within a multi-column container is always both a page break and a column break.
+</p>
+
+		</section>
+	</section>
+	<section id="breaking-controls">
+<h2 title="Controlling Breaks">3. 分断の制御-法</h2>
+
+<p>
+以下の節では、`断片化d~flow$において分断を制御する方法を説明する。
+2 つの~boxの合間にある［
+~page／柱／~region
+］分断~機会は、［
+`包含塊$の `break-inside$p ~prop,
+先行する方の~boxを生成する要素の `break-after$p ~prop,
+後続する方の~boxを生成する要素の `break-before$p ~prop
+］の影響下に置かれる。
+2 つの`行l~box$の合間にある［
+~page／柱／~region
+］分断~機会は、`包含塊$の［
+`break-inside$p, `widows$p, `orphans$p
+］~propの影響下に置かれる。
+`分断$は、これらの~propの値に依存して，［
+許容-／強制-／忌避-
+］され得る。
+強制d分断は、その分断点に作用する どの分断~制約も上書きする。
+強制d~page分断の場合、作者は，［
+後続の内容が ~pageのいずれの側（
+<a href="~CSSPAGE#spread-pseudos">左~pageまたは右~page</a>
+【！#left-right-first】
+）から再開されるベキであるか
+］を指定できる。
+◎
+The following sections explain how breaks are controlled in a fragmented flow. A page/column/region break opportunity between two boxes is under the influence of the containing block’s break-inside property, the break-after property of the preceding element, and the break-before property of the following element. A page/column/region break opportunity between line boxes is under the influence of the containing block’s break-inside, widows, and orphans properties. A fragmentation break can be allowed, forced, or discouraged depending on the values of these properties. A forced break overrides any break restrictions acting at that break point. In the case of forced page breaks, the author can also specify on which page (left or right) the subsequent content should resume.
+</p>
+
+<p>
+これらの~propが断片化にどのように影響するかについての
+正確な規則については、<a href="#breaking-rules">§ 分断-法のための規則</a>に。
+◎
+See the section on rules for breaking for the exact rules on how these properties affect fragmentation.
+</p>
+
+		<section id="break-between">
+<h3 title="Breaks Between Boxes: the break-before and break-after properties">3.1. ~box間の分断： `break-before^p, `break-after^p ~prop</h3>
+
+◎名 `break-before@p, `break-after@p
+◎値
+`auto$v | `avoid$v
+| `always$v | `all$v
+| `avoid-page$v | `page$v
+| `left$v | `right$v
+| `recto$v | `verso$v
+| `avoid-column$v | `column$v
+| `avoid-region$v | `region$v
+◎初 `auto$v
+◎適
+`塊~level$の~box, 格子~駒, ~flex駒 ~table~row~group, ~table~row（ただし，注釈文を見よ）
+◎
+block-level boxes, grid items, flex items, table row groups, table rows (but see prose)
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+
+<p>
+これらの~propは、生成された~boxの前後における［
+~page／柱／~region
+］分断の挙動を指定する：
+◎
+These properties specify page/column/region break behavior before/after the generated box.＼
+</p>
+
+<ul>
+	<li>
+次に挙げる
+`分断強制~値@
+は、~flowにおいて`強制d分断$を作成する
+⇒
+`always$v,
+`all$v,
+`left$v,
+`right$v,
+`recto$v,
+`verso$v,
+`page$v,
+`column$v,
+`region$v
+◎
+The forced break values always, all, left, right, recto, verso, page, column and region create a forced break in the flow while＼
+</li>
+	<li>
+一方，次に挙げる
+`分断回避~値@
+は、前後の内容が一緒に保たれるベキであることを指示する
+⇒
+`avoid$v0,
+`avoid-page$v0,
+`avoid-column$v0,
+`avoid-region$v0
+◎
+the avoid break values avoid, avoid-page, avoid-column and avoid-region indicate that content should be kept together.
+</li>
+</ul>
+
+<p>
+`break-before$p ／ `break-after$p
+用の各種 値は、以下の下位節にて定義される。
+~UAは、これらの~propを，`断片化~根$の通常~flowの中の~boxに適用するモノトスル。
+また、［
+`包含塊$が断片化された根~要素の通常~flowの中にあるような，浮動d~box
+］にも適用するベキである。
+~UAは、これらの~propを他の~boxにも適用してヨイが，絶対的に位置された~boxには適用しないモノトスル。
+◎
+Values for break-before and break-after are defined in the sub-sections below. User Agents must apply these properties to boxes in the normal flow of the fragmentation root. User agents should also apply these properties to floated boxes whose containing block is in the normal flow of the root fragmented element. User agents may also apply these properties to other boxes. User agents must not apply these properties to absolutely-positioned boxes.
+</p>
+
+<p>
+以下における，
+`首要~box@
+とは、当の要素が生成する`塊~level$の
+<a href="~CSSDISP#principal-box">首要~box</a>
+を意味する。
+この節の以下における “前／後” は、個別に `break-before$p ／ `break-after$p に対応するものとする。
+</p>
+
+			<section id="generic-break-values">
+<h4 title="Generic Break Values">各種 汎用~分断~値</h4>
+
+<p>
+以下に挙げる値は、［
+当の~flowを包含している`断片化~文脈$
+］の型に関わらず，効果を及ぼす。
+◎
+These values have an effect regardless of the type of fragmented context containing the flow.
+</p>
+
+<dl>
+	<dt>`auto@v</dt>
+	<dd>
+`首要~box$の前／後における分断を，強制-も禁止-もしない。
+◎
+Neither force nor forbid a break before/after the principal box.
+</dd>
+
+	<dt>`avoid@v</dt>
+	<dd>
+`首要~box$の前／後における分断を，避ける。
+◎
+Avoid a break before/after the principal box.
+</dd>
+
+	<dt>`always@v</dt>
+	<dd>
+`首要~box$の前／後における分断を，常に強制する。
+この型の分断は、それを~~直に包含している`断片化~文脈$のそれになる。
+【すなわち、断片化~文脈を包含している断片化~文脈の分断にはならない。】
+例えば、`複柱~容器$においては `柱~分断$を強制し，`~paged媒体$においては 複柱~容器の内側でないならば`~page分断$を強制する。
+◎
+Always force a break before/after the principal box. The type of this break is that of the immediately-containing fragmentation context. For example, in a multi-column container forces a column break; in paged media not inside a multi-column container, forces a page break.
+</dd>
+
+	<dt>`all@v</dt>
+	<dd>
+`首要~box$の前／後における分断を，常に強制する。
+この値は、包含している`断片化~文脈$のすべてを通して分断する。
+例えば、`~paged媒体$内の`複柱~容器$内の`~region$内の`複柱~容器$の内側に強制すると同時に，［
+内縁`複柱~容器$内の`柱~分断$,
+`~region分断$,
+外縁`複柱~容器$内の`柱~分断$,
+`~page分断$
+］も強制する。
+◎
+Always force a break before/after the principal box. This value breaks through all containing fragmentation contexts. For example, inside a multi-column container in a region in a multi-column container in paged media, it forces simultaneously a column break in the inner multi-column container, a region break, a column break in the outer multi-column container, and a page break.
+</dd>
+	<dd class="issue">
+この値は必要なのか明瞭でない。
+◎
+It’s unclear if this value is needed.
+</dd>
+</dl>
+
+			</section>
+			<section id="page-break-values">
+<h4 title="Page Break Values">各種 ~page分断~値</h4>
+
+<p>
+以下に挙げる値の効果は、~page割りされた文脈に限られる
+— 他の文脈~下の~flowには、効果はない。
+◎
+These values only have an effect in paginated contexts; if the flow is not paginated, they have no effect.
+</p>
+
+<dl>
+	<dt>`avoid-page@v</dt>
+	<dd>
+`首要~box$の前／後における~page分断を，避ける。
+◎
+Avoid a page break before/after the principal box.
+</dd>
+
+	<dt>`page@v</dt>
+	<dd>
+`首要~box$の前／後における~page分断を，常に強制する。
+◎
+Always force a page break before/after the principal box.
+</dd>
+
+	<dt>`left@v</dt>
+	<dd>
+`首要~box$の前／後において，
+1 〜 2 個の~page分断を強制して、次の~pageが左~pageとして整形されるようにする。
+◎
+Force one or two page breaks before/after the principal box so that the next page is formatted as a left page.
+</dd>
+
+	<dt>`right@v</dt>
+	<dd>
+`首要~box$の前／後において，
+1 〜 2 個の~page分断を強制して、次の~pageが右~pageとして整形されるようにする。
+◎
+Force one or two page breaks before/after the principal box so that the next page is formatted as a right page.
+</dd>
+
+	<dt>`recto@v</dt>
+	<dd>
+`首要~box$の前／後において，
+1 〜 2 個の~page分断を強制して、次の~pageが［
+左~page, 右~page
+のうち（`~page進行$に則って）~page見開きの後半~page
+］として整形されるようにする。
+◎
+Force one or two page breaks before/after the principal box so that the next page is formatted as either a left page or a right page, whichever is second (according to the page progression) in a page spread.
+</dd>
+
+	<dt>`verso@v</dt>
+	<dd>
+`首要~box$の前／後において，
+1 〜 2 個の~page分断を強制して、次の~pageが［
+左~page, 右~page
+のうち（`~page進行$に則って）~page見開きの前半~page
+］として整形されるようにする。
+◎
+Force one or two page breaks before/after the principal box so that the next page is formatted as either a left page or a right page, whichever is first (according to the page progression) in a page spread.
+</dd>
+</dl>
+
+
+			</section>
+			<section id="column-break-values">
+<h4 title="Column Break Values">各種 柱~分断~値</h4>
+
+<p>
+以下に挙げる値の効果は、複柱~文脈に限られる
+— 他の文脈~下の~flowには、効果はない。
+◎
+These values only have an effect in multi-column contexts; if the flow is not within a multi-column context, they have no effect.
+</p>
+
+<dl>
+	<dt>`avoid-column@v</dt>
+	<dd>
+`首要~box$の前／後における柱~分断を，避ける。
+◎
+Avoid a column break before/after the principal box.
+</dd>
+
+	<dt>`column@v</dt>
+	<dd>
+`首要~box$の前／後における柱~分断を，常に強制する。
+◎
+Always force a column break before/after the principal box.
+</dd>
+</dl>
+
+			</section>
+			<section id="region-break-values">
+<h4 title="Region Break Values">各種 ~region分断~値</h4>
+
+<p>
+以下に挙げる値の効果は、複region文脈に限られる
+— 
+複数~regionに渡って~linkされていない~flowには、効果はない。
+◎
+These values only have an effect in multi-region contexts; if the flow is not linked across multiple regions, these values have no effect.
+</p>
+
+<dl>
+	<dt>`avoid-region@v</dt>
+	<dd>
+`首要~box$の前／後における~region分断を，避ける。
+◎
+Avoid a region break before/after the principal box.
+</dd>
+
+	<dt>`region@v</dt>
+	<dd>
+`首要~box$の前／後における~region分断を，常に強制する。
+◎
+Always force a region break before/after the principal box.
+</dd>
+</dl>
+
+			</section>
+			<section id="break-propagation">
+<h4 title="Child→Parent Break Propagation">3.1.1. 子から親への分断の伝播</h4>
+
+<p>
+分断は、同胞~boxの合間にのみ許容され，~boxとその容器の合間には許容されないので（`アリな分断点$を見よ）、親の［
+始端／終端
+］にある子に適用される分断~値は
+— 効果を及ぼし得る所では —
+親へ
+`伝播-@
+する。
+◎
+Since breaks are only allowed between siblings, not between a box and its container (see Possible Break Points), break values applied to children at the start/end of a parent are propagated to the parent, where they can take effect.
+</p>
+
+<p>
+特定的には
+— 並替ngや並行する~layoutを織り込むために，より特有な規則を定義する~layout~modeを除いて（例：
+<a href="~CSSFLEX#pagination">~flex~layout</a>
+`CSS-FLEXBOX-1$r,
+<a href="~CSSGRID#pagination">格子~layout</a>
+`CSS-GRID-1$r
+） —
+`~flow内$にある［
+最初の／最後の
+］子~box上の［
+`break-before$p ／ `break-after$p
+］値は、その容器へ`伝播-$する（互いに競合する値は、下に定義するように<a href="#forced-breaks">組合される</a>）。
+この伝播は、それが［
+最も近くに合致する`断片化~文脈$
+］の所までになる。
+◎
+Specifically—except in layout modes which define more specific rules to account for reordering and parallel layout (e.g. in flex layout [CSS-FLEXBOX-1] or grid layout [CSS-GRID-1])—a break-before value on a first in-flow child box is propagated to its container. Likewise a break-after value on a last in-flow child box is propagated to its container. (Conflicting values combine as defined below.) This propagation stops before it breaks through the nearest matching fragmentation context.
+</p>
+
+<p>
+分断の`伝播$は、`算出d値$には影響しない
+— それは、要素の算出d値を~layout用に解釈する一部を成す。
+◎
+Break propagation does not affect computed values; it is part of interpreting the elements’ computed values for layout.
+</p>
+			</section>
+		</section>
+		<section id="break-within">
+<h3 title="Breaks Within Boxes: the break-inside property">3.2. ~box内での分断： `break-inside^p ~prop</h3>
+
+◎名 `break-inside@p
+◎値
+`auto$v0 | `avoid$v0 | `avoid-page$v0 | `avoid-column$v0 | `avoid-region$v0
+◎初 `auto$v0
+◎適
+すべての要素
+— ただし、次に挙げるものは除く
+⇒＃
+`行内~level$の~box,
+`内部~ruby~box$,
+~table~col~box,
+~table~col~group~box,
+絶対的に位置された~box
+◎
+all elements except inline-level boxes, internal ruby boxes, table column boxes, table column group boxes, absolutely-positioned boxes
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+この~propは、要素の`首要~box$内における［
+~page／柱／~region
+］分断の挙動を指定する。
+各種 値は、次を意味する：
+◎
+This property specifies page/column/region break behavior within the element’s principal box. Values have the following meanings:
+</p>
+
+<dl>
+	<dt>`auto@v0</dt>
+	<dd>
+`首要~box$内の分断-法に追加的な拘束を課さない。
+◎
+Impose no additional breaking constraints within the box.
+</dd>
+
+	<dt>`avoid@v0</dt>
+	<dd>
+`首要~box$内での分断を，避ける。
+◎
+Avoid breaks within the box.
+</dd>
+
+	<dt>`avoid-page@v0</dt>
+	<dd>
+`首要~box$内での~page分断を，避ける。
+◎
+Avoid a page break within the box.
+</dd>
+
+	<dt>`avoid-column@v0</dt>
+	<dd>
+`首要~box$内での柱~分断を，避ける。
+◎
+Avoid a column break within the box.
+</dd>
+
+	<dt>`avoid-region@v0</dt>
+	<dd>
+`首要~box$内での~region分断を，避ける。
+◎
+Avoid a region break within the box.
+</dd>
+</dl>
+
+
+		</section>
+		<section id="widows-orphans">
+<h3 title="Breaks Between Lines: orphans, widows">3.3. 行l間の分断： `orphans^p, `widows^p</h3>
+
+◎名 `orphans@p, `widows@p
+◎値 `integer$t
+◎初 `2^v
+◎適 `行内~整形~文脈$を確立する`塊~容器$
+◎
+block containers that establish an inline formatting context
+◎継 される
+◎百 受容しない
+◎算 指定された整数
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+［
+`orphans$p ／ `widows$p
+］~propは、`塊~容器$~内の`分断$において，その［
+前／後
+］に［
+`断片$内に残さなければならない最小な行l~box数
+］を指定する。
+<a href="#widows-orphans-example">後述</a>にて、これらを利用して`分断$を制御する例を与える。
+◎
+The orphans property specifies the minimum number of line boxes in a block container that must be left in a fragment before a fragmentation break. The widows property specifies the minimum number of line boxes of a block container that must be left in a fragment after a break. Examples of how they are used to control fragmentation breaks are given below.
+</p>
+
+<p>
+［
+`orphans$p ／ `widows$p
+］の値には、正な整数のみ許容される。
+負な値や 0 は無効であり、当の宣言を`無視する$モノトスル。
+◎
+Only positive integers are allowed as values of orphans and widows. Negative values and zero are invalid and must cause the declaration to be ignored.
+</p>
+
+<p>
+塊が包含する行l数が［
+`orphans$p ／ `widows$p
+］の値より少ない場合、単に，［
+塊~内のすべての行lが一緒に保たれなければならない
+］とする規則に変わる。
+◎
+If a block contains fewer lines than the value of widows or orphans, the rule simply becomes that all lines in the block must be kept together.
+</p>
+
+		</section>
+		<section id="page-break-properties">
+<h3 title="Page Break Aliases: the page-break-before, page-break-after, and page-break-inside properties">3.4. ~page分断~propの別名： `page-break-before^p, `page-break-after^p, `page-break-inside^p</h3>
+
+<p>
+<a href="~CSS22/page.html">CSS Level 2</a>
+との互換性を得るため、
+`CSS2$r に適合する~UAは，［
+`page-break-before$p ／
+`page-break-after$p ／
+`page-break-inside$p
+］~propを［
+`break-before$p ／
+`break-after$p ／
+`break-inside$p
+］の別名として扱う
+— すなわち，次の表に与える値の対応付けの下で、各種 `page-break-*^p ~propを，対応する `break-*^p ~prop用の`旧来の略式~prop$として扱うモノトスル：
+◎
+For compatibility with CSS Level 2, UAs that conform to [CSS2] must alias the page-break-before, page-break-after, and page-break-inside properties to break-before, break-after, and break-inside by treating the page-break-* properties as legacy shorthands for the break-* properties with the following value mappings:
+</p>
+
+
+<table class="data">
+
+<thead><tr><th>略式~prop（ `page-break-*^p ）値◎ Shorthand ( page-break-* ) Values
+<th>下位prop（ `break-*^p ）値◎ Longhand ( break-* ) Values
+</thead>
+
+<tbody><tr><td>`auto^v | `left^v | `right^v | `avoid^v
+<td>`auto^v | `left^v | `right^v | `avoid^v
+
+<tr><td>`always^v
+<td>`page$v
+</tbody></table>
+
+		</section>
+	</section>
+	<section id="breaking-rules">
+<h2 title="Rules for Breaking">4. 分断-法のための規則</h2>
+
+<p>
+`断片化d~flow$は、いくつもの`アリな分断点$で，一連の`断片容器$に分断され得る。
+`強制d分断$に対しては、~UAには，その地点で~flowを分断することが要求される。
+`非強制d分断$に対しては、~UAは，アリな分断のうち，許容されるものを選ぶ必要がある。
+◎
+A fragmented flow may be broken across fragmentainers at a number of possible break points. In the case of forced breaks, the UA is required to break the flow at that point. In the case of unforced breaks, the UA has to choose among the possible breaks that are allowed.
+</p>
+
+<p>
+進行を保証するため、どの`断片容器$も，［
+その使用~sizeに関わらず，`塊~size$は 1px 以上ある
+］ものと見做される。
+◎
+To guarantee progress, fragmentainers are assumed to have a minimum block size of 1px regardless of their used size.
+</p>
+
+		<section id="possible-breaks">
+<h3 title="Possible Break Points">4.1. アリな分断点</h3>
+
+<p>
+断片化は、塊~flow次元において，~boxを分割する。
+［
+塊／行内
+］~flowにおける分断は、以下に挙げる所で生じ得る：
+◎
+Fragmentation splits boxes in the block flow dimension. In block-and-inline flow, breaks may occur at the following places:
+</p>
+
+<dl>
+	<dt id="btw-blocks">`A類~分断点@</dt>
+	<dd>
+<p>
+以下に挙げる型の，互いに同胞な~boxの合間：
+◎
+Between sibling boxes of the following types:
+</p>
+
+		<dl>
+			<dt>
+塊に平行な断片化：
+◎
+Block-parallel Fragmentation
+</dt>
+			<dd>
+<p>
+すなわち、同胞~boxたちの`包含塊$の`塊~flow方向$が，`断片化~文脈$のそれに平行である下では：
+</p>
+
+<ul>
+<li>`~flow内$にある， 2 つの［ `塊~level$の~box ］の合間
+<li>`浮動体$, それに~~直に隣接な［ ~flow内にある~box／浮動d~box ］の合間
+<li>2 つの［ ~table~row~group~box ］の合間
+<li>2 つの［ ~table~row~box ］の合間
+<li>複柱における，2 つの［ 柱~row~box ］の合間
+</ul>
+
+◎
+When the block flow direction of the siblings' containing block is parallel to that of the fragmentation context: in-flow block-level boxes, a float and an immediately-adjacent in-flow or floated box, table row group boxes, table row boxes, multi-column column row boxes.
+</dd>
+
+			<dt>塊に垂直な断片化</dt>
+			<dd>
+<p>
+すなわち、同胞~boxたちの`包含塊$の`塊~flow方向$が，`断片化~文脈$のそれに垂直である下では：
+</p>
+
+<ul>
+<li>2 つの［ ~table~col~group~box ］の合間
+<li>2 つの［ ~table~col~box ］の合間
+<li>複柱における， 2 つの［ `柱~box$ ］の合間
+</ul>
+
+◎
+When the block flow direction of the siblings' containing block is perpendicular to that of the fragmentation context: table column group boxes, table column boxes, multi-column column boxes.
+</dd>
+		</dl>
+	</dd>
+
+	<dt>`B類~分断点@</dt>
+	<dd>
+`塊~容器$~boxの内側にある，2 本の［ `行l~box$ ］の合間
+◎
+Between line boxes inside a block container box.
+</dd>
+
+	<dt>`C類~分断点@</dt>
+	<dd>
+`塊~容器$~boxの［
+内容~辺, 子~内容の外縁~辺
+］の合間
+— `ただし^em，合間を成す隙間が 0 でない場合に限る。
+外縁~辺とは、子が［
+`塊~level$ならば その~margin辺 ／
+`行内~level$ならば その行l~box辺
+］を指す。
+【！XXX add example】
+◎
+Between the content edge of a block container box and the outer edges of its child content (margin edges of block-level children or line box edges for inline-level children) if there is a (non-zero) gap between them.
+</dd>
+</dl>
+
+<p class="note">注記：
+これら各~類の分断点の間には、内来的な優先順位は無い。
+しかしながら，個々の分断点には、`分断-法の制御$を利用して，優先順位が
+付与される／解除される
+こともある。
+◎
+Note: There is no inherent prioritization among these classes of break points. However, individual break points may be prioritized or de-prioritized by using the breaking controls.
+</p>
+
+<p class="note">注記：
+他の~layout~modelは、上述の各~類の分断点を追加し得る。
+例えば、 `CSS-FLEXBOX-1$r は，~flex整形~文脈における一定の地点を［
+`A類~分断点$ ／ `C類~分断点$
+］として追加する。
+◎
+Note: Other layout models may add breakpoints to the above classes. For example, [CSS-FLEXBOX-1] adds certain points within a flex formatting context to classes A and C.
+</p>
+
+<p>
+断片化できない内容もある
+— 例えば，［
+多くの型の`置換d要素$（画像や動画など）,
+~scroll~~可能な要素,
+~text内容の単独の行l
+］など。
+その種の内容は
+`単体的@
+と見なされ、アリな分断点を包含しない。
+したがって、そのような~boxの中の強制d分断は~boxを分割できず、~boxの自前の断片化~文脈からは，無視されるモノトスル。
+◎
+Some content is not fragmentable, for example many types of replaced elements [CSS2] (such as images or video), scrollable elements, or a single line of text content. Such content is considered monolithic: it contains no possible break points. Any forced breaks within such boxes therefore cannot split the box, and must therefore also be ignored by the box’s own fragmentation context.
+</p>
+
+<p>
+一般に断片化できない内容に加え、~UAは，次に挙げる どの要素も`単体的$と見なしてもヨイ：
+◎
+In addition to any content which is not generally fragmentable, UAs may consider as monolithic＼
+</p>
+
+<ul>
+	<li>
+`overflow$p が［
+`auto^v ／ `scroll^v
+］にされた要素
+◎
+any elements with overflow set to auto or scroll and＼
+</li>
+	<li>
+`overflow^p が `hidden^v, かつ
+`論理-縦幅$が `~autoS$v でない（かつ最大`論理-縦幅$が指定されていない）要素
+◎
+any elements with overflow: hidden and a non-auto logical height (and no specified maximum logical height).
+</li>
+</ul>
+
+<p>
+`行l~box$は，`アリな分断点$を包含しないので、［
+`行内~level$の`表示~型$のうち，`独立な整形~文脈$を確立するもの（ `inline-block$v, `inline-table$v など）
+］は，`単体的$と見なしてもヨイ：
+すなわち、単独の行l~boxが
+— それ自身が断片容器を成しているとしても —
+`断片容器$に収まるには大き過ぎで，~UAは行l~boxを分割することを選ぶ事例では、そのような~boxを断片化しても，単体的として扱ってもヨイ。
+◎
+Since line boxes contain no possible break points, inline-block and inline-table boxes (and other inline-level display types that establish an independent formatting context) may also be considered monolithic: that is, in the cases where a single line box is too large to fit within its fragmentainer even by itself and the UA chooses to split the line box, it may fragment such boxes or it may treat them as monolithic.
+</p>
+
+		</section>
+		<section id="break-types">
+<h3 title="Types of Breaks">4.2. 分断の型</h3>
+
+<p>
+~CSSにおいては、種々の分断~型が，それらが~spanする`断片容器$の型に基づいて定義される：
+◎
+There are different types of breaks in CSS, defined based on the type of fragmentainers they span:
+</p>
+
+<dl>
+	<dt>`~page分断@</dt>
+	<dd>
+2 つの`~page~box$の合間にある分断。
+`CSS-PAGE-3$r
+◎
+A break between two page boxes. [CSS-PAGE-3]
+</dd>
+
+	<dt>`見開き分断@</dt>
+	<dd>
+<a href="~CSSPAGE#facing-pages">対向~page</a>
+にされていないような， 2 つの~page~boxの合間にある分断。
+見開き分断は、~page分断でもある。
+`CSS-PAGE-3$r
+◎
+A break between two page boxes that are not associated with facing pages. A spread break is always also a page break. [CSS-PAGE-3]
+</dd>
+
+	<dt>`柱~分断@</dt>
+	<dd>
+2 つの`柱~box$の合間にある分断。
+これらの~boxが異なる~page上に在る場合、分断は`~page分断$にもなることに注意。
+同様に，~boxが異なる~regionに在る場合、分断は`~region分断$にもなる。
+`CSS-MULTICOL-1$r
+◎
+A break between two column boxes. Note that if the column boxes are on different pages, then the break is also a page break. Similarly, if the column boxes are in different regions, then the break is also a region break. [CSS-MULTICOL-1]
+</dd>
+
+	<dt>`~region分断@</dt>
+	<dd>
+2 つの`~region$の合間にある分断。
+これらの~boxが異なる~page上にある場合、分断は`~page分断$にもなることに注意。
+`CSS3-REGIONS$r
+◎
+A break between two regions. Note that if the region boxes are on different pages, then the break is also a page break. [CSS3-REGIONS]
+</dd>
+</dl>
+
+<p class="note">注記：
+分断~型には他にも、 2 本の`行l~box$に分断する`行l分断$もあるが、この仕様では受持たない。
+`CSS2$r, `CSS-TEXT-3$r
+を見よ。
+◎
+Note: A fifth type of break is the line break, which is a break between two line boxes. These are not covered in this specification; see [CSS2] [CSS-TEXT-3].
+</p>
+
+		</section>
+		<section id="forced-breaks">
+<h3 title="Forced Breaks">4.3. 強制d分断</h3>
+
+<p>
+`強制d分断@
+は、~stylesheet作者により明示的に指示される分断である。
+`強制d分断$は、［［
+先行の同胞~boxに［
+指定される／`伝播-$される【！#propagate】
+］ `break-after$p ~prop
+］, または［
+~~後続の同胞~boxに［
+指定される／`伝播-$される
+］ `break-before$p ~prop
+］のうち，少なくとも一方が`分断強制~値$をとる場合に、`A類~分断点$にて生じる。
+（したがって，この`分断強制~値$は、実質的に，同じ分断点に適用されるどの`分断回避~値$も上書きする。）
+◎
+A forced break is one explicitly indicated by the style sheet author. A forced break occurs at a class A break point if, among the break-after properties specified on or propagated to the earlier sibling box and the break-before properties specified on or propagated to the later sibling box there is at least one with a forced break value. (Thus a forced break value effectively overrides any avoid break value that also applies at that break point.)
+</p>
+
+<p>
+単独の分断点に，複数の`分断強制~値$が適用されるときには、それらの分断~型すべてが尊守されるように，組合される。
+［
+`left$v,
+`right$v,
+`recto$v,
+`verso$v
+］が組合されたときは、~flowの中で最も末尾側の要素に指定された値が，優先される。
+◎
+When multiple forced break values apply to a single break point, they combine such that all types of break are honored. When left, right, recto, and/or verso are combined, the value specified on the latest element in the flow wins.
+</p>
+
+<p class="note">注記：
+強制d~page分断は、［
+この~margin【どの？】の直前と直後の行l~boxが， 同じ `page$p ~prop値をとらない
+］場合には，`A類~分断点$にも生じるモノトスル。
+`CSS-PAGE-3$r
+を見よ。
+◎
+Note: A forced page break must also occur at a class A break point if the last line box above this margin and the first one below it do not have the same value for page. See [CSS-PAGE-3].
+</p>
+
+<p>
+強制d分断が生じる場合、内容が［
+その分断に結び付けられている型の，次の`断片容器$
+］の中に入る様に強制する
+— 指定された分断~型がすべて満たされるまで，必要なだけ`断片化~文脈$の入子階層を遡って。
+合致する型の`断片化~文脈$に包含されない強制d分断には、効果はない。
+◎
+When a forced break occurs, it forces ensuing content into the next fragmentainer of the type associated with the break, breaking through as many fragmentation contexts as necessary until the specified break types are all satisfied. If the forced break is not contained within a matching type of fragmentation context, then the forced break has no effect.
+</p>
+
+		</section>
+		<section id="unforced-breaks">
+<h3 title="Unforced Breaks">4.4. 非強制d分断</h3>
+
+<p>
+`分断-法の制御$は、分断を強制できるのみならず，忌避することもできる。
+`非強制d分断@
+とは、内容が`断片容器$を~overflowしないように，~UAにより自動的に挿入される分断である。
+`アリな分断点$にて，非強制d分断-法が許容されるかどうかは、次の規則により制御される：
+◎
+While breaking controls can force breaks, they can also discourage them. An unforced break is one that is inserted automatically by the UA in order to prevent content from overflowing the fragmentainer. The following rules control whether unforced breaking at a possible break point is allowed:
+</p>
+
+<dl>
+	<dt>規則 1</dt>
+	<dd>
+<p>
+`A類~分断点$においては、この分断点に適用-可能な［［
+`break-after$p ／ `break-before$p
+］の値
+］すべてが，`断片化d~flow$の分断を許容する
+— すなわち，次のいずれかの場合に限り，分断が許容される：
+</p>
+
+		<ul>
+			<li>
+それらの値に一つでも分断を強制するものがある
+</li>
+			<li>
+それらを禁止するもの（
+`分断の型$に依存して，［
+`avoid$v, `avoid-page$v, `avoid-column$v, `avoid-region$v
+］のうち，いくつか）はない。
+</li>
+		</ul>
+
+◎
+A fragmented flow may break at a class A break point only if all the break-after and break-before values applicable to this break point allow it, which is when at least one of them forces a break or when none of them forbid it (avoid or avoid-page/avoid-column/avoid-region, depending on the break type). 
+</dd>
+
+	<dt>規則 2</dt>
+	<dd>
+<p>
+しかしながら、次のいずれも満たされる場合，そこで分断するのは許容されない：
+</p>
+		<ul>
+			<li>
+それらの値すべてが `auto^v
+</li>
+			<li>
+［
+すべての要素に共通な ある先祖
+］の `break-inside$p の値は `avoid$v0
+</li>
+		</ul>
+
+◎
+However, if all of them are auto and a common ancestor of all the elements has a break-inside value of avoid, then breaking here is not allowed.
+</dd>
+
+	<dt>規則 3</dt>
+	<dd>
+<p>
+`B類~分断点$においては、分断を囲んでいる塊~boxについて，次のいずれも満たされ場合に限り，分断が許容される：
+</p>
+		<ul>
+			<li>
+分断と~boxの始端の合間にある行l~box数は `orphans$p の値~以上である
+</li>
+			<li>
+分断と~boxの終端の合間にある行l~box数は `widows$p の値~以上である
+</li>
+		</ul>
+◎
+Breaking at a class B break point is allowed only if the number of line boxes between the break and the start of the enclosing block box is the value of orphans or more, and the number of line boxes between the break and the end of the box is the value of widows or more.
+</dd>
+
+	<dt>規則 4</dt>
+	<dd>
+加えて，［
+`B類~分断点$ ／`C類~分断点$
+］においては、［
+どの先祖も，その `break-inside$p の値は `auto$v0
+］の場合に限り，分断が許容される。
+◎
+Additionally, breaking at class B or class C break points is allowed only if the break-inside property of all ancestors is auto.
+</dd>
+</dl>
+
+<p>
+上の拘束により，［［
+内容が`断片容器$から~overflowしない
+］ように保つに十分な分断点
+］が供されない場合、更に分断点を供するため，規則 3 が外される
+◎
+If the above doesn’t provide enough break points to keep content from overflowing the fragmentainer, then rule 3 is dropped to provide more break points.
+</p>
+
+<p>
+それでも，分断点が不足なら、追加的な分断点を見出すために，規則 1, 2, 4 が外される。
+この場合、~UAは，新たな分断点の適切さを~~評価するために，［
+それらの地点に効果を及ぼす `avoid^v
+］を利用してもヨイ。
+しかしながら、この仕様は，その精確な~algoについては示唆しない。
+◎
+If that still does not lead to sufficient break points, then rules 1, 2 and 4 are dropped in order to find additional breakpoints. In this case the UA may use the avoids that are in effect at those points to weigh the appropriateness of the new breakpoints; however, this specification does not suggest a precise algorithm.
+</p>
+
+<p>
+それでもまだ，分断点が不足なら、`~cloneされ$た［
+~margin／~border／~padding
+］の`塊-終端$ 側が切落され、それでも不足なら，その`塊-始端$ 側も切落される。
+◎
+If even that does not lead to sufficient break points, cloned margins/border/padding at on the block-end side are truncated; and if more room is still needed, cloned margins/border/padding are truncated at the block-start side as well.
+</p>
+
+<p>
+最終的に、［
+`断片容器$の始めから終わりまでアリな分断点が無い, かつ
+内容すべてが`断片容器$に収まり切らない
+］場合には、~UAは，`断片容器$の辺から内容がはみ出ないように，任意の所で分断してもヨイ。
+<span id="monolithic-breaking">
+そのような場合、~UAは，`単体的$な要素の~graphic表現を断片に切分けて，その内容を断片化してもヨイ。
+しかしながら、~UAは，~pageの上端の所で分断しないモノトスル
+— すなわち，内容の進行を保証するため、どの`断片容器$にも，少なくとも何らかの内容を配置するモノトスル。
+</span>
+◎
+Finally, if there are no possible break points below the top of the fragmentainer, and not all the content fits, the UA may break anywhere in order to avoid losing content off the edge of the fragmentainer. In such cases, the UA may also fragment the contents of monolithic elements by slicing the element’s graphical representation. However, the UA must not break at the top of the page, i.e. it must place at least some content on each fragmentainer, so that each fragmentainer has a non-zero amount of content, in order to guarantee progress through the content. 
+</p>
+
+		</section>
+		<section id="best-breaks">
+<h3 title="Optimizing Unforced Breaks">4.5. 非強制d分断の最適化-法</h3>
+
+<p>
+~CSSは、［
+`断片化~文脈$における`断片容器$の~overflowを避けるため、`断片化d~flow$は，許容される分断点にて分断するモノトスル
+］と要求するが，［
+特定0の`許容される分断$にて，内容を分断するかどうか
+］は定義しない。
+しかしながら、 ~UAには，次の指針を~~順守することが推奨される（それらには、所々で矛盾もあることを認識した上で）：
+◎
+While CSS requires that a fragmented flow must break at allowed break points in order to avoid overflowing the fragmentainers in its fragmentation context, it does not define whether content breaks at a particular allowed break. However, it is recommended that user agents observe the following guidelines (while recognizing that they are sometimes contradictory):
+</p>
+
+<ul>
+	<li>
+分断はアリな限り少なくする。
+◎
+Break as few times as possible.
+</li>
+	<li>
+強制d分断で終端しないような，すべての`断片容器$は、等量の内容で埋まるように現れさせる。
+◎
+Make all fragmentainers that don’t end with a forced break appear to be equally filled with content.
+</li>
+	<li>
+`置換d要素$の内側では、分断するのを避ける。
+◎
+Avoid breaking inside a replaced element.
+</li>
+</ul>
+
+<div class="example" id="widows-orphans-example">
+<p>
+例えば，~stylesheetに
+<samp class="css">`orphans^p: `4^v</samp>,
+<samp class="css">`widows^p: `2^v</samp>
+が含まれていて,
+現在の~pageの下端に 20 行l（行l~box）分の可用な空間があり、［
+通常~flowにおいて， %N 本の行l~boxを包含する %塊 をその次に配置する
+］ことを考える：
+◎
+Suppose, for example, that the style sheet contains orphans : 4, widows : 2, and there is space for 20 lines (line boxes) available at the bottom of the current page, and the next block in normal flow is considered for placement:
+</p>
+
+<ul class="switch">
+	 <li>
+%N ≤ 20 の場合
+⇒
+【 %塊 は断片化することなく】現在の~page上に置かれるベキである。
+◎
+If the block contains 20 line boxes or fewer, it should be placed on the current page.
+</li>
+	<li>
+%N ~IN { 21, 22 } の場合
+⇒
+%塊 を成す 2 個目の断片は、 `widows$p の拘束に違反してはならないので，少なくとも 2 本の行l~boxを包含するモノトスル。
+同様に， 1 個目の断片も、少なくとも 4 本の行l~boxを包含するモノトスル。
+◎
+If the block contains 21 or 22 line boxes, the second fragment of the paragraph must not violate the widows constraint, and so the second fragment must contain at least two line boxes; likewise the first fragment must contain at least four line boxes.
+</li>
+	<li>
+%N ≥ 23 の場合
+⇒
+%塊 を成す 1 個目の断片は 20 行l， 2 個目の断片は残りの行lを包含するベキであるが、現在の~page上に %塊 の断片を置く場合，［
+1 個目 ／ 2 個目
+］の断片は 少なくとも［
+4 本 ／ 2 本
+］の行l~boxを包含するモノトスル。
+◎
+If the block contains 23 line boxes or more, the first fragment should contain 20 lines and the second fragment the remaining lines. But if any fragment of the block is placed on the current page, that fragment must contain at least four line boxes and the second fragment at least two line boxes.
+</li>
+</ul>
+
+<p>
+今度は、
+<samp class="css">`orphans$p: `10^v</samp>,
+<samp class="css">`widows$p: `20^v</samp>
+にされていて，現在の~pageの下端にて 8 行l分が可用とする：
+◎
+Now suppose that orphans is 10, widows is 20, and there are 8 lines available at the bottom of the current page:
+</p>
+
+<ul class="switch">
+	<li>
+%N ≤ 8 の場合
+⇒
+%塊 全体が現在の~page上に置かれるベキである。
+◎
+If the block contains 8 lines or fewer, it should be placed on the current page.
+</li>
+	<li>
+%N ≥ 9 の場合
+⇒
+分割されてはならないので（さもなければ `orphans$p の拘束に違反する），
+%塊 全体を次の~pageへ移動するモノトスル。
+◎
+If the block contains 9 lines or more, it must NOT be split (that would violate the orphans constraint), so it must move as a block to the next page.
+</li>
+</ul>
+</div>
+
+<p>
+~CSSにおいては、次の要件も追加的に課される：
+~size 0 の`~box断片$は、空間を占めないので
+— 【直前の内容が】`断片容器$の中に収まるならば —
+当の`断片化~分断$の前~側に現れるモノトスル。
+◎
+Additionally, CSS imposes one requirement: a zero-sized box fragment, since it does not take up space, must appear on the earlier side of a fragmentation break if it is able to fit within the fragmentainer.
+</p>
+
+<p class="note">注記：
+~size 0 の`~box断片$は、断片容器を~overflowする内容の直後に配置された場合には，次の`断片容器$へ追出されることになる。
+◎
+Note: A zero-sized box fragment will be pushed to the next fragmentainer if it is placed immediately after content that itself overflows the fragmentainer.
+</p>
+
+		</section>
+	</section>
+	<section id="breaking-boxes">
+<h2 title="Box Model for Breaking">5. 分断-法のための~box~model</h2>
+
+<p class="note">注記：
+この節では、 `CSS-SIZING-3$r にて定義される ~sizingに関する用語を利用する。
+◎
+Note: The sizing terminology used in this section is defined in [CSS-SIZING-3].
+</p>
+
+		<section id="varying-size-boxes">
+<h3 title="Breaking into Varying-size Fragmentainers">5.1. ~sizeが一様でない断片容器への分断-法</h3>
+
+<p>
+~flowが，~sizeが一様でない 一連の`断片容器$に断片化されるときには、~layoutに適応するため，次の規則が~~順守される：
+◎
+When a flow is fragmented into varying-size fragmentainers, the following rules are observed for adapting layout:
+</p>
+
+<ul>
+	<li>
+~layoutは、`断片容器$ごとに遂行される
+—
+各 `断片容器$ %C は、~lay-outする要素について，［
+前の分断点からの要素の進捗量を継続しつつ
+］， %C 自身の~sizeを利用して，要素~全体が［
+他の`断片容器$の~sizeも %C と同じ~sizeにされて断片化されている
+］と~~見なした下で，要素の~sizeと位置を再度~計算する。
+進捗量は、［
+%C において［
+利用-済みの／残りの
+【！＊ `残りの断片容器~塊~size$】
+］`塊~size$が占める百分率（絶対的~長さではなく）
+］で, および［
+利用-済みの／残りの
+］内容の分量
+］で，測定される。
+ただし，`単体的$な要素を~lay-outするときには、~UAは，代わりに［
+各 `断片容器$に渡り，［
+`行内~size$／解決された`塊~size$
+］を一貫して保守してもヨイ。
+◎
+Layout is performed per-fragmentainer, with each fragmentainer continuing progress from the breakpoint on the previous, but recalculating sizes and positions using its own size as if the entire element were fragmented across fragmentainers of this size. Progress is measured in percentages (not absolute lengths) of used/remaining fragmentainer size and in amount of used/remaining content. However, when laying out monolithic elements, the UA may instead maintain a consistent inline size and resolved block size across fragmentainers.
+</li>
+	<li>
+要素の内在的~sizeは、要素~全体に渡って，計算され, 保守される
+【すなわち，断片化されないときの~sizeを用いる】
+—
+内在的~sizeを解決するために初期~包含塊の~sizeを要するときは、`断片化~文脈$を定義している最初の`断片容器$の~sizeと見做す。
+◎
+Intrinsic sizes are calculated and maintained across the entire element. Where an initial containing block size is needed to resolve an intrinsic size, assume the size of the first fragmentainer defining a fragmentation context.
+</li>
+	<li>
+<p>
+［
+前の`断片容器$から始まっている~box
+］の断片は、［
+それらが，【次の？】`断片容器$の`塊-始端$ 辺の上側に位置してはならない
+］とする，追加的な拘束を伴う配置~規則を順守するモノトスル。
+その結果，~boxの継続~断片が`断片容器$の`塊-始端$ 辺から離されることになる場合、
+`box-decoration-break$p に `clone^v が指定されているならば，その断片を［
+~boxの~paddingと~borderに加えて~margin
+］により包装する。
+◎
+Fragments of boxes that began on a previous fragmentainer must obey placement rules with the additional constraint that fragments must not be positioned above the block-start edge of the fragmentainer. If this results in a box’s continuation fragment shifting away from the block-start edge of the fragmentainer, then box-decoration-break: clone, if specified, wraps the fragment with the box’s margin in addition to its padding and border.
+</p>
+
+<figure>`Varying-Size-Fragmentainers^dgm
+<figcaption>
+~sizeが一様でない`断片容器$が分断される様子を示す~~図式
+◎
+Illustration of breaking in varying-size fragmentainers.
+</figcaption></figure>
+
+	</li>
+</ul>
+
+<p class="note">注記：
+一連の要素の文書~順序は，断片化の間は変化しないので、各~断片は，`連続的~媒体$に適用される規則と同じ規則に従って処理される。
+特に、`浮動体$の順序は，すべての断片に渡って保全され、
+CSS 2.1 § 9.5 にて定義される規則と同じ規則に従う。
+◎
+Note: Since document order of elements doesn’t change during fragmentation, fragments are processed following the same rules that apply to continuous media. In particular, the order of floats is preserved across all fragments and follows the same rules as defined in CSS 2.1 9.5.
+</p>
+
+<p>
+上述の規則が含意するいくつかを以下に挙げる（参考）：
+◎
+Below are listed (informatively) some implications of these rules:
+</p>
+
+<ul>
+	<li>
+［
+`収納伸張~size$ ／百分率に基づく~size
+］による~layout拘束を充足している~box（~tableも含む）は、~page間に渡り，その`行内~size$を変化させ得る。
+◎
+Boxes (including tables) fulfilling layout constraints at their stretch-fit or percentage-based size may change inline size across pages.
+</li>
+	<li>
+［
+`最小-内容$ ／ `最大-内容$ ／ 絶対~長さ
+］~sizeによる~layout拘束を充足している~box（~tableも含む）は、~page間に渡り，その`行内~size$を保守することになる。
+◎
+Boxes (including tables) fulfilling layout constraints at their min-content, max-content, or absolute-length size will maintain their inline size across pages.
+</li>
+	<li>
+`塊~level$の継続~断片は、例えば，それが［
+塊~整形~文脈を確立する, かつ
+`浮動体$の脇に置かれる, かつ
+それと浮動体の両者が，横並びに置くには狭~過ぎる~page上に継続する
+］場合には、~pageの始めから置かれてもヨイ。
+◎
+A block-level continuation fragment may be placed below the top of the page if, e.g. it establishes a block formatting context and is placed beside a float and both it and the float continue onto a narrower page that is too narrow to hold both of them side-by-side.
+</li>
+	<li>
+同じ~page上に先行する`浮動体$ F に隣接な要素は、例えば，［
+この より狭い~page上に継続する別の先行する浮動体 G があって，
+F, G が最早，横並びに収まらないために F が下側へ追出される
+］ような場合、次の~pageに継続する浮動体の上側に回込むことがある。
+◎
+An element adjacent to a preceding float on one page may wind up above the float’s continuation on the next page if, e.g. that float is pushed down because it no longer fits side-by-side with an earlier float that also continues onto this narrower page.
+</li>
+	<li>
+左~浮動体は、先行する右~浮動体が前の~pageに収まらない場合には，右~浮動体の残りの断片の `前の^em ~page上に現れてもヨイ。
+しかしながら，他の右~浮動体は、先行する右~浮動体の残りの断片を配置し終える所まで，~~先送りされることになる。
+◎
+A left float may appear on a page before the remaining fragments of a preceding right float if that right float does not fit on the earlier page. However another right float will be forced down until the preceding right float’s remaining fragment can be placed.
+</li>
+</ul>
+
+<div class="example">
+<p>
+ここに、百分率に基づいて進捗する例を示す：
+絶対的に位置された要素があり，その位置が［
+<samp class="css">`top$p: `calc(150% + 30px)^v</samp>,
+<samp class="css">`height$p: `calc(100% - 10px)^v</samp>
+］にされているとする。
+要素が，縦幅が［
+1 ~page目は 400px,
+2 ~page目は 200px,
+3 ~page目は 600px
+］に~page割りされた文脈~下に置かれた場合、その~layoutは次の様に進捗する：
+◎
+Here is an example that shows the use of percentage-based progress: Suppose we have an absolutely-positioned element that is positioned top: calc(150% + 30px) and has height: calc(100% - 10px). If it is placed into a paginated context with a first page height of 400px, a second page of 200px, and a third page of 600px, its layout progresses as follows:
+</p>
+
+<ul>
+	<li>
+まず、要素の上端~位置が，1 個目の~pageの縦幅に対し解決され、その結果は
+630px （ ＝ 150% × 400px + 30px ）
+になる。
+1 個目の~pageの縦幅は 400px しかないので、［
+進捗量 63.49% （ ＝ 400 ÷ 630 ）； 残り 36.51%
+］を記録した上で，~layoutは 2 ~page目へ移動する。
+◎
+First, the top position is resolved against the height of the first page. This results in 630px. Since the first page has a height of only 400px, layout moves to the second page, recording progress of 400/630 = 63.49% with 36.51% left to go.
+</li>
+	<li>
+2 個目の~page上では、要素の上端~位置が再び
+— ここでは 2 個目の —
+~pageの縦幅に対し解決され、その結果は 330px になる。
+したがって、残りの進捗量 36.51% は， 120.5px に解決され、要素の上端~辺が，この~pageの上端~辺から 120.5px 下の所に置かれる。
+◎
+Now on the second page, the top position is again resolved, this time against the height of the second page. This results in 330px. The remaining 36.51% of progress thus resolves to 120.5px, placing the top edge of the element 120.5px down the second page.
+</li>
+	<li>
+要素の縦幅は、 2 個目の~pageに対し解決され、その結果は
+190px （ ＝ 100% × 200px − 10px ）
+になる。
+~page上には
+79.5px （ ＝ 200px − 120.5px ）
+しか残されていないので、［
+進捗量 41.84% （ ＝ 79.5 ÷ 190 ）； 残り 58.16%
+］を記録した上で，~layoutは 3 ~page目へ移動する。
+◎
+Now the height is resolved against the second page; it resolves to 190px. Since there are only 79.5px left on the page, layout moves to the third page, recording progress of 79.5/190 = 41.84%, with 58.16% left to go.
+</li>
+	<li>
+3 個目の~page上では、縦幅は
+590px （ ＝ 100% × 600px − 10px ）
+に解決される。
+したがって、残りの進捗量 58.16% は，この~page上に収まる 343.1px （ ＝ 58.16% × 590px ）に解決され、要素は完了する。
+◎
+On the third page, the height resolves to 590px. The remaining 58.16% of progress thus resolves to 343.1px, which fits on this page and completes the element.
+</li>
+</ul>
+</div>
+
+		</section>
+		<section id="break-margins">
+<h3 title="Adjoining Margins at Breaks: the margin-break property">5.2. 分断に連接している~margin： `margin-break^p ~prop</h3>
+
+◎名 `margin-break@p
+◎値 `auto$v1 | `keep$v | `discard$v
+◎初 `auto^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+`断片化~分断$にて~boxの`塊-軸$`~margin$を破棄するか保つかを制御する。
+各種 値の意味は：
+◎
+Controls whether the box’s block-axis margins are discarded or kept at a fragmentation break. Values have the following meanings:
+</p>
+
+<dl>
+	<dt>`auto@v1</dt>
+	<dd>
+~boxの前／後に`非強制d^em分断が生じるときは、分断の［
+前／後
+］に連接している~marginを［
+`残りの断片容器~塊~size$ ／ 0
+］に切落す。
+そこで`強制d分断^emが生じるときは、分断の［
+前／後
+］に連接している~marginは［
+切落される／保全される
+］。
+`~cloneされ$た~marginは、常に 0 に切落される。
+◎
+When an unforced break occurs before or after the box, any margins adjoining the break truncate to the remaining fragmentainer extent before the break, and are truncated to zero after the break. When a forced break occurs there, adjoining margins before the break are truncated, but margins after the break are preserved. Cloned margins are always truncated to zero.
+</dd>
+	<dd class="note">注記：
+<a href="~CSS2BOX#collapsing-margins">~marginが相殺される</a>ときは、同じ分断に複数の~boxの~marginが連接し得る。
+◎
+Note: When margins collapse (see CSS2§8.3.1), the margins of multiple boxes can be adjoining the break.
+</dd>
+
+	<dt>`keep@v</dt>
+	<dd>
+`断片化~分断$に連接している~marginは、切落されない。
+◎
+Margins adjoining a fragmentation break are not truncated.
+</dd>
+
+	<dt>`discard@v</dt>
+	<dd>
+`断片化~分断$に連接している~marginは、常に切落される
+— `断片化~文脈$の始端や終端にあるものも含めて。
+◎
+Margins adjoining a fragmentation break are always truncated, including at the start and end of a fragmentation context.
+</dd>
+</dl>
+
+<p class="note">注記：
+（~page, 柱, 等々の）`断片化~容器$に適用される `margin-trim$p ~propも見よ。
+◎
+Note: See also the margin-trim property, which applies to the fragmentation container (page/column/etc.)
+</p>
+
+<p class="issue">
+<a href="https://www.antennahouse.com/product/ahf66/ahf-focss6.html">Antenna House は 2 個目の `keep^v ~keywordも許容する</a>
+— それは、分断の後にある~marginを保全し，他の場合は破棄する。
+この特能は求まれているのか？
+また，`keep$v が 1 個だけ指定された場合、~marginの前のみ, あるいは両~側のどちらに適用するのか？
+<a href="~CSSissue/3254">論点</a>を見よ。
+◎
+Antenna House also allows a second keep keyword, which preserves the margin after the break; it is otherwise discarded. Do we want to include this feature? Also, if only one keep is specified, does it apply only to the before margin or both sides? See discussion.
+</p>
+
+<div class="example">
+
+<p>
+例、次の`複柱~layout$を考える：
+◎
+Consider the following multi-column layout example:
+</p>
+
+<pre class="lang-html">
+&lt;style&gt;
+  article { columns: 16ch; border: solid silver; }
+  h3 { break-before: always; }
+&lt;/style&gt;
+&lt;article&gt;
+ここでは、強制d分断や非強制d分断の前／後における &lt;code&gt;margin-break&lt;/code&gt; の効果を比較できる。
+この段落は、非強制d分断の後に開始する。
+  &lt;h3&gt;この~headingの前には強制d分断が与えられている。&lt;/h3&gt;
+&lt;/article&gt;
+</pre>
+
+<!-- 
+Here we can compare the effects of <code>margin-break</code>,
+  before and after forced and unforced breaks.
+  This paragraph starts after an unforced break.
+  <h3>This heading is given a forced break before.</h3>
+-->
+
+<p>
+種々の `margin-break$p 値がどう描画され得るか，以下に説明図を与える：
+◎
+Here are illustrations of how it might render with each margin-break value:
+</p>
+
+<dl id="_ex-margin-break">
+	<dt>`auto^v（ 初期~値）</dt>
+	<dd>
+<figure>
+<div class="ex-margin-break" id="_dgm-margin-break-auto">
+<div>
+<div></div>
+ここでは、強制d分断や非強制d分断の前／後における `margin-break^p の効果を比較できる。
+</div>
+<div>
+この段落は、非強制d分断の後に開始する。
+</div>
+<div>
+<div></div>
+この~headingの前には強制d分断が与えられている。
+</div>
+</div>
+
+<figcaption>
+ここでは，
+1 個目の段落と~heading（強制d分断の後に開始する）に対する上端~marginは保たれるが、
+2 個目の段落（非強制d分断の後に開始する）の後【前？】では保たれない。
+各~柱の下端における下端~marginは、すべて破棄される。
+</figcaption></figure>
+
+◎
+alt= Here the top margin is kept on the first paragraph and the heading (which starts after a forced break) but not after the second paragraph (which starts after an unforced break). The bottom margins are all discarded at the bottom of each column.
+◎
+margin-break: auto (initial value)
+</dd>
+
+	<dt>`discard^v</dt>
+	<dd>
+<figure>
+<div class="ex-margin-break" id="_dgm-margin-break-discard">
+<div>
+ここでは、強制d分断や非強制d分断の前／後における `margin-break^p の効果を比較できる。
+</div>
+<div>
+この段落は、非強制d分断の後に開始する。
+</div>
+<div>
+この~headingの前には強制d分断が与えられている。
+</div>
+</div>
+<figcaption>
+ここでは、各~柱の［
+上端に生じる上端~margin／下端に生じる下端~margin
+］は，すべて 0 に切落される。
+</figcaption></figure>
+
+◎
+alt= Here the top margins occurring at the top of each column and the bottom margins occurring at the bottom of each column are all truncated to zero.
+◎
+margin-break: discard
+</dd>
+
+	<dt>`keep discard^v</dt>
+	<dd>
+<figure>
+<div class="ex-margin-break" id="_dgm-margin-break-keep-discard">
+<div>
+<div></div>
+ここでは、強制d分断や非強制d分断の前／後における `margin-break^p の効果を比較できる。
+</div>
+<div>
+<div></div>
+この段落は、非強制d分断の後に開始する。
+</div>
+<div>
+<div></div>
+この~headingの前には強制d分断が与えられている。
+</div>
+</div>
+
+<figcaption>
+ここでは、各~柱の［
+上端に生じる上端~margin／下端に生じる下端~margin
+］は［
+すべて保たれる／依然として切落される
+］。
+</figcaption></figure>
+
+◎
+alt= Here the top margins occurring at the top of each column are all kept; however the bottom margins are still truncated.
+◎
+margin-break: keep discard
+</dd>
+
+	<dt>`keep keep^v</dt>
+	<dd>
+<figure>
+
+<div class="ex-margin-break" id="_dgm-margin-break-keep-keep">
+<div>
+<div></div>
+ここでは、強制d分断や非強制d分断の前／後における `margin-break^p の効果を比較できる。
+<div></div>
+</div>
+<div>
+<div></div>
+この段落は、非強制d分断の後に開始する。
+<div></div>
+</div>
+<div>
+<div></div>
+この~headingの前には強制d分断が与えられている。
+<div></div>
+</div>
+</div>
+<figcaption>
+ここでは、各~柱の［
+上端に生じる上端~margin／下端に生じる下端~margin
+］は，すべて保たれる。
+これは、自動-縦幅にされた容器の縦幅を，下端~marginを収容するよう増やす。
+</figcaption></figure>
+
+◎
+alt= Here the top margins occurring at the top of each column as well as the bottom margins occurring at the bottom of each column are all kept; this increases the height of the auto-height container to accommodate the bottom margins.
+◎
+margin-break: keep keep
+</dd>
+</dl>
+
+</div>
+
+		</section>
+		<section id="box-splitting">
+<h3 title="Splitting Boxes">5.3. ~boxの分割-法</h3>
+
+<p>
+~boxを分断するときは、その分断の前の内容に対する~boxは，`残りの断片容器~塊~size$を埋めるように拡がる（ `box-decoration-break$p: `clone^v により適用される
+~margin／~border／~padding
+用の部屋は残す） — 内容を次の`断片容器$にて再開させる前に。
+（内容を，次の`断片容器$に追出すような`分断$は、~boxの内容の`塊~size$を，実質的に増大させる。）
+◎
+When a box breaks, its content box extends to fill any remaining fragmentainer extent (leaving room for any margins/borders/padding applied by box-decoration-break: clone) before the content resumes on the next fragmentainer. (A fragmentation break that pushes content to the next fragmentainer effectively increases the block size of a box’s contents.)
+</p>
+
+<p class="note">注記：
+~boxの断片化により供与される`塊~size$の増分（すなわち，分断点から`断片容器$の辺までの距離）は、~boxの`塊~size$に指定された上限への進捗量を供与する。
+◎
+Note: The extra block size contributed by fragmenting the box (i.e. the distance from the break point to the edge of the fragmentainer) contributes progress towards any specified limits on the box’s block size.
+</p>
+
+<figure>`Remaining-Fragmentainer-Extent^dgm
+<figcaption>
+`残りの断片容器~塊~size$を埋める様子を示す~~図式：
+◎
+Illustration of filling the remaining fragmentainer extent.
+</figcaption></figure>
+
+
+		</section>
+		<section id="break-decoration">
+<h3 title="Fragmented Borders and Backgrounds: the box-decoration-break property">5.4. ~borderと背景の断片化： `box-decoration-break^p ~prop</h3>
+
+◎名 `box-decoration-break@p
+◎値 `slice^v | `clone^v
+◎初 `slice^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+`box-decoration-break$p ~propは、（~page／柱／~region／行l
+【！ISSUE-182】
+）分断が~boxを分割する下で，次を制御する：
+◎
+When a break (page/column/region/line) splits a box, the box-decoration-break property controls
+</p>
+
+<ul>
+	<li>
+~boxの［
+~margin／~border／~padding
+］および他の装飾が，各~box断片の分断辺【 “切り口” 】を包装するかどうか。
+◎
+whether the box’s margins, borders, padding, and other decorations wrap the broken edges of the box fragments
+</li>
+	<li>
+各~box断片から`背景~位置決め区画$ `CSS-BACKGROUNDS-3$r
+（あるいは、
+`~mask位置決め区画$ `CSS-MASKING-1$r,
+`図形の基準~box$ `CSS-SHAPES-1$r,
+等々）を導出したり複数化する方法, および
+その中に要素の背景を描く方法。
+◎
+how the background positioning area [CSS-BACKGROUNDS-3] (and mask positioning area [CSS-MASKING-1], shape reference box [CSS-SHAPES-1], etc.) is derived from or duplicated across the box fragments and how the element’s background is drawn within them.
+</li>
+</ul>
+
+<p>
+各種 値の意味は：
+◎
+Values have the following meanings:
+</p>
+
+<dl>
+	<dt>`clone@v</dt>
+	<dd>
+各~box断片は、［
+~border, ~padding, ~margin
+］により，独立に包装される。
+`border-radius$p,
+`border-image$p,
+`box-shadow$p
+があれば，それらは各~断片ごとに独立に適用される。
+背景は、要素の各~断片の中に独立に描かれる。
+したがって， `no-repeat^v による背景~画像は，要素の断片ごとに描画されることになる。
+◎
+Each box fragment is independently wrapped with the border, padding, and margin. The border-radius and border-image and box-shadow, if any, are applied to each fragment independently. The background is drawn independently in each fragment of the element. A no-repeat background image will thus be rendered once in each fragment of the element.
+</dd>
+	<dd class="note">注記：
+~cloneされる~marginは、塊~levelの~box上では<a href="#break-margins">切落される</a>。
+◎
+Note: Cloned margins are truncated on block-level boxes.
+</dd>
+
+	<dt>`slice@v</dt>
+	<dd>
+要素が分断されずに描画された上で，分断で切分けられたかのような効果になる：
+分断辺の所には，~borderも~paddingも挿入されず,
+`box-shadow$p は描かれず、［
+背景,
+`border-radius$p,
+`border-image$p
+］は、~box全体の幾何が分断されていないかのように適用される。
+◎
+The effect is as though the element were rendered with no breaks present, and then sliced by the breaks afterward: no border and no padding are inserted at a break; no box-shadow is drawn at a broken edge; and backgrounds, border-radius, and the border-image are applied to the geometry of the whole box as if it were unbroken.
+</dd>
+</dl>
+
+<figure>`box-break^dgm
+<figcaption>
+`box-decoration-break$p による 2 つの可能性：
+図左は値 `slice$v によるもの,
+図右は値 `clone$v によるもの。
+◎
+Two possibilities for box-decoration-break: on the left, the value slice, on the right the value clone.
+</figcaption></figure>
+
+<div class="p">
+<p>
+~UAは、次に該当する箇所に対しても，
+`box-decoration-break$p を適用して描画を制御するベキである：
+</p>
+
+<ul>
+	<li>
+双向性により課される分断
+— すなわち、双向性~並替ngにより，行内が不連続な断片に分割される所。
+<a href="~CSSWM#bidi-algo">双方向-並替ng~algoの適用-法</a>
+`CSS-WRITING-MODES-3$r
+を見よ。
+</li>
+	<li>
+表示~型により課される分断
+— すなわち、より高~levelな`表示~型$が，互換でない先祖を分割する所（例：
+`塊~levelの~box$が`行内~box$を分割する所 ／
+`~spanner$が`複柱~容器$を分割する所）。
+<a href="~CSS2VISUREN#box-gen">塊~levelの要素と塊~box</a> `CSS2$r ／
+<a href="~CSSMCOL#spanning-columns">~spanning柱</a> `CSS-MULTICOL-1$r
+を見よ。
+</li>
+</ul>
+
+<p>
+他の場合【~UAが上述の “ベキ” に従わない場合】、そのような分断に際しては `slice$v として取扱うモノトスル。
+</p>
+
+◎
+UAs should also apply box-decoration-break to control rendering at bidi-imposed breaks—i.e. when bidi reordering causes an inline to split into non-contiguous fragments—and/or at display-type–imposed breaks—i.e. when a higher-level display type (such as a block-level box / column spanner) splits an incompatible ancestor (such as an inline box / block container). Otherwise such breaks must be handled as slice. See Applying the Bidirectional Reorderign Algorithm in CSS Writing Modes, CSS2§9.2 Block-level elements and block boxes, and CSS Multi-column Layout §6 Spanning Columns.
+</div>
+
+<p class="note">注記：
+行内~要素に対しては、断片のどの側が分断辺と見なされるかは、親~要素の行内~進行~方向により決定される。
+例えば，［
+親の `direction$p `CSS-WRITING-MODES-3$r が `rtl^v にされている行内~要素
+］が 2 行lに分断される場合、最初の行l上の断片の
+`左端^em
+【！＊ left^v】
+辺が，分断辺になる（特に、要素~自身, および その`包含塊$の `direction$p は利用されないことに注意）。
+◎
+Note: For inline elements, which side of a fragment is considered the broken edge is determined by the parent element’s inline progression direction. For example, if an inline element whose parent has direction: rtl breaks across two lines, the left edge of the fragment on the first line will be the broken edge. (Note in particular that neither the element’s own direction nor its containing block’s direction is used.) See [CSS-WRITING-MODES-3].
+</p>
+
+			<section id="joining-boxes">
+<h4 title="Joining Boxes for slice">5.4.1. `slice$v により切分けられた~boxの接合法</h4>
+
+<p>
+`box-decoration-break$p が `slice^v にされた~boxに対しては、背景（および `border-image$p ）は，［
+~boxの断片すべてを，視覚-順序に組直して組成される~box
+］に適用されたかのように描かれる。
+この理論上の組立ては、要素が（寄せ, `双向性$による並替ng, ~page分断, 等々も含め）~lay-outされた後に生じる。
+組成-~boxを組立てるためには：
+◎
+For box-decoration-break: slice, backgrounds (and border-image) are drawn as if applied to a composite box consisting of all of the box’s fragments reassembled in visual order. This theoretical assembly occurs after the element has been laid out (including any justification, bidi reordering, page breaks, etc.). To assemble the composite box...
+</p>
+
+<dl>
+	<dt>
+複数~行lに分断される~boxに対しては
+◎
+For boxes broken across lines
+</dt>
+	<dd>
+最初に、同じ行l上の各~断片が，視覚-順序に接続される。
+次に、後続の行l上の各~断片が，要素の`行内~基底~方向$に則って順序付けられ，要素の`支配的~基底線$上に整列される。
+例えば、左横書き（ `direction$p が `ltr^v ）である`包含塊$の中では、最初の断片は 最初の行l上の 最も左の断片になり，後続の行lによる各~断片は，その右側に置かれる。
+右横書きである`包含塊$の中では、最初の断片は最初の行l上の最も右端に，後続の各~断片はその左側に置かれる。
+◎
+First, fragments on the same line are connected in visual order. Then, fragments on subsequent lines are ordered according to the element’s inline base direction and aligned on the element’s dominant baseline. For example, in a left-to-right containing block (direction is ltr), the first fragment is the leftmost fragment on the first line and fragments from subsequent lines are put to the right of it. In a right-to-left containing block, the first fragment is the rightmost on the first line and subsequent fragments are put to the left of it.
+</dd>
+
+	<dt>
+複数~柱に分断される~boxに対しては
+◎
+For boxes broken across columns
+</dt>
+	<dd>
+各~断片は［
+`複柱~容器$の`塊~flow方向$に，各 柱~boxが互いに接合わされた
+］かのように接続される。
+◎
+Fragments are connected as if the column boxes were glued together in the block flow direction of the multi-column container.
+</dd>
+
+	<dt>
+複数~pageに分断される~boxに対しては
+◎
+For boxes broken across pages
+</dt>
+	<dd>
+各~断片は［
+根~要素の`塊~flow方向$に，各 ~page内容~区画が互いに接合わされた
+］かのように接続される。
+◎
+Fragments are connected as if page content areas were glued together in the block flow direction of the root element.
+</dd>
+
+	<dt>
+複数~regionに分断される~boxに対しては
+◎
+For boxes broken across regions
+</dt>
+	<dd>
+各~断片は［
+`~region連鎖$の`首要な書字mode$による`塊~flow方向$に，各 ~region内容~区画が互いに接合わされた
+］かのように接続される。
+◎
+Fragments are connected as if region content areas were glued together in the block flow direction of the principal writing mode of the region chain.
+</dd>
+</dl>
+
+<p>
+横幅が異なる~box断片が上下に接合わされる場合（左右に接合わされるときは，以下の縦横を入れ替えて同様に解釈する）、各~片には，要素~全体が その片と同じ横幅を持つものと~~見なした下で，対応する背景の一部分を描く。
+ただし，画像の使用~縦幅が ~boxの横幅から導出される場合、最も幅広な断片の横幅を利用して計算され，固定d~sizeとして保守される。
+これにより、断片~間に渡る連続性を保全しつつ，どの断片についても，［
+右寄せ／左寄せ／中央寄せ
+］の画像は［
+右端~辺／左端~辺／中央
+］に整列され,
+伸張された画像は背景~区画を覆うようになる。
+◎
+If the box fragments have different widths (heights, if the fragments are joined horizontally), then each piece draws its portion of the background assuming that the whole element has the same width (height) as this piece. However, if the used height (width) of an image is derived from the width (height) of the box, then it is calculated using the widest fragment’s width and maintained as a fixed size. This ensures that right-aligned images stay aligned to the right edge, left-aligned images stay aligned to the left edge, centered images stay centered, and stretched images cover the background area as intended while preserving continuity across fragments.
+</p>
+
+			</section>
+		</section>
+		<section id="transforms">
+<h3 title="Transforms, Positioning, and Pagination">5.5. 変形, 位置決め, ~page割り</h3>
+
+<p>
+断片化は~layoutと相互作用し、したがって［
+相対~位置決め `CSS2$r,
+変形 `CSS-TRANSFORMS-1$r,
+その他
+］による，どの~graphic上の効果よりも`前に^em生じる。
+その種の効果は，断片ごとに適用される：
+例えば，断片化された~boxに回転を適用するときは、各~断片について 回転の原点を計算した上で, それぞれの原点を中心に独立に回転させることになる。
+（~overflow部分のみからなる断片の原点は、内容が，`断片容器$の始端にある［［
+~margin／~border／~padding
+］が 0 幅にされた空な~box
+］を~overflowしていたかのように，決定される。）
+しかしながら，印刷-時の~datalossを抑えるため、~page~boxによる分離と移転は，最後に生じる`ベキである^em。
+したがって，変形された断片が何~pageかにまたがる場合、~page分断の所で切分けられた上で、その出自の~pageの外側を切り取るのではなく，その全体像が印刷される`ベキである^em。
+◎
+Fragmentation interacts with layout, and thus occurs before relative positioning [CSS2], transforms [CSS-TRANSFORMS-1], and any other graphical effects. Such effects are applied per fragment: for example, rotation applied to a fragmented box will calculate a rotation origin for each fragment and independently rotate that fragment around its origin. (The origin of an overflow-only fragment is determined as if that content were overflowing an empty box with zero margins/borders/padding at the start of the fragmentainer.) However, in order to reduce dataloss when printing, the separation and transfer of page boxes should occur last; thus a transformed fragment that spans pages should be sliced at the page breaks and print in its entirety rather than being clipped by its originating page.
+</p>
+
+<figure
+	style="display:flex; align-items:flex-end"
+>`fragmented-transforms^dgm
+<figcaption>
+縦幅が 2.5 ~page分に固定された~boxの中で，総計 4 ~page分に~overflowする内容。
+各~断片の変形~原点は，その~border~boxの中心に据えられる
+— ~border~boxを伴わない断片の~boxは、縦幅 0 で~overflowの始端に~~位置すると見做す。
+◎
+A fixed-height box spanning 2.5 pages with overflow content spanning to a total of 4 pages. The transform origin of each fragment is the center of its border box; the fragment without a border box assumes a zero-height box at the start of the overflow.
+</figcaption></figure>
+
+<p>
+絶対的~位置決めは~layoutに影響し，したがって断片化と相互作用する。
+ある`包含塊$に属する［
+座標系, 
+絶対的に位置された~box
+］のいずれも、その包含塊と同じ断片化~flowの下で，一連の断片容器に断片化されることになる。
+◎
+Absolute positioning affects layout and thus interacts with fragmentation. Both the coordinate system and absolutely-positioned boxes belonging to a containing block will fragment across fragmentainers in the same fragmentation flow as the containing block.
+</p>
+
+<p>
+~UA には、［
+`分断$に~spanする~boxのうち，その`塊-始端$ 辺の位置が ~boxの内容~断片の場所に依存するもの
+］については、正しく位置させることは要求されない。
+◎
+UAs are not required to correctly position boxes that span a fragmentation break and whose block-start edge position depends on where the box’s content fragments.
+</p>
+
+<p>
+［
+文書~全体を記憶して操作できないような拘束
+］がある~UAには、［
+前に描画された~page上で終わるような，絶対的に位置された要素
+］を正しく位置させることは要求されない。
+◎
+UAs with memory constraints that prevent them from manipulating an entire document in memory are not required to correctly position absolutely-positioned elements that end up on a previously-rendered page.
+</p>
+
+		</section>
+	</section>
+	<section id="priv-sec">
+<h2 title="Privacy and Security Considerations">~privacyと~securityの考慮点</h2>
+
+<p>
+この仕様は、一般に，~CSSに新たな［
+~privacy／~security
+］考慮点を導入するものではない。
+◎
+This specification introduces no new privacy or security considerations over CSS in general.
+</p>
+
+	</section>
+	<section id="changes">
+<h2 title="Changes">変更点</h2>
+
+		<section id="changes-level-4">
+<h3 title=" Changes Since Level 3">~level 3 からの変更点</h3>
+
+<p>
+<a href="~CSSWG/css-break-3/">CSS Fragmentation Level 3</a>
+以降に，次の特能が追加された：
+◎
+The following features have been added since CSS Fragmentation Level 3:
+</p>
+
+<ul>
+	<li>
+`margin-break$p ~prop。
+◎
+The margin-break property.
+</li>
+	<li>
+［
+`break-before$p ／ `break-after$p
+］用の値［
+`always$v, `all$v 
+］。
+◎
+The always and all values of break-before/break-after.
+</li>
+</ul>
+
+		</section>
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p>
+Murakami Shinyu 氏による特に CSS Fragmentation Level 4 への貢献, および
+この仕様の大部分を成す Level 3 に
+<a href="~TR/css-break-3/#acknowledgments">貢献されたすべての方々</a>
+に感謝したい。
+◎
+The editors would like to thank Murakami Shinyu specifically for his contributions to CSS Fragmentation Level 4, and to all the contributors to Level 3, which constitutes the bulk of this specification.
+</p>
+
+	</section>
+</main></div>

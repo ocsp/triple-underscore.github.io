@@ -1,0 +1,2158 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>Fullscreen API （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+<style>
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	Util.switchWordsInit({
+		collectParts: Util.collectParts,
+		toc_main: 'MAIN0',
+		generate: expand
+	});
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) { //%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r': // ref
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'l': // literal
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'm': // IDL member
+case 'mE':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'pe': 
+	text = `::${key}`;
+	break;
+case 'ps': 
+	text = `:${key}`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:Fullscreen API
+spec_date:2020-08-18
+trans_update:2020-08-19
+source_checked:200611
+spec_status:LS
+original_url:https://fullscreen.spec.whatwg.org/
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:uievents
+copyright:,whatwg
+trans_1st_pub:2017-12-24
+
+
+●●class_map
+E:error
+A:abstract
+jv:js-value
+p:property
+css:css
+ps:pseudo
+pe:pseudo
+e:element
+a:attr
+h:header
+v:value
+et:event-type
+
+●●tag_map
+I:code
+m:code
+mE:code
+E:code
+p:code
+css:code
+ps:code
+pe:code
+et:code
+e:code
+a:code
+v:code
+c:code
+h:code
+jv:code
+A:span
+i:i
+
+●●mdn_urls
+css-pc-fullscreen:CSS/:fullscreen
+css-pe-backdrop:CSS/::backdrop
+
+dictdef-fullscreenoptions:API/FullscreenOptions
+	enumdef-fullscreennavigationui:API/FullscreenNavigationUI
+
+●●link_map
+
+
+	●IDL／code
+
+LegacyLenientSetter:~WEBIDLjs#LegacyLenientSetter
+Unscopable:~WEBIDLjs#Unscopable
+
+boolean:~WEBIDL#idl-boolean
+undefined:~WEBIDL#idl-undefined
+
+I.Document:~DOM4#document
+I.EventHandler:~WAPI#eventhandler
+I.DocumentOrShadowRoot:~DOM4#documentorshadowroot
+I.Element:~DOM4#element
+I.ShadowRoot:~DOM4#shadowroot
+I.Window:~WINDOW#window
+I.FullscreenNavigationUI:#enumdef-fullscreennavigationui
+I.FullscreenOptions:#dictdef-fullscreenoptions
+
+m.bubbles:~DOM4#dom-event-bubbles
+m.composed:~DOM4#dom-event-composed
+
+m.navigationUI:#dom-fullscreenoptions-navigationui
+
+m.exitFullscreen:#dom-document-exitfullscreen
+m.fullscreen:#dom-document-fullscreen
+m.fullscreenElement:#dom-document-fullscreenelement
+m.fullscreenEnabled:#dom-document-fullscreenenabled
+m.onfullscreenchange:#handler-document-onfullscreenchange
+m.onfullscreenerror:#handler-document-onfullscreenerror
+mE.onfullscreenchange:#dom-element-onfullscreenchange
+mE.onfullscreenerror:#dom-element-onfullscreenerror
+mE.requestFullscreen:#dom-element-requestfullscreen
+
+l.fullscreen:#fullscreen-feature
+l.auto:#dom-fullscreennavigationui-auto
+l.show:#dom-fullscreennavigationui-show
+l.hide:#dom-fullscreennavigationui-hide
+
+e.dialog:~HEinteractive#the-dialog-element
+e.iframe:~HEembed#the-iframe-element
+e.svg:~SVGstruct#elementdef-svg
+	e.svg:~SVG11/struct.html#SVGElement
+e.math:https://www.w3.org/Math/draft-spec/chapter2.html#interf.toplevel
+
+a.allowfullscreen:~HEembed#attr-iframe-allowfullscreen
+a.allow:~HEembed#attr-iframe-allow
+
+h.Permissions-Policy:~PERMISSIONS-POLICY#permissions-policy-header
+
+ps.fullscreen:#css-pc-fullscreen
+pe.backdrop:#css-pe-backdrop
+
+	●用語
+上端~層:#top-layer
+追加する:#top-layer-add
+子孫~閲覧文脈:#descendant-browsing-context
+
+~fullscreenは~supportされて:#fullscreen-is-supported
+~fullscreenから抜出る:#exit-fullscreen
+~fullscreen要素~準備済み検査:#fullscreen-element-ready-check
+~fullscreen要素:#fullscreen-element
+~fullscreen~flag:#fullscreen-flag
+要素を~fullscreen化する:#fullscreen-an-element
+~fullscreenから全部的に抜出る:#fully-exit-fullscreen
+~iframe~fullscreen~flag:#iframe-fullscreen-flag
+処理待ち~fullscreen~eventの~list:#list-of-pending-fullscreen-events
+~fullscreen化~手続き:#run-the-fullscreen-steps
+単純~fullscreen文書:#simple-fullscreen-document
+
+~unfullscreenする文書を収集する:#collect-documents-to-unfullscreen
+要素を~unfullscreenする:#unfullscreen-an-element
+文書を~unfullscreenする:#unfullscreen-a-document
+
+	●外部
+
+~HTML名前空間:~INFRA#html-namespace
+空:~INFRA#list-empty
+空にする:~INFRA#list-empty
+set.付加する:~INFRA#set-append
+~pair:~INFRA#pair
+除去する:~INFRA#list-remove
+文字列:~INFRA#string
+有順序~集合:~INFRA#ordered-set
+	~EACH:~INFRA#list-iterate
+	~WHILE:~INFRA#iteration-while
+	~BREAK:~INFRA#iteration-break
+	~CONTINUE:~INFRA#iteration-continue
+
+
+先祖:~DOM4#concept-tree-ancestor
+~eventを発火する:~DOM4#concept-event-fire
+接続されて:~DOM4#connected
+文書:~DOM4#concept-document
+要素:~DOM4#concept-element
+~host:~DOM4#concept-documentfragment-host
+el.名前空間:~DOM4#concept-element-namespace
+~node文書:~DOM4#concept-node-document
+除去-時の手続き:~DOM4#concept-node-remove-ext
+~targetし直す:~DOM4#retarget
+根:~DOM4#concept-tree-root
+~shadow~host:~DOM4#element-shadow-host
+~shadow根:~DOM4#concept-shadow-root
+~shadowも含む広義-先祖:~DOM4#concept-shadow-including-inclusive-ancestor
+~shadowも含む広義-子孫:~DOM4#concept-shadow-including-inclusive-descendant
+~shadowも含む~tree順序:~DOM4#concept-shadow-including-tree-order
+~tree順序:~DOM4#concept-tree-order
+~tree:~DOM4#concept-tree
+
+並列的:~HTMLINFRA#in-parallel
+
+作動中の文書:~BROWSERS#active-document
+先祖~閲覧文脈:~BROWSERS#ancestor-browsing-context
+閲覧文脈~容器:~BROWSERS#browsing-context-container
+閲覧文脈:~BROWSERS#browsing-context
+全部的に作動中:~BROWSERS#fully-active
+入子の閲覧文脈:~BROWSERS#nested-browsing-context
+bc.容器:~BROWSERS#bc-container
+属する閲覧文脈:~BROWSERS#concept-document-bc
+~top-level閲覧文脈:~BROWSERS#top-level-browsing-context
+
+~event~handler~IDL属性:~WAPI#event-handler-idl-attributes
+~event~handler内容~属性:~WAPI#event-handler-content-attributes
+~event~handler~event型:~WAPI#event-handler-event-type
+~event~handler:~WAPI#event-handlers
+~event~loop:~WAPI#event-loop
+関連な大域~obj:~WAPI#concept-relevant-global
+
+特能の利用は許容され:~HEembed#allowed-to-use
+
+利用者が生成した方位~変更により誘発されて:https://w3c.github.io/screen-orientation/#dfn-triggered-by-a-user-generated-orientation-change
+一過な作動化:~HTMLinteraction#transient-activation
+
+文書~unload時の片付け手続き:~NAVI#unloading-document-cleanup-steps
+
+doc.許可~施策:~HTMLdom#concept-document-permissions-policy
+
+施策により制御される特能:~PERMISSIONS-POLICY#policy-controlled-feature
+既定の許容list:~PERMISSIONS-POLICY#default-allowlist
+容器~施策:~PERMISSIONS-POLICY#container-policy
+	~PERMISSIONS-POLICY#iframe-allowfullscreen-attribute
+
+	●補完
+新たな~promise:~WEBIDLjs#a-new-promise
+却下する:~WEBIDLjs#reject
+解決する:~WEBIDLjs#resolve
+
+p.z-index:~CSS2VISUREN#propdef-z-index
+	~CSS2VISUREN
+p.position:~CSSPOS#propdef-position
+p.top:~CSSPOS#propdef-top
+p.right:~CSSPOS#propdef-right
+p.left:~CSSPOS#propdef-left
+
+p.display:~CSSDISP#propdef-display
+p.outline:~CSSUI#outline
+p.overflow:~CSSOVERFLOW3#propdef-overflow
+p.opacity:~CSSCOLOR#propdef-opacity
+p.mask:~MASKING1#propdef-mask
+
+積層~文脈:~CSS2VISUREN#stacking-context
+静的~位置:~CSSPOS#_static-position
+指定d値:~CASCADE#specified-value
+算出d値:~CASCADE#computed-value
+包含塊:~CSSDISP#containing-block
+初期~包含塊:~CSSDISP#initial-containing-block
+表示域:~CSS2VISUREN#viewport
+疑似要素:~SELECTORS4#pseudo-element
+疑似類:~SELECTORS4#pseudo-class
+出自の要素:~SELECTORS4#originating-element
+
+●●words_table1
+
+
+●●words_table
+
+	●DOM
+shadow:
+広義-:inclusive:~
+
+	●CSS
+積層:stacking::~
+重層する:overlayする::層を重ねる
+最上端:topmost::~
+後景:backdrop::~
+出自の:originating::~
+
+	●仕様
+詳述:elaborate description:~
+	必要と〜され:necessary
+
+	気付ける:aware
+	ゆくゆくは:Long term
+	大雑把な~~素描に過ぎない:sketchy as hell
+	かまわない:free to
+	平易に:simplicity
+
+	●仕様（動詞
+改善案:potential improvements:~
+末端利用者:end user:~:::エンドユーザ
+指図-:instruct:~
+指図:instruction:~
+継当て:patching:継ぎ当て
+	呼ばれ:called
+告知-:advertise:~
+給-:supply:~
+
+	他が言明されない限り:unless stated otherwise
+	読者への演習に残しておく:left as an exercise to the reader
+	加えて:in addition to
+	~~模造:recreate
+	欺く:spoof する
+	という:said to be
+
+	●未分類（動詞
+fullscreen::::全スクリーン
+fullscreen-::::全スクリーン化
+	~fullscreenになる:go fullscreen
+unfullscreen::非 fullscreen 化::非全スクリーン化
+一過:transient::~
+開いて:openして::~
+	~targetし直す:retarget
+隠す:hideする:~
+抜出る:exitする::抜け出る
+
+unload:
+observer::::オブザーバ
+処理待ち:pending:~
+片付け:cleanup::~
+復帰-:revert::~
+	観測され得ない:not observable
+塗ng:painting::塗り
+塗る:paintする::~
+塗られ:paintされ::~
+終止-:end:~
+	末尾:end
+	現れ:appear
+	になる:go
+	~CSS22
+	https://www.w3.org/TR/CSS2/zindex.html
+	~F:unset
+	:against
+	-:go
+	retargeting
+	~unload時の:unloading
+
+	●未分類
+iframe:
+
+許容list:allowlist::許容 list:許容リスト
+不可分:atomic::~
+候補:candidate:~
+
+単位:unit:~
+
+process::::プロセス
+	~process外の:out-of-process
+
+	分だけ除いた:clamp
+	より広い:more
+
+	●指示語
+
+	いつでも:always
+	それまでに:previously
+	以降の:remaining
+	下位節:subsection
+	節:section:
+	済んだ時点で:when done
+	一部を成す:part of
+	comes after
+	最も手前:closest
+
+	●変数名
+	文書:doc
+	~fullscreen要素たち:fullscreenElements
+	除去された~node:removedNode
+	~top-level文書:topLevelDoc
+	文書:lastDoc
+	抜出る文書たち:exitDocs
+	抜出る文書:exitDoc
+	子孫~文書たち:descendantDocs
+	子孫~文書:descendantDoc
+	処理待ち文書:pendingDoc
+
+●●ref_key_map
+SVG:SVG11
+CSS:CSS21
+
+●●ref_normative
+
+[CSS]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. URL: https://drafts.csswg.org/css2/ 
+[DOM]
+    Anne van Kesteren. DOM Standard. Living Standard. URL: https://dom.spec.whatwg.org/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[INFRA]
+    Anne van Kesteren; Domenic Denicola. Infra Standard. Living Standard. URL: https://infra.spec.whatwg.org/ 
+[MATHML]
+    Patrick D F Ion; Robert R Miner. Mathematical Markup Language (MathML) 1.01 Specification. 7 July 1999. REC. URL: https://www.w3.org/TR/REC-MathML/ 
+[PERMISSIONS-POLICY-1]
+    Ian Clelland. Permissions Policy. URL: https://w3c.github.io/webappsec-permissions-policy/ 
+[SVG]
+    Erik Dahlström; et al. Scalable Vector Graphics (SVG) 1.1 (Second Edition). 16 August 2011. REC. URL: https://www.w3.org/TR/SVG11/ 
+[WEBIDL]
+    Boris Zbarsky. Web IDL. URL: https://heycam.github.io/webidl/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる
+<a href="https://fullscreen.spec.whatwg.org/">Fullscreen API</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+Participate:
+	<a href="https://github.com/whatwg/fullscreen">GitHub whatwg/fullscreen</a> (<a href="https://github.com/whatwg/fullscreen/issues/new">new issue</a>, <a href="https://github.com/whatwg/fullscreen/issues">open issues</a>)</dd>
+	<a href="https://wiki.whatwg.org/wiki/IRC">IRC: #whatwg on Freenode</a></dd>
+
+Commits:
+	<a href="https://github.com/whatwg/fullscreen/commits">GitHub whatwg/fullscreen/commits</a>
+	<a href="https://fullscreen.spec.whatwg.org/commit-snapshots/2ca615949a2a11a8e52fb0af0ea12ae8f4c85795/" id="commit-snapshot-link">Snapshot as of this commit</a></dd>
+	<a href="https://twitter.com/fullscreenapi">@fullscreenapi</a>
+
+Tests:
+	<a href="https://github.com/web-platform-tests/wpt/tree/master/fullscreen">web-platform-tests fullscreen/</a> (<a href="https://github.com/web-platform-tests/wpt/labels/fullscreen">ongoing work</a>)
+
+各国語翻訳（非規範的）
+	日本語（このページ）
+
+</script>
+
+
+</head>
+
+<body>
+
+<header>
+
+<a href="https://whatwg.org/"><img
+	style="float: right;"
+	alt="WHATWG"
+	height="100"
+	src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KPHBhdGggZD0ibTUsNDB2LTM1aDM1bTIwLDBoMzV2MzVtMCwyMHYzNWgtMzVtLTIwLDBoLTM1di0zNSIgc3Ryb2tlLXdpZHRoPSIxMCIgc3Ryb2tlPSIjM2M3OTBhIiBmaWxsPSIjZmZmIi8+CjxwYXRoIGQ9Im0zOCwzOGMwLTEyLDI0LTE1LDIzLTJjMCw5LTE2LDEzLTE2LDIzdjdoMTB2LTRjMC05LDE3LTEyLDE3LTI3Yy0yLTIyLTQ1LTIyLTQ1LDN6bTcsMzJoMTB2MTBoLTEwIiBmaWxsPSIjM2M3OTBhIi8+Cjwvc3ZnPgo="
+></a>
+
+	<hgroup>
+<h1 id="title">Fullscreen API</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+Fullscreen ~API 標準は、自身を~fullscreenに表示する要素~用の~APIを定義する。
+◎
+The Fullscreen API standard defines an API for elements to display themselves fullscreen.
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="terminology">
+<h2 title="Terminology">1. 各種用語</h2>
+
+<p>
+この仕様は、 `INFRA$r に依存する。
+◎
+This specification depends on the Infra Standard. [INFRA]
+</p>
+
+<p>
+この仕様に利用される各種用語のほとんどは、
+`CSS$r, `DOM$r, `HTML$r, `WEBIDL$r
+による。
+◎
+Most terminology used in this specification is from CSS, DOM, HTML, and Web IDL. [CSS] [DOM] [HTML] [WEBIDL]
+◎
+A browsing context A is called a descendant browsing context of a browsing context B if and only if B is an ancestor browsing context of A.
+この訳では、この用語は利用しない。
+</p>
+
+		<section id="_conventions">
+<h3>【この訳に特有な表記規約】</h3>
+
+<p>
+この訳の，~algoの記述に利用されている各種記号（此れ, ~LET, ~T, ~IF, ~RET, 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+		</section>
+	</section>
+	<section id="model">
+<h2 title="Model">2. ~model</h2>
+
+<p>
+各 `要素$には
+`~fullscreen~flag@
+が結付けられ、他が言明されない限り ~F をとるとする。
+◎
+All elements have an associated fullscreen flag. Unless stated otherwise it is unset.
+</p>
+
+<p>
+各 `iframe$e `要素$には
+`~iframe~fullscreen~flag@
+が結付けられ、他が言明されない限り ~F をとるとする。
+◎
+All iframe elements have an associated iframe fullscreen flag. Unless stated otherwise it is unset.
+</p>
+
+<p>
+`文書$の
+`~fullscreen要素@
+は、`文書$の`上端~層$内の`要素$のうち［
+`~fullscreen~flag$ ~EQ ~T
+］なるものが［
+あれば それらのうち最上端【最も手前に塗られる／最後】のもの／
+他の場合は ~NULL
+］とする。
+◎
+All documents have an associated fullscreen element. The fullscreen element is the topmost element in the document’s top layer whose fullscreen flag is set, if any, and null otherwise.
+</p>
+
+<p>
+各 `文書$には
+`処理待ち~fullscreen~eventの~list@
+が結付けられる。
+それは、 0 個~以上の［
+( `文字列$, `要素$ ) が成す`~pair$
+］かならる`有順序~集合$であり，初期~時には空とする。
+◎
+All documents have an associated list of pending fullscreen events, which is an ordered set of (string, element) pairs. It is initially empty.
+</p>
+
+<div class="algorithm">
+<p>
+`要素を~fullscreen化する@
+ときは、所与の
+( %要素 )
+に対し
+⇒＃
+%要素 の`~fullscreen~flag$ ~SET ~T；
+%要素 の`~node文書$の`上端~層$に %要素 を`追加する$
+◎
+To fullscreen an element, set element’s fullscreen flag and add it to its node document’s top layer.
+</p>
+</div>
+
+<div class="algorithm">
+<p>
+`要素を~unfullscreenする@
+ときは、所与の
+( %要素 )
+に対し：
+</p>
+<ol>
+	<li>
+%要素 の`~fullscreen~flag$ ~SET ~F
+</li>
+	<li>
+~IF［
+%要素 は `iframe$e 要素である
+］
+⇒
+%要素 の`~iframe~fullscreen~flag$ ~SET ~F
+</li>
+	<li>
+%要素 の`~node文書$の`上端~層$から %要素 を`除去する$
+</li>
+</ol>
+◎
+To unfullscreen an element, unset element’s fullscreen flag and iframe fullscreen flag (if any), and remove it from its node document’s top layer.
+</div>
+
+<div class="algorithm">
+<p>
+`文書を~unfullscreenする@
+ときは、所与の
+( %文書 )
+に対し
+⇒
+%文書 の`上端~層$を成す
+~EACH( `要素$ %要素 )
+に対し
+⇒
+~IF［
+%要素 の`~fullscreen~flag$ ~EQ ~T
+］
+⇒
+`要素を~unfullscreenする$( %要素 )
+◎
+To unfullscreen a document, unfullscreen all elements, within document’s top layer, whose fullscreen flag is set.
+</p>
+</div>
+
+<hr>
+
+<div class="algorithm">
+<p>
+`~fullscreenから全部的に抜出る@
+ときは、所与の
+( `文書$ %文書 )
+に対し，次を走らす：
+◎
+To fully exit fullscreen a document document, run these steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+%文書 の`~fullscreen要素$ ~EQ ~NULL
+］
+⇒
+~RET
+◎
+If document’s fullscreen element is null, terminate these steps.
+</li>
+	<li>
+%文書 の`上端~層$を成す
+~EACH( %要素 )
+に対し
+⇒
+~IF［
+%要素 の`~fullscreen~flag$ ~EQ ~T
+］~AND［
+%要素 ~NEQ %文書 の`~fullscreen要素$
+］
+⇒
+`要素を~unfullscreenする$( %要素 )
+◎
+Unfullscreen elements whose fullscreen flag is set, within document’s top layer, except for document’s fullscreen element.
+</li>
+	<li>
+`~fullscreenから抜出る$( %文書 )
+◎
+Exit fullscreen document.
+</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p id="removing-steps">
+`除去-時の手続き$は、所与の
+( %除去された~node )
+に対し，次を走らす：
+◎
+Whenever the removing steps run with a removedNode, run these steps:
+</p>
+
+<ol>
+	<li>
+%文書 ~LET %除去された~node の`~node文書$
+◎
+Let document be removedNode’s node document.
+</li>
+	<li>
+<p>
+%除去された~node の
+~EACH( `~shadowも含む広義-子孫$ %~node )
+に対し，`~shadowも含む~tree順序$で：
+◎
+Let nodes be removedNode’s shadow-including inclusive descendants that have their fullscreen flag set, in shadow-including tree order.
+◎
+For each node in nodes:
+</p>
+		<ol>
+			<li>
+~IF［
+%~node の`~fullscreen~flag$ ~EQ ~F
+］
+⇒
+~CONTINUE
+◎
+↑</li>
+			<li>
+~IF［
+%~node ~EQ %文書 の`~fullscreen要素$
+］
+⇒
+`~fullscreenから抜出る$( %文書 )
+◎
+If node is document’s fullscreen element, exit fullscreen document.
+</li>
+			<li>
+~ELSE
+⇒
+`要素を~unfullscreenする$( %~node )
+◎
+Otherwise, unfullscreen node.
+</li>
+			<li>
+<p>
+%文書 の`上端~層$から %~node を`除去する$
+◎
+If document’s top layer contains node, remove node from document’s top layer.
+</p>
+
+<p class="note">注記：
+`上端~層$は、他の仕様から要素が追加されたり除去され得るので、
+%~node は %文書 の`~fullscreen要素$でないかもしれない。
+例えば、 %~node は開いている `dialog$e 要素にもなり得る。
+◎
+Other specifications can add and remove elements from top layer, so node might not be document’s fullscreen element. For example, node could be an open dialog element.
+</p>
+			</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+`文書~unload時の片付け手続き$は、所与の
+( %文書 )
+に対し，次を走らす
+⇒
+`~fullscreenから全部的に抜出る$( %文書 )
+◎
+Whenever the unloading document cleanup steps run with a document, fully exit fullscreen document.
+</p>
+</div>
+
+<hr>
+
+<p>
+`~fullscreenは~supportされて@
+いるとは、それまでに確立されている
+【すなわち、所与の時点で，~fullscreen化を防止するような】
+［
+利用者~選好, ~security~risk, ~platform制限
+］は無いことを~~意味する。
+◎
+Fullscreen is supported if there is no previously-established user preference, security risk, or platform limitation.
+</p>
+
+<hr>
+
+<div class="algorithm">
+<p>
+`~fullscreen化~手続き@
+は、所与の
+( `文書$ %文書 )
+に対し，次を走らす：
+◎
+To run the fullscreen steps for a document document, run these steps:
+</p>
+
+<ol>
+	<li>
+%~pair~list ~LET %文書 の`処理待ち~fullscreen~eventの~list$【の~clone】<!-- ＊ -->
+◎
+Let pairs be document’s list of pending fullscreen events.
+</li>
+	<li>
+%文書 の`処理待ち~fullscreen~eventの~list$を`空にする$
+◎
+Empty document’s list of pending fullscreen events.
+</li>
+	<li>
+<p>
+%~pair~list を成す
+~EACH( ( %型, %要素 ) )
+に対し：
+◎
+For each (type, element) in pairs:
+</p>
+		<ol>
+			<li>
+%~target ~LET ［
+次が満たされるならば %要素 ／
+~ELSE_ %文書
+］
+⇒
+［
+%要素 は`接続されて$いる
+］~AND［
+%要素 の`~node文書$ ~EQ %文書
+］
+◎
+Let target be element if element is connected and its node document is document, and otherwise let target be document.
+</li>
+			<li>
+%~target に向けて，名前 %型 の`~eventを発火する$
+— 次のように初期化して
+⇒＃
+`bubbles$m 属性 ~SET ~T,
+`composed$m 属性 ~SET ~T
+◎
+Fire an event named type, with its bubbles and composed attributes set to true, at target.
+</li>
+		</ol>
+	</li>
+</ol>
+
+<p class="note">注記：
+この手続きは、 `HTML$r にて定義される`~event~loop$に統合されている。
+【<a href="~WAPI#update-the-rendering">参照</a>】
+◎
+These steps integrate with the event loop defined in HTML. [HTML]
+</p>
+</div>
+
+	</section>
+	<section id="api">
+<h2 title="API">3. ~API</h2>
+
+<pre class="idl">
+enum `FullscreenNavigationUI$I {
+  `auto@l,
+  `show@l,
+  `hide@l
+};
+
+dictionary `FullscreenOptions$I {
+  `FullscreenNavigationUI$I `navigationUI@m = "auto";
+};
+
+partial interface `Element$I {
+  Promise&lt;`undefined$&gt; `requestFullscreen$mE(optional `FullscreenOptions$I %options = {});
+
+  attribute `EventHandler$I `onfullscreenchange@mE;
+  attribute `EventHandler$I `onfullscreenerror@mE;
+};
+
+partial interface `Document$I {
+  [`LegacyLenientSetter$] readonly attribute `boolean$ `fullscreenEnabled$m;
+  [`LegacyLenientSetter$, `Unscopable$] readonly attribute `boolean$ `fullscreen$m; // <span class="comment">歴史的</span>
+
+  Promise&lt;`undefined$&gt; `exitFullscreen$m();
+
+  attribute `EventHandler$I `onfullscreenchange$m;
+  attribute `EventHandler$I `onfullscreenerror$m;
+};
+
+partial interface mixin `DocumentOrShadowRoot$I {
+  [`LegacyLenientSetter$] readonly attribute `Element$I? `fullscreenElement$m;
+};
+</pre>
+
+<dl class="domintro">
+	<dt>%promise = %element . `requestFullscreen([options])$mE</dt>
+	<dd>
+%element を~fullscreenに表示する
+— 済んだ時点で  %promise を解決する。
+◎
+Displays element fullscreen and resolves promise when done.
+</dd>
+	<dd>
+%options の `navigationUI$m ~memberが給されたときは、［
+~fullscreenが選好される間，~navi~UIを示すかどうか
+］を指示する。
+`show^l に設定した場合、~screen空間を広くとるより~naviを平易にする方が選好される。
+`hide^l に設定した場合、~screen空間を広くとる方が選好される。
+~UAは、いつでも，~appの選好より利用者の選好を尊守することにしてもかまわない。
+既定の値 `auto^l は、~appによる選好は無いことを指示する。
+◎
+When supplied, options’s navigationUI member indicates whether showing navigation UI while in fullscreen is preferred or not. If set to "show", navigation simplicity is preferred over screen space, and if set to "hide", more screen space is preferred. User agents are always free to honor user preference over the application’s. The default value "auto" indicates no application preference.
+</dd>
+
+	<dt>%document . `fullscreenEnabled$m</dt>
+	<dd>
+［
+次が満たされるならば ~T ／
+~ELSE_ ~F
+］を返す
+⇒
+［
+%document は `要素$を~fullscreenに表示する能を備える
+］~AND［
+`~fullscreenは~supportされて$いる
+］
+◎
+Returns true if document has the ability to display elements fullscreen and fullscreen is supported, or false otherwise.
+</dd>
+
+	<dt>%promise = %document . `exitFullscreen()$m</dt>
+	<dd>
+%document の`~fullscreen要素$の~fullscreen表示-を停止する
+— 済んだ時点で %promise を解決する。
+◎
+Stops document’s fullscreen element from being displayed fullscreen and resolves promise when done.
+</dd>
+
+	<dt>%document . `fullscreenElement$m</dt>
+	<dd>
+%document の`~fullscreen要素$を返す。
+◎
+Returns document’s fullscreen element.
+</dd>
+
+	<dt>%shadowroot . `fullscreenElement$m</dt>
+	<dd>
+%shadowroot の`~fullscreen要素$を返す。
+◎
+Returns shadowroot’s fullscreen element.
+</dd>
+</dl>
+
+<div class="algorithm">
+<p>
+`~fullscreen要素~準備済み検査@
+は、所与の
+( `要素$ %要素 )
+に対し，［
+次が満たされるならば ~T ／
+~ELSE_ ~F
+］を返す
+⇒
+［
+%要素 は`接続されて$いる
+］~AND［
+%要素 の`~node文書$には `fullscreen$l `特能の利用は許容され$ている
+］
+◎
+A fullscreen element ready check for an element element returns true if all of the following are true, and false otherwise:
+• element is connected.
+• element’s node document is allowed to use the "fullscreen" feature.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`requestFullscreen(options)@mE
+~method~手続きは：
+◎
+The requestFullscreen(options) method, when invoked, must run these steps:
+</p>
+<ol>
+	<li>
+%処理待ち文書 ~LET 此れの`~node文書$
+◎
+Let pending be the context object.
+◎
+Let pendingDoc be pending’s node document.
+</li>
+	<li>
+%~promise ~LET `新たな~promise$
+◎
+Let promise be a new promise.
+</li>
+	<li>
+~IF［
+%処理待ち文書 は`全部的に作動中$でない
+］
+⇒＃
+`TypeError^E 例外で %~promise を`却下する$；
+~RET %~promise
+◎
+If pendingDoc is not fully active, then reject promise with a TypeError exception and return promise.
+</li>
+	<li>
+<p>
+%~error ~LET ［
+次のすべてが満たされるならば ~F ／
+~ELSE_ ~T
+］：
+◎
+Let error be false.
+◎
+If any of the following conditions are false, then set error to true:
+</p>
+		<ul>
+			<li>
+此れは次のいずれかを満たす
+⇒＃
+`名前空間$elは`~HTML名前空間$である<!-- ＊~HTML要素 --> ／
+SVG `svg$e 要素である `SVG$r ／
+MathML `math$e 要素である `MATHML$r
+◎
+pending’s namespace is the HTML namespace or pending is an SVG svg or MathML math element. [SVG] [MATHML]
+</li>
+			<li>
+此れは `dialog$e 要素でない
+◎
+pending is not a dialog element.
+</li>
+			<li>
+`~fullscreen要素~準備済み検査$( 此れ ) ~EQ ~T
+◎
+The fullscreen element ready check for pending returns true.
+</li>
+			<li>
+`~fullscreenは~supportされて$いる
+◎
+Fullscreen is supported.
+</li>
+			<li>
+［
+此れに`関連な大域~obj$の`一過な作動化$ ~EQ ~T
+］~OR［
+この~algoは`利用者が生成した方位~変更により誘発されて$いる
+］
+◎
+pending’s relevant global object has transient activation or the algorithm is triggered by a user generated orientation change.
+</li>
+		</ul>
+	</li>
+	<li>
+~RET %~promise
+— ただし，以降の手続きも`並列的$に走らす。
+◎
+Return promise, and run the remaining steps in parallel.
+</li>
+	<li>
+<p>
+~IF［
+%~error ~EQ ~F
+］
+⇒
+%処理待ち文書 の`~top-level閲覧文脈$にて`作動中の文書$の表示域の寸法を，~resizeする
+— 任意選択で， %options の `navigationUI$m ~memberを織り込む下で：
+◎
+If error is false, then resize pendingDoc’s top-level browsing context’s active document’s viewport’s dimensions, optionally taking into account options’s navigationUI member:
+</p>
+
+<table><thead><tr><th>値
+<th>表示域の寸法
+</thead><tbody>
+
+<tr><td>`hide^l
+<td>
+出力-機器の~screenの全部的な寸法
+◎
+full dimensions of the screen of the output device
+
+<tr><td>`show^l
+<td>
+出力-機器の~screenから，~UAが~page~navi~controlを示す分だけ除いた寸法
+◎
+dimensions of the screen of the output device clamped to allow the user agent to show page navigation controls
+
+<tr><td>`auto^l
+<td>
+他の行に挙げたいずれか
+— どの寸法かは、~UAが定義する
+◎
+user-agent defined, but matching one of the above
+</tbody></table>
+
+<p>
+加えて，任意選択で
+⇒
+末端利用者~向けに、これを復帰する方法について~~述べる~messageを表示する
+◎
+Optionally display a message how the end user can revert this.
+</p>
+	</li>
+	<li>
+<p>
+~IF［
+%~error ~EQ ~T
+］~OR［
+次のいずれかが満たされない
+］…：
+◎
+If any of the following conditions are false, then set error to true:
+</p>
+
+		<ul>
+			<li>
+此れの`~node文書$ ~EQ %処理待ち文書
+◎
+pending’s node document is pendingDoc.
+</li>
+			<li>
+`~fullscreen要素~準備済み検査$( 此れ ) ~EQ ~T
+◎
+The fullscreen element ready check for pending returns true.
+</li>
+		</ul>
+
+<p>
+…ならば：
+◎
+If error is true:
+</p>
+
+		<ol>
+			<li>
+%処理待ち文書 の`処理待ち~fullscreen~eventの~list$に
+( `fullscreenerror^et, 此れ )
+を`付加する$set
+◎
+Append (fullscreenerror, pending) to pendingDoc’s list of pending fullscreen events.
+</li>
+			<li>
+`TypeError^E 例外で %~promise を`却下する$
+◎
+Reject promise with a TypeError exception and＼
+</li>
+			<li>
+~RET
+◎
+terminate these steps.
+</li>
+		</ol>
+	</li>
+	<li>
+%~fullscreen要素たち ~LET 新たな`有順序~集合$
+◎
+Let fullscreenElements be an ordered set＼
+</li>
+	<li>
+%要素 ~LET 此れ
+◎
+↓</li>
+	<li>
+<p>
+~WHILE［
+%要素 ~NEQ ~NULL
+］：
+</p>
+		<ol>
+			<li>
+%~fullscreen要素たち に %要素 を`付加する$set
+</li>
+			<li>
+%B ~LET %要素 の`~node文書$が`属する閲覧文脈$
+</li>
+			<li>
+~IF［
+%B ~EQ ~NULL 
+］
+⇒
+~BREAK
+</li>
+			<li>
+%要素 ~LET %B の`容器$bc 
+</li>
+		</ol>
+◎
+initially consisting of pending.
+◎
+While the last element in fullscreenElements is in a nested browsing context: append its browsing context container to fullscreenElements.
+</li>
+	<li>
+<p>
+%~fullscreen要素たち を成す
+~EACH( %要素 )
+に対し：
+◎
+For each element in fullscreenElements:
+</p>
+
+		<ol>
+			<li>
+%文書 ~LET %要素 の`~node文書$
+◎
+Let doc be element’s node document.
+</li>
+			<li>
+<p>
+~IF［
+%要素 ~EQ %文書 の`~fullscreen要素$
+］
+⇒
+~CONTINUE
+◎
+If element is doc’s fullscreen element, continue.
+</p>
+
+<p class="note">注記：
+何も変化しない場合、~observerに通知する必要は無い。
+◎
+No need to notify observers when nothing has changed.
+</p>
+			</li>
+			<li>
+~IF［
+%要素 ~EQ 此れ
+］~AND［
+此れは `iframe$e `要素$である
+］
+⇒
+%要素 の`~iframe~fullscreen~flag$ ~SET ~T
+◎
+If element is pending and pending is an iframe element, then set element’s iframe fullscreen flag.
+</li>
+			<li>
+`要素を~fullscreen化する$( %要素 )
+◎
+Fullscreen element within doc.
+</li>
+			<li>
+%文書 の`処理待ち~fullscreen~eventの~list$に
+~pair( `fullscreenchange^et, %要素 )
+を`付加する$set
+◎
+Append (fullscreenchange, element) to doc’s list of pending fullscreen events.
+</li>
+		</ol>
+
+<p class="note">注記：
+要素たちが~fullscreen化される順序は、観測され得ない
+— `~fullscreen化~手続き$は、`~tree順序$で呼出されるので。
+【なぜ観測され得ない？】
+◎
+The order in which elements are fullscreened is not observable, because run the fullscreen steps is invoked in tree order.
+</p>
+	</li>
+	<li>
+`undefined^jv で %~promise を`解決する$
+◎
+Resolve promise with undefined.
+</li>
+</ol>
+
+<p class="note">注記：
+~process外の`閲覧文脈$【？】での実装は、読者【実装者】への演習に残しておく。
+改善案があれば歓迎する。
+◎
+Implementations with out-of-process browsing contexts are left as an exercise to the reader. Input welcome on potential improvements.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`fullscreenEnabled@m
+取得子~手続きは
+⇒
+~RET ［
+次が満たされるならば ~T ／
+~ELSE_ ~F
+］
+⇒
+［
+此れには `fullscreen$l `特能の利用は許容され$ている
+］~AND［
+`~fullscreenは~supportされて$いる
+］
+◎
+The fullscreenEnabled attribute’s getter must return true if the context object is allowed to use the "fullscreen" feature and fullscreen is supported, and false otherwise.
+</div>
+
+<div class="algo">
+<p>
+`fullscreen@m
+取得子~手続きは
+⇒
+~RET ［
+此れの`~fullscreen要素$ ~NEQ ~NULL ならば ~T ／
+~ELSE_ ~F
+］
+◎
+The fullscreen attribute’s getter must return false if context object’s fullscreen element is null, and true otherwise.
+</p>
+
+<p class="note">注記：
+作者は、代わりに `fullscreenElement$m 属性を利用するように。
+◎
+Use the fullscreenElement attribute instead.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`fullscreenElement@m
+取得子~手続きは：
+◎
+The fullscreenElement attribute’s getter must run these steps:
+</p>
+<ol>
+	<li>
+~IF［
+此れは`~shadow根$である
+］~AND［
+此れの`~host$は`接続されて$いない
+］
+⇒
+~RET ~NULL
+◎
+If the context object is a shadow root and its host is not connected, then return null.
+</li>
+	<li>
+%候補 ~LET 此れの`~fullscreen要素$を此れに向けて`~targetし直す$
+◎
+Let candidate be the result of retargeting fullscreen element against the context object.
+</li>
+	<li>
+~IF［
+( %候補, 此れ )
+は同じ`~tree$内にある
+］
+⇒
+~RET %候補
+◎
+If candidate and the context object are in the same tree, then return candidate.
+</li>
+	<li>
+~RET ~NULL
+◎
+Return null.
+</li>
+</ol>
+</div>
+
+<p>
+次を満たす`文書$ %文書 は
+`単純~fullscreen文書@
+という
+⇒
+［
+%文書 の`上端~層$内の`要素$のうち［
+`~fullscreen~flag$ ~EQ ~T
+］を満たすもの
+］の個数 ~EQ 1
+◎
+A document is said to be a simple fullscreen document if there is exactly one element in its top layer that has its fullscreen flag set.
+</p>
+
+<p class="note">注記：
+`上端~層$内に 2 個の `要素$がある`文書$でも，`単純~fullscreen文書$になり得る。
+例えば、`~fullscreen要素$に加えて，開いている `dialog$e 要素がある場合。
+◎
+A document with two elements in its top layer can be a simple fullscreen document. For example, in addition to the fullscreen element there could be an open dialog element.
+</p>
+
+<div class="algorithm">
+<p>
+`~unfullscreenする文書を収集する@
+ときは、所与の
+( %文書 )
+に対し，次を走らす：
+◎
+To collect documents to unfullscreen given doc, run these steps:
+</p>
+
+<ol>
+	<li>
+%文書たち ~LET 新たな`有順序~集合$
+◎
+Let docs be an ordered set＼
+</li>
+	<li>
+<p>
+~WHILE 無条件
+</p>
+		<ol>
+			<li>
+~Assert：
+%文書 の`~fullscreen要素$ ~NEQ ~NULL
+</li>
+			<li>
+%文書たち に %文書 を`付加する$set
+</li>
+			<li>
+~IF［
+%文書 は`単純~fullscreen文書$でない
+］
+⇒
+~BREAK
+</li>
+			<li>
+%B ~LET %文書 が`属する閲覧文脈$
+</li>
+			<li>
+~IF［
+%B ~EQ ~NULL
+］
+⇒
+~BREAK
+</li>
+			<li>
+%容器 ~LET %B の`容器$bc
+</li>
+			<li>
+~IF［
+%容器 ~EQ ~NULL
+］
+⇒
+~BREAK
+</li>
+			<li>
+~IF［
+%容器 の`~iframe~fullscreen~flag$ ~EQ ~F
+【！原文 set( ~T ) は誤り】
+］
+⇒
+~BREAK
+</li>
+			<li>
+%文書 ~SET %容器 の`~node文書$
+</li>
+		</ol>
+◎
+consisting of doc.
+◎
+While true:
+• Let lastDoc be docs’s last document.
+• Assert: lastDoc’s fullscreen element is not null.
+• If lastDoc is not a simple fullscreen document, break.
+• Let container be lastDoc’s browsing context container, if any, and otherwise break.
+• If container’s iframe fullscreen flag is set, break.
+• Append container’s node document to docs.
+</li>
+	<li>
+<p>
+~RET %文書たち
+◎
+Return docs.
+</p>
+
+<p class="note">注記：
+%文書たち は，文書のうち［
+その`~fullscreen要素$が~unfullscreenされることになるもの
+］からなるが、その最後の文書 %文書 の`上端~層$内には［
+`~fullscreen~flag$ ~EQ ~T
+］にされた`要素$が複数個あるかもしれない
+— その事例では、 %文書 は依然として，~fullscreenであり続けることになる。
+◎
+This is the set of documents for which the fullscreen element will be unfullscreened, but the last document in docs might have more than one element in its top layer with the fullscreen flag set, in which case that document will still remain in fullscreen.
+</p>
+	</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+`~fullscreenから抜出る@
+ときは、所与の
+( `文書$ %文書 )
+に対し，次を走らす：
+◎
+To exit fullscreen a document doc, run these steps:
+</p>
+
+<ol>
+	<li>
+%~promise ~LET `新たな~promise$
+◎
+Let promise be a new promise.
+</li>
+	<li>
+~IF［
+%文書 は`全部的に作動中$でない
+］~OR［
+%文書 の`~fullscreen要素$ ~EQ ~NULL
+］
+⇒＃
+`TypeError^E 例外で %~promise を`却下する$；
+~RET %~promise
+◎
+If doc is not fully active or doc’s fullscreen element is null, then reject promise with a TypeError exception and return promise.
+</li>
+	<li>
+%~resize ~LET ~F
+◎
+Let resize be false.
+</li>
+	<li>
+%文書たち ~LET `~unfullscreenする文書を収集する$( %文書 )
+◎
+Let docs be the result of collecting documents to unfullscreen given doc.
+</li>
+	<li>
+%~top-level文書 ~LET %文書 の`~top-level閲覧文脈$にて`作動中の文書$
+◎
+Let topLevelDoc be doc’s top-level browsing context’s active document.
+</li>
+	<li>
+~IF［
+%~top-level文書 ~IN %文書たち
+］~AND［
+%~top-level文書 は`単純~fullscreen文書$である
+］
+⇒＃
+%文書 ~SET %~top-level文書；
+%~resize ~SET ~T
+◎
+If topLevelDoc is in docs, and it is a simple fullscreen document, then set doc to topLevelDoc and resize to true.
+</li>
+	<li>
+~IF［
+%文書 の`~fullscreen要素$は`接続されて$いない
+］
+⇒
+%文書 の`処理待ち~fullscreen~eventの~list$に
+~pair( `fullscreenchange^et, %文書 の`~fullscreen要素$ )
+を`付加する$set
+◎
+If doc’s fullscreen element is not connected:
+• Append (fullscreenchange, doc’s fullscreen element) to doc’s list of pending fullscreen events.
+</li>
+	<li>
+~RET %~promise
+— ただし，以降の手続きも`並列的$に走らす。
+◎
+Return promise, and run the remaining steps in parallel.
+</li>
+	<li>
+~IF［
+%~resize ~EQ ~T
+］
+⇒
+%文書 の表示域を その “通常の” 寸法に~resizeする
+◎
+If resize is true, resize doc’s viewport to its "normal" dimensions.
+</li>
+	<li>
+~IF［
+%文書 の`~fullscreen要素$ ~EQ ~NULL
+］
+⇒＃
+`undefined^jv で %~promise を`解決する$；
+~RET
+◎
+If doc’s fullscreen element is null, then resolve promise with undefined and terminate these steps.
+</li>
+	<li>
+%抜出る文書たち ~LET `~unfullscreenする文書を収集する$( %文書 )
+◎
+Let exitDocs be the result of collecting documents to unfullscreen given doc.
+</li>
+	<li>
+<p>
+%子孫~文書たち ~LET 次をいずれも満たす文書 %子孫~文書 からなる，`~tree順序$†による`有順序~集合$（無ければ空）
+</p>
+		<ul>
+			<li>
+ある`閲覧文脈$ %B があって，次が満たされる
+⇒
+［
+%子孫~文書 は %B にて`作動中の文書$である
+］~AND［
+%文書 が`属する閲覧文脈$は %B の`先祖~閲覧文脈$である
+］
+</li>
+			<li>
+%子孫~文書 の`~fullscreen要素$ ~NEQ ~NULL
+</li>
+		</ul>
+
+【† この “~tree順序” は、 %子孫~文書 が`属する閲覧文脈$の`容器$bcどうしのそれと，閲覧文脈の親子関係によるそれの，両者を含むと思われる。】
+◎
+Let descendantDocs be an ordered set consisting of doc’s descendant browsing contexts' active documents whose fullscreen element is non-null, if any, in tree order.
+</li>
+	<li>
+<p>
+%抜出る文書たち を成す
+~EACH( %抜出る文書 )
+に対し：
+◎
+For each exitDoc in exitDocs:
+</p>
+		<ol>
+			<li>
+%抜出る文書 の`処理待ち~fullscreen~eventの~list$に
+~pair( `fullscreenchange^et, %抜出る文書 の`~fullscreen要素$ )
+を`付加する$set
+◎
+Append (fullscreenchange, exitDoc’s fullscreen element) to exitDoc’s list of pending fullscreen events.
+</li>
+			<li>
+~IF［
+%~resize ~EQ ~T
+］
+⇒
+`文書を~unfullscreenする$( %抜出る文書 )
+◎
+If resize is true, unfullscreen exitDoc.
+</li>
+			<li>
+~ELSE
+⇒
+`要素を~unfullscreenする$( %抜出る文書 の`~fullscreen要素$ )
+◎
+Otherwise, unfullscreen exitDoc’s fullscreen element.
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+%子孫~文書たち を成す
+~EACH( %子孫~文書 )
+に対し：
+◎
+For each descendantDoc in descendantDocs:
+</p>
+		<ol>
+			<li>
+%子孫~文書 の`処理待ち~fullscreen~eventの~list$に
+~pair( `fullscreenchange^et, %子孫~文書 の`~fullscreen要素$ )
+を`付加する$set
+◎
+Append (fullscreenchange, descendantDoc’s fullscreen element) to descendantDoc’s list of pending fullscreen events.
+</li>
+			<li>
+`文書を~unfullscreenする$( %子孫~文書 )
+◎
+Unfullscreen descendantDoc.
+</li>
+		</ol>
+
+<p class="note">注記：
+文書たちが~unfullscreenされる順序は観測され得ない
+— `~fullscreen化~手続き$は、`~tree順序$で呼出されるので。
+【なぜ観測され得ない？】
+◎
+The order in which documents are unfullscreened is not observable, because run the fullscreen steps is invoked in tree order.
+</p>
+	</li>
+	<li>
+`undefined^jv で %~promise を`解決する$
+◎
+Resolve promise with undefined.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`exitFullscreen()@m
+~method~手続きは
+⇒
+~RET `~fullscreenから抜出る$( 此れ )
+◎
+The exitFullscreen() method, when invoked, must return the result of running exit fullscreen on the context object.
+</div>
+
+<hr>
+
+<p>
+以下に挙げる各種`~event~handler$（および，対応する`~event~handler~event型$）は、［
+`Element$I ／ `Document$I
+］~objにより，`~event~handler~IDL属性$として~supportされるモノトスル：
+◎
+The following are the event handlers (and their corresponding event handler event types) that must be supported by Element and Document objects as event handler IDL attributes:
+</p>
+
+<table><thead>
+<tr><th>`~event~handler$
+</th><th>`~event~handler~event型$
+</th></tr></thead><tbody>
+
+<tr><td>`onfullscreenchange@m
+</td><td>`fullscreenchange^et
+</td></tr>
+
+<tr><td>`onfullscreenerror@m
+</td><td>`fullscreenerror^et
+</td></tr></tbody></table>
+
+<p class="note">注記：
+これらは、［
+`ShadowRoot$I ／ `Window$I
+］~objからは~supportされない。
+また、 `Element$I ~obj用の対応する`~event~handler内容~属性$も無い
+— 名前空間を問わず。
+◎
+These are not supported by ShadowRoot or Window objects, and there are no corresponding event handler content attributes for Element objects in any namespace.
+</p>
+
+	</section>
+	<section id="ui">
+<h2 title="UI">4. ~UI</h2>
+
+<p>
+~UAには、［
+`requestFullscreen()$mE,
+`exitFullscreen()$m
+］の手続きを通して，~native媒体の~fullscreen制御を実装することが奨励される。
+◎
+User agents are encouraged to implement native media fullscreen controls in terms of requestFullscreen() and exitFullscreen().
+</p>
+
+<p>
+末端利用者は、［
+`requestFullscreen()$mE を介して起動された ~fullscreen~sessionを終止する
+］よう，~UAに指図している場合
+⇒
+`~fullscreenから全部的に抜出る$( `~top-level閲覧文脈$にて`作動中の文書$ )
+◎
+If the end user instructs the user agent to end a fullscreen session initiated via requestFullscreen(), fully exit fullscreen the top-level browsing context’s active document.
+</p>
+
+<p>
+~UAは、［
+末端利用者からの指図 ／
+`exitFullscreen()$m の~call
+］が無いときでも，必要と判断されるならば ~fullscreen~sessionを終止してもヨイ。
+◎
+The user agent may end any fullscreen session without instruction from the end user or call to exitFullscreen() whenever the user agent deems it necessary.
+</p>
+
+	</section>
+	<section id="rendering">
+<h2 title="Rendering">5. 描画</h2>
+
+<p>
+この節は、~HTMLの<a href="~HTMLrendering#rendering" >具現化~節</a>と等価に解釈されることになる。
+`HTML$r
+◎
+This section is to be interpreted equivalently to the Rendering section of HTML. [HTML]
+</p>
+
+<p class="XXX">
+~CSSは、ゆくゆくは，`上端~層$の概念を定義した上で ［
+それに結付けられる `backdrop$pe 疑似要素は、~CSSの積層~文脈~modelの一部を成す
+］ものとして定義することになる。
+ここで行う~CSSへの継当ては、大雑把な~~素描に過ぎない。
+◎
+Long term CSS will define the top layer concept and its associated ::backdrop pseudo-element as part of CSS' stacking context model. Patching CSS as done here is sketchy as hell.
+</p>
+
+<p class="trans-note">【
+この訳では、この節の一部の~CSS［
+用語 ／ ~prop
+］に，リンクを補完している。
+】</p>
+
+		<section id="new-stacking-layer">
+<h3 title="New stacking layer">5.1. 新たな積層~層</h3>
+
+<p>
+この仕様は、
+CSS 2.1 による
+<a href="~CSS22/zindex.html#elaborate-stacking-contexts">積層~文脈の詳述</a>
+に，新たな積層~層を導入する。
+それは，
+`上端~層@
+（ top layer ）と呼ばれ、塗ng順序における段 10 【最後の段】の後に来る
+— したがって、`表示域$の中で，利用者から見て最も手前に描画される。
+各 `文書$には， 1 個の`表示域$が結付けられる
+— したがって、 1 個の`上端~層$がある。
+`CSS$r
+◎
+This specification introduces a new stacking layer to the Elaborate description of Stacking Contexts of CSS 2.1. It is called the top layer, comes after step 10 in the painting order, and is therefore rendered closest to the user within a viewport. Each document has one associated viewport and therefore also one top layer. [CSS]
+</p>
+
+<p class="note">注記：
+以下のこの節とその下位節に利用される各種用語は、 CSS 2.1, 付録 E に合致するよう試みる。
+◎
+The terminology used in this and following subsection attempts to match CSS 2.1 Appendix E.
+</p>
+
+<p>
+`上端~層$は、一連の要素が成す`有順序~集合$であり，集合~内に現れる順序で描画される。
+この集合の最後の要素は、最後に描画され，したがって上端【最も手前】に現れる。
+◎
+The top layer is an ordered set of elements, rendered in the order they appear in the set. The last element in the set is rendered last, and thus appears on top.
+</p>
+
+<p class="note">注記：
+`z-index$p ~propによる`上端~層$に対する効果は無い。
+◎
+The z-index property has no effect in the top layer.
+</p>
+
+<p>
+`上端~層$を成す各［
+要素, 【要素を`出自の要素$とする】 `backdrop$pe `疑似要素$
+］ %E は、以下の特徴を備える：
+◎
+Each element and ::backdrop pseudo-element in a top layer has the following characteristics:
+</p>
+
+<ul>
+	<li>
+%E は新たな`積層~文脈$を生成する。
+◎
+It generates a new stacking context.
+</li>
+	<li>
+%E の親~積層~文脈は、根~積層~文脈である。
+◎
+Its parent stacking context is the root stacking context.
+</li>
+	<li>
+%E が複数の~layout~boxからなる場合、それらのうち最初の~boxが利用される。
+◎
+If it consists of multiple layout boxes, the first box is used.
+</li>
+	<li>
+<p>
+%E は、［
+%E の`根$の同胞であった
+］かのように，不可分な単位として描画される。
+◎
+It is rendered as an atomic unit as if it were a sibling of its root.
+</p>
+
+<p class="note">注記：
+%E の`先祖$要素の
+`overflow$p,
+`opacity$p,
+`mask$p,
+等々の~propは、 %E に影響し得ない。
+◎
+Ancestor elements with overflow, opacity, masks, etc. cannot affect it.
+</p>
+	</li>
+	<li>
+%E の`包含塊$は、
+%E の `position$p ~propの`算出d値$に応じて，［
+ `fixed^v ならば `表示域$ ／
+~ELSE_ `初期~包含塊$
+］になる
+◎
+If its position property computes to fixed, its containing block is the viewport, and the initial containing block otherwise.
+</li>
+	<li>
+%E は要素であって，次を満たす場合、［
+%E , および %E を`出自の要素$とする `backdrop$pe `疑似要素$
+］は，描画されない
+⇒
+%E の`~shadowも含む広義-先祖$【のうち，いずれか】の `display$p ~propの値 ~EQ `none^v
+◎
+If it is an element, it and its ::backdrop pseudo-element are not rendered if its shadow-including inclusive ancestor has the display property set to none.
+</li>
+	<li>
+%E の `display$p ~propは、その`指定d値$が `contents^v ならば，`算出d値$は `block^v になる。
+◎
+If its specified display property is contents, it computes to block.
+</li>
+	<li>
+%E の `position$p ~propは、その`指定d値$
+~NIN { `absolute^v, `fixed^v }
+ならば，`算出d値$は `absolute^v になる。
+◎
+If its specified position property is not absolute or fixed, it computes to absolute.
+</li>
+	<li>
+<p>
+%E の外形線（ `outline$p ）は、あるならば 塗ng順序における段 10 より前に描画する。
+</p>
+<p class="trans-note">【
+段 10 は
+<a href="~CSS22/zindex.html#elaborate-stacking-contexts">積層~文脈の詳述</a>
+における最後の段を指す。
+外形線は，任意選択で この段 10 か別の段で塗るものとされているので、その別の段で描画することになる。
+】</p>
+◎
+Its outline, if any, is to be rendered before step 10 in the painting order.
+</li>
+	<li>
+別の仕様により上書きされない限り、 %E の［
+`left$p ／ `right$p ／ `top$p
+］用の`静的~位置$は 0 になる。
+◎
+Unless overridden by another specification, its static position for left, right, and top is zero.
+</li>
+</ul>
+
+<div class="algorithm">
+<p>
+%要素 を %上端~層 に
+`追加する@
+ときは
+⇒＃
+%上端~層 から %要素 を`除去する$；
+%上端~層 に %要素 を`付加する$set
+◎
+To add an element to a top layer, remove it from top layer and then append it to top layer.
+</p>
+
+<p class="note">注記：
+言い換えれば、 %要素 が %上端~層 内にすでに在るならば %上端~層 の末尾に移動する。
+◎
+In other words, element is moved to the end of top layer if it is already present.
+</p>
+</div>
+
+		</section>
+		<section id="::backdrop-pseudo-element">
+<h3 title="::backdrop pseudo-element">5.2. `backdrop^pe 疑似要素</h3>
+
+<p>
+`上端~層$内の各~要素は
+`backdrop@pe
+`疑似要素$を持つ。
+この疑似要素は、同じ`上端~層$の中で要素の直下（集合~内で要素の直前にある要素の直上）に描画される~boxである。
+◎
+Each element in a top layer has a ::backdrop pseudo-element. This pseudo-element is a box rendered immediately below the element (and above the element before the element in the set, if any), within the same top layer.
+</p>
+
+<p class="note">注記：
+`backdrop$pe 疑似要素は、`上端~層$内の要素（~fullscreenに表示される要素など）用に［
+下層の文書を隠す後景
+］を作成するために利用できる。
+◎
+The ::backdrop pseudo-element can be used to create a backdrop that hides the underlying document for an element in a top layer (such as an element that is displayed fullscreen).
+</p>
+
+<p>
+この疑似要素は、要素から何も継承しない／何からも継承されない。
+また、どの~propを適用し得るかについても，制約は無い。
+◎
+It does not inherit from any element and is not inherited from. No restrictions are made on what properties apply to this pseudo-element either.
+</p>
+
+		</section>
+		<section id=":fullscreen-pseudo-class">
+<h3 title=":fullscreen pseudo-class">5.3. `fullscreen^ps 疑似類</h3>
+
+<p>
+`fullscreen@ps
+`疑似類$は、次のいずれかを満たすどの`要素$ %要素 にも合致するモノトスル：
+◎
+The :fullscreen pseudo-class must match any element element for which one of the following conditions is true:
+</p>
+
+<ul>
+	<li>
+%要素 の`~fullscreen~flag$ ~EQ ~T
+◎
+element’s fullscreen flag is set.
+</li>
+	<li>
+［
+%要素 は`~shadow~host$である
+］~AND［［［
+%要素 の`~node文書$の`~fullscreen要素$
+］を %要素 に向けて`~targetし直す$
+］~EQ %要素
+］
+◎
+element is a shadow host and the result of retargeting its node document’s fullscreen element against element is element.
+</li>
+</ul>
+
+<p class="note">注記：
+これは、最上端の`~fullscreen要素$を返す
+`fullscreenElement$m ~APIとは異なる。
+◎
+This makes it different from the fullscreenElement API, which returns the topmost fullscreen element.
+</p>
+
+		</section>
+		<section id="user-agent-level-style-sheet-defaults">
+<h3 title="User-agent level style sheet defaults">5.4. ~UA~levelの既定の~stylesheet</h3>
+
+<pre class="lang-css">
+@namespace "http://www.w3.org/1999/xhtml";
+
+*|*:not(:root):fullscreen {
+  position:fixed !important;
+  top:0 !important; right:0 !important; bottom:0 !important; left:0 !important;
+  margin:0 !important;
+  box-sizing:border-box !important;
+  min-width:0 !important;
+  max-width:none !important;
+  min-height:0 !important;
+  max-height:none !important;
+  width:100% !important;
+  height:100% !important;
+  transform:none !important;
+
+  /* intentionally not !important */
+  object-fit:contain;
+}
+
+iframe:fullscreen {
+  border:none !important;
+  padding:0 !important;
+}
+
+::backdrop {
+  position:fixed;
+  top:0; right:0; bottom:0; left:0;
+}
+
+*|*:not(:root):fullscreen::backdrop {
+  background:black;
+}
+</pre>
+
+		</section>
+	</section>
+	<section id="feature-policy-integration">
+<h2 title="Permissions Policy Integration">6. 許可~施策の統合</h2>
+
+<p>
+この仕様は、文字列
+`fullscreen@l
+で識別される`施策により制御される特能$を定義する。
+その`既定の許容list$は、 `'self'^l とする。
+◎
+This specification defines a policy-controlled feature identified by the string "fullscreen". Its default allowlist is 'self'.
+</p>
+
+<div class="note">
+<p>注記：
+`文書$の`許可~施策$docは、その文書~内の内容は，~fullscreenにすることが許容されるかを決定する。
+文書~内で不能化された場合、文書~内のどの内容にも，~fullscreen`特能の利用は許容され$ない。
+◎
+A document’s permissions policy determines whether any content in that document is allowed to go fullscreen. If disabled in any document, no content in the document will be allowed to use fullscreen.
+</p>
+
+<p>
+~HTML `iframe$e 要素の `allowfullscreen$a 属性は、 `allow$a 属性により上書きされない限り，それが入子にしている文書の`容器~施策$に影響する。
+~iframe上に `allowfullscreen$a を設定することは，
+`&lt;iframe allow="fullscreen *"&gt;^c
+と等価になる
+— `PERMISSIONS-POLICY-1$r の
+<a href="~PERMISSIONS-POLICY#iframe-allowfullscreen-attribute">§ `allowfullscreen^a</a>
+に述べられるように。
+◎
+The allowfullscreen attribute of the HTML iframe element affects the container policy for any document nested in that iframe. Unless overridden by the allow attribute, setting allowfullscreen on an iframe is equivalent to &lt;iframe allow="fullscreen *"&gt;, as described in Permissions Policy §iframe-allowfullscreen-attribute.
+</p>
+</div>
+
+	</section>
+	<section id="security-and-privacy-considerations">
+<h2 title="Security and Privacy Considerations">7. ~securityと~privacyの考慮点</h2>
+
+<p>
+~UAは、重層するなどの手段により，末端利用者が［
+何かが~fullscreenで表示されていること
+］に気付けることを確保するべきである。
+~UAは、［
+常に働くような，~fullscreenから抜出る手段
+］を供して，利用者に告知するべきである。
+これは、ある~siteが［
+~fullscreenにある間、~UAや~OS環境までも~~模造して，末端利用者を欺く
+］のを防止する。
+`requestFullscreen()$mE の定義も見よ。
+◎
+User agents should ensure, e.g. by means of an overlay, that the end user is aware something is displayed fullscreen. User agents should provide a means of exiting fullscreen that always works and advertise this to the user. This is to prevent a site from spoofing the end user by recreating the user agent or even operating system environment when fullscreen. See also the definition of requestFullscreen().
+</p>
+
+<p>
+`入子の閲覧文脈$内の内容が~fullscreenになるのを可能化するためには、許可~施策を介して特定的に許容される必要がある
+— 次のいずれかを通して
+⇒＃
+~HTML `iframe$e 要素の `allowfullscreen$a 属性 ／
+~HTML `iframe$e 要素の `allow$a  属性における適切な宣言 ／
+内容を入子にしている`文書$と伴に `Permissions-Policy$h ~HTTP~headerを送達する
+◎
+To enable content in a nested browsing context to go fullscreen, it needs to be specifically allowed via permissions policy, either through the allowfullscreen attribute of the HTML iframe element, or an appropriate declaration in the allow attribute of the HTML iframe element, or through a `Permissions-Policy` HTTP header delivered with the document through which it is nested.
+</p>
+
+<p>
+これは例えば、［
+第三者主体からの内容が，明示的な許可なく~fullscreenになる
+］のを防止する。
+◎
+This prevents e.g. content from third parties to go fullscreen without explicit permission.
+</p>
+
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p lang="en-x-a0">
+Many thanks to Robert O’Callahan for designing the initial model and being awesome.
+</p>
+
+<p lang="en-x-a0">
+Thanks to
+Andy Earnshaw,
+Changwan Hong,
+Chris Pearce,
+Darin Fisher,
+Dave Tapuska,
+<i>fantasai</i>,
+Giuseppe Pascale,
+Glenn Maynard,
+Ian Clelland,
+Ian Hickson,
+Ignacio Solla,
+João Eiras,
+Josh Soref,
+Kagami Sascha Rosylight,
+Matt Falkenhagen,
+Mihai Balan,
+Mounir Lamouri,
+Øyvind Stenhaug,
+Pat Ladd,
+Rafał Chłodnicki,
+Riff Jiang,
+Rune Lillesveen,
+Sigbjørn Vik,
+Simon Pieters,
+Tab Atkins,
+Takayoshi Kochi,
+Theresa O’Connor,
+triple-underscore,
+Vincent Scheib, and
+Xidorn Quan
+for also being awesome.
+</p>
+
+<p lang="en-x-a0">
+This standard is edited by <a href="https://foolip.org/" lang="sv">Philip Jägenstedt</a> (<a href="https://google.com/">Google</a>, <a href="mailto:philip@foolip.org">philip@foolip.org</a>). It was originally written by <a href="https://annevankesteren.nl/" lang="nl">Anne van Kesteren</a> (<a href="https://www.mozilla.org/">Mozilla</a>, <a href="mailto:annevk@annevk.nl">annevk@annevk.nl</a>). <a href="http://tantek.com/" lang="tr">Tantek Çelik</a> (<a class="p-org org h-org h-card" href="https://www.mozilla.org/">Mozilla</a>, <a href="mailto:tantek@cs.stanford.edu">tantek@cs.stanford.edu</a>) sorted out legal hassles.
+</p>
+
+<p lang="en-x-a0">
+Copyright © WHATWG (Apple, Google, Mozilla, Microsoft). This work is licensed under a <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution
+4.0 International License</a>.
+</p>
+
+	</section>
+
+</main></div>

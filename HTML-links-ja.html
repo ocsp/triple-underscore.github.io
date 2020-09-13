@@ -1,0 +1,6527 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Links（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+
+<style>
+
+@supports (display: grid) and (display: contents) {
+
+/* TODO @media */
+
+#_link-type-table {
+	min-width:30em;
+}
+
+#_link-type-table tr {
+	grid-template-areas:
+		"型 link a_area form body-ok"
+		"型 概略 概略 概略 概略"
+	;
+	grid-template-columns: 10em 1fr 1fr 1fr 5em;
+}
+
+#_link-type-table tr > *:nth-child(1) {
+	border-left-width: 0;
+	grid-area: 型;
+}
+
+#_link-type-table tr > *:nth-child(2) {
+	grid-area: link;
+}
+
+#_link-type-table tr > *:nth-child(3) {
+	grid-area: a_area;
+}
+
+#_link-type-table tr > *:nth-child(4) {
+	grid-area: form;
+}
+
+#_link-type-table tr > *:nth-child(5) {
+	grid-area: body-ok;
+}
+
+#_link-type-table tr > *:nth-child(6) {
+	grid-area: 概略;
+	padding: 0.5em;
+}
+
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'links',
+		persisted_parts: Util.collectHtmlCodeList(),
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'sc': // url scheme
+	text = text.replace(/_/, ':');
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'h':
+	text = `\`<code class="header">${text}</code>\``;
+	break;
+case 'uST': 
+	text = `${text} <small>state</small>`;
+	break;
+case 'lT': 
+	text = `Link type &quot;${text}&quot;`;
+	break;
+case 'sl':
+	text = `[[${key}]]`;
+	break;
+case 'U':
+	text = `U+${key}`
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+case 'xCode':
+	return `<pre class="lang-html" id="_ex-${key}">＊</pre>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<!--
+v.any:attr-link-sizes-any
+ -->
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-09-02
+trans_update:2020-08-28
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/links.html
+	abbr_url:HTMLlinks
+nav_prev:HEtextlevel
+nav_next:HEedits
+trans_1st_pub:2016-09-07
+
+
+●●class_map
+e:element
+a:attr
+aL:attr
+et:event-type
+sc:scheme
+jA:abstract
+P:production
+dir:directive
+t:type
+st:attr-state
+sl:js-slot
+v:value
+U:code-point
+
+●●tag_map
+I:code
+m:code
+mL:code
+c:code
+et:code
+sc:code
+e:code
+a:code
+aL:code
+P:code
+dir:code
+jA:span
+st:span
+t:var
+v:code
+V:var
+sl:span
+cite:cite
+i:i
+mk:mark
+U:span
+
+●●original_id_map
+
+
+●●words_table1
+
+APPMANIFEST:appmanifest-ja.html
+
+a_area:<code class="element">a</code>|<code class="element">area</code>
+targetB:target
+relF:rel
+
+●●mdn_urls
+htmlhyperlinkelementutils:API/HTMLHyperlinkElementUtils
+
+●●link_map
+
+	●IDL
+
+CEReactions:~HEcustom#cereactions
+I.Document:~HTMLdom#document
+I.HTMLHyperlinkElementUtils:#htmlhyperlinkelementutils
+
+m.href:#dom-hyperlink-href
+m.origin:#dom-hyperlink-origin
+m.protocol:#dom-hyperlink-protocol
+m.username:#dom-hyperlink-username
+m.password:#dom-hyperlink-password
+m.host:#dom-hyperlink-host
+m.hostname:#dom-hyperlink-hostname
+m.port:#dom-hyperlink-port
+m.pathname:#dom-hyperlink-pathname
+m.search:#dom-hyperlink-search
+m.hash:#dom-hyperlink-hash
+
+m.window.opener:~BROWSERS#dom-window-opener
+
+et.error:~HTMLindex#event-error
+et.load:~HTMLindex#event-load
+
+	●elem, attrm value
+e.a:~HEtextlevel#the-a-element
+e.area:~HEimages#the-area-element
+~a_area:#_a-or-area
+e.article:~HEsections#the-article-element
+e.link:~HEmetadata#the-link-element
+e.form:~HEforms#the-form-element
+
+a.href:#attr-hyperlink-href
+a.target:#attr-hyperlink-target
+a.download:#attr-hyperlink-download
+a.rel:#attr-hyperlink-rel
+a.hreflang:#attr-hyperlink-hreflang
+a.type:#attr-hyperlink-type
+a.referrerpolicy:#attr-hyperlink-referrerpolicy
+a.ping:#ping
+
+a.~relF:~HEforms#attr-form-rel
+
+a.charset:~HTMLobs#attr-link-charset
+a.title:~HTMLdom#attr-title
+
+aL.as:~HEmetadata#attr-link-as
+aL.crossorigin:~HEmetadata#attr-link-crossorigin
+aL.disabled:~HEmetadata#attr-link-disabled
+aL.href:~HEmetadata#attr-link-href
+aL.media:~HEmetadata#attr-link-media
+aL.rel:~HEmetadata#attr-link-rel
+aL.sizes:~HEmetadata#attr-link-sizes
+aL.title:~HEmetadata#attr-link-title
+aL.type:~HEmetadata#attr-link-type
+aL.integrity:~HEmetadata#attr-link-integrity
+aL.referrerpolicy:~HEmetadata#attr-link-referrerpolicy
+
+v.alternate:#rel-alternate
+v.icon:#rel-icon
+v.any:#attr-link-sizes-any
+
+v.author:#link-type-author
+v.bookmark:#link-type-bookmark
+v.canonical:#link-type-canonical
+v.dns-prefetch:#link-type-dns-prefetch
+v.external:#link-type-external
+v.help:#link-type-help
+v.license:#link-type-license
+v.manifest:#link-type-manifest
+v.modulepreload:#link-type-modulepreload
+v.next:#link-type-next
+v.nofollow:#link-type-nofollow
+v.noopener:#link-type-noopener
+v.noreferrer:#link-type-noreferrer
+v.opener:#link-type-opener
+v.pingback:#link-type-pingback
+v.preconnect:#link-type-preconnect
+v.prefetch:#link-type-prefetch
+v.preload:#link-type-preload
+v.prerender:#link-type-prerender
+v.prev:#link-type-prev
+v.search:#link-type-search
+v.stylesheet:#link-type-stylesheet
+v.tag:#link-type-tag
+
+	●http
+h.Content-Disposition:~RFCx/rfc6266
+h.Ping-From:~HTMLiana#ping-from
+h.Ping-To:~HTMLiana#ping-to
+h.Referer:~HTTPrq#field.referer
+	h.Referer:~RFC7231#section-5.5.2
+
+sc.mailto_:~RFCx/rfc6068#section-2
+sc.blob_:~FILEAPI#url
+	廃：~FILEAPI#DefinitionOfScheme
+
+c.text/css:~HTMLindex#text/css
+
+	●concept
+外部~資源~link:#external-resource-link
+~hyperlink:#hyperlink
+暗黙の~hyperlink:#_implied-hyperlink
+注釈:#hyperlink-annotation
+注釈する:#hyperlink-annotation
+~url:#concept-hyperlink-url
+~urlを設定-:#concept-hyperlink-url-set
+~urlを設定する:#concept-hyperlink-url-set
+~urlを初期化し直す:#reinitialise-url
+~hrefを更新する:#update-href
+~hyperlinkを追う:#following-hyperlinks-2
+~download:#downloading-hyperlinks
+~downloadとして:#as-a-download
+拡張子:#concept-extension
+~body-ok:#body-ok
+代替~stylesheet:#the-link-is-an-alternative-stylesheet
+	the link is an alternative stylesheet
+定義済み~link型の集合に対する拡張:#concept-rel-extensions
+~navigateできない:#cannot-navigate
+要素の~noopenerを取得する:#get-an-element's-noopener
+~downloadは許容される:#allowed-to-download
+
+	●§
+~link型:#linkTypes
+§ ~HTML~link型:#linkTypes
+~hyperlink聴取:#hyperlink-auditing
+
+	allowed keywords and their meanings:#linkTypes-
+
+
+	●HTML
+~body内に許容され:~HEmetadata#allowed-in-the-body
+資源の型を決定する:~HEmetadata#concept-link-type-sniffing
+要素の~targetを取得する:~HEmetadata#get-an-element's-target
+	'
+lK.~fetch:~HEmetadata#fetch-and-process-the-linked-resource
+~link先の資源を~fetchして処理する:~HEmetadata#fetch-and-process-the-linked-resource
+~link先の資源~fetch用に設定しておく:~HEmetadata#linked-resource-fetch-setup-steps
+既定の~link先の資源を~fetchして処理する:~HEmetadata#default-fetch-and-process-the-linked-resource
+~link先の資源を処理する:~HEmetadata#process-the-linked-resource
+~scriptを阻んでいる~stylesheetを供与して:~HEmetadata#contributes-a-script-blocking-style-sheet
+~scriptを阻んでいる~stylesheet~counter:~HEmetadata#script-blocking-style-sheet-counter
+明示的に可能化？:~HEmetadata#explicitly-enabled
+
+
+閲覧文脈に接続されて:~HTMLINFRA#browsing-context-connected
+閲覧文脈に接続された:~HTMLINFRA#becomes-browsing-context-connected
+無視-:~HTMLINFRA#ignore
+並列的:~HTMLINFRA#in-parallel
+非同期に完了する:~HTMLINFRA#_asynchronously-complete
+
+sl.CryptographicNonce:~HTMLurl#cryptographicnonce
+~CORS同一-生成元:~HTMLurl#cors-same-origin
+~Content-Type~metadata:~HTMLurl#content-type
+相対的に構文解析-:~HTMLurl#parse-a-url
+~referrer施策~属性:~HTMLurl#referrer-policy-attribute
+結果の~URL~record:~HTMLurl#resulting-url-record
+結果の~URL文字列:~HTMLurl#resulting-url-string
+前後~空白~可の妥当な~URL:~HTMLurl#valid-url-potentially-surrounded-by-spaces
+妥当かつ空でない~URL:~HTMLurl#valid-non-empty-url
+非安全~応答:~HTMLurl#unsafe-response
+~CORS設定群~属性の資格証~mode:~HTMLurl#cors-settings-attribute-credentials-mode
+
+負でない整数として構文解析-:~HTMLcms#rules-for-parsing-non-negative-integers
+空白区切りの~token集合:~HTMLcms#set-of-space-separated-tokens
+空白区切りの一意な~token集合:~HTMLcms#_set-of-unique-space-separated-tokens
+妥当な負でない整数:~HTMLcms#valid-non-negative-integer
+
+提出する:~HTMLforms#concept-form-submit
+
+~navigate:~NAVI#navigate
+~navi:~NAVI#navigate
+V.履歴~取扱い:~NAVI#navigation-hh
+i.既定:~NAVI#hh-default
+i.置換-:~NAVI#hh-replace
+
+~source閲覧文脈:~NAVI#source-browsing-context
+
+閲覧文脈:~BROWSERS#browsing-context
+~top-level閲覧文脈:~BROWSERS#top-level-browsing-context
+補助~閲覧文脈:~BROWSERS#auxiliary-browsing-context
+閲覧文脈~名:~BROWSERS#browsing-context-name
+属する閲覧文脈:~BROWSERS#concept-document-bc
+親~閲覧文脈:~BROWSERS#parent-browsing-context
+閲覧文脈を選ぶ規則:~BROWSERS#the-rules-for-choosing-a-browsing-context-given-a-browsing-context-name
+妥当な閲覧文脈~名または~keyword:~BROWSERS#valid-browsing-context-name-or-keyword
+全部的に作動中:~BROWSERS#fully-active
+
+生成元:~ORIGIN#concept-origin
+同一-生成元:~ORIGIN#same-origin
+生成元を直列化する:~ORIGIN#ascii-serialisation-of-an-origin
+bc.~sandbox法~flags:~ORIGIN#concept-bc-sandboxing-flags
+閲覧文脈~sandbox化( ~download )~flag:~ORIGIN#sandboxed-downloads-browsing-context-flag
+
+文書:~HTMLdom#document
+言語:~HTMLdom#language
+表現-:~HTMLdom#represents
+doc.~module~map:~HTMLdom#concept-document-module-map
+
+~DOM操作~task源:~WAPI#dom-manipulation-task-source
+~network用~task源:~WAPI#networking-task-source
+要素~taskを~queueする:~WAPI#queue-an-element-task
+入口~設定群~obj:~WAPI#entry-settings-object
+環境~設定群~obj:~WAPI#environment-settings-object
+~task源:~WAPI#task-source
+関連な設定群~obj:~WAPI#relevant-settings-object
+~module~script:~WAPI#module-script
+~module~map:~WAPI#module-map
+~modulepreload~script~graphを~fetchする:~WAPI#fetch-a-modulepreload-module-script-graph
+外部~module~script~graphを~fetchする:~WAPI#fetch-a-module-script-tree
+
+~script~fetch~options:~WAPI#script-fetch-options
+sfO.暗号用~nonce:~WAPI#concept-script-fetch-options-nonce
+sfO.完全性~metadata:~WAPI#concept-script-fetch-options-integrity
+sfO.構文解析器~metadata:~WAPI#concept-script-fetch-options-parser
+sfO.資格証~mode:~WAPI#concept-script-fetch-options-credentials
+sfO.~referrer施策:~WAPI#concept-script-fetch-options-referrer-policy
+
+画像~sourceを選定する:~HEimages#select-an-image-source
+
+~load~eventを遅延-:~HTMLparsing#delay-the-load-event
+
+	●外部
+実装定義:~INFRA#implementation-defined
+~ASCII数字:~INFRA#ascii-digit
+~ASCII大小無視:~INFRA#ascii-case-insensitive
+~ASCII空白で分割する:~INFRA#split-on-ascii-whitespace
+~ASCII空白で分割-:~INFRA#split-on-ascii-whitespace
+
+doc.~URL:~DOM4#concept-document-url
+文書~要素:~DOM4#document-element
+doc.符号化法:~DOM4#concept-document-encoding
+文書~tree内:~DOM4#in-a-document-tree
+~node文書:~DOM4#concept-node-document
+過去互換~mode:~DOM4#concept-document-quirks
+~supportする~token:~DOM4#concept-supported-tokens
+~tree順序:~DOM4#concept-tree-order
+作動化の挙動:~DOM4#eventtarget-activation-behavior
+接続されて:~DOM4#connected
+~eventを発火する:~DOM4#concept-event-fire
+
+~labelから符号化法を取得する:~ENCODING#concept-encoding-get
+
+
+基本~URL構文解析器:~URL1#concept-basic-url-parser
+~URL構文解析する:~URL1#concept-url-parser
+~URLの~passwordを設定する:~URL1#set-the-password
+~URLの~usernameを設定する:~URL1#set-the-username
+~URL:~URL1#concept-url
+絶対~URL:~URL1#absolute-url-string
+~username／~password／~portを持てない:~URL1#cannot-have-a-username-password-port
+
+url.基底~URL不可用~flag:~URL1#url-cannot-be-a-base-url-flag
+url.素片:~URL1#concept-url-fragment
+url.~host:~URL1#concept-url-host
+url.生成元:~URL1#concept-url-origin
+url.~password:~URL1#concept-url-password
+url.~path:~URL1#concept-url-path
+url.~port:~URL1#concept-url-port
+url.~query:~URL1#concept-url-query
+url.~scheme:~URL1#concept-url-scheme
+url.~username:~URL1#concept-url-username
+
+uST.素片:~URL1#fragment-state
+uST.~host:~URL1#host-state
+uST.~hostname:~URL1#hostname-state
+uST.~path開始:~URL1#path-start-state
+uST.~port:~URL1#port-state
+uST.~query:~URL1#query-state
+uST.~scheme開始:~URL1#scheme-start-state
+
+~hostを直列化する:~URL1#concept-host-serializer
+~URLを直列化する:~URL1#concept-url-serializer
+整数を直列化する:~URL1#serialize-an-integer
+
+
+~referrer施策:~REFERRER-POLICY#referrer-policy
+
+~HTTP_S~scheme:~FETCH#http-scheme
+~fetch:~FETCH#concept-fetch
+要請:~FETCH#concept-request
+応答:~FETCH#concept-response
+rq.本体:~FETCH#concept-request-body
+rq.~client:~FETCH#concept-request-client
+rq.~mode:~FETCH#concept-request-mode
+rq.資格証~mode:~FETCH#concept-request-credentials-mode
+rq.行先:~FETCH#concept-request-destination
+rq.起動元:~FETCH#concept-request-initiator
+rq.~method:~FETCH#concept-request-method
+rq.優先度:~FETCH#concept-request-priority
+rq.~referrer施策:~FETCH#concept-request-referrer-policy
+rq.~referrer:~FETCH#concept-request-referrer
+rq.~URL:~FETCH#concept-request-url
+rq.~URL資格証~利用~flag:~FETCH#concept-request-use-url-credentials-flag
+rq.同期~flag:~FETCH#synchronous-flag
+行先の素:~FETCH#concept-potential-destination
+行先に翻訳する:~FETCH#concept-potential-destination-translate
+pD.対応する:~FETCH#concept-potential-destination-translate
+~scriptに類する行先:~FETCH#request-destination-script-like
+
+	＊補完
+rq.~header~list:~FETCH#concept-request-header-list
+~headerを付加する:~FETCH#concept-header-list-append
+
+~MIME型:~MIMESNIFF#mime-type
+妥当な~MIME型~文字列:~MIMESNIFF#valid-mime-type
+~JSON~MIME型:~MIMESNIFF#json-mime-type
+
+~CSS~pixel:~CSSVAL#px
+~CSS環境~符号化法:~CSSSYN#environment-encoding
+
+~CSS~stylesheet:~CSSOM1#css-style-sheet
+~CSS~stylesheetが結付けられ:~CSSOM1#associated-css-style-sheet
+~CSS~stylesheetを作成する:~CSSOM1#create-a-css-style-sheet
+~CSS~stylesheetを除去する:~CSSOM1#remove-a-css-style-sheet
+ss.代替-~flag:~CSSOM1#concept-css-style-sheet-alternate-flag
+ss.不能化~flag:~CSSOM1#concept-css-style-sheet-disabled-flag
+ss.所在:~CSSOM1#concept-css-style-sheet-location
+ss.媒体:~CSSOM1#concept-css-style-sheet-media
+ss.生成元clean~flag:~CSSOM1#concept-css-style-sheet-origin-clean-flag
+ss.所有者~CSS規則:~CSSOM1#concept-css-style-sheet-owner-css-rule
+ss.所有者~node:~CSSOM1#concept-css-style-sheet-owner-node
+ss.親~CSS~stylesheet:~CSSOM1#concept-css-style-sheet-parent-css-style-sheet
+ss.~title:~CSSOM1#concept-css-style-sheet-title
+ss.種別:~CSSOM1#concept-css-style-sheet-type
+ss.~CSS規則~list:~CSSOM1#concept-css-style-sheet-css-rules
+
+~app~manifest:~APPMANIFEST#dfn-application-manifest
+~manifestを処理する:~APPMANIFEST#dfn-processing-a-manifest
+~web~appを~installする:~APPMANIFEST#dfn-installed-web-application
+
+~tag~cloud:~HTMLLS/semantics-other.html#tag-cloud
+
+Blob URL Store:~FILEAPI#BlobURLStore
+c.import():~TC39#sec-import-calls
+
+●●words_table
+
+	●処理一般
+noopener:
+modulepreload:
+活動:activity::~
+先取り:preempt:~
+先取的:preemptive:先取り的
+往来:roundtrip::~
+
+	初期化し直す:reinitialise
+	初期化されないまま:uninitialize
+	時機:time
+	事前に:ahead of time
+	〜と同一視:ignore
+	始まった:begun
+	~instance化する〜:instantiator 〜
+	設定-時:setting
+
+	●link
+Content-Type:
+permalink::::
+	~link先:linked
+body-ok:
+ping::::
+pingback::::
+href::::
+dot::::ドット
+syndication-feed:syndication feed:::［連携サイトからのフィード］
+syndicate::::連携
+feed::::フィード
+増補-:augment:~
+追う:followする::~
+追った:followした::~
+参照先:referenced:~
+探索-:search::検索
+探索:search::検索
+検索:lookup:~
+導く:leadする:~
+連列的:sequential::~
+	文書~列:series
+別形式:reformulation:~
+保存-:save:~
+
+承認-:endorse:~
+拡張子:extension:~
+提携-:affiliate:~
+	者:people
+	低~costな:less-costly
+高速:fast:~
+	faster
+帯域外の:out-of-band:~
+広告主:advertiser:~
+版元:publisher:~
+著作者:original author:~
+	訪問-済み:visited
+
+	●network／navi
+DNS:
+HTTP_S:HTTP(S)
+	~download法:downloading
+filename:
+disposition:
+添付:attachment::~
+優先度:priority::~
+閉じて:closeして:~
+	-:resolving
+	caching::::キャッシュ処理
+	~message本体:entity-body
+	~network接続の不確実性:use of unreliable network connectivity
+
+
+	●保安
+directory::::ディレクトリ
+暗号用:cryptographic::~
+nonce::::ナンス
+生成元clean:origin-clean::生成元-clean::オリジン-clean
+個人的:personal:~
+機密的:confidential:~
+危険:dangerous:~
+危険性:danger:~
+非安全:unsafe::~
+防護-:guard::~
+	既知かつ安全な:known-safe
+	安全に防護する:safeguard
+問題m:matter:問題
+聴取-:audit:~
+聴取:auditing:~
+選択的:selective:~
+関心:interest:~
+関心事:interest:~
+	信用-済み:trusted
+	信用-済みでない:untrusted
+警告-:warn:~
+私的:private:~
+騙して:trickして:~
+	知らずに:unknowingly
+無法:nefarious:~
+flags:::flag 群:フラグ群
+
+	●URL
+hostname::::ホスト名
+password::::パスワード
+username::::ユーザ名
+上書state:state override:上書きstate
+上書符号化法:encoding override::上書き符号化法::上書エンコーディング
+開始:start:~
+
+	●構文
+colon::::コロン
+空白区切りの:space-separated:~
+約物:punctuation:~
+分割-:split:~
+	-:digit
+削る:trimする:~
+合法:legal:~
+	頭部と尾部の:leading and trailing
+	先頭の:leading
+	区切って:separated
+
+	●icon
+display::::ディスプレイ
+bitmap::::ビットマップ
+拡縮-:scale:~
+	拡縮-可能:scalable
+低解像度:low-resolution:~
+高解像度:high-resolution:~
+機器画素:device pixel:~
+画像画素:raw pixel:~
+	-:device pixel density
+	幅:wide
+密度:density:~
+
+	●内容
+	PDF
+body:
+	head:
+	-:labeling／labeled
+section::::セクション
+cloud::::クラウド
+email::::メール
+blog::::ブログ
+	日本語版:French
+主要な:main:~
+編集:edit:~
+翻訳-:translate:~
+翻訳:translation:~
+記事:article:~
+license::::ライセンス
+著作権:copyright:~
+条項:term:~
+
+聴覚-:auditory:~
+写真:photo:~
+
+写真共有:photo sharing:~
+
+	~~直に属する:is most closely associated with
+
+	●CSS／UI
+CSSOM:
+	~style付け:styling
+	~~入力:prompt
+help::::ヘルプ
+cursor::::カーソル
+status-bar:status bar:::ステータスバー
+tooltip::::ツールチップ
+自動発見-:autodiscover:~
+自動発見:autodiscovery:~
+押下げた:pressした:~
+	文脈に応じた:context-sensitive
+	隠されずに:unobscured
+	〜に伴わせて:in conjunction with
+	近くの目立つ所に置く:prominently positioned near
+popup:
+	探して:looking for
+
+	●仕様
+design::::デザイン
+利便性:usability:~
+利点:advantage:~
+既存技術:pre-existing technologies:~
+推移的:transitive:~
+有益:beneficial:~
+有害:harmful:~
+査読:peer review:~
+Wiki:
+同義語:synonym:~
+概略的な:brief:~
+使用中止:discontinued::~
+批准-:ratify:~
+	批准-済み:ratified
+	提案-済み:proposed
+地位:status::~
+自由:free:~
+機会:opportunity:~
+
+依存物:dependencies:~
+	dependency
+	~~勧める:offer
+	~~考える:think
+非許容:<em>not allowed</em>:<em>許容されない</em>
+商業関係:commercial relationship:~
+強いら:forceさ:~
+	ようにしておく:ensure
+	とする:assume
+計画:plan:~
+分岐-:branch:~
+衝突-:clash:~
+
+	任意選択で:may
+	特に:no particular
+	できなくする:impossible
+	広くから:wide
+	approval
+	事:fact
+	併用:used with
+	〜下にある:covered
+	の一部:part of
+	誰もが:anyone
+	紛らわしい:confusingly similar
+	まったく:quite
+	注意されたし:cautioned
+	まるごと:altogether
+	見込みが高い:highly likely
+	兼ね合い:balance
+	したがって:thus3
+	選ぶ:pick
+	見込まれる:likely
+	ほぼ〜と見込まれる:in all likelihood
+	同様:like
+	し易く:help
+	~~無駄:pointless
+	注意点として:notably,
+	~~可能性:potential
+	併用して:used in conjunction with
+	~~仕向ける:geared toward／get
+	加えて:additionally
+	-:we see
+	~~利用中にある:in play
+	ようにされている:begin with
+	選んだ:choose
+
+	●未分類
+load:
+preload:
+	preloading
+開いた:openした:~
+	開いた~page:opener
+取込む:importする::取り込む
+温存-:conserve:~
+	-:mark
+重複-:duplicate:~
+manifest::::マニフェスト
+install::::インストール
+入口:entry::~
+	access::::アクセス
+package::::パッケージ
+供与-:contribute:~
+背後:background:~
+補助:auxiliary::~
+種類:kind:~
+shell-script:shell script:::シェルスクリプト
+executable::::実行可能ファイル
+executable-macro::::実行可能マクロ
+電池:battery:~
+	~~残量／~~能力:power
+側:side:~
+ナシ:none:なし
+
+	個々の~linkの~click率:click-through-rate
+	〜を含み得る:-capable
+	指す:refer
+	見る:viewing
+	伝える:inform
+	含-:include
+	含めて:including
+	対応:correspond
+	示す:show
+	起こる:happen
+	来ている:comes from
+
+	ものとされて:dictate
+	consist
+	made
+	-:categorize
+	-:proposed
+	-:claimed
+	-:authoritative
+	-:locate
+	手を加え:influence
+	対応する:mapping
+	:become
+
+	-:alter
+	~~後続する:followup
+	通る:go through
+
+	●指示語
+一体:全体
+	as a whole
+	-:certain
+	その次／次回:next
+	何らかの方法:somehow
+	常に:invariably
+	後の／後で:later
+	等しく:equally
+	冒頭:top
+	自身は:own
+	後続:follow
+	前回／前の／以前の:previous
+	連続する:consecutive
+	属する:form part of
+	再度:re-
+	類するもの:sort of
+	冒頭部:top part
+	もの:thing
+
+	~~所在から:by looking at where
+	過去の:past
+	米国のアイダホ州の愛称:the towns in the US
+	スイスのレーティッシュ鉄道の機関車:Swiss locomotive class
+
+
+	表:table
+	れるようになる:It allows
+	調べていくうちに不適切であると~~判明した場合:is determined, upon closer examination, to in fact be inappropriate
+	判明した:found
+	も:furthermore
+	なり得る:potentially
+	-:vice versa:
+	no longer
+	人気／よくある:popular
+	〜にない:over
+	最終的な:final
+	でしかない:merely
+	要素:subject
+	-:light
+	code片:snippet
+	gem
+	ではなく:as opposed to
+	携わる:engaged in
+	似た:similar
+	across
+	-:few
+	-:against
+	part
+	当の:in question
+	-:fact
+	-:foot
+	〜用:suitable
+	~~形で表す:styling
+	~~常備:persistent
+
+●●html_code_list
+
+■rel-alternate-1
+<!-- 常備のスタイルシート  -->
+<link rel="stylesheet" href="default.css">
+％
+<!-- 代替スタイルシートのうち，選好されるもの（既定で有効化される） -->
+<link rel="stylesheet" href="green.css" title="緑系スタイル">
+％
+<!-- 他の代替スタイルシート（既定では有効化されない） -->
+<link rel="alternate stylesheet" href="contrast.css" title="高コントラスト">
+<link rel="alternate stylesheet" href="big.css" title="大きいフォント">
+<link rel="alternate stylesheet" href="wide.css" title="幅広スクリーン用">
+
+
+<!-- a persistent style sheet -->
+<link rel="stylesheet" href="default.css">
+<!-- the preferred alternate style sheet  -->
+<link rel="alternate stylesheet" href="green.css" title="Green styles">
+<!-- some alternate style sheets  -->
+<link rel="alternate stylesheet" href="contrast.css" title="High contrast">
+<link rel="alternate stylesheet" href="big.css" title="Big fonts">
+<link rel="alternate stylesheet" href="wide.css" title="Wide screen">
+
+
+■rel-alternate-2
+<link ＜rel="alternate"＞ type="application/atom+xml" href="posts.xml" title="Cool Stuff Blog">
+<link ＜rel="alternate"＞ type="application/atom+xml" href="posts.xml?category=robots" title="Cool Stuff Blog: robots category">
+<link ＜rel="alternate"＞ type="application/atom+xml" href="comments.xml" title="Cool Stuff Blog: Comments">
+
+
+■rel-alternate-3
+<p>Atom フィードを利用して惑星データベースにアクセスできる：</p>
+<ul>
+ <li><a ＜rel="alternate"＞ type="application/atom+xml" href="recently-visited-planets.xml">最近訪れた惑星</a></li>
+ <li><a ＜rel="alternate"＞ type="application/atom+xml" href="known-bad-planets.xml">既知な不良な惑星</a></li>
+ <li><a ＜rel="alternate"＞ type="application/atom+xml" href="unexplored-planets.xml">未踏の惑星</a></li>
+</ul>
+
+<p>You can access the planets database using Atom feeds:</p>
+<ul>
+ <li><a href="recently-visited-planets.xml" rel="alternate" type="application/atom+xml">Recently Visited Planets</a></li>
+ <li><a href="known-bad-planets.xml" rel="alternate" type="application/atom+xml">Known Bad Planets</a></li>
+ <li><a href="unexplored-planets.xml" rel="alternate" type="application/atom+xml">Unexplored Planets</a></li>
+</ul>
+
+■rel-alternate-4
+<link
+   rel=alternate
+   href="/en/html"
+   hreflang=en
+   type=text/html
+   title="英語版 HTML"
+>
+<link
+   rel=alternate
+   href="/ja/html"
+   hreflang=ja
+   type=text/html
+   title="日本語版 HTML"
+>
+<link
+   rel=alternate
+   href="/en/html/print"
+   hreflang=en
+   type=text/html
+   media=print
+   title="英語版 HTML （印刷用）"
+>
+<link
+   rel=alternate
+   href="/ja/html/print"
+   hreflang=ja
+   type=text/html
+   media=print
+   title="日本語版 HTML （印刷用）"
+>
+<link
+   rel=alternate
+   href="/en/pdf"
+   hreflang=en
+   type=application/pdf
+   title="英語版 PDF"
+>
+<link
+   rel=alternate
+   href="/ja/pdf"
+   hreflang=ja
+   type=application/pdf
+   title="日本語版 PDF"
+>
+
+
+■link-type-bookmark-1
+ ...
+ <body>
+  <h1>permalink の例</h1>
+  <div id="a">
+   <h2>最初の例</h2>
+   <p><a href="a.html" ＜rel="bookmark"＞>この permalink は、最初の H2 から 次の H2 までの内容のみに適用される。</a> DIV は正確には，そのセクションに一致しないが、概ねそれに対応する。</p>
+  </div>
+  <h2>二番目の例</h2>
+  <article id="b">
+   <p><a href="b.html" ＜rel="bookmark"＞>この permalink は外縁の ARTICLE 要素に適用される</a> （それは例えばブログ投稿にもなり得る）。</p>
+   <article id="c">
+    <p><a href="c.html" ＜rel="bookmark"＞>この permalink は内縁の ARTICLE に適用される</a> （それは例えばブログコメントにもなり得る）。</p>
+   </article>
+  </article>
+ </body>
+ ...
+
+
+ ...
+ <body>
+  <h1>Example of permalinks</h1>
+  <div id="a">
+   <h2>First example</h2>
+   <p><a href="a.html" rel="bookmark">This permalink applies to
+   only the content from the first H2 to the second H2</a>. The DIV isn't
+   exactly that section, but it roughly corresponds to it.</p>
+  </div>
+  <h2>Second example</h2>
+  <article id="b">
+   <p><a href="b.html" rel="bookmark">This permalink applies to
+   the outer ARTICLE element</a> (which could be, e.g., a blog post).</p>
+   <article id="c">
+    <p><a href="c.html" rel="bookmark">This permalink applies to
+    the inner ARTICLE element</a> (which could be, e.g., a blog comment).</p>
+   </article>
+  </article>
+ </body>
+ ...
+
+■link-type-help-1
+<p><label> Topic: <input name=topic> <a href="help/topic.html" ＜rel="help"＞>(Help)</a></label></p>
+
+
+■rel-icon-1
+<!DOCTYPE HTML>
+<html lang="en">
+ <head>
+  <title>lsForums — Inbox</title>
+  <link rel=icon href=favicon.png sizes="16x16" type="image/png">
+  <link rel=icon href=windows.ico sizes="32x32 48x48" type="image/vnd.microsoft.icon">
+  <link rel=icon href=mac.icns sizes="128x128 512x512 8192x8192 32768x32768">
+  <link rel=icon href=iphone.png sizes="57x57" type="image/png">
+  <link rel=icon href=gnome.svg sizes="any" type="image/svg+xml">
+  <link rel=stylesheet href=lsforums.css>
+  <％script src=lsforums.js><％/script>
+  <meta name=application-name content="lsForums">
+ </head>
+ <body>
+  ...
+
+
+■link-type-license-1
+<!DOCTYPE HTML>
+<html lang="ja">
+ <head>
+  <title>Exampl Pictures： ネコ属</title>
+  <link rel="stylesheet" href="/style/default">
+ </head>
+ <body>
+  <h1>ネコ属</h1>
+  <nav>
+   <a href="../">写真索引に戻る</a>
+  </nav>
+  <figure>
+   <img src="/pix/39627052_fd8dcd98b5.jpg">
+   <figcaption>ネコ属</figcaption>
+  </figure>
+  <p>6 本指の種もある！</p>
+  <p><small><a ＜rel="license"＞ href="http://www.opensource.org/licenses/mit-license.php">MIT Licensed</a></small></p>
+  <footer>
+   <a href="/">ホーム</a> | <a href="../">写真索引</a>
+   <p>＜<small>© 2009 Exampl Pictures.</small>＞</p>
+  </footer>
+ </body>
+</html>
+
+
+<!DOCTYPE HTML>
+<html lang="en">
+ <head>
+  <title>Exampl Pictures: Kissat</title>
+  <link rel="stylesheet" href="/style/default">
+ </head>
+ <body>
+  <h1>Kissat</h1>
+  <nav>
+   <a href="../">Return to photo index</a>
+  </nav>
+  <figure>
+   <img src="/pix/39627052_fd8dcd98b5.jpg">
+   <figcaption>Kissat</figcaption>
+  </figure>
+  <p>One of them has six toes!</p>
+  <p><small><a rel="license" href="http://www.opensource.org/licenses/mit-license.php">MIT Licensed</a></small></p>
+  <footer>
+   <a href="/">Home</a> | <a href="../">Photo index</a>
+   <p><small>© copyright 2009 Exampl Pictures. All Rights Reserved.</small></p>
+  </footer>
+ </body>
+</html>
+
+■link-type-modulepreload-1
+<!DOCTYPE html>
+<html lang="en">
+<title>IRCFog</title>
+％
+<link rel="modulepreload" href="app.mjs">
+<link rel="modulepreload" href="helpers.mjs">
+<link rel="modulepreload" href="irc.mjs">
+<link rel="modulepreload" href="fog-machine.mjs">
+％
+<％script type="module" src="app.mjs">
+...
+
+
+■link-type-modulepreload-2
+<link rel="modulepreload" href="awesome-viewer.mjs">
+％
+<button onclick="import('./awesome-viewer.mjs').then(m => m.view())">
+  View awesome thing
+</button>
+
+■link-type-noopener-1
+<a href=help.html target=example>Help!</a>
+
+■link-type-noopener-2
+<a href=help.html target=example rel=noopener>Help!</a>
+
+■link-type-noopener-3
+<a href=index.html target=_parent>Home</a>
+
+■link-type-noopener-4
+<a href=index.html target=_parent rel=noopener>Home</a>
+
+■link-type-opener-1
+<a href="..." ＜rel=opener＞ target=_blank>Help!</a>
+
+
+■link-type-tag-1
+<!DOCTYPE HTML>
+<html lang="en">
+ <head>
+  <title>My Precious</title>
+ </head>
+ <body>
+  <header><h1>My precious</h1> <p>Summer 2012</p></header>
+  <p>Recently I managed to dispose of a red gem that had been
+  bothering me. I now have a much nicer blue sapphire.</p>
+  <p>The red gem had been found in a bauxite stone while I was digging
+  out the office level, but nobody was willing to haul it away. The
+  same red gem stayed there for literally years.</p>
+  <footer>
+   Tags: <a rel=tag href="https://en.wikipedia.org/wiki/Gemstone">Gemstone</a>
+  </footer>
+ </body>
+</html>
+
+■link-type-tag-2
+<!DOCTYPE HTML>
+<html lang="en">
+ <head>
+  <title>Gem 4/4</title>
+ </head>
+ <body>
+  <article>
+   <h1>801: Steinbock</h1>
+   <p>The number 801 Gem 4/4 electro-diesel has an ibex and was rebuilt in 2002.</p>
+  </article>
+  <article>
+   <h1>802: Murmeltier</h1>
+   <figure>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Trains_de_la_Bernina_en_hiver_2.jpg"
+         alt="The 802 was red with pantographs and tall vents on the side.">
+    <figcaption>The 802 in the 1980s, above Lago Bianco.</figcaption>
+   </figure>
+   <p>The number 802 Gem 4/4 electro-diesel has a marmot and was rebuilt in 2003.</p>
+  </article>
+  <p class="topic"><a ＜rel=tag＞ href="https://en.wikipedia.org/wiki/Rhaetian_Railway_Gem_4/4">Gem 4/4</a></p>
+ </body>
+</html>
+
+801 号機 Gem 4/4 電気式ディーゼル機関車は、 2002 年に改修され、アルプスアイベックスのエンブレムが付いている。
+802: アルプスマーモット
+alt="802 号機。赤い車体にパンタグラフがあり、側面に背の高い空気取入口。
+ビアンコ湖のほとりを走行する 1980 年の 802 号機。
+802 号機 Gem 4/4 電気式ディーゼル機関車は、 2003 年に改修され、アルプスマーモットのエンブレムが付いている。
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる HTML 仕様の
+<a href="~SPEC_URL">§ Links</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+</head>
+
+<body>
+
+<header id="head">
+	<hgroup>
+<h1>リンク — Links</h1>
+	</hgroup>
+</header>
+
+<main id="MAIN" hidden>
+
+		<section id="links">
+<h2 title="Links">4.6 ~link</h2>
+
+			<section id="_conventions">
+<h3>【この訳に特有な表記規約】</h3>
+
+<p>
+この訳の，~algoの記述に利用されている各種記号（ ~LET, ~IF, ~GOTO, 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+<p>
+`~a_area@
+要素とは、
+`a$e, `area$e 両~要素を含む総称である。
+</p>
+
+			</section>
+			<section id="introduction-2">
+<h3 title="Introduction">4.6.1. 序論</h3>
+
+<p>
+~linkとは、［
+`~a_area$ ／ `form$e ／ `link$e
+］要素により作成される概念的な構成子であり，現在の`文書$と別の資源との間の接続を`表現-$する。
+~HTMLにおける~linkには、次の 2 種類がある：
+◎
+Links are a conceptual construct, created by a, area, form, and link elements, that represent a connection between two resources, one of which is the current Document. There are two kinds of links in HTML:
+</p>
+
+<dl>
+	<dt>`外部~資源~link@</dt>
+	<dd>
+現在の文書を増補するために利用される資源への~linkであり、一般に，~UAにより自動的に処理される。
+すべての`外部~資源~link$には、`~link先の資源を~fetchして処理する$ ~algoがあり，資源がどう得されるかを述べる。
+◎
+These are links to resources that are to be used to augment the current document, generally automatically processed by the user agent. All external resource links have a fetch and process the linked resource algorithm which describes how the resource is obtained.
+</dd>
+
+	<dt>`~hyperlink@</dt>
+	<dd>
+他の資源への~linkであり、一般に，利用者がその資源へ`~navigate$できるようにする
+— 例えば，その資源を［
+~browser内で訪問する ／ ~downloadする
+］など —
+ために，~UAにより公開される。
+◎
+These are links to other resources that are generally exposed to the user by the user agent so that the user can cause the user agent to navigate to those resources, e.g. to visit them in a browser or download them.
+</dd>
+
+</dl>
+
+<p>
+`href$aL 属性を有する［
+`link$e ／ `~a_area$
+］要素に対しては：
+◎
+For link elements with an href attribute＼
+</p>
+
+<ul>
+	<li>
+要素が `rel$aL 属性も有するならば、その値に含まれる各~keyword用に
+— `§ ~HTML~link型$に与える各~keywordの定義に従って —
+~linkを作成するモノトスル。
+◎
+and a rel attribute, links must be created for the keywords of the rel attribute, as defined for those keywords in the link types section.
+</li>
+	<li>
+要素が `~a_area$ 要素であって，［
+`rel$a 属性は有さないか, 有していて その値に［
+`~hyperlink$を作成するものと定義されている~keyword
+］は含まれてない
+］場合も、
+`暗黙の~hyperlink@
+を作成するモノトスル
+⇒
+この`暗黙の~hyperlink$には、［
+要素の`~node文書$から 要素の `href$a 属性で与えられる資源へ~linkする
+］ことを超えるような，特別な意味はない（その`~link型$はない）。
+◎
+Similarly, for a and area elements with an href attribute and a rel attribute, links must be created for the keywords of the rel attribute as defined for those keywords in the link types section. Unlike link elements, however, a and area elements with an href attribute that either do not have a rel attribute, or whose rel attribute has no keywords that are defined as specifying hyperlinks, must also create a hyperlink. This implied hyperlink has no special meaning (it has no link type) beyond linking the element's node document to the resource given by the element's href attribute.
+</li>
+</ul>
+
+<div class="p">
+<p>
+同様に，`form$e 要素に対しては：
+</p>
+
+<ul>
+	<li>
+`~relF$a 属性を有するならば、その値に含まれる各~keyword用に
+— `§ ~HTML~link型$に与える各~keywordの定義に従って —
+~linkを作成するモノトスル。
+</li>
+	<li>
+`~relF$a 属性を［
+有さない ／
+有していて その値に［
+`~hyperlink$を作成するものと定義されている~keyword
+］は含まれてない
+］場合も，`~hyperlink$を作成するモノトスル。
+</li>
+</ul>
+◎
+Similarly, for form elements with a rel attribute, links must be created for the keywords of the rel attribute as defined for those keywords in the link types section. form elements that do not have a rel attribute, or whose rel attribute has no keywords that are defined as specifying hyperlinks, must also create a hyperlink.
+</div>
+
+<p>
+`~hyperlink$は、その~hyperlinkの処理~意味論を改変するような
+`注釈@
+を 0 個以上~持つ。
+◎
+A hyperlink can have one or more hyperlink annotations that modify the processing semantics of that hyperlink.
+</p>
+
+			</section>
+			<section id="links-created-by-a-and-area-elements">
+<h3 title="Links created by a and area elements">4.6.2. ~a_area 要素により作成される~link</h3>
+
+<p>
+`~a_area$ 要素~上の
+`href@a
+属性に指定する値は、`前後~空白~可の妥当な~URL$でなければナラナイ。
+◎
+The href attribute on a and area elements must have a value that is a valid URL potentially surrounded by spaces.
+</p>
+
+<p class="note">注記：
+`~a_area$ 要素には、 `href$a 属性を有することは要求されない
+— 有さない場合、~hyperlinkは作成されない。
+◎
+The href attribute on a and area elements is not required; when those elements do not have href attributes they do not create hyperlinks.
+</p>
+
+<p>
+`target@a
+属性に指定する値は、`妥当な閲覧文脈~名または~keyword$でなければナラナイ。
+それは、利用されることになる`閲覧文脈$の名前を与える。
+~UAは、`~hyperlinkを追う$ときにこの名前を利用する。
+◎
+The target attribute, if present, must be a valid browsing context name or keyword. It gives the name of the browsing context that will be used. User agents use this name when following hyperlinks.
+</p>
+
+<p>
+`~a_area$ 要素の`作動化の挙動$が呼出されたときは、~UAは，利用者が次に関する選好を指示できるようにしてもヨイ：
+◎
+When an a or area element's activation behavior is invoked, the user agent may allow the user to indicate a preference regarding＼
+</p>
+
+<ul>
+	<li>
+その~hyperlinkを `~navi$に利用するかどうか
+◎
+whether the hyperlink is to be used for navigation or＼
+</li>
+	<li>
+それが指定する資源を~downloadするかどうか
+◎
+whether the resource it specifies is to be downloaded.
+</li>
+</ul>
+
+<p>
+利用者による選好がない下での既定は、要素が `download$a 属性を［
+有さないならば ~navi ／
+有するならば 参照先~資源の~download
+］になるベキである。
+◎
+In the absence of a user preference, the default should be navigation if the element has no download attribute, and should be to download the specified resource if it does.
+</p>
+
+<p>
+~UAは、利用者の選好, あるいは 属性の有無を介して決定された結果に従うモノトスル：
+すなわち，~hyperlinkの利用が［
+`~navi$とされた場合は `~hyperlinkを追う$ ／
+資源の~downloadとされた場合は それを`~download$する
+］ことが要求される。
+これらの用語は、後続の各~節にて定義される。
+◎
+Whether determined by the user's preferences or via the presence or absence of the attribute, if the decision is to use the hyperlink for navigation then the user agent must follow the hyperlink, and if the decision is to use the hyperlink to download a resource, the user agent must download the hyperlink. These terms are defined in subsequent sections below.
+</p>
+
+<p>
+`download@a
+属性は、在るならば，［
+作者は，~hyperlinkは資源の`~download$用であると意図している
+］ことを指示する。
+この属性の値が空でない場合、作者が推奨する既定の~file名を指定する
+— それは、局所~file~systemにて資源の~file名を与えるときに利用される。
+許容される値に制約はないが、作者は、ほとんどの~file~systemには ~file名に~supportされる約物に関して制限があり，~UAは それに則って~file名を調整すると見込まれることに注意されたし。
+◎
+The download attribute, if present, indicates that the author intends the hyperlink to be used for downloading a resource. The attribute may have a value; the value, if any, specifies the default file name that the author recommends for use in labeling the resource in a local file system. There are no restrictions on allowed values, but authors are cautioned that most file systems have limitations with regard to what punctuation is supported in file names, and user agents are likely to adjust file names accordingly.
+</p>
+
+<div >
+<p>
+`ping@a
+属性は、在るならば，［
+利用者が~hyperlinkを追うときに，それについて通知されることに関心がある資源
+］の~URLを与える。
+その値は、~UAにより`~hyperlink聴取$に利用される。
+値は、`空白区切りの~token集合$であって，その各~tokenは 次を満たさなければナラナイ：
+</p>
+
+<ul ><li>`妥当かつ空でない~URL$である
+</li><li>`~scheme$url ~IN `~HTTP_S~scheme$
+</li></ul>
+
+◎
+The ping attribute, if present, gives the URLs of the resources that are interested in being notified if the user follows the hyperlink. The value must be a set of space-separated tokens, each of which must be a valid non-empty URL whose scheme is an HTTP(S) scheme. The value is used by the user agent for hyperlink auditing.
+</div>
+
+<p>
+`~a_area$ 要素~上の
+`rel@a
+属性は、要素が作成する~linkの種類を制御する。
+この属性に指定する値は、`空白区切りの一意な~token集合$でなければナラナイ。
+<a href="#linkTypes">許容される~keywordとその意味</a>
+は、下に定義される。
+◎
+The rel attribute on a and area elements controls what kinds of links the elements create. The attribute's value must be a unordered set of unique space-separated tokens. The allowed keywords and their meanings are defined below.
+</p>
+
+<div>
+<p>
+次をすべて満たすものが `rel$aL が`~supportする~token$とされる：
+</p>
+
+<ul ><li>`§ ~HTML~link型$にて定義される~keywordであって， `~a_area$ 要素に許容される。
+</li><li>~UAが~supportする。
+</li><li>~UAによる処理~modelに影響iする。
+</li></ul>
+
+<p>
+アリな~tokenには次が挙げられるが、`~supportする~token$は，これらのうち~UAが処理~modelを実装するものに限られるモノトスル
+⇒
+`noreferrer$v,
+`noopener$v,
+`opener$v
+</p>
+
+◎
+rel's supported tokens are the keywords defined in HTML link types which are allowed on a and area elements, impact the processing model, and are supported by the user agent. The possible supported tokens are noreferrer, noopener, and opener. rel's supported tokens must only include the tokens from this list that the user agent implements the processing model for.
+</div>
+
+<p>
+`rel$a 属性には既定の値はない。
+属性が省略された場合や, 属性の値が含むどの~tokenも ~UAにより認識されない場合、文書と行先~資源との間には，~hyperlinkであること以外に 特に関係性はないことになる。
+◎
+The rel attribute has no default value. If the attribute is omitted or if none of the values in the attribute are recognized by the user agent, then the document has no particular relationship with the destination resource other than there being a hyperlink between the two.
+</p>
+
+<p>
+`~hyperlink$を作成するような `a$e 要素に
+`hreflang@a
+属性が在る場合、~link先~資源の言語を与える。
+指定する値は、妥当な `BCP47$r 言語~tagでなければナラナイ。
+この属性は、純粋に助言的である
+【！ この属性を authoritativeと考慮しないモノトスル】
+— ~UAは、~fetchした資源の言語を決定するときには，資源への~linkに含められた~metadataは利用せず，資源に結付けられている言語~情報のみを利用するモノトスル。
+◎
+The hreflang attribute on a elements that create hyperlinks, if present, gives the language of the linked resource. It is purely advisory. The value must be a valid BCP 47 language tag. [BCP47] User agents must not consider this attribute authoritative — upon fetching the resource, user agents must use only language information associated with the resource to determine its language, not metadata included in the link to the resource.
+</p>
+
+<p>
+`type@a
+属性は、在るならば，~link先の資源の`~MIME型$を与える。
+指定する値は、`妥当な~MIME型~文字列$でなければナラナイ。
+この属性は、純粋に助言的である 【！ authoritative】
+— ~UAは、~fetchした資源の型を決定するときには，資源への~linkに含められた~metadataは利用しないモノトスル。
+◎
+The type attribute, if present, gives the MIME type of the linked resource. It is purely advisory. The value must be a valid MIME type string. User agents must not consider the type attribute authoritative — upon fetching the resource, user agents must not use metadata included in the link to the resource to determine its type.
+</p>
+
+<p>
+`referrerpolicy@a
+属性は、`~referrer施策~属性$である。
+その目的は、
+`~hyperlinkを追う$ときに利用される`~referrer施策$を設定することである。
+`REFERRERPOLICY$r
+◎
+The referrerpolicy attribute is a referrer policy attribute. Its purpose is to set the referrer policy used when following hyperlinks. [REFERRERPOLICY]
+</p>
+
+			</section>
+			<section id="api-for-a-and-area-elements">
+<h3 title="API for a and area elements">4.6.3. ~a_area 要素~用の~API</h3>
+
+<pre class="idl">
+interface mixin `HTMLHyperlinkElementUtils@I {
+  [`CEReactions$] stringifier attribute USVString `href$m;
+  readonly attribute USVString `origin$m;
+  [`CEReactions$] attribute USVString `protocol$m;
+  [`CEReactions$] attribute USVString `username$m;
+  [`CEReactions$] attribute USVString `password$m;
+  [`CEReactions$] attribute USVString `host$m;
+  [`CEReactions$] attribute USVString `hostname$m;
+  [`CEReactions$] attribute USVString `port$m;
+  [`CEReactions$] attribute USVString `pathname$m;
+  [`CEReactions$] attribute USVString `search$m;
+  [`CEReactions$] attribute USVString `hash$m;
+};
+</pre>
+
+  <dl class="domintro">
+
+	<dt>%hyperlink . `toString()^m</dt>
+	<dt>%hyperlink . `href$m</dt>
+	<dd>
+%hyperlink の~URLを返す。
+◎
+Returns the hyperlink's URL.
+</dd>
+	<dd>
+設定して~URLを変更できる。
+◎
+Can be set, to change the URL.
+</dd>
+
+	<dt>%hyperlink . `origin$m</dt>
+	<dd>
+%hyperlink の~URLの生成元を返す。
+◎
+Returns the hyperlink's URL's origin.
+</dd>
+
+	<dt>%hyperlink . `protocol$m</dt>
+	<dd>
+%hyperlink の~URLの~schemeを返す。
+◎
+Returns the hyperlink's URL's scheme.
+</dd>
+	<dd>
+設定して~URLの~schemeを変更できる。
+◎
+Can be set, to change the URL's scheme.
+</dd>
+
+	<dt>%hyperlink . `username$m</dt>
+	<dd>
+%hyperlink の~URLの~usernameを返す。
+◎
+Returns the hyperlink's URL's username.
+</dd>
+	<dd>
+設定して~URLの~usernameを変更できる。
+◎
+Can be set, to change the URL's username.
+</dd>
+
+	<dt>%hyperlink . `password$m</dt>
+	<dd>
+%hyperlink の~URLの~passwordを返す。
+◎
+Returns the hyperlink's URL's password.
+</dd>
+	<dd>
+設定して~URLの~passwordを変更できる。
+◎
+Can be set, to change the URL's password.
+</dd>
+
+	<dt>%hyperlink . `host$m</dt>
+	<dd>
+%hyperlink の~URLの ~host＆~portを返す（~portは、~URLの~scheme用の既定の~portと異なる場合に限り，結果に含まれる）。
+◎
+Returns the hyperlink's URL's host and port (if different from the default port for the scheme).
+</dd>
+	<dd>
+設定して~URLの~host＆~portを変更できる。
+◎
+Can be set, to change the URL's host and port.
+</dd>
+
+	<dt>%hyperlink . `hostname$m</dt>
+	<dd>
+%hyperlink の~URLの~hostを返す。
+◎
+Returns the hyperlink's URL's host.
+</dd>
+	<dd>
+設定して~URLの~hostを変更できる。
+◎
+Can be set, to change the URL's host.
+</dd>
+
+	<dt>%hyperlink . `port$m</dt>
+	<dd>
+%hyperlink の~URLの~portを返す。
+◎
+Returns the hyperlink's URL's port.
+</dd>
+	<dd>
+設定して~URLの~portを変更できる。
+◎
+Can be set, to change the URL's port.
+</dd>
+
+	<dt>%hyperlink . `pathname$m</dt>
+	<dd>
+%hyperlink の~URLの~pathを返す。
+◎
+Returns the hyperlink's URL's path.
+</dd>
+	<dd>
+設定して~URLの~pathを変更できる。
+◎
+Can be set, to change the URL's path.
+</dd>
+
+	<dt>%hyperlink . `search$m</dt>
+	<dd>
+%hyperlink の~URLの~queryを返す（結果が空でなければ先頭の `?^l も含む）。
+◎
+Returns the hyperlink's URL's query (includes leading "?" if non-empty).
+</dd>
+	<dd>
+設定して~URLの~query（先頭の `?^l は無視される）を変更できる。
+◎
+Can be set, to change the URL's query (ignores leading "?").
+</dd>
+
+	<dt>%hyperlink . `hash$m</dt>
+	<dd>
+%hyperlink の~URLの素片を返す（結果が空でなければ先頭の `#^l も含む）。
+◎
+Returns the hyperlink's URL's fragment (includes leading "#" if non-empty).
+</dd>
+	<dd>
+設定して~URLの素片を変更できる（先頭の `#^l は無視される）。
+◎
+Can be set, to change the URL's fragment (ignores leading "#").
+</dd>
+</dl>
+
+<p>
+`HTMLHyperlinkElementUtils$I ~mixinを実装する各 %要素 には、次のものが結付けられる：
+◎
+↓</p>
+
+<dl class="def-list">
+	<dt>`~url@</dt>
+	<dd>
+~NULL または `~URL$ 。
+初期~時には ~NULL とする。
+◎
+An element implementing the HTMLHyperlinkElementUtils mixin has an associated url (null or a URL). It is initially null.
+</dd>
+
+	<dt>
+`~urlを設定する@
+~algo
+◎
+An element implementing the HTMLHyperlinkElementUtils mixin has an associated set the url algorithm, which＼
+</dt>
+	<dd>
+<p>
+次を走らす：
+</p>
+		<ol>
+			<li>
+%~URL ~LET ~error
+</li>
+			<li>
+~IF［
+%要素 は `href$a 内容~属性を有する
+］
+⇒
+%~URL ~LET［
+%要素 の `href$a 内容~属性の値
+］を［
+%要素 の`~node文書$
+］に`相対的に構文解析-$した結果
+</li>
+			<li>
+%要素 の`~url$ ~SET ［
+%~URL ~NEQ `失敗^i ならば %~URL ／
+~ELSE_  ~NULL
+］
+</li>
+		</ol>
+◎
+runs these steps:
+• If this element's href content attribute is absent, set this element's url to null.
+• Otherwise, parse this element's href content attribute value relative to this element's node document. If parsing is successful, set this element's url to the result; otherwise, set this element's url to null.
+</dd>
+
+	<dd>
+<p>
+~UAは、 %要素 が作成されたとき, および %要素 の `href$a
+内容~属性が［
+設定-／ 変更- ／ 除去-
+］される度に，`~urlを設定-$するモノトスル。
+◎
+When elements implementing the HTMLHyperlinkElementUtils mixin are created, and whenever those elements have their href content attribute set, changed, or removed, the user agent must set the url.
+</p>
+
+<p class="note">注記：
+これが観測-可能になるのは、 `blob_$sc ~URLに限られる。
+それを`~URL構文解析する$ことには、 `Blob URL Store$ の検索が孕まれるので。
+◎
+This is only observable for blob: URLs as parsing them involves a Blob URL Store lookup.
+</p>
+	</dd>
+
+	<dt>
+`~urlを初期化し直す@
+~algo
+◎
+An element implementing the HTMLHyperlinkElementUtils mixin has an associated reinitialize url algorithm, which＼
+</dt>
+	<dd>
+<p>
+次を走らす：
+◎
+runs these steps:
+</p>
+		<ol>
+			<li>
+%~url ~LET %要素 の`~url$
+◎
+↓</li>
+			<li>
+~IF［
+%~url ~NEQ ~NULL
+］~AND［
+%~url の`~scheme$url ~EQ `blob^l
+］~AND［
+%~url の`基底~URL不可用~flag$url ~EQ ~T
+］
+⇒
+~RET
+◎
+If element's url is non-null, its scheme is "blob", and its cannot-be-a-base-URL flag is set, terminate these steps.
+</li>
+			<li>
+`~urlを設定する$
+◎
+Set the url.
+</li>
+		</ol>
+	</dd>
+</dl>
+
+<p>
+要素の
+`~hrefを更新する@
+ときは
+⇒
+要素の `href$a 内容~属性の値
+~SET `~URLを直列化する$( 要素の`~url$ )
+◎
+To update href, set the element's href content attribute's value to the element's url, serialized.
+</p>
+
+<hr>
+
+<div class="algo">
+<p>
+`href@m
+取得子~手続きは：
+◎
+The href attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］~AND［
+此れは `href$a 内容~属性を有さない
+］
+⇒
+~RET 空~文字列
+◎
+If url is null and this element has no href content attribute, return the empty string.
+</li>
+	<li>
+~ELIF［
+%~url ~EQ ~NULL
+］
+⇒
+~RET 此れの`href$a 内容~属性の値
+◎
+Otherwise, if url is null, return this element's href content attribute's value.
+</li>
+	<li>
+~RET `~URLを直列化する$( %~url )
+◎
+Return url, serialized.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`href$m 設定子~手続きは
+⇒
+此れの `href$a 内容~属性の値を所与の値に設定する
+◎
+The href attribute's setter must set this element's href content attribute's value to the given value.
+</div>
+
+<div class="algo">
+<p>
+`origin@m
+取得子~手続きは：
+◎
+The origin attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+~IF［
+此れの`~url$ ~EQ ~NULL
+］
+⇒
+~RET 空~文字列
+◎
+If this element's url is null, return the empty string.
+</li>
+	<li>
+~RET `生成元を直列化する$( 此れの`~url$ の`生成元$url )
+◎
+Return the serialization of this element's url's origin.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`protocol@m
+取得子~手続きは：
+◎
+The protocol attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+~IF［
+此れの`~url$ ~EQ ~NULL
+］
+⇒
+~RET `:^l
+◎
+If this element's url is null, return ":".
+</li>
+	<li>
+~RET 次の並び
+⇒
+此れの`~url$ の`~scheme$url,
+`:^l
+◎
+Return this element's url's scheme, followed by ":".
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`protocol$m 設定子~手続きは：
+◎
+The protocol attribute's setter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+~IF［
+此れの`~url$ ~EQ ~NULL
+］
+⇒
+~RET
+◎
+If this element's url is null, terminate these steps.
+</li>
+	<li>
+<p>
+次を与える下で［
+所与の値, `:^l
+］の並びを`基本~URL構文解析器$にかける
+⇒
+~URLと上書stateの組：
+( 此れの`~url$, `~scheme開始$uST )
+◎
+Basic URL parse the given value, followed by ":", with this element's url as url and scheme start state as state override.
+</p>
+
+<p class="note">注記：
+~URL構文解析器は，連続する複数個の~colonを 1 個のそれと同一視するので、値に
+`https:^l を供しても（あるいは `https::::^l でさえ），
+`https^l を供するのと同じことになる。
+◎
+Because the URL parser ignores multiple consecutive colons, providing a value of "https:" (or even "https::::") is the same as providing a value of "https".
+</p>
+	</li>
+	<li>
+`~hrefを更新する$
+◎
+Update href.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`username@m
+取得子~手続きは：
+◎
+The username attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+~IF［
+此れの`~url$ ~EQ ~NULL
+］
+⇒
+~RET 空~文字列
+◎
+If this element's url is null, return the empty string.
+</li>
+	<li>
+~RET 此れの`~url$ の`~username$url
+◎
+Return this element's url's username.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`username$m 設定子~手続きは：
+◎
+The username attribute's setter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］~OR［
+%~url は`~username／~password／~portを持てない$
+］
+⇒
+~RET
+◎
+If url is null or url cannot have a username/password/port, then return.
+</li>
+	<li>
+`~URLの~usernameを設定する$( %~url, 所与の値 )
+◎
+Set the username, given url and the given value.
+</li>
+	<li>
+`~hrefを更新する$
+◎
+Update href.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`password@m
+取得子~手続きは：
+◎
+The password attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］
+⇒
+~RET 空~文字列
+◎
+If url is null, then return the empty string.
+</li>
+	<li>
+~RET %~url の`~password$url
+◎
+Return url's password.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`password$m 設定子~手続きは：
+◎
+The password attribute's setter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］~OR［
+%~url は`~username／~password／~portを持てない$
+］
+⇒
+~RET
+◎
+If url is null or url cannot have a username/password/port, then return.
+</li>
+	<li>
+`~URLの~passwordを設定する$( %~url, 所与の値 )
+◎
+Set the password, given url and the given value.
+</li>
+	<li>
+`~hrefを更新する$
+◎
+Update href.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`host@m
+取得子~手続きは：
+◎
+The host attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］~OR［
+%~url の`~host$url ~EQ ~NULL
+］
+⇒
+~RET 空~文字列
+◎
+If url or url's host is null, return the empty string.
+</li>
+	<li>
+~IF［
+%~url の`~port$url ~EQ ~NULL
+］
+⇒
+~RET `~hostを直列化する$( %~url の`~host$url )
+◎
+If url's port is null, return url's host, serialized.
+</li>
+	<li>
+~RET 次の並び
+⇒
+`~hostを直列化する$( %~url の`~host$url )
+`:^l,
+`整数を直列化する$( %~url の`~port$url )
+◎
+Return url's host, serialized, followed by ":" and url's port, serialized.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`host$m 設定子~手続きは：
+◎
+The host attribute's setter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］~OR［
+%~url の`基底~URL不可用~flag$url ~EQ ~T
+］
+⇒
+~RET
+◎
+If url is null or url's cannot-be-a-base-URL flag is set, terminate these steps.
+</li>
+	<li>
+次を与える下で，所与の値を`基本~URL構文解析器$にかける
+⇒
+~URLと上書stateの組：
+( %~url, `~host$uST )
+◎
+Basic URL parse the given value, with url as url and host state as state override.
+</li>
+	<li>
+`~hrefを更新する$
+◎
+Update href.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`hostname@m
+取得子~手続きは：
+◎
+The hostname attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］~OR［
+%~url の`~host$url ~EQ ~NULL
+］
+⇒
+~RET 空~文字列
+◎
+If url or url's host is null, return the empty string.
+</li>
+	<li>
+~RET 
+`~hostを直列化する$( %~url の`~host$url )
+◎
+Return url's host, serialized.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`hostname$m 設定子~手続きは：
+◎
+The hostname attribute's setter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］~OR［
+%~url の`基底~URL不可用~flag$url ~EQ ~T
+］
+⇒
+~RET
+◎
+If url is null or url's cannot-be-a-base-URL flag is set, terminate these steps.
+</li>
+	<li>
+次を与える下で，所与の値を`基本~URL構文解析器$にかける
+⇒
+~URLと上書stateの組：
+( %~url, `~hostname$uST )
+◎
+Basic URL parse the given value, with url as url and hostname state as state override.
+</li>
+	<li>
+`~hrefを更新する$
+◎
+Update href.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`port@m
+取得子~手続きは：
+◎
+The port attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］~OR［
+%~url の`~port$url ~EQ ~NULL
+］
+⇒
+~RET 空~文字列
+◎
+If url or url's port is null, return the empty string.
+</li>
+	<li>
+~RET 
+`整数を直列化する$( %~url の`~port$url )
+◎
+Return url's port, serialized.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`port$m 設定子~手続きは：
+◎
+The port attribute's setter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］~OR［
+%~url は`~username／~password／~portを持てない$
+］
+⇒
+~RET
+◎
+If url is null or url cannot have a username/password/port, then return.
+</li>
+	<li>
+~IF［
+所与の値 ~EQ 空~文字列
+］
+⇒
+%~url の`~port$url ~SET ~NULL
+◎
+If the given value is the empty string, then set url's port to null.
+</li>
+	<li>
+~ELSE
+⇒
+次を与える下で，所与の値を`基本~URL構文解析器$にかける
+⇒
+~URLと上書stateの組：
+( %~url, `~port$uST )
+◎
+Otherwise, basic URL parse the given value, with url as url and port state as state override.
+</li>
+	<li>
+`~hrefを更新する$
+◎
+Update href.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`pathname@m
+取得子~手続きは：
+◎
+The pathname attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］
+⇒
+~RET 空~文字列
+◎
+If url is null, return the empty string.
+</li>
+	<li>
+~IF［
+%~url の`基底~URL不可用~flag$url ~EQ ~T
+］
+⇒
+~RET %~url の`~path$url内の最初の文字列
+◎
+If url's cannot-be-a-base-URL flag is set, return the first string in url's path.
+</li>
+	<li>
+~IF［
+%~url の`~path$url は空である
+］
+⇒
+~RET 空~文字列
+◎
+If url's path is empty, then return the empty string.
+</li>
+	<li>
+~RET 次の並び
+⇒
+`/^l,
+%~url の`~path$url内の各~文字列を（空~文字列も含め） `/^l で区切って~~連結した結果
+◎
+Return "/", followed by the strings in url's path (including empty strings), separated from each other by "/".
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`pathname$m 設定子~手続きは：
+◎
+The pathname attribute's setter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］~OR［
+%~url の`基底~URL不可用~flag$url ~EQ ~T
+］
+⇒
+~RET
+◎
+If url is null or url's cannot-be-a-base-URL flag is set, terminate these steps.
+</li>
+	<li>
+%~url の`~path$url ~SET 空~list
+◎
+Set url's path to the empty list.
+</li>
+	<li>
+次を与える下で，所与の値を`基本~URL構文解析器$にかける
+⇒
+~URLと上書stateの組：
+( %~url, `~path開始$uST )
+◎
+Basic URL parse the given value, with url as url and path start state as state override.
+</li>
+	<li>
+`~hrefを更新する$
+◎
+Update href.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`search@m
+取得子~手続きは：
+◎
+The search attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］~OR［
+%~url の`~query$url ~IN { ~NULL, 空~文字列 }
+］
+⇒
+~RET 空~文字列
+◎
+If url is null, or url's query is either null or the empty string, return the empty string.
+</li>
+	<li>
+~RET 次の並び
+⇒
+`?^l, %~url の`~query$url
+◎
+Return "?", followed by url's query.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`search$m 設定子~手続きは：
+◎
+The search attribute's setter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］
+⇒
+~RET
+◎
+If url is null, terminate these steps.
+</li>
+	<li>
+~IF［
+所与の値 ~EQ 空~文字列
+］
+⇒
+%~url の`~query$url ~SET ~NULL
+◎
+If the given value is the empty string, set url's query to null.
+</li>
+	<li>
+<p>
+~ELSE：
+◎
+Otherwise:
+</p>
+		<ol>
+			<li>
+%入力 ~LET 所与の値
+◎
+↓</li>
+			<li>
+~IF［
+%入力 の最初の文字 ~EQ `?^l
+］
+⇒
+%入力 から最初の文字を除去する
+◎
+Let input be the given value with a single leading "?" removed, if any.
+</li>
+			<li>
+%~url の`~query$url ~SET 空~文字列
+◎
+Set url's query to the empty string.
+</li>
+			<li>
+次を与える下で， %入力 を`基本~URL構文解析器$にかける
+⇒＃
+上書符号化法 ： 此れの`~node文書$ の`符号化法$doc,
+~URLと上書stateの組： ( %~url, `~query$uST )
+◎
+Basic URL parse input, with url as url and query state as state override, and this element's node document's document's character encoding as encoding override.
+</li>
+		</ol>
+	</li>
+	<li>
+`~hrefを更新する$
+◎
+Update href.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`hash@m
+取得子~手続きは：
+◎
+The hash attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］~OR［
+%~url の`素片$url ~IN { ~NULL, 空~文字列 }
+］
+⇒
+~RET 空~文字列
+◎
+If url is null, or url's fragment is either null or the empty string, return the empty string.
+</li>
+	<li>
+~RET 次の並び
+⇒
+`#^l,
+%~url の`素片$url
+◎
+Return "#", followed by url's fragment.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`hash$m 設定子~手続きは：
+◎
+The hash attribute's setter must run these steps:
+</p>
+<ol>
+	<li>
+此れの`~urlを初期化し直す$
+◎
+Reinitialize url.
+</li>
+	<li>
+%~url ~LET 此れの`~url$
+◎
+Let url be this element's url.
+</li>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］
+⇒
+~RET
+◎
+If url is null, then return.
+</li>
+	<li>
+~IF［
+所与の値 ~EQ 空~文字列
+］
+⇒
+%~url の`素片$url ~SET ~NULL
+◎
+If the given value is the empty string, set url's fragment to null.
+</li>
+	<li>
+<p>
+~ELSE：
+◎
+Otherwise:
+</p>
+		<ol>
+			<li>
+%入力 ~LET 所与の値
+◎
+↓</li>
+			<li>
+~IF［
+%入力 の最初の文字 ~EQ `#^l
+］
+⇒
+%入力 から最初の文字を除去する
+◎
+Let input be the given value with a single leading "#" removed, if any.
+</li>
+			<li>
+%~url の`素片$url ~SET 空~文字列
+◎
+Set url's fragment to the empty string.
+</li>
+			<li>
+次を与える下で， %入力 を`基本~URL構文解析器$にかける
+⇒
+~URLと上書stateの組：
+( %~url, `素片$uST )
+◎
+Basic URL parse input, with url as url and fragment state as state override.
+</li>
+		</ol>
+	</li>
+	<li>
+`~hrefを更新する$
+◎
+Update href.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="following-hyperlinks">
+<h3 title="Following hyperlinks">4.6.4. ~hyperlinkを追うとき</h3>
+
+<p>
+次のいずれかを満たす要素 %要素 は
+`~navigateできない@
+とされる：
+◎
+An element element cannot navigate if one of the following is true:
+</p>
+
+<ul>
+	<li>
+%要素 の`~node文書$は`全部的に作動中$でない
+◎
+element's node document is not fully active
+</li>
+	<li>
+［
+%要素 は `a$e 要素でない
+］~AND［
+%要素 は`接続されて$いない
+］
+◎
+element is not an a element and is not connected.
+</li>
+</ul>
+
+<p class="note">
+これは、 `form$e 要素を`提出する$ときにも利用される。
+`a$e 要素に対する例外は、~web内容との互換性のためにある。
+◎
+This is also used by form submission for the form element. The exception for a elements is for compatibility with web content.
+</p>
+
+<p>
+`要素の~noopenerを取得する@
+ときは、所与の
+( ［
+`~a_area$／ `form$e
+］要素 %要素, 文字列 %~target )
+に対し，［
+次のいずれかが満たされるならば ~T ／
+~ELSE_ ~F
+］を返す：
+◎
+To get an element's noopener, given an a, area, or form element element and a string target, run these steps:
+</p>
+
+<ul>
+	<li>
+%要素 の`~link型$は、~keyword［
+`noopener$v, `noreferrer$v
+］いずれかを含む
+◎
+If element's link types include the noopener or noreferrer keyword, then return true.
+</li>
+	<li id="opener-processing-model">
+［
+%要素 の`~link型$は、~keyword `opener$v を含まない
+］~AND［
+%~target は`~ASCII大小無視$で `_blank^l に合致する
+］
+◎
+If element's link types do not include the opener keyword and target is an ASCII case-insensitive match for "_blank", then return true.
+◎
+Return false.
+</li>
+</ul>
+
+<div class="algo">
+<p>
+~UAは、利用者が要素 %要素 により作成される
+`~hyperlinkを追う@
+ときは、所与の
+( %~hyperlink接尾辞 （省略時は ε ）)
+に対し，次の手続きを走らすモノトスル：
+◎
+When a user follows a hyperlink created by an element subject, optionally with a hyperlink suffix, the user agent must run the following steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+%要素 は`~navigateできない$
+］
+⇒
+~RET
+◎
+If subject cannot navigate, then return.
+</li>
+	<li>
+%文書 ~LET %要素 の`~node文書$
+◎
+↓</li>
+	<li>
+%~source ~LET %文書 が`属する閲覧文脈$
+◎
+Let replace be false.<!-- ＊不要 -->
+◎
+Let source be subject's node document's browsing context.
+</li>
+	<li>
+%~target属性~値 ~LET 空~文字列
+◎
+Let targetAttributeValue be the empty string.
+</li>
+	<li>
+~IF［
+%要素 は `~a_area$ である
+］
+⇒
+%~target属性~値 ~SET `要素の~targetを取得する$( %要素 )
+◎
+If subject is an a or area element, then set targetAttributeValue to the result of getting an element's target given subject.
+</li>
+	<li>
+%~noopener ~LET `要素の~noopenerを取得する$( %要素, %~target属性~値 )
+◎
+Let noopener be the result of getting an element's noopener with subject and targetAttributeValue.
+</li>
+	<li>
+( %~target, %~window種別 ) ~LET
+`閲覧文脈を選ぶ規則$を適用する( %~target属性~値, %~source, %~noopener )
+◎
+Let target and windowType be the result of applying the rules for choosing a browsing context given targetAttributeValue, source, and noopener.
+</li>
+	<li>
+~IF［
+%~target ~EQ ~NULL
+］
+⇒
+~RET
+◎
+If target is null, then return.
+</li>
+	<li>
+%~URL ~LET ［
+%要素 の`href$a 属性が与える`~URL$
+］を %文書 に`相対的に構文解析-$した`結果の~URL文字列$
+◎
+Parse the URL given by subject's href attribute, relative to subject's node document.
+◎
+If that is successful, let URL be the resulting URL string.
+</li>
+	<li>
+<p>
+~IF［
+%~URL ~EQ `失敗^i
+］：
+</p>
+		<ol>
+			<li>
+<p>
+任意選択で、次のいずれかを行う
+</p>
+				<ul>
+					<li>
+~UAに特有な方式で，利用者に向けて~errorを報告する
+</li>
+					<li>
+次を走らす`要素~taskを~queueする$( `~DOM操作~task源$, %要素 )
+⇒
+%~target `閲覧文脈$を［
+~UAに特有な~error~page
+］に`~navigate$する
+</li>
+				</ul>
+			</li>
+			<li>
+~RET
+</li>
+		</ol>
+◎
+Otherwise, if parsing the URL failed, the user agent may report the error to the user in a user-agent-specific manner, may queue an element task on the DOM manipulation task source given subject to navigate the target browsing context to an error page to report the error, or may ignore the error and do nothing. In any case, the user agent must then return.
+</li>
+	<li>
+~IF［
+%~hyperlink接尾辞 ~NEQ ε
+］
+⇒
+%~hyperlink接尾辞 を %~URL に 付加する
+◎
+If there is a hyperlink suffix, append it to URL.
+</li>
+	<li>
+%要請 ~LET 次のように設定された新たな`要請$
+⇒＃
+`~URL$rq ~SET %~URL,
+`~referrer施策$rq ~SET %要素 の`referrerpolicy$a 内容~属性の現在の状態
+◎
+Let request be a new request whose url is URL and whose referrer policy is the current state of subject's referrerpolicy content attribute.
+</li>
+	<li id="noreferrer-a-area-processing-model">
+~IF［
+%要素 の`~link型$は `noreferrer$v ~keywordを含む
+］
+⇒
+%要請 の`~referrer$rq ~SET `no-referrer^l
+◎
+If subject's link types includes the noreferrer keyword, then set request's referrer to "no-referrer".
+</li>
+	<li>
+%履歴~取扱い ~SET %~window種別 に応じて
+⇒＃
+`既存のまたはナシ^i ならば `置換-$i ／
+~ELSE_ `既定$i
+◎
+Let historyHandling be "replace" if windowType is not "existing or none"; otherwise, "default".
+</li>
+	<li>
+次を走らす`要素~taskを~queueする$( `~DOM操作~task源$, %要素 )
+⇒
+%~target を %要請 へ`~navigate$する
+— 次を与える下で
+⇒＃
+`履歴~取扱い$V ~SET %履歴~取扱い,
+`~source閲覧文脈$ ~SET %~source
+◎
+Queue an element task on the DOM manipulation task source given subject to navigate target to request with historyHandling set to historyHandling and the source browsing context set to source.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="downloading-resources">
+<h3 title="Downloading resources">4.6.5. 資源の~download法</h3>
+
+<p>
+資源は、即時に見るのみならず，後の利用のために~downloadするものと意図される事例もある。
+そのように指示するには、その資源への`~hyperlink$を作成する `~a_area$ 要素~上に `download$a 属性を指定する。
+◎
+In some cases, resources are intended for later use rather than immediate viewing. To indicate that a resource is intended to be downloaded for use later, rather than immediately used, the download attribute can be specified on the a or area element that creates the hyperlink to that resource.
+</p>
+
+<p>
+この属性には、値も与えて，~UAが資源を~file~systemに格納するときに利用する~file名も指定できる。
+この値は、 `Content-Disposition$h ~HTTP~headerに~filename~parameterがあれば，それにより上書きされる。
+`RFC6266$r
+◎
+The attribute can furthermore be given a value, to specify the file name that user agents are to use when storing the resource in a file system. This value can be overridden by the `Content-Disposition` HTTP header's filename parameters. [RFC6266]
+</p>
+
+<p>
+非同一-生成元の状況においては、 `download$a 属性は，特定的には［
+~disposition型として `attachment^v を伴うような
+`Content-Disposition$h ~HTTP~header
+］と組合せる必要がある
+— 場合によっては無法な活動について 利用者~向けに警告されるのを避けるため。
+（これは、利用者が全部的に解することなく，敏感な個人的／機密的~情報を~downloadすることから，利用者を保護する。）
+◎
+In cross-origin situations, the download attribute has to be combined with the `Content-Disposition` HTTP header, specifically with the attachment disposition type, to avoid the user being warned of possibly nefarious activity. (This is to protect users from being made to download sensitive personal or confidential information without their full understanding.)
+</p>
+
+<hr>
+
+<div class="algo">
+<p>
+`~downloadは許容される@
+かどうかは、次の~algoに従う
+— それは、所与の
+( %起動元~閲覧文脈, %~instance化する閲覧文脈 )
+に対し，許容されるかどうかを指示する真偽値を返す：
+◎
+The following allowed to download algorithm takes an initiator browsing context and an instantiator browsing context, and returns a boolean indicating whether or not downloading is allowed:
+</p>
+
+<ol>
+	<li>
+~IF［
+`閲覧文脈~sandbox化( ~download )~flag$ ~IN %起動元~閲覧文脈 の`~sandbox法~flags$bc
+］
+⇒
+~RET ~F
+◎
+If the initiator browsing context's sandboxing flags has the sandboxed downloads browsing context flag set, then return false.
+</li>
+	<li>
+~IF［
+%~instance化する閲覧文脈 ~NEQ ~NULL
+］~AND［
+`閲覧文脈~sandbox化( ~download )~flag$ ~IN %~instance化する閲覧文脈 の`~sandbox法~flags$bc
+］
+⇒
+~RET ~F
+◎
+If the instantiator browsing context is non-null, and its sandboxing flags has the sandboxed downloads browsing context flag set, then return false.
+</li>
+	<li>
+任意選択で
+— 敵対的になり得る~downloadから利用者を安全に防護すると予見されるならば
+⇒
+~RET ~F
+◎
+Optionally, the user agent may return false, if it believes doing so would safeguard the user from a potentially hostile download.
+</li>
+	<li>
+~RET ~T
+◎
+Return true.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+~UAは、利用者が ある要素 %要素 により作成される~hyperlinkを
+`~download@
+するときは、所与の
+( %~hyperlink接尾辞 （省略時は ε ） )
+に対し，次の手続きを走らすモノトスル：
+◎
+When a user downloads a hyperlink created by an element subject, optionally with a hyperlink suffix, the user agent must run the following steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+%要素 は`~navigateできない$
+］
+⇒
+~RET
+◎
+If subject cannot navigate, then return.
+</li>
+	<li>
+~IF［
+`~downloadは許容される$( %要素 の`~node文書$が`属する閲覧文脈$, ~NULL ) ~EQ ~F
+］
+⇒
+~RET
+◎
+Run the allowed to download algorithm with the subject's node document's browsing context and null. If the algorithm returns false, then return.
+</li>
+	<li>
+%~URL ~LET ［
+%要素 の`href$a 属性が与える`~URL$
+］を［
+%要素 の`~node文書$
+］に`相対的に構文解析-$した結果
+◎
+Parse the URL given by subject's href attribute, relative to subject's node document.
+</li>
+	<li>
+<p>
+~IF［
+%~URL ~EQ `失敗^i
+］：
+</p>
+		<ol>
+			<li>
+任意選択で
+⇒
+~UAに特有な~error~pageに`~navigate$することにより，利用者に向けて~errorを報告する
+（または、~errorを無視して何もしない）
+</li>
+			<li>
+~RET
+</li>
+		</ol>
+◎
+If parsing the URL fails, the user agent may report the error to the user in a user-agent-specific manner, may navigate to an error page to report the error, or may ignore the error and do nothing. In either case, the user agent must return.
+◎
+Otherwise, let URL be the resulting URL string.
+</li>
+	<li>
+~IF［
+%~hyperlink接尾辞 ~NEQ ε
+］
+⇒
+%~hyperlink接尾辞 を %~URL に 付加する
+◎
+If there is a hyperlink suffix, append it to URL.
+</li>
+	<li>
+<p>
+この段は`並列的$に走らす：
+◎
+Run these steps in parallel:
+</p>
+		<ol>
+			<li>
+%要請 ~LET 次のように設定された新たな`要請$
+⇒＃
+`~URL$rq ~SET %~URL,
+`~client$rq ~SET `入口~設定群~obj$,
+`起動元$rq ~SET `download^l,
+`行先$rq ~SET 空~文字列,
+`同期~flag$rq ~SET ~F,
+`~URL資格証~利用~flag$rq ~SET ~F
+◎
+Let request be a new request whose url is URL, client is entry settings object, initiator is "download", destination is the empty string, and whose synchronous flag and use-URL-credentials flag are set.
+</li>
+			<li>
+%要請 により`~fetch$された結果を`~downloadとして$取扱う
+◎
+Handle the result of fetching request as a download.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+~UAは，~fetchして得られた資源を
+`~downloadとして@
+取扱うときは、資源が成功裡に得された場合は，［
+後で利用できるよう，その資源を保存する仕方
+］を利用者に供するベキである。
+他の場合、~fileの~download時における問題を利用者に報告するベキである。
+◎
+When a user agent is to handle a resource obtained from a fetch as a download, it should provide the user with a way to save the resource for later use, if a resource is successfully obtained. Otherwise, it should report any problems downloading the file to the user.
+</p>
+
+<p>
+~UAは、資源 %資源 を`~downloadとして$取扱う際に~file名が必要なときは、次の~algoを利用して，それを選定するベキである：
+◎
+If the user agent needs a file name for a resource being handled as a download, it should select one using the following algorithm.
+</p>
+
+<p class="warning">
+この~algoは，［
+信用-済みでない~siteから~fileを~downloadするときに孕まれる，~security上の危険性
+］を軽減することが意図されているので、~UAには，従うことが強く督促される。
+◎
+This algorithm is intended to mitigate security dangers involved in downloading files from untrusted sites, and user agents are strongly urged to follow it.
+</p>
+
+<ol>
+	<li>
+<p>
+%~file名 ~LET 次の下位手続きを走らせた結果：
+◎
+Let filename be the undefined value.
+</p>
+		<ol>
+			<li>
+( %資源~file名, %添付 ) ~LET ( ε, ~F )
+◎
+↓</li>
+			<li>
+<p>
+~IF［
+%資源 には `Content-Disposition$h ~header `RFC6266$r %H が伴われている
+］：
+</p>
+				<ol>
+					<li>
+~IF［
+%H は ~filename情報を含んでいる
+］
+⇒
+%資源~file名 ~SET その~filename
+</li>
+					<li>
+~IF［
+%H には~disposition型として `attachment^v が指定されている
+］
+⇒
+%添付 ~SET ~T
+</li>
+				</ol>
+◎
+If the resource has a `Content-Disposition` header, that header specifies the attachment disposition type, and the header includes file name information,＼
+</li>
+			<li>
+~IF［
+%添付 ~EQ ~T
+］~AND［
+%資源~file名 ~NEQ ε
+］
+⇒
+~RET %資源~file名
+◎
+then let filename have the value specified by the header, and jump to the step labeled sanitize below. [RFC6266]
+</li>
+			<li>
+%~UI生成元 ~LET ε
+◎
+Let interface origin＼
+</li>
+			<li>
+~IF［［
+`~download$ ／
+~downloadさせるような`~navigate$動作
+］を起動した`文書$はある
+］
+⇒
+%~UI生成元 ~SET その文書の`生成元$
+◎
+be the origin of the Document in which the download or navigate action resulting in the download was initiated, if any.
+</li>
+			<li>
+%資源~生成元 ~LET ［［
+%資源 の~URLの`~scheme$url成分 ~EQ `data^sc
+］ならば %~UI生成元 ／
+~ELSE_ %資源 の~URLの`生成元$
+］
+◎
+Let resource origin be the origin of the URL of the resource being downloaded, unless that URL's scheme component is data, in which case let resource origin be the same as the interface origin, if any.
+</li>
+			<li>
+`演算は信用-済み^V ~LET ［
+次が満たされるならば ~T ／
+~ELSE_ ~F
+］
+⇒
+［
+%~UI生成元 ~EQ ε
+］~OR［
+( %資源~生成元, %~UI生成元 ) は`同一-生成元$である
+］
+◎
+If there is no interface origin, then let trusted operation be true. Otherwise, let trusted operation be true if resource origin is the same origin as interface origin, and false otherwise.
+</li>
+			<li>
+~IF［
+`演算は信用-済み^V ~EQ ~T
+］~AND［
+%資源~file名 ~NEQ ε
+］
+⇒
+~RET %資源~file名
+◎
+If trusted operation is true and the resource has a `Content-Disposition` header and that header includes file name information, then let filename have the value specified by the header, and jump to the step labeled sanitize below. [RFC6266]
+</li>
+			<li>
+~IF［
+`演算は信用-済み^V ~EQ ~T
+］~OR［
+%添付 ~EQ ~T
+］
+⇒
+~IF［
+~downloadは `~a_area$ 要素 %E により作成された`~hyperlink$から起動された
+］~AND［
+%E は ~downloadが起動された時点で `download$a 属性 %A を有していた
+］~AND［
+%A の 値 ~NEQ 空~文字列
+］
+⇒
+~RET %A の 値
+◎
+If the download was not initiated from a hyperlink created by an a or area element, or if the element of the hyperlink from which it was initiated did not have a download attribute when the download was initiated, or if there was such an attribute but its value when the download was initiated was the empty string, then jump to the step labeled no proposed file name.
+◎
+Let proposed filename have the value of the download attribute of the element of the hyperlink that initiated the download at the time the download was initiated.
+◎
+If trusted operation is true, let filename have the value of proposed filename, and jump to the step labeled sanitize below.
+◎
+If the resource has a `Content-Disposition` header and that header specifies the attachment disposition type, let filename have the value of proposed filename, and jump to the step labeled sanitize below. [RFC6266]
+</li>
+			<li>
+【！ ＊No proposed file name】
+~IF［
+`演算は信用-済み^V ~EQ ~T
+］~OR［
+利用者は %資源 を~downloadする選好を指示した
+］
+⇒
+~RET %資源 の`~URL$から`実装定義$な方式で導出される値
+◎
+No proposed file name: If trusted operation is true, or if the user indicated a preference for having the resource in question downloaded, let filename have a value derived from the URL of the resource in an implementation-defined manner, and jump to the step labeled sanitize below.
+</li>
+			<li>
+<p>
+~RET 利用者が選好した~file名, または ~UAにより選定された~file名
+◎
+Let filename be set to the user's preferred file name or to a file name selected by the user agent, and jump to the step labeled sanitize below.
+</p>
+
+<div class="warning">
+<div class="p">
+<p>
+~algoがこの段まで達した場合、次が含意されることになる：
+</p>
+
+<ul ><li>~downloadされている %資源 の生成元と, ~downloadを始めた生成元とは，異なる。
+</li><li>%資源 の生成元は、 %資源 を~download用としていない（ `Content-Disposition^h は伴われていないなど）。
+</li><li>~downloadは利用者が【右~click等により明示的に】起動したものでない。
+</li></ul>
+
+<p>
+これは、~downloadを誘発するために `download$a 属性が利用されたか，
+%資源 が~UAが~supportする型でないことからも生じ得る。
+</p>
+◎
+If the algorithm reaches this step, then a download was begun from a different origin than the resource being downloaded, and the origin did not mark the file as suitable for downloading, and the download was not initiated by the user. This could be because a download attribute was used to trigger the download, or because the resource in question is not of a type that the user agent supports.
+</div>
+
+<p>
+これは危険にもなり得る。
+一例として、ある敵対的~server %M が，~download~linkを用意して
+— それは、実際には一定割合の利用者が利用している別~site %B への~linkであるが — その~dataは %M からのものと~~考えるよう利用者を騙して（例えば何かの “応募券” ）、 %B を常用している利用者が そうと知らずに その~linkを通して（ “応募券” に見せかけられた）私的~情報を~downloadして，それを敵対的~server（ %M と同じ必要はない）に向けて~uploadする（ “応募する” ）よう~~仕向けることにより、その情報を取得しようと試行することもできる。
+◎
+This could be dangerous, because, for instance, a hostile server could be trying to get a user to unknowingly download private information and then re-upload it to the hostile server, by tricking the user into thinking the data is from the hostile server.
+</p>
+
+<p>
+したがって、［
+当の %資源 が，まったく異なる~sourceから来ていること
+］について，何らかの方法で通知されることが、利用者にとっての関心事になる。
+加えて，利用者の混同を防止するため、敵対的になり得る %~UI生成元 から示唆された~file名は，無視されるベキである。
+◎
+Thus, it is in the user's interests that the user be somehow notified that the resource in question comes from quite a different source, and to prevent confusion, any suggested file name from the potentially hostile interface origin should be ignored.
+</p>
+</div>
+
+			</li>
+		</ol>
+	</li>
+	<li>
+【！sanitize】
+任意選択で
+⇒
+利用者が %~file名 に手を加えられるようにする。
+例えば，~UAは、前~段で決定された %~file名 を既定の値として供して，利用者に~file名を~~入力してもらうこともできる。
+◎
+Sanitize: Optionally, allow the user to influence filename. For example, a user agent could prompt the user for a file name, potentially providing the value of filename as determined above as a default value.
+</li>
+	<li>
+<p>
+%~file名 を局所~file~systemに相応しいものに調整する
+◎
+Adjust filename to be suitable for the local file system.
+</p>
+
+<p class="example">
+例えば、~file名として合法でない文字を除去したり，頭部／尾部の空白を削ることも孕まれる。
+◎
+For example, this could involve removing characters that are not legal in file names, or trimming leading and trailing whitespace.
+</p>
+	</li>
+	<li>
+~IF［
+~platform規約において，`拡張子$から ~file~system上の~fileの型を決定する仕方はない
+］
+⇒
+~RET %~file名
+◎
+If the platform conventions do not in any way use extensions to determine the types of file on the file system, then return filename as the file name.
+</li>
+	<li>
+%~Content-Type型 ~LET［
+%資源 の`~Content-Type~metadata$により与えられる型が既知であるならば その型 ／
+~ELSE_ ε
+］
+◎
+Let claimed type be the type given by the resource's Content-Type metadata, if any is known.＼
+</li>
+	<li>
+<p>
+~IF［
+%~file名 には`拡張子$がある
+］~AND［
+その拡張子に対応する既知な`~MIME型$ %拡張子~型 がある
+］：
+◎
+Let named type be the type given by filename's extension, if any is known. For the purposes of this step, a type is a mapping of a MIME type to an extension.
+</p>
+		<ol>
+			<li>
+~IF［
+%拡張子~型 は利用者の選好に整合する（例： %~file名 は 利用者による~~入力により決定された）
+］
+⇒
+~RET %~file名
+◎
+If named type is consistent with the user's preferences (e.g. because the value of filename was determined by prompting the user), then return filename as the file name.
+</li>
+			<li>
+~IF［
+%~Content-Type型 ~EQ %拡張子~型
+（すなわち， %資源 の`~Content-Type~metadata$が与える型は %~file名 の`拡張子$が与える型に整合する）
+］
+⇒
+~RET %~file名
+◎
+If claimed type and named type are the same type (i.e. the type given by the resource's Content-Type metadata is consistent with the type given by filename's extension), then return filename as the file name.
+</li>
+		</ol>
+	</li>
+	<li>
+~IF［
+%~Content-Type型 に対応する既知な`拡張子$がある
+］
+⇒
+%~file名 に その拡張子を追加する
+◎
+If the claimed type is known, then alter filename to add an extension corresponding to claimed type.
+</li>
+	<li>
+<div class="p">
+<p>
+~ELIF［
+%拡張子~型 は危険になり得ると既知である
+］
+⇒
+任意選択で
+⇒
+%~file名 に既知かつ安全な`拡張子$（例 `.txt^l）を追加する
+</p>
+
+<p class="example">
+例えば、~platform規約により，［
+~nativeな~executable ／
+~shell-script ／
+~HTML~app ／
+~executable-macroを含み得る文書
+］として扱われるものが該当する。
+</p>
+◎
+Otherwise, if named type is known to be potentially dangerous (e.g. it will be treated by the platform conventions as a native executable, shell script, HTML application, or executable-macro-capable document) then optionally alter filename to add a known-safe extension (e.g. ".txt").
+</div>
+
+<p class="note">注記：
+この段は，~executableを~downloadできなくするので、望ましくないかもしれない。
+実装者は、常に，この問題mについて~securityと利便性との兼ね合いをとることが強いられる。
+◎
+This last step would make it impossible to download executables, which might not be desirable. As always, implementers are forced to balance security and usability in this matter.
+</p>
+
+	</li>
+	<li>
+~RET %~file名
+◎
+Return filename as the file name.
+</li>
+</ol>
+</div>
+
+<p>
+この~algoの目的における~fileの
+`拡張子@
+とは、当の~platform規約にて ~fileの型を識別するために利用するものとされている，~file名の一部分である。
+例えば多くの~OSは、~file名の最後の~dot （ `.^l ）に後続する部分を利用して，~fileの型, および ~fileを開いたり実行する方式を決定している。
+◎
+For the purposes of this algorithm, a file extension consists of any part of the file name that platform conventions dictate will be used for identifying the type of the file. For example, many operating systems use the part of the file name following the last dot (".") in the file name to determine the type of the file, and from that the manner in which the file is to be opened or executed.
+</p>
+
+<p>
+~UAは、結果の~fileを利用者の~file~system内に格納する場所を裁定するときには，［
+%資源 自身 ／ %資源 の `~URL$ ／ `download$a 属性
+］から供される~directoryや~path情報を無視するベキである。
+◎
+User agents should ignore any directory or path information provided by the resource itself, its URL, and any download attribute, in deciding where to store the resulting file in the user's file system.
+</p>
+
+				<section id="hyperlink-auditing">
+<h4 title="Hyperlink auditing">4.6.5.1. ~hyperlinkの聴取</h4>
+
+<div class="algo">
+<p>
+~UAは、［
+利用者が，`~a_area$ 要素 %要素 により作成された`~hyperlink$を追うとき
+］には，次を走らすモノトスル：
+</p>
+<ol>
+	<li>
+~IF［
+要素は `ping$a 属性を有していない
+］
+⇒
+~RET
+</li>
+	<li>
+%文書 ~LET %要素 の`~node文書$
+</li>
+	<li>
+%~target~URL ~LET %要素 の `href$a 属性の値を
+%文書 に`相対的に構文解析-$した`結果の~URL文字列$
+</li>
+	<li>
+~IF［
+%~target~URL ~EQ `失敗^i
+］
+⇒
+~RET
+</li>
+	<li>
+<p>
+`~ASCII空白で分割する$( %要素 の `ping$a 属性の値 )
+— その結果を成す ~EACH ( %~token ) に対し：
+</p>
+		<ol>
+			<li>
+%~ping~URL ~LET %~token を %文書 に`相対的に構文解析-$した`結果の~URL~record$
+</li>
+			<li>
+~IF［
+%~ping~URL ~EQ `失敗^i
+］
+⇒
+~CONTINUE
+</li>
+			<li>
+~IF［
+%~ping~URL の`~scheme$url ~NIN `~HTTP_S~scheme$
+］
+⇒
+~CONTINUE
+</li>
+			<li>
+任意選択で
+⇒
+~CONTINUE
+（例えば~UAは、利用者の選好に則って，一部または全部の~ping~URLを無視したいと望むかもしれない）
+</li>
+			<li>
+( %~ping~URL , %~target~URL, %文書 )
+を与える下で，下に与える `~ping~URLを処理する手続き^i を走らす
+</li>
+		</ol>
+	</li>
+</ol>
+
+◎
+If a hyperlink created by an a or area element has a ping attribute, and the user follows the hyperlink, and the value of the element's href attribute can be parsed, relative to the element's node document, without failure, then the user agent must take the ping attribute's value, split that string on ASCII whitespace, parse each resulting token relative to the element's node document, and then run these steps for each resulting URL record ping URL, ignoring tokens that fail to parse:
+• If ping URL's scheme is not an HTTP(S) scheme, then return.
+• Optionally, return. (For example, the user agent might wish to ignore any or all ping URLs in accordance with the user's expressed preferences.)
+</div>
+
+<div class="algo">
+<p>
+`~ping~URLを処理する手続き^i は、所与の
+( %~ping~URL , %~target~URL, %文書 )
+に対し，次を走らす：
+◎
+↑</p>
+
+<ol>
+	<li>
+%要請 ~LET 次のように設定された新たな`要請$
+⇒＃
+`~URL$rq ~SET %~ping~URL,
+`~method$rq ~SET  `POST^h,
+`本体$rq ~SET `PING^h,
+`~client$rq ~SET %文書 の`環境~設定群~obj$,
+`行先$rq ~SET 空~文字列,
+`資格証~mode$rq ~SET `include^l,
+`~referrer$rq ~SET `no-referrer^l,
+`~URL資格証~利用~flag$rq ~SET ~T
+◎
+Let request be a new request whose url is ping URL, method is `POST`, body is `PING`, client is the environment settings object of the Document containing the hyperlink, destination is the empty string, credentials mode is "include", referrer is "no-referrer", and whose use-URL-credentials flag is set.
+◎
+Let target URL be the resulting URL string obtained from parsing the value of the element's href attribute and then:
+</li>
+	<li>
+%文書~URL ~LET %文書 の`~URL$doc
+◎
+↓</li>
+	<li>
+~IF［
+( %文書~URL, %~ping~URL )
+は`同一-生成元$である
+］~OR［
+%文書~URL の`~scheme$url ~NEQ `https^l
+］
+⇒
+%要請 の`~header~list$rqに`~headerを付加する$( `Ping-From$h / %文書~URL )
+◎
+↓</li>
+	<li>
+%要請 の`~header~list$rqに`~headerを付加する$( `Ping-To$h / %~target~URL )
+◎
+If the URL of the Document object containing the hyperlink being audited and ping URL have the same origin
+◎
+If the origins are different, but the scheme of the URL of the Document containing the hyperlink being audited is not "https"
+◎
+• request must include a `Ping-From` header with, as its value, the URL of the document containing the hyperlink, and a `Ping-To` HTTP header with, as its value, the target URL.
+◎
+Otherwise
+◎
+• request must include a `Ping-To` HTTP header with, as its value, target URL. request does not include a `Ping-From` header.
+</li>
+	<li>
+%要請 を`~fetch$する
+◎
+Fetch request.
+</li>
+</ol>
+
+<p>
+これは、首な~fetchと`並列的$に行われてもヨイ。
+また、その~fetchの結果と独立になる。
+◎
+This may be done in parallel with the primary fetch, and is independent of the result of that fetch.
+</p>
+
+<p>
+~UAは、利用者が この挙動を調整できるようにするベキである。
+例えば、~HTTP `Referer$h ~headerの送信を不能化する設定-時に，それも伴わせるなど。
+~UAは、利用者の選好に基づいて，［
+`ping$a 属性をまるごと, あるいは ~list内の各~URLについて選択的に（例えば，第三者主体~URLなど）
+］`無視-$してもヨイ。
+これは、上の手続きに明示的に組み込まれている。
+◎
+User agents should allow the user to adjust this behavior, for example in conjunction with a setting that disables the sending of HTTP `Referer` (sic) headers. Based on the user's preferences, UAs may either ignore the ping attribute altogether, or selectively ignore URLs in the list (e.g. ignoring any third-party URLs); this is explicitly accounted for in the steps above.
+</p>
+</div>
+
+<p>
+~UAは、応答~内に返された~message本体は無視するモノトスル。
+~UAは、応答~本体を受信し始めた時点で，接続を早々に閉じてもヨイ。
+◎
+User agents must ignore any entity bodies returned in the responses. User agents may close the connection prematurely once they start receiving a response body.
+</p>
+
+<p>
+`ping$a 属性が在る場合、~UAは、利用者に，その~hyperlinkを追うと，副次的な要請も背後で送信されることを
+— 場合によっては、実際の~target~URL
+【~ping~URL？】
+の~listも含めて —
+明瞭に指示するベキである。
+◎
+When the ping attribute is present, user agents should clearly indicate to the user that following the hyperlink will also cause secondary requests to be sent in the background, possibly including listing the actual target URLs.
+</p>
+
+<p class="example">
+例えば，視覚的な~UAは、~hyperlinkの実際の~URLに加えて，~status-barや~tooltip内に
+~target~ping~URLの~hostnameを含めることもできる。
+◎
+For example, a visual user agent could include the hostnames of the target ping URLs along with the hyperlink's actual URL in a status bar or tooltip.
+</p>
+
+<div class="note">
+
+<p>注記：
+`ping$a 属性は、次の様な既存技術とかぶっている：
+~HTTP~redirect／ ［
+どの ~site外（ `off-site^en ）~linkが最も人気か追跡する ／
+広告主が 個々の~linkの~click率を追跡する
+］ことを許容するような~web~pageにおける~JS。
+◎
+The ping attribute is redundant with pre-existing technologies like HTTP redirects and JavaScript in allowing web pages to track which off-site links are most popular or allowing advertisers to track click-through rates.
+</p>
+
+<p>
+しかしながら `ping$a 属性は、それらの代替にない利点を，利用者に供する：
+◎
+However, the ping attribute provides these advantages to the user over those alternatives:
+</p>
+
+<ul>
+	<li>
+利用者は、最終的な~target~URLを隠されずに見れるようになる。
+◎
+It allows the user to see the final target URL unobscured.
+</li>
+	<li>
+~UAは、帯域外の通知について，利用者~向けに伝えれるようになる。
+◎
+It allows the UA to inform the user about the out-of-band notifications.
+</li>
+	<li>
+利用者は、下層の~link機能性を失うことなく，その種の通知を不能化できるようになる。
+◎
+It allows the user to disable the notifications without losing the underlying link functionality.
+</li>
+	<li>
+~UAは、~target~pageをより高速に読込めるよう，可用な~network帯域幅の利用を最適化できるようになる。
+◎
+It allows the UA to optimize the use of available network bandwidth so that the target page loads faster.
+</li>
+</ul>
+
+<p>
+したがって，この特能なしで利用者を追跡することもアリではあるが、作者には，
+`ping$a 属性を利用して ~UAが利用者~体験をより透明にすることが奨励される。
+◎
+Thus, while it is possible to track users without this feature, authors are encouraged to use the ping attribute so that the user agent can make the user experience more transparent.
+</p>
+
+</div>
+
+				</section>
+			</section>
+			<section id="linkTypes">
+<h3 title="Link types">4.6.6. 各種~link型</h3>
+
+<p>
+次の表に、この仕様にて定義される各種~link型を，それぞれに対応する~keywordとともに要約する。
+この表は規範的でない
+— 各種~link型の実際の定義は、この節の各~下位節に与えられる。
+◎
+The following table summarizes the link types that are defined by this specification, by their corresponding keywords. This table is non-normative; the actual definitions for the link types are given in the next few sections.
+</p>
+
+<p>
+この節における用語
+`参照先~資源^i†, `現在の文書^i
+は、順に，当の~linkを表現している要素により識別される資源,
+要素~自身が見出される資源を指す。
+◎
+In this section, the term referenced document refers to the resource identified by the element representing the link, and the term current document refers to the resource within which the element representing the link finds itself.
+</p>
+
+<p class="trans-note">【†
+原文は
+“参照先~文書（ `referenced document^en ）”
+と記しているが、この訳では
+“参照先~資源”
+に改める。
+】</p>
+
+<p>
+［
+`link$e ／ `~a_area$ ／ `form$e
+］要素に どの~link型が適用されるかを決定するときは、要素の `rel^a 属性を`~ASCII空白で分割-$するモノトスル。
+結果の各~tokenが、要素に適用される各~link型に対応する~keywordを与える。
+◎
+To determine which link types apply to a link, a, area, or form element, the element's rel attribute must be split on ASCII whitespace. The resulting tokens are the keywords for the link types that apply to that element.
+</p>
+
+<p>
+他が指定される所を除き，同じ `rel^a【`rel$a】 属性に 同じ~keywordが重ねて指定されてはナラナイ。
+◎
+Except where otherwise specified, a keyword must not be specified more than once per rel attribute.
+</p>
+
+<p class="trans-note">【
+と記されているように読めるが、より強い
+“複数個の~keywordが指定されてはナラナイ”
+かもしれない。
+例外的に，同じ~keywordを重ねてヨイものと指定する理由は無さそうなので（~~実際，そのような箇所は見当たらない）。
+】</p>
+
+<p>
+表に後続する一部の下位節では、~keyword用の同義語も~listされることもある。
+指示された同義語（例えば，~keyword `copyright^l ）は、指定されるとおりに ~UAにより取扱われることになるが，文書~内に利用されてはナラナイ。
+◎
+Some of the sections that follow the table below list synonyms for certain keywords. The indicated synonyms are to be handled as specified by user agents, but must not be used in documents (for example, the keyword "copyright").
+</p>
+
+<p>
+どの~keywordも，常に`~ASCII大小無視$であり、そのように比較されるモノトスル。
+◎
+Keywords are always ASCII case-insensitive, and must be compared as such.
+</p>
+
+<p class="example">
+したがって， `rel="next"^c と `rel="NEXT"^c とは、同じになる。
+◎
+Thus, rel="next" is the same as rel="NEXT".
+</p>
+
+<p>
+次に挙げる~keywordは
+`~body-ok@
+であるとされ、当の `link$e 要素が`~body内に許容され$るかどうかに影響する
+⇒＃
+`dns-prefetch$v,
+`modulepreload$v,
+`pingback$v,
+`preconnect$v,
+`prefetch$v,
+`preload$v,
+`prerender$v,
+`stylesheet$v
+◎
+Keywords that are body-ok affect whether link elements are allowed in the body. The body-ok keywords are dns-prefetch, modulepreload, pingback, preconnect, prefetch, preload, prerender, and stylesheet.
+</p>
+
+<p>
+~web~browserに実装される新たな~link型は、この標準に追加されることになる。
+他のものは、`定義済み~link型の集合に対する拡張$として登録され得る。
+◎
+New link types that are to be implemented by web browsers are to be added to this standard. The remainder can be registered as extensions.
+</p>
+
+<table id="_link-type-table" class="grid-table">
+<thead><tr><th>~link型
+<th>`link$e 上の効果
+<th>`~a_area$ 上の効果
+<th>`form$e 上の効果
+<th>`~body-ok$
+<th>概略的な記述
+</thead><tbody>
+
+<tr><td>`alternate$v
+<td>`~hyperlink$
+<td>`~hyperlink$
+<td>非許容
+<td> · 
+<td>
+現在の文書の代替~表現を指す~linkを与える。
+◎
+Gives alternate representations of the current document.
+
+<tr><td>`canonical$v
+<td>`~hyperlink$
+<td>非許容
+<td>非許容
+<td> · 
+<td>
+現在の文書に選好される~URLを与える。
+◎
+Gives the preferred URL for the current document.
+
+<tr><td>`author$v
+<td>`~hyperlink$
+<td>`~hyperlink$
+<td>非許容
+<td> · 
+<td>
+現在の文書や記事の作者を指す~linkを与える。
+◎
+Gives a link to the author of the current document or article.
+
+<tr><td>`bookmark$v
+<td>非許容
+<td>`~hyperlink$
+<td>非許容
+<td> · 
+<td>
+最も近い先祖~sectionの~permalinkを与える。
+◎
+Gives the permalink for the nearest ancestor section.
+
+<tr><td>`dns-prefetch$v
+<td>`外部~資源~link$
+<td>非許容
+<td>非許容
+<td class="yes"> Yes 
+<td>
+~UAは、参照先~資源の`生成元$用に，先取的に~DNS解決を遂行するベキであることを指定する。
+◎
+Specifies that the user agent should preemptively perform DNS resolution for the target resource's origin.
+
+<tr><td>`external$v
+<td>非許容
+<td>`注釈$
+<td>`注釈$
+<td> · 
+<td>
+参照先~資源は，現在の文書と同じ~siteの一部でないことを指示する。
+◎
+Indicates that the referenced document is not part of the same site as the current document.
+
+<tr><td>`help$v
+<td>`~hyperlink$
+<td>`~hyperlink$
+<td>`~hyperlink$
+<td> · 
+<td>
+文脈に応じた~helpへの~linkを供する。
+◎
+Provides a link to context-sensitive help.
+
+<tr><td>`icon$v
+<td>`外部~資源~link$
+<td>非許容
+<td>非許容
+<td> · 
+<td>
+現在の文書を表現する~iconを取込む。
+◎
+Imports an icon to represent the current document.
+
+<tr><td>`manifest$v
+<td>`外部~資源~link$
+<td>非許容
+<td>非許容
+<td> · 
+<td>
+`~app~manifest$［
+を取込む／へ~linkする
+］。
+`MANIFEST$r
+◎
+Imports or links to an application manifest. [MANIFEST]
+
+<tr><td>`modulepreload$v
+<td>`外部~資源~link$
+<td>非許容
+<td>非許容
+<td class="yes"> Yes
+<td>
+~UAは、`~module~script$を先取的に~fetchした上で，後の評価~用に文書の`~module~map$に格納するモノトスルことを指定する。
+~UAはまた、任意選択で，~moduleの依存物も~fetchできる。
+◎
+Specifies that the user agent must preemptively fetch the module script and store it in the document's module map for later evaluation. Optionally, the module's dependencies can be fetched as well.
+
+<tr><td>`license$v
+<td>`~hyperlink$
+<td>`~hyperlink$
+<td>`~hyperlink$
+<td> · 
+<td>
+現在の文書の主要な内容は，［
+参照先~資源に述べられる著作権~licenseの下にある
+］ことを指示する。
+◎
+Indicates that the main content of the current document is covered by the copyright license described by the referenced document.
+
+<tr><td>`next$v
+<td>`~hyperlink$
+<td>`~hyperlink$
+<td>`~hyperlink$
+<td> · 
+<td>
+現在の文書は，ある 文書~列に属していて、参照先~資源は，その連列における次の文書であることを指示する。
+◎
+Indicates that the current document is a part of a series, and that the next document in the series is the referenced document.
+
+<tr><td>`nofollow$v
+<td>非許容
+<td>`注釈$
+<td>`注釈$
+<td> · 
+<td>
+現在の文書の著作者／版元は、参照先~資源を承認していないことを指示する。
+◎
+Indicates that the current document's original author or publisher does not endorse the referenced document.
+
+<tr><td>`noopener$v
+<td>非許容
+<td>`注釈$
+<td>`注釈$
+<td> · 
+<td>
+`補助~閲覧文脈$ではない`~top-level閲覧文脈$を作成する
+— 当の~hyperlinkが，これらいずれかを作成するようにされている（すなわち、適切な `target$a 属性~値を有している）ならば。
+◎
+Creates a top-level browsing context that is not an auxiliary browsing context if the hyperlink would create either of those to begin with (i.e., has an appropriate target attribute value).
+
+<tr><td>`noreferrer$v
+<td>非許容
+<td>`注釈$
+<td>`注釈$
+<td> · 
+<td>
+`Referer$h ~headerを含めない。
+加えて， `noopener$v と同じ効果になる。
+◎
+No `Referer` (sic) header will be included. Additionally, has the same effect as noopener.
+
+<tr><td>`opener$v
+<td>非許容
+<td>`注釈$
+<td>`注釈$
+<td> · 
+<td>
+当の~hyperlinkが，さもなければ`補助~閲覧文脈$ではない`~top-level閲覧文脈$を作成することになる（すなわち、 `target$a 属性~値は `_blank^l にされている）ならば、`補助~閲覧文脈$を作成する
+◎
+Creates an auxiliary browsing context if the hyperlink would otherwise create a top-level browsing context that is not an auxiliary browsing context (i.e., has "_blank" as target attribute value).
+
+<tr><td>`pingback$v
+<td>`外部~資源~link$
+<td>非許容
+<td>非許容
+<td class="yes"> Yes 
+<td>
+現在の文書への~pingbackを取扱う~pingback~serverの~addressを与える。
+◎
+Gives the address of the pingback server that handles pingbacks to the current document.
+
+<tr><td>`preconnect$v
+<td>`外部~資源~link$
+<td>非許容
+<td>非許容
+<td class="yes"> Yes 
+<td>
+~UAは、参照先~資源の`生成元$に先取的に接続するベキであることを指定する。
+◎
+Specifies that the user agent should preemptively connect to the target resource's origin.
+
+<tr><td>`prefetch$v
+<td>`外部~資源~link$
+<td>非許容
+<td>非許容
+<td class="yes"> Yes 
+<td>
+~UAは、参照先~資源を先取的に`~fetch$して~cacheするベキであることを指定する
+— ~~後続する`~navi$に要求されると見込まれるので。
+◎
+Specifies that the user agent should preemptively fetch and cache the target resource as it is likely to be required for a followup navigation.
+
+<tr><td>`preload$v
+<td>`外部~資源~link$
+<td>非許容
+<td>非許容
+<td class="yes"> Yes 
+<td>
+~UAは、 `as$aL 属性が与える`行先の素$（および それに`対応する$pD`行先$rqに結付けられている`優先度$rq）に則って，現在の`~navi$用に参照先~資源を先取的に`~fetch$して~cacheするモノトスルことを指定する。
+◎
+Specifies that the user agent must preemptively fetch and cache the target resource for current navigation according to the potential destination given by the as attribute (and the priority associated with the corresponding destination).
+
+<tr><td>`prerender$v
+<td>`外部~資源~link$
+<td>非許容
+<td>非許容
+<td class="yes"> Yes 
+<td>
+未来の応答がより高速に送達されるように，参照先~資源を先取的に`~fetch$して処理するベキであることを指定する。
+◎
+Specifies that the user agent should preemptively fetch the target resource and process it in a way that helps deliver a faster response in the future.
+
+<tr><td>`prev$v
+<td>`~hyperlink$
+<td>`~hyperlink$
+<td>`~hyperlink$
+<td> · 
+<td>
+現在の文書は，ある文書~列に属していて、参照先~資源は，その連列における前の文書であることを指示する。
+◎
+Indicates that the current document is a part of a series, and that the previous document in the series is the referenced document.
+
+<tr><td>`search$v
+<td>`~hyperlink$
+<td>`~hyperlink$
+<td>`~hyperlink$
+<td> · 
+<td>
+現在の文書や関係する各~pageにわたって探索するときに利用できる資源への~linkを与える。
+◎
+Gives a link to a resource that can be used to search through the current document and its related pages.
+
+<tr><td>`stylesheet$v
+<td>`外部~資源~link$
+<td>非許容
+<td>非許容
+<td class="yes"> Yes 
+<td>
+~stylesheetを取込む。
+◎
+Imports a style sheet.
+
+<tr><td>`tag$v
+<td>非許容
+<td>`~hyperlink$
+<td>非許容
+<td> · 
+<td>
+現在の文書に適用する
+~tag（所与の~addressにより識別される）を与える。
+◎
+Gives a tag (identified by the given address) that applies to the current document.
+
+</tbody></table>
+
+				<section id="rel-alternate">
+<h4 title="`alternate^lT">4.6.6.1. ~link型 `alternate^v</h4>
+
+<p>
+`alternate$v ~keywordは、［
+`link$e ／ `~a_area$
+］要素に利用されてヨイ。
+◎
+The alternate keyword may be used with link, a, and area elements.
+</p>
+
+<p>
+この~keywordの意味は、他の属性の値に依存する：
+◎
+The meaning of this keyword depends on the values of the other attributes.
+</p>
+
+<dl class="switch">
+	<dt>
+要素は `link$e 要素であって, その
+`rel$aL 属性は ~keyword `stylesheet$v を包含する場合：
+◎
+If the element is a link element and the rel attribute also contains the keyword stylesheet
+</dt>
+	<dd>
+`alternate$v ~keywordは、`stylesheet$v ~keywordの意味を，そこに述べられる仕方で改変する。
+`alternate$v ~keyword自身は、~linkを作成しない。
+◎
+The alternate keyword modifies the meaning of the stylesheet keyword in the way described for that keyword. The alternate keyword does not create a link of its own.
+</dd>
+
+	<dd class="example">
+<p>
+次の一連の `link$e 要素は、いずれも~stylesheetを供する：
+◎
+Here, a set of link elements provide some style sheets:
+</p>
+
+`rel-alternate-1^xCode
+
+	</dd>
+	<dt>
+`alternate$v ~keywordが［［
+`application/rss+xml^v ／
+`application/atom+xml^v
+］いずれかの値に設定されている `type$a 属性
+］と併用されている場合 (A)：
+◎
+If the alternate keyword is used with the type attribute set to the value application/rss+xml or the value application/atom+xml
+</dt>
+	<dd>
+この~keywordは、~syndication-feed（ `Web syndication feed^en ）を参照する`~hyperlink$を作成する（現在の~pageと正確に同じ内容を~syndicateしていることは必要とされないが）。
+◎
+The keyword creates a hyperlink referencing a syndication feed (though not necessarily syndicating exactly the same content as the current page).
+</dd>
+	<dd>
+~feedの自動発見（ `autodiscovery^en ）の目的においては、~UAは，同じ条件 (A) に該当する 文書~内のすべての `link$e 要素を考慮するベキである。
+既定の~syndication-feedの概念を備えていない~UAは、該当する要素のうち`~tree順序$で最初のものを既定として利用するベキである。
+◎
+For the purposes of feed autodiscovery, user agents should consider all link elements in the document with the alternate keyword used and with their type attribute set to the value application/rss+xml or the value application/atom+xml. If the user agent has the concept of a default syndication feed, the first such element (in tree order) should be used as the default.
+</dd>
+	<dd class="example">
+<p>
+次の `link$e 要素は、ある~blog用の~syndication-feedを与える：
+◎
+The following link elements give syndication feeds for a blog:
+</p>
+
+`rel-alternate-2^xCode
+
+<p>
+~feedの自動発見に携わる~UAは、これらの `link$e 要素を
+— 最初のそれを既定として —
+利用することになる（適用-可能な所では）。
+◎
+Such link elements would be used by user agents engaged in feed autodiscovery, with the first being the default (where applicable).
+</p>
+	</dd>
+	<dd class="example">
+<p>
+`a$e 要素を利用して、様々な~syndication-feedを利用者に提供する例：
+◎
+The following example offers various different syndication feeds to the user, using a elements:
+</p>
+
+`rel-alternate-3^xCode
+
+<p>
+これらの~linkは、~feedの自動発見には利用されないことになる。
+◎
+These links would not be used in feed autodiscovery.
+</p>
+
+	</dd>
+
+	<dt>
+他の場合：
+◎
+Otherwise
+</dt>
+	<dd>
+`alternate$v ~keywordは、現在の文書の代替~表現を参照している`~hyperlink$を作成する。
+◎
+The keyword creates a hyperlink referencing an alternate representation of the current document.
+</dd>
+	<dd>
+<p>
+［
+`hreflang$a, `type$a
+］属性が、参照先~資源の資質を与える：
+◎
+The nature of the referenced document is given by the hreflang, and type attributes.
+</p>
+		<ul>
+			<li>
+`hreflang$a 属性と併用されていて，その属性の値が`文書~要素$の`言語$から相違する場合、参照先~資源は 翻訳であることを指示する。
+◎
+If the alternate keyword is used with the hreflang attribute, and that attribute's value differs from the document element's language, it indicates that the referenced document is a translation.
+</li>
+			<li>
+`type$a 属性と併用された場合、参照先~資源は 指定された形式による 現在の文書の別形式であることを指示する。
+◎
+If the alternate keyword is used with the type attribute, it indicates that the referenced document is a reformulation of the current document in the specified format.
+</li>
+		</ul>
+
+<p>
+`hreflang$a, `type$a
+両~属性を組合せて指定することもできる。
+◎
+The hreflang and type attributes can be combined when specified with the alternate keyword.
+</p>
+	</dd>
+	<dd class="example">
+<p>
+同じ~pageの複数の~version
+— 代替~形式を利用するもの, 他の言語~用のもの, 他の媒体~用のもの —
+を指定する例：
+◎
+The following example shows how you can specify versions of the page that use alternative formats, are aimed at other languages, and that are intended for other media:
+</p>
+
+`rel-alternate-4^xCode
+
+	</dd>
+	<dd>
+この関係性は、推移的である
+— すなわち，ある文書が~link型 `alternate$v で他の複数の文書に~linkしている場合、それらの文書が~link元~の文書の代替~表現であることのみならず，それらの文書すべてが互いの代替~表現であることも含意する。
+◎
+This relationship is transitive — that is, if a document links to two other documents with the link type "alternate", then, in addition to implying that those documents are alternative representations of the first document, it is also implying that those two documents are alternative representations of each other.
+</dd>
+</dl>
+
+				</section>
+				<section id="link-type-author">
+<h4 title="`author^lT">4.6.6.2. ~link型 `author^v</h4>
+
+<div class="p">
+<p>
+`author$v ~keywordは：
+</p>
+<ul ><li>［
+`link$e ／ `~a_area$
+］要素に利用されてヨイ。
+</li><li>`~hyperlink$を作成する。
+</li></ul>
+
+◎
+The author keyword may be used with link, a, and area elements. This keyword creates a hyperlink.
+</div>
+
+<div>
+<p>
+`author$v ~keywordは、参照先~資源が［
+現在の文書のある部分の作者についての，更なる情報
+］を供することを指示する
+— ここでのある部分とは：
+</p>
+
+<ul>
+	<li>
+`~a_area$ 要素~用には、その先祖に `article$e 要素があれば それらのうち最も近いもの ／
+~ELSE_ ~page一体
+</li>
+	<li>
+`link$e 要素~用には、~page一体
+</li>
+</ul>
+
+◎
+For a and area elements, the author keyword indicates that the referenced document provides further information about the author of the nearest article element ancestor of the element defining the hyperlink, if there is one, or of the page as a whole, otherwise.
+◎
+For link elements, the author keyword indicates that the referenced document provides further information about the author for the page as a whole.
+
+</div>
+
+<p class="note">注記：
+“参照先~資源” は、作者の~email~addressを与える `mailto_$sc ~URLになることも多い。
+`MAILTO$r
+◎
+The "referenced document" can be, and often is, a mailto: URL giving the email address of the author. [MAILTO]
+</p>
+
+<p><strong>同義語</strong>：
+歴史的な理由から、~UAは，値 `made^v をとる `rev^a 属性を有する［
+`link$e ／ `~a_area$
+］要素に対しては、［
+~link関係性として `author$v ~keywordが指定されている
+］ものと扱うモノトスル。
+◎
+Synonyms: For historical reasons, user agents must also treat link, a, and area elements that have a rev attribute with the value "made" as having the author keyword specified as a link relationship.
+</p>
+
+				</section>
+				<section id="link-type-bookmark">
+<h4 title="`bookmark^lT">4.6.6.3. ~link型 `bookmark^v</h4>
+
+<div class="p">
+<p>
+`bookmark$v ~keywordは：
+</p>
+<ul ><li>`~a_area$ 要素に利用されてヨイ。
+</li><li>`~hyperlink$を作成する。
+</li></ul>
+
+◎
+The bookmark keyword may be used with a and area elements. This keyword creates a hyperlink.
+</div>
+
+<p>
+`bookmark$v ~keywordは、次のもの用の~permalinkを与える
+⇒
+要素に先祖 `article$e 要素が［
+在るならば それらのうち 最も近いもの ／
+無いならば 要素が
+<a href="~HEsections#associatedSection">~~直に属する~section</a>
+］
+◎
+The bookmark keyword gives a permalink for the nearest ancestor article element of the linking element in question, or of the section the linking element is most closely associated with, if there are no ancestor article elements.
+</p>
+
+<div class="example">
+
+<p>
+次の~code片には、 3 個の~permalinkがある。
+~UAは、各~permalinkの~~所在から，それを文書のどの部位に適用するかを決定できる。
+◎
+The following snippet has three permalinks. A user agent could determine which permalink applies to which part of the spec by looking at where the permalinks are given.
+</p>
+
+`link-type-bookmark-1^xCode
+
+</div>
+
+				</section>
+				<section id="link-type-canonical">
+<h4 title="`canonical^lT">4.6.6.4. ~link型 `canonical^v</h4>
+
+<div class="p">
+<p>
+`canonical$v ~keywordは：
+</p>
+<ul ><li>`link$e 要素に利用されてヨイ。
+</li><li>`~hyperlink$を作成-する。
+</li></ul>
+
+◎
+The canonical keyword may be used with link element. This keyword creates a hyperlink.
+</div>
+
+<p>
+`canonical$v ~keywordは、［
+`href$aL 属性に与えた~URLが，現在の文書に選好される~URLである
+］ことを指示する。
+それは、探索~engineが重複する内容を抑制し易くするためにある
+— 詳細は、
+`The Canonical Link Relation^cite `RFC6596$r
+に述べられる。
+◎
+The canonical keyword indicates that URL given by the href attribute is the preferred URL for the current document. That helps search engines reduce duplicate content, as described in more detail in The Canonical Link Relation. [RFC6596]
+</p>
+
+				</section>
+				<section id="link-type-dns-prefetch">
+<h4 title="`dns-prefetch^lT">4.6.6.5. ~link型 `dns-prefetch^v</h4>
+
+<div class="p">
+<p>
+`dns-prefetch$v ~keywordは：
+</p>
+<ul ><li>`link$e 要素に利用されてヨイ。
+</li><li>`外部~資源~link$を作成する。
+</li><li>`~body-ok$である。
+</li></ul>
+
+◎
+The dns-prefetch keyword may be used with link elements. This keyword creates an external resource link. This keyword is body-ok.
+</div>
+
+<p>
+`dns-prefetch$v ~keywordは、［
+利用者は，参照先~資源を要求する見込みが高いので、［
+~UAが， 資源の`生成元$用に~DNS解決を先取的に遂行して、その待時間~costを先取りする
+］ことで，利用者~体験は改善されると見込まれる
+］ことを指示する。
+~UAは、
+`Resource Hints^cite `RESOURCEHINTS$r
+に述べられる，~keyword `dns-prefetch$v の処理~modelを実装するモノトスル。
+◎
+The dns-prefetch keyword indicates that preemptively performing DNS resolution for the origin of the specified resource is likely to be beneficial, as it is highly likely that the user will require resources located at that origin, and the user experience would be improved by preempting the latency costs associated with DNS resolution. User agents must implement the processing model of the dns-prefetch keyword described in Resource Hints. [RESOURCEHINTS]
+</p>
+
+<p>
+`dns-prefetch$v ~keywordにより与えられる資源~用には、既定の型は無い。
+◎
+There is no default type for resources given by the dns-prefetch keyword.
+</p>
+
+				</section>
+				<section id="link-type-external">
+<h4 title="`external^lT">4.6.6.6. ~link型 `external^v</h4>
+
+<div class="p">
+<p>
+`external$v ~keywordは：
+</p>
+<ul ><li>［
+`~a_area$ ／ `form$e
+］要素に利用されてヨイ。
+</li><li>`~hyperlink$は作成しない。
+</li><li>要素が作成する［
+他の~keywordによる~hyperlink, または`暗黙の~hyperlink$
+］を`注釈する$。
+</li></ul>
+
+◎
+The external keyword may be used with a, area, and form elements. This keyword does not create a hyperlink, but annotates any other hyperlinks created by the element (the implied hyperlink, if no other keywords create one).
+</div>
+
+<p>
+`external$v ~keywordは、参照先~資源は，現在の文書が属する~siteには属していないことを指示する。
+◎
+The external keyword indicates that the link is leading to a document that is not part of the site that the current document forms a part of.
+</p>
+
+				</section>
+				<section id="link-type-help">
+<h4 title="`help^lT">4.6.6.7. ~link型 `help^v</h4>
+
+<div class="p">
+<p>
+`help$v ~keywordは：
+</p>
+<ul ><li>［
+`link$e ／ `~a_area$ ／ `form$e
+］要素に利用されてヨイ。
+</li><li>`~hyperlink$を作成する。
+</li></ul>
+
+◎
+The help keyword may be used with link, a, area, and form elements. This keyword creates a hyperlink.
+</div>
+
+<p>
+［
+`~a_area$ ／ `form$e
+］要素に対しては、 `help$v ~keywordは，参照先~資源が［
+~hyperlinkを定義している要素の親, および その子たち用に更なる~help情報
+］を供していることを指示する。
+◎
+For a, area, and form elements, the help keyword indicates that the referenced document provides further help information for the parent of the element defining the hyperlink, and its children.
+</p>
+
+<div class="example">
+
+<p>
+次の例では、~form~controlには，文脈に応じた~helpが結付けられている。
+~UAは、例えば，利用者が <kbd>Help</kbd> ~Keyや <kbd>F1</kbd> ~Keyを押下げたときに、この情報を利用して参照先~資源を表示することもできる。
+◎
+In the following example, the form control has associated context-sensitive help. The user agent could use this information, for example, displaying the referenced document if the user presses the "Help" or "F1" key.
+</p>
+
+`link-type-help-1^xCode
+
+</div>
+
+<p>
+`link$e 要素に対しては、 `help$v ~keywordは，参照先~資源が ~page一体~用の~helpを供していることを指示する。
+◎
+For link elements, the help keyword indicates that the referenced document provides help for the page as a whole.
+</p>
+
+<p>
+~browserによっては、 `~a_area$ 要素~用の `help$v ~keywordに対しては，~linkに対し異なる~cursorを利用するものもある。
+◎
+For a and area elements, on some browsers, the help keyword causes the link to use a different cursor.
+</p>
+
+				</section>
+				<section id="rel-icon">
+<h4 title="`icon^lT">4.6.6.8. ~link型 `icon^v</h4>
+
+<div class="p">
+<p>
+`icon$v ~keywordは：
+</p>
+<ul ><li>`link$e 要素に利用されてヨイ。
+</li><li>`外部~資源~link$を作成する。
+</li></ul>
+
+◎
+The icon keyword may be used with link elements. This keyword creates an external resource link.
+</div>
+
+<p>
+参照先~資源は、~pageや~siteを表現している~iconである
+— ~UAは、~pageを~UI内に表現するときに，それを利用するベキである。
+◎
+The specified resource is an icon representing the page or site, and should be used by the user agent when representing the page in the user interface.
+</p>
+
+<p>
+~iconは、［
+聴覚-~icon ／ 視覚-~icon ／ 他の種類の~icon
+］にもなり得る。
+複数の~iconが供された場合、~UAには次が要求される：
+◎
+Icons could be auditory icons, visual icons, or other kinds of icons. If multiple icons are provided, the user agent must＼
+</p>
+
+<ul>
+	<li>
+［
+`type$aL, `media$aL, `sizes$aL
+］属性に則って最も適切な~iconを選定する。
+◎
+select the most appropriate icon according to the type, media, and sizes attributes.＼
+</li>
+	<li>
+等しく適切な~iconが複数ある場合、~iconの~listを収集した時点で宣言されていたものうち，`~tree順序$で最後のものを利用する。
+◎
+If there are multiple equally appropriate icons, user agents must use the last one declared in tree order at the time that the user agent collected the list of icons.＼
+</li>
+	<li>
+ある~iconを利用しようと試行したが，調べていくうちに不適切であると~~判明した場合（~supportされない形式を利用しているなど）、その次に適切な~iconを試行する。
+◎
+If the user agent tries to use an icon but that icon is determined, upon closer examination, to in fact be inappropriate (e.g. because it uses an unsupported format), then the user agent must try the next-most-appropriate icon as determined by the attributes.
+</li>
+</ul>
+
+<p class="note">注記：
+~UAには，~iconの~listが変化したときに 選定する~iconを更新することは要求されないが、そうすることが奨励される。
+◎
+User agents are not required to update icons when the list of icons changes, but are encouraged to do so.
+</p>
+
+<p>
+`icon$v ~keywordにより与えられる資源~用には、既定の型は無い。
+しかしながら，`資源の型を決定する$目的においては、~UAは 資源は画像であるものと予期するモノトスル。
+◎
+There is no default type for resources given by the icon keyword. However, for the purposes of determining the type of the resource, user agents must expect the resource to be an image.
+</p>
+
+<p>
+`sizes$aL 属性の値を成す各~keywordは、画像画素~数による~icon~sizeを表現する（`~CSS~pixel$ではなく）。
+◎
+The sizes keywords represent icon sizes in raw pixels (as opposed to CSS pixels).
+</p>
+
+<p class="note">注記：
+1 `~CSS~pixel$が 2 機器画素になる（ 2x, 192dpi）~displayで，~iconを 50 `~CSS~pixel$ 幅で表示させるために必要な横幅は、 100 画像画素になる。
+この特能は、［
+小さい高解像度~icon vs. 大きい低解像度~icon（例： 50×50 2x vs. 100×100 1x ）
+］用に異なる資源を利用するよう指示する~~機能は，~supportしない。
+◎
+An icon that is 50 CSS pixels wide intended for displays with a device pixel density of two device pixels per CSS pixel (2x, 192dpi) would have a width of 100 raw pixels. This feature does not support indicating that a different resource is to be used for small high-resolution icons vs large low-resolution icons (e.g. 50×50 2x vs 100×100 1x).
+</p>
+
+<div class="algo">
+<p>
+~UAは、属性の値を先ず`~ASCII空白で分割-$して，結果の各~keywordが表現するものを
+次に従って決定するモノトスル：
+◎
+To parse and process the attribute's value, the user agent must first split the attribute's value on ASCII whitespace, and must then parse each resulting keyword to determine what it represents.
+</p>
+
+<ol>
+	<li>
+~keywordが
+`any@v
+に`~ASCII大小無視$で合致するならば、資源は拡縮-可能な~icon
+— 例えば，~SVG画像 —
+を包含することを表現する。
+◎
+The any keyword represents that the resource contains a scalable icon, e.g. as provided by an SVG image.
+</li>
+	<li>
+<p>
+他の場合，~keywordが次をすべて満たすような文字列［
+%w, %x, %h
+］の並びであるならば：
+</p>
+
+<ul><li>%w, %h とも，`妥当な負でない整数$である
+</li><li>%w, %h とも，先頭の文字 ~NEQ 文字 `0030^U ( `0^l )
+</li><li>%x ~IN { `0078^U ( `x^l ), `0058^U ( `X^l ) }
+</li></ul>
+
+<p>
+…ならば
+⇒
+~keywordは、［
+資源は~bitmap~iconを包含していて，その機器画素による ( 横幅, 縦幅 ) は
+( %w, %h ) を，順に`負でない整数として構文解析-$した結果で与えられる
+］ことを表現する。
+</p>
+
+◎
+Other keywords must be further parsed as follows to determine what they represent:
+
+• If the keyword doesn't contain exactly one U+0078 LATIN SMALL LETTER X or U+0058 LATIN CAPITAL LETTER X character, then this keyword doesn't represent anything. Return for that keyword.
+• Let width string be the string before the "x" or "X".
+• Let height string be the string after the "x" or "X".
+• If either width string or height string start with a U+0030 DIGIT ZERO (0) character or contain any characters other than ASCII digits, then this keyword doesn't represent anything. Return for that keyword.
+• Apply the rules for parsing non-negative integers to width string to obtain width.
+• Apply the rules for parsing non-negative integers to height string to obtain height.
+• The keyword represents that the resource contains a bitmap icon with a width of width device pixels and a height of height device pixels.
+</li>
+	<li>
+他の場合、~keywordは何も表現しない。
+◎
+↑</li>
+</ol>
+</div>
+
+<p>
+`sizes$aL 属性に指定される各~keywordは、~link先の資源の実際に可用でない~icon~sizeを表現してはナラナイ。
+◎
+The keywords specified on the sizes attribute must not represent icon sizes that are not actually available in the linked resource.
+</p>
+
+<div class="algo">
+<p>
+この型の
+`~link先の資源~fetch用に設定しておく$ときは、所与の
+( `link$e 要素 %link, `要請$ %要請 )
+に対し：
+◎
+The linked resource fetch setup steps for this type of linked resource, given a link element el and request request, are:
+</p>
+<ol>
+	<li>
+%要請 の`行先$rq ~SET `image^l
+◎
+Set request's destination to "image".
+</li>
+	<li>
+~RET ~T
+◎
+Return true.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`link$e 要素が `icon$v ~keywordを有さない場合、［
+要素の`~node文書$ %文書 の`~URL$docの`~scheme$url ~IN `~HTTP_S~scheme$
+］ならば，~UAは 次の手続きを`並列的$に走らせてもヨイ：
+◎
+In the absence of a link with the icon keyword, for Document objects whose URL's scheme is an HTTP(S) scheme, user agents may instead run these steps in parallel:
+</p>
+
+<ol>
+	<li>
+%要請 ~LET 次のように設定された新たな`要請$
+⇒＃
+`~URL$rq ~SET 文字列 `/favicon.ico^l を %文書 に`相対的に構文解析-$した結果,
+`~client$rq ~SET %文書 に`関連な設定群~obj$,
+`行先$rq ~SET `image^l,
+`同期~flag$rq ~SET ~T,
+`資格証~mode$rq ~SET `include^l,
+`~URL資格証~利用~flag$rq ~SET ~T
+◎
+Let request be a new request whose url is the URL record obtained by resolving the URL "/favicon.ico" against the Document object's URL, client is the Document object's relevant settings object, destination is "image", synchronous flag is set, credentials mode is "include", and whose use-URL-credentials flag is set.
+</li>
+	<li>
+%応答 ~LET %要請 を`~fetch$した結果
+◎
+Let response be the result of fetching request.
+</li>
+	<li>
+%応答 の`非安全~応答$を
+`icon$v ~keywordを利用して宣言された~iconであるかのように利用する。
+◎
+Use response's unsafe response as an icon as if it had been declared using the icon keyword.
+</li>
+</ol>
+</div>
+
+<div class="example">
+
+<p>
+~appの冒頭にて，いくつかの~iconを取込む例：
+◎
+The following snippet shows the top part of an application with several icons.
+</p>
+
+`rel-icon-1^xCode
+
+</div>
+
+<p>
+歴史的な理由から、 `icon$v ~keywordには，~keyword `shortcut^v が先行してもヨイ。
+ただし，その場合には、
+`rel$aL【！`rel$a】 属性の値~全体が`~ASCII大小無視$で次の並びに合致しなければナラナイ
+⇒＃
+`shortcut^l,
+1 個の文字 `0020^U <span class="cp-name">SPACE</span>,
+`icon^l
+◎
+For historical reasons, the icon keyword may be preceded by the keyword "shortcut". If the "shortcut" keyword is present, the rel attribute's entire value must be an ASCII case-insensitive match for the string "shortcut icon" (with a single U+0020 SPACE character between the tokens and no other ASCII whitespace).
+</p>
+
+				</section>
+				<section id="link-type-license">
+<h4 title="`license^lT">4.6.6.9. ~link型 `license^v</h4>
+
+<div class="p">
+<p>
+`license$v ~keywordは：
+</p>
+<ul ><li>［
+`link$e ／ `~a_area$ ／ `form$e
+］要素に利用されてヨイ。
+</li><li>`~hyperlink$を作成する。
+</li></ul>
+
+◎
+The license keyword may be used with link, a, area, and form elements. This keyword creates a hyperlink.
+</div>
+
+<p>
+`license$v ~keywordは、現在の文書の主要な内容が，参照先~資源が供する著作権~license条項の下に供されていることを指示する。
+◎
+The license keyword indicates that the referenced document provides the copyright license terms under which the main content of the current document is provided.
+</p>
+
+<p>
+この仕様は、この~~目的において，文書のどの部分が主要な内容でどの部分がそうでないと判断されるかは指定しない。
+それは利用者に明瞭にされるベキである。
+◎
+This specification does not specify how to distinguish between the main content of a document and content that is not deemed to be part of that main content. The distinction should be made clear to the user.
+</p>
+
+<div class="example">
+
+<p>
+写真共有~siteを考える。
+その~site上の~pageは、写真とその記述のために，次のように~mark-upされているとする：
+◎
+Consider a photo sharing site. A page on that site might describe and show a photograph, and the page might be marked up as follows:
+</p>
+
+`link-type-license-1^xCode
+
+<p>
+この事例の `license$v は、文書~一体でなく写真（文書の主要な内容）のみに適用される。
+特に，~page自身の~designは、文書の下端に与えられる著作権の下にある。
+これは、より明瞭な~~形で表すこともできる（例：
+~license~linkを写真の近くの目立つ所に置く一方で、~pageの著作権は，この例のように~pageの `footer^e 内の `small^e 内の~textに与えるなど）。
+◎
+In this case the license applies to just the photo (the main content of the document), not the whole document. In particular not the design of the page itself, which is covered by the copyright given at the bottom of the document. This could be made clearer in the styling (e.g. making the license link prominently positioned near the photograph, while having the page copyright in light small text at the foot of the page).
+</p>
+
+</div>
+
+<p><strong>同義語</strong>：
+歴史的な理由から、~UAは，~keyword `copyright^v を `license$v と同じに扱うモノトスル。
+◎
+Synonyms: For historical reasons, user agents must also treat the keyword "copyright" like the license keyword.
+</p>
+
+				</section>
+				<section id="link-type-manifest">
+<h4 title="`manifest^lT">4.6.6.10. ~link型 `manifest^v</h4>
+
+<div class="p">
+<p>
+`manifest$v ~keywordは：
+</p>
+<ul ><li>`link$e 要素に利用されてヨイ。
+</li><li>`外部~資源~link$を作成する。
+</li></ul>
+
+◎
+The manifest keyword may be used with link elements. This keyword creates an external resource link.
+</div>
+
+<p>
+`manifest$v ~keywordは、現在の文書に結付けられる~metadataを供する~manifest~fileを指示する。
+◎
+The manifest keyword indicates the manifest file that provides metadata associated with the current document.
+</p>
+
+<p>
+`manifest$v ~keywordにより与えられる資源~用には、既定の型は無い。
+◎
+There is no default type for resources given by the manifest keyword.
+</p>
+
+<p>
+この~link型~用に`~link先の資源を~fetchして処理する$適切な時点は、~UAが必要とされると判断したときである。
+例えば，利用者が当の`~web~appを~installする$よう選んだとき。
+そのような事例で利用してもヨイ `link$e 要素は、［
+`rel$aL 属性は~token `manifest$v を包含するもの
+］のうち`~tree順序$で最初のものに限るとする。
+◎
+The appropriate time to fetch and process the linked resource for this link type is when the user agent deems it necessary. For example, when the user chooses to install the web application. In that case, only the first link element in tree order whose rel attribute contains the token manifest may be used.
+</p>
+
+<p>
+~UAは、この~link型に対しては，`~load~eventを遅延-$しないモノトスル。
+◎
+A user agent must not delay the load event for this link type.
+</p>
+
+<div class="algo">
+<p>
+この型の`~link先の資源~fetch用に設定しておく$ときは、所与の
+( `link$e 要素 %link, `要請$ %要請 )
+に対し：
+◎
+The linked resource fetch setup steps for this type of linked resource, given a link element el and request request, are:
+</p>
+<ol>
+	<li>
+%文脈 ~LET %link の`~node文書$が`属する閲覧文脈$
+◎
+Let context be el's node document's browsing context.
+</li>
+	<li>
+~IF［
+%文脈 ~EQ ~NULL
+］
+⇒
+~RET ~F
+◎
+If context is null, then return false.
+</li>
+	<li>
+~IF［
+%文脈 は`~top-level閲覧文脈$でない
+］
+⇒
+~RET ~F
+◎
+If context is not a top-level browsing context, then return false.
+</li>
+	<li>
+%要請 の`起動元$rq ~SET `manifest^l
+◎
+Set request's initiator to "manifest".
+</li>
+	<li>
+%要請 の`行先$rq ~SET `manifest^l
+◎
+Set request's destination to "manifest".
+</li>
+	<li>
+%要請 の`~mode$rq ~SET `cors^l
+◎
+Set request's mode to "cors".
+</li>
+	<li>
+%要請 の`資格証~mode$rq ~SET %link の `crossorigin$aL 内容~属性~用の`~CORS設定群~属性の資格証~mode$
+◎
+Set request's credentials mode to the CORS settings attribute credentials mode for el's crossorigin content attribute.
+</li>
+	<li>
+~RET ~T
+◎
+Return true.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`~link先の資源を処理する$ときは、所与の
+( `link$e 要素 %link, 真偽値 %成功, `応答$ %応答 )
+に対し：
+◎
+To process this type of linked resource given a link element el, boolean success, and response response:
+</p>
+<ol>
+	<li>
+~IF［
+%応答 の`~Content-Type~metadata$は`~JSON~MIME型$でない
+］
+⇒
+%成功 ~SET ~F
+◎
+If response's Content-Type metadata is not a JSON MIME type, then set success to false.
+</li>
+	<li>
+~IF［
+%成功 ~EQ ~T
+］
+⇒
+`~manifestを処理する$( %link, %応答 )
+`MANIFEST$r
+◎
+If success is true, then process the manifest given el and response. [MANIFEST]
+</li>
+</ol>
+</div>
+				</section>
+				<section id="link-type-modulepreload">
+<h4 title="`modulepreload^lT">4.6.6.11. ~link型 `modulepreload^v</h4>
+
+<div class="p">
+<p>
+`modulepreload$v ~keywordは：
+</p>
+<ul><li>`link$e 要素に利用されてヨイ。
+</li><li>`外部~資源~link$を作成する。
+</li><li>`~body-ok$である。
+</li></ul>
+
+◎
+The modulepreload keyword may be used with link elements. This keyword creates an external resource link. This keyword is body-ok.
+</div>
+
+<p>
+`modulepreload$v ~keywordは、
+`preload$v ~keywordに対する特化された代替であり，`~module~script$の処理~modelを~preloadする方へ~~仕向ける。
+特に，~fetch時には、~module~scriptに特有な挙動を利用して（例えば、 `crossorigin$aL 属性に対する解釈は異なる），その結果を
+— 後の評価~用に —
+適切な`~module~map$docの中に配置する。
+対照的に， `preload$v ~keywordを利用する類似な`外部~資源~link$は、文書の`~module~map$docに影響することなく，結果を~preload~cache内に配置する。
+◎
+The modulepreload keyword is a specialized alternative to the preload keyword, with a processing model geared toward preloading module scripts. In particular, it uses the specific fetch behavior for module scripts (including, e.g., a different interpretation of the crossorigin attribute), and places the result into the appropriate module map for later evaluation. In contrast, a similar external resource link using the preload keyword would place the result in the preload cache, without affecting the document's module map.
+</p>
+
+<p>
+加えて，実装は、`~module~script$が その依存物も宣言する事による利点をとって，~moduleに指定された依存物を~fetchすることもできる。
+これは、最適化の機会として意図されている
+— ~UAは、それらの依存物も後で ほぼ必要になると見込まれることを知るので。
+それは一般に、~swなどの技術を用いるか, ~server側で監視しない限り，観測-可能にならない。
+注意点として、適切な［
+`load$et ／ `error$et
+］~eventは、指定された~moduleが~fetchされた後に
+— 依存物を待機することなく —
+生じることになる。
+◎
+Additionally, implementations can take advantage of the fact that module scripts declare their dependencies in order to fetch the specified module's dependency as well. This is intended as an optimization opportunity, since the user agent knows that, in all likelihood, those dependencies will also be needed later. It will not generally be observable without using technology such as service workers, or monitoring on the server side. Notably, the appropriate load or error events will occur after the specified module is fetched, and will not wait for any dependencies.
+</p>
+
+<p>
+そのような `link$e 要素 %link 用に`~link先の資源を~fetchして処理する$適切な時点は：
+◎
+The appropriate times to fetch and process the linked resource for such a link are:
+</p>
+
+<ul>
+	<li>
+%link は`閲覧文脈に接続されて$いる下で，
+%link 上に`外部~資源~link$が作成されたとき。
+◎
+When the external resource link is created on a link element that is already browsing-context connected.
+</li>
+	<li>
+%link は`外部~資源~link$を与えている下で，
+%link が`閲覧文脈に接続された$とき。
+◎
+When the external resource link's link element becomes browsing-context connected.
+</li>
+	<li>
+%link は`外部~資源~link$を与えている, かつ`閲覧文脈に接続されて$いる下で，
+%link の `href$aL 属性が変化したとき。
+◎
+When the href attribute of the link element of an external resource link that is already browsing-context connected is changed.
+</li>
+</ul>
+
+<p class="note">注記：
+一部の他の~link関係と違って，関連な［
+`link$e の属性（
+`as$aL, `crossorigin$aL, `referrerpolicy$aL
+など）
+］を変更しても，新たな~fetchが誘発されることはない。
+文書の`~module~map$docは，以前の~fetchによりすでに拡充されていて，再度~fetchするのは~~無駄になるからである。
+◎
+Unlike some other link relations, changing the relevant attributes (such as as, crossorigin, and referrerpolicy) of such a link does not trigger a new fetch. This is because the document's module map has already been populated by a previous fetch, and so re-fetching would be pointless.
+</p>
+
+<div class="algo">
+<p>
+`modulepreload$v ~link用の`~link先の資源を~fetchして処理する$
+~algoは、所与の
+( `link$e 要素 %link )
+に対し，次に従う：
+◎
+The fetch and process the linked resource algorithm for modulepreload links, given a link element el, is as follows:
+</p>
+
+<ol>
+	<li>
+%~url文字列 ~LET ［
+%link は `href$aL 属性を有するならば その値 ／
+~ELSE_ 空~文字列
+］
+◎
+↓</li>
+	<li>
+~IF［
+%~url文字列 ~EQ 空~文字列
+］
+⇒
+~RET
+◎
+If the href attribute's value is the empty string, then return.
+</li>
+	<li>
+%行先 ~LET %link の `as$aL 属性の現在の状態（ `行先$rq ）
+◎
+Let destination be the current state of the as attribute (a destination),＼
+</li>
+	<li>
+~IF［
+%行先 ~EQ ε
+］
+⇒
+%行先 ~SET `script^l
+◎
+or "script" if it is in no state.
+</li>
+	<li>
+<p>
+~IF［
+%行先 は`~scriptに類する行先$でない
+］：
+</p>
+		<ol>
+			<li>
+次を走らす`要素~taskを~queueする$( `~network用~task源$，%link )
+⇒
+%link に向けて，名前 `error$et の`~eventを発火する$
+</li>
+			<li>
+~RET
+</li>
+		</ol>
+◎
+If destination is not script-like, then queue an element task on the networking task source given the link element to fire an event named error at the link element, and return.
+</li>
+	<li>
+%~url ~LET %~url文字列 を %link の`~node文書$に`相対的に構文解析-$した`結果の~URL~record$
+◎
+Parse the URL given by the href attribute, relative to the element's node document.＼
+</li>
+	<li>
+~IF［
+%~url ~EQ `失敗^i
+］
+⇒
+~RET
+◎
+If that fails, then return. Otherwise, let url be the resulting URL record.
+</li>
+	<li>
+%設定群~obj ~LET %link の`~node文書$に`関連な設定群~obj$
+◎
+Let settings object be the link element's node document's relevant settings object.
+</li>
+	<li>
+%資格証~mode ~LET %link の `crossorigin$aL 属性~用の`~CORS設定群~属性の資格証~mode$
+◎
+Let credentials mode be the CORS settings attribute credentials mode for the crossorigin attribute.
+</li>
+	<li>
+%暗号用~nonce ~LET %link の `CryptographicNonce$sl 内部~slotの現在の値
+◎
+Let cryptographic nonce be the current value of the element's [[CryptographicNonce]] internal slot.
+</li>
+	<li>
+%完全性~metadata ~LET ［
+%link は `integrity$aL 属性を有するならば その値 ／
+~ELSE_ 空~文字列
+］
+◎
+Let integrity metadata be the value of the integrity attribute, if it is specified, or the empty string otherwise.
+</li>
+	<li>
+%~referrer施策 ~LET
+%link の `referrerpolicy$aL 属性の現在の状態
+◎
+Let referrer policy be the current state of the element's referrerpolicy attribute.
+</li>
+	<li>
+%~options ~LET 次のようにされた新たな`~script~fetch~options$
+⇒＃
+`暗号用~nonce$sfO ~SET %暗号用~nonce,
+`完全性~metadata$sfO ~SET %完全性~metadata,
+`構文解析器~metadata$sfO ~SET `not-parser-inserted^l,
+`資格証~mode$sfO ~SET %資格証~mode,
+`~referrer施策$sfO ~SET %~referrer施策
+◎
+Let options be a script fetch options whose cryptographic nonce is cryptographic nonce, integrity metadata is integrity metadata, parser metadata is "not-parser-inserted", credentials mode is credentials mode, and referrer policy is referrer policy.
+</li>
+	<li>
+`~modulepreload~script~graphを~fetchする$( %~url, %行先, %設定群~obj, %~options )
+◎
+Fetch a modulepreload module script graph given url, destination, settings object, and options.＼
+</li>
+	<li>
+前~段が %結果 を結果として`非同期に完了する$まで待機する
+◎
+Wait until the algorithm asynchronously completes with result.
+</li>
+	<li>
+~IF［
+%結果 ~EQ ~NULL
+］
+⇒
+%link に向けて，名前 `error$et の`~eventを発火する$；
+◎
+If result is null, then fire an event named error at the link element,＼
+and return.
+</li>
+	<li>
+~ELSE
+⇒
+%link に向けて，名前 `load$et の`~eventを発火する$
+◎
+Fire an event named load at the link element.
+</li>
+</ol>
+</div>
+
+<div id="example-modulepreload-manifest" class="example">
+<p>
+次の~code片に、いくつかの~moduleを~preloadするような，ある~appの冒頭部を示す：
+◎
+The following snippet shows the top part of an application with several modules preloaded:
+</p>
+
+`link-type-modulepreload-1^xCode
+
+<p>
+~app用の~module~graphは、次のようになっているとする：
+◎
+Assume that the module graph for the application is as follows:
+</p>
+
+<div >
+<figure>
+<ul><li>`app.mjs^c → `irc.mjs^c → `helpers.mjs^c
+</li><li>`app.mjs^c → `fog-machine.mjs^c
+</li></ul>
+<figcaption>
+%A → %B は、 %A が %B に依存していることを表す。
+</figcaption>
+</figure>
+
+【！ img src="ircfog-modules.svg" 】
+◎
+The module graph is rooted at app.mjs, which depends on irc.mjs and fog-machine.mjs. In turn, irc.mjs depends on helpers.mjs.
+</div>
+
+<p>
+ここでは，~app開発者は、~module~graphを成す すべての~moduleを
+— それらの~fetchを~UAが起動することを確保するために —
+`modulepreload$v を利用して宣言している。
+そのように~preloadしていない場合、~UAは `helpers.mjs^c を発見する前に 複数の~network往来を通る必要があるかもしれない
+— HTTP/2 Server Push などの技術が~~利用中にある場合は別として。
+このような仕方で、 `modulepreload$v 付きの `link$e 要素を，~appの~moduleを成す “~manifest” に類するものとして，利用できる。
+◎
+Here we see the application developer has used modulepreload to declare all of the modules in their module graph, ensuring that the user agent initiates fetches for them all. Without such preloading, the user agent might need to go through multiple network roundtrips before discovering helpers.mjs, if technologies such as HTTP/2 Server Push are not in play. In this way, modulepreload link elements can be used as a sort of "manifest" of the application's modules.
+</p>
+
+</div>
+
+<div id="example-modulepreload-dynamic-import" class="example">
+
+<p>
+`import()$c ~callに `modulepreload$v 付き~linkを併用して，~network~fetchingは事前に済むようにしておく方法を、次の~codeに示す
+— `import()^c が~callされた時点で，`~module~map$内の~moduleは すでに準備済みになる（が，まだ評価されていない）：
+◎
+The following code shows how modulepreload links can be used in conjunction with import() to ensure network fetching is done ahead of time, so that when import() is called, the module is already ready (but not evaluated) in the module map:
+</p>
+
+`link-type-modulepreload-2^xCode
+
+</div>
+
+				</section>
+				<section id="link-type-nofollow">
+<h4 title="`nofollow^lT">4.6.6.12. ~link型 `nofollow^v</h4>
+
+<div class="p">
+<p>
+`nofollow$v ~keywordは：
+</p>
+<ul ><li>［
+`~a_area$ ／ `form$e
+］要素に利用されてヨイ。
+</li><li>`~hyperlink$は作成しない。
+</li><li>要素が作成する［
+他の~keywordによる~hyperlink, または`暗黙の~hyperlink$
+］を`注釈する$。
+</li></ul>
+
+◎
+The nofollow keyword may be used with a, area, and form elements. This keyword does not create a hyperlink, but annotates any other hyperlinks created by the element (the implied hyperlink, if no other keywords create one).
+</div>
+
+<div class="p">
+<p>
+`nofollow$v ~keywordは、参照先~資源への~linkが次のいずれかであることを指示する：
+</p>
+
+<ul><li>現在の~pageの著作者／版元から承認されたものではない。
+</li><li>首に，現在の~pageと参照先~pageとの間で提携する者どうしの商業関係により含められている。
+</li></ul>
+
+◎
+The nofollow keyword indicates that the link is not endorsed by the original author or publisher of the page, or that the link to the referenced document was included primarily because of a commercial relationship between people affiliated with the two pages.
+</div>
+
+				</section>
+				<section id="link-type-noopener">
+<h4 title="`noopener^lT">4.6.6.13. ~link型 `noopener^v</h4>
+
+<div class="p">
+<p>
+`noopener$v ~keywordは：
+</p>
+<ul ><li>［
+`~a_area$ ／ `form$e
+］要素に利用されてヨイ。
+</li><li>`~hyperlink$は作成しない。
+</li><li>要素が作成する［
+他の~keywordによる~hyperlink, または`暗黙の~hyperlink$
+］を`注釈する$。
+</li></ul>
+
+◎
+The noopener keyword may be used with a, area, and form elements. This keyword does not create a hyperlink, but annotates any other hyperlinks created by the element (the implied hyperlink, if no other keywords create one).
+</div>
+
+<p>
+この~keywordは、［
+`~hyperlink$を追った結果，新たに作成される`~top-level閲覧文脈$は、`補助~閲覧文脈$にはならない
+］ことを指示する。
+例えば、 `window.opener$m 属性は ~NULL になる。
+◎
+The keyword indicates that any newly created top-level browsing context which results from following the hyperlink will not be an auxiliary browsing context. E.g., its window.opener attribute will be null.
+</p>
+
+<p class="note">注記：
+<a href="~BROWSERS#noopener">処理~model</a>も見よ
+— ［
+`補助~閲覧文脈$, `~top-level閲覧文脈$
+］が分岐する箇所は、そこに定義される。
+◎
+See also the processing model where the branching between an auxiliary browsing context and a top-level browsing context is defined.
+</p>
+
+<div class="example">
+<p>
+次のものは、概して`補助~閲覧文脈$を作成する（既存のどの`閲覧文脈$も，その`閲覧文脈~名$は `example^l でないと見做すなら）：
+◎
+This typically creates an auxiliary browsing context (assuming there is no existing browsing context whose browsing context name is "example"):
+</p>
+
+`link-type-noopener-1^xCode
+
+<p>
+次のものは、`補助~閲覧文脈$ではない`~top-level閲覧文脈$を作成する（上と同じと見做すなら）:
+◎
+This creates a top-level browsing context that is not an auxiliary browsing context (assuming the same thing):
+</p>
+
+`link-type-noopener-2^xCode
+
+<p>
+次の 2 つは等価であり、`親~閲覧文脈$を~navigateするだけである：
+◎
+These are equivalent and only navigate the parent browsing context:
+</p>
+
+`link-type-noopener-3^xCode
+`link-type-noopener-4^xCode
+</div>
+
+				</section>
+				<section id="link-type-noreferrer">
+<h4 title="`noreferrer^lT">4.6.6.14. ~link型 `noreferrer^v</h4>
+
+<div class="p">
+<p>
+`noreferrer$v ~keywordは：
+</p>
+<ul ><li>［
+`~a_area$ ／ `form$e
+］要素に利用されてヨイ。
+</li><li>`~hyperlink$は作成しない。
+</li><li>要素が作成する［
+他の~keywordによる~hyperlink, または`暗黙の~hyperlink$
+］を`注釈する$。
+</li></ul>
+
+◎
+The noreferrer keyword may be used with a, area, and form elements. This keyword does not create a hyperlink, but annotates any other hyperlinks created by the element (the implied hyperlink, if no other keywords create one).
+</div>
+
+<p>
+`noreferrer$v ~keywordは、~linkを追うときに ~referrer情報が漏洩されないことを指示する。
+加えて、同じ条件の下で， `noopener$v ~keywordの挙動も含意する。
+◎
+It indicates that no referrer information is to be leaked when following the link and also implies the noopener keyword behavior under the same conditions.
+</p>
+
+<p class="note">注記：
+処理~modelにおける
+<a href="#noreferrer-a-area-processing-model">~referrerが直に操作される箇所</a>
+も見よ。
+◎
+See also the processing model where referrer is directly manipulated.
+</p>
+
+<p class="example">
+例えば、次の 2 つのの挙動は同じになる
+⇒＃
+`&lt;a href="..." rel="noreferrer" target="_blank"&gt;^c,
+`&lt;a href="..." rel="noreferrer noopener" target="_blank"&gt;^c
+◎
+&lt;a href="..." rel="noreferrer" target="_blank"&gt; has the same behavior as &lt;a href="..." rel="noreferrer noopener" target="_blank"&gt;.
+</p>
+
+				</section>
+				<section id="link-type-opener">
+<h4 title="`opener^lT">4.6.6.15. ~link型 `opener^v</h4>
+
+<div class="p">
+<p>
+`opener$v ~keywordは：
+</p>
+<ul><li>［
+`~a_area$ ／ `form$e
+］要素に利用されてヨイ。
+</li><li>`~hyperlink$は作成しない。
+</li><li>要素が作成する［
+他の~keywordによる~hyperlink, または`暗黙の~hyperlink$
+］を`注釈する$。
+</li></ul>
+
+◎
+The opener keyword may be used with a, area, and form elements. This keyword does not create a hyperlink, but annotates any other hyperlinks created by the element (the implied hyperlink, if no other keywords create one).
+</div>
+
+<p>
+この~keywordは、［
+`~hyperlink$を追った結果，新たに作成される`~top-level閲覧文脈$
+］は，`補助~閲覧文脈$になることを指示する。
+◎
+The keyword indicates that any newly created top-level browsing context which results from following the hyperlink will be an auxiliary browsing context.
+</p>
+
+<p class="note">注記：
+<a href="#opener-processing-model">処理~model</a>
+も見よ。
+◎
+See also the processing model.
+</p>
+
+<div class="example">
+<p>
+次の例は、 `opener$v を利用して，~popupされた~help~pageから それを開いた~pageを~navigateできるようにする。
+例：利用者が探しているものが，他所に見出され得る事例など。
+`_blank^v ではなく，有名~targetを利用する代替もあるが、既存の名前と衝突する~~可能性がある。
+◎
+In the following example the opener is used to allow the help page popup to navigate its opener, e.g., in case what the user is looking for can be found elsewhere. An alternative might be to use a named target, rather than _blank, but this has the potential to clash with existing names.
+</p>
+
+`link-type-opener-1^xCode
+
+</div>
+
+				</section>
+				<section id="link-type-pingback">
+<h4 title="`pingback^lT">4.6.6.16. ~link型 `pingback^v</h4>
+
+<div class="p">
+<p>
+`pingback$v ~keywordは：
+</p>
+<ul ><li>`link$e 要素に利用されてヨイ。
+</li><li>`外部~資源~link$を作成する。
+</li><li>`~body-ok$である。
+</li></ul>
+
+◎
+The pingback keyword may be used with link elements. This keyword creates an external resource link. This keyword is body-ok.
+</div>
+
+<p>
+`pingback$v ~keywordの意味論については、
+Pingback 1.0 `PINGBACK$r
+を見よ。
+◎
+For the semantics of the pingback keyword, see Pingback 1.0. [PINGBACK]
+</p>
+
+				</section>
+				<section id="link-type-preconnect">
+<h4 title="`preconnect^lT">4.6.6.17. ~link型 `preconnect^v</h4>
+
+<div class="p">
+<p>
+`preconnect$v ~keywordは：
+</p>
+<ul ><li>`link$e 要素に利用されてヨイ。
+</li><li>`外部~資源~link$を作成する。
+</li><li>`~body-ok$である。
+</li></ul>
+
+◎
+The preconnect keyword may be used with link elements. This keyword creates an external resource link. This keyword is body-ok.
+</div>
+
+<p>
+`preconnect$v ~keywordは、［
+利用者は 参照先~資源を要求する見込みが高いので、~UAが 資源の`生成元$への接続を先取的に起動して 接続を確立する待時間~costを先取りすることで，利用者~体験は改善されると見込まれる
+］ことを指示する。
+~UAは、
+`Resource Hints^cite
+仕様に述べられる，~keyword `preconnect$v の処理~modelを実装するモノトスル。
+`RESOURCEHINTS$r
+◎
+The preconnect keyword indicates that preemptively initiating a connection to the origin of the specified resource is likely to be beneficial, as it is highly likely that the user will require resources located at that origin, and the user experience would be improved by preempting the latency costs associated with establishing the connection. User agents must implement the processing model of the preconnect keyword described in Resource Hints. [RESOURCEHINTS]
+</p>
+
+<p>
+`preconnect$v ~keywordにより与えられる資源~用には、既定の型は無い。
+◎
+There is no default type for resources given by the preconnect keyword.
+</p>
+
+				</section>
+				<section id="link-type-prefetch">
+<h4 title="`prefetch^lT">4.6.6.18. ~link型 `prefetch^v</h4>
+
+<div class="p">
+<p>
+`prefetch$v ~keywordは：
+</p>
+<ul ><li>`link$e 要素に利用されてヨイ。
+</li><li>`外部~資源~link$を作成する。
+</li><li>`~body-ok$である。
+</li></ul>
+
+◎
+The prefetch keyword may be used with link elements. This keyword creates an external resource link. This keyword is body-ok.
+</div>
+
+<p>
+`prefetch$v ~keywordは、［
+利用者は 未来の~naviにてこの資源を要求する見込みが高いので、~UAは，参照先~資源を先取的に`~fetch$して~cacheすることが有益になると見込まれる
+］ことを指示する。
+~UAは、
+`Resource Hints^cite
+仕様に述べられる，~keyword `prefetch$v の処理~modelを実装するモノトスル。
+`RESOURCEHINTS$r
+◎
+The prefetch keyword indicates that preemptively fetching and caching the specified resource is likely to be beneficial, as it is highly likely that the user will require this resource for future navigations. User agents must implement the processing model of the prefetch keyword described in Resource Hints. [RESOURCEHINTS]
+</p>
+
+<p>
+`prefetch$v ~keywordにより与えられる資源~用には、既定の型は無い。
+◎
+There is no default type for resources given by the prefetch keyword.
+</p>
+
+				</section>
+				<section id="link-type-preload">
+<h4 title="`preload^lT">4.6.6.19. ~link型 `preload^v</h4>
+
+<div class="p">
+<p>
+`preload$v ~keywordは：
+</p>
+<ul ><li>`link$e 要素に利用されてヨイ。
+</li><li>`外部~資源~link$を作成する。
+</li><li>`~body-ok$である。
+</li></ul>
+
+◎
+The preload keyword may be used with link elements. This keyword creates an external resource link. This keyword is body-ok.
+</div>
+
+<p>
+`preload$v ~keywordは、［
+利用者は 現在の~naviに 参照先~資源を要求する見込みが高いので、~UAは［
+`as$aL 属性が与える`行先の素$（および それに`対応する$pD`行先$rqに結付けられている`優先度$rq）
+］に則って，参照先~資源を先取的に`~fetch$して~cacheするモノトスル
+］ことを指示する。
+~UAは
+— この仕様による`~link先の資源を~fetchして処理する$ ~algoに加えて —
+`Preload^cite 仕様に述べられる，~keyword `preload$v の処理~modelを実装するモノトスル。
+`PRELOAD$r
+◎
+The preload keyword indicates that the user agent must preemptively fetch and cache the specified resource according to the potential destination given by the as attribute (and the priority associated with the corresponding destination), as it is highly likely that the user will require this resource for the current navigation. User agents must implement the processing model of the preload keyword described in Preload, as well as in this specification's fetch and process the linked resource algorithm. [PRELOAD]
+</p>
+
+<p>
+`preload$v ~keywordにより与えられる資源~用には、既定の型は無い。
+◎
+There is no default type for resources given by the preload keyword.
+</p>
+
+<div class="algo">
+<p>
+この型の`~link先の資源~fetch用に設定しておく$ときは、所与の
+( `link$e 要素 %link, `要請$ %要請 )
+に対し：
+◎
+The linked resource fetch setup steps for this type of linked resource, given a link element el and request request, are:
+</p>
+
+<ol>
+	<li>
+%as ~LET %link の `as$aL 属性の現在の状態
+◎
+Let as be the current state of el's as attribute.
+</li>
+	<li>
+~IF［
+%as ~EQ ε
+］
+⇒
+~RET ~F
+◎
+If as does not represent a state, return false.
+</li>
+	<li>
+%要請 の`行先$rq ~SET `行先に翻訳する$( %as )
+◎
+Set request's destination to the result of translating as.
+</li>
+	<li>
+<p>
+~IF［
+%as ~EQ `image^l
+］：
+◎
+If as is "image", then:
+</p>
+		<ol>
+			<li>
+( %選定された~source, %選定された画素~密度 ) ~LET `画像~sourceを選定する$( %link )
+◎
+Let selected source and selected pixel density be the URL and pixel density that results from selecting an image source given el, respectively.
+</li>
+			<li>
+~IF［
+%選定された~source ~EQ ~NULL
+］
+⇒
+~RET ~F
+◎
+If selected source is null, then return false.
+</li>
+			<li>
+%~url ~LET %選定された~source を %link の`~node文書$に`相対的に構文解析-$した`結果の~URL~record$
+◎
+Parse selected source, relative to el's node document.＼
+</li>
+			<li>
+~IF［
+%~url ~EQ `失敗^i
+］
+⇒
+~RET ~F
+◎
+If that fails, then return false. Otherwise, let url be the resulting URL record.
+</li>
+			<li>
+%要請 の`~URL$rq ~SET %~url
+◎
+Set request's url to url.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET ~T
+◎
+Return true.
+</li>
+</ol>
+</div>
+
+				</section>
+				<section id="link-type-prerender">
+<h4 title="`prerender^lT">4.6.6.20. ~link型 `prerender^v</h4>
+
+<div class="p">
+<p>
+`prerender$v ~keywordは：
+</p>
+<ul ><li>`link$e 要素に利用されてヨイ。
+</li><li>`外部~資源~link$を作成する。
+</li><li>`~body-ok$である。
+</li></ul>
+
+◎
+The prerender keyword may be used with link elements. This keyword creates an external resource link. This keyword is body-ok.
+</div>
+
+<p>
+`prerender$v ~keywordは、［
+参照先~資源は，次回の~naviに要求されるので、資源を先取的に`~fetch$するのみならず，それを処理する
+— 例えば，その下位資源を`~fetch$したり，何らかの具現化を遂行する —
+ことも有益になると見込まれる
+］ことを指示する。
+~UAは、
+`Resource Hints^cite
+仕様に述べられる~keyword `prerender$v の処理~modelを実装するモノトスル。
+`RESOURCEHINTS$r
+◎
+The prerender keyword indicates that the specified resource might be required by the next navigation, and so it may be beneficial to not only preemptively fetch the resource, but also to process it, e.g. by fetching its subresources or performing some rendering. User agents must implement the processing model of the prerender keyword described in Resource Hints. [RESOURCEHINTS]
+</p>
+
+<p>
+`prerender$v ~keywordにより与えられる資源~用には、既定の型は無い。
+◎
+There is no default type for resources given by the prerender keyword.
+</p>
+
+				</section>
+				<section id="link-type-search">
+<h4 title="`search^lT">4.6.6.21. ~link型 `search^v</h4>
+
+<div class="p">
+<p>
+`search$v ~keywordは：
+</p>
+<ul ><li>［
+`link$e ／ `~a_area$ ／ `form$e
+］要素に利用されてヨイ。
+</li><li>`~hyperlink$を作成する。
+</li></ul>
+
+◎
+The search keyword may be used with link, a, area, and form elements. This keyword creates a hyperlink.
+</div>
+
+<p>
+`search$v ~keywordは、参照先~資源は，［
+現在の文書やそれに関係する資源を探索するための~UI
+］を特定的に供していることを指示する。
+◎
+The search keyword indicates that the referenced document provides an interface specifically for searching the document and its related resources.
+</p>
+
+<p class="note">注記：
+OpenSearch 記述~文書 `OPENSEARCH$r を `link$e 要素と `search$v ~link型に併用できる。
+それは、~UAが探索-用~UIを自動発見できるようにする。
+◎
+OpenSearch description documents can be used with link elements and the search link type to enable user agents to autodiscover search interfaces. [OPENSEARCH]
+</p>
+
+				</section>
+				<section id="link-type-stylesheet">
+<h4 title="`stylesheet^lT">4.6.6.22. ~link型 `stylesheet^v</h4>
+
+<div class="p">
+<p>
+`stylesheet$v ~keywordは：
+</p>
+<ul ><li>`link$e 要素に利用されてヨイ。
+</li><li>~style付け処理~modelに供与する`外部~資源~link$を作成する。
+</li><li>`~body-ok$である。
+</li></ul>
+
+◎
+The stylesheet keyword may be used with link elements. This keyword creates an external resource link that contributes to the styling processing model. This keyword is body-ok.
+</div>
+
+<p>
+参照先~資源は、文書をどう呈示するかを述べる`~CSS~stylesheet$である。
+◎
+The specified resource is a CSS style sheet that describes how to present the document.
+</p>
+
+<p>
+`link$e 要素に `alternate$v ~keywordも指定されている場合、要素は
+`代替~stylesheet@
+になる。
+その場合、空でない値をとる `title$a 属性も要素に指定しなければナラナイ。
+◎
+If the alternate keyword is also specified on the link element, then the link is an alternative style sheet; in this case, the title attribute must be specified on the link element, with a non-empty value.
+</p>
+
+<p>
+`stylesheet$v ~keywordにより与えられる資源~用の既定の型は、
+`text/css$c とする。
+◎
+The default type for resources given by the stylesheet keyword is text/css.
+</p>
+
+<p>
+この型の `link$e 要素 %link の`~link先の資源を~fetchして処理する$適切な時点は：
+◎
+The appropriate times to fetch and process this type of link are:
+</p>
+
+<ul>
+	<li>
+%link は`閲覧文脈に接続されて$いる下で，
+%link 上で`外部~資源~link$が作成されたとき。
+◎
+When the external resource link is created on a link element that is already browsing-context connected.
+</li>
+	<li>
+%link は`外部~資源~link$を与えている下で，
+%link が`閲覧文脈に接続された$とき。
+◎
+When the external resource link's link element becomes browsing-context connected.
+</li>
+	<li>
+<p>
+%link は`外部~資源~link$を与えていて, かつ`閲覧文脈に接続されて$いる下で：
+◎
+↓</p>
+		<ul>
+			<li>
+%link の `href$aL 属性が変更されたとき。
+◎
+When the href attribute of the link element of an external resource link that is already browsing-context connected is changed.
+</li>
+			<li>
+%link の `disabled$aL 属性が［
+設定- ／ 変更- ／ 除去-
+］されたとき。
+◎
+When the disabled attribute of the link element of an external resource link that is already browsing-context connected is set, changed, or removed.
+</li>
+			<li>
+%link の `crossorigin$aL 属性が［
+設定- ／ 変更- ／ 除去-
+］されたとき。
+◎
+When the crossorigin attribute of the link element of an external resource link that is already browsing-context connected is set, changed, or removed.
+</li>
+			<li>
+%link の `type$aL 属性の値が，［
+前回に得した外部~資源の `~Content-Type~metadata$と合致しない値
+］に［
+設定- ／ 変更-
+］されたとき。
+◎
+When the type attribute of the link element of an external resource link that is already browsing-context connected is set or changed to a value that does not or no longer matches the Content-Type metadata of the previous obtained external resource, if any.
+</li>
+			<li>
+%link の `type$aL 属性が，［
+~supportされない型を指定していることに因り，得されなかった
+］下で［
+設定- ／ 除去- ／ 変更-
+］されたとき。
+◎
+When the type attribute of the link element of an external resource link that is already browsing-context connected, but was previously not obtained due to the type attribute specifying an unsupported type, is set, removed, or changed.
+</li>
+			<li>
+%link は`代替~stylesheet$であるかどうかが，変化したとき。
+◎
+When the external resource link that is already browsing-context connected changes from being an alternative style sheet to not being one, or vice versa.
+</li>
+		</ul>
+	</li>
+</ul>
+
+<p>
+<strong>過去互換</strong>：
+~UAは、次が満たされる場合は，自身が~supportしない［
+外部~資源の`~Content-Type~metadata$による~stylesheet型
+］を `text/css$c と見做すモノトスル
+⇒
+［
+文書は`過去互換~mode$にある
+］~AND［
+文書の`~URL$doc【！ ＊補完 】
+と外部~資源の`~URL$とは`同一-生成元$である
+］
+◎
+Quirk: If the document has been set to quirks mode, has the same origin as the URL of the external resource, and the Content-Type metadata of the external resource is not a supported style sheet type, the user agent must instead assume it to be text/css.
+</p>
+
+<div class="algo">
+<p>
+この型の`~link先の資源~fetch用に設定しておく$ときは、所与の
+( `link$e 要素 %link, `要請$（無視する） )
+に対し：
+◎
+The linked resource fetch setup steps for this type of linked resource, given a link element el (ignoring the request) are:
+</p>
+
+<ol>
+	<li>
+~IF［
+%link は `disabled$aL 属性を有する
+］
+⇒
+~RET ~F
+◎
+If el's disabled attribute is set, then return false.
+</li>
+	<li>
+~IF［
+%link は`~scriptを阻んでいる~stylesheetを供与して$いる
+］
+⇒
+%link の`~node文書$の`~scriptを阻んでいる~stylesheet~counter$ ~INCBY 1
+◎
+If el contributes a script-blocking style sheet, increment el's node document's script-blocking style sheet counter by 1.
+</li>
+	<li>
+~RET ~T
+◎
+Return true.
+</li>
+</ol>
+
+<p class="XXX">
+`既定の~link先の資源を~fetchして処理する$
+~algoに代えて，~CSSOMによる
+<a href="~CSSOM1#fetching-css-style-sheets">~CSS~stylesheetを~fetchする</a>
+~algoを利用する計画については、
+<a href="~HTMLissue/968">issue #968</a>
+を見よ。
+◎
+See issue #968 for plans to use the CSSOM fetch a CSS style sheet algorithm instead of the default fetch and process the linked resource algorithm.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`~link先の資源を処理する$ときは、所与の
+( `link$e 要素 %link, 真偽値 %成功, `応答$ %応答 )
+に対し，次の手続き走らすモノトスル:
+◎
+To process this type of linked resource given a link element el, boolean success, and response response, the user agent must run these steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+当の資源の `~Content-Type~metadata$ ~NEQ `text/css$c
+］
+⇒
+%成功 ~SET ~F
+◎
+If the resource's Content-Type metadata is not text/css, then set success to false.
+</li>
+	<li>
+~IF［
+%link はもはや~style付け処理~modelに供与する`外部~資源~link$を作成しない
+］~OR［
+当の資源は`~fetch$lKされたが，その間に再び`~fetch$lKする適切な時点になった
+］
+⇒
+~RET
+◎
+If el no longer creates an external resource link that contributes to the styling processing model, or if, since the resource in question was fetched, it has become appropriate to fetch it again, then return.
+</li>
+	<li>
+~IF［
+%link には`~CSS~stylesheetが結付けられ$ている
+］
+⇒
+その`~CSS~stylesheetを除去する$
+◎
+If el has an associated CSS style sheet, remove the CSS style sheet.
+</li>
+	<li>
+<p>
+~IF［
+%成功 ~EQ ~T
+］：
+◎
+If success is true, then:
+</p>
+		<ol>
+			<li>
+<p>
+次の各種~propを伴う`~CSS~stylesheetを作成する$：
+◎
+Create a CSS style sheet with the following properties:
+</p>
+				<dl>
+					<dt>`種別$ss</dt>
+					<dd>
+`text/css$c
+◎
+text/css
+</dd>
+
+					<dt>`所在$ss</dt>
+					<dd>
+`~link先の資源を~fetchして処理する$ときに決定された`結果の~URL文字列$
+◎
+The resulting URL string determined during the fetch and process the linked resource algorithm.
+</dd>
+					<dd class="note">注記：
+これは、~redirectが適用される前のものである。
+◎
+This is before any redirects get applied.
+</dd>
+
+					<dt>`所有者~node$ss</dt>
+					<dd>
+%link
+◎
+element
+</dd>
+
+					<dt>`媒体$ss</dt>
+					<dd>
+%link の `media$aL 属性
+◎
+The media attribute of element.
+</dd>
+					<dd class="note">注記：
+これは、属性の現在の値の複製ではなく，属性への参照-である（この時点では、場合によってが無いことある）。
+属性が動的に［
+設定- ／ 変更- ／ 除去-
+］されたときに何が起こるかは、
+`CSSOM^cite が定義する。
+◎
+This is a reference to the (possibly absent at this time) attribute, rather than a copy of the attribute's current value. CSSOM defines what happens when the attribute is dynamically set, changed, or removed.
+</dd>
+
+					<dt>`~title$ss</dt>
+					<dd>
+%link が`文書~tree内$に［
+あるならば %link の `title$aL 属性 ／
+ないならば 空~文字列
+］
+◎
+The title attribute of element, if element is in a document tree, or the empty string otherwise.
+</dd>
+					<dd class="note">注記：
+これも、属性の現在の値の複製ではなく，属性への参照-である。
+◎
+This is similarly a reference to the attribute, rather than a copy of the attribute's current value.
+</dd>
+					<dt>`代替-~flag$ss</dt>
+					<dd>
+次が満たされるならば ~T ／
+~ELSE_ ~F
+⇒
+［
+~linkは`代替~stylesheet$である
+］~AND［
+%link の`明示的に可能化？$ ~EQ ~F
+］
+◎
+Set if the link is an alternative style sheet and element's explicitly enabled is false; unset otherwise.
+</dd>
+
+					<dt>`生成元clean~flag$ss</dt>
+					<dd>
+資源は`~CORS同一-生成元$であるならば ~T ／
+~ELSE_ ~F
+◎
+Set if the resource is CORS-same-origin; unset otherwise.
+</dd>
+
+					<dt>`親~CSS~stylesheet$ss</dt>
+					<dt>`所有者~CSS規則$ss</dt>
+					<dd>
+~NULL
+◎
+null
+</dd>
+
+					<dt>`不能化~flag$ss</dt>
+					<dd>
+その既定の値
+【すなわち，~F】
+◎
+Left at its default value.
+</dd>
+
+					<dt>`~CSS規則~list$ss</dt>
+					<dd>
+初期化されないまま。
+【空~list？】
+◎
+Left uninitialized.
+</dd>
+
+					<dd class="XXX">
+これは~~正しく見えない。
+応答の本体を利用しているはずなので。
+<a href="~HTMLissue/2997">issue #2997</a>
+◎
+This doesn't seem right. Presumably we should be using the response body? Tracked as issue #2997.
+</dd>
+				</dl>
+			</li>
+			<li>
+<p>
+`~CSS環境~符号化法$は、次の手続きを走らせた結果とする：
+`CSSSYNTAX$r
+◎
+The CSS environment encoding is the result of running the following steps: [CSSSYNTAX]
+</p>
+				<ol>
+					<li>
+~IF［
+%link は `charset$a 属性を有する
+］~AND［
+`~labelから符号化法を取得する$( その属性の値 ) の結果 ~NEQ `失敗^i
+`ENCODING$r
+］
+⇒
+~RET その結果
+◎
+If the element has a charset attribute, get an encoding from that attribute's value. If that succeeds, return the resulting encoding. [ENCODING]
+</li>
+					<li>
+~RET 文書の`符号化法$doc
+`DOM$r
+◎
+Otherwise, return the document's character encoding. [DOM]
+</li>
+				</ol>
+			</li>
+			<li>
+%link に向けて，名前 `load$et の`~eventを発火する$
+◎
+Fire an event named load at el.
+</li>
+		</ol>
+	</li>
+	<li>
+~ELSE
+⇒
+%link に向けて，名前 `error$et の`~eventを発火する$
+◎
+Otherwise, fire an event named error at el.
+</li>
+	<li>
+<p>
+~IF［
+%link は`~scriptを阻んでいる~stylesheetを供与して$いる
+］：
+◎
+If el contributes a script-blocking style sheet, then:
+</p>
+		<ol>
+			<li>
+~Assert:
+%link の`~node文書$の`~scriptを阻んでいる~stylesheet~counter$ ~GT 0
+◎
+Assert: el's node document's script-blocking style sheet counter is greater than 0.
+</li>
+			<li>
+%link の`~node文書$の`~scriptを阻んでいる~stylesheet~counter$ ~DECBY 1
+◎
+Decrement el's node document's script-blocking style sheet counter by 1.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+				</section>
+				<section id="link-type-tag">
+<h4 title="`tag^lT">4.6.6.23. ~link型 `tag^v</h4>
+
+<div class="p">
+<p>
+`tag$v ~keywordは：
+</p>
+<ul ><li>`~a_area$ 要素に利用されてヨイ。
+</li><li>`~hyperlink$を作成する。
+</li></ul>
+
+◎
+The tag keyword may be used with a and area elements. This keyword creates a hyperlink.
+</div>
+
+<p>
+`tag$v ~keywordは、参照先~資源が表現する<em>~tag</em>は，現在の文書に適用されることを指示する。
+◎
+The tag keyword indicates that the tag that the referenced document represents applies to the current document.
+</p>
+
+<p class="note">注記：
+~tagは，<em>現在の文書に適用される</em>ことを指示するので、この~keywordを`~tag~cloud$
+— ~pageの集合にわたって よくある~tagを~listするもの —
+の~markup内に利用することは，不適切になる。
+◎
+Since it indicates that the tag applies to the current document, it would be inappropriate to use this keyword in the markup of a tag cloud, which lists the popular tags across a set of pages.
+</p>
+
+<div class="example">
+
+<p>
+次の文書では、
+“宝石” の~~意味の gem について述べていて、他の~~意味の gem
+— 例えば
+米国のアイダホ州の愛称 ／
+Ruby 言語の~package形式 ／
+スイスのレーティッシュ鉄道の機関車
+—
+ではない，宝石の~~意味のそれが適用されるように `~tag^i
+`https://en.wikipedia.org/wiki/Gemstone^l
+が付与されている：
+◎
+This document is about some gems, and so it is tagged with "https://en.wikipedia.org/wiki/Gemstone" to unambiguously categorize it as applying to the "jewel" kind of gems, and not to, say, the towns in the US, the Ruby package format, or the Swiss locomotive class:
+</p>
+
+`link-type-tag-1^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+次の文書には 2 個の記事（ `article$e ）がある。
+しかしながら、 `tag$v ~linkは，その中に配置されていたとしても，~page一体に適用される。
+◎
+In this document, there are two articles. The "tag" link, however, applies to the whole page (and would do so wherever it was placed, including if it was within the article elements).
+</p>
+
+`link-type-tag-2^xCode
+
+</div>
+
+				</section>
+				<section id="sequential-link-types">
+<h4 title="Sequential link types">4.6.6.24. 連列的~link型</h4>
+
+<p>
+文書は、ある “連列”
+— 順序付けられた一連の文書 —
+に属することもある。
+前の文書が無い文書は この連列の始端,
+次の文書が無い文書は この連列の終端になる。
+◎
+Some documents form part of a sequence of documents.
+◎
+A sequence of documents is one where each document can have a previous sibling and a next sibling. A document with no previous sibling is the start of its sequence, a document with no next sibling is the end of its sequence.
+</p>
+
+<p>
+文書は、複数の連列に属することもある。
+◎
+A document may be part of multiple sequences.
+</p>
+
+					<section id="link-type-next">
+<h5 title="`next^lT">4.6.6.24.1. ~link型 `next^v</h5>
+
+<div class="p">
+<p>
+`next$v ~keywordは：
+</p>
+<ul ><li>［
+`link$e ／ `~a_area$ ／ `form$e
+］要素に利用されてヨイ。
+</li><li>`~hyperlink$を作成する。
+</li></ul>
+
+◎
+The next keyword may be used with link, a, area, and form elements. This keyword creates a hyperlink.
+</div>
+
+<p>
+`next$v ~keywordは、［
+現在の文書は ある連列に属していて，当の~linkは連列における次の文書へ導くものである
+］ことを指示する。
+◎
+The next keyword indicates that the document is part of a sequence, and that the link is leading to the document that is the next logical document in the sequence.
+</p>
+
+<p>
+`next$v ~keywordが `link$e 要素に併用された場合、~UAは
+`Resource Hints^cite
+に述べられる，いずれかの処理~modelを実装するベキである
+— すなわち、そのような~linkを，それが［
+`dns-prefetch$v, `preconnect$v, `prefetch$v, `prerender$v
+］いずれかの~keywordを利用していたかのように処理するベキである。
+~UAが どの資源~hintを利用したいと望むかは、実装に依存する。
+例えば~UAは、より低~costな `preconnect$v ~hintを利用して［
+~data ／ 電池~~残量 ／ 処理~~能力
+］を温存しようと試行してもヨイし、似た局面における 利用者の過去の挙動を解析して，経験的に資源~hintを選んでもヨイ。
+`RESOURCEHINTS$r
+◎
+When the next keyword is used with a link element, user agents should implement one of the processing models described in Resource Hints, i.e. should process such links as if they were using one of the dns-prefetch, preconnect, prefetch, or prerender keywords. Which resource hint the user agent wishes to use is implementation-dependent; for example, a user agent may wish to use the less-costly preconnect hint when trying to conserve data, battery power, or processing power, or may wish to pick a resource hint depending on heuristic analysis of past user behavior in similar scenarios. [RESOURCEHINTS]
+</p>
+
+					</section>
+					<section id="link-type-prev">
+<h5 title="`prev^lT">4.6.6.24.2. ~link型 `prev^v</h5>
+
+<div class="p">
+<p>
+`prev$v ~keywordは：
+</p>
+<ul ><li>［
+`link$e ／ `~a_area$ ／ `form$e
+］要素に利用されてヨイ。
+</li><li>`~hyperlink$を作成する。
+</li></ul>
+
+◎
+The prev keyword may be used with link, a, area, and form elements. This keyword creates a hyperlink.
+</div>
+
+<p>
+`prev$v ~keywordは、［
+現在の文書は ある連列に属していて，当の~linkは連列における前の文書へ導くものである
+］ことを指示する。
+◎
+The prev keyword indicates that the document is part of a sequence, and that the link is leading to the document that is the previous logical document in the sequence.
+</p>
+
+<p><strong>同義語</strong>：
+歴史的な理由から、~UAは，~keyword `previous^v も `prev$v ~keywordと同様に扱うモノトスル。
+◎
+Synonyms: For historical reasons, user agents must also treat the keyword "previous" like the prev keyword.
+</p>
+
+					</section>
+				</section>
+				<section id="other-link-types">
+<h4 title="Other link types">4.6.6.25. 他種の~link型</h4>
+
+<p>
+`定義済み~link型の集合に対する拡張@
+は、
+<a href="http://microformats.org/wiki/existing-rel-values#HTML5_link_type_extensions">microformats wiki existing-rel-values page</a>
+— 以下，単に “この~Wiki” と略記する —
+に登録されてもヨイ。
+`MFREL$r
+◎
+Extensions to the predefined set of link types may be registered in the microformats wiki existing-rel-values page. [MFREL]
+</p>
+
+<p>
+誰もがいつでも，型を追加するために，この~Wikiを自由に編集できる。
+拡張~型には，次の情報も伴われなければナラナイ：
+◎
+Anyone is free to edit the microformats wiki existing-rel-values page at any time to add a type. Extension types must be specified with the following information:
+</p>
+
+<dl>
+	<dt>
+~keyword
+◎
+Keyword
+</dt>
+	<dd>
+定義されている実際の値。
+定義-済みの他の名前と紛らわしいもの（例： 文字大小のみ相違するなど）は、避けるベキである。
+◎
+The actual value being defined. The value should not be confusingly similar to any other defined value (e.g. differing only in case).
+</dd>
+	<dd>
+値が `003A^U ( `:^l ) を包含する場合、それは`絶対~URL$でなければナラナイ。
+◎
+If the value contains a U+003A COLON character (:), it must also be an absolute URL.
+</dd>
+
+	<dt>
+`link$e 上の効果
+◎
+Effect on... link
+</dt>
+	<dd>
+<p>
+次のいずれか
+— “許容されない” に該当する場合を除き，~keywordは `link$e 要素に指定されてヨイ：
+◎
+One of the following:
+</p>
+		<dl>
+			<dt>
+許容されない
+◎
+Not allowed
+</dt>
+			<dd>
+~keywordは `link$e 要素~上には指定されてはナラナイ。
+◎
+The keyword must not be specified on link elements.
+</dd>
+
+			<dt>
+~hyperlink
+◎
+Hyperlink
+</dt>
+			<dd>
+~keywordは`~hyperlink$を作成する。
+◎
+The keyword may be specified on a link element; it creates a hyperlink.
+</dd>
+
+			<dt>
+外部~資源
+◎
+External Resource
+</dt>
+			<dd>
+~keywordは`外部~資源~link$を作成する。
+◎
+The keyword may be specified on a link element; it creates an external resource link.
+</dd>
+		</dl>
+	</dd>
+
+	<dt>
+`~a_area$ 上の効果
+◎
+Effect on... a and area
+</dt>
+	<dd>
+<p>
+次のいずれか
+— “許容されない” に該当する場合を除き，~keywordは `~a_area$ 要素に指定されてヨイ：
+◎
+One of the following:
+</p>
+		<dl>
+			<dt>
+許容されない
+◎
+Not allowed
+</dt>
+			<dd>
+~keywordは `~a_area$ 要素~上には指定されてはナラナイ。
+◎
+The keyword must not be specified on a and area elements.
+</dd>
+
+			<dt>
+~hyperlink
+◎
+Hyperlink
+</dt>
+			<dd>
+~keywordは`~hyperlink$を作成する。
+◎
+The keyword may be specified on a and area elements; it creates a hyperlink.
+</dd>
+
+			<dt>
+外部~資源
+◎
+External Resource
+</dt>
+			<dd>
+~keywordは`外部~資源~link$を作成する。
+◎
+The keyword may be specified on a and area elements; it creates an external resource link.
+</dd>
+
+			<dt>
+~hyperlink注釈
+◎
+Hyperlink Annotation
+</dt>
+			<dd>
+~keywordは要素により作成される他の`~hyperlink$を`注釈$する。
+◎
+The keyword may be specified on a and area elements; it annotates other hyperlinks created by the element.
+</dd>
+		</dl>
+	</dd>
+
+	<dt>
+`form$e 上の効果
+◎
+Effect on... form
+</dt>
+	<dd>
+<p>
+次のいずれか
+— “許容されない” に該当する場合を除き，~keywordは `form$e 要素に指定されてヨイ：
+◎
+One of the following:
+</p>
+		<dl>
+			<dt>
+許容されない
+◎
+Not allowed
+</dt>
+			<dd>
+~keywordは `form$e 要素~上には指定されてはナラナイ。
+◎
+The keyword must not be specified on form elements.
+</dd>
+
+			<dt>
+~hyperlink
+◎
+Hyperlink
+</dt>
+			<dd>
+~keywordは`~hyperlink$を作成する。
+◎
+The keyword may be specified on form elements; it creates a hyperlink.
+</dd>
+
+			<dt>
+外部~資源
+◎
+External Resource
+</dt>
+			<dd>
+~keywordは`外部~資源~link$を作成する。
+◎
+The keyword may be specified on form elements; it creates an external resource link.
+</dd>
+
+			<dt>
+~hyperlink注釈
+◎
+Hyperlink Annotation
+</dt>
+			<dd>
+~keywordは要素により作成される他の`~hyperlink$を`注釈$する。
+◎
+The keyword may be specified on form elements; it annotates other hyperlinks created by the element.
+</dd>
+		</dl>
+	</dd>
+
+	<dt>概略的な記述 （ `Brief description^en ）</dt>
+	<dd>
+~keywordの意味についての，規範的でない短い記述。
+◎
+A short non-normative description of what the keyword's meaning is.
+</dd>
+
+	<dt>仕様 （ `Specification^en ）</dt>
+	<dd>
+~keywordの意味論と要件についての詳細な記述への~link。
+この~Wikiの別の~pageや外部~pageへの~linkにもなり得る。
+◎
+A link to a more detailed description of the keyword's semantics and requirements. It could be another page on the Wiki, or a link to an external page.
+</dd>
+
+	<dt>同義語 （ `Synonyms^en ）</dt>
+	<dd>
+処理~要件が正確に同じであるような，他の~keyword値からなる~list。
+作者は、同義語による名前を定義して利用するベキでない
+— これらに意図される用途は、~UAが旧来の内容を~supportできるようにすることに限られる。
+誰もが、実施に利用されていない同義語を除去してヨイ。
+この仕方で登録されるのは、旧来の内容との互換性のため，同義語として処理される必要がある~keyword値に限られる。
+◎
+A list of other keyword values that have exactly the same processing requirements. Authors should not use the values defined to be synonyms, they are only intended to allow user agents to support legacy content. Anyone may remove synonyms that are not used in practice; only names that need to be processed as synonyms for compatibility with legacy content are to be registered in this way.
+</dd>
+
+	<dt>地位 （ `Status^en ）</dt>
+	<dd>
+
+<p>
+次のいずれか：
+◎
+One of the following:
+</p>
+		<dl>
+			<dt>提案-済み （ `Proposed^en ）</dt>
+			<dd>
+~keywordは、まだ，広くから査読を受けてないか認可されていない。
+誰かがそれを提案していて、それを利用しているか，近いうちに利用することになる。
+◎
+The keyword has not received wide peer review and approval. Someone has proposed it and is, or soon will be, using it.
+</dd>
+			<dt>批准-済み （ `Ratified^en ）</dt>
+			<dd>
+~keywordは、広くから査読を受け，認可された。
+~keywordを利用している~pageを取扱う方法を
+— 不正な仕方で利用された場合も含め —
+一義的に定義する仕様がある。
+◎
+The keyword has received wide peer review and approval. It has a specification that unambiguously defines how to handle pages that use the keyword, including when they use it in incorrect ways.
+</dd>
+
+			<dt>使用中止 （ `Discontinued^en ）</dt>
+			<dd>
+この~keywordは、広くから査読を受けた上で，水準に満たないものと判明した。
+既存の~pageが この~keywordを利用していても、新たな~pageには避けるベキである。
+作者が代わりに利用するベキものは、（もしあれば）
+“概略的な記述 ” と “仕様”
+の項に詳細が与えられることになる。
+◎
+The keyword has received wide peer review and it has been found wanting. Existing pages are using this keyword, but new pages should avoid it. The "brief description" and "specification" entries will give details of what authors should use instead, if anything.
+</dd>
+		</dl>
+	</dd>
+	<dd>
+~keywordが，既存の値とかぶると判明した場合、除去された上で，既存の値に対する同義語として~listされるベキである。
+◎
+If a keyword is found to be redundant with existing values, it should be removed and listed as a synonym for the existing value.
+</dd>
+	<dd>
+~keywordが “提案-済み” の地位で登録されてから， 1 ヶ月~以上
+利用されない／指定されない
+ままにある場合、~registryから除去されてもヨイ。
+◎
+If a keyword is registered in the "proposed" state for a period of a month or more without being used or specified, then it may be removed from the registry.
+</dd>
+	<dd>
+“提案-済み” の地位で追加された~keywordが，既存の値とかぶるものと判明した場合、除去された上で，既存の値に対する同義語として~listされるベキである。
+“提案-済み” の地位で追加された~keywordが，有害と判明した場合、
+“使用中止” の地位に変更されるベキである。
+◎
+If a keyword is added with the "proposed" status and found to be redundant with existing values, it should be removed and listed as a synonym for the existing value. If a keyword is added with the "proposed" status and found to be harmful, then it should be changed to "discontinued" status.
+</dd>
+	<dd>
+誰もがいつでも地位を変更できるが、上の定義に則る限りにおいて，そうするベキである。
+◎
+Anyone can change the status at any time, but should only do so in accordance with the definitions above.
+</dd>
+</dl>
+
+<p>
+適合性~検査器は、値が許容されるかどうかを確立するときに，
+この~Wiki~pageに与えられる情報を利用するモノトスル：
+この仕様にて定義される値, および
+“提案-済み” ／ “批准-済み”
+とされている値のうち、
+要素~上で “〜上の効果” 欄に述べられるものとして適用されるように利用されたものは，受容するモノトスル。
+それ以外の値は、妥当でないものとして却下するモノトスル。
+適合性~検査器は、この情報を~cacheしてもヨイ（例： 処理能~上の理由, あるいは
+~network接続の不確実性を避けるためとして）。
+◎
+Conformance checkers must use the information given on the microformats wiki existing-rel-values page to establish if a value is allowed or not: values defined in this specification or marked as "proposed" or "ratified" must be accepted when used on the elements for which they apply as described in the "Effect on..." field, whereas values marked as "discontinued" or not listed in either this specification or on the aforementioned page must be rejected as invalid. Conformance checkers may cache this information (e.g. for performance reasons or to avoid the use of unreliable network connectivity).
+</p>
+
+<p>
+適合性~検査器は、作者が，この仕様にも この~Wikiにも定義されていない，新たな型を利用しているときは、上に述べた詳細と伴に値を “提案-済み” の地位でこの~Wikiに追加するよう~~勧めるベキである。
+◎
+When an author uses a new type not defined by either this specification or the Wiki page, conformance checkers should offer to add the value to the Wiki, with the details described above, with the "proposed" status.
+
+</p>
+
+<p>
+この~Wikiにて，地位
+“提案-済み” ／ “批准-済み”
+である拡張として定義された型は、
+“〜上の効果” 欄に則って［
+`link$e ／ `~a_area$
+］要素の `rel^a 属性と併用されてもヨイ。
+`MFREL$r
+◎
+Types defined as extensions in the microformats wiki existing-rel-values page with the status "proposed" or "ratified" may be used with the rel attribute on link, a, and area elements in accordance to the "Effect on..." field. [MFREL]
+</p>
+
+				</section>
+			</section>
+		</section>
+</main>

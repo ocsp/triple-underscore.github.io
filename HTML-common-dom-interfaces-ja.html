@@ -1,0 +1,2100 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Common DOM interfaces（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'common-dom-interfaces',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {// '%'
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'I':
+	break;
+case 'm':
+case 'sL': 
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'sc': // url scheme
+	text = key.replace(/_/, ':');
+	break;
+case 'ps':
+	text = `:${key}`;
+	break;
+case 'h':
+	text = `\`<code class="header">${text}</code>\``;
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'jI': // JS intrinsic
+	text = `%${key}%`;
+	break;
+case 'U':
+	text = `U+${key}`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-08-18
+trans_update:2020-08-19
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/common-dom-interfaces.html
+nav_prev:HTMLurl
+nav_next:HTMLcloning
+trans_1st_pub:2016-01-28
+
+
+●●class_map
+e:element
+a:attr
+st:attr-state
+et:event-type
+sc:scheme
+ps:pseudo
+p:production
+dir:directive
+v:value
+E:error
+js:js-other
+jA:abstract
+t:type
+U:code-point
+
+●●tag_map
+I:code
+m:code
+sL:code
+E:code
+c:code
+e:code
+a:code
+st:span
+sc:code
+et:code
+v:code
+p:code
+ps:code
+dir:code
+js:span
+jA:span
+V:var
+t:var
+mark:mark
+dfn:dfn
+i:i
+U:span
+cite:cite
+
+●●original_id_map
+
+
+●●mdn_urls
+htmlformcontrolscollection:API/HTMLFormControlsCollection
+htmloptionscollection:API/HTMLOptionsCollection
+radionodelist:API/RadioNodeList
+domstringlist:API/DOMStringList
+
+●●link_map
+
+	●idl
+CEReactions:~HEcustom#cereactions
+I.boolean:~WEBIDL#idl-boolean
+I.double:~WEBIDL#idl-double
+I.long:~WEBIDL#idl-long
+I.unsigned long:~WEBIDL#idl-unsigned-long
+I.unrestricted double:~WEBIDL#idl-unrestricted-double
+I.DOMString:~WEBIDL#idl-DOMString
+I.USVString:~WEBIDL#idl-USVString
+I.HTMLElement:~HTMLdom#htmlelement
+I.Comment:~DOM4#comment
+I.DOMTokenList:~DOM4#interface-domtokenlist
+I.DocumentFragment:~DOM4#interface-documentfragment
+I.Element:~DOM4#interface-element
+I.NodeList:~DOM4#interface-nodelist
+I.HTMLCollection:~DOM4#interface-htmlcollection
+
+I.HTMLFormControlsCollection:#htmlformcontrolscollection
+I.HTMLOptGroupElement:~HEforms#htmloptgroupelement
+I.HTMLOptionElement:~HEforms#htmloptionelement
+I.HTMLOptionsCollection:#htmloptionscollection
+I.RadioNodeList:#radionodelist
+I.HTMLAllCollection:~HTMLLS/common-dom-interfaces.html#htmlallcollection
+I.DOMStringList:#domstringlist
+	I.DOMException:~WEBIDL#idl-DOMException
+
+E.HierarchyRequestError:~WEBIDL#hierarchyrequesterror
+E.NotFoundError:~WEBIDL#notfounderror
+E.IndexSizeError:~WEBIDL#indexsizeerror
+
+
+	●idl member
+■member
+
+sL.item:#dom-domstringlist-item
+sL.length:#dom-domstringlist-length
+sL.contains:#dom-domstringlist-contains
+
+m.~length0:~DOM4#dom-htmlcollection-length
+m.~namedItem0:~DOM4#dom-htmlcollection-nameditem
+m.item:~DOM4#dom-htmlcollection-item
+
+m.value:#dom-radionodelist-value
+m.add:#dom-htmloptionscollection-add
+m.length:#dom-htmloptionscollection-length
+m.namedItem:#dom-htmlformcontrolscollection-nameditem
+m.remove:#dom-htmloptionscollection-remove
+m.selectedIndex:#dom-htmloptionscollection-selectedindex
+m.setter:#dom-htmloptionscollection-setter
+m.document.all:~HTMLLS/obsolete.html#dom-document-all
+
+m.crossOrigin:~HEscripting#dom-script-crossorigin
+m.~selectedIndex0:~HEforms#dom-select-selectedindex
+
+
+	●element
+e.form:~HEforms#the-form-element
+e.input:~HEinput#the-input-element
+e.optgroup:~HEforms#the-optgroup-element
+e.option:~HEforms#the-option-element
+e.select:~HEforms#the-select-element
+
+	●attr
+a.name:#_attr-*-name
+a.~nameF:~HTMLforms#attr-fe-name
+a.~nameO:~HTMLobs#attr-option-name
+a.type:~HEinput#attr-input-type
+a.value:~HEinput#attr-input-value
+a.id:~HTMLdom#the-id-attribute
+
+st.Radio:~HEinput#radio-button-state-(type=radio)
+
+	●属性
+V.~IDL属性:#_reflecting-attr
+V.要素:#_element
+V.内容~属性:#_reflected-attr
+V.内容~値:#_content-attr-value
+V.既定~値:#_attr-default-value
+
+反映-:#reflect
+反映する:#reflect
+
+正準的な~keyword:#canonical-keyword
+既知な値のみに制限され:#limited-to-only-known-values
+負でない数のみに制限され:#limited-to-only-non-negative-numbers
+正な整数のみに制限され:#limited-to-only-non-negative-numbers-greater-than-zero
+~fallbackありの下で正な整数のみに制限され:#limited-to-only-non-negative-numbers-greater-than-zero-with-fallback
+正な数に制限され:#limited-to-numbers-greater-than-zero
+範囲に切詰められ:#clamped-to-the-range
+
+新たな空option:#_new-blank-option
+~IDか名前が一致する要素たち:#_matches-id-or-name
+~supportする~prop名を収集する:#_collect-supported-property-names
+
+状態から~keywordを得る:#_choose-a-keyword-from-state
+
+	●
+~liveである:~HTMLINFRA#live
+
+列挙d属性:~HTMLcms#enumerated-attribute
+真偽-内容~属性:~HTMLcms#boolean-attribute
+値なし用の既定:~HTMLcms#missing-value-default
+妥当な整数:~HTMLcms#valid-integer
+整数として構文解析する:~HTMLcms#rules-for-parsing-integers
+浮動小数点数として最良な表現:~HTMLcms#best-representation-of-the-number-as-a-floating-point-number
+浮動小数点数として構文解析する:~HTMLcms#rules-for-parsing-floating-point-number-values
+負でない整数として構文解析する:~HTMLcms#rules-for-parsing-non-negative-integers
+
+相対的に構文解析-:~HTMLurl#parse-a-url
+結果の~URL文字列:~HTMLurl#resulting-url-string
+
+
+~checkedness:~HTMLforms#concept-fe-checked
+~listされる要素:~HEforms#category-listed
+
+	●DOM
+~ID:~DOM4#concept-id
+~collection:~DOM4#concept-collection
+~node文書:~DOM4#concept-node-document
+~nodeを付加する:~DOM4#concept-node-append
+~nodeを子の前に前挿入する:~DOM4#concept-node-pre-insert
+前挿入-:~DOM4#concept-node-pre-insert
+~tree順序:~DOM4#concept-tree-order
+子を~nodeに置換する:~DOM4#concept-node-replace
+表現され:~DOM4#represented-by-the-collection
+
+
+	●他
+~URL:~URL1#concept-url
+
+
+~list:~INFRA#list
+~size:~INFRA#list-size
+	包含-:~INFRA#list-contain
+有順序~集合:~INFRA#ordered-set
+set.付加する:~INFRA#set-append
+
+~nullable:~WEBIDL#dfn-nullable-type
+所与の値:~WEBIDL#the-given-value
+新たな有index~propの値を設定する:~WEBIDL#dfn-set-the-value-of-a-new-indexed-property
+既存の有index~propの値を設定する:~WEBIDL#dfn-set-the-value-of-an-existing-indexed-property
+~supportする~prop~index:~WEBIDL#dfn-supported-property-indices
+~supportする~prop名:~WEBIDL#dfn-supported-property-names
+
+
+●●words_table1
+
+
+nameO:name
+nameF:name
+namedItem0:namedItem
+length0:length
+selectedIndex0:selectedIndex
+
+
+●●words_table
+
+	●IDL／データ／構造／操作
+nullable:::null 可能
+
+実数:number::~
+浮動小数点数:floating-point number::~
+有符号:signed::~
+無符号:unsigned::~
+	正な数:non-negative numbers greater than zero
+	正な整数のみ:only non-negative numbers greater than zero
+
+
+前挿入-:pre-insert::~
+切詰めら:clampさ::切り詰めら
+切詰めた:clampした::切り詰めた
+
+
+
+派生-:derive::~
+切落す:truncateする:切り落とす
+
+	●一般処理
+隠蔽-:shadow::~
+	新:
+	渡され
+	渡して
+	条件
+
+	●仕様
+指名-:designate:~
+
+	昔風の:non-fashionable retro
+	集約-
+
+	固有の:
+	記述
+	表記
+	表記規約
+	注記
+	決して
+	従わ
+
+
+	●未分類
+	扱い
+
+選択-:select:~
+選択:selection:~
+
+checkedness::::チェック有無
+check::::チェック
+radio-button:radio button:::ラジオボタン
+空option:blank option:空 option
+
+透過的:transparent:~
+
+	得る
+	各種記号
+	応じて
+	数え
+	法
+	表す
+	訳
+	持つ
+	指す
+	満たす
+	用いら
+	与える
+	下限
+	備える
+	加え
+	加えて
+	可能な
+	数
+	有-
+
+	●指示語
+	同様に:like
+	他
+	上述
+	中
+	以上
+	以下
+	伴
+	何か
+	何らか
+	例えば
+	個
+	個数
+	個:two
+	個目
+	先ず
+	先
+	内
+	冒頭
+	場合
+	外
+	対し
+	対する
+	時点
+	最大
+	最小
+	最短
+	未満
+	末尾
+	次
+	番
+	示し
+	種
+	等
+	被
+	複数
+	該当
+	関して
+	限り
+	非
+	一致する
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる HTML 仕様の
+<a href="~SPEC_URL">§ Common DOM interfaces</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+</head>
+<body>
+
+
+<header id="head">
+	<hgroup>
+<h1>共通な DOM インタフェース — Common DOM interfaces</h1>
+
+	</hgroup>
+
+</header>
+
+<main id="MAIN" hidden>
+
+		<section id="common-dom-interfaces">
+<h2 title="Common DOM interfaces">2.7. 共通な DOM ~interface</h2>
+
+
+			<section id="_conventions">
+<h3>【この訳に固有の表記規約】</h3>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, ε, ~IF, ~THROW 等々）の意味や定義の詳細は，~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+			</section>
+			<section id="reflecting-content-attributes-in-idl-attributes">
+<h3 title="Reflecting content attributes in IDL attributes">2.7.1. ~IDL属性による内容~属性の反映-法</h3>
+
+<p>
+一部の~IDL属性は、特定0の内容~属性を
+`反映する@
+ものと定義される。
+これは、その~IDL属性の［
+取得子は，内容~属性の現在の値を返す ／
+設定子は，内容~属性の値を所与の値†に変更する
+］ことを意味する。
+◎
+Some IDL attributes are defined to reflect a particular content attribute. This means that on getting, the IDL attribute returns the current value of the content attribute, and on setting, the IDL attribute changes the value of the content attribute to the given value.
+</p>
+
+<p class="trans-note">【†
+`所与の値$は、正式には~Web~IDLに定義される
+— 設定子に渡された値を当の~IDL属性の型に変換した結果を意味する。
+】</p>
+
+<p>
+以下，この節における
+`~IDL属性@V
+は、ある
+`要素@V
+上の，ある
+`内容~属性@V
+を`反映-$しているものとする。
+加えて：
+</p>
+
+<ul>
+	<li>
+`内容~値@V
+は、 `要素$V が `内容~属性$V を［
+有するならば その値 ／
+有さないならば ε
+］とする。
+</li>
+	<li>
+`既定~値@V
+は、 `~IDL属性$V 用に既定の値が定義されて［
+いるならば その値 ／
+いなければ ε
+］とする。
+</li>
+</ul>
+
+<p>
+一般に，［
+`内容~値$V ~EQ ε
+］の下では、
+`~IDL属性$V は：
+◎
+In general,＼
+</p>
+
+<ul>
+	<li>
+取得子は、（他が指定されない限り）［
+`内容~値$V ~EQ 空~文字列
+］であったかのように動作するモノトスル。
+◎
+on getting, if the content attribute is not present, the IDL attribute must act as if the content attribute's value is the empty string; and＼
+</li>
+	<li>
+設定子は、先ず， `要素$V に `内容~属性$V を追加するモノトスル。
+◎
+on setting, if the content attribute is not present, it must first be added.
+</li>
+</ul>
+
+<p class="trans-note">【
+`~IDL属性$V には、ある種の拘束を課す注釈
+— 例： `既知な値のみに制限され$る —
+が指定されるものもある。
+一般に、そのような~IDL属性において，当の注釈の有無が動的に変化することはない。
+】</p>
+
+<p>
+`USVString$I 型の `~IDL属性$V の挙動は、［
+`内容~属性$V が 1 個の`~URL$を値にとる
+］ものと定義されているならば，以下の定義に従うモノトスル：
+◎
+If a reflecting IDL attribute is a USVString attribute whose content attribute is defined to contain a URL, then＼
+</p>
+
+<ul>
+	<li class="algo">
+<p>
+取得子~手続きは：
+◎
+on getting,＼
+</p>
+		<ol>
+			<li>
+~IF［
+`内容~値$V ~EQ ε
+］
+⇒
+~RET 空~文字列
+◎
+if the content attribute is absent, the IDL attribute must return the empty string.＼
+</li>
+			<li>
+%~url ~LET `内容~値$V を `要素$V の`~node文書$に`相対的に構文解析-$した`結果の~URL文字列$
+◎
+Otherwise, the IDL attribute must parse the value of the content attribute relative to the element's node document and＼
+</li>
+			<li>
+~IF ［
+%~url ~NEQ `失敗^i
+］
+⇒
+~RET %~url
+］
+◎
+if that is successful, return the resulting URL string.＼
+</li>
+			<li>
+~RET `内容~値$V を `USVString$I 型に変換した結果
+◎
+If parsing fails, then the value of the content attribute must be returned instead, converted to a USVString.＼
+</li>
+		</ol>
+	</li>
+	<li class="algo">
+設定子~手続きは
+⇒
+`内容~属性$V の値 ~SET 所与の値
+◎
+On setting, the content attribute must be set to the specified new value.
+</li>
+</ul>
+
+
+<div>
+<p>
+`DOMString$I 型の `~IDL属性$V の挙動は、［
+`~IDL属性$V は次のいずれかに該当する†
+］~AND［
+`内容~属性$V は`列挙d属性$である
+］ならば，以下の定義に従うモノトスル：
+</p>
+
+<ul>
+	<li>
+`既知な値のみに制限され@
+る
+</li>
+	<li>
+`~nullable$である
+</li>
+</ul>
+
+<p class="trans-note">【†
+両方に該当するものもある（例： `crossOrigin$m ）。
+原文は，この 2 つの場合を分けて定義しているが、そのような~IDL属性においては，~nullable用の挙動が優先されると推定される（さもなければ、 ~NULL 値をとり得なくなるので）。
+この訳では、 2 つの場合を統合して与える。
+】</p>
+
+<ul>
+	<li class="algo">
+<p>
+取得子~手続きは：
+</p>
+		<ol>
+			<li>
+%状態 ~LET `内容~属性$V が表現している状態
+【 `内容~値$V に基づいて決定される — `列挙d属性$を見よ。】
+</li>
+			<li>
+<p>
+~IF［
+`~IDL属性$V は`~nullable$である
+］：
+</p>
+				<ol>
+					<li>
+~Assert：
+%状態 ~NEQ ε
+</li>
+					<li>
+~IF［
+%状態 ~EQ `値なし用の既定$の状態
+］
+⇒
+~RET ~NULL
+</li>
+				</ol>
+			</li>
+			<li>
+<p>
+~ELSE：
+</p>
+				<ol>
+					<li>
+~Assert：
+`~IDL属性$V は`既知な値のみに制限され$る
+</li>
+					<li>
+~IF［
+%状態 ~EQ ε
+（例： `内容~値$V ~EQ ε, かつ `内容~属性$V には`値なし用の既定$の状態は定義されていない）
+］
+⇒
+~RET 空~文字列
+</li>
+				</ol>
+			</li>
+			<li>
+%~keywordたち ~LET ［
+`内容~属性$V 用に定義される~keywordたちのうち，
+%状態 に対応付けられるもの
+］からなる集合
+</li>
+			<li>
+<p>
+~IF［
+%~keywordたち は 1 個の値のみからなる
+］
+⇒
+~RET その値
+</p>
+<p class="trans-note">【
+この段は不要かもしれない — 原文からは、はっきりしない。
+】</p>
+			</li>
+			<li>
+%~keywordたち から適合しない値は除去する
+</li>
+			<li>
+~IF［
+%~keywordたち は空である
+］
+⇒
+~RET 空~文字列
+</li>
+			<li>
+~IF［
+%~keywordたち は 1 個の値のみからなる
+］
+⇒
+~RET その値
+</li>
+			<li>
+~Assert：
+%~keywordたち 内には %状態 用の
+`正準的な~keyword@
+であると指名される値が 1 個だけある
+</li>
+			<li>
+~RET 前~段に述べた`正準的な~keyword$
+</li>
+		</ol>
+	</li>
+	<li class="algo">
+<p>
+設定子~手続きは：
+</p>
+		<ol>
+			<li>
+~IF［
+`~IDL属性$V は~nullableである
+］~AND［
+所与の値 ~EQ ~NULL
+］
+⇒
+`要素$V から `内容~属性$V を除去する
+</li>
+			<li>
+~ELSE
+⇒
+`内容~属性$V の値 ~SET 所与の値
+</li>
+		</ol>
+	</li>
+</ul>
+
+◎
+If a reflecting IDL attribute is a DOMString attribute whose content attribute is an enumerated attribute, and the IDL attribute is limited to only known values, then,＼
+on getting, the IDL attribute must return the keyword value associated with the state the attribute is in, if any, or the empty string if the attribute is in a state that has no associated keyword value or if the attribute is not in a defined state (e.g. the attribute is missing and there is no missing value default).＼
+If there are multiple keyword values for the state, then return the conforming one.＼
+If there are multiple conforming keyword values, then one will be designated the canonical keyword; choose that one.＼
+On setting, the content attribute must be set to the specified new value.
+◎
+If a reflecting IDL attribute is a nullable DOMString attribute whose content attribute is an enumerated attribute, then,＼
+on getting, if the corresponding content attribute is in its missing value default state then the IDL attribute must return null,＼
+otherwise, the IDL attribute must return the keyword value associated with the state the attribute is in.＼
+If there are multiple keyword values for the state, then return the conforming one.＼
+If there are multiple conforming keyword values, then one will be designated the canonical keyword; choose that one.＼
+On setting, if the new value is null, the content attribute must be removed, and otherwise, the content attribute must be set to the specified new value.
+</div>
+
+
+<p>
+上述に該当しない［
+`DOMString$I ／ `USVString$I
+］型の `~IDL属性$V の［
+取得子／設定子
+］は、文字大小を保全するように透過的に［
+取得する／設定する
+］とする。
+◎
+If a reflecting IDL attribute is a DOMString or USVString attribute but doesn't fall into any of the above categories, then the getting and setting must be done in a transparent, case-preserving manner.
+</p>
+
+
+<p>
+`boolean$I 型の `~IDL属性$V の挙動は、以下の定義に従うモノトスル：
+◎
+If a reflecting IDL attribute is a boolean attribute, then＼
+</p>
+<ul>
+	<li class="algo">
+<p>
+取得子~手続きは：
+◎
+on getting＼
+</p>
+		<ol>
+			<li>
+~IF［
+`内容~値$V ~NEQ ε
+］
+⇒
+~RET ~T
+◎
+the IDL attribute must return true if the content attribute is set, and＼
+</li>
+			<li>
+~RET ~F
+◎
+false if it is absent.＼
+</li>
+		</ol>
+	</li>
+	<li class="algo">
+<p>
+設定子~手続きは：
+◎
+On setting,＼
+</p>
+		<ol>
+			<li>
+~IF［
+所与の値 ~EQ ~F
+］
+⇒
+`要素$V 上から `内容~属性$V を除去する
+◎
+the content attribute must be removed if the IDL attribute is set to false, and＼
+</li>
+			<li>
+~ELSE
+⇒
+`内容~属性$V の値 ~SET 空~文字列
+◎
+must be set to the empty string if the IDL attribute is set to true.＼
+</li>
+		</ol>
+	</li>
+</ul>
+
+<p>
+（これらは、`真偽-内容~属性$の規則に対応する。）
+◎
+(This corresponds to the rules for boolean content attributes.)
+</p>
+
+<p>
+有符号~整数~型（ `long$I ）の `~IDL属性$V は、以下の定義に従うモノトスル：
+</p>
+
+<ul>
+	<li>
+この種の `~IDL属性$V には、
+`負でない数のみに制限され@
+るものもある。
+◎
+↓</li>
+	<li class="algo">
+<p>
+取得子~手続きは：
+</p>
+		<ol>
+			<li>
+~IF［
+`内容~値$V ~NEQ ε
+］：
+				<ol>
+					<li>
+%V ~LET `内容~値$V
+</li>
+					<li>
+~IF［
+`~IDL属性$V は`負でない数のみに制限され$る
+］
+⇒
+%V ~SET `負でない整数として構文解析する$( %V )
+</li>
+					<li>
+~ELSE
+⇒
+%V ~SET `整数として構文解析する$( %V )
+</li>
+					<li>
+~IF［
+%V ~NEQ `失敗^i
+］~AND［
+%V ~IN `~IDL属性$V の型がとり得る範囲
+］
+⇒
+~RET %V
+</li>
+				</ol>
+			<li>
+~IF ［
+`既定~値$V ~NEQ ε
+］
+⇒
+~RET `既定~値$V
+</li>
+			<li>
+~RET ［
+`~IDL属性$V は`負でない数のみに制限され$るならば −1 ／
+~ELSE_ 0
+］
+</li>
+		</ol>
+◎
+If a reflecting IDL attribute has a signed integer type (long) then, on getting, the content attribute must be parsed according to the rules for parsing signed integers, and if that is successful, and the value is in the range of the IDL attribute's type, the resulting value must be returned. If, on the other hand, it fails or returns an out of range value, or if the attribute is absent, then the default value must be returned instead, or 0 if there is no default value.＼
+◎
+On setting, the given value must be converted to the shortest possible string representing the number as a valid integer and then that string must be used as the new content attribute value.
+◎
+If a reflecting IDL attribute has a signed integer type (long) that is limited to only non-negative numbers then, on getting, the content attribute must be parsed according to the rules for parsing non-negative integers, and if that is successful, and the value is in the range of the IDL attribute's type, the resulting value must be returned. If, on the other hand, it fails or returns an out of range value, or if the attribute is absent, the default value must be returned instead, or −1 if there is no default value.＼
+◎
+On setting, if the value is negative, the user agent must throw an "IndexSizeError" DOMException. Otherwise, the given value must be converted to the shortest possible string representing the number as a valid non-negative integer and then that string must be used as the new content attribute value.
+</li>
+	<li class="algo">
+<p>
+設定子~手続きは：
+</p>
+		<ol>
+			<li>
+~IF［
+`~IDL属性$V は`負でない数のみに制限され$る
+］~AND［
+所与の値 ~LT 0
+］
+⇒
+~THROW `IndexSizeError$E
+</li>
+			<li>
+`内容~属性$V の値 ~SET 所与の値を表現する`妥当な整数$のうち，可能な限り最短の文字列
+</li>
+		</ol>
+◎
+↑</li>
+</ul>
+
+<p>
+無符号~整数~型（ `unsigned long$I ）の `~IDL属性$V は、以下の定義に従うモノトスル：
+</p>
+<ul>
+	<li>
+この種の `~IDL属性$V には、次のいずれかに該当するものもある：
+
+<ul ><li>(A) `正な整数のみに制限され@る
+</li><li>(B) `~fallbackありの下で正な整数のみに制限され@る
+</li><li>(C) ある最小, 最大による`範囲に切詰められ@る
+</li></ul>
+
+<p>
+(B) ／ (C)
+の場合、~fallbackとして，常に何らかの `既定~値$V が定義される。
+</p>
+
+◎
+↓</li>
+	<li class="algo">
+<p>
+取得子~手続きは：
+</p>
+		<ol>
+			<li>
+%V ~LET `失敗^i
+</li>
+			<li>
+~IF［
+`内容~値$V ~NEQ ε
+］
+⇒
+%V ~SET `負でない整数として構文解析する$( `内容~値$V )
+</li>
+			<li>
+~IF［
+`~IDL属性$V は上述の (C) に該当する
+］
+⇒
+~RET ［
+%V ~EQ `失敗^i ならば `既定~値$V ／
+~ELSE_ %V を所与の範囲に切詰めた結果
+］
+</li>
+			<li>
+%下限 ~LET ［
+`~IDL属性$V は上述の (A), (B) いずれかに該当するならば 1 ／
+~ELSE_ 0
+］
+</li>
+			<li>
+~IF［
+%V ~NEQ `失敗^i
+］~AND［
+%V ~IN { %下限 〜 2147483647 }
+］
+⇒
+~RET %V
+</li>
+			<li>
+~RET［
+`既定~値$V ~NEQ ε ならば `既定~値$V ／
+~ELSE_ %下限
+］
+</li>
+		</ol>
+◎
+If a reflecting IDL attribute has an unsigned integer type (unsigned long) then, on getting, the content attribute must be parsed according to the rules for parsing non-negative integers, and if that is successful, and the value is in the range 0 to 2147483647 inclusive, the resulting value must be returned. If, on the other hand, it fails or returns an out of range value, or if the attribute is absent, the default value must be returned instead, or 0 if there is no default value.＼
+◎
+On setting, first, if the new value is in the range 0 to 2147483647, then let n be the new value, otherwise let n be the default value, or 0 if there is no default value; then, n must be converted to the shortest possible string representing the number as a valid non-negative integer and that string must be used as the new content attribute value.
+◎
+If a reflecting IDL attribute has an unsigned integer type (unsigned long) that is limited to only non-negative numbers greater than zero, then the behavior is similar to the previous case, but zero is not allowed. On getting, the content attribute must first be parsed according to the rules for parsing non-negative integers, and if that is successful, and the value is in the range 1 to 2147483647 inclusive, the resulting value must be returned. If, on the other hand, it fails or returns an out of range value, or if the attribute is absent, the default value must be returned instead, or 1 if there is no default value.＼
+◎
+On setting, if the value is zero, the user agent must throw an "IndexSizeError" DOMException. Otherwise, first, if the new value is in the range 1 to 2147483647, then let n be the new value, otherwise let n be the default value, or 1 if there is no default value; then, n must be converted to the shortest possible string representing the number as a valid non-negative integer and that string must be used as the new content attribute value.
+◎
+If a reflecting IDL attribute has an unsigned integer type (unsigned long) that is limited to only non-negative numbers greater than zero with fallback, then the behavior is similar to the previous case, but disallowed values are converted to the default value. On getting, the content attribute must first be parsed according to the rules for parsing non-negative integers, and if that is successful, and the value is in the range 1 to 2147483647 inclusive, the resulting value must be returned. If, on the other hand, it fails or returns an out of range value, or if the attribute is absent, the default value must be returned instead.＼
+◎
+On setting, first, if the new value is in the range 1 to 2147483647, then let n be the new value, otherwise let n be the default value; then, n must be converted to the shortest possible string representing the number as a valid non-negative integer and that string must be used as the new content attribute value.
+◎
+If a reflecting IDL attribute has an unsigned integer type (unsigned long) that is clamped to the range [min, max], then on getting, the content attribute must first be parsed according to the rules for parsing non-negative integers, and if that is successful, and the value is between min and max inclusive, the resulting value must be returned. If it fails, the default value must be returned. If it succeeds but the value is less than min, min must be returned. If it succeeds but the value is greater than max, max must be returned.＼
+◎
+On setting, it behaves the same as setting a regular reflected unsigned integer.
+</li>
+	<li class="algo">
+<p>
+設定子~手続きは：
+</p>
+		<ol>
+			<li>
+%V ~LET 所与の値
+</li>
+			<li>
+~IF［
+`~IDL属性$V は上述の (A) に該当する
+］~AND［
+%V ~EQ 0
+］
+⇒
+~THROW `IndexSizeError$E
+</li>
+			<li>
+%下限 ~LET ［
+`~IDL属性$V は上述の (A), (B) いずれかに該当するならば 1 ／
+~ELSE_ 0
+］
+</li>
+			<li>
+~IF［
+%V ~NIN { %下限 〜 2147483647 }
+］
+⇒
+%V ~SET ［
+`既定~値$V ~NEQ ε ならば `既定~値$V ／
+~ELSE_ %下限
+］
+</li>
+			<li>
+`内容~属性$V の値 ~SET %V を表現するような`妥当な整数$のうち，可能な限り最短の文字列
+</li>
+		</ol>
+
+【設定子に関しては、 (C) に対する特別な扱いはない】
+◎
+↑</li>
+</ul>
+
+<p>
+浮動小数点数~型（ `double$I ／ `unrestricted double$I ）の `~IDL属性$V は、以下の定義に従うモノトスル：
+</p>
+
+<ul>
+	<li>
+この種の `~IDL属性$V には、
+`正な数に制限され@
+るものもある。
+◎
+↓</li>
+	<li class="algo">
+<p>
+取得子~手続きは：
+</p>
+		<ol>
+			<li>
+<p>
+~IF［
+`内容~値$V ~NEQ ε
+］：
+</p>
+				<ol>
+					<li>
+%V ~LET `浮動小数点数として構文解析する$( `内容~値$V )
+</li>
+					<li>
+<p >
+~IF［
+%V ~NEQ `失敗^i
+］：
+</p>
+						<ol>
+							<li>
+~IF［
+`~IDL属性$V は`正な数に制限され$ていない
+］~OR［
+%V ~GT 0.0
+］
+⇒
+~RET %V
+</li>
+						</ol>
+					</li>
+				</ol>
+			</li>
+			<li>
+~IF ［
+`既定~値$V ~NEQ ε
+］
+⇒
+~RET `既定~値$V
+</li>
+			<li>
+~RET 0.0
+</li>
+		</ol>
+◎
+If a reflecting IDL attribute has a floating-point number type (double or unrestricted double), then, on getting, the content attribute must be parsed according to the rules for parsing floating-point number values, and if that is successful, the resulting value must be returned. If, on the other hand, it fails, or if the attribute is absent, the default value must be returned instead, or 0.0 if there is no default value.＼
+◎
+On setting, the given value must be converted to the best representation of the number as a floating-point number and then that string must be used as the new content attribute value.
+◎
+If a reflecting IDL attribute has a floating-point number type (double or unrestricted double) that is limited to numbers greater than zero, then the behavior is similar to the previous case, but zero and negative values are not allowed. On getting, the content attribute must be parsed according to the rules for parsing floating-point number values, and if that is successful and the value is greater than 0.0, the resulting value must be returned. If, on the other hand, it fails or returns an out of range value, or if the attribute is absent, the default value must be returned instead, or 0.0 if there is no default value.＼
+◎
+On setting, if the value is less than or equal to zero, then the value must be ignored. Otherwise, the given value must be converted to the best representation of the number as a floating-point number and then that string must be used as the new content attribute value.
+</li>
+	<li class="algo">
+<p>
+設定子~手続きは：
+</p>
+		<ol>
+			<li>
+~IF［
+`~IDL属性$V は`正な数に制限され$る
+］~AND［
+所与の値 ~LTE 0
+］
+⇒
+~RET （無視する）
+</li>
+			<li>
+`内容~属性$V の値 ~SET 所与の値を`浮動小数点数として最良な表現$に変換した結果
+</li>
+		</ol>
+◎
+↑</li>
+</ul>
+
+<p class="note">注記：
+`Web IDL^cite `WEBIDL$r
+にて定義されるように、実数~型の~IDL属性の設定子に対する値
+Infinity,  NaN（ Not-a-Number ）は、例外を投出させる。
+
+◎
+The values Infinity and Not-a-Number (NaN) values throw an exception on setting, as defined in Web IDL. [WEBIDL]
+</p>
+
+<p>
+`DOMTokenList$I 型の `~IDL属性$V の挙動は、以下の定義に従うモノトスル：
+◎
+If a reflecting IDL attribute has the type DOMTokenList, then＼
+</p>
+
+<ul>
+	<li class="algo">
+<p>
+取得子~手続きは、次を満たす `DOMTokenList$I ~obj %O を返す：
+◎
+on getting it must return a DOMTokenList object＼
+</p>
+		<ul>
+			<li>
+%O に
+<a href="~DOM4#_dtl-element">結付けられている要素</a>
+~EQ `要素$V
+◎
+whose associated element is the element in question and＼
+</li>
+			<li>
+%O に結付けられている
+<a href="~DOM4#_dtl-localname">属性の局所~名</a>
+~EQ `内容~属性$V の名前
+◎
+whose associated attribute's local name is the name of the attribute in question.
+</li>
+		</ul>
+	</li>
+</ul>
+
+			</section>
+			<section id="collections">
+<h3 title="Collections">2.7.2. ~collection</h3>
+
+<p>
+［
+`HTMLFormControlsCollection$I ／
+`HTMLOptionsCollection$I
+］~interfaceは、 `HTMLCollection$I ~interfaceから派生する`~collection$である。
+`HTMLAllCollection$I ~interfaceは、`~collection$であるが，そのように派生されるものではない。
+◎
+The HTMLFormControlsCollection and HTMLOptionsCollection interfaces are collections derived from the HTMLCollection interface. The HTMLAllCollection interface is a collection, but is not so derived.
+</p>
+
+
+				<section id="_collections-common-defs">
+<h4 class="trans-note">2.7.2.X. 共通な定義</h4>
+
+<p class="trans-note">【
+この節は、共通な記述を集約するために，この訳に導入したものである。
+】</p>
+
+<p>
+所与の［
+`HTMLFormControlsCollection$I ／
+`HTMLOptionsCollection$I
+］~obj %C に対し：
+</p>
+
+<ul>
+	<li>
+“%N 番” という表記は、
+%C で`表現され$る要素のうち，`~tree順序$で
+( %N ~PLUS 1 )
+個目にある~nodeを指す。
+</li>
+	<li>
+<p>
+所与の文字列 %name に
+`~IDか名前が一致する要素たち@
+とは、
+%C で`表現され$る要素のうち，次のいずれかを満たすものからなる `~tree順序$による~listを意味する：
+</p>
+
+<ul ><li>`id$a 属性を有していて その値 ~EQ %name
+</li><li>`name$a 属性を有していて その値 ~EQ %name
+</li></ul>
+	</li>
+	<li>
+<p>
+%C が
+`~supportする~prop名を収集する@
+ときは、次を走らす：
+</p>
+		<ol>
+			<li>
+%名前~集合 ~LET 新たな`有順序~集合$
+</li>
+			<li>
+<p>
+%C により`表現され$る ~EACH ( %要素 ) に対し，`~tree順序$で：
+</p>
+				<ol>
+					<li>
+~IF［
+%要素 は `id$a 属性を有する
+］~AND［
+その値 %V ~NEQ 空~文字列
+］
+⇒
+%名前~集合 に %V を`付加する$set
+</li>
+					<li>
+~IF［
+%要素 は `name$a 属性を有する
+］~AND［
+その値 %V ~NEQ 空~文字列
+］
+⇒
+%名前~集合 に %V を`付加する$set
+</li>
+				</ol>
+			</li>
+			<li>
+~RET %名前~集合
+</li>
+		</ol>
+	</li>
+</ul>
+
+<p>
+`name@a
+属性は、［
+`option$e 要素に対しては，その `~nameO$a 属性 ／
+他の要素に対しては，その `~nameF$a 属性
+］を指すとする。
+</p>
+
+<p>
+`新たな空option@
+とは、
+新たに作成される `option$e 要素であって，属性も子~nodeも伴わないものとする。
+</p>
+
+
+
+				</section>
+				<section id="the-htmlallcollection-interface">
+<h4 title="The HTMLAllCollection interface">2.7.2.1. `HTMLAllCollection^I ~interface</h4>
+
+<p class="trans-note">【
+`document.all$m ~~専用の，旧来の特能。
+この節の和訳は、省略する。
+】</p>
+
+				</section>
+				<section id="the-htmlformcontrolscollection-interface">
+<h4 title="The HTMLFormControlsCollection interface">2.7.2.2. `HTMLFormControlsCollection^I ~interface</h4>
+
+
+
+<p>
+`HTMLFormControlsCollection$I ~interfaceは `form$e 要素~内に`~listされる要素$からなる`~collection$に利用される。
+◎
+The HTMLFormControlsCollection interface is used for collections of listed elements in form elements.
+</p>
+
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLFormControlsCollection@I : `HTMLCollection$I {
+  // <span class="comment">`~length0$m, `item()$m を継承する</span>
+  getter (`RadioNodeList$I or `Element$I)? `namedItem$m(DOMString name); // <span class="comment">継承された `~namedItem0()$m を隠蔽する</span>
+};
+
+[Exposed=Window]
+interface `RadioNodeList@I : `NodeList$I {
+  attribute DOMString `value$m;
+};</pre>
+
+<dl class="domintro">
+
+	<dt>%collection . `length$m</dt>
+	<dd>
+%collection 内の要素の個数を返す。
+◎
+Returns the number of elements in the collection.
+</dd>
+
+	<dt>%element = %collection . `item(index)$m</dt>
+	<dt>%element = %collection[%index]</dt>
+	<dd>
+%collection 内の %index 番の~itemを返す。
+◎
+Returns the item with index index from the collection. The items are sorted in tree order.
+</dd>
+
+	<dt>%element = %collection . `namedItem(name)$m</dt>
+	<dt>%radioNodeList = %collection . `namedItem(name)$m</dt>
+	<dt>%element = %collection[%name]</dt>
+	<dt>%radioNodeList = %collection[%name]</dt>
+	<dd>
+%collection 内で， %name に`~IDか名前が一致する要素たち$を返す。
+◎
+Returns the item with ID or name name from the collection.
+</dd>
+	<dd>
+合致する要素が複数ある場合、それらすべてからなる `RadioNodeList$I ~objが返される。
+◎
+If there are multiple matching items, then a RadioNodeList object containing all those elements is returned.
+</dd>
+
+	<dt>%radioNodeList . `value$m [ = %value ]</dt>
+	<dd>
+この~objにより表現される~radio-buttonであって，~checkされているもののうち，最初のものの値を返す。
+◎
+Returns the value of the first checked radio button represented by the object.
+</dd>
+	<dd>
+設定して，~objにより表現される~radio-buttonであって， `value$a に %value を伴うもののうち，最初のものを~checkできる。
+◎
+Can be set, to check the first radio button with the given value represented by the object.
+</dd>
+
+</dl>
+
+
+<p>
+`HTMLFormControlsCollection$I ~obj %C に対しては：
+</p>
+
+<ul>
+	<li>
+%C が`~supportする~prop~index$は、
+`HTMLCollection$I ~objに対し定義されるそれになる。
+◎
+The object's supported property indices are as defined for HTMLCollection objects.
+</li>
+	<li>
+%C が`~supportする~prop名$は、その時点における次の結果として定義される
+⇒
+%C が`~supportする~prop名を収集する$
+◎
+The supported property names consist of the non-empty values of all the id and name attributes of all the elements represented by the collection, in tree order, ignoring later duplicates, with the id of an element preceding its name if it contributes both, they differ from each other, and neither is the duplicate of an earlier entry.
+</li>
+</ul>
+
+<div class="algo">
+<p>
+`namedItem(name)@m
+~method~手続きは：
+◎
+The namedItem(name) method must act according to the following algorithm:
+</p>
+<ol>
+	<li>
+~IF［
+%name ~EQ 空~文字列
+］
+⇒
+~RET ~NULL
+◎
+If name is the empty string, return null and stop the algorithm.
+</li>
+	<li>
+~IF［
+コレ内で， %name に`~IDか名前が一致する要素たち$は 1 個だけある
+］
+⇒
+~RET その要素
+◎
+If, at the time the method is called, there is exactly one node in the collection that has either an id attribute or a name attribute equal to name, then return that node and stop the algorithm.
+</li>
+	<li>
+~IF［
+コレ内で， %name に`~IDか名前が一致する要素たち$はない
+］
+⇒
+~RET ~NULL
+◎
+Otherwise, if there are no nodes in the collection that have either an id attribute or a name attribute equal to name, then return null and stop the algorithm.
+</li>
+	<li>
+~RET ［
+コレ内で， %name に`~IDか名前が一致する要素たち$
+］の~viewを表現するような，新たな［
+`~liveである$ `RadioNodeList$I ~obj
+］
+◎
+Otherwise, create a new RadioNodeList object representing a live view of the HTMLFormControlsCollection object, further filtered so that the only nodes in the RadioNodeList object are those that have either an id attribute or a name attribute equal to name. The nodes in the RadioNodeList object must be sorted in tree order.
+◎
+Return that RadioNodeList object.
+</li>
+</ol>
+</div>
+
+<hr>
+
+<p>
+`RadioNodeList$I ~interfaceが `NodeList$I ~interfaceから継承する~memberは、
+`NodeList$I ~obj上にあるかのように挙動するモノトスル。
+◎
+Members of the RadioNodeList interface inherited from the NodeList interface must behave as they would on a NodeList object.
+</p>
+
+<div class="algo">
+<p>
+`value$m ~IDL属性の目的においては、次が定義される：
+</p>
+<ul>
+	<li>
+<p>
+`要素を見出す^i
+手続きは、所与の
+( 要素に関する条件 %条件 )
+の下で，［
+要素, または ε
+］を返す：
+</p>
+		<ol>
+			<li>
+<p>
+~IF［
+次をすべて満たす要素はある
+］…：
+</p>
+
+<ul ><li>この `RadioNodeList$I ~objにより`表現され$る要素である
+</li><li>`input$e 要素である
+</li><li>`type$a 属性は `Radio$st 状態にある
+</li><li>要素は %条件 を満たす
+</li></ul>
+
+<p>
+…ならば
+⇒
+~RET 該当する要素のうち，`~tree順序$で最初の要素
+</p>
+			</li>
+			<li>
+~RET ε
+</li>
+		</ol>
+	</li>
+	<li>
+所与の要素の `value^i は、次を返す
+⇒
+要素は `value$a 内容~属性を［
+有するならば その値 ／
+有さないならば文字列 `on^l
+］
+</li>
+</ul>
+
+【これらの定義は、以下を簡潔に表現するために，この訳に導入している。】
+◎
+↓</div>
+
+<div class="algo">
+<p>
+`value@m 取得子~手続きは：
+◎
+The value IDL attribute on the RadioNodeList object, on getting, must return the value returned by running the following steps:
+</p>
+<ol>
+	<li>
+%要素 ~LET 次の条件の下で，`要素を見出す^i
+⇒
+要素の`~checkedness$ ~EQ ~T
+◎
+Let element be the first element in tree order represented by the RadioNodeList object that is an input element whose type attribute is in the Radio Button state and whose checkedness is true. Otherwise, let it be null.
+</li>
+	<li>
+~IF［
+%要素 ~EQ ε
+］
+⇒
+~RET ~NULL
+◎
+If element is null, return the empty string.
+</li>
+	<li>
+~RET %要素 の `value^i
+◎
+If element is an element with no value attribute, return the string "on".
+◎
+Otherwise, return the value of element's value attribute.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`value$m 設定子~手続きは：
+◎
+On setting, the value IDL attribute must run the following steps:
+</p>
+<ol>
+	<li>
+%要素 ~LET 次の条件の下で，`要素を見出す^i
+⇒
+要素の `value^i ~EQ 所与の値
+◎
+If the new value is the string "on": let element be the first element in tree order represented by the RadioNodeList object that is an input element whose type attribute is in the Radio Button state and whose value content attribute is either absent, or present and equal to the new value, if any. If no such element exists, then instead let element be null.
+◎
+Otherwise: let element be the first element in tree order represented by the RadioNodeList object that is an input element whose type attribute is in the Radio Button state and whose value content attribute is present and equal to the new value, if any. If no such element exists, then instead let element be null.
+</li>
+	<li>
+~IF［
+%要素 ~NEQ ε
+］
+⇒
+%要素 の `~checkedness$ ~SET ~T
+◎
+If element is not null, then set its checkedness to true.
+</li>
+</ol>
+</div>
+
+				</section>
+				<section id="the-htmloptionscollection-interface">
+<h4 title="The HTMLOptionsCollection interface">2.7.2.3. `HTMLOptionsCollection^I ~interface</h4>
+
+<p>
+`HTMLOptionsCollection$I ~interfaceは、
+`option$e 要素たちの`~collection$に利用される。
+その根は，常に `select$e 要素にされ、その子孫を操作する属性や~methodを備える。
+◎
+The HTMLOptionsCollection interface is used for collections of option elements. It is always rooted on a select element and has attributes and methods that manipulate that element's descendants.
+</p>
+
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLOptionsCollection@I : `HTMLCollection$I {
+  // <span class="comment">`item()$m, `~namedItem0()$m を継承する</span>
+  [`CEReactions$] attribute unsigned long `length$m; // <span class="comment">継承された `~length0$m を隠蔽する</span>
+  [`CEReactions$] `setter$m undefined (unsigned long index, `HTMLOptionElement$I? option);
+  [`CEReactions$] undefined `add$m((`HTMLOptionElement$I or `HTMLOptGroupElement$I) element, optional (`HTMLElement$I or long)? before = null);
+  [`CEReactions$] undefined `remove$m(long index);
+  attribute long `selectedIndex$m;
+};</pre>
+
+<dl class="domintro">
+
+	<dt>%collection . `length$m [ = %value ]</dt>
+	<dd>
+<p>
+%collection 内の要素の個数 %N を返すことに加え：
+◎
+Returns the number of elements in the collection.
+</p>
+		<ul>
+			<li>
+%value ~LT %N の場合、
+%collection の根~内から最後の ( %N − %value ) 個の `option$e 要素を切落す。
+◎
+When set to a smaller number, truncates the number of option elements in the corresponding container.
+</li>
+			<li>
+%value ~GT %N の場合、
+%collection の根~内に ( %value − %N ) 個の`新たな空option$を追加する。
+◎
+When set to a greater number, adds new blank option elements to that container.
+</li>
+		</ul>
+
+	</dd>
+
+	<dt>%element = %collection . `item(index)$m</dt>
+	<dt>%element = %collection[%index]</dt>
+	<dd>
+%collection 内の %index 番の~itemを返す。
+◎
+Returns the item with index index from the collection. The items are sorted in tree order.
+</dd>
+
+	<dt>%collection[%index] = %element</dt>
+	<dd>
+%index ~GT ( %collection 内の~itemの個数 )
+の場合、
+%collection の根~内に`新たな空option$を追加する。
+◎
+When index is a greater number than the number of items in the collection, adds new blank option elements in the corresponding container.
+</dd>
+	<dd>
+%element ~EQ ~NULL の場合、 %collection から %index 番の~itemを除去する。
+◎
+When set to null, removes the item at index index from the collection.
+</dd>
+	<dd>
+%element が `option$e 要素である場合、
+%element を %collection の %index 番の~itemとして追加するか，または
+%collection の %index 番の~itemを %element に置換する。
+◎
+When set to an option element, adds or replaces it at index index from the collection.
+</dd>
+
+	<dt>%element = %collection . `namedItem(name)$m</dt>
+	<dt>%element = %collection[%name]</dt>
+	<dd>
+［
+%collection 内で， %name に`~IDか名前が一致する要素たち$
+］のうち，最初のものを返す。
+◎
+Returns the item with ID or name name from the collection.
+◎
+If there are multiple matching items, then the first is returned.
+</dd>
+
+	<dt>%collection . `add(element [, before ] )$m</dt>
+	<dd>
+<p>
+%before 引数が指す~nodeの前に %element を挿入する：
+</p>
+		<ul>
+			<li>
+%before が数の場合、 %element は，
+%collection 内の %before 番の~itemの前に挿入される
+</li>
+			<li>
+%before が %collection 内の要素である場合、
+%element はその要素の前に挿入される。
+</li>
+			<li>
+%before が［
+省略されている ／ ~NULL ／ 範囲~外の数である
+］場合、 %element は~listの末尾に追加される。
+</li>
+		</ul>
+◎
+Inserts element before the node given by before.
+◎
+The before argument can be a number, in which case element is inserted before the item with that number, or＼
+◎
+an element from the collection, in which case element is inserted before that element.
+◎
+If before is omitted, null, or a number out of range, then element will be added at the end of the list.
+</dd>
+	<dd>
+%element が 挿入-先の要素（ %collection の根）の先祖である場合、
+`HierarchyRequestError$E を投出する。
+◎
+This method will throw a "HierarchyRequestError" DOMException if element is an ancestor of the element into which it is to be inserted.
+</dd>
+	<dd class="trans-note">【
+%before が %collection 内にない要素である場合、
+`NotFoundError$E を投出する。
+】</dd>
+
+	<dt>%collection . `remove(index)$m</dt>
+	<dd>
+%collection から %index 番の~itemを除去する。
+◎
+Removes the item with index index from the collection.
+</dd>
+
+	<dt>%collection . `selectedIndex$m [ = %value ]</dt>
+	<dd>
+選択されている~itemが［
+あれば それらのうち最初の~itemの~index ／
+なければ −1
+］を返す。
+◎
+Returns the index of the first selected item, if any, or −1 if there is no selected item.
+</dd>
+	<dd>
+設定して，選択を変更できる。
+◎
+Can be set, to change the selection.
+</dd>
+</dl>
+
+
+<p>
+`HTMLOptionsCollection$I ~objが`~supportする~prop~index$は、
+`HTMLCollection$I ~objに対し定義されるそれになる。
+◎
+The object's supported property indices are as defined for HTMLCollection objects.
+</p>
+
+
+<div class="algo">
+`length@m
+取得子~手続きは
+⇒
+~RET コレにより`表現され$る~nodeの個数
+◎
+On getting, the length attribute must return the number of nodes represented by the collection.
+</div>
+
+<div class="algo">
+<p>
+`length$m 設定子~手続きは：
+◎
+On setting,＼
+</p>
+<ol>
+	<li>
+%n ~LET 所与の値 − ( コレにより`表現され$る~nodeの個数 )
+◎
+the behavior depends on whether the new value is equal to, greater than, or less than the number of nodes represented by the collection at that time.＼
+</li>
+	<li>
+~IF［
+%n ~EQ 0
+］
+⇒
+~RET
+◎
+If the number is the same, then setting the attribute must do nothing.＼
+</li>
+	<li>
+~IF［
+%n ~GT 0
+］
+⇒
+コレの根である `select$e 要素に［
+%n 個の`新たな空option$
+］を付加した上で、［
+これらの空optionを包含する `DocumentFragment$I
+］が挿入されたかのように，変異~eventを発火する
+◎
+If the new value is greater, then n new option elements with no attributes and no child nodes must be appended to the select element on which the HTMLOptionsCollection is rooted, where n is the difference between the two numbers (new value minus old value). Mutation events must be fired as if a DocumentFragment containing the new option elements had been inserted.＼
+</li>
+	<li>
+~ELSE
+⇒
+コレ内の最後の ( − %n ) 個の~nodeを親~nodeから除去する
+◎
+If the new value is lower, then the last n nodes in the collection must be removed from their parent nodes, where n is the difference between the two numbers (old value minus new value).
+</li>
+</ol>
+
+<p class="note">注記：
+`optgroup$e 要素に関しては、
+`length$m に何かを設定しても，（根である `select$e 要素~内で）［
+それが除去される ／ それが追加される ／ それに新たな子が追加される
+］ことは、決してない（それの子は除去され得るが）。
+◎
+Setting length never removes or adds any optgroup elements, and never adds new children to existing optgroup elements (though it can remove children from them).
+</p>
+</div>
+
+<p>
+`HTMLOptionsCollection$I ~obj %C が`~supportする~prop名$は、その時点における次の結果として定義される
+⇒
+%C が`~supportする~prop名を収集する$
+◎
+The supported property names consist of the non-empty values of all the id and name attributes of all the elements represented by the collection, in tree order, ignoring later duplicates, with the id of an element preceding its name if it contributes both, they differ from each other, and neither is the duplicate of an earlier entry.
+</p>
+
+<div class="algo">
+<p id="dom-htmloptionscollection-setter">
+~UAは、 `HTMLOptionsCollection$I ~obj %C 上で［
+`新たな有index~propの値を設定する$ ／
+`既存の有index~propの値を設定する$
+］ときは，所与の
+( ~prop~index %index, 新たな値 %値 )
+に対し、次を走らすモノトスル：
+◎
+When the user agent is to set the value of a new indexed property or set the value of an existing indexed property for a given property index index to a new value value, it must run the following algorithm:
+</p>
+<ol>
+	<li>
+<p>
+~IF［
+%値 ~EQ ~NULL
+］
+⇒＃
+%C 上の `remove$m ~method手続き( %index )；
+~RET
+◎
+If value is null, invoke the steps for the remove method with index as the argument, and return.
+</li>
+	<li>
+%select ~LET %C の根である `select$e 要素
+◎
+↓</li>
+	<li>
+%n ~LET %index − ( %C により`表現され$る~nodeの個数 )
+◎
+Let length be the number of nodes represented by the collection.
+◎
+Let n be index minus length.
+</li>
+	<li>
+~IF［
+%n ~GT 0
+］
+⇒
+%select に`~nodeを付加する$( ( %n-1 ) 個の`新たな空option$を子に持つ `DocumentFragment$I )
+◎
+If n is greater than zero, then append a DocumentFragment consisting of n-1 new option elements with no attributes and no child nodes to the select element on which the HTMLOptionsCollection is rooted.
+</li>
+	<li>
+~IF［
+%n ~GTE 0
+］
+⇒
+%select に`~nodeを付加する$( %値 )
+◎
+If n is greater than or equal to zero, append value to the select element.＼
+</li>
+	<li>
+~ELSE
+⇒
+<!--＊の中で-->
+`子を~nodeに置換する$( %C 内の %index 番の要素, %値 )
+◎
+Otherwise, replace the indexth element in the collection by value.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`add(element, before)@m
+~method~手続きは：
+◎
+The add(element, before) method must act according to the following algorithm:
+</p>
+<ol>
+	<li>
+%select ~LET コレの根である `select$e 要素
+◎
+↓</li>
+	<li>
+~IF［
+%element は %select の先祖である
+］
+⇒
+~THROW `HierarchyRequestError$E
+◎
+If element is an ancestor of the select element on which the HTMLOptionsCollection is rooted, then throw a "HierarchyRequestError" DOMException.
+</li>
+	<li>
+<p>
+~IF［
+%before は要素である
+］：
+◎
+If before is an element,＼
+</p>
+		<ol>
+			<li>
+~IF［
+%before は %select の子孫でない
+］
+⇒
+~THROW `NotFoundError$E
+◎
+but that element isn't a descendant of the select element on which the HTMLOptionsCollection is rooted, then throw a "NotFoundError" DOMException.
+</li>
+			<li>
+~IF［
+%element ~EQ %before
+］
+⇒
+~RET
+◎
+If element and before are the same element, then return.
+</li>
+		</ol>
+	</li>
+	<li>
+~ELSE（ %before は整数である）
+⇒
+%before ~SET ［
+コレ内に %before 番の~nodeはあるならば それ ／
+~ELSE_ ~NULL
+］
+◎
+If before is a node, then let reference be that node. Otherwise, if before is an integer, and there is a beforeth node in the collection, let reference be that node. Otherwise, let reference be null.
+</li>
+	<li>
+%親 ~LET［
+%before ~NEQ ~NULL ならば %before の親~node ／
+~ELSE_ %select
+］
+◎
+If reference is not null, let parent be the parent node of reference. Otherwise, let parent be the select element on which the HTMLOptionsCollection is rooted.
+</li>
+	<li>
+%親 の中で`~nodeを子の前に前挿入する$( %element, %before )
+◎
+Pre-insert element into parent node before reference.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`remove(index)@m
+~method~手続きは
+⇒
+~IF［
+0 ~LTE %index ~LT ( コレにより`表現され$る~nodeの個数 )
+］
+⇒
+コレ内の %index 番の要素をその親から除去する
+◎
+The remove(index) method must act according to the following algorithm:
+• If the number of nodes represented by the collection is zero, return.
+• If index is not a number greater than or equal to 0 and less than the number of nodes represented by the collection, return.
+• Let element be the indexth element in the collection.
+• Remove element from its parent node.
+</div>
+
+<div class="algo">
+`selectedIndex@m
+取得子~手続きは
+⇒
+~RET コレの根である `select$e 要素~上の
+`~selectedIndex0$m 取得子~手続き()
+◎
+The selectedIndex IDL attribute must act like the identically named attribute on the select element on which the HTMLOptionsCollection is rooted
+</div>
+
+				</section>
+			</section>
+			<section id="the-domstringlist-interface">
+<h3 title="The DOMStringList interface">2.7.3. `DOMStringList$I ~interface</h3>
+
+<p>
+`DOMStringList$I ~interfaceは、文字列の~listを昔風の仕方で表現する。
+◎
+The DOMStringList interface is a non-fashionable retro way of representing a list of strings.
+</p>
+
+<pre class="idl">
+[Exposed=(Window,Worker)]
+interface `DOMStringList@I {
+  readonly attribute unsigned long `length$sL;
+  getter DOMString? `item$sL(unsigned long %index);
+  boolean `contains$sL(DOMString %string);
+};</pre>
+
+
+<p class="warning">
+新たな~APIは、 `DOMStringList$I ではなく，
+`sequence&lt;DOMString&gt;^c または それに等価なものを利用しなければナラナイ。
+◎
+New APIs must use sequence&lt;DOMString&gt; or equivalent rather than DOMStringList.
+</p>
+
+<dl class="domintro">
+	<dt>%strings . `length$sL</dt>
+	<dd>
+%strings が包含している文字列の個数を返す。
+◎
+Returns the number of strings in strings.
+</dd>
+
+	<dt>%strings[%index]</dt>
+
+	<dt>%strings . `item(index)$sL</dt>
+	<dd>
+%strings 内の~index %index 番の文字列を返す。
+◎
+Returns the string with index index from strings.
+</dd>
+
+	<dt>%strings . `contains(string)$sL</dt>
+	<dd>
+%strings が %string を［
+包含するならば ~T ／
+~ELSE_ ~F
+］を返す
+◎
+Returns true if strings contains string, and false otherwise.
+</dd>
+</dl>
+
+<p>
+各 `DOMStringList$I ~objには`~list$
+`文字列~list^i
+が結付けられる。
+◎
+Each DOMStringList object has an associated list.
+</p>
+
+<p>
+`DOMStringList$I ~obj %O が`~supportする~prop~index$は、
+0 以上［
+%O の`文字列~list^iの`~size$
+］未満とする。
+◎
+The supported property indices for a DOMStringList object are the numbers zero to the associated list's size minus one. If its associated list is empty, it has no supported property indices.
+</p>
+
+<div class="algo">
+`length@sL
+取得子~手続きは
+⇒
+~RET コレの`文字列~list^iの`~size$
+◎
+The length attribute's getter must return this DOMStringList object's associated list's size.
+</div>
+
+<div class="algo">
+<p>
+`item(index)@sL
+~method~手続きは：
+</p>
+<ol>
+	<li>
+%~list ~LET コレの`文字列~list^i
+</li>
+	<li>
+~IF［
+%index ~LT %~list の`~size$
+］
+⇒
+~RET %~list[ %index ]
+</li>
+	<li>
+~RET ~NULL
+</li>
+</ol>
+◎
+The item(index) method, when invoked, must return the indexth item in this DOMStringList object's associated list, or null if index plus one is greater than this DOMStringList object's associated list's size.
+</div>
+
+<div class="algo">
+`contains(string)@sL
+~method~手続きは
+⇒
+~RET ［
+次が満たされるならば ~T ／
+~ELSE_ ~F
+］
+⇒
+%string ~IN コレの`文字列~list^i
+◎
+The contains(string) method, when invoked, must return true if this DOMStringList object's associated list contains string, and false otherwise.
+</div>
+
+			 </section>
+		</section>
+</main>

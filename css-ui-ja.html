@@ -1,0 +1,4629 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Basic User Interface Module Level 4 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+<style>
+.attr-state {
+	font-family: sans-serif0, sans-serif;
+}
+
+._cursor-demo {
+	display: inline-block;
+	margin-left: 0.5em;
+	min-width: 5em;
+	height: 1em;
+	outline: thin dashed silver;
+}
+
+@keyframes caret-bar-ref {
+	50% {
+		border-color: transparent;
+	}
+}
+@keyframes caret-block-ref {
+	50% {
+		background: transparent;
+	}
+}
+@keyframes caret-underscore-ref {
+	50% {
+		border-color: transparent;
+	}
+}
+
+@keyframes terminal-caret-ref {
+	50% {
+		border-color: transparent;
+	}
+}
+
+#caret-shape-example td:nth-child(n+2) {
+	white-space: nowrap;
+	background: white;
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	let context_prop = '';
+
+	return this.html.replace(
+		/`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'p':
+	if(indicator === '@') {
+		context_prop = `#valdef-${key}-`;
+	}
+	break;
+case 'ps':
+	text = `:${key}`;
+	break;
+case 'pe':
+	text = `::${key}`;
+	break;
+case 'vt': // value type
+	text = `&lt;${key}&gt;`;
+	href = context_prop + key;
+	break;
+case 'v':
+	href = context_prop + key;
+	break;
+case 'tp': // property value type
+	text = `&lt;'<code class="property">${key}</code>'&gt;`;
+	href = link_map[`p.${key}`];
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		if(klass ==='v' && context_prop === '#valdef-cursor-'){
+			text += `<span class="_cursor-demo" style="cursor:${key}"></span>`;
+		}
+		break;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Basic User Interface Module Level 4
+spec_date:2020-08-18
+trans_update:2020-08-19
+source_checked:200102
+
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-ui-4/
+	abbr_url:CSSUI
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:css-ux,css
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2015-02-15
+
+
+●●class_map
+p:property
+ps:pseudo
+pe:pseudo
+t:type
+tp:type
+vt:type
+css:css
+f:func
+u:unit
+v:value
+e:element
+a:attr
+et:event-type
+st:attr-state
+
+●●tag_map
+p:code
+pe:code
+ps:code
+t:var
+tp:var
+vt:var
+css:code
+I:code
+f:code
+v:code
+u:code
+e:code
+a:code
+et:code
+st:span
+c:code
+V:var
+em:em
+
+●●original_id_map
+
+valdef-outline-style-auto:
+valdef-outline-offset-length:
+
+valdef-resize-none:
+valdef-resize-both:
+valdef-resize-horizontal:
+valdef-resize-vertical:
+
+valdef-cursor-uri:
+valdef-cursor-x:
+valdef-cursor-y:
+
+valdef-caret-color-color:
+
+valdef-nav-up-auto:
+valdef-nav-up-current:
+valdef-nav-up-root:
+valdef-nav-up-id:typedef-id
+valdef-nav-up-target-name:typedef-target-name
+
+●●mdn_urls
+propdef-caret-color:CSS/caret-color
+propdef-cursor:CSS/cursor
+propdef-outline:CSS/outline
+propdef-outline-color:CSS/outline-color
+propdef-outline-offset:CSS/outline-offset
+propdef-outline-style:CSS/outline-style
+propdef-outline-width:CSS/outline-width
+propdef-resize:CSS/resize
+propdef-text-overflow:CSS/text-overflow
+	propdef-nav-down:CSS/nav-down
+	propdef-nav-left:CSS/nav-left
+	propdef-nav-right:CSS/nav-right
+	propdef-nav-up:CSS/nav-up
+propdef-appearance:CSS/appearance
+propdef--webkit-appearance:CSS/appearance
+	propdef-caret:CSS/caret
+	propdef-caret-shape:CSS/caret-shape
+propdef-user-select:CSS/user-select
+
+●●words_table1
+SVGconform:svg-conform-ja.html
+
+autoS:auto
+
+●●words_table
+
+	●UI／呈示
+pointing::::ポインタ指示
+alias::::エイリアス
+	aliasing
+shortcut::::ショートカット
+clipboard::::クリップボード
+I-beam:
+beach-ball:beach ball:::ビーチボール
+balloon::::バルーン
+bar::::バー
+極細十字線:crosshair::~::クロスヘア
+cursor::::カーソル
+bitmap::::ビットマップ
+busy:
+	処理中:busy
+	~button類:button-like variants
+	~buttonらしき:buttony
+caret::::キャレット
+cell::::セル
+円:circle:~
+column::::カラム
+check-box::::チェックボックス
+check-mark::::チェックマーク
+touchscreen::::タッチスクリーン
+slider::::スライダ
+drop-down::::ドロップダウン
+	範囲~control:range
+
+切取る:clipする::切り取る
+
+dot::::ドット
+	上下:up and down
+	左右:left and right
+
+	曲がった:curved
+	上・右・下・左
+drag::::ドラッグ
+drop::::ドロップ
+囲う:encloseする:~
+	~focus可能:focusable
+	~focusし直す:refocus
+	~focusされた:focused
+	~~回転:spinning
+	~graphicな:graphical
+	手~hand
+help::::ヘルプ
+hotspot::::ホットスポット
+hover:
+popup::::ポップアップ
+zoom::::ズーム
+	~zoom用:zooming
+	~resize用:resizing
+	~resize可能:resizable
+resizer:::リサイズ用つまみ
+
+	~scroll可能:scrollable
+	~scroll用:scrolling
+	~scroll用の仕組み:scrolling mechanism
+	separating
+矢印:arrow:~
+拡大鏡:magnifying glass:~
+砂時計:hourglass:~
+腕時計:watch:~
+半透明:semi-translucent::~
+
+	訪問-済み:visited
+
+外形線:outline::~
+	打ち消し線:line through
+
+掴める:grabできる:~
+掴んで:grabして:~
+強調用の:highlighting:~
+編集-:edit:~
+編集中の:editing:~
+視認性:visibility::~
+contrast::::コントラスト
+切替わっ:switchされ:切り替わっ
+切替える:switchする:切り替える
+切替法:switch 法:切り替え法
+	switching
+切替する:toggleする:切り替える
+切詰める:clampする:切り詰める
+
+正符号:plus-sign:~
+無限平面:infinite surface:~
+疑問符:question-mark:~
+接触判定:hit testing:~
+身体的不利:disabilities:~
+選択-:select::~
+	選択-可能:selectable
+未選択に:unselect::~
+	未選択に:undo
+選択:selection::~
+選択的:selective:~
+	存在
+描かれ:drawされ:~
+描く:drawする:~
+
+描かす:drawさせる:~
+標的:target:~
+	挿入~点:insertion point
+insert:
+overtype:
+操作o-:operate:操作
+展開-:expand:~
+見かけ:look::~
+感触:feel::~
+	使用感
+
+	隣接する:neighboring
+	似せられる:resemble
+	現れる:appear する
+	現れてはならない:must disappear
+	示す:show
+	起こる:happen
+	目立たせる:stand out
+	改行される lines are broken 
+	動き始める:movement starts
+	外へずらされ:outset
+	ずらし:offset
+	途切れる／open
+	周囲:around／surrounding
+	指す:pointing／
+	指す所:location
+	表示の有無を変える：displaying or suppressing
+	占める:take up／occupy／-
+	省かれ:elide
+	南東:south-east
+	手の甲:backside of a hand
+	人差し指を立てた:index finger extended
+
+	●塗り
+色:color::~
+色付け:coloring::~
+赤色:red:~
+重合して:overlapして::重なり合って
+重合する:overlapする::重なり合う
+	重なる:over
+黒色:black::~
+背後:behind:~
+反転:inversion:~
+背景:background::~
+影:shadow::~
+	具現化-:rendering
+積層法:stacking::~
+積層-:stack::~
+	stacking
+
+	●幾何
+線:line:~
+曲線:curve:~
+部位:portion:~
+	細い:thin
+横方向:horizontal::~
+縦方向:vertical::~
+
+縦横二方向の:bidirectional::~
+双方向-:bidirectional::~
+	横方向に限り:unidirectional horizontal
+	縦方向に限り:unidirectional vertical
+	端:edge
+矩形:rectangle:~
+矩形で:rectangularで:~
+矩形に:rectangularに:~
+隙間:space:~
+中心:center:~
+太めの:thick:~
+太さ:thickness:~
+小さな:small:~
+拡大縮小:magnify:~
+縮小-:scale down:~
+形状:shape:~
+傾けて:slantして:~
+遮られ:obscureされ:~
+方向的:directional::~
+二次元:two dimensional::~
+
+隅:corner:~
+領域:region:~
+垂直:perpendicular:~
+時計回り:clockwise:~
+反時計回り:counter-clockwise:~
+限界域:bounds::~
+	寸法
+縦横比:ratio:~
+	終端-:end
+	終端した所:end-point
+下面:under::~
+側:side::~
+垂直:perpendicular:~
+
+	●CSS layout
+不可分:atomic::~
+	内在的~size:intrinsically sized
+再flow:reflow::再フロー:リフロー
+置かれ:placeされ:~
+
+分断-:break::~
+	~~内部:inside
+	~~外縁:outside
+行-:line-::~
+単行:single line::~
+折返さな:wrapしな::折り返さな
+送幅:advance measure:送り幅
+中央寄せに:center:~
+	匿名:annonymous／:annomymous
+縮短-:shrink:~
+
+	●書字方向／用字系
+縦書き:vertical::~
+横書き:horizontal::~
+右横書き:right-to-left::~
+	右横書き:RTL
+	字:letter
+書記素:grapheme::~
+書字mode:writing mode::書字 mode:書字モード
+
+	●CSS
+別名n:name alias::別名
+important:
+単位:unit:~
+変形n:transformation::変形
+変形:transform::~
+	`style^c ~~属性:inline style
+italic:
+oblique:
+
+	~animateされ:animated
+	~animate化:animated
+	~styleし直す:restyle
+	~style付け:styling
+	~styleなしの:unstyled
+	~CSS:css
+
+	●仕様
+省略可:optional:~
+	~risk下:at-risk
+linter:
+	問題を~~孕んで:problematic
+	誤った特能:misfeature
+合法:legal:~
+	効果は無い:ineffective
+有効な:effectiveな:~
+	できなくなる:no longer be effective
+上位拡張:superset:~
+	方針:path
+一般用:general purpose:~
+
+選択肢:option:~
+慣行:conventions:~
+	compability
+	互換性:compat
+
+義務的:mandatory:~
+代替的:alternative:~
+多彩:rich:~
+機能:function:~
+主目的:subject:~
+偶発的:accidental:~
+安定的:stable:~
+	実用的でない:impractical
+柔軟性:flexibility::~
+明白:obvious:~
+根拠:evidence:~
+結論-:conclude:~
+適度:reasonable:~
+	reasonably
+blacklist::::ブラックリスト
+whitelist::::ホワイトリスト
+普通の:ordinaryな:~
+矛盾-:contradict:~
+質問票:questionnaire:~
+質問:question:~
+回答:answer:~
+
+	通例的でない:unusual
+	単純さ:simplicity
+	可用にできない:unavailable
+	~~意図的に deliberate
+	-:impossible
+	でき:possible
+	あり得る:possible
+	:contradiction
+	面で:in terms of
+	~~理由:because
+	に備えて，for the sake of
+	限り，as long as,
+	相当に:substantial
+	反する:adverse
+	良好な／良い:good
+	ひどく:highly
+	かもしれない:maybe
+	〜な限り:to the extent
+	これを書いている時点では、As of the time of writing／At the time of writing
+	し易く:easy
+	~~技法:trick
+	~~期待されているhopefully
+	する気になった:show interest and intent to
+	委ね:left／up to
+	能力を欠く:incapable
+	~~目標:objectives
+	必ず:to make sure
+	-:making sure
+	としても:if at all
+	-:matter
+	感謝:Thanks to
+	モノトスル:shall
+	あり得る／なり得る:potentially
+	早急に:as soon as possible
+	利用中の:your
+	ないと見込まれる:unlikely
+	見込まれ:it is likely that
+	見込まれ:likely
+	整合性を保つ:consistent
+	任意選択で:optionally
+	当初は:initially
+	we
+	任意な:any arbitrary
+	にもかかわらず:despite
+	良いであろう:would be good
+	であろう:maybe
+	担当する:being responsible for
+	いつかは:at some point
+	逆に:conversely
+	広く:widely
+
+	●仕様（動詞
+
+欠如:lack:~
+濫用的:abusive:~
+文書化-:document:~
+試みし:attemptし:試み
+	~~扱う:count as
+修復-:repair:~
+増補-:augment:~
+追求-:pursue:~
+格下げ:downgrade:~
+回避策:work around:~
+併合-:merge::~
+判定-:judge::~
+支援-:assist:~
+緩める:relaxする:~
+見落とす:overlookする:~
+警告-:warn:~
+警告:warning:~
+指名-:designate:~
+模倣-:simulate:~
+再現-:replicate:~
+獲得-:acquire:~
+無視r:disregard:無視することに
+	させる:let
+妥協-:compromise:~
+昇格-:promote:~
+復旧-:restore:~
+妨げる:inhibitする:~
+条項:clause:~
+
+	選んだ:choice
+	-:user-designated
+	導入し直-:reintroduce
+	したいように:want
+	干渉-:interference
+	環境設定-:configuration
+	documentation
+	指定されていない:unspecific
+	~~詳細:specifics
+	述べ得る
+	述べたとおりに:prescribe
+	言う:say
+	とても:very
+	書かれ:written
+	~~明らかにする:figure-out
+	いらつかせ:frustrating／frustration
+	使い勝手を悪くする hamper usability
+	~~強く要望する:explicitly solicited
+	~~意見:input
+	課さな:impose
+	委ねられる:left up to
+	忘れる:without remembering to make
+	惑わす:confuse
+	伝える:tell する
+	~~実行:carry out
+	伝える:convey
+	損なわれ:damaging
+	転換-:turn 〜 into
+	熟しきった:full blown
+	切って:turn off
+	表す:denote
+	作業し直:rework
+	初めから:to start with
+
+	●未分類（動詞
+参照r:refer:参照
+検索-:look up:~
+探索:search:検索
+
+paste::::ペースト
+copy::::コピー
+	~copy可否:copyability
+迂回-:bypass:~
+	変異-可能:mutable
+添付-:attach:~
+組成-:compose:~
+失う:loseする:~
+sensor::::センサ
+
+	~~具体的な~markup:Whatever markup sequence
+	できるようにする:enable
+	既存の:pre-existing
+	足る:sufficient
+	-:pretend
+	選ぶ:choose
+	選ばれ:chosen
+	あてがう:leave
+	一定:fixed
+		-:share
+	成す:resembling
+	skip
+	fall
+	made
+	left
+	後続する:follow
+	課さない:makes
+	へ後戻り:go backwards
+	押し下げた:press した
+	見つける:look for
+	行く:going
+	ままに:leaving
+	保つ:keep
+	-:issue number
+	letting
+	against
+	-:in turn
+	〜にする:make／making
+	made
+	-:called
+	得る:get
+	置く:put
+
+	●未分類
+URI:
+	Microsoft
+	IE
+	Internet Explorer
+	Firefox
+	Chrome
+	Safari
+underscore::::アンダースコア
+terminal::::ターミナル
+command-line:command line:::コマンドライン
+	~browser内の:in-browser
+desktop::::デスクトップ
+オープン:open::~
+	-:parameter
+password::::パスワード
+パソコン:personal computer:::~
+	potential:::
+table::::テーブル
+別名n:name alias::別名
+	片:pieces of
+	`p^e 要素:paragraph
+	範囲:lower than〜greater than
+分量:amount:~
+翻訳:translation:~
+装飾的:decorative::~
+	接頭辞~付き:prefixed:-prefixed
+	接頭辞なしの:prefixless
+形:form:~
+	よい:ok
+	-:target
+	-:instance
+	-:opportunity
+	期間:period
+	近いもの:approximation
+	長過ぎる:too long
+	数:number
+	id
+	線が途切れることなく，輪になる:fully connected rather than open on some sides
+	次の 3 種に分類される:fall into one of three categories
+	:Authoring Guidelines
+	高める:greater
+
+	●指示語
+非-:non-:~
+一定の:certain:~
+
+	部分:part
+	-:particular
+	部品:parts
+	似たように:similarly
+	直ぐ:immediately
+	元々の:original
+	以前は／それまでに:previously
+	以前の:previous
+	これまでの:earlier
+	早期に:earlier
+	前 2 項:previous two
+	仮の:tentative
+	複数の:be in different
+	2 成分:dual
+	または:or
+	さもないと:otherwise
+	自身の:their
+	次の:next
+	何か／一部の／いくらかの:some
+	いくぶん:somewhat
+	こともある:sometimes
+	何か／一部の／いくらかの:some
+	しかしながら:However
+	触れ／上に:over
+	手前に:on top
+	後に／後で:later
+	すでに
+	代わりに in place of
+	傍に next to it
+	次の:next
+	少しばかり:minor
+	ちょうど:just
+	数種の:several
+	各種:numerous
+	種々の:various
+	2 倍 twice
+	異なる-:differ
+	異なり:differently
+	大きい:large
+	時点:time／
+	内外:in or out
+	対応する／respective
+	ある程度:somewhat
+	有無:on and off
+	似た:like
+	per
+	next
+	沿う:along
+	across
+	0 でない:non-zero
+	いずれにせよ:anyway
+	その逆:vice versa
+	上述:above
+	互いに:eachother
+	全く:at all
+	全体:entirely
+	一体:whole
+	挟むように:across
+	間にわたり:across
+	主だった:main
+	その逆:opposite
+	点:point
+	ずっと〜ない:much less
+	一握りの:handful
+	付近:near
+	他に:more
+	のみならず:more than just
+	さらには、:moreover
+	たびに:every time
+	限り:as long as
+	単に:merely
+	だけ:merely
+	一方で:while
+	一つとして:in part
+	長い:long
+	でない:anything other than
+
+●●link_map
+
+p.caret-color:#propdef-caret-color
+p.cursor:#propdef-cursor
+p.outline-color:#propdef-outline-color
+p.outline-offset:#propdef-outline-offset
+p.outline-style:#propdef-outline-style
+p.outline-width:#propdef-outline-width
+p.outline:#propdef-outline
+p.resize:#propdef-resize
+p.caret-shape:#propdef-caret-shape
+p.caret:#propdef-caret
+p.user-select:#propdef-user-select
+p.nav-down:#propdef-nav-down
+p.nav-left:#propdef-nav-left
+p.nav-right:#propdef-nav-right
+p.nav-up:#propdef-nav-up
+p.appearance:#propdef-appearance
+p.-webkit-appearance:#propdef--webkit-appearance
+
+p.all:~CASCADE#propdef-all
+p.background-color:~CSSBG#propdef-background-color
+p.border:~CSSBG#propdef-border
+p.box-sizing:~SIZING#propdef-box-sizing
+p.text-overflow:~CSSOVERFLOW3#propdef-text-overflow
+p.overflow:~CSSOVERFLOW3#propdef-overflow
+	p.content:~CSSCONTENT#propdef-content
+
+p.visibility:~CSS2VISUFX#propdef-visibility
+p.width:~CSS2VISUDET#propdef-width
+p.height:~CSS2VISUDET#propdef-height
+p.min-width:~CSS2VISUDET#propdef-min-width
+p.min-height:~CSS2VISUDET#propdef-min-height
+p.max-width:~CSS2VISUDET#propdef-max-width
+p.max-height:~CSS2VISUDET#propdef-max-height
+p.display:~CSSDISP#propdef-display
+	p.display:~CSS2VISUREN#propdef-display
+
+p.direction:~CSSWM#propdef-direction
+p.unicode-bidi:~CSSWM#propdef-unicode-bidi
+
+p.border-style:~CSSBG#propdef-border-style
+p.border-width:~CSSBG#propdef-border-width
+p.border-radius:~CSSBG#propdef-border-radius
+p.background-image:~CSSBG#propdef-background-image
+
+p.border-*-style:~CSSBG#border-style
+p.border-*-width:~CSSBG#border-width
+p.border-*-radius:~CSSBG#border-radius
+
+p.margin:~CSSBOX#propdef-margin
+p.margin-left:~CSSBOX#propdef-margin-bottom
+p.margin-right:~CSSBOX#propdef-margin-bottom
+p.margin-top:~CSSBOX#propdef-margin-bottom
+p.margin-bottom:~CSSBOX#propdef-margin-bottom
+
+p.float:~CSS2VISUREN#propdef-float
+p.clear:~CSS2VISUREN#propdef-clear
+p.z-index:~CSS2VISUREN#propdef-z-index
+
+p.position:~CSSPOS#propdef-position
+p.left:~CSSPOS#propdef-left
+p.right:~CSSPOS#propdef-right
+p.top:~CSSPOS#propdef-top
+p.bottom:~CSSPOS#propdef-bottom
+
+p.color:~CSSCOLOR#propdef-color
+
+ps.focus:~SELECTORS4#focus-pseudo
+ps.enabled:~SELECTORS4#enabled-pseudo
+ps.disabled:~SELECTORS4#disabled-pseudo
+ps.checked:~SELECTORS4#checked-pseudo
+
+pe.before:~CSSPSEUDO#selectordef-before
+pe.after:~CSSPSEUDO#selectordef-after
+pe.first-line:~CSSPSEUDO#selectordef-first-line
+pe.first-letter:~CSSPSEUDO#selectordef-first-letter
+pe.marker:~CSSPSEUDO#selectordef-marker
+
+v.currentcolor:~CSSCOLOR#valdef-color-currentcolor
+v.visible:~CSSOVERFLOW3#valdef-overflow-visible
+v.~autoS:~SIZING#valdef-width-auto
+
+
+	#valdef-outline-style-auto
+
+	#valdef-outline-color-invert
+
+	#valdef-resize-none
+	#valdef-resize-both
+	#valdef-resize-horizontal
+	#valdef-resize-vertical
+
+	#valdef-cursor-uri
+	#valdef-cursor-x
+	#valdef-cursor-y
+
+	#valdef-caret-color-auto
+	#valdef-caret-color-color
+
+	#valdef-caret-shape-bar
+	#valdef-caret-shape-block
+	#valdef-caret-shape-underscore
+	#valdef-caret-shape-auto
+
+	#valdef-nav-up-auto
+	#valdef-nav-up-current
+	#valdef-nav-up-root
+	#valdef-nav-up-id
+	#valdef-nav-up-target-name
+
+	#valdef-user-select-auto
+	#valdef-user-select-all
+	#valdef-user-select-contain
+	#valdef-user-select-none
+	#valdef-user-select-text
+
+	#valdef-appearance-auto
+	#valdef-appearance-none
+	#valdef-appearance-button
+	#valdef-appearance-textfield
+	#valdef-appearance-menulist-button
+
+
+t.color:~CSSCOLOR#typedef-color
+t.image:~CSSIMAGE#typedef-image
+t.length:~CSSVAL#length-value
+t.percentage:~CSSVAL#percentage-value
+t.string:~CSSVAL#string-value
+t.number:~CSSVAL#number-value
+t.url:~CSSVAL#url-value
+t.outline-line-style:#typedef-outline-line-style
+t.line-style:~CSSBG#typedef-line-style
+t.line-width:~CSSBG#typedef-line-width
+t.compat-auto:#typedef-appearance-compat-auto
+
+
+e.div:~HEgrouping#the-div-element
+e.img:~HEimages#the-img-element
+e.input:~HEinput#the-input-element
+e.video:~HEmedia#video
+e.picture:~HEimages#the-picture-element
+e.textarea:~HEforms#the-textarea-element
+e.svg:~TR/svg2/struct.html#elementdef-svg
+	https://svgwg.org/svg2-draft/struct.html#elementdef-svg
+e.object:~HEembed#the-object-element
+e.iframe:~HEembed#the-iframe-element
+e.canvas:~HEcanvas#canvas
+e.textPath:~SVGtext#elementdef-textPath
+e.select:~HEforms#the-select-element
+e.option:~HEforms#the-option-element
+e.button:~HEforms#the-button-element
+e.cursor:~SVG11/interact.html#CursorElement
+
+a.contenteditable:~HTMLinteraction#attr-contenteditable
+a.hidden:~HTMLinteraction#the-hidden-attribute
+a.lang:~HTMLdom#attr-lang
+	a.inputmode:~HTMLinteraction#attr-inputmode
+	a.pattern:
+a.type:~HEinput#attr-input-type
+
+et.click:~UIEVENTS#event-type-click
+
+I.CSSPseudoElement:~CSSPSEUDO#CSSPseudoElement-interface
+
+	●用語
+外形線:#outline-props
+
+文字:#character
+可視~文字:#visible-character
+編集-可能な要素:#editable-element
+
+~widget:#widget
+~nativeな外観:#native-appearance
+
+	●用語（外部, CSS layout
+
+書字mode:~CSSWM#writing-mode
+行-下面:~CSSWM#line-under
+	下面:~CSSWM#under
+行内-軸:~CSSWM#inline-axis
+行内:~CSSDISP#inline
+塊~容器:~CSSDISP#block-container
+塊:~CSSDISP#block
+	~CSS2VISUREN#block-boxes
+置換d要素:~CSSDISP#replaced-element
+内縁~表示-型:~CSSDISP#inner-display-type
+
+~border~box:~CSSBOX#border-box
+内容~辺:~CSSBOX#content-edge
+~padding辺:~CSSBOX#padding-edge
+~border辺:~CSSBOX#border-edge
+
+有位置:~CSSPOS#positioned-box
+
+具象-~obj~size:~CSSIMAGE#concrete-object-size
+既定の~obj~size:~CSSIMAGE#default-object-size
+既定の~sizing~algo:~CSSIMAGE#default-sizing-algorithm
+
+~page~margin~box:~CSSPAGE#page-margin-boxes
+
+絶対的に位置され:~CSSPOS#absolute-position
+
+	●用語（外部, 他
+~canvas:~CSS2CONFORM#canvas
+~importantな宣言:~CASCADE#important
+通常の宣言:~CASCADE#normal
+~UA~stylesheet:~CASCADE#cascade-origin-ua
+旧来の別名n:~CASCADE#legacy-name-alias
+下位prop:~CASCADE#longhand
+
+算出d色:~CSSCOLOR#computed-color
+使用~値:~CASCADE#used-value
+算出d値:~CASCADE#computed-value
+
+	絶対~長さ:~CSSVAL#absolute-length-units
+絶対~単位:~CSSVAL#absolute-length-units
+~style属性:~CSSSTYLEATTR#style-attribute
+
+~ID選択子:~SELECTORS4#id-selector
+
+~secure~animate化~mode:~SVGconform#secure-animated-mode
+~secure静的~mode:~SVGconform#secure-static-mode
+
+変異-可能:~HTMLforms#concept-fe-mutable
+
+~drop-down~box:~HTMLrendering#drop-down-box
+
+編集中の~host:https://w3c.github.io/contentEditable/#dfn-editing-host
+
+	~SVG2/text.html#TextLayoutPath
+	~TR/SVG2/#TextLayoutPath
+
+
+●●ref_normative
+
+[CSS-BACKGROUNDS-3]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. 17 October 2017. CR. URL: https://www.w3.org/TR/css-backgrounds-3/ 
+[CSS-BOX-4]
+    Elika Etemad. CSS Box Model Module Level 4. 21 April 2020. WD. URL: https://www.w3.org/TR/css-box-4/ 
+[CSS-CASCADE-4]
+    Elika Etemad; Tab Atkins Jr.. CSS Cascading and Inheritance Level 4. 18 August 2020. WD. URL: https://www.w3.org/TR/css-cascade-4/ 
+[CSS-COLOR-3]
+    Tantek Çelik; Chris Lilley; David Baron. CSS Color Module Level 3. 19 June 2018. REC. URL: https://www.w3.org/TR/css-color-3/ 
+[CSS-COLOR-4]
+    Tab Atkins Jr.; Chris Lilley. CSS Color Module Level 4. 5 November 2019. WD. URL: https://www.w3.org/TR/css-color-4/ 
+[CSS-DISPLAY-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Display Module Level 3. 19 May 2020. CR. URL: https://www.w3.org/TR/css-display-3/ 
+[CSS-IMAGES-3]
+    Tab Atkins Jr.; Elika Etemad; Lea Verou. CSS Images Module Level 3. 10 October 2019. CR. URL: https://www.w3.org/TR/css-images-3/ 
+[CSS-OVERFLOW-3]
+    David Baron; Elika Etemad; Florian Rivoal. CSS Overflow Module Level 3. 3 June 2020. WD. URL: https://www.w3.org/TR/css-overflow-3/ 
+[CSS-OVERFLOW-4]
+    David Baron; Florian Rivoal. CSS Overflow Module Level 4. 13 June 2017. WD. URL: https://www.w3.org/TR/css-overflow-4/ 
+[CSS-PAGE-3]
+    Elika Etemad; Simon Sapin. CSS Paged Media Module Level 3. 18 October 2018. WD. URL: https://www.w3.org/TR/css-page-3/ 
+[CSS-POSITION-3]
+    Elika Etemad; et al. CSS Positioned Layout Module Level 3. 19 May 2020. WD. URL: https://www.w3.org/TR/css-position-3/ 
+[CSS-PSEUDO-4]
+    Daniel Glazman; Elika Etemad; Alan Stearns. CSS Pseudo-Elements Module Level 4. 25 February 2019. WD. URL: https://www.w3.org/TR/css-pseudo-4/ 
+[CSS-SIZING-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Intrinsic & Extrinsic Sizing Module Level 3. 22 May 2019. WD. URL: https://www.w3.org/TR/css-sizing-3/ 
+[CSS-TRANSFORMS-1]
+    Simon Fraser; et al. CSS Transforms Module Level 1. 14 February 2019. CR. URL: https://www.w3.org/TR/css-transforms-1/ 
+[CSS-UI-3]
+    Tantek Çelik; Florian Rivoal. CSS Basic User Interface Module Level 3 (CSS3 UI). 21 June 2018. REC. URL: https://www.w3.org/TR/css-ui-3/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS-WRITING-MODES-3]
+    Elika Etemad; Koji Ishii. CSS Writing Modes Level 3. 10 December 2019. REC. URL: https://www.w3.org/TR/css-writing-modes-3/ 
+[CSS-WRITING-MODES-4]
+    Elika Etemad; Koji Ishii. CSS Writing Modes Level 4. 30 July 2019. CR. URL: https://www.w3.org/TR/css-writing-modes-4/ 
+[CSS21]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[PNG]
+    Tom Lane. Portable Network Graphics (PNG) Specification (Second Edition). 10 November 2003. REC. URL: https://www.w3.org/TR/PNG/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[SELECTORS-4]
+    Elika Etemad; Tab Atkins Jr.. Selectors Level 4. 21 November 2018. WD. URL: https://www.w3.org/TR/selectors-4/ 
+[SVG11]
+    Erik Dahlström; et al. Scalable Vector Graphics (SVG) 1.1 (Second Edition). 16 August 2011. REC. URL: https://www.w3.org/TR/SVG11/ 
+[SVG2]
+    Amelia Bellamy-Royds; et al. Scalable Vector Graphics (SVG) 2. 4 October 2018. CR. URL: https://www.w3.org/TR/SVG2/ 
+[UAX29]
+    Mark Davis; Christopher Chapman. Unicode Text Segmentation. 19 February 2020. Unicode Standard Annex #29. URL: https://www.unicode.org/reports/tr29/tr29-37.html 
+
+●●ref_informative
+
+[CSS1]
+    Håkon Wium Lie; Bert Bos. Cascading Style Sheets, level 1. 13 September 2018. REC. URL: https://www.w3.org/TR/CSS1/ 
+[CSS4-IMAGES]
+    Tab Atkins Jr.; Elika Etemad; Lea Verou. CSS Image Values and Replaced Content Module Level 4. 13 April 2017. WD. URL: https://www.w3.org/TR/css-images-4/ 
+[HTML5]
+    Ian Hickson; et al. HTML5. 27 March 2018. REC. URL: https://www.w3.org/TR/html5/ 
+[SELECT]
+    Tantek Çelik; et al. Selectors Level 3. 6 November 2018. REC. URL: https://www.w3.org/TR/selectors-3/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Basic User Interface Module Level 4</a>
+を日本語に翻訳したものです。
+~PUB （ Level 3 ）
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/css-ui-4/
+編集者草案
+	https://drafts.csswg.org/css-ui-4/
+以前のバージョン
+	https://www.w3.org/TR/2020/WD-css-ui-4-20200124/
+	https://www.w3.org/TR/2020/WD-css-ui-4-20200102/
+	https://www.w3.org/TR/2017/WD-css-ui-4-20171222/
+	https://www.w3.org/TR/2015/WD-css-ui-4-20150922/
+
+テスト一式
+	http://test.csswg.org/suites/css-ui-4_dev/nightly-unstable/
+
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-ui-4">GitHub Issues</a>
+
+編集
+	<a href="https://florian.rivoal.net/">Florian Rivoal</a> (On behalf of Bloomberg
+
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-ui-4/Overview.bs">GitHub Editor</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-ui-4
+
+</script>
+
+</head>
+<body>
+
+<header>
+
+	<hgroup>
+<h1>CSS Basic User Interface Module Level 4</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この仕様は、~HTML／~XML（ XHTML も含む）に~styleをあてがうために，~UI（ `user interface^en ）に関係する各種［
+~prop, 値
+］について述べる。
+これは、以前の各種~CSS~levelの各種［
+~prop, 値
+］の，~UIに関係する特能を拡張する。
+また、種々の［
+~prop, 値
+］を利用して，文書~内の基本的な~UI要素に~styleをあてがう。
+◎
+This specification describes user interface related properties and values to style HTML and XML (including XHTML). It includes and extends user interface related features from the properties and values of previous CSS levels. It uses various properties and values to style basic user interface elements in a document.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは、編集者草案の公な複製です…
+【以下，この節の他の内容は <a href="css-common-ja.html#status">~CSS日本語訳 共通~page／冒頭の仕様~metadata</a>に委譲。】
+</p>
+
+<p>
+この仕様は、
+<cite>CSS Basic User Interface Module Level 3</cite>
+`CSS-UI-3$r
+を含み，それを拡張する。
+◎
+This specification will include and extend CSS Basic User Interface Module Level 3. [CSS-UI-3]
+</p>
+
+<p>
+次の特能は
+<a href="css-common-ja.html#at-risk">~risk下</a>
+にあり，勧告候補の期間~中に落とされるかもしれません：
+◎
+The following features are at-risk, and may be dropped during the CR period:
+</p>
+
+<ul>
+	<li>
+`before$pe, `after$pe
+に対する `user-select$p の適用能。
+◎
+Applicability of user-select to ::before and ::after 
+</li>
+</ul>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+<p>
+この~moduleは、［
+~UIに関係する~propと その値に対し，作者による~style付けを可能化する
+］ような，各種~CSS~propについて述べる。
+◎
+This module describes CSS properties which enable authors to style user interface related properties and values.
+</p>
+
+<p>
+`CSS1$r の
+<a href="https://www.w3.org/TR/REC-CSS1#anchor-pseudo-classes">§ 2.1</a>,
+および `CSS21$r の
+<a href="https://www.w3.org/TR/CSS2/ui.html">18 章</a>
+では、~UIに関係する数種の［
+~prop, 値
+］が導入されている。
+`CSSUI$r （ 2000 年 2 月 16日）では、~UIに関係する 数種の新たな特能が導入された。
+◎
+Section 2.1 of CSS1 [CSS1] and Chapter 18 of CSS2 [CSS21] introduced several user interface related properties and values. User Interface for CSS3 (16 February 2000) introduced several new user interface related features.
+</p>
+
+<p>
+後に，これらを組入れて, 拡張し, それらに取って代わる，
+`CSS-UI-3$r が導入された。
+この仕様は、この作業を継続して， `CSS-UI-3$r を置換する。
+◎
+[CSS-UI-3] was later introduced to incorporate, extend, and supersede these. This specification continues this work, and in turn replaces [CSS-UI-3].
+</p>
+
+		<section id="purpose">
+<h3 title="Purpose">1.1. 目的</h3>
+
+<p>
+この仕様の目的は、次の~~目標を達成することである：
+◎
+The purpose of this specification is to achieve the following objectives:
+</p>
+
+<ul>
+	<li>
+`CSS21$r, `CSS-UI-3$r
+による~UI特能を拡張する。
+◎
+Extend the user interface features in [CSS21] and [CSS-UI-3]
+</li>
+	<li>
+~CSSによる追加的な仕組みを供して、~HTMLにおける他の動的な呈示に関係する特能を，増補する／置換する。
+◎
+Provide additional CSS mechanisms to augment or replace other dynamic presentation related features in HTML.
+</li>
+	<li>
+~UIの構築を支援するための方向的~navi~propを導入する
+— それは、方向的~navi~modelを用立てる。
+◎
+Introduce directional navigation properties to assist in the construction of user interfaces which make use of a directional navigation model.
+</li>
+</ul>
+
+		</section>
+	</section>
+	<section id="interaction">
+<h2 title="Module Interactions">2. ~module間の相互作用</h2>
+
+<p>
+この文書は、これまでの仕様に存在しなかった，新たな特能を定義する。
+加えて、［
+次を置換して，それに取って代わった `CSS-UI-3$r
+］を置換して，それに取って代わる：
+◎
+This document defines new features not present in earlier specifications. In addition, it replaces and supersedes [CSS-UI-3], which itself replaced and superseded the following:
+</p>
+
+<ul>
+	<li>
+`CSS21$r の：
+<a href="~CSS22/ui.html#cursor-props">§ 18.1</a>,
+<a href="~CSS22/ui.html#dynamic-outlines">§ 18.4</a>,
+［
+<a href="~CSS22/zindex.html#elaborate-stacking-contexts">付録 E</a>
+にて定義される`外形線$の積層法についての情報
+］
+◎
+Section 18.1, section 18.4, and Information on the stacking of outlines defined in Appendix E of Cascading Style Sheets, level 2, revision 1 [CSS21]
+</li>
+	<li>
+<a href="~TR/2000/WD-css3-userint-20000216">User Interface for CSS3 （ 2000 年 2 月 16日）</a>
+`CSS-UI-3$r
+◎
+User Interface for CSS3 (16 February 2000) [CSS-UI-3]
+</li>
+</ul>
+
+<p id="box-sizing" class="note">注記：
+以前は この仕様にて定義されていた
+<span id="propdef-box-sizing">`box-sizing$p</span>
+~propは、
+`CSS-SIZING-3$r に移動された。
+◎
+Note: The box-sizing property was previously defined in this section of the specification, but has been moved to CSS Sizing 3 §3.3 Box Edges for Sizing: the box-sizing property.
+</p>
+
+<p id="text-overflow" class="note">注記：
+以前は この仕様にて定義されていた
+<span id="propdef-text-overflow">`text-overflow$p</span>
+~propは、
+`CSS-OVERFLOW-3$r に移動された。
+◎
+Note: The text-overflow property was previously defined in this section of the specification, but has been moved to CSS Overflow 3 §4.1 Overflow Ellipsis: the text-overflow property.
+</p>
+
+		<section id="values">
+<h3 title="Values Definitions">2.1. 値~定義</h3>
+
+<p class="trans-note">【
+この節の内容は <a href="css-common-ja.html#values">~CSS日本語訳 共通~page</a>に委譲。
+】</p>
+
+		</section>
+	</section>
+	<section id="outline-props">
+<h2 title="Outline properties">3. 各種 外形線（ `outline-*^p ）~prop</h2>
+
+<p>
+~stylesheet作者は、［
+~button, 作動中の~form~field, 画像~map
+］などを目立たせるため，それらの
+視覚的な~objの周囲に外形線（ `outline^en ）を作成させるよう求めることもある。
+外形線は、次の点で~borderと異なる：
+◎
+At times, style sheet authors may want to create outlines around visual objects such as buttons, active form fields, image maps, etc., to make them stand out. Outlines differ from borders in the following ways:
+</p>
+
+<ol>
+	<li>
+外形線は、空間を~~排他的に占めない。
+◎
+Outlines do not take up space.
+</li>
+	<li>
+外形線は、矩形でないこともある。
+◎
+Outlines may be non-rectangular.
+</li>
+	<li>
+~UAは、 `focus$ps 状態にある要素に対し，外形線を描画することが多い。
+◎
+UAs often render outlines on elements in the :focus state.
+</li>
+</ol>
+
+<p>
+各種 外形線~propは、これら動的な外形線の~styleを制御する
+◎
+The outline properties control the style of these dynamic outlines.
+</p>
+
+<p>
+これらの外形線を描画するときの積層法は、~platformに応じて より良い利用者~体験を供するため、明示的に実装に委ねられる。
+これは、
+<a href="~CSS21/zindex.html">CSS 2.1, 付録 E</a>
+による外形線の積層法に取って代わる。
+◎
+The stacking of the rendering of these outlines is explicitly left up to implementations to provide a better user experience per platform. This supersedes the stacking of outlines as defined in Appendix E of CSS 2.1 [CSS21].
+</p>
+
+<p class="advisement"><strong>
+~keyboard利用者
+— 特に他のやり方で~pageとヤリトリできない身体的不利のある利用者 — 
+は、 `focus$ps 状態にある要素~上で外形線が可視になることに依存する。
+よって作者は、そのような外形線を，代替的な強調用の仕組みを供することなく不可視にしてはナラナイ。
+</strong>
+◎
+Keyboard users, in particular people with disabilities who may not be able to interact with the page in any other fashion, depend on the outline being visible on elements in the :focus state, thus authors must not make the outline invisible on such elements without making sure an alternative highlighting mechanism is provided.
+</p>
+
+<p>
+外形線に変形（ `transform^p ）を適用したときの描画は、この~levelの仕様においては，明示的に未定義とする。
+◎
+The rendering of applying transforms to outlines is left explicitly undefined in CSS3-UI.
+</p>
+
+		<section id="outline">
+<h3 title="Outlines Shorthand: the outline property">3.1. 外形線の略式： `outline^p ~prop</h3>
+
+◎名 `outline@p
+◎値
+[ `outline-color$tp
+|| `outline-style$tp
+|| `outline-width$tp
+]
+◎初 個々の~propを見よ
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 個々の~propを見よ
+◎順 文法に従う
+◎ア 個々の~propを見よ
+◎表終
+
+		</section>
+		<section id="outline-width">
+<h3 title="Outline Thickness: the outline-width property">3.2. 外形線の太さ： `outline-width^p ~prop</h3>
+
+◎名 `outline-width@p
+◎値 `line-width$t
+◎初 `medium^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算
+絶対~長さ
+— ただし， `outline-style$p が `none^v の場合は `0^v 。
+◎
+absolute length; 0 if the outline style is none.
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+		</section>
+		<section id="outline-style">
+<h3 title="Outline Patterns: the outline-style property">3.3. 外形線の~pattern： `outline-style^p ~prop</h3>
+
+◎名 `outline-style@p
+◎値
+`auto$v | `outline-line-style$t
+◎初 `none^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+		</section>
+		<section id="outline-color">
+<h3 title="Outline Colors: the outline-color property">3.4. 外形線の色： `outline-color^p ~prop</h3>
+
+◎名 `outline-color@p
+◎値 `color$t | `invert$v
+◎初 `invert^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算
+`invert$v に対しては `invert$v ／
+`color$t 値に対しては`算出d色$ `CSS-COLOR-4$r
+◎
+The computed value for invert is invert. For &lt;color&gt; values, see [[!CSS-COLOR-4#resolving-color-values]] in [CSS-COLOR-4].
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+		</section>
+		<section id="_outline-properties">
+<h3>3.1. 〜 3.4. 外形線~prop</h3>
+
+<p>
+上に示された各種 外形線~propにより作成される外形線は、~boxの “上から” 描かれる
+— すなわち外形線は、常に手前にあり，~boxや他の~boxの位置や~sizeには波及しない。
+従って、外形線の表示の有無が変わっても，再flowが生じることはない。
+◎
+The outline created with the outline properties is drawn "over" a box, i.e., the outline is always on top and doesn’t influence the position or size of the box, or of any other boxes. Therefore, displaying or suppressing outlines does not cause reflow.
+</p>
+
+<p>
+外形線は：
+</p>
+
+<ul>
+	<li>
+矩形でなくてもヨイ。
+例えば，要素がいくつかの行lたちに分断されている場合、それらの各~boxを囲うような，最小~本数の外形線からなるベキである。
+◎
+Outlines may be non-rectangular. For example, if the element is broken across several lines, the outline should be an outline or minimum set of outlines that encloses all the element’s boxes.
+</li>
+	<li>
+その各~部分は、（改行されるときの，`行内$~要素の~borderのように）線が途切れることなく，輪になるベキである。
+◎
+Each part of the outline should be fully connected rather than open on some sides (as borders on inline elements are when lines are broken).
+</li>
+	<li>
+その各~部分も、矩形になることは要求されない。
+`~border辺$をなぞる所では，`border-*-radius$p による曲線もなぞるベキである。
+◎
+The parts of the outline are not required to be rectangular. To the extent that the outline follows the border edge, it should follow the border-radius curve.
+</li>
+	<li>
+その位置は、子孫~boxに影響され得る。
+【例えば、子孫~boxが親~boxからはみ出すときは，はみ出た部分も囲うように描かれるであろう。】
+◎
+The position of the outline may be affected by descendant boxes.
+</li>
+</ul>
+
+<p>
+~UAは、利用者に~focusの概念を伝えるものとして 適切な領域を囲うような，外形線を決定する~algoを利用するベキである。
+◎
+User agents should use an algorithm for determining the outline that encloses a region appropriate for conveying the concept of focus to the user.
+</p>
+
+<p class="note">注記：
+この仕様は、外形線の正確な
+位置／形状
+を定義しないが、それは概して，~border~boxの直ぐ外側に描かれる。
+◎
+Note: This specification does not define the exact position or shape of the outline, but it is typically drawn immediately outside the border box.
+</p>
+
+<div class="example">
+<p>
+【利用中の~browserによる，~border（灰）から相対的な外形線（青）の位置を示す図：】
+</p>
+
+<figure>
+<span style="border: solid 0.5em silver; outline: solid blue 0.2em;">外形線あり</span>
+<span style="border: solid 0.5em silver;">外形線なし</span>
+</figure>
+</div>
+
+<p>
+`outline-width$p ~propは、 `border-width$p 【の個々の成分~値】と同じ値を受容する。
+◎
+The outline-width property accepts the same values as border-width (CSS Backgrounds 3 §4.3 Line Thickness: the border-width properties).
+</p>
+
+<!-- `outline-style@p -->
+<p>
+`outline-line-style@t
+は、［
+値 `hidden^v は，外形線~styleとして合法でない
+］ことを除いて， `line-style$t と同じ値を 同じ意味として受容する。
+加えて， `outline-style$p ~propは、値
+`auto@v
+も受容する。
+この値は、~custom外形線~styleを描画することを~UAに許可する：
+概して、~platformにおける~UI既定の~styleで, あるいは
+たぶん~CSSにて述べ得る詳細よりも多彩な~styleで
+— 例えば、外縁の画素が半透明に輝いて現れるような，丸まった辺による外形線など。
+そのようなわけで、この仕様は，`auto^v ~styleの外形線を描画するときに
+`outline-color$p や `outline-width$p
+が［
+組入れられる／利用される
+］としても，その方法は定義しない。
+~UAは、 `auto^v を `solid^v と扱ってもヨイ。
+◎
+&lt;outline-line-style&gt; accepts the same values as &lt;line-style&gt; (CSS Backgrounds 3 §4.2 Line Patterns: the border-style properties) with the same meaning, except that hidden is not a legal outline style. In addition, the outline-style property accepts the value auto. The auto value permits the user agent to render a custom outline style, typically a style which is either a user interface default for the platform, or perhaps a style that is richer than can be described in detail in CSS, e.g. a rounded edge outline with semi-translucent outer pixels that appears to glow. As such, this specification does not define how the outline-color and outline-width are incorporated or used (if at all) when rendering auto style outlines. User agents may treat auto as solid.
+</p>
+
+<!-- `outline-color@p -->
+<p>
+`outline-color$p
+~propは、すべての色（ `color$t ）に加え，~keyword
+`invert@v
+も受容する。
+`invert$v は，~screen画素~色の反転を遂行するものと期待される。
+これは、色~背景に関わらず~focus~borderが可視になるのを確保するために，共通的にとられる~~技法である。
+◎
+The outline-color property accepts all colors, as well as the keyword invert. invert is expected to perform a color inversion on the pixels on the screen. This is a common trick to ensure the focus border is visible, regardless of color background.
+</p>
+
+<p>
+適合t~UAは、~screen上の画素~色の反転を~supportしない~platform上では，
+`invert$v 値を無視してもヨイ。
+◎
+Conformant UAs may ignore the invert value on platforms that do not support color inversion of the pixels on the screen.
+</p>
+
+<p>
+`invert$v 値を~supportしない~UAは，その値を構文解析-時に却下するモノトスル
+— その場合の `outline-color$p ~propの初期~値は、~keyword `currentcolor$v【！currentColor】 とする。
+◎
+If the UA does not support the invert value, then it must reject that value at parse-time, and the initial value of the outline-color property is the currentColor keyword.
+</p>
+
+<p>
+`outline$p ~propは、略式~propであり，［
+`outline-style$p, `outline-width$p, `outline-color$p
+］すべてを設定する。
+◎
+The outline property is a shorthand property and sets all three of outline-style, outline-width, and outline-color.
+</p>
+
+<p id="_note-outline-style" class="note">注記：
+~borderとは対照的に、外形線は どの側でも同じであり，
+`outline-top^p や `outline-left^p
+等々の~propは無い。
+◎
+Note: The outline is the same on all sides. In contrast to borders, there are no outline-top, outline-left, etc. properties.
+</p>
+
+<p>
+この仕様は、複数の外形線が重合するときや, 他の要素の背後に部分的に遮られている~boxに対し，外形線がどう描かれるかについては定義しない。
+◎
+This specification does not define how multiple overlapping outlines are drawn or how outlines are drawn for boxes that are partially obscured behind other elements.
+</p>
+
+<div class="example">
+<p>
+`button^e 要素の周囲に 太めの（ `thick^v ）外形線を描く例：
+◎
+Here’s an example of drawing a thick outline around a BUTTON element:
+</p>
+
+<pre class="lang-css">
+button { outline: thick solid }
+</pre>
+  </div>
+
+<p>
+~graphicな~UIは、~pageの どの要素が~focusを得ているかを 利用者に伝えるために，要素の周囲に外形線を利用してもヨイ。
+これらの外形線は、~borderに加えて示される
+— 外形線の有無が切替わっても，文書は再flowされるベキでない。
+~focusは、文書における利用者とのヤリトリが主目的である（例えば，~textを手入力したり~buttonを選択する, など）。
+◎
+Graphical user interfaces may use outlines around elements to tell the user which element on the page has the focus. These outlines are shown in addition to any borders, and switching outlines on and off should not cause the document to reflow. The focus is the subject of user interaction in a document (e.g. for entering text or selecting a button).
+</p>
+
+<div class="example">
+<p>
+例えば，次の規則は、要素が~focusを得ているときは周囲に太めの黒色~線を，要素が作動中のときは太めの赤色~線を描かす：
+◎
+For example, to draw a thick black line around an element when it has the focus, and a thick red line when it is active, the following rules can be used:
+</p>
+
+<pre class="lang-css">
+:focus  { outline: thick solid black }
+:active { outline: thick solid red }
+</pre>
+  </div>
+
+  
+<p class="note">注記：
+外形線は、整形には影響しない（すなわち，~box~modelにおいて空間を占めない）ので，~page上の他の要素と重合することもある。
+◎
+Note: Since the outline does not affect formatting (i.e., no space is left for it in the box model), it may well overlap other elements on the page.
+</p>
+
+		</section>
+		<section id="outline-offset">
+<h3 title="Offsetting the Outline: the outline-offset property">3.5. 外形線の~offset法： `outline-offset^p ~prop</h3>
+
+<p>
+外形線は、既定では，ちょうど`~border辺$の外側に描かれる
+— が、そこから外へ~offsetして描かすこともアリである。
+◎
+By default, the outline is drawn starting just outside the border edge. However, it is possible to offset the outline and draw it beyond the border edge.
+</p>
+
+◎名 `outline-offset@p
+◎値 `length$t
+◎初 `0^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 絶対~長さ
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+`outline-offset$p の算出d値が `0^v でない場合、外形線は，その分量だけ`~border辺$から外へずらされる。
+◎
+If the computed value of outline-offset is anything other than 0, then the outline is outset from the border edge by that amount.
+</p>
+
+<div class="example">
+<p>
+例えば，次の規則を利用すれば、~focus外形線と［
+~focusを得ている, または 作動中の
+］要素との合間に， 2 画素~分の隙間をあてがえる：
+◎
+For example, to leave 2 pixels of space between a focus outline and the element that has the focus or is active, the following rule can be used:
+</p>
+
+<pre class="lang-css">
+:focus,:active  { outline-offset: 2px }
+</pre>
+</div>
+
+<p id="negative-offset">
+負な値は、外形線を~border~boxの中へ縮短させるモノトスル。
+絶対~値が大きい負な値でも，外形線を必ず描画できるようにするため、外形線で描かれる形状の~~外縁の［
+縦幅, 横幅
+］は、いずれも［
+`outline-width$p ~propの算出d値の 2 倍
+］以上にするベキである。
+~UAは、この拘束を，各~次元ごとに独立に適用するベキである。
+外形線が，単連結でない, 複数の形状として描かれる場合、この拘束は，各~形状ごとに別々に適用される。
+◎
+Negative values must cause the outline to shrink into the border box. Both the height and the width of the outside of the shape drawn by the outline should not become smaller than twice the computed value of the outline-width property to make sure that an outline can be rendered even with large negative values. User agents should apply this constraint independently in each dimension. If the outline is drawn as multiple disconnected shapes, this constraint applies to each shape separately.
+</p>
+
+		</section>
+	</section>
+	<section id="resizing-and-overflow">
+<h2 title="Resizing">4. ~resize法</h2>
+
+<p>
+CSS2.1 は、`塊~容器$~要素~上の~scroll用の仕組み（例：~scrollbar）の外観を制御するための仕組みを供する。
+この仕様は、利用者が要素を~resizeできる能に加えて，~text~overflowの挙動を指定する能を制御する仕組みを追加する。
+◎
+CSS2.1 provides a mechanism for controlling the appearance of a scrolling mechanism (e.g. scrollbars) on block container elements. This specification adds a mechanism to that for controlling user resizability of elements as well as the ability to specify text overflow behavior.
+</p>
+
+		<section id="resize">
+<h3 title="Resizing Boxes: the resize property">4.1. ~boxの~resize法： `resize^p ~prop</h3>
+
+<p>
+`resize$p ~propにより、作者は，［
+要素が利用者により~resize可能かどうか, および
+その~~方向は縦横いずれが可能か
+］について，指定できるようになる。
+◎
+The resize property allows the author to specify whether or not an element is resizable by the user, and if so, along which axis/axes.
+</p>
+
+◎名 `resize@p
+◎値
+`none$v
+| `both$v
+| `horizontal$v
+| `vertical$v
+◎初 `none$v
+◎適
+`overflow$p が `visible$v でない要素, および
+任意選択で［
+画像／動画／ `iframe$e
+］などの`置換d要素$
+◎
+elements with overflow other than visible, and optionally replaced elements such as images or videos, and iframes
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<dl>
+	<dt>`none@v</dt>
+	<dd>
+~UAは、要素~上に~resize用の仕組みを呈示しない
+— 利用者には、要素を直に~resizeする操作の仕組みは与えられない。
+◎
+The UA does not present a resizing mechanism on the element, and the user is given no direct manipulation mechanism to resize the element.
+</dd>
+
+	<dt>`both@v</dt>
+	<dd>
+~UAは、縦横二方向の~resize用の仕組みを呈示する
+— 利用者は、要素の 縦幅, 横幅 いずれも調整できるようになる。
+◎
+The UA presents a bidirectional resizing mechanism to allow the user to adjust both the height and the width of the element.
+</dd>
+
+	<dt>`horizontal@v</dt>
+	<dd>
+~UAは、横方向に限り~resize用の仕組みを呈示する
+— 利用者は、要素の横幅のみ調整できるようになる。
+◎
+The UA presents a unidirectional horizontal resizing mechanism to allow the user to adjust only the width of the element.
+</dd>
+
+	<dt>`vertical@v</dt>
+	<dd>
+~UAは、縦方向に限り~resize用の仕組みを呈示する
+— 利用者は、要素の縦幅のみ調整できるようになる。
+◎
+The UA presents a unidirectional vertical resizing mechanism to allow the user to adjust only the height of the element.
+</dd></dl>
+
+<p>
+現在，要素~上の~scroll用の仕組みについては、
+`overflow$p ~propを利用して，その外観を制御することもアリである（例：
+`overflow^p に対する `scroll^v ／ `hidden^v ）。
+`resize$p ~propの目的は、要素~上の~resize用の仕組み（例：
+~boxや~widgetの~resize）の外観と機能を制御できるようにする所にある。
+◎
+Currently it is possible to control the appearance of the scrolling mechanism (if any) on an element using the overflow property (e.g. overflow: scroll vs. overflow: hidden etc.). The purpose of the resize property is to allow control over the appearance and function of the resizing mechanism (e.g. a resize box or widget) on the element.
+</p>
+
+<p class="note">注記：
+~resize用の仕組みは、~scroll用の仕組みと同じでないし，~UAによる~zoom用の仕組みにも関係しない。
+~scroll用の仕組みは，［
+利用者が，要素の内容のどの部位が示されるかを決定できるようにする
+］ものである一方、~resize用の仕組みは，［
+利用者が，要素の~sizeを決定できるようにする
+］ものである。
+◎
+Note: The resizing mechanism is NOT the same as the scrolling mechanism, nor is it related to any UA mechanism for zooming. The scrolling mechanism allows the user to determine which portion of the contents of an element is shown. The resizing mechanism allows the user to determine the size of the element.
+</p>
+
+<p>
+`resize$p ~propを適用-可能なのは、［
+`overflow$p の算出d値が `visible$v でない，要素
+］である。
+~UAは、 `overflow$p ~propの値に関わらず，次のものに適用してもヨイ：
+◎
+The resize property applies to elements whose computed overflow value is something other than visible. UAs may also apply it, regardless of the value of the overflow property, to:
+</p>
+
+<ul>
+	<li>
+画像や動画を表現している`置換d要素$
+—
+`img$e, `video$e, `picture$e, `svg$e, `object$e, `canvas$e
+など。
+◎
+Replaced elements representing images or videos, such as img, video, picture, svg, object, or canvas.
+</li>
+	<li>
+`iframe$e 要素。
+◎
+The iframe element.
+</li>
+</ul>
+
+<p>
+生成d内容における `resize$p ~propの効果は未定義とする。
+実装は `resize$p ~propを生成d内容に適用するベキでない。
+◎
+The effect of the resize property on generated content is undefined. Implementations should not apply the resize property to generated content.
+</p>
+
+<p class="note">注記：
+将来
+<a href="~CSSPSEUDO#CSSPseudoElement-interface">`CSSPseudoElement^c</a>
+~interfaceが実装されたときには、
+`resize$p ~propが生成d内容に適用されるかもしれない。
+◎
+Note: the resize property may apply to generated content in the future if there is implementation of Interface CSSPseudoElement.
+</p>
+
+<p>
+要素が利用者により~resizeされたときは、~UAは、［
+DOM 内の，要素の`~style属性$
+］内の［
+`width$p,
+`height$p
+］~propを，利用者から指示された~sizeによる `px^u 単位の長さ値に設定する
+— 既存の~prop宣言があれば，その `!important^css を除く部分は置換して。
+◎
+When an element is resized by the user, the user agent sets the width and height properties to px unit length values of the size indicated by the user, in the element’s style attribute DOM, replacing existing property declaration(s), if any, without !important, if any.
+</p>
+
+<p>
+片方の次元のみ，要素が~resizeされた場合、対応する~propのみが設定される。
+◎
+If an element is resized in only one dimension, only the corresponding property is set, not both.
+</p>
+
+<p>
+~resizeする精確な方向（すなわち，要素のどの隅を改めるか）は、~CSS~layoutに関するいくつもの要因に依存し得る：
+要素は`絶対的に位置され$ているかどうか,
+`right$p, `bottom$p
+~propを利用して位置されているかどうか,
+要素の言語が右横書きかどうか，等々。
+~UAは、利用者に~resize用の仕組みをどのように伝えるかを決めるときに，（~CSS~layoutにより決定される）~resizeする方向, 並びに~platformの慣行や拘束を考慮するベキである。
+◎
+The precise direction of resizing (i.e. altering the top left of the element or altering the bottom right) may depend on a number of CSS layout factors including whether the element is absolutely positioned, whether it is positioned using the right and bottom properties, whether the language of the element is right-to-left etc. The UA should consider the direction of resizing (as determined by CSS layout), as well as platform conventions and constraints when deciding how to convey the resizing mechanism to the user.
+</p>
+
+<p>
+~UAは、利用者が要素を~resizeできる範囲に対して課す拘束を［
+`min-width$p,
+`max-width$p,
+`min-height$p,
+`max-height$p
+］によるものに限るモノトスル。
+◎
+The user agent must allow the user to resize the element with no other constraints than what is imposed by min-width, max-width, min-height, and max-height.
+</p>
+
+<p class="note">注記：
+利用者が要素を~resizeしようと試みても，上書きされたり無視されたように現われる状況があり得る：
+例えば、`~importantな宣言$が~cascadeして，［
+DOM 内の要素の`~style属性$内の［
+`width$p, `height$p
+］~propに取って代わるときなど。
+◎
+Note: There may be situations in which user attempts to resize an element appear to be overriden or ignored, e.g. because of !important cascading declarations that supersede that element’s style attribute width and height properties in the DOM.
+</p>
+
+<p>
+要素の `resize$p ~propの算出d値が変化しても、利用者が要素を~resizeすることに因る`~style属性$に対する変更が設定し直されることはない。
+◎
+Changes to the computed value of an element’s resize property do not reset changes to the style attribute made due to user resizing of that element.
+</p>
+
+<div class="example">
+<p>
+例えば，次のような規則を利用すれば、
+`iframe$e を~scroll可能`かつ^em~resize可能にできる：
+◎
+For example, to make iframes scrollable and resizable, the following rule can be used:
+</p>
+
+<pre class="lang-css">
+iframe,
+object[type^="text/"],
+object[type$="+xml"],
+object[type="application/xml"] {
+  overflow:auto;
+  resize:both;
+}
+</pre>
+</div>
+
+		</section>
+	</section>
+	<section id="pointing-keyboard">
+<h2 title="Pointing Devices and Keyboards">5. ~pointing装置と~keyboard</h2>
+
+		<section id="pointer-interaction">
+<h3 title="Pointer interaction">5.1. ~pointerに関する対話性</h3>
+
+			<section id="cursor">
+<h4 title="Styling the Cursor: the cursor property">5.1.1. ~cursor用の~style： `cursor^p ~prop</h4>
+
+◎名 `cursor@p
+◎値
+[ [`url$vt [ `x$vt `y$vt ]?,]*
+[ `auto$v
+| `default$v
+| `none$v
+| `context-menu$v
+| `help$v
+| `pointer$v
+| `progress$v
+| `wait$v
+| `cell$v
+| `crosshair$v
+| `text$v
+| `vertical-text$v
+| `alias$v
+| `copy$v
+| `move$v
+| `no-drop$v
+| `not-allowed$v
+| `grab$v
+| `grabbing$v
+| `e-resize$v
+| `n-resize$v
+| `ne-resize$v
+| `nw-resize$v
+| `s-resize$v
+| `se-resize$v
+| `sw-resize$v
+| `w-resize$v
+| `ew-resize$v
+| `ns-resize$v
+| `nesw-resize$v
+| `nwse-resize$v
+| `col-resize$v
+| `row-resize$v
+| `all-scroll$v
+| `zoom-in$v
+| `zoom-out$v
+] ]
+◎初 `auto^v
+◎適 すべての要素
+◎継 される
+◎百 受容しない
+◎算 
+相対~URLは絶対~URLに変換されることを除いて，指定d値
+◎
+as specified, except with any relative URLs converted to absolute
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+この~propは、［
+~pointing装置~用の~cursorの~hotspotが，要素の`~border辺$の中を指している
+］ときに表示される，~cursorの型を指定する。
+◎
+This property specifies the type of cursor to be displayed for the pointing device when the cursor’s hotspot is within the element’s border edge.
+</p>
+
+<p class="note">注記：
+`CSS3BG$r
+に従い、~border辺は `border-*-radius$p に影響される。
+◎
+Note: As per CSS Backgrounds 3 §5.1 Curve Radii: the border-radius properties, the border edge is affected by border-radius.
+</p>
+
+<p>
+複数の要素が重合している場合、~cursorの型を決定する要素は、接触判定に基づく
+— すなわち、その位置からの `click$et ~eventを受取る要素になる。
+◎
+In the case of overlapping elements, which element determines the type of cursor is based on hit testing: the element determining the cursor is the one that would receive a click initiated from this position.
+</p>
+
+<p class="note">注記：
+接触判定の~~詳細は，この仕様の視野~外であり、~CSSまたは~HTMLの将来の改訂にて定義されるものと~~期待されている。
+◎
+Note: The specifics of hit testing are out of scope of this specification. Hit testing will hopefully be defined in a future revision of CSS or HTML.
+</p>
+
+<p>
+~UAは、次に挙げるような~UA~control上では， `cursor$p ~propを無視してもヨイ：
+~scrollbar, ~resizer, その他、例えば~form要素~用に ~UAに特有な実装の~~内部で利用され得るような、~native~UI~widgetなど。
+~UAはまた、~UIにおける種々の状態を指示するためとして，
+`cursor$p ~propを無視して 自身が選んだ~cursorを表示してもヨイ
+— ~pageが応答できないときには~busy~cursor,
+利用者が~text選択を行なっているときには~text~cursor, 等々。
+◎
+User agents may ignore the cursor property over native user-agent controls such as scrollbars, resizers, or other native UI widgets e.g. those that may be used inside some user agent specific implementations of form elements. User agents may also ignore the cursor property and display a cursor of their choice to indicate various states of the UA’s user interface, such as a busy cursor when the page is not responding, or a text cursor when the user is performing text selection.
+</p>
+
+<p class="note">注記：
+`HTML$r は、画像~mapにおける `cursor$p ~prop用に
+<a href="~HTMLrendering#image-maps-2">特別な取扱い</a>
+を定義している。
+◎
+Note: [HTML] defines special handling of image maps for the cursor property.
+</p>
+
+<p>
+各種 値の意味は：
+◎
+Values have the following meanings:
+</p>
+
+<p class="trans-note">【
+~keyword値に対しては、
+<span class="_cursor-demo">その直後の~box</span>
+にマウスを重ねると，利用中の~UAによる~cursorが示される。
+】</p>
+
+<dl>
+	<dt>
+画像~cursor
+◎
+image cursors
+</dt>
+
+	<dd>
+		<dl>
+			<dt id="valdef-cursor-uri">`url$t</dt>
+			<dd>
+<p>
+~UAは~URIが指名する資源から，~cursorを検索取得する。
+~UAは、~cursor~listの最初の~cursorを取扱えない場合は その次の~URIを, それも取扱えない場合は その次の~URIを, 等々，順に試みるモノトスル。
+~UAが，どの利用者~定義な~cursorも取扱えない場合、~listの終端の~cursor~keywordを利用するモノトスル。
+適合t~UAは、 `url$t の代わりに，その上位拡張である `image$t を~supportしてもヨイ。
+◎
+The user agent retrieves the cursor from the resource designated by the URI. If the user agent cannot handle the first cursor of a list of cursors, it must attempt to handle the second, etc. If the user agent cannot handle any user-defined cursor, it must use the cursor keyword at the end of the list. Conforming User Agents may, instead of &lt;url&gt;, support &lt;image&gt; which is a superset.
+</p>
+
+<p>
+~UAは、次の画像~file形式を~supportするモノトスル：
+◎
+The UA must support the following image file formats:
+</p>
+
+<ul>
+	<li>
+PNG `PNG$r
+◎
+PNG, as defined in [PNG]
+</li>
+	<li>
+`~secure静的~mode$ `SVG2$r 下における~SVG `SVG11$r
+のうち，内在的~sizeを有するもの。
+◎
+SVG, as defined in [SVG11], in secure static mode [SVG2], if it has an intrinsic size.
+</li>
+	<li>
+`background-image$p ~propなどの他の~propにおける `image$t 用に~supportされる，他の~animateされない画像~file形式
+◎
+any other non-animated image file format that they support for &lt;image&gt; in other properties, such as the the background-image property 
+</li>
+</ul>
+
+<p>
+加えて、~UAは、次の画像~file形式を~supportするベキである：
+◎
+In addition, the UA should support the following image file formats:
+</p>
+
+<ul>
+	<li>
+`~secure~animate化~mode$ `SVG2$r 下における~SVG `SVG11$r のうち，内在的~sizeを有するもの。
+◎
+SVG, as defined in [SVG11], in secure animated mode [SVG2], if it has an intrinsic size.
+</li>
+	<li>
+`background-image$p ~propなどの他の~propにおける `image$t 用に~supportされる，他の~animateされる画像~file形式
+◎
+any other animated image file format that they support for &lt;image&gt; in other properties, such as the the background-image property 
+</li>
+</ul>
+
+<p>
+~UAは、他の~file形式を追加的に~supportしてもヨイ
+— ［
+~secure静的~mode ／ ~secure~animate化~mode
+］`SVG2$r
+下にあるが，内在的~sizeを有さない~SVG `SVG11$r も含め。
+◎
+The UA may also support additional file formats, including SVG, as defined in [SVG11], in secure static mode or secure animated mode [SVG2], even if it does not have an intrinsic size.
+</p>
+
+<p class="note">注記：
+CSS Working group は、初期~時は，内在的~sizeの有無を問わず すべての~SVGを~supportするものと意図していたが、実装の欠如に因り，内在的~sizeを有さない~SVGは 義務的から任意選択に格下げされた。
+◎
+Note: The CSS Working Group initially intended support for all SVG, intrinsically sized or not. Support for non-intrinsically sized SVG was downgraded from mandatory to optional due to lack of implementations.
+</p>
+
+<p class="note">注記：
+この仕様が書かれた時点では（ 2015 年 春）、共通的な~desktop~browserが
+~cursor用に~supportしている~file形式は，
+Microsoft が設計した［
+.ico, および .cur
+］の他にない。
+旧来の内容との互換性をとるため、~UAには，これらを~supportすることが奨励される
+— オープンな仕様がないため，これらの形式についての規範的な要件は作り得ないが。
+`<a href="https://en.wikipedia.org/wiki/ICO_%28file_format%29">Wikipedia</a>^_
+にて，ある程度の情報を見られる。
+◎
+Note: At the time of writing this specification (spring 2015), the only file formats supported for cursors in common desktop browsers are the .ico and .cur file formats, as designed by Microsoft. For compatibility with legacy content, UAs are encouraged to support these, even though the lack of an open specification makes it impossible to have a normative requirement about these formats. Some information on these formats can be found on Wikipedia.
+</p>
+
+<p>
+~cursor画像~用の`既定の~obj~size$は、~UA が定義する
+— その~sizeは、 ~UAの~OSにて代表的な~cursorの~sizeに基づくベキである。
+◎
+The default object size for cursor images is a UA-defined size that should be based on the size of a typical cursor on the UA’s operating system.
+</p>
+
+<p>
+`具象-~obj~size$は、`既定の~sizing~algo$を利用して決定される。
+~OSが，所与の~sizeを超える~cursorを描画する<strong>能力を欠く</strong>場合、その~sizeより大きい~cursorは
+— ~cursor画像に内在的~縦横比があれば，それは保守しつつ — 
+~OSが~supportする限界域~sizeまで縮短されるモノトスル。
+◎
+The concrete object size is determined using the default sizing algorithm. If an operating system is incapable of rendering a cursor above a given size, cursors larger than that size must be shrunk to within the OS-supported size bounds, while maintaining the cursor image’s intrinsic ratio, if any.
+</p>
+			</dd>
+
+			<dt>`x@vt `y@vt</dt>
+			<dd>
+<p>
+`x$vt, `y$vt 座標（省略可）は、画像の中の正確な~pointer位置（~hotspot）を識別する。
+◎
+The optional &lt;x&gt; and &lt;y&gt; coordinates identify the exact position within the image which is the pointer position (i.e., the hotspot).
+</p>
+
+<p>
+いずれも `number$t である。
+~cursorの座標系における（左端, 上端に相対的な）位置の x, y 座標は、画像~内で~pointerが指す精確な位置を表現する。
+◎
+Each is a &lt;number&gt;. The x-coordinate and y-coordinate of the position in the cursor’s coordinate system (left/top relative) which represents the precise position that is being pointed to.
+</p>
+
+<p class="note">注記：
+この仕様は、種々の型の `image$t 用に座標系を確立する方法は定義しない。
+それらの定義は `CSS4-IMAGES$r まで先送りされる。
+◎
+Note: This specification does not define how the coordinate systems of the various types of &lt;image&gt; are established, and defers these definitions to [CSS4-IMAGES].
+</p>
+
+<p>
+値が指定されていない場合、利用された画像~資源の~~内部で定義される，内在的~hotspotになる。
+その~hotspotも定義されていない場合の効果は、値 `0 0^v が指定されたかのようになる。
+◎
+If the values are unspecified, then the intrinsic hotspot defined inside the image resource itself is used. If both the values are unspecific and the referenced cursor has no defined hotspot, the effect is as if a value of "0 0" was specified.
+</p>
+
+<p>
+~hotspotの座標が
+— 画像~資源の~~内部か,  `x$vt, `y$vt 値のいずれで指定されるにせよ —
+~cursor画像の外側に出る場合、内側に入るように（ x, y について独立に）切詰めるモノトスル。
+◎
+If the coordinates of the hotspot, as specified either inside the image resource or by &lt;x&gt; and &lt;y&gt; values, fall outside of the cursor image, they must be clamped (independently) to fit.
+</p>
+
+			</dd>
+		</dl>
+	</dd>
+
+	<dt>
+一般用~cursor
+◎
+general purpose cursors
+</dt>
+
+	<dd>
+		<dl>
+			<dt>`auto@v</dt>
+			<dd>
+~UAは、現在の文脈に基づいて，表示する~cursorを決定する。
+特定的には、［
+選択-可能な~text ／ 編集-可能な要素
+］上では `text$v, 他では `default$v のように挙動する。
+◎
+The UA determines the cursor to display based on the current context. Specifically: auto behaves as text over selectable text or editable elements, and default otherwise. 
+</dd>
+			<dd class="note">注記：
+［
+選択-可能な~text ／ 編集-可能な要素
+］上では、~UAは
+— `text$v のときと同じく —
+要素の`書字mode$に応じて，［
+縦方向, 横方向
+］のうち適切な方の~text~cursorを利用するモノトスル
+— また、変形や他の視覚-効果も織り込んでもヨイ。
+◎
+Note: When over selectable text or editable elements, as it does with text, the UA must use a vertical or horizontal text cursor, as appropriate for the writing mode of the element, and may take transforms and other visual effects into account as well.
+</dd>
+
+			<dt>`default@v</dt>
+			<dd>
+~platformに依存する既定の~cursor。
+矢印として描画されることが多い。
+◎
+The platform-dependent default cursor. Often rendered as an arrow.
+</dd>
+
+			<dt>`none@v</dt>
+			<dd>
+要素に対しては~cursorは描画されない。
+◎
+No cursor is rendered for the element.
+</dd>
+		</dl>
+	</dd>
+
+	<dt>
+~link／~~状態を表す~cursor
+◎
+links and status cursors
+</dt>
+
+	<dd>
+		<dl>
+			<dt>`context-menu@v</dt>
+			<dd>
+~cursorが指す~objにて，文脈~menuが可用であることを指示する。
+~menuに似た小さな~graphicを傍に伴う，矢印として描画されることが多い。
+◎
+A context menu is available for the object under the cursor. Often rendered as an arrow with a small menu-like graphic next to it.
+</dd>
+
+			<dt>`help@v</dt>
+			<dd>
+~cursorが指す~objにて，~helpが可用であることを指示する。
+疑問符や~balloonとして描画されることが多い。
+◎
+Help is available for the object under the cursor. Often rendered as a question mark or a balloon.
+</dd>
+
+			<dt>`pointer@v</dt>
+			<dd>
+~linkを指示する~pointer~cursor。
+人差し指を立てた手の甲として描画されることが多い。
+◎
+The cursor is a pointer that indicates a link. Often rendered as the backside of a hand with the index finger extended.
+</dd>
+			<dd>
+他が指定されない限り，~UAは、自身が~supportする すべての文書~形式において，~hyperlink用の `cursor$p にはこの値を
+— `~UA~stylesheet$に`通常の宣言$を利用することを介して —
+適用するモノトスル。
+◎
+Unless otherwise specified, UAs must apply cursor: pointer to hyperlinks for all supported document formats via the UA stylesheet, using a normal (i.e. not !important) declaration.
+</dd>
+			<dd>
+作者は、~linkに対しては `pointer$v を利用するベキである。
+また、他の対話的な要素にも利用してヨイ。
+◎
+Authors should use pointer on links and may use on other interactive elements.
+</dd>
+
+			<dt>`progress@v</dt>
+			<dd>
+~programが何らかの処理を遂行していて，進捗-中にあることを指示する。
+利用者は~programとヤリトリできることを表す点で `wait$v と異なる。
+~~回転する~beach-ball，あるいは
+腕時計／砂時計を伴う矢印として描画されることが多い。
+◎
+A progress indicator. The program is performing some processing, but is different from wait in that the user may still interact with the program. Often rendered as a spinning beach ball, or an arrow with a watch or hourglass.
+</dd>
+
+			<dt>`wait@v</dt>
+			<dd>
+~programが処理中（ ~busy ）にあり，利用者は待機すベキであることを指示する。
+腕時計や砂時計として描画されることが多い。
+◎
+Indicates that the program is busy and the user should wait. Often rendered as a watch or hourglass.
+</dd>
+		</dl>
+	</dd>
+
+	<dt>
+選択~cursor
+◎
+selection cursors
+</dt>
+
+	<dd>
+		<dl>
+			<dt>`cell@v</dt>
+			<dd>
+利用者は いくつかの~cellを選択できることを指示する。
+真中に~dotを伴う，太めの正符号として描画されることが多い。
+◎
+Indicates that a cell or set of cells may be selected. Often rendered as a thick plus-sign with a dot in the middle.
+</dd>
+
+			<dt>`crosshair@v</dt>
+			<dd>
+単純な極細十字線。
+二次元~bitmap選択~modeを指示するために利用されることが多い。
+◎
+A simple crosshair (e.g., short line segments resembling a "+" sign). Often used to indicate a two dimensional bitmap selection mode.
+</dd>
+
+			<dt>`text@v</dt>
+			<dd>
+利用者は，~textを選択できることを指示する。
+~I-beamとして描画されることが多い。
+~UAは、要素の`書字mode$に応じて，［
+横書きならば縦方向／縦書きならば横方向
+］の~I-beam等~cursorを自動的に表示するモノトスル（例：後者は `vertical-text$v 用のそれと同じにするなど）。
+加えて，~UAは、横方向, 縦方向どっちの~cursorか選ぶときに，変形（ `CSS-TRANSFORMS-1$r ）や他の視覚-効果（
+<a href="~SVGtext#TextLayoutPath">§ ~path上の~text</a> `SVG2$r
+など）を~~加味してもヨイ。
+◎
+Indicates text that may be selected. Often rendered as an I-beam. User Agents must automatically display a vertical I-beam/cursor over elements with a horizontal writing mode, and a horizontal I-beam/cursor (e.g. same as the vertical-text keyword) over elements in a vertical writing mode. Additionally, User Agents may take transforms (see [CSS-TRANSFORMS-1]) or other visual effects such as text on a path (See SVG 2 §11.8 Text on a path), when chosing between the horizontal or vertical text cursor, and may display any angle of I-beam/cursor for text that is rendered at any particular angle.
+</dd>
+
+			<dt>`vertical-text@v</dt>
+			<dd>
+利用者は，縦書き~textを選択できることを指示する。
+横方向 ~I-beam として描画されることが多い。
+◎
+Indicates vertical-text that may be selected. Often rendered as a horizontal I-beam.
+</dd>
+		</dl>
+	</dd>
+
+	<dt>
+~drag＆~drop ~cursor
+◎
+drag and drop cursors
+</dt>
+
+	<dd>
+		<dl>
+			<dt>`alias@v</dt>
+			<dd>
+何かの~alias／何かへの~shortcut
+が作成されることになることを指示する。
+曲がった小さな矢印を傍に伴う，矢印として描画されることが多い。
+◎
+Indicates an alias of/shortcut to something is to be created. Often rendered as an arrow with a small curved arrow next to it.
+</dd>
+
+			<dt>`copy@v</dt>
+			<dd>
+何かが複製されることになることを指示する。
+小さな正符号を傍に伴う，矢印として描画されることが多い。
+◎
+Indicates something is to be copied. Often rendered as an arrow with a small plus sign next to it.
+</dd>
+
+			<dt>`move@v</dt>
+			<dd>
+移動されることになる何かを指示する。
+◎
+Indicates something is to be moved.
+</dd>
+
+			<dt>`no-drop@v</dt>
+			<dd>
+~drag中の~itemは，~cursorが現在 指す所には~dropできないことを指示する。
+打ち消し線を伴う小さな円を伴う［
+手／~pointer
+］として描画されることが多い。
+◎
+Indicates that the dragged item cannot be dropped at the current cursor location. Often rendered as a hand or pointer with a small circle with a line through it.
+</dd>
+
+			<dt>`not-allowed@v</dt>
+			<dd>
+要請された動作は、~~実行されないことを指示する。
+打ち消し線を伴う円として描画されることが多い。
+◎
+Indicates that the requested action will not be carried out. Often rendered as a circle with a line through it.
+</dd>
+
+			<dt>`grab@v</dt>
+			<dd>
+何かを掴める（~drag／移動できる）ことを指示する。
+開いた手の甲の様に描画されることが多い。
+◎
+Indicates that something can be grabbed (dragged to be moved). Often rendered as the backside of an open hand.
+</dd>
+			<dt>`grabbing@v</dt>
+			<dd>
+何かを掴んでいる（~drag／移動している）ことを指示する。
+閉じた手の甲の様に描画されることが多い。
+◎
+Indicates that something is being grabbed (dragged to be moved). Often rendered as the backside of a hand with fingers closed mostly out of view.
+</dd>
+		</dl>
+	</dd>
+
+	<dt>
+~resize／~scroll時の~cursor（括弧内の矢印は方向を表す）
+◎
+resizing and scrolling cursors
+</dt>
+
+	<dd>
+		<dl>
+			<dt>`e-resize@v（→）</dt>
+			<dt>`n-resize@v（↑）</dt>
+			<dt>`ne-resize@v（↗）</dt>
+			<dt>`nw-resize@v（↖）</dt>
+			<dt>`s-resize@v（↓）</dt>
+			<dt>`se-resize@v（↘）</dt>
+			<dt>`sw-resize@v（↙）</dt>
+			<dt>`w-resize@v（←）</dt>
+			<dd>
+ある辺が移動されることを指示する。
+例えば、~boxの右下~隅（南東 — `south-east^en ）から動き始めるときは，
+`se-resize$v ~cursorが利用される。
+◎
+Indicates that some edge is to be moved. For example, the se-resize cursor is used when the movement starts from the south-east corner of the box.
+</dd>
+
+			<dt>`ew-resize@v（←→）</dt>
+			<dt>`ns-resize@v（↑↓）</dt>
+			<dt>`nesw-resize@v（↙↗）</dt>
+			<dt>`nwse-resize@v（↖↘）</dt>
+			<dd>
+双方向-~resize~cursorを指示する。
+◎
+Indicates a bidirectional resize cursor.
+</dd>
+
+			<dt>`col-resize@v（←→）</dt>
+			<dd>
+~itemや~columnを横方向に~resizeできることを指示する。
+左右を指す矢印に, それらを分離する縦~barが伴われて描画されることが多い。
+◎
+Indicates that the item/column can be resized horizontally. Often rendered as arrows pointing left and right with a vertical bar separating them.
+</dd>
+
+			<dt>`row-resize@v（↑↓）</dt>
+			<dd>
+~itemや~columnを縦方向に~resizeできることを指示する。
+上下を指す矢印に, それらを分離する横~barが伴われて描画されることが多い。
+◎
+Indicates that the item/row can be resized vertically. Often rendered as arrows pointing up and down with a horizontal bar separating them.
+</dd>
+
+			<dt>`all-scroll@v</dt>
+			<dd>
+何かを，どの方向にも~scrollできることを指示する。
+真中に~dotを伴う，上下左右を指す矢印として描画されることが多い。
+◎
+Indicates that the something can be scrolled in any direction. Often rendered as arrows pointing up, down, left, and right with a dot in the middle.
+</dd>
+		</dl>
+	</dd>
+
+	<dt>
+~zoom用の~cursor
+◎
+zooming cursors
+</dt>
+
+	<dd>
+		<dl>
+			<dt>`zoom-in@v</dt>
+			<dt>`zoom-out@v</dt>
+			<dd>
+何かを内外へ~zoom（拡大縮小）できることを指示する。
+中心に［
+"+" （ `zoom-in$v のとき）／ "−" （ `zoom-out$v のとき）
+］を伴う，拡大鏡の様に描画されることが多い。
+◎
+Indicates that something can be zoomed (magnified) in or out, and often rendered as a magnifying glass with a "+" or "-" in the center of the glass, for zoom-in and zoom-out respectively.
+</dd>
+		</dl>
+	</dd>
+</dl>
+
+<div class="example">
+<p>
+いくつかの~cursor値とともに，~fallback~cursorを利用する例：
+◎
+Here is an example of using several cursor values.
+</p>
+
+<pre class="lang-css">
+:link,:visited {
+    cursor: url(example.svg#linkcursor),
+            url(hyper.cur),
+            url(hyper.png) 2 3,
+            pointer
+}
+</pre>
+
+<p>
+この例は、すべての~hyperlink上で（訪問-済み（ `visited^ps ）か否かにかかわらず），~cursorを外部~SVG `cursor$e に設定する
+【 ~SVG 2 にて廃された `cursor^e 要素を参照しているが、単に~SVG形式による~cursor画像かも？】。
+~SVG~cursorを~supportしない~UAは、単純に，次の値 `hyper.cur^v ~cursorを利用しようと試みし、その~cursor形式も~supportしない場合，明示的な~hotspotを伴う `hyper.png^v ~cursorの利用を試みし、これらのどの画像~cursor形式も~supportしない場合，最後の値による `pointer$v ~cursorを描画することになる。
+◎
+This example sets the cursor on all hyperlinks (whether visited or not) to an external SVG cursor. User agents that don’t support SVG cursors would simply skip to the next value and attempt to use the "hyper.cur" cursor. If that cursor format was also not supported, the UA could attempt to use the "hyper.png" cursor with the explicit hotspot. Finally if the UA does not support any of those image cursor formats, the UA would skip to the last value and render the pointer cursor.
+</p>
+</div>
+
+				<section id="canvas_cursor">
+<h5 title="Cursor of the canvas">5.1.1.1. ~canvasの~cursor</h5>
+
+<p>
+文書の`~canvas$とは、文書が描画される無限平面である `CSS21$r 。
+~canvasに対応する要素は無いので、どの要素にも触れない~cursorにも~styleをあてがえるようにするため、~canvasの~cursorには，根~要素の~cursorが再~利用される。
+しかしながら、根~要素~用の~boxが生成されない場合（例えば，根~要素の `display$p が `none^v にされているなど）、~canvas~cursorは，~platformに依存する既定の~cursorになる。
+◎
+The document canvas is the infinite surface over which the document is rendered [CSS21]. Since no element corresponds to the canvas, in order to allow styling of the cursor when not over any element, the canvas cursor re-uses the root element’s cursor. However, if no boxes are generated for the root element (for example, if the root element has display: none), then the canvas cursor is the platform-dependent default cursor.
+</p>
+
+<p class="note">注記：
+不可視な要素でも，~boxを生成することはある。
+例えば、要素の `visibility$p は `hidden^vにされていて,
+`display$p は `none^v にされていない場合、~boxは生成され，その~cursorが~canvasに利用される。
+◎
+Note: An element might be invisible but still generate boxes. For example, if the element has visibility: hidden but not display: none, boxes are generated for it and its cursor is used for the canvas.
+</p>
+
+				</section>
+			</section>
+		</section>
+		<section id="insertion-caret">
+<h3 title="Insertion caret">5.2. ~text挿入~caret</h3>
+
+			<section id="caret-color">
+<h4 title="Coloring the Insertion Caret: the caret-color property">5.2.1. 挿入~caretの色付け： `caret-color^p</h4>
+
+◎名 `caret-color@p
+◎値 `auto$v | `color$vt
+◎初 `auto^v
+◎適 すべての要素
+◎継 される
+◎百 受容しない
+◎算
+`auto$v に対しては `auto^v ／
+`color$t 値に対しては`算出d色$ `CSS-COLOR-4$r
+◎
+The computed value for auto is auto. For &lt;color&gt; values, see [[!CSS-COLOR-4#resolving-color-values]] in [CSS-COLOR-4].
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<dl>
+	<dt>`auto@v</dt>
+	<dd>
+~UA は `currentcolor$v を利用するベキである。
+~UA は、良好な視認性／周囲の内容との~contrastを確保するため，~caretの色を自動的に調整してもヨイ
+— `currentcolor^v, 背景, 影, 等々に基づくなどして。
+◎
+User agents should use currentColor. User agents may automatically adjust the color of caret to ensure good visibility and contrast with the surrounding content, possibly based on the currentColor, background, shadows, etc.
+</dd>
+	<dd class="note">注記：
+`caret-shape$p が `block$v のとき，良好な可視性と~contrastを確保することは、
+`currentcolor$v 以外の色を~UAが決定することで最良に達成される。
+◎
+Note: When caret-shape is block, ensuring good visibility and contrast is best achieved with a UA determined color other than currentColor.
+</dd>
+
+	<dt id="valdef-caret-color-color">`color$t</dt>
+	<dd>
+挿入~caretの色は，指定された色になる。
+◎
+The insertion caret is colored with the specified color.
+</dd>
+
+</dl>
+
+<p>
+~caretは、利用者が［
+~text （あるいは他の内容もあり得る）を挿入できる所を指す，要素~内の挿入~箇所
+］を，視覚的に指示するものである。
+この~propは、その可視~指示子の色を制御する。
+◎
+The caret is a visible indicator of the insertion point in an element where text (and potentially other content) is inserted by the user. This property controls the color of that visible indicator.
+</p>
+
+<p class="note">注記：
+~UAは、追加的な何かを “~caret” と~~扱うこともある。
+例えば，~UAには “~navi~caret” を示すものもあり、挿入~caretと似たように動作しつつ，~caretとして機能するように編集できない~text周りにも移動し得る。
+他方、 `cursor$p ~propが［
+<!-- `cursor@p -->
+`auto$v ／ ［
+`text$v ／ `vertical-text$v
+］］にされた［
+~text／要素
+］を~hoverするときに示される~cursor画像は、~caretに似せられることもあろうが，~caretではない（それは~cursorである）。
+◎
+Note: UAs might have additional things that count as “carets”. For example, some UAs can show a “navigation caret”, which acts similarly to an insertion caret but can be moved around in non-editable text and is functionally a caret. On the other hand, the cursor image shown when hovering over text when the cursor property is auto, or when hovering over an element where the cursor property is text or vertical-text, though it sometimes resembles a caret, is not a caret (it’s a cursor).
+</p>
+
+<div class="example">
+<p>
+<samp class="css">caret-color:#00aacc;</samp>
+を伴う `textarea$e：
+◎
+Example: a textarea with caret-color:#00aacc;
+</p>
+
+<textarea style="caret-color:#00aacc;">caret-color:#00aacc</textarea>
+</div>
+
+			</section>
+			<section id="caret-shape">
+<h4 title="Shape of the insertion caret: caret-shape">5.2.2. 挿入~caretの形状： `caret-shape$p</h4>
+
+◎名 `caret-shape@p
+◎値 `auto$v | `bar$v | `block$v | `underscore$v
+◎初 `auto$v
+◎適
+入力を受容する要素
+◎
+elements that accept input
+◎継 される
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+この~propは、~text挿入~caretに欲される形状を，作者が指定できるようにする。
+◎
+This property allows authors to specify the desired shape of the text insertion caret.
+</p>
+
+<p>
+この定義の文脈においては、
+`文字@
+とは， `UAX29$r にて定義される
+<i>extended grapheme cluster</i>
+（拡張された書記素~cluster）として解されるとし、
+`可視~文字@
+とは，送幅が 0 でない文字を意味する。
+◎
+Within the context of this definition, character is to be understood as extended grapheme cluster, as defined in [UAX29], and visible character means a character with a non-zero advance measure.
+</p>
+
+<dl>
+	<dt>`auto@v</dt>
+	<dd>
+~caretの形状は、~UAが決定する。
+それは、~platform規約に合致するベキであり，文脈に基づいて調整されてもヨイ。
+例えば、~UAは
+~insert（~~挿入）~modeと
+~overtype（~~上書き）~mode
+とを切替える場合、利用者が~keyboard上の
+<kbd><kbd>insert</kbd></kbd>
+~Keyを押し下げたときは、［
+~insert~modeにおいては `bar$v,
+~overtype~modeにおいては `block$v
+］による~caretを示してもヨイ。
+◎
+The UA determines the shape of the caret. It should match platform conventions, and may be adjusted based on context. For example, if a UA switches between insert mode and overtype mode when the user presses the insert key on their keyboard, it may show a bar caret in insert mode, and a block caret in overtype mode.
+</dd>
+
+	<dt>`bar@v</dt>
+	<dd>
+~UAは、~text挿入~caretを挿入~点に置かれる細い~barとして描画するモノトスル。
+これは、文字には重ならない，`文字$の［
+合間 ／ 前 ／ 後
+］いずれかを意味する。
+~barは、`行内-軸$と垂直になるベキである。
+ただし，［
+~italic／~oblique
+］~textを挿入するときは、傾けて描画してもヨイ。
+◎
+The UA must render the text insertion caret as a thin bar placed at the insertion point. This means it is between, before, or after characters, not over them. It should be perpendicular to the inline progression direction, although UAs may render it slanted when inserting italic or oblique text.
+</dd>
+
+	<dt>`block@v</dt>
+	<dd>
+~UAは、~text挿入~caretを，［
+挿入~点に後続する次の`可視~文字$に重合している矩形
+］として描画するモノトスル。
+そのような文字が後続していない場合、~UAは
+~caretを最後の`可視~文字$の後に描画するモノトスル。
+~UAは、［
+~italic／~oblique
+］~textを挿入している所では，描画する矩形を傾けてもヨイ。
+◎
+The UA must render the text insertion caret as a rectangle overlapping the next visible character following the insertion point. If there is no visible character after the insertion point, the UA must render the caret after the last visible character. UAs may render it as a slanted rectangle when inserting italic or oblique text.
+</dd>
+
+	<dt>`underscore@v</dt>
+	<dd>
+~UAは、~text挿入~caretを，［
+挿入~点に後続する次の`可視~文字$
+］が占める`行-下面$に，細い線として描画するモノトスル。
+そのような文字が後続していない場合、~UAは，最後の`可視~文字$の後に~caretを描画するモノトスル。
+◎
+The UA must render the text insertion caret as a thin line under (as defined in [CSS-WRITING-MODES-3] the next visible character following the insertion point. If there is no visible character after the insertion point, the UA must render the caret after the last visible character.
+</dd>
+</dl>
+
+<p>
+［
+`block$v ／ `underscore$v
+］~caretの横幅は、挿入~点の後に来る次の`可視~文字$の送幅にされるベキである
+— ただし、［
+そのような文字は無い／
+この情報を決定することは実用的でない
+］場合には `1ch^v にされるベキである。
+◎
+The width of the block and underscore carets should be the advance measure of the next visible character after the insertion point, or 1ch if there is no next visible character or if this information is impractical to determine.
+</p>
+
+<p>
+~caretの方位と外観を決定するときは、~UAは，`書字mode$ `CSS-WRITING-MODES-3$r を織り込んだ上で変形n `CSS-TRANSFORMS-1$r を適用するモノトスル。
+編集された~textが ある~path上に~lay-outされている場合
+— 一例として，~SVG `textPath$e 要素を利用して —
+~UAは それも織り込むベキである。
+◎
+When determining the orientation and appearance of the caret, UAs must take into account the writing mode [CSS-WRITING-MODES-3] and must apply transformations [CSS-TRANSFORMS-1]. If the edited text is laid out on a path, for instance by using the SVG textPath element, UAs should also account for this.
+</p>
+
+<p>
+［
+`bar$v ／ `underscore$v
+］による~caretの太さ, および
+類似に描画される `auto$v による~caretの太さは、~UAが決定する。
+~UAは，実用的になるときは、［
+変形n `CSS-TRANSFORMS-1$r などの手段を介して縮小されたときでも，~caretは可視であり続ける
+］ことを確保するよう，太さを選ぶベキである。
+◎
+The thickness of bar and underscore carets—as well as that of auto carets with a similar rendering—is determined by the user agent. When practical, the user agent should choose a thickness that ensures the caret remains visible even if it has been scaled down via means such as transformations [CSS-TRANSFORMS-1].
+</p>
+
+<p>
+~caretを積層する位置は、~UAは 次の拘束を満たすことを除き，未定義とする：
+◎
+The stacking position of the caret is left undefined within the following constraints:
+</p>
+
+<ul>
+	<li>
+~caretは、要素の背景で遮られないモノトスル。
+◎
+The caret must not be obscured by the background of the element.
+</li>
+	<li>
+`block$v ~caretに対しては、それに重合している文字が~caretに遮られないように描画するモノトスル。
+◎
+UAs must render block carets so that the character it overlaps with is not obscured by the caret.
+</li>
+</ul>
+
+<div class="example">
+<p>
+種々の~caret形状の代表的な外観を図示する。
+各 見本~描画における挿入~点は、字 "u" と "m" の合間にあるとする。
+◎
+This illustrates the typical appearance of the various caret shapes. In each of the sample renderings below, the insertion point is between the letters u and m.
+</p>
+
+<table id="caret-shape-example">
+
+<tbody><tr><th>`caret-shape$p
+<th>見本~描画
+<th>利用中の~browserにおける呈示（~cellを~focusすれば~caretを見れる）
+
+<tr><td>`bar$v
+<td>Lorem ipsu<span style="border: 1px solid black; margin: 0 -1px; animation: caret-bar-ref 2s step-end infinite;">​</span>m
+<td style="" contenteditable="true">Lorem Ipsum
+
+<tr><td>`block$v
+<td>Lorem ipsu<span style="background: #bbb; animation: caret-block-ref 2s step-end infinite;">m</span>
+<td style="caret-shape: block" contenteditable="true">Lorem Ipsum
+
+<tr><td>`underscore$v
+<td>Lorem ispu<span style="border-bottom: 2px solid black; animation: caret-underscore-ref 2s step-end infinite;">m</span>
+<td style="caret-shape: underscore" contenteditable="true">Lorem Ipsum
+
+</tbody></table></div>
+
+<div class="example">
+<p>
+［
+`underscore$v ／ `block$v
+］~caretは、この例にあるように，~terminalや~command-lineで共通的に利用される。
+◎
+underscore or block carets are commonly used in terminals and command lines, as in this example.
+</p>
+
+<pre class="lang-css">
+.console {
+  caret-shape: underscore;
+  background: black;
+  color: white;
+  font-family: monospace;
+  padding: 1ex;
+}
+</pre>
+
+<p>
+これがどんな見かけになるベキかを，下に模倣される描画で図示する。
+◎
+The simulated rendering below illustrates how this should look.
+</p>
+
+<pre style="background: black; color: white; font-family: monospace; padding: 1ex">
+user@host:css-ui-4 $ ls -a
+. .. Overview.bs Overview.html
+user@host:css-ui-4 $ <span style="border-bottom: 2px solid white;animation: terminal-caret-ref 2s step-end infinite;">&nbsp;</span>
+</pre>
+
+<p>
+要素を~focusすれば、利用中の~browserがそれをどう描画するか見れる。
+◎
+Focus the element below to see how your browser renders it.
+</p>
+
+<pre style="background: black; color: white; font-family: monospace; padding: 1ex; caret-shape: underscore;" contenteditable="true">
+user@host:css-ui-4 $ ls -a
+. .. Overview.bs Overview.html
+user@host:css-ui-4 $
+</pre>
+</div>
+
+			</section>
+			<section id="caret">
+<h4 title="Insertion caret shorthand: caret">5.2.3. 挿入~caret略式~prop：`caret^p</h4>
+
+◎名 `caret@p
+◎値 `caret-color$tp || `caret-shape$tp
+◎初 `auto^v
+◎適
+入力を受容する要素
+◎
+elements that accept input
+◎継 される
+◎百 受容しない
+◎算 個々の~propを見よ
+◎順 文法に従う
+◎ア 個々の~propを見よ
+◎表終
+
+<p>
+この略式~propは、［
+`caret-color$p, `caret-shape$p
+］を 1 個の宣言で設定する。
+省略された値は、それぞれの初期~値に設定される。
+◎
+This property is a shorthand for setting caret-color and caret-shape in one declaration. Omitted values are set to their initial values.
+</p>
+
+			</section>
+		</section>
+		<section id="keyboard">
+<h3 title="Keyboard control">5.3. ~keyboardによる制御</h3>
+
+			<section id="nav-dir">
+<h4 title="Directional Focus Navigation: the nav-up, nav-right, nav-down, nav-left properties">5.3.1. ~focusの方向的~navi： `nav-*^p ~prop</h4>
+
+<p class="trans-note">【
+方向的~navi（ `directional navigation^en ）：
+~focusを，利用者から指図された方向にある標的へ~navigateする。
+】</p>
+
+◎名 `nav-up@p, `nav-right@p, `nav-down@p, `nav-left@p
+<!-- `nav-up@p -->
+◎値
+`auto$v | `id$vt [ `current$v | `root$v | `target-name$vt ]?
+◎初 `auto^v
+◎適 すべての `enabled^en 要素
+【~focusが可能化された（または `enabled$ps ？ ）要素】
+◎
+all enabled elements
+◎継 されない
+◎百 受容しない
+◎算 指定d値
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<dl>
+	<dt>`auto@v</dt>
+	<dd>
+~UAは、［
+方向的~navi入力に呼応して，~focusをどの要素に~navigateするか
+］を，自動的に決定する。
+◎
+The user agent automatically determines which element to navigate the focus to in response to directional navigational input.
+</dd>
+
+	<dt>`id@vt</dt>
+	<dd>
+`id^t 値は `~ID選択子$ `SELECT$r である†。
+~propに対応する††方向的~navi入力に呼応して、~focusは，選択子に合致している要素のうち，~tree順序†††で最初のものへ~navigateされる。
+◎
+The &lt;id&gt; value is an ID selector [SELECT]. In response to directional navigation input corresponding to the property, the focus is navigated to the first element in tree order matching the selector.
+</dd>
+	<dd class="trans-note">【†
+したがって，下の例に見られるように、先頭は `#^c にする必要があることになる。
+】【††
+すなわち， `nav-right^p ならば右方向への~navi, 等々
+】【†††
+文書~treeにおける？
+— この機能の資質的には、~box~treeにも思われるが。
+】</dd>
+	<dd>
+`id^t 値がすでに~focusされた要素を参照rしている場合、同じ要素を~focusし直す必要はないので， `nav-*^p ~propに対応する方向的~navi入力は 無視される。
+◎
+If this refers to the currently focused element, the directional navigation input respective to the nav- property is ignored — there is no need to refocus the same element.
+</dd>
+	<dd>
+選択子に合致する要素がない場合、~UAは，どの要素に~focusを~navigateするかを自動的に決定する。
+◎
+If no element matches the selector, the user agent automatically determines which element to navigate the focus to.
+</dd>
+	<dd>
+~focusが，他では~focus可能でない要素に~navigateされた場合、この方向的~naviの結果においてのみ~focus可能になる。
+加えて、 `focus$ps 疑似類も，そのように~focusされている間は その要素に合致する。
+◎
+If the focus is navigated to an element that was not otherwise focusable, it becomes focusable only as the result of this directional navigation, and the :focus pseudo-class matches the element while it is focused as such.
+</dd>
+	<dd class="note">注記：
+このような
+“他では~focus可能でない”
+要素について考慮するにあたっては，他の選択肢もあった
+— 文書~tree内の，次の［
+他でも~focus可能な要素（［
+他では~focus可能でない要素
+］の子孫も含む）
+］への~focusも含めて。
+そのような他の選択肢についての~~意見を歓迎する／~~強く要望する
+— とりわけ、実装~経験, および
+それらの内容に方向的~navi~propを利用している作者~経験からの。
+◎
+Note: there were other options under consideration for such "not otherwise focusable" elements, including focus to the next otherwise focusable element in the document tree (including descendants of such a not otherwise focusable element). Input on such other options is welcome and explicitly solicited, especially from implementation experiences and author experience using the directional navigation properties in their content.
+</dd>
+
+	<dt>`target-name@vt</dt>
+	<dt>`current@v</dt>
+	<dt>`root@v</dt>
+	<dd>
+<p>
+`target-name^vt は、~focusの~navi先になる標的~frameを指示する。
+それは `string$t であり，~underscore文字（ "`_^c" ）から開始されてはならない。
+</p>
+
+<p>
+~errorの取扱い：
+~~実際に，~underscoreから開始されている場合：
+</p>
+
+<ul><li>`"_parent"^v は，親~frameへ~navigateし、
+<li>`"_root"^v は `root$v として扱って、
+<li>他の値は，該当する名前の~frameがあれば その~frameへ~navigateするとする。
+</ul>
+
+<p>
+指定された標的~frameが存在しない場合， `current$v として扱われることになる。
+</p>
+
+<p>
+~keyword `current$v は、単純に，
+【これらの~propが指定されている】
+要素が属している~frameを標的にすること意味する。
+</p>
+
+<p>
+~keyword `root^v は、~UIwindow全体を標的にするベキであることを指示する。
+</p>
+◎
+The &lt;target-name&gt; parameter indicates the target frame for the focus navigation. It is a &lt;string&gt; and it MUST NOT start with the underscore "_" character. Error handling: if it does start with an underscore, "_parent" navigates to the parent frame, "_root" is treated as root, and other values navigate to a frame by that name if it exists. If the specified target frame does not exist, the parameter will be treated as the keyword current, which means to simply use the frame that the element is in. The keyword root indicates that the user agent should target the full window.
+</dd>
+</dl>
+
+<p>
+~UAは、方向的~navi~Keyを備える装置に対しては，対応する 4 つの
+`nav-*^p  方向的~navi~prop（
+`nav-up^p, `nav-right^p, `nav-down^p, `nav-left^p
+）に則って，~focusを~navigateするように応答する。
+この仕様は、装置のどの~Keyが方向的~navi~Keyになるかは，定義しない。
+◎
+User agents for devices with directional navigation keys respond by navigating the focus according to four respective nav-* directional navigation properties (nav-up, nav-right, nav-down, nav-left). This specification does not define which keys of a device are directional navigational keys.
+</p>
+
+<p class="note">注記：
+代表的なパソコンの~keyboardは、 4 種の矢印~Keyを備える。
+それらの~Keyを方向的~naviに利用するものが、アリな実装の一つとして挙げられる。
+~accessibility, および利用者の便利~用に、~UAは，~keyboard上のどの~Keyを方向的~naviに利用するか，環境設定できるようにするベキである。
+◎
+Note: Typical personal computers have keyboards with four arrow keys. One possible implementation would be to use those four arrow keys for directional navigation. For accessibility and user convenience, user agents should allow configuration of which keys on a keyboard are used for directional navigation.
+</p>
+
+<div class="example">
+<p>
+`有位置$な~buttonの例：
+`position^p に対する `absolute^v により位置され，上・右・下・左に置かれた `button^e に対し，利用者が~focusを方向的に~navigateするとき、各 `button^e を時計回りに（または反時計回りに）~navigateするように設定する例：
+◎
+5.3.1.1. Example: positioned buttons
+◎
+Here is an example of buttons positioned in a diamond shape whose directional focus navigation is set in such a way to navigate the focus clockwise (or counter-clockwise) around the diamond shape when the user chooses to navigate directionally.
+</p>
+
+<pre class="lang-css">
+button { position:absolute }
+
+button#b1 {
+  top:0; left:50%;
+  nav-right:#b2; nav-left:#b4;
+  nav-down:#b2; nav-up:#b4;
+}
+
+button#b2 {
+  top:50%; left:100%;
+  nav-right:#b3; nav-left:#b1;
+  nav-down:#b3; nav-up:#b1;
+}
+
+button#b3 {
+  top:100%; left:50%;
+  nav-right:#b4; nav-left:#b2;
+  nav-down:#b4; nav-up:#b2;
+}
+
+button#b4 {
+  top:50%; left:0;
+  nav-right:#b1; nav-left:#b3;
+  nav-down:#b1; nav-up:#b3;
+}
+</pre>
+
+<p>
+`button^e の~~具体的な~markupは，この例には指定されない。
+~markupは，`有位置$な要素の~layoutには関連しない
+— 重要なのは，~focus~naviの挙動を 指定された~layoutに適度に関係させることなので。
+◎
+Whatever markup sequence the buttons may have (which is not specified in this example) is irrelevant in this case because they are positioned, and yet, it is still important to ensure focus navigation behaviors which relate reasonably to the specified layout.
+</p>
+</div>
+
+<div class="example">
+<p>
+特定の~frame内の要素に~focusを移動させる例。
+そのためには、要素 id と~frame名を要する。
+◎
+5.3.1.2. Example: moving focus to inside a frame
+◎
+Moving the focus to an element in a specific frame requires both the element’s id and the frame’s name.
+</p>
+
+<p>
+［
+`id="foo"^a を有する `button^e
+］から左へ~navigateされるとき、~focusを
+`name="sidebar"^a を有する~frameの中にある［
+`id="bar"^a の要素
+］へ移動させるようにする例：
+◎
+This example shows how to make navigating left from the button with id "foo" move the focus to the element with id "bar" within the frame named "sidebar".
+</p>
+
+<pre class="lang-css">
+button#foo { nav-left: #bar "sidebar"; }
+</pre>
+</div>
+
+			</section>
+			<section id="input-method-editor">
+<h4 title="Obsolete: the ime-mode property">5.3.2. 廃用： `ime-mode^p ~prop</h4>
+
+<p>
+一部の~browserで ある程度~実装されている
+`ime-mode^p ~propは、問題を~~孕んでおり，この仕様とその前の仕様 `CSS-UI-3$r により公式的に廃用にされた。
+◎
+ime-mode is a property somewhat implemented in some browsers, that is problematic and officially obsoleted by this specification and its predecessor [CSS-UI-3].
+</p>
+
+<p>
+これらの実装の非-相互運用能について
+<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/ime-mode">文書化されている</a>。
+◎
+There is documentation of non-interoperability of these implementations.
+</p>
+
+<p>
+~UAは、 `ime-mode^p ~propを~supportするベキでない。
+◎
+User agents should not support the ime-mode property.
+</p>
+
+<p>
+作者は、 `ime-mode^p ~propを利用してはナラナイ。
+◎
+Authors must not use the ime-mode property.
+</p>
+
+<p>
+利用者が，利用者~stylesheetにて `ime-mode^p ~propを利用してヨイのは、不良~siteや旧来の実装~用に回避策を要するような，修復-の利用事例に限られるとする
+— 例えば，次の様な利用者~stylesheet規則で：
+◎
+Users may use the ime-mode property only for repair use-cases where they have to work around bad sites and legacy implementations, e.g. with a user style sheet rule like:
+</p>
+
+<div class="example">
+<p>
+利用者~選好の例：
+◎
+Example: user preference
+</p>
+<pre class="lang-css">
+input[type=password] {
+  ime-mode: auto !important;
+}
+</pre>
+</div>
+
+<p>
+この~CSSは、~password入力~fieldの挙動を既定の方式に強制するために，利用者~stylesheet~fileの中に置かれてもヨイ。
+◎
+This example CSS may be placed into a user style sheet file to force password input fields to behave in a default manner.
+</p>
+
+<p>
+この仕様は、旧来の `ime-mode^p 実装の機能性を文書化することも，それが特定的には何を~supportするかも，~~意図的に試みない
+— そのような方針を追求する／推奨することは，イミを成さないので。
+◎
+This specification deliberately does not attempt to document the functionality of legacy ime-mode implementations nor what they specifically support because it does not make sense to pursue or recommend any such path.
+</p>
+
+<div class="note">
+<p>注記：
+`HTML5$r には、［
+利用者にとってより良い入力~体験を，~UAが供せるようにする
+］ための情報を~UAに供するために，作者が利用するベキ特能がある：
+◎
+Note: there are several [HTML5] features which authors should use to provide information to user agents that allow them to provide a better input user experience:
+</p>
+<ul>
+	<li>
+大域的 `lang$a 属性
+◎
+The global lang attribute
+</li>
+	<li>
+`input$e 要素の［
+`inputmode^a,
+`pattern^a,
+`type^a
+］属性
+◎
+The inputmode, pattern, and type attributes of the input element
+</li>
+</ul>
+</div>
+
+			</section>
+		</section>
+	</section>
+	<section id="user-interaction">
+<h2 title="User Interaction">6. 利用者とのヤリトリ</h2>
+
+		<section id="content-selection">
+<h3 title="Controlling content selection">6.1. 内容~選択の制御-法</h3>
+
+<p>
+`user-select$p ~propは、［
+文書~内のどの要素をどう選択できるか
+］を，作者が指定できるようにする。
+これにより，［
+選択するのに等しく有用ではない要素がある
+］ときでも、利用者は，~~隣接する内容を偶発的に選択するのを避けられ，ヤリトリし易くなる。
+◎
+The user-select property enables authors to specify which elements in the document can be selected by the user and how. This allows for easier interactions when not all elements are equally useful to select, avoiding accidental selections of neighboring content.
+</p>
+
+◎名 `user-select@p
+◎値 `auto$v | `text$v | `none$v | `contain$v | `all$v
+◎初 `auto$v
+◎適 すべての要素, および任意選択で［
+`before$pe, `after$pe
+］疑似要素
+◎
+all elements, and optionally to the ::before and ::after pseudo-elements
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+~UAは、［
+`first-line$pe ／ `first-letter$pe
+］疑似要素には，
+`user-select$p ~propを適用しないモノトスル。
+◎
+User agents must not apply the user-select property to the ::first-line and ::first-letter pseudo-elements.
+</p>
+
+<div class="note">
+<p>注記：
+~UAは、［
+`before$pe ／ `after$pe
+］疑似要素にも，この~propを適用してもヨイ。
+そうする場合，これらの疑似要素~上では、値 `auto$v は`使用~値$ `none$v に対応付けられるが，他の値も指定できる。
+これは、生成d内容を［
+選択-／~copy
+］できない旧来の挙動を保全する
+— それは、これらの疑似要素が装飾的な目的に利用されたときには，適切になる。
+しかしながら，この~propは、それらが内容の一部を生成するために利用される事例においても，利用者の期待に沿うよう［
+選択-／~copy
+］可能にする。
+【！the issue numbers in this document】
+
+◎
+Note: The UA may apply this property to the ::before and ::after pseudo-elements. If it does, the auto value maps to a used value of none on these pseudos, but other values can be specified. This preserves the legacy behavior of generated content not being selectable or copyable, which is appropriate when these pseudos are used for decorative purposes. However, this property allows them to become selectable and copyable, as the user would expect in cases where they are used to generate parts of the content, such as the issue numbers in this document.＼
+</p>
+
+<p class="advisement">
+作者は、装飾的でない目的には，生成d内容を利用するのはアリな限り避けて、すべての内容を~DOM内に含めることを選好するベキである。
+◎
+To the extent possible, authors should avoid using generated content for non-decorative purposes, and should prefer including all the content in the DOM.＼
+</p>
+
+<p>
+`この特能は~risk下にある。^em
+◎
+This feature is at risk.
+</p>
+</div>
+
+<p class="issue">
+`user-select^p を `none$v 以外の値に変更することが
+~copy可否と~DOM~API
+において何を意味するか，~~明らかにする必要がある。
+◎
+if we allow user-select to change to a value other than none, we need to figure out what this means for copyability, and DOM APIs.
+</p>
+
+<p>
+疑似要素~内の生成d内容が，この仕組みを通して選択-可能になるときは、~UAは，探索~機能からも その内容を見出せるようにするベキである。
+◎
+When generated content in pseudo-elements becomes selectable through this mechanism, UAs should also make this content findable through their search function.
+</p>
+
+<p class="issue">
+`marker$pe にも適用するベキか？
+`~page~margin~box$にも適用するベキか？
+`auto$v に対する`使用~値$は `none$v, `text$v のどちらが適切か？
+◎
+Should it also apply to ::marker? To page-margin boxes? Should the used value of auto also be none, or would text be more appropriate?
+</p>
+
+<p>
+次に挙げる場合を除き，`使用~値$は`算出d値$と同じになる：
+◎
+The used value is the same as the computed value, except:
+</p>
+
+<ol>
+	<li>
+`編集-可能な要素$上では、算出d値に関わらず，使用~値は常に `contain$v になる。
+◎
+on editable elements where the used value is always contain regardless of the computed value
+</li>
+	<li>
+算出d値が `auto$v のときは、使用~値は，下に定義するように他のいずれかの値になる。
+◎
+when the computed value is auto, in which case the used value one of the other values as defined below
+</li>
+
+</ol>
+
+<p>
+この仕様の目的においては、次に該当する要素が
+`編集-可能な要素@
+とされる
+⇒
+［
+`編集中の~host$／`変異-可能$な~form~control
+］のうち，~textな内容を伴うもの
+— `textarea$e など。
+◎
+For the purpose of this specification, an editable element is either an editing host or a mutable form control with textual content, such as textarea.
+</p>
+
+<p class="issue">
+編集中の~hostの編集-可能な子孫である要素~上の算出d値に対し，何が起こるかについて、拘束はあるベキか？
+その意味論は、明白ではない。
+`none$v は，使用~値 `text$v に対応付けるベキかもしれないし、他のすべての値も `text$v に対応付けるベキかもしれない。
+◎
+Should there be constraints on what happens to the used value on elements that are editable descendants of editing hosts? The semantics are not obvious. Maybe none should map to text, or maybe all values should map to text.
+</p>
+
+<dl>
+	<dt>`auto@v</dt>
+	<dd>
+<p>
+`auto$v に対する`使用~値$は：
+◎
+The used value of auto is determined as follows:
+</p>
+		<ol>
+			<li>
+［
+`before$pe ／ `after$pe
+］疑似要素に対しては、
+`none$v になる。
+◎
+On the ::before and ::after pseudo-elements, the used value is none
+</li>
+			<li>
+`編集-可能な要素$ならば、
+`contain$v になる。
+◎
+If the element is an editable element, the used value is contain
+</li>
+			<li>
+他の場合，親の `user-select$p の`使用~値$は［
+`all$v ／ `none$v 
+］ならば、それと同じになる。
+◎
+Otherwise, if the used value of user-select on the parent of this element is all, the used value is all
+◎
+Otherwise, if the used value of user-select on the parent of this element is none, the used value is none
+</li>
+			<li>
+他の場合、
+`text$v になる。
+◎
+Otherwise, the used value is text
+</li>
+		</ol>
+
+<p class="note">注記：
+この［
+継承されない~propと,
+初期~値 `auto$v に対する`使用~値$が親~要素に依存すること
+］との通例的でない組合nは、実質的には，選択的な継承をアリにするためにある。
+これは，当初は、 Microsoft IE において継承に類似な挙動を導入するために提案された
+— ここでは、値 `contain$v は継承されないが。
+◎
+Note: This unusual combination of a non-inherited property with an initial value of auto whose used value depends on the parent element makes it possible to create what is effectively selective inheritance. This was initially proposed by Microsoft in IE to introduce a behavior similar to inheritance except that the contain value does not inherit.
+</p>
+	</dd>
+
+	<dt>`text@v</dt>
+	<dd>
+要素は、選択に拘束を課さない。
+◎
+The element imposes no constraint on the selection.
+</dd>
+
+	<dt>`none@v</dt>
+	<dd>
+~UAは、この要素~内から開始される選択を許容しないモノトスル。
+◎
+The UA must not allow selections to be started in this element.
+</dd>
+	<dd>
+<p>
+この要素の外側から開始される選択は、この要素~内で終端しないモノトスル。
+利用者が そのような選択を作成しようと試みた場合、~UAは，代わりに選択~範囲を要素~境界の所で終端させるモノトスル。
+◎
+A selection started outside of this element must not end in this element. If the user attempts to create such a selection, the UA must instead end the selection range at the element boundary.
+</p>
+
+<p class="note">注記：
+これを書いている時点では、試験的な実装は，この様に挙動していない部分がある。
+Firefox は、そう挙動する。
+Chrome, Safari は、ほぼそう挙動する：
+選択が要素より後から開始して, 要素の中へ後戻りしようと試行している場合，それらはここに指定したように挙動するが、選択が要素より前から開始して, 要素の中へ進もうと試行している場合、要素は `all$v にされていたかのように挙動する結果，全体を選択する。
+IE （ Internet Explorer ）は要素の外側から開始され, 要素の中へ行く選択を全く制約しない。
+Chrome, Safari における別の相違には、
+`none$v にされた要素の内側からも選択を開始できることが挙げられる
+— 選択が要素の外で終端したときには、要素の境界から終端した所までの選択が作成される。
+Firefox, IE
+は、この仕様に述べたとおりに挙動するので，選択を全く作成しない。
+◎
+Note: As of the time of writing, experimental implementations do not all behave like this. Firefox does. Chrome and Safari almost do: for a selection started after the element and trying to go backwards into the element they behave as specified here, but for a selection started before the element and trying to go into the element they behave as if the element has all and select it entirely. IE does not restrict selections started outside of the element from going into it at all. Another difference is that in Chrome and Safari, if the user attempts to start a selection inside a user-select: none, and to end the selection out of it, a selection will be created from the boundary of the element to the user-designated end-point. Firefox and Internet explorer behave as prescribed in this specification and do not create a selection at all.
+</dd>
+	<dd>
+しかしながら，この要素の子孫に［
+`user-select$p の`使用~値$が `none$v にならないもの
+］がある場合、そのような子孫の中で開始して, 終端する選択は，許容される。
+◎
+However, if this element has descendants on which the used value of user-select is not none, selections that start and end within these descendants are allowed.
+</dd>
+	<dd>
+~UAは、選択が この要素を挟むように拡張することを許容した上で，そのような選択からこの要素を除外するモノトスル。
+ただし、選択ごとに複数の範囲を~supportしない~UAは，この要素を含めてもヨイ。
+この要素の子孫に［
+`user-select$p の`使用~値$が `none$v にならないもの
+］がある場合、そのような子孫は，要素を挟むように拡張している選択~内に含まれるモノトスル。
+<span class="note">
+この仕様は、~clipboardの挙動についての規範的な要件は課さない：
+しかしながら，~UAには、~copy時に~clipboardに~copyされるものと, 視覚的な選択との整合性を保つことが奨励される。
+選択されたように現れない~textを~copyすること, あるいはその逆は、利用者をひどく惑わすので。
+</span>
+◎
+The UA must allow selections to extend across this element, and must exclude this element from such a selection. An exception is made for UAs which do not support multiple ranges per selection, and they may include this element. If the element has descendants on which the used value of user-select is not none, these descendants must be included in a selection extending across the element. This specification makes no normative requirement about the behavior of the clipboard. however, UAs are encouraged to keep the visual selection consistent with what would get copied to the clipboard when copying. Copying text that does not appear to be selected, or vice versa, is highly confusing to users.
+</dd>
+	<dd>
+`user-select$p が `none$v にされた要素~内から
+— それを~clickする／ その中から~dragを開始するなどにより —
+選択を開始しようと試みられても、既存の選択は，いかなる仕方でも
+— 未選択にされるなど —
+影響されないモノトスル。
+◎
+Attempting to start a selection in an element where user-select is none, such as by clicking in it or starting a drag in it, must not cause a pre-existing selection to become unselected or to be affected in any way.
+</dd>
+	<dd>
+<p>
+`user-select$p は、~UIの便利~用の仕組みであり，~copy保護の仕組みではない
+— ~UAは、 `user-select$p が `none$v にされようが，利用者が~textを明示的に選択する代替的な仕方を供してもヨイ。
+◎
+As user-select is a UI convenience mechanism, not a copy protection mechanism, the UA may provide an alternative way for the user to explicitly select the text even when user-select is none.
+</p>
+
+<div class="note">
+<p>
+注記：
+`none$v は~copy保護の仕組みではないので、そのように利用しても，効果は無い：
+</p>
+<ul><li>~UAには、それを迂回する仕方を供することが許容される。
+</li><li>~supportしない旧来の~UAには，その効果は無い。
+</li><li>いずれにせよ，利用者は、~UAの利用者~stylesheetやそれに等価な仕組みを通して不能化できる。
+</li></ul>
+
+<p>
+`none$v に意味されているのは、［
+作者が、選択しても有用にならない~UI要素の選択を不能化できるようにする
+］ことにより，［
+利用者が，求める内容を選択し易くする
+］ことである。
+［
+~CSS検証器,
+~linter,
+~browser内の開発者~tool
+］などの~toolには、経験則を利用して，［
+使い勝手を悪くしたり，共通的な利用者の期待に違反する
+］ような［
+不正, あるいは濫用的
+］な用法を検出して，警告することが奨励される。
+</p>
+
+◎
+Note: none is not a copy protection mechanism, and using it as such is ineffective: User Agents are allowed to provide ways to bypass it, it will have no effect on legacy User Agents that do not support it, and the user can disable it through the user style sheet or equivalent mechanisms on UAs that do anyway. Instead, none is meant to make it easier for the user to select the content they want, by letting the author disable selection on UI elements that are not useful to select. Tools such as CSS validators, linters or in-browser developer tools are encouraged to use heuristics to detect and warn against incorrect or abusive usage that would hamper usability or violate common user expectations.
+</div>
+
+	</dd>
+	<dd class="note">
+<p>注記：
+作者は、利用者を不必要に拘束しないことについて注意深くあるベキである。
+例えば，根~要素の `user-select$p を `none^v に設定した上で［
+作者が選択するに有用と判定した，一握りの要素において、その制約を緩める
+］ことは、利用者をいらつかせかねない：
+◎
+Authors should be careful about not constraining the user unnecessarily. For example, setting user-select: none on the root element, and relaxing that restriction on a handful of elements the author judges useful to select can be frustrating to users:
+</p>
+		<ul>
+			<li>
+空な区画を~clickして現在の選択を未選択にすることが，できなくなる
+◎
+Clicking in empty areas to undo the current selection will no longer be effective
+</li>
+			<li>
+作者は、選択-可能にすべき区画を見落とすかもしれない
+◎
+The author may have overlooked some areas which should be selectable
+</li>
+			<li>
+後で~pageに区画を追加するとき，選択-可能にし忘れるかもしれない
+◎
+Areas may be added later to the page without remembering to make them selectable
+</li>
+			<li>
+利用者は主だった内容~以外の~text片を選択したいと求めるかもしれない
+— 一例として、それらを［
+何らかの辞書や翻訳~toolで検索する ／
+探索~engine内で警告や~error~messageを見つける
+］ためなど…
+◎
+The user may want to select pieces of text other than the main content, for instance to look them up in a dictionary or in some translation tool, or to look for warnings and error messages in a search engine…
+</li>
+		</ul>
+
+<p>
+作者にとって代わりになる良い実施は、［
+偶発的に選択されると，意図される動作に干渉すると見込まれる要素
+］に対し，選択的に
+<code class="css">`user-select$p: `none^v</code>
+を適用することである。
+~page内の［
+ヤリトリされないと見込まれる部品
+］は偶発的に選択-可能なままにする方が、その逆にするより，ずっと利用者をいらつかせずに済むと見込まれるので。
+◎
+Instead, a good practice is for authors is to selectively apply user-select: none to elements which seem likely to be accidentally selected when doing so would interfere with the more likely intended action. Accidentally leaving parts of the page that are unlikely to be interacted with selectable will likely cause much less frustration to users than the opposite.
+</p>
+	</dd>
+
+	<dt>`contain@v</dt>
+	<dd>
+~UAは、この要素から開始された選択が要素の外側まで拡張されるのを許容しないモノトスル。
+◎
+UAs must not allow a selection which is started in this element to be extended outside of this element.
+</dd>
+	<dd>
+この要素の外側から開始された選択は、この要素~内で終端しないモノトスル。
+利用者がそのような選択を作成しようと試みた場合には、~UAは，選択~範囲を要素~境界の所で終端させるモノトスル。
+◎
+A selection started outside of this element must not end in this element. If the user attempts to create such a selection, the UA must instead end the selection range at the element boundary.
+</dd>
+	<dd>
+~UAは、選択が この要素を挟むように拡張することを許容するモノトスル。
+そのような選択には、要素の内容も含めるモノトスル。
+◎
+The UA must allow selections to extend across this element, and such selections must include the content of the element.
+</dd>
+	<dd class="note">注記：
+これを書いている時点では，試験的~実装の挙動は、［
+外側から開始された選択, 要素の中へ行く選択
+］について互いに異なる。
+この挙動は、
+`contain$v を明示的に~supportしない~browserにすら［
+`textarea$e ／
+`contenteditable$a
+］要素の中へ選択しようと試行することにより観測できる。
+◎
+Note: At the time of writing, experimental implementations behave differently from eachother about selections started outside and selections going into the element. The behavior can be observed even on browsers that do not explicitly support contain by trying to select into a textarea or a contenteditable element.
+</dd>
+	<dd class="note">注記：
+これは、当初は Internet Explorer における試験的な特能として，
+`user-select$p に対する値 `element^v の下で導入された。
+◎
+Note: This was initially introduced as an experimental feature in Internet Explorer, under the name user-select: element.
+</dd>
+
+	<dt>`all@v</dt>
+	<dd>
+要素の内容は、不可分に選択されるモノトスル。
+選択が要素の一部を包含することになる場合、選択は，要素~全体を
+— そのすべての子孫も含め —
+包含するモノトスル。
+要素の親の `user-select$p の`使用~値$も `all$v の場合、要素が選択されたときには，親も再帰的に選択に含めるモノトスル。
+◎
+The content of the element must be selected atomically: If a selection would contain part of the element, then the selection must contain the entire element including all its descendants. If the element is selected and the used value of user-select on its parent is all, then the parent must be included in the selection, recursively.
+</dd>
+	<dd>
+この要素の子孫に `user-select$p の`使用~値$が `all$v でないものがあって，選択~全体が そのような子孫たちに包含されている場合、［
+選択が この要素~一体を含むように拡張する
+］ことはないとする。
+◎
+If this element has descendants on which the used value of user-select is not all and if a selection is entirely contained in these descendants, then the selection is not extended to include this whole element.
+</dd>
+</dl>
+
+<p class="note">注記：
+選択は、~textのみならず，［
+画像, ~table, 動画, 等々
+］まで拡張して，それらを含み得る。
+そのような選択を［
+~copyする／~pasteする
+］ときの挙動は、この仕様の視野~外である。
+◎
+Note: Selections can include more than just text and extend over images, tables, videos, etc. The behavior when copying and pasting a such selections is out of scope for this specification.
+</p>
+
+<p>
+~HTML用には、次の~UA~stylesheetが追加される：
+◎
+The following additions are made to the UA stylesheet for HTML:
+</p>
+
+<pre class="lang-css">
+button, meter, progress, select { user-select: none; }
+</pre>
+
+<p class="issue">
+上の~listは不完全であり、少なくとも `input$e の各種~button類は含める必要がある。
+◎
+the list above is incomplete and needs to include at least the various button-like variants of input.
+</p>
+
+<p>
+旧来の内容との互換性を得るため、
+`user-select$p を~supportする~UAは，
+`-webkit-user-select^p も別名として~supportするモノトスル。
+◎
+For compatibility with legacy content, UAs that support user-select must also support -webkit-user-select as an alias.
+</p>
+
+<p class="note">注記：
+別名にする仕組みの詳細は、意図的に~UAに委ねられる。
+`-webkit-user-select^p を `user-select$p の略式~propにすることは，有効な~approachとして既知であり、新たな実装者は それを考慮するべきである。
+しかしながら、互換性に反する帰結なしに，他の手段を通して
+`-webkit-user-select^p を `user-select$p の別名として~supportしている~UAも存在するので、この仕様は，そのような柔軟性を許容する。
+◎
+Note: The details of the aliasing mechanism is intentionally left up to the UA. Making -webkit-user-select a shorthand property of user-select is known to be an effective approach, and new implementers should consider it. However, UAs supporting -webkit-user-select as an alias of user-select through other means exist, without adverse consequences to compatibility, so this specification allows flexibility.
+</p>
+
+		</section>
+	</section>
+	<section id="styling-widgets">
+<h2 title="Styling Widgets">7. ~widgetの~style法</h2>
+
+		<section id="appearance-switching">
+<h3 title="Switching appearance">7.1. 外観の切替法</h3>
+
+◎名 `appearance@p
+◎値 `none$v | `auto$v | `textfield$v | `menulist-button$v | `compat-auto$t
+◎初 `none$v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+文書~内のほとんどの要素に対しては、その見かけは~CSSにより全部的に制御できる。
+一方で，`~widget$は、概して，~host~OSの~native~UI~controlを利用して~UAにより具現化される
+— それは、~CSSを利用して再現できないし, ~styleできない。
+◎
+While the way most elements in a document look can be fully controlled by CSS, widgets are typically rendered by UAs using native UI controls of the host operating system, which can neither be replicated nor styled using CSS.
+</p>
+
+<p>
+この仕様における用語
+`~widget@
+は、
+`~nativeな外観@
+を備え得る要素を表す
+— すなわち、~host［
+~OSまたは~platform
+］の［
+~UAのそれに相似的な~native［
+~widget／~control
+］］の様に, さもなくば［
+~CSSでは表出-不能な見かけと感触
+］を伴って，具現化されることを意味する。
+どの要素が`~nativeな外観$を備え得ると定義されるかは、~host言語（例：
+~HTML `HTML$r
+）に委ねられる。
+◎
+The term widget in this specification denotes elements that can have native appearance, meaning that they are rendered like analogous native widgets or controls of the host operating system or platform, or with a look and feel not otherwise expressible in CSS. It is up to the host language (e.g., HTML [HTML]) to define which elements can have native appearance.
+</p>
+
+<p>
+この仕様は、 `appearance$p ~propを導入して，この挙動にいくらかの制御を供する。
+特に，この~propに値 `none$v を利用すれば、作者は，`~widget$用の`~nativeな外観$を抑止した上で、~CSSを利用してそれを~styleし直せるようになる。
+◎
+This specification introduces the appearance property to provide some control over this behavior. In particular, using appearance: none allows authors to suppress the native appearance of widgets, so that CSS can be used to restyle them.
+</p>
+
+<details class="note">
+<summary>
+この特能の歴史についての注記
+◎
+Note on the history of this feature
+</summary>
+
+<p>
+これは、ほとんどの~browserにおいて，以前は 接頭辞~付きの形で存在していた。
+標準~化の前までは、アリな値は， `none^v に加えて［
+要素の見かけを与え得るすべての仕方からなる，とても長い~list
+］であった。
+それぞれの値は、~form~controlに特定の見かけと感触を与えることを担当する。
+この~listは、~browserごとに異なっていた。
+◎
+This previously existed in prefixed form in most browsers. Before standardization, in addition to none, the possible values were a very long list of all the ways an element could look; each value being responsible for giving form controls their specific look and feel. This list was different across browsers.
+</p>
+
+<p>
+~CSS~WGは、これを標準~化するのは実用的でないと結論した
+— その~~理由として、~form要素をどう構築するかは各~browserごとに異なり，多くの値は 他の~browserが備えていない疑似要素に適用され、［
+~form~controlの見かけを~platformごとに相当に異ならせる能は，保全されるべき
+］なので，標準~化されるべきでないことが挙げられる。
+◎
+The CSS Working Group concluded this was impractical to standardize, in part because many values applied to pseudo-elements that other browsers don’t have, as they construct form elements differently, and which should not be standardized, since the ability to make form controls look substantially different on different platforms should be preserved.
+</p>
+
+<p>
+また，任意な要素（~form~controlも含む）を（他の）任意な~form~controlに転換する能は、誤った特能と見なされる。
+◎
+Also, the ability to turn any arbitrary element (including any form control) into any (other) arbitrary form control is considered a misfeature.
+</p>
+
+<p>
+代わりに，ここでの設計は、単に次に基づくように指定される
+⇒＃
+値 `auto^v は、~form~controlは，何であれ それに必要な見かけになる。
+値 `none^v は、`~nativeな外観$を抑止する。
+◎
+Instead, the design being specified is based on just having an "auto" value that makes form controls look like whatever they need, and a "none" value that suppresses native appearance.
+</p>
+
+<p>
+しかしながら，次のような利用に因り，これだけでは~web互換でなくなる根拠がある：
+◎
+However, there is evidence that this alone is not web compatible, due in part to uses such as:
+</p>
+
+<pre class="lang-css">
+input { appearance: none; }
+input[type=checkbox] { appearance: checkbox; }
+</pre>
+
+<p>
+ここで指定された設計は、少数の追加的な~keywordを介して，［
+<span class="prod">`none^v | `auto^v</span>
+による~modelの単純さを保全すること,
+既存の内容との互換性を保守すること
+］の間で妥協する。
+◎
+The design specified here is a compromise between the two, preserving the simplicity of the none | auto model while maintaining compatibility with existing content via a few additional keywords.
+</p>
+
+<p>
+互換性を得るために必要な~keywordの精確な~list, および それらの正確な挙動は、既存の内容との互換性をより良く取扱うため，この仕様の将来~versionにて精緻化される見込みが高い。
+~CSS~WGは、関連な~feedbackを歓迎する。
+◎
+The precise list of keywords needed for compatibility and their exact behavior is likely to be refined in a future version of this specification to better handle compatibility with existing content. The CSS-WG welcomes relevant feedback.
+</p>
+</details>
+
+
+<dl>
+	<dt>`none@v</dt>
+	<dd>
+要素は、~CSSの通例の規則に従って具現化される。
+`~widget$以外の置換d要素は、これにより影響されず，置換d要素であり続ける。
+`~widget$は、`~nativeな外観$にならないモノトスル。
+詳細は、［
+<a href="#appearance-decorative">§ 要素の装飾的な側面に対する `appearance^p の効果</a>,
+<a href="#appearance-semantics">§ 要素の意味論上の側面に対する `appearance^p の効果</a>
+］を見よ。
+◎
+The element is rendered following the usual rules of CSS. Replaced elements other than widgets are not affected by this and remain replaced elements. Widgets must not have their native appearance. See § 7.1.1 Effects of appearance on Decorative Aspects of Elements and § 7.1.2 Effects of appearance on Semantic Aspects of Elements for details.
+</dd>
+
+	<dt>`auto@v</dt>
+	<dd>
+`~widget$は`~nativeな外観$になってもヨイ。
+◎
+Widgets may have their native appearance.
+</dd>
+	<dd>
+`~widget$以外の要素は、
+`none$v が指定されていたかのように具現化するモノトスル。
+◎
+Elements other than widgets must be rendered as if none had been specified.
+</dd>
+
+	<dt>`textfield@v</dt>
+	<dd>
+［
+`input$e 要素のうち，その `type$a 属性は `Search^st 状態にあるもの
+］に対しては
+— `Text^st 状態にあるものと類似に —
+“通常の” ~text手入力~widgetとして描画される
+◎
+For input elements where the type attribute is in the Search state, the element is rendered as a "normal" text entry widget, similar to an input element where the type attribute is in the Text state.
+</dd>
+	<dd>
+他のすべての要素に対する効果は、 `auto$v と同じになる
+◎
+For all other elements, this value has the same effect as auto.
+</dd>
+
+	<dt>`menulist-button@v</dt>
+	<dd>
+`~drop-down~box$になる `select$e 要素は、 “~drop-down~button” も含め，~drop-down~boxとして描画されるが、~host~OSの~native~controlは必ずしも利用されない。
+そのような要素に対しては、（ `auto$v に対しては無視rされ得る）［
+`color$p, `background-color$p, `border$p
+］などの~CSS~propは無視rされるベキでない。
+◎
+For drop-down box select elements, the element is rendered as a drop-down box, including a "drop-down button", but not necessarily using a native control of the host operating system. For such elements, CSS properties such as color, background-color, and border (that can be disregarded for auto) should not be disregarded.
+</dd>
+	<dd>
+他のすべての要素に対しては、この値の効果は `auto$v と同じになる。
+◎
+For all other elements, this value has the same effect as auto.
+</dd>
+
+	<dt>`compat-auto@t</dt>
+	<dd>
+<p>
+これらの値は、［
+早期に，この~propの非-標準~version用に開発された内容
+］との互換性を得るために存在する。
+それらの効果は、どれも `auto$v と同じになる：
+◎
+These values exist for compatibility of content developed for earlier non-standard versions of this property. They all have the same effect as auto.
+</p>
+
+<pre class="prod">
+`compat-auto$t
+    = `searchfield@v
+    | `textarea@v
+    | `push-button@v
+    | `slider-horizontal@v
+    | `checkbox@v
+    | `radio@v
+    | `square-button@v
+    | `menulist@v
+    | `listbox@v
+    | `meter@v
+    | `progress-bar@v
+    | `button@v
+</pre>
+	</dd>
+	<dd class="issue">
+`auto$v が広く~supportされたなら、代わりに その利用を推奨する。
+◎
+When auto is widely supported, recommend using it instead.
+</dd>
+	<dd class="issue">
+これらの値のうち~web互換性に必要ないものは、この~listから落とされるベキである。
+逆に，互換性に必要な値が他にあれば、この~listに追加されるベキである。
+◎
+If any of these values are not needed for web compat, they should be dropped from this list; conversely, any value needed for compat not included in this list should be added.
+</dd>
+	<dd class="issue">
+互換性の理由から，これらの値の一部は、［
+任意な要素に効果がある，熟しきった値に昇格する ／
+一部の`~widget$に副作用を及ぼす
+］必要もあり得る。
+◎
+It is possible that for compat reasons some of these values need to be promoted to being full blown values with effects on arbitrary elements, or that some of these values need to have some side effects on some widgets.
+</dd>
+</dl>
+
+<p class="issue"> 
+一部の~UAは、
+`input type="range"^e
+要素の方位を変更するためとして，値
+`slider-vertical^v, `sliderthumb-vertical^v
+を~supportする。
+これらの値は指定されない
+— この~controlの方位を変更するのは、別々の仕組みでもっと良く行えるので。
+<a href="~HTMLissue/4177">課題 whatwg/html#4177</a>
+を見よ。
+◎
+The values slider-vertical and sliderthumb-vertical are supported in some user agents to change the orientation of &lt;input type=range&gt; elements. These values are not specified because changing the orientation of this control is better done with a separate mechanism. See issue whatwg/html#4177.
+</p>
+
+<div class="example">
+<p>
+作者は、~HTMLにおける~check-boxの見かけと感触を~custom化しようと求めるならば，次を利用することもできる：
+◎
+An author wanting to customize the look and feel of check boxes in HTML could use the following:
+</p>
+
+<pre class="lang-css">
+input[type=checkbox] {
+  all: unset; /* <span class="comment">
+この略式は、 `appearance^p も `none^v に設定し直す。
+◎
+this shorthand includes resetting appearance to none
+</span> */
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  background: red;
+}
+input[type=checkbox]:checked {
+  border-radius: 50%;
+  background: green;
+}
+input[type=checkbox]:focus-visible {
+  outline: auto;
+}
+</pre>
+
+<p>
+`input type="checkbox"^e
+は、
+<span style="display: inline-block; width: 1em; height: 1em; background: red;"></span>
+として描画されることになる一方で、
+`input type="checkbox" checked^e
+は
+<span style="display: inline-block; width: 1em; height: 1em; background: green; border-radius: 50%;"></span>
+として描画され、要素を（例えば~clickして）作動化すれば，状態を通例通り切替することになる。
+◎
+&lt;input type="checkbox"&gt; would be rendered as , while &lt;input type="checkbox" checked&gt; would be rendered as , and activating (for example by clicking) the element would toggle the state as usual.
+</p>
+</div>
+
+<p>
+算出d値が`~widget$上で［
+`auto$v ／
+`textfield$v ／
+`menulist-button$v ／
+いずれかの `compat-auto$t 値
+］になる所では、~UAは，一部の~CSS~propを無視rしてもヨイ
+— 意図される外観が保全されるのを確保するために, あるいは
+当の~propは選ばれた外観に有意義でなくなり得るならば。
+しかしながら、次に挙げる~propは，無視rしないモノトスル：
+◎
+On widgets where the computed value is auto, textfield, menulist-button, or one of the &lt;compat-auto&gt; values, UAs may disregard some CSS properties to ensure that the intended appearance is preserved, or because these properties may not be meaningful for the chosen appearance. However, the following properties must not be disregarded:
+</p>
+
+<ul><li>`appearance$p
+</li><li>`display$p （`内縁~表示-型$は無視されてヨイ）
+◎
+display (the inner display type may be ignored)
+</li><li>`visibility$p
+</li><li>`position$p
+</li><li>`top$p
+</li><li>`right$p
+</li><li>`bottom$p
+</li><li>`left$p
+</li><li>`float$p
+</li><li>`clear$p
+</li><li>`margin$p とそれに関係する下位prop
+◎
+margin and related long-hand properties
+</li><li>`unicode-bidi$p
+</li><li>`direction$p
+</li><li>`cursor$p
+</li><li>`z-index$p
+</li></ul>
+
+<p class="issue">
+この~listに含めるべき~propは他にあるか？
+~listから除去するべきものはあるか？
+無視してよい~propの~whitelistを与えるべきか？
+— そうでないものの~blacklistに代えて。
+どちらの仕方でも、~UAは，`~widget$を具現化するときに 一部の~propを無視するので、この仕様は，これについて何か言う必要がある。
+◎
+Are there more properties that should be included in this list? Should we remove some? Should we whitelist the properties that are ok to ignore instead of blacklisting those that are not? Either way, UAs do ignore some properties when rendering widgets, so this specification needs to say something about this.
+</p>
+
+<p>
+旧来の内容との互換性を得るため、~UAは， `appearance$p の`旧来の別名n$として
+`-webkit-appearance@p
+も~supportする~モノトスル。
+◎
+For compatibility with legacy content, UAs must also support -webkit-appearance as a legacy name alias of appearance.
+</p>
+
+			<section id="appearance-decorative">
+<h4 title="Effects of appearance on Decorative Aspects of Elements">7.1.1. 要素の装飾的な側面に対する `appearance^p の効果</h4>
+
+<p>
+`~widget$の装飾的かつ視覚的な側面を成すもののうち，~CSS~style規則によるものでないすべては、
+`appearance$p を利用して外観が変更されたときには，抑止されるモノトスル
+— この要素~用の~UAの内部~表現が、複数の
+要素や疑似要素
+を一緒に組合わすように組成されていたとしても。
+◎
+All decorative visual aspects of a widget which are not caused by a CSS style rule must be suppressed when the appearance is changed using appearance, even if the UA’s internal representation for this element was composed of multiple elements or pseudo-elements combined together.
+</p>
+
+<p class="example">
+例えば `HTML$r `select$e 要素は、右端~側に［
+要素が~clickされたとき~listは展開されることを指示する，矢印
+］が描画されることが多い。
+`select^e 要素の `appearance$p の算出d値が `none$v になる場合、これは現れてはならない。
+◎
+For example, the [HTML] select element is often rendered with an arrow on the right side indicating that the list will be expanded if the element is clicked. If the computed value of appearance on a select element is none this must disappear.
+</p>
+
+<p>
+~UAは、自身の~UA~stylesheetに，［
+`appearance$p が `none$v でないときに，`~widget$に認識-可能な形状を与える
+］ための~style規則を含めるベキである。
+◎
+UAs should include in their user agent stylesheet style rules to give widgets a recognizable shape when appearance is none.
+</p>
+
+<p class="note">注記：
+したがって，作者は、自身が意図する~style付けを得るためには、これらの~UA~style規則を上書きする必要があるかもしれない。
+◎
+Note: Authors may therefore need to override these UA style rules to get the styling they intended.
+</p>
+
+<p class="advisement">
+作者は、 `all$p を利用して，全部的に~styleなしの`~widget$を得るのが簡便と見出すこともあろう
+— そうすれば、~UA~stylesheetから干渉されずに，したいように~styleできるので。
+しかしながら，これは、同じ~UA~stylesheetが供する~focus指示子も抑止する。
+なので，そうする作者は、~focus指示子を復旧して~accessibilityが~~損なわれるのを避けるベキである
+— 一例として，
+`:focus-visible { outline: auto; }^css
+を利用するなど。
+◎
+Authors may find it convenient to use all: unset, to get fully unstyled widgets, which they can then style as they want without interference from the user agent’s stylesheet. However, this also suppresses the focus indicators provided by the same UA stylesheet. In order to avoid damaging accessibility, authors who do so should restore a focus indicator, for instance by using :focus-visible { outline: auto; }.
+</p>
+
+			</section>
+			<section id="appearance-semantics">
+<h4 title="Effects of appearance on Semantic Aspects of Elements">7.1.2. 要素の意味論上の側面に対する `appearance^p の効果</h4>
+
+<p>
+~UAは、`~widget$の側面のうち［
+その元の意味論の下で，`~widget$を操作oするために必要とされるもの
+］は，保全するモノトスル。
+しかしながら，~UAは、`~widget$を操作oでき続ける限り，異なる見かけと感触を与えてもヨイ。
+`~widget$を成す側面のうち，`~widget$の状態を観測するのに必要であるが，操作o-用には必要ないものは、同じ情報を普通の~CSSを利用して伝えれるならば，抑止されるベキである。
+文書~言語は、自身が定義する各`~widget$に対し，何を保全する必要があるかを指定するベキである。
+◎
+UAs must preserve aspects of the widget which are necessary to operate the widget with its original semantics. The UA may however give them a different look and feel as long as it remains possible to operate the widget. Aspects of a widget which are merely needed to observe the state the widget is in and are not needed to operate it should be suppressed as well when the same information can be conveyed using ordinary CSS. Document languages should specify for each widget that they define what needs to be preserved.
+</p>
+
+<div class="example">
+<p>
+例えば，
+`input type="range"^e
+の~sliderは、 `appearance$p は `none$v であっても保全される（または、等価な仕組みに置換される）
+— さもないと，この範囲~controlの値を~mouseや~touchscreenで変更できなくなるので。
+◎
+For example, the slider of an &lt;input type=range&gt; is preserved (or replaced by an equivalent mechanism) even if appearance is none, as it would otherwise not be possible to change the value of the range with the mouse or touchscreen.
+</p>
+
+<p>
+他方、
+`input type="checkbox" checked^e
+の~check-markは抑止されなければならない
+— それは 要素の状態を指示するだけであり、
+`checked$ps 選択子を利用して異なる仕方で~styleできるので。
+◎
+On the other hand, the check mark in an &lt;input type=checkbox checked&gt; must be suppressed, as it merely indicates the state the element is in, which can be styled in different ways using the :checked selector.
+</p>
+</div>
+
+<p>
+この~propは、文書~言語が定義する要素の挙動と意味論には波及しない。
+◎
+The behavior and semantics of elements remain defined by the document language, and are not influenced by this property.
+</p>
+
+<div class="example">
+<p>
+例えば、 `appearance$p の算出d値に関わらず：
+◎
+For example, regardless of the computed value of appearance:
+</p>
+
+<ul>
+	<li>
+複数の状態をとり得る要素は、その能を保ち，関連な疑似類は通例通り合致する。
+◎
+Elements which can be in different states keep this ability, and the relevant pseudo-classes match as usual.
+</li>
+	<li>
+`select$e 要素が作動化された場合、それに結付けられている `option$e 要素の一つを選ぶための~UIが示される（その見かけは異なり得るが）。
+◎
+If a select element is activated, the UI to choose one of the associated option elements is shown (although it may look different).
+</li>
+	<li>
+要素に添付されている~event~handlerは、通例通り誘発される。
+◎
+Event handlers attached to the element trigger as usual.
+</li>
+</ul>
+</div>
+
+<p>
+逆に，要素の外観が変更されようが、そのような外観の要素が概して獲得するような［
+意味論, 疑似類, ~event~handler, 等々
+］は獲得しないモノトスル。
+◎
+Conversely, changing the appearance of an element must not cause it to acquire the semantics, pseudo classes, event handlers, etc, that are typical of the element whose appearance it acquires.
+</p>
+
+
+<p class="example">
+例えば， `div$e の `appearance$p が `button$v にされようが、
+`enabled$ps や `disabled$ps に合致することはない。
+`appearance$p ~propは、要素が~focusされる能も変更しない。
+◎
+For example, neither :enabled nor :disabled match on a div styled with appearance: button. The ability for an element to be focused is also not changed by the appearance property.
+</p>
+
+			</section>
+		</section>
+		<section id="control-specific-rules">
+<h3 title="Control Specific Rules">7.2. ~controlに特有な規則</h3>
+
+<p class="issue">
+この節の一部またはすべては、いつかは `HTML$r 仕様に移動されるベキであろう。
+◎
+Maybe some or all of this section should be moved to the [HTML] spec. at some point.
+</p>
+
+<p class="issue">
+一部の要素~上で一部の~propを設定すると、
+<code class="css">`appearance$p: `auto^v</code>
+を妨げる。
+一例として，~buttonは、 `appearance^p が `auto$v であっても， `border$p が設定されれば~nativeな外観を失う。
+これは、 `auto$v の定義には矛盾しない
+— `auto^v は、~UAは~nativeな外観を利用しても`ヨイ^emことのみを意味するので。
+とは言え，相互運用能を高めるため、［
+この効果は，どの要素の どの~propにあるか
+］を文書化すると良いであろう。
+◎
+On some elements, setting some properties inhibits appearance: auto. For instance, even if appearance is auto, buttons lose their native appearance when a border is set. This is not in contradiction with the definition of auto, since appearance: auto only means UAs may use a native appearance, but for greater interoperability, it would be good to document which properties on which elements have this effect.
+</p>
+
+<p class="issue">
+~UAが自身の~stylesheet内に何を置く必要があるか，文書化すると良いであろう。
+◎
+Documenting what UAs need to put in their UA stylesheet would be good.
+</p>
+
+			<section id="input-rules">
+<h4 title="Single-Line Text Input Controls">7.2.1. 単行~text入力~control</h4>
+
+<p>
+単行~text入力~control
+— `HTML$r の `input type="text"^e など —
+は、 `appearance$p が `auto$v のときには，次のように描画されるモノトスル：
+◎
+When appearance is auto, single-line text input controls such as [HTML] &lt;input type=text&gt; must be rendered so that:
+</p>
+
+<ul>
+	<li>
+行内~方向においては、内容を`内容~辺$で切取る。
+◎
+The content is clipped in the inline direction to the content edge
+</li>
+	<li>
+塊~方向においては、内容を`~padding辺$で切取る。
+◎
+The content is clipped in the block direction to the padding edge
+</li>
+	<li>
+内容は、縦方向において中央寄せにする。
+◎
+The content is vertically centered
+</li>
+	<li>
+内容は折返さない。
+◎
+The content does not wrap
+</li>
+	<li>
+`text-overflow$p ~propは、`overflow$p ~propの値に関わらず適用する。
+◎
+The text-overflow property applies regardless of the value of the overflow property
+</li>
+</ul>
+			</section>
+		</section>
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">付録 A. 謝辞</h2>
+
+~INFORMATIVE
+【！This appendix is informative.】
+
+<p>
+この仕様は `CSS-UI-3$r の上に築かれている。
+その仕様のほとんどの部分は、1999 年から~~現在に至るまで，
+Tantek Çelik 氏により編集され, 書かれた。
+氏は、最初は Microsoft から,
+次は Invited Expert として,
+~~最近は Mozilla から参加されている。
+◎
+This specification builds upon [CSS-UI-3], which was edited and written for the most part by Tantek Çelik from 1999 to the present, first while representing Microsoft, then as an Invited Expert, and most recently while representing Mozilla.
+</p>
+
+<p>
+次の方々からの~feedbackと貢献に：
+</p>
+
+<p lang="en-x-a0">
+Thanks to feedback and contributions from
+
+Rossen Atanassov,
+Tab Atkins,
+L. David Baron,
+Bert Bos,
+Matthew Brealey,
+Rick Byers,
+Ada Chan,
+James Craig,
+Michael Cooper,
+Axel Dahmen,
+Michael Day,
+Micah Dubinko,
+Elika E.,
+Steve Falkenburg,
+Andrew Fedoniouk,
+Al Gilman,
+Ian Hickson,
+Bjoern Hoehrmann,
+Alan Hogan,
+David Hyatt,
+Richard Ishida,
+Sho Kuwamoto,
+Yves Lafon,
+Stuart Langridge,
+Susan Lesch,
+Peter Linss,
+Kang-Hao Lu,
+Masayuki Nakano,
+Mats Palmgren,
+Brad Pettit,
+Chris Rebert,
+François Remy,
+Andrey Rybka,
+Simon Sapin,
+Alexander Savenkov,
+Sebastian Schnitzenbaumer,
+Lea Verou,
+Etan Wexler,
+David Woolley,
+Frank Yan,
+Boris Zbarsky,
+and Domel.
+</p>
+
+	</section>
+	<section id="changes">
+<h2 title="Changes">付録 B. 変更点</h2>
+
+~INFORMATIVE
+
+<dl>
+	<dt id="changes-2-1-2020">
+<a href="~TR/2020/WD-css-ui-4-20200102/">2020 年 1 月 2 日 作業草案</a>
+からの変更点（編集上のものは除く）：
+◎
+Changes from the 2 January 2020 Working Draft
+◎
+In addition to a number of editorial adjustments, the following normative changes have been made:
+</dt>
+	<dd>
+`user-select$p は、~animate不可に代えて，離散的に~animate可能と定義した。
+◎
+Defined user-select to be discretely animatable, rather than not
+</dd>
+	<dd>
+<code class="css">`appearance$p: `button^v</code>
+の適用能を制約して、~buttonでない~widgetに初めから~buttonらしき外観を与えることは，もはやできなくした。
+◎
+Restricted the applicability of appearance: button so that it can no longer give a buttony appearance to widgets that aren’t buttons to start with.
+</dd>
+	<dd>
+変形を介して縮小されても，~caretの可視性は保全するとする条項を追加した。
+◎
+Add a clause to preserve visibility of carets even when scaled down via transforms.
+</dd>
+
+	<dt id="changes-22-12-2017">
+<a href="~TR/2017/WD-css-ui-4-20171222/">2017 年 12 月 22 日 作業草案</a>
+からの変更点（編集上のものは除く）：
+◎
+Changes from the 22 December 2017 Working Draft
+◎
+In addition to a number of editorial adjustments, the following normative changes have been made:
+</dt>
+	<dd>
+~form~controlに特有な描画~規則についての詳細を追加した。
+◎
+Added details about form control specific rendering rules 
+</dd>
+	<dd>
+`text-overflow$p と匿名~塊~容器との相互作用を明確化した。
+◎
+Clarify interaction between text-overflow and annonymous block containers
+</dd>
+	<dd>
+すべての文書~形式において，~hyperlink用の `cursor$p は `pointer^v にすることを要求した。
+◎
+Require the pointer cursor for hyperlinks in all document formats
+</dd>
+	<dd>
+`box-sizing$p ~propを `CSS-SIZING-3$r に,
+`text-overflow$p ~propを `CSS-OVERFLOW-4$r に移動した。
+◎
+Moved the box-sizing and text-overflow properties to [CSS-SIZING-3] and [CSS-OVERFLOW-4] respectively.
+</dd>
+	<dd>
+`text^v 用の~cursorを書字modeに合致させる要件を
+“〜してもヨイ” から “〜するモノトスル”
+に変更した。
+◎
+Changed the requirement that the text cursor matches the writing mode from MAY to MUST
+</dd>
+	<dd>
+`appearance$p ~propの定義を、既存の~web内容と互換な設計になるよう，有意に作業し直した。
+◎
+The definition of the appearance property has been significantly reworked to make the design compatible with existing web content
+</dd>
+	<dd>
+`user-select$p 用の値 `auto^v を様々な値に対応付ける~logicを，算出d値の時点から使用~値の時点に変更した。
+◎
+The logic that mapped user-select: auto to various values at computed value time has been changed to used value time
+</dd>
+	<dd>
+`cursor$p 用の値 `pointer^v に対する作者~要件を明確化した。
+◎
+Clarify Author requirements on the cursor: pointer value 
+</dd>
+
+	<dt id="changes-22-09-2015">
+<a href="~TR/2015/WD-css-ui-4-20150922/">2015 年 9 月 22 日 最初の公な作業草案</a>
+からの変更点（編集上のものは除く）：
+◎
+Changes from the 22 Sep 2015 First Public Working Draft
+◎
+In addition to a number of editorial adjustments, the following normative changes have been made:
+</dt>
+	<dd>
+`caret-animation^p ~propは、除去された。
+根拠に足る利用事例があれば、導入し直され得る。
+◎
+The caret-animation property have been removed. It may be reintroduced later given sufficient evidence for use cases.
+</dd>
+	<dd>
+`resize^p ~propは、今や
+画像や動画を表現している`置換d要素$, および
+`iframe$e にも適用される。
+◎
+The resize property now also applies to replaced elements representing images or videos, and to iframes.
+</dd>
+	<dd>
+`text-overflow$p ~prop用の［
+文字列~値, 2 ~~成分からなる値
+］を、~level 3 からこの仕様に移動した。
+◎
+The string values and dual values of the text-overflow property were moved to this specification from level 3.
+</dd>
+	<dd>
+方向的~focus~navi~propを~level 3 から~level 4 へ移動した。
+◎
+Move directional focus navigation properties from level 3 to level 4
+</dd>
+	<dd>
+今や安定的になった `CSS-UI-3$r からの内容が併合された。
+◎
+Content from the now stable [CSS-UI-3] has been merged in.
+</dd>
+</dl>
+
+	</section>
+	<section id="security-privacy-considerations">
+<h2 title="Considerations for Security and Privacy">付録 C. ~securityと~privacyの考慮点</h2>
+
+~INFORMATIVE
+
+<p>
+W3C TAG は、仕様の編集者~向けに
+<a href="~SECQ">~securityと~privacyに関する自己-考査 質問票</a>
+を開発-中にある。
+◎
+The W3C TAG is developing a Self-Review Questionnaire: Security and Privacy for editors of specifications to informatively answer.
+</p>
+
+<p>
+<a href="~SECQ#questions">考慮する質問</a>
+に対する回答は【この訳では、~~影響があるものだけ挙げる（他の質問に対する回答は “いいえ” 等）】：
+◎
+Per the Questions to Consider
+</p>
+
+<dl>
+	<dt>
+この仕様は、~scriptを実行する／読込む新たな仕組みを可能化するか？
+◎
+Does this specification enable new script execution/loading mechanisms?
+</dt>
+	<dd>
+実行する仕組みは可能化しないが、読込む仕組みは可能化する。
+◎
+Yes to loading, but not to execution.
+</dd>
+	<dd>
+`cursor$p ~propは、 `image$t 値を受容する
+— それは，何かを読込むことになる~URLを含む。
+それはまた，~scriptを包含する~SVG文書も指し得るが、この仕様は，~scriptを走らせないモノトスルことを要求する。
+◎
+The cursor property accepts &lt;image&gt; values which may include URLs to be loaded. These may be SVG documents which may contain scripts, but this specification requires that scripts must not be run.
+</dd>
+
+	<dt>
+この仕様は、利用者の機器~上の~sensorに対する~accessを生成元に許容するか？
+◎
+Does this specification allow an origin access to sensors on a user’s device?
+</dt>
+	<dd>
+方向的~focus~navi~propは、矢印~Keyなどの機器の~keyboard~navi入力の仕組みへの~accessを間接的に許容する。
+◎
+Yes.
+◎
+The directional focus navigation properties indirectly allow access to the device’s keyboard navigation input mechanism such as arrow keys.
+</dd>
+
+	<dt>
+この仕様は、~UAの~native~UIに対する何らかの制御を生成元に許容するか？
+◎
+Does this specification allow an origin some measure of control over a user agent’s native UI?
+</dt>
+	<dd>
+［
+`cursor$p, `caret$p
+］~prop, それらの`下位prop$は、~UAの~native~UIを成す［
+~cursor, ~text挿入~caret
+］の表示を変更することを，~pageに可能化する。
+加えて， `outline-style$p ~propの `auto^v 値は（したがって `outline$p 略式も）、どの要素の周りにも［
+~nativeに~focusされたときと同じ呈示になる外形線を表示する
+］ようになり得ることを，~pageに可能化する。
+◎
+Yes.
+The cursor and caret property and sub-properties enable the page to change the display of the cursor and text insertion caret of the user agent’s native UI. In addition the outline-style property’s auto value (and thus outline shorthand) enable the page to potentially display a native focused element outline presentation around any element.
+</dd>
+	<dd>
+`appearance$p ~propも，［
+~nativeな~style付けを切って，~CSSに基づく~style付けで置換する
+］ことを作者に許容する。
+◎
+The appearance property also allows author to turn off native styling and replace it with css based styling.
+</dd>
+</dl>
+
+	</section>
+	<section id="appendix-d.-default-style-sheet-addition">
+<h2 title="Default style sheet additions for HTML">付録 D. ~HTML用の既定の~stylesheetに対する追加</h2>
+
+~INFORMATIVE
+
+<p>
+~HTMLの~form~control, および
+少数の動的な呈示~属性を表出するためとして，基底~stylesheetにあり得る追加：
+◎
+Potential additions to the base style sheet to express HTML form controls, and a few dynamic presentation attributes:
+</p>
+
+<pre class="lang-css">
+:enabled:focus {
+  outline: 2px inset;
+}
+
+button,
+input[type=button],
+input[type=reset],
+input[type=submit],
+input[type=checkbox],
+input[type=radio],
+textarea,
+input,
+input[type=text],
+input[type=password],
+input[type=image] {
+  display: inline-block;
+}
+
+input[type=button],
+input[type=reset],
+input[type=submit],
+input[type=checkbox],
+input[type=radio],
+input,
+input[type=text],
+input[type=password],
+input[type=image] {
+  white-space: nowrap;
+}
+
+button {
+/* <span class="comment">
+`button^e ~tagの空白について特に取扱う
+◎
+white space handling of BUTTON tags in particular
+</span> */
+  white-space:normal;
+}
+
+input[type=reset]:lang(en) {
+  /* <span class="comment">
+言語に応じた，~HTML `input type="reset"^e ~buttonに対する既定の内容
+◎
+default content of HTML input type=reset button, per language
+</span> */
+  content: "Reset";
+}
+
+input[type=submit]:lang(en) {
+/* <span class="comment">
+言語に応じた，~HTML `input type="submit"^e ~buttonに対する既定の内容
+◎
+default content of HTML input type=submit button, per language
+</span> */
+  content: "Submit";
+}
+
+/* <span class="comment">
+~UAは、他のものに対しても，言語に特有な reset／submit 規則を利用するベキである。
+◎
+UAs should use language-specific Reset/Submit rules for others.
+</span> */
+
+input[type=button],
+input[type=reset][value],
+input[type=submit][value] {
+  /* <span class="comment">
+~HTML `input$e ~buttonの~text 内容／~label
+◎
+text content/labels of HTML "input" buttons
+</span> */
+  content: attr(value);
+}
+
+textarea {
+  /* <span class="comment">
+`textarea$e ~tagの空白について特に取扱う
+◎
+white space handling of TEXTAREA tags in particular
+</span> */
+  white-space:pre-wrap;
+  resize: both;
+}
+
+input[type=hidden] {
+  /* <span class="comment">
+~HTML `hidden$a ~text~fieldの外観について特に取扱う
+◎
+appearance of the HTML hidden text field in particular
+</span> */
+  display: none !important;
+}
+
+input[type=image] {
+  content: attr(src,url);
+  border: none;
+}
+
+select[size] {
+  /* <span class="comment">
+size が 1 を超える~HTML `select$e ~listの外観
+◎
+HTML4/XHTML1 &lt;select&gt; w/ size more than 1 - appearance of list
+</span> */
+  display: inline-block;
+  height: attr(size,em);
+}
+
+select,select[size=1] {
+  /* <span class="comment">
+size を伴わない, または `size=1^a の~HTML `select$e （~popup~menu）
+◎
+HTML4/XHTML1 &lt;select&gt; without size, or size=1 - popup-menu
+</span> */
+  display: inline-block;
+  height: 1em;
+  overflow: hidden;
+}
+
+select[size]:active {
+  /* <span class="comment">
+size が 1 を超える active ~HTML `select$e  — active list の外観
+◎
+active HTML &lt;select&gt; w/ size more than 1 - appearance of active list
+</span> */
+  display: inline-block;
+}
+
+optgroup, option {
+  display: block;
+  white-space: nowrap;
+}
+
+optgroup[label],option[label] {
+  content: attr(label);
+}
+
+option[selected]::before {
+  display: inline;
+  content: check;
+}
+
+/* <span class="comment">
+`frame^e を~resizeすることは、この仕様では直には取組まれていないが、次の規則は，適度な挙動に近いものを供するであろう。
+◎
+Though FRAME resizing is not directly addressed by this specification, the following rules may provide an approximation of reasonable behavior.
+</span> */
+
+/*
+
+frame { resize:both }
+frame[noresize] { resize:none }
+
+*/
+</pre>
+
+	</section>
+</main></div>

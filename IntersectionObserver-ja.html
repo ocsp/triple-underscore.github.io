@@ -1,0 +1,2462 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8" />
+<title>Intersection Observer （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-w3c.css" type="text/css" />
+<style>
+#_ex-margin td:nth-child(n+2),
+#_ex-margin th:nth-child(n+2) {
+	text-align: right;
+}
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN0',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r': // ref
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'l': // literal
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 't': // typedef
+	text = `&lt;${key}&gt;`;
+	break;
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'mc':
+	text = 'constructor';
+	klass = 'm';
+	key = `new ${key}`;
+	break;
+case 'sl':
+	text = `[[${text}]]`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-09-09
+trans_update:2020-09-13
+source_checked:160707
+spec_status:ED
+original_url:https://w3c.github.io/IntersectionObserver/
+	abbr_url:
+ref_id_prefix:biblio-
+site_nav:uievents,css-ux
+ref_id_lowercase:true
+copyright:2020,permissive
+conformance:w3c
+trans_1st_pub:2016-12-13
+
+
+●●class_map
+jA:abstract
+sl:js-slot
+E:error
+p:css
+v:value
+t:type
+
+●●tag_map
+I:code
+E:code
+m:code
+mb:code
+c:code
+p:code
+v:code
+et:code
+sl:span
+t:var
+i:i
+
+●●original_id_map
+
+●●mdn_urls
+intersectionobserver:API/IntersectionObserver
+intersectionobserverentry:API/IntersectionObserverEntry
+	dictdef-intersectionobserverentryinit:API/IntersectionObserverEntryInit
+	dictdef-intersectionobserverinit:API/IntersectionObserverInit
+	callbackdef-intersectionobservercallback:API/IntersectionObserverCallback
+
+●●link_map
+
+	●IDL
+Exposed:~WEBIDLjs#Exposed
+
+undefined:~WEBIDL#idl-undefined
+boolean:~WEBIDL#idl-boolean
+double:~WEBIDL#idl-double
+DOMHighResTimeStamp:~HRTIME#dom-domhighrestimestamp
+DOMString:~WEBIDL#idl-DOMString
+FrozenArray:~WEBIDL#idl-frozen-array
+
+I.DOMString:~WEBIDL#idl-DOMString
+I.DOMHighResTimeStamp:~HRTIME#dom-domhighrestimestamp
+I.DOMRect:~GEOMETRY#domrect
+I.DOMRectInit:~GEOMETRY#dictdef-domrectinit
+I.DOMRectReadOnly:~GEOMETRY#domrectreadonly
+
+I.Window:~WINDOW#window
+
+I.Document:~HTMLdom#the-document-object
+I.Element:~DOM4#element
+
+I.IntersectionObserver:#intersectionobserver
+I.IntersectionObserverCallback:#callbackdef-intersectionobservercallback
+I.IntersectionObserverEntry:#intersectionobserverentry
+I.IntersectionObserverEntryInit:#dictdef-intersectionobserverentryinit
+I.IntersectionObserverInit:#dictdef-intersectionobserverinit
+I.MutationObserver:~DOM4#mutationobserver
+I.MutationObserverInit:~DOM4#dictdef-mutationobserverinit
+I.Node:~DOM4#node
+E.RangeError:~WEBIDL#dfn-simple-exception
+E.SyntaxError:~WEBIDL#syntaxerror
+	~WEBIDL#dfn-simple-exception
+
+交差~観測器~登録:#intersectionobserverregistration
+
+m.new IntersectionObserverEntry:#dom-intersectionobserverentry-intersectionobserverentry
+m.new IntersectionObserver:#dom-intersectionobserver-intersectionobserver
+m.boundingClientRect:#dom-intersectionobserverentry-boundingclientrect
+m.disconnect:#dom-intersectionobserver-disconnect
+m.getBoundingClientRect:~CSSOMVIEW#dom-element-getboundingclientrect
+m.intersectionRatio:#dom-intersectionobserverentry-intersectionratio
+m.intersectionRect:#dom-intersectionobserverentry-intersectionrect
+m.isIntersecting:#dom-intersectionobserverentry-isintersecting
+m.observe:#dom-intersectionobserver-observe
+m.~observe0:~DOM4#dom-mutationobserver-observe
+m.root:#dom-intersectionobserver-root
+m.rootBounds:#dom-intersectionobserverentry-rootbounds
+m.rootMargin:#dom-intersectionobserver-rootmargin
+m.takeRecords:#dom-intersectionobserver-takerecords
+m.target:#dom-intersectionobserverentry-target
+m.thresholds:#dom-intersectionobserver-thresholds
+m.time:#dom-intersectionobserverentry-time
+m.unobserve:#dom-intersectionobserver-unobserve
+
+mb.time:#dom-intersectionobserverentryinit-time
+mb.rootBounds:#dom-intersectionobserverentryinit-rootbounds
+mb.boundingClientRect:#dom-intersectionobserverentryinit-boundingclientrect
+mb.intersectionRatio:#dom-intersectionobserverentryinit-intersectionratio
+mb.target:#dom-intersectionobserverentryinit-target
+mb.intersectionRect:#dom-intersectionobserverentryinit-intersectionrect
+mb.isIntersecting:#dom-intersectionobserverentryinit-isintersecting
+
+mb.root:#dom-intersectionobserverinit-root
+mb.rootMargin:#dom-intersectionobserverinit-rootmargin
+mb.threshold:#dom-intersectionobserverinit-threshold
+
+sl.ObservationTargets:#dom-intersectionobserver-observationtargets-slot
+sl.QueuedEntries:#dom-intersectionobserver-queuedentries-slot
+sl.RegisteredIntersectionObservers:#dom-element-registeredintersectionobservers-slot
+sl.callback:#dom-intersectionobserver-callback-slot
+sl.rootMargin:#dom-intersectionobserver-rootmargin-slot
+sl.thresholds:#_dom-intersectionobserver-thresholds-slot
+sl.root:#_dom-intersectionobserver-root-slot
+
+rp.観測器:#dom-intersectionobserverregistration-observer
+rp.前回の~threshold~index:#dom-intersectionobserverregistration-previousthresholdindex
+rp.前回に交差あり:#dom-intersectionobserverregistration-previousisintersecting
+
+	%entries:#dom-intersectionobservercallback-entries
+	%observer:#dom-intersectionobservercallback-observer
+	%callback:#dom-intersectionobserver-intersectionobserver-callback-options-callback
+	%options:#dom-intersectionobserver-intersectionobserver-callback-options-options
+	%%target:#dom-intersectionobserver-observe-target-target
+	%target:#dom-intersectionobserver-unobserve-target-target
+	%intersectionObserverEntryInit:#dom-intersectionobserverentry-intersectionobserverentry-intersectionobserverentryinit-intersectionobserverentryinit
+
+	●用語
+要素:#_element
+文書:#_document
+
+交差~観測器:#intersection-observer
+交差~観測器~task処理待ち~flag:#document-intersectionobservertaskqueued
+	IntersectionObserverTaskQueued
+交差~観測器~taskを~queueする:#queue-an-intersection-observer-task
+交差~観測nを更新する:#run-the-update-intersection-observations-steps
+交差域を算出する:#compute-the-intersection
+暗黙的な~root:#intersectionobserver-implicit-root
+交差~root:#intersectionobserver-intersection-root
+交差~観測器たちに通知する:#notify-intersection-observers
+~root~marginを構文解析する:#parse-a-root-margin
+§ 処理~model:#intersection-observer-processing-model
+~IntersectionObserverEntryを~queueする:#queue-an-intersectionobserverentry
+~root交差~矩形:#intersectionobserver-root-intersection-rectangle
+~target:#intersectionobserver-target
+
+処理待ち初期~交差~観測器~target:#pending-initial-intersectionobserver-targets
+
+	●用語（外部
+
+成分~値~listを構文解析-:~CSSSYN#parse-a-list-of-component-values
+
+~pinch-zoom:~CSSOMVIEW#pinch-zoom
+p.margin:~CSSBOX#propdef-margin
+p.clip-path:~MASKING1#propdef-clip-path
+t.percentage:~CSSVAL#percentage-value
+絶対~長さ:~CSSVAL#absolute-length
+t.dimension:~CSSVAL#typedef-dimension
+	寸法:~CSSVAL#dimension
+包含塊~連鎖:~CSSDISP#containing-block-chain
+
+包含塊:~CSSDISP#containing-block
+	包含塊:~CSS2VISUDET#containing-block-details
+	包含塊:https://drafts.csswg.org/css-box/#containing-block
+内容~区画:~CSSBOX#content-area
+	内容~区画:https://drafts.csswg.org/css-box/#content-area
+表示域:~CSS2VISUREN#viewport
+
+閲覧文脈~容器:~BROWSERS#browsing-context-container
+bc.容器:~BROWSERS#bc-container
+閲覧文脈:~BROWSERS#browsing-context
+属する閲覧文脈:~BROWSERS#concept-document-bc
+入子にされた閲覧文脈:~BROWSERS#nested-browsing-context
+~top-level閲覧文脈:~BROWSERS#top-level-browsing-context
+互いに関係するかつ生成元も類似な閲覧文脈~群:~BROWSERS#unit-of-related-similar-origin-browsing-contexts
+全部的に作動中:~BROWSERS#fully-active
+作動中の文書:~BROWSERS#active-document
+
+結付けられている文書:~WINDOW#concept-document-window
+	:~WINDOW#dom-document-2
+~window:~WINDOW#the-window-object
+
+~taskを~queueする:~WAPI#queue-a-task
+~event~loop:~WAPI#event-loop
+暗黙の~event~loop:~WAPI#implied-event-loop
+例外を報告-:~WAPI#report-the-exception
+~event~loop処理~model:~WAPI#event-loop-processing-model
+~task源:~WAPI#task-source
+	利用者~対話~task源:~WAPI#user-interaction-task-source
+
+描画を更新する:~WAPI#update-the-rendering
+
+~callback this 値:~WEBIDLjs#dfn-callback-this-value
+	~HTMLLS/infrastructure.html#dfn-callback-this-value
+	投出:~WEBIDL#dfn-throw
+
+時刻起点:~HRTIME#dfn-time-origin
+
+
+	●省略
+	~animation~frame~callbackを走らす:~HTMLGAPI#run-the-animation-frame-callbacks
+	animation::::アニメーション
+	frame::::フレーム
+	作動中:active::~::アクティブ
+	全部的:full:~
+
+	●補完
+~node文書:~DOM4#concept-node-document
+~event構築子:~DOM4#concept-event-constructor
+
+空白~token:~CSSSYN#typedef-whitespace-token
+生成した観測器:#_notified-observer
+~CSS成分~値を直列化する:~CSSOM1#serialize-a-css-component-value
+論理-横幅:~CSSWM#logical-width
+
+●●words_table1
+
+observe0:observe
+IntersectionObserverEntry:<code>IntersectionObserverEntry</code> 
+
+
+●●words_table
+
+	●仕様
+受動的:passive:~
+性質:properties:~
+濫用-:abuse:~
+発展-:evolve:~
+頻繁:frequent:~
+高価:expensive:~
+	高-:high-
+仕事:work:~
+中心的:central:~
+成句:idiom::~
+対話上の:interaction::~
+携帯:mobile::~::モバイル
+	携帯~機:mobile
+	対話上の成句:central mobile interaction idiom
+収益集計:monetizing impressions:~
+解決策:solution:~
+	data-bound
+主旨:intent:~
+代償:penalty:~
+余計な:extraordinary:~
+重い:criticalな:~
+
+	複階性が増す:introduce more complexity
+	影響されない:unaffected
+	-:V2
+	要因:source
+	意見:input
+	厳しい刻限を課す:impose hard-latency requirements
+	目標とはされていないが注目すべき点として:notable non-goal
+	生じた-:introduce
+	つまり:that is to say
+	自体:body
+	も含め:but not limited to
+	にもかかわらず:despite
+	乏しい:poorly
+	極めて:quite
+	不要になる:eliminates the need 〜 removing the need for
+	普及している:widespread use
+	できるように:enableする
+	と呼ばれる:referred to
+	その逆:vice versa
+	以上:greater than or equal
+
+	頼る:resorting
+	生き残り続ける remain alive
+	真の:true
+	結果になって:has led to
+	~~元の:undilated
+	ことにある:consistent
+	得-:understand
+	行われる:take place
+	-:adjust
+	NOT
+	led
+	causing
+	見える:seem
+	必要なもの:remaining ones
+	拡がらず:without solving additional
+	単に:unadjusted
+
+	● CSS ／呈示／ UI
+部位:portion:~
+拡大鏡:magnifying glass:~
+拡幅-:expand:~
+	詰まる:jank
+外方:outward:~
+pinch-zoom:pinch zoom:::ピンチズーム
+
+	●交差幾何
+	~pixel単位の:pixel-accurate
+clip:
+cliping:
+	~clipされていない:unclipped
+	切取られ:clipされ::切り取られ
+	切抜かれ:clipされ::切り抜かれ
+	切抜いた:clipした::切り抜いた
+	切抜き:cliping::切り抜き
+矩形:rectangle::~
+	矩形:rect
+	辺が接する:edge-adjacent
+比率:ratio::~
+可視率:visibility::~
+再計算:recalculation:~
+写像-:map:~
+交差あり:intersectしている::~
+面積:area::~
+限界域:bounds::~
+限界:bounding::~
+	-:size::::サイズ
+量:amount:~
+横切った:crossした:~
+
+	拡げる／狭める:growing or shrinking
+	交差しているかどうか:against
+	縦組み
+
+
+	●観測
+threshold:
+	しきい
+root:
+事前読込み:pre-loading::事前読み込み
+遅延読込み:deferred-loading::遅延読み込み
+	lazy-loading
+停止する:stopする:やめる
+時刻:time:~
+時刻起点:time origin:~
+
+	●一般処理
+filter::::フィルタ
+絞込む:filterする::絞り込む
+overhead::::オーバーヘッド
+schedule::::スケジュール
+空に:clear:~
+走り:runし:~
+再読取り:readback:再読み取り
+処理待ち:pending:~
+飛ばす:skipする:~
+存続期間:lifetime:~
+polling::::ポーリング
+
+	●未分類
+数量-:numeric:~
+energy::::エネルギー
+不完全な:perfectでない:~
+組成結果:compositing-result:~
+有効:valid:~
+広告:ad:~
+space::::スペース
+	で分離して:-separated
+	time::::
+zero::::ゼロ
+	:non-zero
+
+	~~相対的:with respect to
+	昇順:ascending-order
+	昇順:increasing numeric order
+	満たされ:hold
+	~~複製:duplicate
+	CPU
+	GPU
+	WebGL:webgl
+	IntersectionObserver
+	Intersection Observer
+	属する:belong
+	-:unadjust
+	rAF:requestAnimationFrame()
+	-:numeric value
+	inclusive
+	~~外部~exotic
+	ごとに:Per-
+	-:consistent
+	-:NOT
+	残り:remaining ones
+	-:inclusive
+	remain
+	前回:previous
+	rootBound
+	boundingClientRect
+	intersectionRect
+	intersectionObserver:#1
+	marginString
+
+
+●●ref_normative
+
+[CSS-BOX-3]
+    Elika Etemad. CSS Box Model Module Level 3. 18 December 2018. WD. URL: https://www.w3.org/TR/css-box-3/ 
+[CSS-SYNTAX-3]
+    Tab Atkins Jr.; Simon Sapin. CSS Syntax Module Level 3. 16 July 2019. CR. URL: https://www.w3.org/TR/css-syntax-3/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSSOM-VIEW-1]
+    Simon Pieters. CSSOM View Module. 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-view-1/ 
+[DOM]
+    Anne van Kesteren. DOM Standard. Living Standard. URL: https://dom.spec.whatwg.org/ 
+[GEOMETRY-1]
+    Simon Pieters; Chris Harrelson. Geometry Interfaces Module Level 1. 4 December 2018. CR. URL: https://www.w3.org/TR/geometry-1/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[WebIDL]
+    Boris Zbarsky. Web IDL. 15 December 2016. ED. URL: https://heycam.github.io/webidl/ 
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより
+編集者草案として公開された
+<a href="~SPEC_URL">Intersection Observer</a>
+を日本語に翻訳したものです。
+~PUB
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/intersection-observer/
+以前のバージョン
+	https://www.w3.org/TR/2019/WD-intersection-observer-20190530/
+テスト一式
+	http://w3c-test.org/intersection-observer/
+最新の課題／フィードバック
+	<a href="https://github.com/W3C/IntersectionObserver/issues/">GitHub</a>
+
+編集
+	<a href="mailto:szager@google.com">Stefan Zager</a> (Google)
+	<a href="mailto:emilio@mozilla.com">Emilio Cobos Álvarez</a> (Mozilla)
+
+前任編集者
+	<a href="mailto:mpb@google.com">Michael Blain</a> (Google)
+
+バージョン履歴
+	https://github.com/w3c/IntersectionObserver/commits/master
+過去 ML アーカイブ
+	http://lists.w3.org/Archives/Public/public-webapps/
+発行者
+	<a href="https://www.w3.org/2019/webapps/">Web Applications Working Group</a>
+
+</p>
+
+</script>
+
+
+</head>
+<body >
+
+<header>
+
+
+
+	<hgroup>
+<h1>Intersection Observer</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この仕様は、任意の~DOM要素 （ “~targetたち” ）の［
+可視率, 位置
+］
+— ［
+各~targetを包含している要素／
+各~targetの~top-level表示域（ “~root” ）
+］の中での それら —
+を得るために利用できる~APIを記述する。
+この位置は，非同期的に送達され、要素の可視率を得て，~DOM内容の事前読込み, 遅延読込みを実装するときに有用になる。
+◎
+This specification describes an API that can be used to understand the visibility and position of DOM elements ("targets") relative to a containing element or to the top-level viewport ("root"). The position is delivered asynchronously and is useful for understanding the visibility of elements and implementing pre-loading and deferred loading of DOM content.
+</p>
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+この節では、発行時点における…
+【以下、この節の他の内容は <a href="w3c-common-ja.html#status" >W3C 日本語訳 共通ページ</a>に委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="_conventions">
+<h3>【この訳に固有の表記規約】</h3>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, ~IF, コレ, ~THROW 等々）の意味や定義の詳細は，~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+<ul>
+	<li>
+用語
+`文書@
+は、
+（ `Document$I ~interfaceを実装する~objのうち，）何らかの（または、この語が現れる文脈に適切な）`~window$に`結付けられている文書$を指す。
+【！原文では window.document を指す document 】
+</li>
+	<li>
+用語
+`要素@
+は、 `Element$I ~interfaceを実装する~objの略記である。
+</li>
+	<li>
+%target.`<var>xyz</var>^sl という表記は、［
+%target の `<var>xyz</var>^sl 内部~slot
+］の略記である。
+</li>
+</ul>
+
+	</section>
+	<section id="introduction">
+<h2 title="Introduction">1. 序論</h2>
+
+<p>
+~webの伝統的な位置~計算の仕組みは、~DOM状態を明示的に~queryすることに依拠する。
+それは、（高価な）~styleの再計算, および~layoutを生じさせることが既知である。
+この情報の継続的な~pollingは、有意な処理能~overheadの~~要因になることは頻繁にある。
+◎
+The web’s traditional position calculation mechanisms rely on explicit queries of DOM state that are known to cause (expensive) style recalculation and layout and, frequently, are a source of significant performance overhead due to continuous polling for this information.
+</p>
+
+<p>
+次に挙げるもの含め、上述の挙動に依拠するような共通的な実施~自体は発展したが：
+◎
+A body of common practice has evolved that relies on these behaviors, however, including (but not limited to):
+</p>
+
+<ul>
+	<li>
+~DOMや~dataに対する~customな事前読込み／遅延読込みを築くとき。
+◎
+Building custom pre- and deferred-loading of DOM and data.
+</li>
+	<li>
+~data集合の一部分を読込んで描画するような，~dataに束縛された高-処理能な~scroll用~listを実装するとき。
+これは、携帯~機において中心的な対話上の成句になっている。
+◎
+Implementing data-bound high-performance scrolling lists which load and render subsets of data sets. These lists are a central mobile interaction idiom.
+</li>
+	<li>
+<p>
+要素の可視率を計算するとき。
+特に，広告~networkでは、今や
+<a href="http://www.iab.net/iablog/2014/03/viewability-has-arrived-what-you-need-to-know-to-see-through-this-sea-change.html">収益集計~用に広告の “可視率” を報告することが要求されている</a>。
+その結果、多くの~siteが次のいずれかを用いている：
+</p>
+		<ul>
+			<li>
+~scroll~handlerを濫用する（その結果、~scroll時に詰まる（ “scroll jank” ））
+</li>
+			<li>
+<a href="http://gent.ilcore.com/2011/03/how-not-to-trigger-layout-in-webkit.html">同期的~layoutを呼出すような再読取り</a>
+（ `requestAnimationFrame()^m ~loop内で不必要に重い仕事をさせる）
+【例えば、 `getComputedStyle()^m で 最新の~layout情報を~queryするなど。】
+</li>
+			<li>
+要素の “真の” 可視率を算出するため，~~外部~pluginによる解決策に頼る（~plugin~architectureによる~overheadすべてが伴われる）
+</li>
+		</ul>
+◎
+Calculating element visibility. In particular, ad networks now require reporting of ad "visibility" for monetizing impressions. This has led to many sites abusing scroll handlers (causing jank on scroll), synchronous layout invoking readbacks (causing unnecessary critical work in rAF loops), and resorting to exotic plugin-based solutions for computing "true" element visibility (with all the associated overhead of the plugin architecture).
+</li>
+</ul>
+
+<p>
+これらの利用事例には、共通な性質がある：
+◎
+These use-cases have several common properties:
+</p>
+
+<ol>
+	<li>
+個々の要素の，他の要素（または大域的な`表示域$）に~~相対的な状態を、受動的に “~queryするもの” として表現できる。
+◎
+They can be represented as passive "queries" about the state of individual elements with respect to some other element (or the global viewport).
+</li>
+	<li>
+厳しい刻限を課すものではない。
+つまり、情報は 代償なしに非同期的に送達できる（例えば別~threadから）。
+◎
+They do not impose hard latency requirements; that is to say, the information can be delivered asynchronously (e.g. from another thread) without penalty.
+</li>
+	<li>
+既存の~web~platform特能の どの組合nからも，ほぼ~supportに乏しいため、普及しているにもかかわらず，開発者は余計な労を要している。
+◎
+They are poorly supported by nearly all combinations of existing web platform features, requiring extraordinary developer effort despite their widespread use.
+</li>
+</ol>
+
+<p>
+目標とはされていないが注目すべき点として、実際に何が表示されているかについての，~pixel単位の情報もある（ある種の~browser~architectureにおいては、~filter, WebGL, その他の特能に面したとき，効率的にこれを得するのは極めて困難なこともある）。
+この情報は、これらの局面すべてに有用になる
+— たとえ、遅延が少しあって，送達される~dataが不完全な組成結果によるときでも。
+◎
+A notable non-goal is pixel-accurate information about what was actually displayed (which can be quite difficult to obtain efficiently in certain browser architectures in the face of filters, webgl, and other features). In all of these scenarios the information is useful even when delivered at a slight delay and without perfect compositing-result data.
+</p>
+
+<p>
+交差~観測器~APIは、［
+他の要素や大域的な`表示域$に~~相対的な 要素の位置を，非同期的に~queryする
+］ための新たな~methodを，開発者に与えることにより、上述の課題に取組む。
+非同期的な送達により，［
+~costのかかる~DOMや~styleの~query ／
+継続的な~polling ／
+~custom~pluginの利用
+］は不要になるので、~appは［
+CPU, GPU, ~energy~cost
+］を有意に抑制できるようになる。
+◎
+The Intersection Observer API addresses the above issues by giving developers a new method to asynchronously query the position of an element with respect to other elements or the global viewport. The asynchronous delivery eliminates the need for costly DOM and style queries, continuous polling, and use of custom plugins. By removing the need for these methods it allows applications to significantly reduce their CPU, GPU and energy costs.
+</p>
+
+<div class="example">
+
+<pre class="lang-js">
+var %observer = new IntersectionObserver(%changes =&gt; {
+  for (const %change of %changes) {
+    /* <span class="comment">
+変化が生じた時点を表す時刻印：
+</span> */
+    console.log(%change.`time$m);
+
+    /* <span class="comment">
+`交差~root$の区画：
+</span> */
+    console.log(%change.`rootBounds$m);
+
+    /* <span class="comment">
+%target が占める区画（ `getBoundingClientRect()$m ）：
+</span> */
+    console.log(%change.`boundingClientRect$m);
+
+    /* <span class="comment">
+`交差~root$内の %target の可視~域（
+`boundingClientRect^m を %target の`包含塊~連鎖$に属する各 先祖で~clipして得られる区画と `rootBounds^m との交差域）：
+</span> */
+    console.log(%change.`intersectionRect$m);
+
+    /* <span class="comment">
+%target が占める区画のうち， %target の可視~部分が占める比率（
+`intersectionRect^m の面積 ~DIV `boundingClientRect^m の面積
+）：
+</span> */
+    console.log(%change.`intersectionRatio$m);
+
+    /* <span class="comment">
+`~target$にされている要素（ %target ）：
+</span> */
+    console.log(%change.`target$m);
+  }
+}, {});
+
+var %target = ... /* <span class="comment">`~target$にする要素</span> */ ;
+
+/* <span class="comment">
+特定の`~target$に対し，交差~eventを観測し始める：
+</span> */
+%observer.`observe(target)$m;
+
+/* <span class="comment">
+特定の`~target$に対し，観測するのを停止する：
+</span> */
+%observer.`unobserve(target)$m;
+
+/* <span class="comment">
+すべての`~target$に対し，観測するのを停止する：
+</span> */
+%observer.`disconnect()$m;
+</pre>
+
+<div lang="en"><pre class="lang-js">
+var observer = new IntersectionObserver(changes =&gt; {
+  for (const change of changes) {
+    console.log(change.time);               // Timestamp when the change occurred
+    console.log(change.rootBounds);         // Unclipped area of root
+    console.log(change.boundingClientRect); // target.boundingClientRect()
+    console.log(change.intersectionRect);   // boundingClientRect, clipped by its containing block ancestors, and intersected with rootBounds
+    console.log(change.intersectionRatio);  // Ratio of intersectionRect area to boundingClientRect area
+    console.log(change.target);             // the Element target
+  }
+}, {});
+
+// Watch for intersection events on a specific target Element.
+observer.observe(target);
+
+// Stop watching for intersection events on a specific target Element.
+observer.unobserve(target);
+
+// Stop observing threshold events on all target elements.
+observer.disconnect();
+</pre></div>
+
+</div>
+
+	</section>
+	<section id="intersection-observer-api">
+<h2 title="Intersection Observer">2. 交差~観測器</h2>
+
+<p>
+`交差~観測器@
+~APIは、開発者が次を得れるようにする
+⇒
+`交差~root$の中での，［
+`~target@
+にされた~DOM要素
+］の［
+可視率, 位置
+］
+◎
+The Intersection Observer API enables developers to understand the visibility and position of target DOM elements relative to an intersection root.
+</p>
+
+		<section id="intersection-observer-callback">
+<h3 title="The IntersectionObserverCallback">2.1. `IntersectionObserverCallback^I</h3>
+
+<pre class="idl">
+callback `IntersectionObserverCallback@I = `undefined$ (sequence&lt;`IntersectionObserverEntry$I&gt; %entries, `IntersectionObserver$I %observer);
+</pre>
+
+<p>
+この~callbackは、`~target$と`交差~root$との交差に変化が生じたとき，`§ 処理~model$にしたがって呼出されることになる。
+◎
+This callback will be invoked when there are changes to target’s intersection with the intersection root, as per the processing model.
+</p>
+
+<p class="trans-note">【
+見かけ上の交差が~UAからどう認識されるかは、~UAや処理能に依存するであろう
+— 例えば，高速に~scrollしたとき、その途上で~~表示が “間引かれた” 箇所があれば，その箇所にある~targetとの交差は見過ごされることになる
+— 交差が検出される時機は，~UAの<a href="#event-loop">各~描画~更新ごと</a>なので。
+】</p>
+
+		</section>
+		<section id="intersection-observer-interface">
+<h3 title="The IntersectionObserver interface">2.2. `IntersectionObserver^I ~interface</h3>
+
+<p>
+`IntersectionObserver$I ~interfaceを利用すれば、［
+`交差~root$と, `~target$にされた各`要素$
+］との交差における変化を観測できる。
+◎
+The IntersectionObserver interface can be used to observe changes in the intersection of an intersection root and one or more target Elements.
+</p>
+
+<div >
+<p>
+`IntersectionObserver$I ~objが有効な`~target$として観測できるのは
+~obj.`root$sl に応じて：
+</p>
+
+<ul>
+	<li>
+~NULL の場合、自動的に`暗黙的な~root$との交差を観測する。
+すなわち、`~top-level閲覧文脈$内にある どの`要素$も観測できる
+— 内側に`入子にされた閲覧文脈$内も含め。
+</li>
+	<li>
+他の場合、`包含塊~連鎖$において `root$sl の子孫である`要素$に限られる。
+</li>
+</ul>
+◎
+An IntersectionObserver with a root Node can observe any target Element that is a descendant of the root in the containing block chain.
+◎
+An IntersectionObserver with no root Node will automatically observe intersections with the implicit root, and valid targets include any Element in the top-level browsing context, as well as any Element in any nested browsing contexts inside the top-level browsing context.
+</div>
+
+<p class="note">注記：
+`MutationObserver$I においては，
+`MutationObserverInit$I が~optionsとして `~observe0()$m に渡される一方で、
+`IntersectionObserver$I においては，~optionsは構築子に渡される。
+この違いは、 `MutationObserver$I においては，観測する `Node$I ごとに
+【変異の種類を】
+絞込むための属性の集合を違えれることによる。
+`IntersectionObserver$I においては、開発者は，［
+同じ~optionsを利用している単独の観測器
+］を利用して複数の~targetを追跡するか，または追跡する各~targetごとに異なる観測器を利用できる。
+◎
+Note: In MutationObserver, the MutationObserverInit options are passed to observe() while in IntersectionObserver they are passed to the constructor. This is because for MutationObserver, each Node being observed could have a different set of attributes to filter for. For IntersectionObserver, developers may choose to use a single observer to track multiple targets using the same set of options; or they may use a different observer for each tracked target.
+</p>
+
+<p class="issue">【！ class="issue" 追加】
+各 `~target$ごとに［
+`rootMargin$mb ／ `threshold$mb
+］値を違えれるようにしても、利用事例は拡がらず，複階性が増すだけに見える。
+その必要が将来に生じたときは、後の~versionで `observe()$m ごとに~optionを供することもあり得る。
+◎
+rootMargin or threshold values for each target seems to introduce more complexity without solving additional use-cases. Per-observe() options could be provided in the future if V2 introduces a need for it.
+</p>
+
+<pre class="idl">
+[`Exposed$=Window]
+interface `IntersectionObserver@I {
+  `IntersectionObserver$mc(`IntersectionObserverCallback$I %callback, optional `IntersectionObserverInit$I %options = {}),
+  readonly attribute `Node$I? `root$m;
+  readonly attribute `DOMString$ `rootMargin$m;
+  readonly attribute `FrozenArray$&lt;`double$&gt; `thresholds$m;
+  `undefined$ `observe$m(`Element$I %target);
+  `undefined$ `unobserve$m(`Element$I %target);
+  `undefined$ `disconnect$m();
+  sequence&lt;`IntersectionObserverEntry$I&gt; `takeRecords$m();
+};
+</pre>
+
+<div class="algo">
+<p>
+`new IntersectionObserver(callback, options)@m
+構築子~手続きは：
+◎
+new IntersectionObserver(callback, options)
+</p>
+<ol>
+	<li>
+コレ.`callback$sl ~SET %callback
+◎
+Let this be a new IntersectionObserver object
+◎
+Set this’s internal [[callback]] slot to callback.
+</li>
+	<li>
+%~list ~LET `~root~marginを構文解析する$( %options[ "`rootMargin$mb" ] )
+◎
+Attempt to parse a root margin from options.rootMargin.＼
+</li>
+	<li>
+~IF［
+%~list ~EQ `失敗^i
+］
+⇒
+~THROW `SyntaxError$E
+◎
+↓</li>
+	<li>
+コレ.`rootMargin$sl ~SET %~list
+◎
+If a list is returned, set this’s internal [[rootMargin]] slot to that. Otherwise, throw a SyntaxError exception.
+</li>
+	<li>
+%~threshold~list ~LET %options[ "`threshold$mb" ] に等しい~list
+【すなわち、 `double^c 型であったなら その値のみからなる~list】
+◎
+Let thresholds be a list equal to options.threshold.
+</li>
+	<li>
+~IF［
+%~threshold~list 内の値に { 0.0 〜 1.0 } に入らないものがある
+］
+⇒
+~THROW `RangeError$E
+◎
+If any value in thresholds is less than 0.0 or greater than 1.0, throw a RangeError exception.
+</li>
+	<li>
+%~threshold~list を昇順に~sortする
+◎
+Sort thresholds in ascending order.
+</li>
+	<li>
+~IF［
+%~threshold~list は空である
+］
+⇒
+%~threshold~list に 0 を付加する
+◎
+If thresholds is empty, append 0 to thresholds.
+</li>
+	<li>
+コレ.`thresholds$sl ~SET %~threshold~list
+◎
+The thresholds attribute getter will return this sorted thresholds list.
+◎
+Return this.
+</li>
+	<li>
+コレの `root$sl ~SET %options[ "`root$mb" ]
+◎
+[[root]] を見よ
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`observe(target)@m
+~method~手続きは：
+◎
+observe(target)
+</p>
+<ol>
+	<li>
+~IF［
+%target ~IN コレ.`ObservationTargets$sl
+］
+⇒
+~RET
+◎
+If target is in this’s internal [[ObservationTargets]] slot, return.
+</li>
+	<li>
+%交差~観測器~登録 ~LET 次のようにされた 新たな`交差~観測器~登録$
+⇒＃
+`観測器$rp ~SET コレ,
+`前回の~threshold~index$rp ~SET −1,
+`前回に交差あり$rp ~SET ~F
+◎
+Let intersectionObserverRegistration be an IntersectionObserverRegistration record with an observer property set to this, a previousThresholdIndex property set to -1, and a previousIsIntersecting property set to false.
+</li>
+	<li>
+%target.`RegisteredIntersectionObservers$sl に
+%交差~観測器~登録 を付加する
+◎
+Append intersectionObserverRegistration to target’s internal [[RegisteredIntersectionObservers]] slot.
+</li>
+	<li>
+コレ.`ObservationTargets$sl に %target を付加する
+◎
+Add target to this’s internal [[ObservationTargets]] slot.
+</li>
+	<li>
+`root$sl
+【 `交差~root$？】
+の`閲覧文脈$における`~event~loop$の反復を~scheduleする【！＊】
+◎
+Schedule an iteration of the event loop in the root's browsing context.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`unobserve(target)@m
+~method~手続きは：
+◎
+unobserve(target)
+</p>
+<ol>
+	<li>
+%target.`RegisteredIntersectionObservers$sl から［
+`観測器$rp ~prop ~EQ コレ
+］を満たす`交差~観測器~登録$を除去する
+◎
+Remove the IntersectionObserverRegistration record whose observer property is equal to this from target’s internal [[RegisteredIntersectionObservers]] slot.
+</li>
+	<li>
+コレ.`ObservationTargets$sl から
+%target を除去する
+◎
+Remove target from this’s internal [[ObservationTargets]] slot.
+</li>
+</ol>
+
+<p class="note">注記：
+`MutationObserver$I は `unobserve()$m を実装しない。
+`unobserve()$m は、 `IntersectionObserver$I 用に，遅延読込みの利用事例に取組むためにある
+— その事例では、 %target が可視になった時点で追跡する必要もなくなるので。
+すべての`~target$を `disconnect()$m した上で，必要なものを `observe()$m するときや、各 `~target$ごとに別々の `IntersectionObserver$I を作成するときは、より仕事が要ることになる。
+◎
+Note: MutationObserver does not implement unobserve(). For IntersectionObserver, unobserve() addresses the lazy-loading use case. After target becomes visible, it does not need to be tracked. It would be more work to either disconnect() all targets and observe() the remaining ones, or create a separate IntersectionObserver for each target.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`disconnect()@m
+~method~手続きは：
+◎
+disconnect()
+</p>
+<ol>
+	<li>
+コレ.`ObservationTargets$sl 内の ~EACH( %target ) に対し
+⇒
+%target.`RegisteredIntersectionObservers$sl から［
+`観測器$rp ~prop ~EQ コレ
+］を満たす`交差~観測器~登録$を除去する
+</li>
+	<li>
+コレ.`ObservationTargets$sl を空にする
+◎
+↑</li>
+</ol>
+◎
+For each target in this’s internal [[ObservationTargets]] slot:
+◎
+Remove the IntersectionObserverRegistration record whose observer property is equal to this from target’s internal [[RegisteredIntersectionObservers]] slot.
+◎
+Remove target from this’s internal [[ObservationTargets]] slot.
+</div>
+
+<div class="algo">
+<p>
+`takeRecords()@m
+~method~手続きは：
+◎
+takeRecords()
+</p>
+<ol>
+	<li>
+%~queue ~LET コレ.`QueuedEntries$sl の複製
+◎
+Let queue be a copy of this’s internal [[QueuedEntries]] slot.
+</li>
+	<li>
+コレ.`QueuedEntries$sl を空にする
+◎
+Clear this’s internal [[QueuedEntries]] slot.
+</li>
+	<li>
+~RET %~queue
+◎
+Return queue.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`root@m
+取得子~手続きは
+⇒
+~RET コレ.`root$sl
+◎
+root, of type Node, readonly, nullable
+◎
+The root provided to the IntersectionObserver constructor, or null if none was provided.
+</div>
+
+<div class="algo">
+<p>
+`rootMargin$m は、コレの`~root交差~矩形$の各~辺に適用される一連の~offsetを（下に述べるように文字列~化して）返す
+— これらの~offsetは：
+◎
+rootMargin, of type DOMString, readonly
+◎
+Offsets applied to the root intersection rectangle,＼
+</p>
+<ul>
+	<li>
+交差域を計算する際に，その~boxを実質的に拡げる／狭めるために利用される。
+◎
+effectively growing or shrinking the box that is used to calculate intersections.＼
+</li>
+	<li>
+適用されるのは、`~target$が`交差~root$と同じ`互いに関係するかつ生成元も類似な閲覧文脈~群$に属する場合に限られる。
+◎
+Note that rootMargin is only applied for targets which belong to the same unit of related similar-origin browsing contexts as the intersection root.
+</li>
+</ul>
+
+<div>
+<p>
+`rootMargin@m
+取得子~手続きは、［
+コレ.`rootMargin$sl を成す各 成分を，次に従って文字列~化した結果
+］からなる同順の~listを，順に~spaceで分離して連結した結果を返す：
+</p>
+<ul>
+	<li>
+~pixel長さは、次の並びにする
+⇒＃
+成分の数量-値†,
+`px^l
+</li>
+	<li>
+百分率は、次の並びにする
+⇒＃
+成分の数量-値†,
+`%^l
+</li>
+</ul>
+<p class="trans-note">【†
+その数を表現する 10 進記数法による文字列であろうが、詳細は指定されていない。
+（`~CSS成分~値を直列化する$手続きに従う？）
+】</p>
+◎
+On getting, return the result of serializing the elements of [[rootMargin]] space-separated, where pixel lengths serialize as the numeric value followed by "px", and percentages serialize as the numeric value followed by "%".＼
+</div>
+
+<p class="note">
+結果と［
+コレの構築-時に渡された %options の `rootMargin$mb
+］とが一致することは、保証されないことに注意。
+%options にて `rootMargin$mb を省略した場合の結果は
+`0px 0px 0px 0px^l になる。
+◎
+Note that this is not guaranteed to be identical to the options.rootMargin passed to the IntersectionObserver constructor. If no rootMargin was passed to the IntersectionObserver constructor, the value of this attribute is "0px 0px 0px 0px".
+</p>
+</div>
+
+<div class="algo">
+<p>
+`thresholds@m
+取得子~手続きは
+⇒
+~RET コレ.`thresholds$sl
+</p>
+
+<p class="note">注記：
+`thresholds$sl を成す各~thresholdは、コレが観測している各~targetの限界~box区画の交差~比率と比較され、ある~targetのそれが いずれかの~thresholdを横切ったとき，対する通知が生成される。
+</p>
+
+◎
+thresholds, of type FrozenArray&lt;double&gt;, readonly
+◎
+A list of thresholds, sorted in increasing numeric order, where each threshold is a ratio of intersection area to bounding box area of an observed target. Notifications for a target are generated when any of the thresholds are crossed for that target. If no options.threshold was provided to the IntersectionObserver constructor, the value of this attribute will be [0].
+</div>
+
+<p>
+`IntersectionObserver$I ~obj %O の
+`交差~root@
+は、［
+%O .`root$sl ~NEQ ~NULL ならば それ ／
+~ELSE_ `~top-level閲覧文脈$の`文書$~node【！（閲覧文脈にて）`作動中の文書$？】
+］である。
+後者の場合の文書~nodeは
+`暗黙的な~root@
+と呼ばれる。
+◎
+The intersection root for an IntersectionObserver is the value of its root attribute, or else the top-level browsing context’s document node (referred to as the implicit root) if the root attribute is null.
+</p>
+
+<div class="algo">
+<p>
+`IntersectionObserver$I ~obj %O の
+`~root交差~矩形@
+は、各~targetが交差しているかどうか検査するときに利用する矩形であり，次に従って与えられる：
+◎
+The root intersection rectangle for an IntersectionObserver is the rectangle we’ll use to check against the targets.
+</p>
+<ol>
+	<li>
+%~root ~LET %O の`交差~root$
+◎
+↓</li>
+	<li>
+<p>
+%~root矩形 ~LET %~root に応じて，次で与えられる矩形：
+</p>
+		<dl class="switch">
+			<dt>
+`暗黙的な~root$である場合
+◎
+If the intersection root is the implicit root,
+</dt>
+			<dd>
+%~root は`~top-level閲覧文脈$に属する文書であったかのように，次項の文書~用の規則に則って扱う
+◎
+it’s treated as if the root were the top-level browsing context’s document, according to the following rule for document.
+</dd>
+			<dt>
+`文書$である場合
+◎
+If the intersection root is a document,
+</dt>
+			<dd>
+`文書$の`表示域$の~size
+（この処理~段に達するのは、文書が`全部的に作動中$であるときに限られることに注意。）
+◎
+it’s the size of the document's viewport (note that this processing step can only be reached if the document is fully active).
+</dd>
+
+			<dt>
+他の場合， %~root の~overflowが~clipされている場合
+◎
+Otherwise, if the intersection root has an overflow clip,
+</dt>
+			<dd>
+%~root の`内容~区画$
+◎
+it’s the element’s content area.
+</dd>
+
+			<dt>
+その他
+◎
+Otherwise,
+</dt>
+			<dd>
+%~root 上で `getBoundingClientRect()$m ~method手続きを走らせた結果
+◎
+it’s the result of running the getBoundingClientRect() algorithm on the intersection root.
+</dd>
+		</dl>
+	</li>
+	<li>
+<p>
+~IF［
+`~target$と %~root は 同じ`互いに関係するかつ生成元も類似な閲覧文脈~群$に属する
+］
+⇒
+%~root矩形 ~SET %~root矩形 の各~辺を
+%O.`rootMargin$sl を成す 4 個の~offset値に則って，~CSSの `margin$p ~propに類似な方式で拡幅した結果
+— すなわち：
+◎
+For any target which belongs to the same unit of related similar-origin browsing contexts as the intersection root, the rectangle is then expanded according to the offsets in the IntersectionObserver’s [[rootMargin]] slot in a manner similar to CSS’s margin property,＼
+</p>
+		<ul>
+			<li>
+値は順に，［
+上端, 右端, 下端, 左端
+］辺が~offsetされる量を指示する。
+◎
+with the four values indicating the amount the top, right, bottom, and left edges, respectively, are offset by,＼
+</li>
+			<li>
+正な長さは外方への~offsetを指示する。
+◎
+with positive lengths indicating an outward offset.＼
+</li>
+			<li>
+百分率は、~~元の矩形の横幅【`論理-横幅$】を基準に解決する。
+◎
+Percentages are resolved relative to the width of the undilated rectangle.
+</li>
+		</ul>
+	</li>
+	<li>
+~RET %~root矩形
+</li>
+</ol>
+</div>
+
+<p class="note">注記：
+`rootMargin$m が適用されるのは、`交差~root$ 自身に限られる。
+`~target$`要素$が`交差~root$以外の ある先祖の区画~内に~clipされる場合でも、その~clipingは
+`rootMargin$m からは影響されない。
+◎
+Note: rootMargin only applies to the intersection root itself. If a target Element is clipped by an ancestor other than the intersection root, that clipping is unaffected by rootMargin.
+</p>
+
+<p class="note">注記：
+`~root交差~矩形$は、`~pinch-zoom$からは影響されず、単に`表示域$を報告することになる
+— ~pinch-zoomの主旨は、~layoutは<em>変えずに</em>，拡大鏡の様に動作することにあるので。
+◎
+Note: Root intersection rectangle is not affected by pinch zoom and will report the unadjusted viewport, consistent with the intent of pinch zooming (to act like a magnifying glass and NOT change layout.)
+</p>
+
+<div class="algo">
+<p>
+`~root~marginを構文解析する@
+ときは、所与の
+( 文字列 %~margin文字列 )
+に対し，次を走らす
+— これは、それぞれが［
+~pixel長さ, または百分率
+］のいずれかである 4 個の値からなる~list, または `失敗^i を返す：
+◎
+To parse a root margin from an input string marginString, returning either a list of 4 pixel lengths or percentages, or failure:
+</p>
+
+<ol>
+	<li>
+%~token~list ~LET %~margin文字列 から`成分~値~listを構文解析-$した結果
+◎
+Parse a list of component values marginString, storing the result as tokens.
+</li>
+	<li>
+%~token~list からすべての`空白~token$を除去する
+◎
+Remove all whitespace tokens from tokens.
+</li>
+	<li>
+~IF［
+%~token~list の長さ ~GT 4
+］
+⇒
+~RET `失敗^i
+◎
+If the length of tokens is greater than 4, return failure.
+</li>
+	<li>
+~IF［
+%~token~list の長さ ~EQ 0
+］
+⇒
+%~token~list に `0px^l を付加する
+◎
+If there are zero elements in tokens, set tokens to ["0px"].
+</li>
+	<li>
+%結果 ~LET 空~list
+</li>
+	<li>
+<p>
+%~token~list 内の ~EACH( %token ) に対し：
+◎
+Replace each token in tokens:
+</p>
+		<ol>
+			<li>
+~IF［
+%token は`絶対~長さ$による `dimension$t ~tokenである
+］
+⇒
+%結果 に %token に等価な~pixel長さを付加する
+◎
+If token is an absolute length dimension token, replace it with a an equivalent pixel length.
+</li>
+			<li>
+~ELIF［
+%token は `percentage$t ~tokenである
+］
+⇒
+%結果 に %token に等価な百分率を付加する
+◎
+If token is a &lt;percentage&gt; token, replace it with an equivalent percentage.
+</li>
+			<li>
+~ELSE
+⇒
+~RET `失敗^i
+◎
+Otherwise, return failure.
+</li>
+		</ol>
+	</li>
+	<li>
+~WHILE［
+%結果 の長さ ~LT 3
+］
+⇒
+%結果 に［
+%結果 内の 1 個目の値の~~複製
+］付加する
+◎
+↓</li>
+	<li>
+~IF［
+%結果 の長さ ~EQ 3
+］
+⇒
+%結果 に［
+%結果 内の 2 個目の値の~~複製
+］を付加する
+◎
+If there is one element in tokens, append three duplicates of that element to tokens. Otherwise, if there are two elements are tokens, append a duplicate of each element to tokens. Otherwise, if there are three elements in tokens, append a duplicate of the second element to tokens.
+</li>
+	<li>
+~RET %結果
+◎
+Return tokens.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="intersection-observer-entry">
+<h3 title="The IntersectionObserverEntry interface">2.3. `IntersectionObserverEntry^I ~interface</h3>
+
+<pre class="idl">
+interface `IntersectionObserverEntry@I {
+  `IntersectionObserverEntry@mc(`IntersectionObserverEntryInit$I %intersectionObserverEntryInit);
+
+  readonly attribute `DOMHighResTimeStamp$ `time$m;
+  readonly attribute `DOMRectReadOnly$I? `rootBounds$m;
+  readonly attribute `DOMRectReadOnly$I `boundingClientRect$m;
+  readonly attribute `DOMRectReadOnly$I `intersectionRect$m;
+  readonly attribute `boolean$ `isIntersecting$m;
+  readonly attribute `double$ `intersectionRatio$m;
+  readonly attribute `Element$I `target$m;
+};
+
+dictionary `IntersectionObserverEntryInit@I {
+  required `DOMHighResTimeStamp$ `time@mb;
+  required `DOMRectInit$I? `rootBounds@mb;
+  required `DOMRectInit$I `boundingClientRect@mb;
+  required `DOMRectInit$I `intersectionRect@mb;
+  required `boolean$ `isIntersecting@mb;
+  required `double$ `intersectionRatio@mb;
+  required `Element$I `target@mb;
+};
+</pre>
+
+<p class="trans-note">【
+個々の交差~event通知は、この~interfaceが表現する。
+】</p>
+
+<p>
+`IntersectionObserverEntry$I ~obj %~entry を
+`生成した観測器@
+とは、
+%~entry が`~IntersectionObserverEntryを~queueする$手続きにて構築されたならば，その手続きの入力に与えられた `IntersectionObserver$I ~objを指す。
+他の場合は未定義とする。
+</p>
+
+<p class="trans-note">【
+この用語は、以下の記述を明確化するためにこの訳に導入している。
+`生成した観測器$が未定義な場合
+— 例えば~scriptから `new IntersectionObserverEntry()$m 構築子を呼出して作成されるものなど —
+の挙動は、ここには述べられていない（が、単に通常の`~event構築子$に則って，各~属性が所与の `IntersectionObserverEntryInit$I 引数で初期化されることになろう）。
+】【
+この節の “真の” 規範的な記述は、上述の手続きを含む `§ 処理~model$に定義される。
+】</p>
+
+<dl class="idl-def">
+	<dt>
+`boundingClientRect@m
+◎
+boundingClientRect, of type DOMRectReadOnly, readonly
+</dt>
+	<dd>
+コレの `target$m 上で `getBoundingClientRect()$m ~method手続きを走らせた結果になる。
+【！ の DOMRectReadOnly】
+◎
+A DOMRectReadOnly obtained by running the getBoundingClientRect() algorithm on the target.
+</dd>
+
+	<dt>
+`intersectionRect@m
+◎
+intersectionRect, of type DOMRectReadOnly, readonly
+</dt>
+	<dd>
+<p>
+次に挙げる矩形すべての交差域（共通域）になる：
+</p>
+		<ul>
+			<li>
+コレの `boundingClientRect$m
+</li>
+			<li>
+次を満たす各~要素の~cliping矩形
+⇒
+［
+コレを`生成した観測器$の`交差~root$の子孫である【！ ＊root】
+］~AND［
+コレの `target$m の先祖である
+］
+</li>
+			<li>
+コレを`生成した観測器$の`~root交差~矩形$
+</li>
+		</ul>
+<p>
+この値は、コレを`生成した観測器$の`~root交差~矩形$内で実際に可視になる， `target$m の部位を表現する。
+</p>
+◎
+boundingClientRect, intersected by each of target's ancestors' clip rects (up to but not including root), intersected with the root intersection rectangle. This value represents the portion of target actually visible within the root intersection rectangle.
+</dd>
+
+	<dt>
+`isIntersecting@m
+◎
+isIntersecting, of type boolean, readonly
+</dt>
+	<dd>
+コレの `target$m がコレ.`root$sl に交差しているならば ~T ／
+~ELSE_ ~F を返す。
+◎
+True if the target intersects with the root; false otherwise.＼
+</dd>
+	<dd>
+この~flagにより、交差~矩形の面積が 0 であるような交差（辺が接しているか， `boundingClientRect$m の面積が 0 の場合に起こる）においても，交差するように遷移したか, その逆に遷移したかを判別-可能になる。
+◎
+This flag makes it possible to distinguish between an IntersectionObserverEntry signalling the transition from intersecting to not-intersecting; and an IntersectionObserverEntry signalling a transition from not-intersecting to intersecting with a zero-area intersection rect (as will happen with edge-adjacent intersections, or when the boundingClientRect has zero area).
+</dd>
+
+	<dt>
+`intersectionRatio@m
+◎
+intersectionRatio, of type double, readonly
+</dt>
+	<dd>
+コレの `boundingClientRect$m の面積 %面積 ~GT 0 ならば、
+( コレの `intersectionRect$m の面積 ~DIV %面積 )
+になる。
+他の場合、コレの `isIntersecting$m に応じて［
+~T ならば 1 ／
+~F ならば 0
+］になる。
+◎
+If the boundingClientRect has non-zero area, this will be the ratio of intersectionRect area to boundingClientRect area. Otherwise, this will be 1 if the isIntersecting is true, and 0 if not.
+</dd>
+
+	<dt>
+`rootBounds@m
+◎
+rootBounds, of type DOMRectReadOnly, readonly, nullable
+</dt>
+	<dd>
+`target$m が［
+コレを`生成した観測器$の`交差~root$
+］と同じ `互いに関係するかつ生成元も類似な閲覧文脈~群$に属するならば、コレを`生成した観測器$の`~root交差~矩形$になる。
+~ELSE_ ~NULL になる。
+◎
+If target belongs to the same unit of related similar-origin browsing contexts as the intersection root, this will be the root intersection rectangle. Otherwise, this will be null. Note that if the target is in a different browsing context than the intersection root, this will be in a different coordinate system than boundingClientRect and intersectionRect.
+</dd>
+	<dd class="note">
+~targetが`交差~root$と異なる`閲覧文脈$内にある場合の結果は、
+`boundingClientRect$m, `intersectionRect$m
+とは異なる座標系に属することに注意。
+◎
+↑</dd>
+
+	<dt>
+`target@m
+◎
+target, of type Element, readonly
+</dt>
+	<dd>
+コレを`生成した観測器$の`交差~root$との交差が変化した`要素$を返す。
+◎
+The Element whose intersection with the intersection root changed.
+</dd>
+
+	<dt>
+`time@m
+◎
+time, of type DOMHighResTimeStamp, readonly
+</dt>
+	<dd>
+交差が記録された時刻を，［
+コレを`生成した観測器$に結付けられている大域~obj
+］の`時刻起点$を基準にして表す `DOMHighResTimeStamp$I 型~値を返すモノトスル。
+◎
+The attribute must return a DOMHighResTimeStamp that corresponds to the time the intersection was recorded, relative to the time origin of the global object associated with the IntersectionObserver instance that generated the notification.
+</dd>
+</dl>
+
+		</section>
+		<section id="intersection-observer-init">
+<h3 title="The IntersectionObserverInit dictionary">2.4. `IntersectionObserverInit^I 辞書</h3>
+
+<pre class="idl">
+dictionary `IntersectionObserverInit@I {
+  (`Element$I or `Document$I)? `root$mb = null;
+  `DOMString$ `rootMargin$mb = "0px";
+  (`double$ or sequence&lt;`double$&gt;) `threshold$mb = 0;
+};
+</pre>
+
+<dl class="idl-def">
+	<dt>
+`root@mb
+◎
+root, of type (Element or Document), nullable, defaulting to null
+</dt>
+	<dd>
+利用する`交差~root$を与える。
+省略時（ ~NULL ）には、`暗黙的な~root$が利用される。
+◎
+The root to use for intersection. If not provided, use the implicit root.
+</dd>
+
+	<dt>
+`rootMargin@mb
+◎
+rootMargin, of type DOMString, defaulting to "0px"
+</dt>
+	<dd>
+~CSS `margin$p ~propと類似に、［
+各 成分が`絶対~長さ$または百分率を表す
+］ような 1 〜 4 個の成分からなる文字列として，`交差~root$に適用する~marginを与える。
+◎
+Similar to the CSS margin property, this is a string of 1-4 components, each either an absolute length or a percentage.
+</dd>
+
+	<dd class="example">
+<table id="_ex-margin">
+<caption>
+値の例と 適用される~margin
+</caption>
+<thead><tr><th>値
+<th>上端<th>右端<th>下端<th>左端
+</thead>
+
+<tbody><tr><td>`5px^l
+<td>`5px^v<td>`5px^v<td>`5px^v<td>`5px^v
+
+<tr><td>`5px 10px^l
+<td>`5px^v<td>`10px^v<td>`5px^v<td>`10px^v
+
+<tr><td>`-10px 5px 8px^l
+<td>`-10px^v<td>`5px^v<td>`8px^v<td>`5px^v
+
+<tr><td>`-10px -5px 5px 8px^l
+<td>`-10px^v<td>`-5px^v<td>`5px^v<td>`8px^v
+
+</tbody></table>
+
+<pre lang="en">
+"5px"                // all margins set to 5px
+"5px 10px"           // top &amp; bottom = 5px, right &amp; left = 10px
+"-10px 5px 8px"      // top = -10px, right &amp; left = 5px, bottom = 8px
+"-10px -5px 5px 8px" // top = -10px, right = -5px, bottom = 5px, left = 8px
+</pre>
+
+	</dd>
+
+	<dt>
+`threshold@mb
+◎
+threshold, of type (double or sequence&lt;double&gt;), defaulting to 0
+</dt>
+	<dd>
+~callbackを誘発するための，一連の~thresholdからなる~listを与える。
+`intersectionRect$m 区画の比率が［
+いずれかの~threshold~以上から それ未満に変化した ／
+その逆に変化した
+］とき、~callbackが呼出されることになる。
+◎
+List of threshold(s) at which to trigger callback. callback will be invoked when intersectionRect’s area changes from greater than or equal to any threshold to less than that threshold, and vice versa.
+	</dd>
+	<dd>
+どの~thresholdも範囲 { 0 〜 1.0 } に入っていなければナラナイ
+【さもなければ、例外が投出される】
+。
+各 ~thresholdは、 `~target$上で `getBoundingClientRect()$m ~method手続きを走らせて得られる矩形~区画の可視率を表現する。
+◎
+Threshold values must be in the range of [0, 1.0] and represent a percentage of the area of the rectangle produced by running the getBoundingClientRect() algorithm on the target.
+	</dd>
+	<dd class="note">注記：
+値 0.0 は、実質的に， “非~zero個の~pixel” を表す。
+【すなわち、少しでも交差しているかどうか。】
+◎
+Note: 0.0 is effectively "any non-zero number of pixels".
+</dd>
+</dl>
+
+		</section>
+	</section>
+	<section id="intersection-observer-processing-model">
+<h2 title="Processing Model">3. 処理~model</h2>
+
+<p>
+この節では、~UAが`交差~観測器$ ~APIを実装するときに とるモノトスル手続きを要旨する。
+◎
+This section outlines the steps the user agent must take when implementing the Intersection Observer API.
+</p>
+
+		<section id="defines">
+<h3 title="Internal Slot Definitions">3.1. 各種 内部~slotの定義</h3>
+
+			<section id="document-defines">
+<h4 title="Document">3.1.1. 文書</h4>
+
+<p>
+各 `文書$には
+`交差~観測器~task処理待ち~flag@
+（ `IntersectionObserverTaskQueued flag^en ）
+が結付けられ、初期~時は ~F にされる。
+◎
+Each document has an IntersectionObserverTaskQueued flag which is initialized to false.
+</p>
+
+<p class="trans-note">【
+この~flagは、いっときに生じた一連の交差が 1 回の通知に集約されるように処理を制御する。
+交差が生じたとき（それは、<a href="#event-loop">~event~loop処理</a>の中で`交差~観測nを更新する$ことにより検出される）、最終的に
+【！~IntersectionObserverEntryを~queueする$ → 交差~観測器~taskを~queueする$】
+`交差~観測器たちに通知する$~taskが~queueされる。
+その~task（それは、観測器の構築子に渡された %callback を呼出して~scriptに交差を通知する）が実際に走り始めるまで、この~flagは ~T にされる。
+その間に検出された新たな交差の通知は、新たな~taskを~queueすることなく留め置かれ，先送りされることになる。
+言い換えれば、この~flagは，ある程度の最適化の裁量を~UAに与えるためにあるように見受けられる。
+】</p>
+
+			</section>
+			<section id="element-private-slots">
+<h4 title="Element">3.1.2. 要素</h4>
+
+<div>
+<p>
+各 `要素$は、
+`RegisteredIntersectionObservers@sl
+内部~slotを持ち，初期~時は空~listになるモノトスル。
+この~listは、
+`交差~観測器~登録@
+と呼ばれる~recordたちを保持する。
+その各~recordは、次の~propからなる：
+</p>
+
+<dl class="def-list">
+	<dt>`観測器@rp</dt>
+	<dd>
+【当の要素を観測している】
+`IntersectionObserver$I を保持する。
+</dd>
+
+	<dt>`前回の~threshold~index@rp</dt>
+	<dd>
+範囲
+{ −1 〜 `観測器$rp.`thresholds$sl の長さ }
+に入る整数を保持する。
+</dd>
+	<dd class="trans-note">【
+−1 は初期~値。
+0 以上の値は、一部の特殊な事例を除き，要素の直近の交差~比率が 一連の~thresholdで区切られる何番目の区間に入っているかを指示する。
+0 は 最小~threshold未満, 最大~値は 最大~threshold以上の区間に対応する。
+】</dd>
+
+	<dt >`前回に交差あり@rp</dt>
+	<dd>
+真偽値を保持する。
+</dd>
+	<dd class="trans-note">【
+要素が交差しているかどうかを指示する。
+その変化を追跡するためにあり、変化-時には通知が生成される。
+】</dd>
+
+</dl>
+
+◎
+Element objects have an internal [[RegisteredIntersectionObservers]] slot, which is initialized to an empty list. This list holds IntersectionObserverRegistration records, which have an observer property holding an IntersectionObserver, a previousThresholdIndex property holding a number between -1 and the length of the observer’s thresholds property (inclusive), and a previousIsIntersecting property holding a boolean.
+</div>
+
+			</section>
+			<section id="intersection-observer-private-slots">
+<h4 title="IntersectionObserver">3.1.3. `IntersectionObserver^I</h4>
+
+<div class="p">
+<p>
+各 `IntersectionObserver$I ~obj %O は、次に挙げる内部~slotを持つ：
+</p>
+
+<dl class="def-list">
+	<dt>`QueuedEntries@sl</dt>
+	<dd>
+初期~時は空~listとする。
+</dd>
+	<dd class="trans-note">【
+%O が観測している~targetたちにおける交差の変化を表現する各 通知を，内部的に保持する。
+】</dd>
+
+	<dt>`ObservationTargets@sl</dt>
+	<dd>
+初期~時は空~listとする。
+</dd>
+	<dd class="trans-note">【
+%O が観測している~targetたちを，内部的に保持する。
+順序は、~targetを引数に %O の `observe()$m が~callされた順になる。
+】</dd>
+
+	<dt>`callback@sl</dt>
+	<dd>
+`new IntersectionObserver()$m にて初期化される。
+</dd>
+	<dd class="trans-note">【
+%O の構築-時に渡された %callback を内部的に保持する。
+】</dd>
+
+	<dt>`rootMargin@sl</dt>
+	<dd>
+4 個の~pixel長さまたは百分率からなる~list。
+</dd>
+	<dd class="trans-note">【
+%O の `rootMargin$m が表現する 4 辺の~offsetを内部的に保持する。
+】</dd>
+
+
+	<dt>`thresholds@sl</dt>
+	<dd class="trans-note">【
+%O の構築-時に渡された
+%options[ "`threshold$mb" ]
+を成す一連の~thresholdを昇順で~sortした結果の~listを内部的に保持する（供されなかった場合、 1 個の 0 のみからなる~listになる）。
+】</dd>
+	<dd class="trans-note">【
+`thresholds$sl, 次の `root$sl
+は、他所を集約するための，この訳による追加。
+】</dd>
+
+	<dt>`root@sl</dt>
+	<dd class="trans-note">【
+%O の構築-時に渡された %options[ "`root$mb" ] を内部的に保持する（供されなかった場合、 ~NULL になる）。
+】</dd>
+
+</dl>
+◎
+IntersectionObserver objects have internal [[QueuedEntries]] and [[ObservationTargets]] slots, which are initialized to empty lists and an internal [[callback]] slot which is initialized by IntersectionObserver(callback, options). They also have an internal [[rootMargin]] slot which is a list of four pixel lengths or percentages.
+</div>
+
+			</section>
+		</section>
+		<section id="algorithms">
+<h3 title="Algorithms">3.2. 各種~algo</h3>
+
+			<section id="queue-intersection-observer-task">
+<h4 title="Queue an Intersection Observer Task">3.2.1. 交差~観測器~taskを~queueする</h4>
+
+<div class="algo">
+<p>
+`文書$ %文書 用に
+`交差~観測器~taskを~queueする@
+ときは、次を走らす：
+◎
+To queue an intersection observer task for a document document, run these steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+%文書 の`交差~観測器~task処理待ち~flag$ ~EQ ~T
+］
+⇒
+~RET
+◎
+If document’s IntersectionObserverTaskQueued flag is set to true, return.
+</li>
+	<li>
+%文書 の`交差~観測器~task処理待ち~flag$ ~SET ~T
+◎
+Set document’s IntersectionObserverTaskQueued flag to true.
+</li>
+	<li>
+<p>
+%文書 の`~event~loop$†に次を走らす`~taskを~queueする$
+⇒
+%文書 用の`交差~観測器たちに通知する$
+</p>
+
+<p class="trans-note">【†
+単に，`暗黙の~event~loop$を指すであろう。
+】【
+`~task源$が指定されていない
+— 特別な専用の~task源にすることが示唆されている（
+<a href="https://github.com/w3c/IntersectionObserver/issues/402">課題 #402</a>
+）。
+】</p>
+◎
+Queue a task to the document’s event loop to notify intersection observers.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="notify-intersection-observers-algo">
+<h4 title="Notify Intersection Observers">3.2.2. 交差~観測器たちに通知する</h4>
+
+<div class="algo">
+<p>
+`文書$ %文書 用の
+`交差~観測器たちに通知する@
+ときは、次を走らす：
+◎
+To notify intersection observers for a document document, run these steps:
+</p>
+
+<ol>
+	<li>
+%文書 の`交差~観測器~task処理待ち~flag$ ~SET ~F
+◎
+Set document’s IntersectionObserverTaskQueued flag to false.
+</li>
+	<li>
+%通知-~list ~LET
+次を満たす `IntersectionObserver$I すべてからなる~list
+⇒
+その `root$sl
+【 `交差~root$？】
+は %文書 の~DOM~tree内にある
+◎
+Let notify list be a list of all IntersectionObservers whose root is in the DOM tree of document.
+</li>
+	<li>
+<p>
+%通知-~list 内の ~EACH( %観測器 ) に対し：
+◎
+For each IntersectionObserver object observer in notify list, run these steps:
+</p>
+		<ol>
+			<li>
+~IF［
+%観測器.`QueuedEntries$sl は空である
+］
+⇒
+~CONTINUE
+◎
+If observer’s internal [[QueuedEntries]] slot is empty, continue.
+</li>
+			<li>
+%~queue ~LET
+%観測器.`QueuedEntries$sl の複製
+◎
+Let queue be a copy of observer’s internal [[QueuedEntries]] slot.
+</li>
+			<li>
+%観測器.`QueuedEntries$sl を空にする
+◎
+Clear observer’s internal [[QueuedEntries]] slot.
+</li>
+			<li>
+<p>
+次を与える下で， %観測器.`callback$sl を呼出す：
+</p>
+
+<ul><li>`~callback this 値$ ~SET %観測器
+</li><li>引数~list ~SET ( %~queue, %観測器 )
+</li></ul>
+
+<p>
+この段で例外が投出された場合は、その`例外を報告-$する
+【この手続き自体は継続する】
+</p>
+
+◎
+Invoke callback with queue as the first argument and observer as the second argument and callback this value. If this throws an exception, report the exception.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+			</section>
+			<section id="queue-intersection-observer-entry-algo">
+<h4 title="Queue an IntersectionObserverEntry">3.2.3. `IntersectionObserverEntry^I を~queueする</h4>
+
+<div class="algo">
+<p>
+`IntersectionObserver$I %観測器 用に
+`~IntersectionObserverEntryを~queueする@
+ときは、所与の
+⇒＃
+%文書 （`文書$ ）,
+%time （ `DOMHighResTimeStamp$I ）,
+%rootBounds （ `DOMRect$I ）,
+%boundingClientRect （ `DOMRect$I ）,
+%intersectionRect （ `DOMRect$I ）,
+%isIntersecting （ `boolean^I ）,
+%target （ `要素$ ）
+◎終
+に対し，次を走らす：
+◎
+To queue an IntersectionObserverEntry for an IntersectionObserver observer, given a document document; DOMHighResTimeStamp time; DOMRects rootBounds, boundingClientRect, intersectionRect, and isIntersecting flag; and an Element target; run these steps:
+</p>
+
+<ol>
+	<li>
+%観測器.`QueuedEntries$sl に，次のように構築された 新たな `IntersectionObserverEntry$I を付加する
+⇒＃
+`time$m ~SET %time,
+`rootBounds$m ~SET %rootBounds,
+`boundingClientRect$m ~SET %boundingClientRect,
+`intersectionRect$m ~SET %intersectionRect,
+`isIntersecting$m ~SET %isIntersecting,
+`target$m ~SET %target
+◎
+Construct an IntersectionObserverEntry, passing in time, rootBounds, boundingClientRect, intersectionRect, isIntersecting, and target.
+◎
+Append it to observer’s internal [[QueuedEntries]] slot.
+</li>
+	<li>
+%文書 用に`交差~観測器~taskを~queueする$
+◎
+Queue an intersection observer task for document.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="calculate-intersection-rect-algo">
+<h4 title="Compute the Intersection of a Target Element and the Root">3.2.4. ~target要素と~rootとの交差域を算出する</h4>
+
+<div class="algo">
+<p>
+`交差域を算出する@
+ときは、所与の
+( `~target$ %~target, ある観測器の`交差~root$ %~root )
+に対し，次を走らす：
+◎
+To compute the intersection between a target and the observer’s intersection root, run these steps:
+</p>
+
+<ol>
+	<li>
+%交差~矩形 ~LET %~target 上で `getBoundingClientRect()$m ~method手続きを走らせた結果
+◎
+Let intersectionRect be the result of running the getBoundingClientRect() algorithm on the target.
+</li>
+	<li>
+%容器 ~LET %~target の`包含塊$
+【を確立している~boxを生成した要素, または包含塊は`表示域$ならば %~target の`~node文書$（下に現れる “包含塊” も同様）】
+◎
+Let container be the containing block of the target.
+</li>
+	<li>
+<p>
+~WHILE［
+%容器 ~NEQ %~root
+］：
+◎
+While container is not the intersection root:
+</p>
+		<ol>
+			<li>
+~IF［
+%容器 は`文書$である
+］~AND［
+%容器 が`属する閲覧文脈$の`容器$bc %C ~NEQ ~NULL 【！は`入子の閲覧文脈$である】
+］
+⇒＃
+%交差~矩形 ~SET %交差~矩形 を %容器 の`表示域$で~clipした結果；
+%容器 ~SET %C 【！%容器 の`閲覧文脈~容器$】
+◎
+If container is the document of a nested browsing context, update intersectionRect by clipping to the viewport of the document, and update container to be the browsing context container of container.
+</li>
+			<li>
+%交差~矩形 ~SET %交差~矩形 を %容器 の座標~空間に写像した結果
+◎
+Map intersectionRect to the coordinate space of container.
+</li>
+			<li>
+~IF［
+%容器 の~overflowは~clipされている
+］~OR［
+%容器 は~CSS `clip-path$p ~propにより~clipされている
+］
+⇒
+%交差~矩形 ~SET %交差~矩形 を %容器 で~clipした結果
+◎
+If container has overflow clipping or a css clip-path property, update intersectionRect by applying container’s clip.
+</li>
+			<li>
+~IF［
+%容器 は ある`文書$ %文書 【！`閲覧文脈$】の~root要素である
+］
+⇒
+%容器 ~SET %文書 （すなわち %C の親）【！ the 閲覧文脈の`文書$】
+◎
+If container is the root element of a browsing context, update container to be the browsing context’s document;＼
+</li>
+			<li>
+~ELSE
+⇒
+%容器 ~SET %容器 の`包含塊$
+◎
+otherwise, update container to be the containing block of container.
+</li>
+		</ol>
+	</li>
+	<li>
+%交差~矩形 ~SET %交差~矩形 を %~root の座標~空間に写像した結果
+◎
+Map intersectionRect to the coordinate space of the intersection root.
+</li>
+	<li>
+%交差~矩形 ~SET %交差~矩形 と`~root交差~矩形$との交差域
+◎
+Update intersectionRect by intersecting it with the root intersection rectangle.
+</li>
+	<li>
+%交差~矩形 ~SET %交差~矩形 を［
+%~target を包含している`文書$の`表示域$の座標~空間
+］に写像した結果
+◎
+Map intersectionRect to the coordinate space of the viewport of the document containing the target.
+</li>
+	<li>
+~RET %交差~矩形
+◎
+Return intersectionRect.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="update-intersection-observations-algo">
+<h4 title="Run the Update Intersection Observations Steps">3.2.5. 交差~観測nを更新する手続き</h4>
+
+<div class="algo">
+<p>
+`交差~観測nを更新する@
+ときは、所与の
+( `文書$ %文書, 時刻印 %時刻 )
+に対し，次を走らす：
+◎
+To run the update intersection observations steps for a document document given a timestamp time, run these steps:
+</p>
+
+<ol>
+	<li>
+%観測器~list ~LET 次を満たす `IntersectionObserver$I ~objすべてからなる~list
+⇒
+`交差~root$は %文書 の~DOM~tree内にある
+【！`~top-level閲覧文脈$用には、これには`暗黙的な~root$の観測器も含まれる】
+◎
+Let observer list be a list of all IntersectionObservers whose root is in the DOM tree of document. For the top-level browsing context, this includes implicit root observers.
+</li>
+	<li>
+<p>
+%観測器~list 内の ~EACH( %観測器 ) に対し：
+◎
+For each observer in observer list:
+</p>
+		<ol>
+			<li>
+%~root ~LET %観測器 の`交差~root$
+◎
+↓</li>
+			<li>
+%~root限界域 ~LET %観測器 の`~root交差~矩形$
+◎
+Let rootBounds be observer’s root intersection rectangle.
+</li>
+			<li>
+<p>
+%観測器.`ObservationTargets$sl 内の ~EACH( %target ) に対し：
+【！observe(target) が~callされた順に】
+◎
+For each target in observer’s internal [[ObservationTargets]] slot, processed in the same order that observe() was called on each target:
+</p>
+				<ol>
+					<li>
+~IF［
+%~root は`要素$である
+］~AND［
+%target は %~root の`包含塊~連鎖$内の子孫ではない
+］
+⇒
+~CONTINUE
+◎
+If the intersection root is an Element, and target is not a descendant of the intersection root in the containing block chain, skip further processing for target.
+</li>
+					<li>
+~IF［
+%~root は`暗黙的な~root$でない
+］~AND［
+%target は %~root と同じ`文書$ 内にない
+］
+⇒
+~CONTINUE
+◎
+If the intersection root is not the implicit root, and target is not in the same document as the intersection root, skip further processing for target.
+</li>
+					<li>
+%~target矩形 ~LET 
+%target 上で `getBoundingClientRect()$m ~method手続きを走らせた結果
+【！の DOMRectReadOnly】
+◎
+Let targetRect be a DOMRectReadOnly obtained by running the getBoundingClientRect() algorithm on target.
+</li>
+					<li>
+%交差~矩形 ~LET `交差域を算出する$( %target, %~root )
+◎
+Let intersectionRect be the result of running the compute the intersection algorithm on target.
+◎
+Let targetArea be targetRect’s area.
+◎
+Let intersectionArea be intersectionRect’s area.
+</li>
+					<li>
+%交差あり ~LET［
+%~target矩形 と %~root限界域 は交差するならば ~T ／
+~ELSE_ ~F
+］
+⇒
+ここでは、辺どうしが接する場合も含め，互いの区画が重なるならば、交差域の面積が 0 （ %~root限界域 や %~target矩形 の面積が 0 の場合など）であっても交差するとする。
+◎
+Let isIntersecting be true if targetRect and rootBounds intersect or are edge-adjacent, even if the intersection has zero area (because rootBounds or targetRect have zero area); otherwise, let isIntersecting be false.
+</li>
+					<li>
+%交差~比率 ~SET ［
+%~target矩形 の面積 ~GT 0 ならば ( %交差~矩形 の面積 ~DIV %~target矩形 の面積 ) ／
+~ELSE_ %交差あり ~EQ ~T ならば 1 ／
+~ELSE_ 0
+］
+◎
+If targetArea is non-zero, let intersectionRatio be intersectionArea divided by targetArea. Otherwise, let intersectionRatio be 1 if isIntersecting is true, or 0 if isIntersecting is false.
+</li>
+					<li>
+%~threshold~list ~LET %観測器.`thresholds$sl
+◎
+↓</li>
+					<li>
+%~threshold~index ~LET %~threshold~list 内の~entryに［
+~entryの値 ~GT %交差~比率
+］を満たすものが［
+あれば それらのうち %~threshold~list 内で最初の~entryの~index ／
+なければ %~threshold~list の長さ
+］
+◎
+Let thresholdIndex be the index of the first entry in observer.thresholds whose value is greater than intersectionRatio, or the length of observer.thresholds if intersectionRatio is greater than or equal to the last entry in observer.thresholds.
+</li>
+					<li>
+%交差~観測器~登録 ~LET 
+%target.`RegisteredIntersectionObservers$sl 内の［
+`観測器$rp ~prop ~EQ %観測器
+］を満たす`交差~観測器~登録$
+◎
+Let intersectionObserverRegistration be the IntersectionObserverRegistration record in target’s internal [[RegisteredIntersectionObservers]] slot whose observer property is equal to observer.
+</li>
+					<li>
+%前回の~threshold~index ~LET %交差~観測器~登録 の`前回の~threshold~index$rp
+◎
+Let previousThresholdIndex be the intersectionObserverRegistration’s previousThresholdIndex property.
+</li>
+					<li>
+%前回に交差あり ~LET %交差~観測器~登録 の`前回に交差あり$rp
+◎
+Let previousIsIntersecting be the intersectionObserverRegistration’s previousIsIntersecting property.
+</li>
+					<li>
+~IF［
+%~threshold~index ~NEQ %前回の~threshold~index
+］~OR［
+%交差あり ~NEQ %前回に交差あり
+］
+⇒
+次を与える下で、 %観測器 用に`~IntersectionObserverEntryを~queueする$
+⇒＃
+%文書【！＊原文抜け】,
+%時刻,
+%~root限界域,
+%~target矩形,
+%交差~矩形,
+%交差あり,
+%target
+◎
+If thresholdIndex does not equal previousThresholdIndex or if isIntersecting does not equal previousIsIntersecting, queue an IntersectionObserverEntry, passing in observer, time, rootBounds, boundingClientRect, intersectionRect, isIntersecting, and target.
+</li>
+					<li>
+%交差~観測器~登録 の
+⇒＃
+`前回の~threshold~index$rp ~SET %~threshold~index,
+`前回に交差あり$rp ~SET %交差あり
+◎
+Assign thresholdIndex to intersectionObserverRegistration’s previousThresholdIndex property.
+◎
+Assign isIntersecting to intersectionObserverRegistration’s previousIsIntersecting property.
+</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+			</section>
+		</section>
+		<section id="lifetime">
+<h3 title="IntersectionObserver Lifetime">3.3. `IntersectionObserver^I の存続期間</h3>
+
+<p>
+`IntersectionObserver$I %O は、次の両~条件とも満たされない限り，生き残り続ける：
+◎
+An IntersectionObserver will remain alive until both of these conditions hold:
+</p>
+
+<ul>
+	<li>
+どの~scriptも %O を参照していない。
+◎
+There are no scripting references to the observer.
+</li>
+	<li>
+%O が観測している~targetはない。
+◎
+The observer is not observing any targets.
+</li>
+</ul>
+
+<p>
+`IntersectionObserver$I %O
+は、次のいずれかが生じるまで， `~target$ %target を観測し続ける：
+◎
+An IntersectionObserver will continue observing a target until either＼
+</p>
+
+<ul>
+	<li>
+%O 上で `unobserve(target)$m が~callされたとき。
+◎
+unobserve(target) is called on the target, or＼
+</li>
+	<li>
+%O 上で `disconnect()$m が~callされたとき。
+◎
+disconnect() is called on the observer.
+</li>
+</ul>
+
+		</section>
+		<section id="external-spec-integrations">
+<h3 title="External Spec Integrations">3.4. 外部~仕様との統合</h3>
+
+			<section id="event-loop">
+<h4 title="HTML Processing Model: Event Loop">3.4.1. ~HTMLの~event~loop処理~model</h4>
+
+<p>
+`交差~観測器$ 処理~段【すなわち，`交差~観測nを更新する$】は、~HTMLの`~event~loop処理~model$における，`描画を更新する$ 段の中で行われるべきである…
+【すでに~HTML仕様に統合されているので、以下，省略する。】
+◎
+An Intersection Observer processing step should take place during the "Update the rendering" steps, after step 12, run the animation frame callbacks, in the in the HTML Processing Model.
+◎
+This step is:
+• For each fully active document in docs, Run the update intersection observations steps for that document, passing in now as the timestamp. 
+</p>
+
+			</section>
+			<section id="pending-initial-observation">
+<h4 title="Pending initial IntersectionObserver targets">3.4.2. 処理待ち初期~交差~観測器~target</h4>
+
+<p>
+所与の`文書$ %文書 において，次に与える判定基準をいずれも満たす `IntersectionObserver$I %観測器 は、
+`処理待ち初期~交差~観測器~target@
+であるとされる：
+◎
+A document is said to have pending initial IntersectionObserver targets if there is at least one IntersectionObserver meeting these criteria:
+</p>
+<ul>
+	<li>
+%観測器 の`交差~root$は %文書 内にある
+【！（`~top-level閲覧文脈$用には、これには`暗黙的な~root$の観測器も含まれる）】
+◎
+The observer’s root is in the document (for the top-level browsing context, this includes implicit root observers).
+</li>
+	<li>
+%観測器 の `ObservationTargets$sl ~slot内に，
+`IntersectionObserverEntry$I をまだ~queueしていないものがある
+◎
+The observer has at least one target in its [[ObservationTargets]] slot for which no IntersectionObserverEntry has yet been queued.
+</li>
+</ul>
+
+<p>
+`~event~loop処理~model$における`描画を更新する$ 段の中の “`不必要な描画^i” 段は、描画~更新を飛ばすためとして，次の要件を追加する【次を満たす %文書 も除去する】よう改変されるべきである
+⇒
+%文書 には`処理待ち初期~交差~観測器~target$は無い
+◎
+In the HTML Processing Model, under the "Update the rendering" step, the "Unnecessary rendering" step should be modified to add an additional requirement for skipping the rendering update:
+• The document does not have pending initial IntersectionObserver targets.
+</p>
+
+			</section>
+		</section>
+	</section>
+	<section id="acknowledgements">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p>
+この仕様に技術的な意見や示唆を寄せられた
+<a href="https://github.com/w3c/IntersectionObserver/graphs/contributors">貢献されたすべて方々</a>
+に。
+◎
+Special thanks to all the contributors for their technical input and suggestions that led to improvements to this specification.
+</p>
+
+	</section>
+</main></div>
+

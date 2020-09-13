@@ -1,0 +1,3353 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8" />
+<title>HTML Standard — The HTML syntax（Writing／Serializing）（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+
+<style>
+.domTree li {
+	margin-top: 0;
+	margin-bottom: 0;
+	list-style-type: none;
+	font-family: monospace0, monospace;
+}
+.domTree li::before {
+	content: "└ ";
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		persisted_parts: Util.collectHtmlCodeList(),
+		collectParts: Util.collectParts,
+		toc_main: 'syntax',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/❝.|%[\w\-~一-鿆]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {
+	switch(match[0]) {
+	case '❝':
+		return (
+`<span class="code-point">U+00${match[1].charCodeAt(0).toString(16).toUpperCase()}</span> (<span class="char-symbol">${match[1]}</span>)`
+		);
+	default://%
+		return `<var>${match.slice(1)}</var>`;
+	}
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'U':
+	text = `U+${key}`;
+	break;
+case 'smb':
+	text = `(<span class="char-symbol">${text}</span>)`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+case 'xCode':
+	return `<a id="_ex-${key}">＊</a>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-04-20
+trans_update:2020-04-21
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/syntax.html
+site_nav:html-syntax,html
+nav_prev:WEBSTORAGE
+nav_next:HTMLparsing
+trans_1st_pub:2017-04-18
+
+
+●●class_map
+E:error
+e:element
+a:attr
+U:code-point
+v:value
+st:attr-state
+
+●●tag_map
+I:code
+m:code
+c:code
+e:code
+a:code
+v:code
+st:span
+U:span
+i:i
+cite:cite
+
+●●original_urls
+parsing:https://html.spec.whatwg.org/multipage/parsing.html
+serialising-html-fragments:https://html.spec.whatwg.org/multipage/parsing.html
+parsing-html-fragments:https://html.spec.whatwg.org/multipage/parsing.html
+
+
+●●original_id_map
+
+
+●●words_table1
+
+
+about_legacy-compat:<code class="scheme">about:legacy-compat</code>
+HTMLcharrefs:HTML-charrefs-ja.html
+is0:<code class="attr">is</code> 
+
+●●link_map
+
+
+	●IDL
+I.Document:~HTMLdom#document
+I.DocumentFragment:~DOM4#interface-documentfragment
+I.Element:~DOM4#interface-element
+I.Text:~DOM4#interface-text
+	I.DocumentType:~DOM4#documenttype
+	I.ProcessingInstruction:~DOM4#processinginstruction
+	I.Comment:~DOM4#comment
+
+m.createElement:~DOM4#dom-document-createelement
+m.innerHTML:~DOM-Parsing#dom-innerhtml-innerhtml
+m.setAttribute:~DOM4#dom-element-setattribute
+
+	m.data:~DOM4#dom-characterdata-data
+	m.target:~DOM4#dom-processinginstruction-target
+	m.name:~DOM4#dom-documenttype-name
+
+
+	●要素
+
+e.a:~HEtextlevel#the-a-element
+e.abbr:~HEtextlevel#the-abbr-element
+e.b:~HEtextlevel#the-b-element
+e.bdi:~HEtextlevel#the-bdi-element
+e.bdo:~HEtextlevel#the-bdo-element
+e.br:~HEtextlevel#the-br-element
+e.cite:~HEtextlevel#the-cite-element
+e.code:~HEtextlevel#the-code-element
+e.data:~HEtextlevel#the-data-element
+e.dfn:~HEtextlevel#the-dfn-element
+e.em:~HEtextlevel#the-em-element
+e.i:~HEtextlevel#the-i-element
+e.kbd:~HEtextlevel#the-kbd-element
+e.mark:~HEtextlevel#the-mark-element
+e.q:~HEtextlevel#the-q-element
+e.rp:~HEtextlevel#the-rp-element
+e.rt:~HEtextlevel#the-rt-element
+e.ruby:~HEtextlevel#the-ruby-element
+e.s:~HEtextlevel#the-s-element
+e.samp:~HEtextlevel#the-samp-element
+e.small:~HEtextlevel#the-small-element
+e.span:~HEtextlevel#the-span-element
+e.strong:~HEtextlevel#the-strong-element
+e.sub:~HEtextlevel#the-sub-and-sup-elements
+e.sup:~HEtextlevel#the-sub-and-sup-elements
+e.time:~HEtextlevel#the-time-element
+e.u:~HEtextlevel#the-u-element
+e.var:~HEtextlevel#the-var-element
+e.wbr:~HEtextlevel#the-wbr-element
+
+e.blockquote:~HEgrouping#the-blockquote-element
+e.div:~HEgrouping#the-div-element
+e.dl:~HEgrouping#the-dl-element
+e.dd:~HEgrouping#the-dd-element
+e.dt:~HEgrouping#the-dt-element
+e.figure:~HEgrouping#the-figure-element
+e.figcaption:~HEgrouping#the-figcaption-element
+e.hr:~HEgrouping#the-hr-element
+e.li:~HEgrouping#the-li-element
+e.main:~HEgrouping#the-main-element
+e.menu:~HEgrouping#the-menu-element
+e.ol:~HEgrouping#the-ol-element
+e.p:~HEgrouping#the-p-element
+e.pre:~HEgrouping#the-pre-element
+e.ul:~HEgrouping#the-ul-element
+
+e.del:~HEedits#the-del-element
+e.ins:~HEedits#the-ins-element
+
+e.address:~HEsections#the-address-element
+e.article:~HEsections#the-article-element
+e.aside:~HEsections#the-aside-element
+e.body:~HEsections#the-body-element
+e.footer:~HEsections#the-footer-element
+e.header:~HEsections#the-header-element
+e.hgroup:~HEsections#the-hgroup-element
+e.nav:~HEsections#the-nav-element
+e.section:~HEsections#the-section-element
+e.h1:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h2:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h3:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h4:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h5:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h6:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+
+e.base:~HEmetadata#the-base-element
+e.head:~HEmetadata#the-head-element
+e.html:~HEmetadata#the-html-element
+e.link:~HEmetadata#the-link-element
+e.meta:~HEmetadata#the-meta-element
+e.style:~HEmetadata#the-style-element
+e.title:~HEmetadata#the-title-element
+
+e.noscript:~HEscripting#the-noscript-element
+e.script:~HEscripting#the-script-element
+e.slot:~HEscripting#the-slot-element
+e.template:~HEscripting#the-template-element
+e.canvas:~HEcanvas#the-canvas-element
+
+e.input:~HEinput#the-input-element
+e.button:~HEforms#the-button-element
+e.datalist:~HEforms#the-datalist-element
+e.fieldset:~HEforms#the-fieldset-element
+e.form:~HEforms#the-form-element
+e.legend:~HEforms#the-legend-element
+e.label:~HEforms#the-label-element
+e.meter:~HEforms#the-meter-element
+e.output:~HEforms#the-output-element
+e.optgroup:~HEforms#the-optgroup-element
+e.option:~HEforms#the-option-element
+e.progress:~HEforms#the-progress-element
+e.select:~HEforms#the-select-element
+e.textarea:~HEforms#the-textarea-element
+
+e.details:~HEinteractive#the-details-element
+e.dialog:~HEinteractive#the-dialog-element
+e.summary:~HEinteractive#the-summary-element
+
+e.area:~HEimages#the-area-element
+e.img:~HEimages#the-img-element
+e.map:~HEimages#the-map-element
+e.source:~HEimages#the-source-element
+e.picture:~HEimages#the-picture-element
+
+e.embed:~HEembed#the-embed-element
+e.iframe:~HEembed#the-iframe-element
+e.object:~HEembed#the-object-element
+e.param:~HEembed#the-param-element
+
+e.audio:~HEmedia#the-audio-element
+e.video:~HEmedia#the-video-element
+e.track:~HEtrack#the-track-element
+
+e.table:~HEtables#the-table-element
+e.td:~HEtables#the-td-element
+e.th:~HEtables#the-th-element
+e.tr:~HEtables#the-tr-element
+e.caption:~HEtables#the-caption-element
+e.colgroup:~HEtables#the-colgroup-element
+e.tbody:~HEtables#the-tbody-element
+e.tfoot:~HEtables#the-tfoot-element
+e.thead:~HEtables#the-thead-element
+e.col:~HEtables#the-col-element
+
+e.basefont:~HTMLobs#basefont
+e.bgsound:~HTMLobs#bgsound
+e.frame:~HTMLobs#frame
+e.keygen:~HTMLobs#keygen
+e.listing:~HTMLobs#listing
+e.noembed:~HTMLobs#noembed
+e.noframes:~HTMLobs#noframes
+e.plaintext:~HTMLobs#plaintext
+e.xmp:~HTMLobs#xmp
+
+e.ms:https://www.w3.org/Math/draft-spec/chapter3.html#presm.ms
+
+
+a.id:~HTMLdom#the-id-attribute
+a.disabled:~HTMLforms#attr-fe-disabled
+a.name:~HTMLforms#attr-fe-name
+a.lang:~HTMLdom#attr-lang
+a.type:~HEinput#attr-input-type
+a.value:~HEinput#attr-input-value
+a.class:~HTMLdom#classes
+a.is:~HEcustom#attr-is
+
+~about_legacy-compat:~HTMLurl#about:legacy-compat
+
+
+	●内部
+自己閉じ:#_self-closing
+直後の同胞:#_immediately-following-sibling
+
+改行文字:#syntax-newlines
+文字~参照:#syntax-charref
+多義的~ampersand:#syntax-ambiguous-ampersand
+
+~DOCTYPE:#syntax-doctype
+~DOCTYPE旧来~文字列:#doctype-legacy-string
+
+~tag:#syntax-tags
+~tag名:#syntax-tag-name
+終了tag:#syntax-end-tag
+開始tag:#syntax-start-tag
+
+要素:#syntax-elements
+~void要素:#void-elements
+~template要素:#the-template-element-2
+生~text要素:#raw-text-elements
+~escape可能な生~text要素:#escapable-raw-text-elements
+外来の要素:#foreign-elements
+通常の要素:#normal-elements
+
+属性:#syntax-attributes
+属性~名:#syntax-attribute-name
+属性~値:#syntax-attribute-value
+
+省略-:#syntax-tag-omission
+	#syntax-tag-omission
+~text:#syntax-text
+~CDATAsec:#syntax-cdata
+~comment:#syntax-comments
+
+~voidとして直列化する要素:#serializes-as-void
+~HTML素片~直列化~algo:#html-fragment-serialisation-algorithm
+直列形の名前:#attribute's-serialised-name
+	'
+~escape:#escapingString
+
+	§
+	#cdata-rcdata-restrictions
+	#element-restrictions
+
+~HTML構文:#syntax
+有名~文字~参照:~HTMLcharrefs#named-character-references
+
+	●HTML
+~HTML構文解析器:~HTMLparsing#html-parser
+親が違えられ:~HTMLparsing#foster-parent
+
+~HTML要素:~HTMLINFRA#html-elements
+
+自律的~custom要素:~HEcustom#autonomous-custom-element
+文字~符号化法~宣言:~HEmetadata#character-encoding-declaration
+内容~model:~HTMLdom#content-models
+内容:~HTMLdom#concept-html-contents
+~scriptingは可能化-:~WAPI#concept-n-script
+~template内容:~HEscripting#template-contents
+
+閲覧文脈:~BROWSERS#browsing-context
+
+~custom化された組込みの要素:~HEcustom#customized-built-in-element
+~custom要素~構築子:~HEcustom#custom-element-constructor
+
+	●外部
+実装定義:~INFRA#implementation-defined
+
+~ASCII英数字:~INFRA#ascii-alphanumeric
+~ASCII大小無視:~INFRA#ascii-case-insensitive
+~ASCII数字:~INFRA#ascii-digit
+~ASCII~hex数字:~INFRA#ascii-hex-digit
+~ASCII英小文字:~INFRA#ascii-lower-alpha
+	~ASCII~lower:~INFRA#ascii-lower-alpha
+~ASCII英大文字:~INFRA#ascii-upper-alpha
+~ASCII空白:~INFRA#ascii-whitespace
+制御文字:~INFRA#control
+非文字:~INFRA#noncharacter
+
+~HTML名前空間:~INFRA#html-namespace
+~MathML名前空間:~INFRA#mathml-namespace
+~SVG名前空間:~INFRA#svg-namespace
+~XLink名前空間:~INFRA#xlink-namespace
+~XML名前空間:~INFRA#xml-namespace
+~XMLNS名前空間:~INFRA#xmlns-namespace
+
+~HTML~MIME型:~MIMESNIFF#html-mime-type
+
+
+~tree順序:~DOM4#concept-tree-order
+文書~要素:~DOM4#document-element
+子~text内容:~DOM4#concept-child-text-content
+~is0値:~DOM4#concept-element-is-value
+	属性~list:~DOM4#concept-element-attribute
+
+●●words_table
+
+
+	●文字
+	CHARACTER TABULATION
+	LINE FEED
+	LF
+	FORM 
+	FF
+	CARRIAGE RETURN
+	CR
+	BYTE ORDER MARK
+	SPACE
+	BOM
+
+	tab
+	~escape可能:escapable
+非文字:noncharacter::~
+制御文字:control::~
+改行文字:newline::~
+	~ASCII空白／空白:space
+数字:digit::~
+英数字:alphanumeric::~
+英小文字:lower alpha::~
+英大文字:upper alpha::~
+ampersand::::アンパサンド
+基数:base::~
+hex:::16 進
+	10 進:decimal
+	16 進／基数 16:hexadecimal
+	基数 10:base-ten
+
+一重引用符付き:single-quoted::~
+二重引用符付き:double-quoted::~
+	single or double quotes
+引用符無しの:unquoted::~
+引用符:quote mark::~
+	小文字と大文字 lower- and uppercase letters
+頭部の:leading:~
+
+
+	●構成子
+DOCTYPE:
+CDATAsec:CDATA section::CDATA 節::CDATA セクション
+	そのまま:literal
+開始tag:start tag::開始 tag:開始タグ
+終了tag:end tag::終了 tag:終了タグ
+生:raw::~
+外来の:foreign::~
+void:
+自律的:autonomous::~
+
+	●構文
+XMLNS:
+XLink:
+MathML:
+
+名前空間付き:namespaced::~
+	-:mark
+省略可能:optional::~
+自己閉じ:self-closing::~
+閉じる:closeする:~
+再解析-:reparse::~::リパース
+直列形の:serialized::~::シリアル形の
+往来-:round-trip::~
+往来:roundtrip::~
+形:form:~
+区切る:delimitする:~
+後続-:follow:~
+混ぜて:mixして:~
+混在:mixture:~
+切落され:truncateされ:切り落とされ
+	落とされた:extra
+現れな:appearしな:~
+
+	構文解析-時:parsing
+	:serialize-parse
+	:serialize-reparse
+	-:component
+
+
+	●構造
+table::::テーブル
+	子たち:children
+	直後の同胞は、無い:no more content in the parent element
+
+	●処理
+
+
+
+	pair:pair
+	space:space
+
+	●仕様
+合法:legal:~
+論題:topic:~
+前置き:preamble:~
+傾向:tend:~
+簡素:terser:~
+流儀:fashion:~
+無色:neutral:~
+安定的:stable:~
+役割:role:~
+機構:machinery:仕組み
+	~~直に
+	特別に取扱われる:we special-case its handling
+	最善な労をもって:makes a best-effort attempt
+
+	申し分なく:fine
+	だけになる:simple
+	-:In fact
+	~~問題:matter／issue／
+	~~問題無く:without trouble
+	簡便に:for convenience
+	わけ:why
+	可能性が高い:likely to
+	~~可能性:possible
+	可能:possible
+	さもなければ:otherwise
+	もちろん:of course
+	かまわない:ok／don’t care about
+	-:we
+	ここで:now
+	としても:even though
+
+	●仕様（動詞
+黙示-:imply:~
+
+	適合していない:non-conforming
+	予期されない:unexpected
+	見かけ:look
+	-:attempt
+	課される:place
+	仲介-:intermediating through
+
+	●未分類（動詞
+
+有修飾:qualified:~
+	-:determine
+	invocation
+	所有-:associate
+	始-:begin
+	し直す:back
+	書いて／書かれ:write
+	書き出す:write out
+	終わる:end
+	置ける／置かれ:put
+	転化-:turns into
+	占める:take up
+	に戻って、:returning to
+	になる:become
+	と称する:referred
+	にする:make the
+	無い:not present
+	とされた:labeled
+	とされ:mark
+	言って:say
+	そうすることは:doing so
+	-:entitled
+	ことになる:end up
+
+	●未分類
+XSS:cross-site scripting:XSS
+template:
+font-family:font family:::フォントファミリ
+row:
+cell:
+短い:short:~
+
+	演算子:operator
+	箇所:where
+	表:table
+	一行:one line
+	互いに:from each other by
+	:take
+	-:pair
+	-:step
+	種:type／kind
+	consist
+	tag名:tagname
+	literally
+	親が違えられ:foster parented
+	再帰的に:thus recursing into this algorithm for that element
+	主の:main
+	:the following format
+
+
+	●指示語
+	これも:again
+	1 個の:a／a single
+	0 〜 1 個の:optionally,
+	任意個数の:any number of
+	0 個以上の:any number of
+	どこにも:anywhere
+	前後にある:around
+	先に掲げた／:earlier
+	次:next
+	更なる／更に:extra
+	更なる／他にも:further
+	他の:different
+	他にもある:yet more
+	様になる:look like
+	あろうが，anyway
+	その時点:At that point
+	かなり減る:much less
+	の有無〜を除き:modulo
+	各種:various types
+	単に:just
+	何らかの／ある:some
+	次に与える順の，in this order
+	直後:just after／immediately after
+	直前:just befer／immediately preceded／immediately followed by
+	ある程度:in part
+	最も内縁:innermost
+	前／後:surround
+	-:previous
+	-:finally
+	先頭の:initial
+	かなり:much
+	場所:room
+	先ず:in the first place
+	残りの部分:the rest
+	他にも、More examples would be
+	〜内の各:any occurrences of
+	続けて:consecutive
+	地点:point
+
+
+●●html_code_list
+
+
+
+■element-1
+<p>
+ <svg>
+  <metadata>
+   <!-- これは妥当でない -->
+   <cdr:license xmlns:cdr="https://www.example.com/cdr/metadata" name="MIT"/>
+  </metadata>
+ </svg>
+</p>
+
+   <!-- this is invalid -->
+
+
+■attribute-1
+<input ＜disabled＞>
+
+■attribute-2
+<input ＜value=yes＞>
+
+■attribute-3
+<input ＜type='checkbox'＞>
+
+■attribute-4
+<input ＜name="be evil"＞>
+
+
+■optional-html-1
+<!DOCTYPE HTML>
+＜<html>＞
+  <head>
+    <title>どうぞ</title>
+  </head>
+  <body>
+    <p>この例をよしなに。</p>
+  </body>
+</html>
+
+Hello
+Welcome to this example.
+
+■optional-html-2
+<!DOCTYPE HTML>
+％
+  <head>
+    <title>どうぞ</title>
+  </head>
+  <body>
+    <p>この例をよしなに。</p>
+  </body>
+</html>
+
+■optional-html-3
+<!DOCTYPE HTML><head>
+    <title>どうぞ</title>
+  </head>
+  <body>
+    <p>この例をよしなに。</p>
+  </body>
+</html>
+
+■optional-html-4
+<!DOCTYPE HTML>
+<html>
+  ＜<!-- このコメントは DOM 内のどこに来る？ -->＞
+  <head>
+    <title>どうぞ</title>
+  </head>
+  <body>
+    <p>この例をよしなに。</p>
+  </body>
+</html>
+
+where is this comment in the DOM?
+
+■optional-html-5
+<!DOCTYPE HTML>
+<!-- このコメントは DOM 内のどこに来る？ -->
+＜<html>＞
+  <head>
+    <title>どうぞ</title>
+  </head>
+  <body>
+    <p>この例をよしなに。</p>
+  </body>
+</html>
+
+■optional-body-1
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>どうぞ</title>
+  </head>
+  <body>
+    <p>この例をよしなに。</p>
+  </body>
+</html>
+
+■optional-body-2
+<!DOCTYPE HTML><html><head><title>どうぞ</title></head><body><p>この例をよしなに。</p></body></html>
+
+
+■optional-body-3
+<!DOCTYPE HTML><title>どうぞ</title><p>この例をよしなに。</p>
+
+
+■optional-body-4
+<!DOCTYPE HTML>
+<title>どうぞ</title>
+<p>この例をよしなに。</p>
+
+
+■optional-body-5
+<!DOCTYPE HTML>
+＜<html><head>＞<title>どうぞ</title>
+＜</head><body>＞<p>この例をよしなに。</p>＜</body></html>＞
+
+
+■optional-p-1
+<!DOCTYPE HTML><title>どうぞ</title><p>この例をよしなに。
+
+■optional-table-1
+<table>
+ <caption>37547 TEE Electric Powered Rail Car Train Functions (Abbreviated)</caption>
+ <colgroup><col><col><col></colgroup>
+ <thead>
+  <tr>
+   <th>Function</th>
+   <th>Control Unit</th>
+   <th>Central Station</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>Headlights</td>
+   <td>✔</td>
+   <td>✔</td>
+  </tr>
+  <tr>
+   <td>Interior Lights</td>
+   <td>✔</td>
+   <td>✔</td>
+  </tr>
+  <tr>
+   <td>Electric locomotive operating sounds</td>
+   <td>✔</td>
+   <td>✔</td>
+  </tr>
+  <tr>
+   <td>Engineer's cab lighting</td>
+   <td></td>
+   <td>✔</td>
+  </tr>
+  <tr>
+   <td>Station Announcements - Swiss</td>
+   <td></td>
+   <td>✔</td>
+  </tr>
+ </tbody>
+</table>
+
+
+■optional-table-2
+<table>
+ <caption>37547 TEE Electric Powered Rail Car Train Functions (Abbreviated)
+ <colgroup><col><col><col>
+ <thead>
+  <tr>
+   <th>Function
+   <th>Control Unit
+   <th>Central Station
+ <tbody>
+  <tr>
+   <td>Headlights
+   <td>✔
+   <td>✔
+  <tr>
+   <td>Interior Lights
+   <td>✔
+   <td>✔
+  <tr>
+   <td>Electric locomotive operating sounds
+   <td>✔
+   <td>✔
+  <tr>
+   <td>Engineer's cab lighting
+   <td>
+   <td>✔
+  <tr>
+   <td>Station Announcements - Swiss
+   <td>
+   <td>✔
+</table>
+
+■optional-table-3
+<table>
+ <caption>37547 TEE Electric Powered Rail Car Train Functions (Abbreviated)
+ <colgroup><col><col><col>
+ <thead>
+  <tr> <th>Function                              <th>Control Unit     <th>Central Station
+ <tbody>
+  <tr> <td>Headlights                            <td>✔                <td>✔
+  <tr> <td>Interior Lights                       <td>✔                <td>✔
+  <tr> <td>Electric locomotive operating sounds  <td>✔                <td>✔
+  <tr> <td>Engineer's cab lighting               <td>                 <td>✔
+  <tr> <td>Station Announcements - Swiss         <td>                 <td>✔
+</table>
+
+'
+
+■optional-attr-1
+<!DOCTYPE HTML><title>どうぞ</title><p>この例をよしなに。
+
+■optional-attr-2
+<!DOCTYPE HTML><html lang="en"><title>どうぞ</title><body class="demo"><p>この例をよしなに。
+
+
+■content-1
+<pre>どうぞ</pre>
+
+■content-2
+<pre>
+どうぞ</pre>
+
+■CDATA-1
+<p>文字列には数も加算できるが，それは加算する数を文字列化する：</p>
+<math>
+ <ms><![CDATA[x<y]]></ms>
+ <mo>+</mo>
+ <mn>3</mn>
+ <mo>=</mo>
+ <ms><![CDATA[x<y3]]></ms>
+</math>
+
+<p>You can add a string to a number, but this stringifies the number:</p>
+
+
+■serializing-1
+<form id="outer"><div></form><form id="inner"><input>
+
+■serializing-2
+<html><head></head><body><form id="outer"><div>＜<form id="inner">＞<input></form></div></form></body></html>
+
+■serializing-3
+<a><table><a>
+
+■serializing-4
+<html><head></head><body><a>＜<a>＞</a><table></table></a></body></html>
+
+
+■serializing-5
+<pre>
+％
+Hello.</pre>
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる
+HTML 仕様の
+<a href="~SPEC_URL">§ Writing HTML documents</a>,
+<a href="~HTMLLS/parsing.html#serialising-html-fragments">§ Serializing HTML fragments</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+</head>
+<body>
+
+
+<header id="head">
+	<hgroup>
+<h1>HTML 文書の書き方 — Writing HTML documents</h1>
+	</hgroup>
+
+</header>
+
+<main id="MAIN" hidden>
+
+	<section id="syntax">
+<h1 title="The HTML syntax">12. ~HTMLの構文</h1>
+
+<p class="note">注記：
+この節は、`~HTML~MIME型$とされた資源に対する規則のみを述べる。
+~XML資源に対する規則は、
+<a href="~HTMLxml#the-xhtml-syntax">§ ~XML構文</a>
+にて論じられる。
+◎
+This section only describes the rules for resources labeled with an HTML MIME type. Rules for XML resources are discussed in the section below entitled "The XML syntax".
+</p>
+
+		<section id="writing">
+<h2 title="Writing HTML documents">12.1.  ~HTML文書の書き方</h2>
+
+<p>
+<i>
+この節が適用されるのは［
+文書 ／ 著作~tool ／~markup生成器
+］に限られ、特に，適合性~検査器には適用されない
+— 適合性~検査器は、
+<a href="~HTMLparsing#parsing">§ ~HTML文書の構文解析-法</a>
+に与える要件を利用するモノトスル。
+</i>
+◎
+This section only applies to documents, authoring tools, and markup generators. In particular, it does not apply to conformance checkers; conformance checkers must use the requirements given in the next section ("parsing HTML documents").
+</p>
+
+<p class="trans-note">【
+この節における “書く（ `write^en ）” は、生成器, 等の~programから “書き出す” ことも含まれる。
+】</p>
+
+<p>
+文書は、次に与える順の~~部品から~~構成されていなければナラナイ：
+◎
+Documents must consist of the following parts, in the given order:
+</p>
+
+<ol>
+	<li>
+0 〜 1 個の `FEFF^U BYTE ORDER MARK `BOM^smb
+◎
+Optionally, a single U+FEFF BYTE ORDER MARK (BOM) character.
+</li>
+	<li>
+0 個以上の［
+`~comment$ ／ `~ASCII空白$
+］
+◎
+Any number of comments and ASCII whitespace.
+</li>
+	<li>
+`~DOCTYPE$
+◎
+A DOCTYPE.
+</li>
+	<li>
+0 個以上の［
+`~comment$ ／ `~ASCII空白$
+］
+◎
+Any number of comments and ASCII whitespace.
+</li>
+	<li>
+`html$e `要素$の形をとる`文書~要素$
+◎
+The document element, in the form of an html element.
+</li>
+	<li>
+0 個以上の［
+`~comment$ ／ `~ASCII空白$
+］
+◎
+Any number of comments and ASCII whitespace.
+</li>
+</ol>
+
+<p>
+上に言及した各種~内容については、以下の少数の節にて述べる。
+◎
+The various types of content mentioned above are described in the next few sections.
+</p>
+
+<p>
+加えて、`文字~符号化法~宣言$を直列化する方法にも ある制約があり、その論題をとりあげる節にて論じられる。
+◎
+In addition, there are some restrictions on how character encoding declarations are to be serialized, as discussed in the section on that topic.
+</p>
+
+<div class="note">
+<p>注記：
+［
+`html$e 要素の前 ／
+`html$e 要素の内側の始端 ／
+`head$e 要素の前
+］にある`~ASCII空白$は、文書の構文解析-時には落とされることになる。
+一方で， `html$e 要素の<em>後</em>にある`~ASCII空白$は、
+`body$e 要素の終端にあったかのように構文解析される。
+したがって，`文書~要素$の前後にある`~ASCII空白$は、往来しない†。
+◎
+ASCII whitespace before the html element, at the start of the html element and before the head element, will be dropped when the document is parsed; ASCII whitespace after the html element will be parsed as if it were at the end of the body element. Thus, ASCII whitespace around the document element does not round-trip.
+</p>
+
+<p class="trans-note">【
+“往来する（ `round-trip^en ）”
+とは、構文解析してから再び直列化されても（あるいはその逆をしても），元のまま保たれることを意味する。
+】</p>
+
+<div class="p">
+<p>
+次に該当するものに対しては，その後に改行文字を挿入することが示唆される：
+</p>
+
+<ul ><li>~DOCTYPEの後
+</li><li>文書~要素の前にある~comment
+</li><li>`html$e 要素の開始tag
+</li><li>`html$e 要素の内側にあって, `head$e 要素の前にある~comment
+</li></ul>
+
+<p class="trans-note">【
+~HTMLにおける文書~要素は `html^e 要素に他ならない（が、そのような `html^e 要素は一つに限られる）。
+】</p>
+
+◎
+It is suggested that newlines be inserted after the DOCTYPE, after any comments that are before the document element, after the html element's start tag (if it is not omitted), and after any comments that are inside the html element but before the head element.
+</div>
+
+</div>
+
+  
+<p>
+~HTML構文における多くの文字列（例：要素の名前や属性）は、`~ASCII英大文字$と`~ASCII英小文字$に限り，文字大小は区別されない。
+この節では、これを簡便に “文字大小無視（ `case-insensitive^en ）” と称する。
+◎
+Many strings in the HTML syntax (e.g. the names of elements and their attributes) are case-insensitive, but only for ASCII upper alphas and ASCII lower alphas. For convenience, in this section this is just referred to as "case-insensitive".
+</p>
+
+<p class="trans-note">【
+と，原文には記されているが、この訳では一律に “~ASCII大小無視” と記すことにする（さして簡便にならないので）。
+】</p>
+
+			<section id="the-doctype">
+<h3 title="The DOCTYPE">12.1.1. ~DOCTYPE</h3>
+
+<p>
+`~DOCTYPE@
+は、要求される “前置き” である。
+◎
+A DOCTYPE is a required preamble.
+</p>
+
+<p class="note">注記：
+~DOCTYPEは、旧来の理由から要求される。
+省略された場合、~browserは，［
+何らかの仕様と互換でない，異なる具現化~mode
+］を利用する傾向にある。
+文書~内に~DOCTYPEを含めておけば、［
+~browserは，最善な労をもって関連な仕様に従う
+］ことが確保される。
+◎
+DOCTYPEs are required for legacy reasons. When omitted, browsers tend to use a different rendering mode that is incompatible with some specifications. Including the DOCTYPE in a document ensures that the browser makes a best-effort attempt at following the relevant specifications.
+</p>
+
+<p>
+~DOCTYPEは、次に与える順の文字~並びでなければナラナイ：
+◎
+A DOCTYPE must consist of the following components, in this order:
+</p>
+
+<ol class="brief">
+	<li>
+`~ASCII大小無視$で `&lt;!DOCTYPE^l に合致する文字列
+◎
+A string that is an ASCII case-insensitive match for the string "&lt;!DOCTYPE".
+</li>
+	<li>
+1 個以上の`~ASCII空白$
+◎
+One or more ASCII whitespace.
+</li>
+	<li>
+`~ASCII大小無視$で `html^l に合致する文字列
+◎
+A string that is an ASCII case-insensitive match for the string "html".
+</li>
+	<li>
+0 個（ “短い~DOCTYPE” ）または 1 個の`~DOCTYPE旧来~文字列$
+◎
+Optionally, a DOCTYPE legacy string.
+</li>
+	<li>
+0 個以上の`~ASCII空白$
+◎
+Zero or more ASCII whitespace.
+</li>
+	<li>
+`003E^U `&gt;^smb
+◎
+A U+003E GREATER-THAN SIGN character (&gt;).
+</li>
+</ol>
+
+<p class="note">注記：
+言い換えれば、~ASCII大小無視で
+`&lt;!DOCTYPE html&gt;^l
+ に合致する文字列。
+◎
+In other words, &lt;!DOCTYPE html&gt;, case-insensitively.
+</p>
+
+<hr>
+
+<p>
+上の “短い~DOCTYPE” による~HTML~markupを出力できない~HTML生成器の目的においては、~DOCTYPEの中に
+`~DOCTYPE旧来~文字列@
+（ `DOCTYPE legacy string^en ）が挿入されてもヨイ（上で定義した位置に）。
+この文字列は、次に与える順の文字~並びでなければナラナイ：
+◎
+For the purposes of HTML generators that cannot output HTML markup with the short DOCTYPE "&lt;!DOCTYPE html&gt;", a DOCTYPE legacy string may be inserted into the DOCTYPE (in the position defined above). This string must consist of:
+</p>
+
+<ol class="brief">
+	<li>
+1 個以上の`~ASCII空白$
+◎
+One or more ASCII whitespace.
+</li>
+	<li>
+`~ASCII大小無視$で `SYSTEM^l  に合致する文字列
+◎
+A string that is an ASCII case-insensitive match for the string "SYSTEM".
+</li>
+	<li>
+1 個以上の`~ASCII空白$
+◎
+One or more ASCII whitespace.
+</li>
+	<li>
+［
+❝" ／ ❝'
+］（ `引用符^i ）
+◎
+A U+0022 QUOTATION MARK or U+0027 APOSTROPHE character (the quote mark).
+</li>
+	<li>
+~literal文字列 "`~about_legacy-compat$"
+◎
+The literal string "about:legacy-compat".
+</li>
+	<li>
+2 つ前に挙げた `引用符^i と同じ文字
+◎
+A matching U+0022 QUOTATION MARK or U+0027 APOSTROPHE character (i.e. the same character as in the earlier step labeled quote mark).
+</li>
+</ol>
+
+<p class="note">注記：
+言い換えれば、［
+`&lt;!DOCTYPE html SYSTEM "about:legacy-compat"&gt;^c ／
+`&lt;!DOCTYPE html SYSTEM 'about:legacy-compat'&gt;^c
+］に，引用符で括られた部分は同じになり, 他の部分は~ASCII大小無視で合致する。
+◎
+In other words, &lt;!DOCTYPE html SYSTEM "about:legacy-compat"&gt; or &lt;!DOCTYPE html SYSTEM 'about:legacy-compat'&gt;, case-insensitively except for the part in single or double quotes.
+</p>
+ 
+<p>
+`~DOCTYPE旧来~文字列$は、 “短い~DOCTYPE” を出力できない~systemで生成される文書を除き，利用されるべきでない。
+◎
+The DOCTYPE legacy string should not be used unless the document is generated from a system that cannot output the shorter string.
+</p>
+
+			</section>
+			<section id="elements-2">
+<h3 title="Elements">12.1.2. 要素</h3>
+
+<p>
+`要素@
+（ `element^en ）は、次の 6 種に分けられる：
+◎
+There are six different kinds of elements: void elements, the template element, raw text elements, escapable raw text elements, foreign elements, and normal elements.
+</p>
+
+<dl>
+	<dt>`~void要素@ （ `void element^en ）</dt>
+	<dd>
+`area$e, `base$e, `br$e, `col$e, `embed$e, `hr$e, `img$e, `input$e, `link$e, `meta$e, `param$e, `source$e, `track$e, `wbr$e
+</dd>
+
+	<dt>`~template要素@ （ `template element^en ）</dt>
+	<dd>
+`template$e
+</dd>
+
+	<dt>`生~text要素@ （ `raw text element^en ）</dt>
+	<dd>
+`script$e, `style$e
+</dd>
+
+	<dt>`~escape可能な生~text要素@ （ `escapable raw text element^en ）</dt>
+	<dd>
+`textarea$e, `title$e
+</dd>
+
+	<dt>`外来の要素@ （ `foreign element^en ）</dt>
+	<dd>
+［
+`~MathML名前空間$ ／ `~SVG名前空間$
+］に属する要素
+◎
+Elements from the MathML namespace and the SVG namespace.
+</dd>
+
+	<dt>`通常の要素@ （ `normal element^en ）</dt>
+	<dd>
+許容される他のすべての`~HTML要素$。
+◎
+All other allowed HTML elements are normal elements.
+</dd>
+
+</dl>
+
+<p>
+`~tag@
+（ `tag^en ）は、~markupにおいて要素の始端と終端を区切るために利用される。
+［
+`生~text要素$ ／ `~escape可能な生~text要素$ ／ `通常の要素$
+］には、その
+始端を指示する`開始tag$,
+終端を指示する`終了tag$
+がある。
+ある種の`通常の要素$の［
+開始tag／終了tag
+］は、下の
+<a href="#optional-tags">§ 省略可能な~tag</a>
+に述べるように，`省略-$できる。
+省略できないものは、省略されてはナラナイ。
+`~void要素$には、開始tagのみがあり，終了tagは指定されてはナラナイ。
+`外来の要素$には、開始tagを有していて，かつ その開始tagが［
+`自己閉じ$でないならば 終了tagも有していなければナラナイ ／
+`自己閉じ$であるならば 終了tagを有してはナラナイ
+］。
+◎
+Tags are used to delimit the start and end of elements in the markup. Raw text, escapable raw text, and normal elements have a start tag to indicate where they begin, and an end tag to indicate where they end. The start and end tags of certain normal elements can be omitted, as described below in the section on optional tags. Those that cannot be omitted must not be omitted. Void elements only have a start tag; end tags must not be specified for void elements. Foreign elements must either have a start tag and an end tag, or a start tag that is marked as self-closing, in which case they must not have an end tag.
+</p>
+
+<p>
+要素の`内容$は、開始tagの直後から終了tagの直前までの合間に置かれなければナラナイ（いずれの~tagも，<a href="#syntax-tag-omission">ある種の事例では黙示され得る</a>）。
+個々の要素に許容される正確な内容は、この仕様の他所に述べたように，要素の`内容~model$に依存する。
+要素は、その内容~modelに許容されない内容を包含してはナラナイ。
+加えて、上の 5 種の要素には追加的な<em>構文上の</em>要件もある。
+◎
+The contents of the element must be placed between just after the start tag (which might be implied, in certain cases) and just before the end tag (which again, might be implied in certain cases). The exact allowed contents of each individual element depend on the content model of that element, as described earlier in this specification. Elements must not contain content that their content model disallows. In addition to the restrictions placed on the contents by those content models, however, the five types of elements have additional syntactic requirements.
+</p>
+
+<p>
+`~void要素$は、内容を有し得ない（終了tagはないので、開始tagと終了tagの合間に置ける内容はない）。
+◎
+Void elements can't have any contents (since there's no end tag, no content can be put between the start tag and the end tag).
+</p>
+
+<p id="template-syntax">
+`~template要素$は`~template内容$を有し得るが， `template$e 要素~自身の子にはならない。
+そのような`~template内容$は、主の `Document$I に干渉するのを避けるため，［
+`閲覧文脈$を伴わない, 異なる `Document$I
+］に結付けられた `DocumentFragment$I 内に格納される。
+`template$e 要素を成す`~template内容$用の~markupは、（他の要素と同じく）
+`template$e 要素の開始tagの直後から終了tagの直前までに置かれる
+— それらはどのような［
+`~text$, `文字~参照$, `要素$, `~comment$
+］からなってもヨイが、~textは，文字 `003C^U `&lt;^smb や`多義的~ampersand$を包含してはナラナイ。
+◎
+The template element can have template contents, but such template contents are not children of the template element itself. Instead, they are stored in a DocumentFragment associated with a different Document — without a browsing context — so as to avoid the template contents interfering with the main Document. The markup for the template contents of a template element is placed just after the template element's start tag and just before template element's end tag (as with other elements), and may consist of any text, character references, elements, and comments, but the text must not contain the character U+003C LESS-THAN SIGN (&lt;) or an ambiguous ampersand.
+</p>
+
+<p>
+`生~text要素$は、`~text$を内容に有し得る。
+また、<a href="#cdata-rcdata-restrictions">下に述べる制約</a>もある。
+◎
+Raw text elements can have text, though it has restrictions described below.
+</p>
+
+<p>
+`~escape可能な生~text要素$は、［
+`~text$, `文字~参照$
+］を内容に有し得る
+— ただし、~textは`多義的~ampersand$を包含してはナラナイ。
+また、<a href="#cdata-rcdata-restrictions">下に述べる制約</a>もある。
+◎
+Escapable raw text elements can have text and character references, but the text must not contain an ambiguous ampersand. There are also further restrictions described below.
+</p>
+
+<p>
+`外来の要素$のうち，開始tagが`自己閉じ$とされたものは、内容を有し得ない（これも，終了tagはないので、開始tagと終了tagの合間に置ける内容はない）。
+他の`外来の要素$は、［
+`~text$, `文字~参照$, `~CDATAsec$, 他の`要素$, `~comment$
+］を内容に有し得る
+— ただし、~textは［
+文字`003C^U `&lt;^smb ／ `多義的~ampersand$
+］を包含してはナラナイ。
+◎
+Foreign elements whose start tag is marked as self-closing can't have any contents (since, again, as there's no end tag, no content can be put between the start tag and the end tag). Foreign elements whose start tag is not marked as self-closing can have text, character references, CDATA sections, other elements, and comments, but the text must not contain the character U+003C LESS-THAN SIGN (&lt;) or an ambiguous ampersand.
+</p>
+
+<div class="note">
+
+<p>注記：
+~HTML構文は、`外来の要素$においても，名前空間~宣言を~supportしない。
+◎
+The HTML syntax does not support namespace declarations, even in foreign elements.
+</p>
+
+<p>
+一例として、次の~HTML素片を考える：
+◎
+For instance, consider the following HTML fragment:
+</p>
+
+`element-1^xCode
+
+<p>
+最も内縁の要素 `cdr:license^e は、実際には ~SVG名前空間に属する
+— ~XMLと違って， `xmlns:cdr^l 属性の効果はないので。
+上の素片~内の~commentが言ってるように、この素片は，実際には適合していない。
+`SVG 2^cite は、~SVG名前空間~内に `cdr:license^l と称される要素は定義しないので。
+◎
+The innermost element, cdr:license, is actually in the SVG namespace, as the "xmlns:cdr" attribute has no effect (unlike in XML). In fact, as the comment in the fragment above says, the fragment is actually non-conforming. This is because SVG 2 does not define any elements called "cdr:license" in the SVG namespace.
+</p>
+
+</div>
+
+<p>
+`通常の要素$は、［
+`~text$, `文字~参照$, 他の`要素$, `~comment$
+］を内容に有し得る
+— ただし、~textは［
+文字`003C^U `&lt;^smb ／ `多義的~ampersand$
+］を包含してはナラナイ。
+一部の`通常の要素$には、許容される内容について，［
+内容~modelにより課される制約 ／ この段落に述べた制約
+］を超えるような制約が，<a href="#element-restrictions">他にもある</a>。
+◎
+Normal elements can have text, character references, other elements, and comments, but the text must not contain the character U+003C LESS-THAN SIGN (&lt;) or an ambiguous ampersand. Some normal elements also have yet more restrictions on what content they are allowed to hold, beyond the restrictions imposed by the content model and those described in this paragraph. Those restrictions are described below.
+</p>
+
+<p>
+各~tagは、要素の名前を与える
+`~tag名@
+（ `tag name^en ）を包含する。
+どの~HTML要素も、その名前は`~ASCII英数字$のみからなる。
+~HTML構文においては、~tag名は，`外来の要素$に対しても`~ASCII大小無視$である
+— すなわち、すべてを小文字~化した結果が要素の~tag名に合致する限り，小文字, 大文字を混ぜて書いてもヨイ。
+◎
+Tags contain a tag name, giving the element's name. HTML elements all have names that only use ASCII alphanumerics. In the HTML syntax, tag names, even those for foreign elements, may be written with any mix of lower- and uppercase letters that, when converted to all-lowercase, matches the element's tag name; tag names are case-insensitive.
+</p>
+
+				<section id="start-tags">
+<h4 title="Start tags">12.1.2.1. 開始tag</h4>
+
+<p>
+`開始tag@
+（ `start  tag^en ）は、次に与える順の文字~並びでなければナラナイ：
+◎
+Start tags must have the following format:
+</p>
+
+<ol>
+	<li>
+`003C^U `&lt;^smb
+◎
+The first character of a start tag must be a U+003C LESS-THAN SIGN character (&lt;).
+</li>
+	<li>
+要素の`~tag名$を与える文字~並び
+◎
+The next few characters of a start tag must be the element's tag name.
+</li>
+	<li>
+<p>
+（属性たちを与える，） 0 個以上の［
+次に与える順の文字~並び
+］：
+</p>
+
+<ol ><li>1 個以上の`~ASCII空白$
+</li><li>1 個の属性
+— <a href="#syntax-attributes">そのための構文は下に述べる</a>。
+</li></ol>
+◎
+If there are to be any attributes in the next step, there must first be one or more ASCII whitespace.
+◎
+Then, the start tag may have a number of attributes, the syntax for which is described below. Attributes must be separated from each other by one or more ASCII whitespace.
+</li>
+	<li>
+0 個以上の`~ASCII空白$
+— ただし，場合によっては、最後の属性に 1 個以上の~ASCII空白を後続させることが要求される。
+下の
+<a href="#attributes-2">§ 属性</a>
+を見よ。
+◎
+After the attributes, or after the tag name if there are no attributes, there may be one or more ASCII whitespace. (Some attributes are required to be followed by a space. See the attributes section below.)
+</li>
+	<li>
+［
+`~void要素$／`外来の要素$
+］である場合に限り， 0 〜 1 個の ❝/
+— この文字を与えた場合
+⇒
+`~void要素$には効果はないが、`外来の要素$に対しては，開始tagを
+`自己閉じ@
+（ `self-closing^en ）にする。
+◎
+Then, if the element is one of the void elements, or if the element is a foreign element, then there may be a single U+002F SOLIDUS character (/). This character has no effect on void elements, but on foreign elements it marks the start tag as self-closing.
+</li>
+	<li>
+`003E^U `&gt;^smb 
+◎
+Finally, start tags must be closed by a U+003E GREATER-THAN SIGN character (&gt;).
+</li>
+</ol>
+
+				</section>
+				<section id="end-tags">
+<h4 title="End tags">12.1.2.2. 終了tag</h4>
+
+<p>
+`終了tag@
+（ `end tag^en ）は、次に与える順の文字~並びでなければナラナイ：
+◎
+End tags must have the following format:
+</p>
+
+<ol>
+	<li>
+`003C^U `&lt;^smb
+◎
+The first character of an end tag must be a U+003C LESS-THAN SIGN character (&lt;).
+</li>
+	<li>
+❝/
+◎
+The second character of an end tag must be a U+002F SOLIDUS character (/).
+</li>
+	<li>
+要素の`~tag名$を与える文字~並び
+◎
+The next few characters of an end tag must be the element's tag name.
+</li>
+	<li>
+0 個以上の`~ASCII空白$
+◎
+After the tag name, there may be one or more ASCII whitespace.
+</li>
+	<li>
+`003E^U `&gt;^smb
+◎
+Finally, end tags must be closed by a U+003E GREATER-THAN SIGN character (&gt;).
+</li>
+</ol>
+
+				</section>
+				<section id="attributes-2">
+<h4 title="Attributes">12.1.2.3. 属性</h4>
+
+<p>
+要素の
+`属性@
+（ `attribute^en ）は、要素の開始tagの内側にて表出される。
+各 属性は、名前と値を持つ：
+◎
+Attributes for an element are expressed inside the element's start tag.
+</p>
+
+<dl class="def-list">
+	<dt>`属性~名@ （ `attribute name^en ）</dt>
+	<dd>
+1 個以上の［
+次に挙げるもの以外の文字
+］からなっていなければナラナイ
+⇒＃
+`制御文字$,
+`0020^U SPACE,
+❝",
+❝',
+`003E^U `&gt;^smb,
+❝/,
+❝=,
+`非文字$
+◎
+Attributes have a name and a value. Attribute names must consist of one or more characters other than controls, U+0020 SPACE, U+0022 ("), U+0027 ('), U+003E (&gt;), U+002F (/), U+003D (=), and noncharacters.＼
+</dd>
+	<dd>
+~HTML構文においては、属性~名は
+— `外来の要素$であっても —
+［
+`~ASCII英小文字$, `~ASCII英大文字$
+］を混ぜて書いてもヨイ。
+◎
+In the HTML syntax, attribute names, even those for foreign elements, may be written with any mix of ASCII lower and ASCII upper alphas.
+</dd>
+
+	<dt>`属性~値@ （ `attribute value^en ）</dt>
+	<dd>
+`~text$と`文字~参照$の混在
+— ただし、~textは`多義的~ampersand$を包含できない。
+◎
+Attribute values are a mixture of text and character references, except with the additional restriction that the text cannot contain an ambiguous ampersand.
+</dd>
+</dl>
+
+<p>
+属性は、次の 4 通りの仕方で指定できる：
+◎
+Attributes can be specified in four different ways:
+</p>
+
+<dl>
+	<dt>
+空~属性~構文
+◎
+Empty attribute syntax
+</dt>
+	<dd>
+`属性~名$のみ。
+値は、暗黙的に空~文字列になる。
+◎
+Just the attribute name. The value is implicitly the empty string.
+</dd>
+	<dd class="example">
+<p>
+次の例の `disabled$a 属性は、空~属性~構文で与えられている：
+◎
+In the following example, the disabled attribute is given with the empty attribute syntax:
+</p>
+
+`attribute-1^xCode
+
+</dd>
+	<dd>
+◎
+↓If an attribute using the empty attribute syntax is to be followed by another attribute, then there must be ASCII whitespace separating the two.
+</dd>
+
+	<dt id="unquoted">
+引用符無しの属性~値~構文
+◎
+Unquoted attribute value syntax
+</dt>
+	<dd>
+<p>
+次に与える順の文字~並び：
+</p>
+
+<ol><li>`属性~名$
+</li><li>0 個以上の`~ASCII空白$
+</li><li>❝=
+</li><li>0 個以上の`~ASCII空白$
+</li><li>空でない`属性~値$であって，次に挙げる文字は包含しないもの
+⇒＃
+`~ASCII空白$,
+❝",
+❝',
+❝=,
+`003C^U `&lt;^smb,
+`003E^U `&gt;^smb,
+❝`
+</li></ol>
+
+◎
+The attribute name, followed by zero or more ASCII whitespace, followed by a single U+003D EQUALS SIGN character, followed by zero or more ASCII whitespace, followed by the attribute value, which, in addition to the requirements given above for attribute values, must not contain any literal ASCII whitespace, any U+0022 QUOTATION MARK characters ("), U+0027 APOSTROPHE characters ('), U+003D EQUALS SIGN characters (=), U+003C LESS-THAN SIGN characters (&lt;), U+003E GREATER-THAN SIGN characters (&gt;), or U+0060 GRAVE ACCENT characters (`), and must not be the empty string.
+</dd>
+	<dd class="example">
+<p>
+次の例の `value$a 属性は、引用符無しの属性~値~構文で与えられている：
+◎
+In the following example, the value attribute is given with the unquoted attribute value syntax:
+</p>
+
+`attribute-2^xCode
+
+	</dd>
+	<dd>
+この属性~構文を利用している属性に，［
+`開始tag$構文の［
+`~void要素$／`自己閉じ$
+］に許容される省略可能な ❝/
+］が後続する場合、その 2 つは`~ASCII空白$で分離されなければナラナイ。
+◎
+If an attribute using the unquoted attribute syntax is to be followed by another attribute or by the optional U+002F SOLIDUS character (/) allowed in step 6 of the start tag syntax above, then there must be ASCII whitespace separating the two.
+↓</dd>
+
+	<dt>
+一重引用符付き属性~値~構文
+◎
+Single-quoted attribute value syntax
+</dt>
+	<dd>
+<p>
+次に与える順の文字~並び：
+</p>
+
+<ol><li>`属性~名$
+</li><li>0 個以上の`~ASCII空白$
+</li><li>❝=
+</li><li>0 個以上の`~ASCII空白$
+</li><li>❝'
+</li><li>`属性~値$の要件を満たす文字列であって，~literal ❝' を包含しないもの
+</li><li>❝'
+</li></ol>
+
+◎
+The attribute name, followed by zero or more ASCII whitespace, followed by a single U+003D EQUALS SIGN character, followed by zero or more ASCII whitespace, followed by a single U+0027 APOSTROPHE character ('), followed by the attribute value, which, in addition to the requirements given above for attribute values, must not contain any literal U+0027 APOSTROPHE characters ('), and finally followed by a second single U+0027 APOSTROPHE character (').
+</dd>
+	<dd class="example">
+
+<p>
+次の例の `type$a 属性は、一重引用符付き属性~値~構文で与えられている：
+◎
+In the following example, the type attribute is given with the single-quoted attribute value syntax:
+</p>
+
+`attribute-3^xCode
+
+	</dd>
+	<dd>
+◎
+↓If an attribute using the single-quoted attribute syntax is to be followed by another attribute, then there must be ASCII whitespace separating the two.
+</dd>
+
+	<dt>
+二重引用符付き属性~値~構文
+◎
+Double-quoted attribute value syntax
+</dt>
+	<dd>
+<p>
+次に与える順の文字~並び：
+</p>
+
+<ol><li>`属性~名$
+</li><li>0 個以上の`~ASCII空白$
+</li><li>❝=
+</li><li>0 個以上の`~ASCII空白$
+</li><li>❝"
+</li><li>`属性~値$の要件を満たす文字列であって，~literal ❝" を包含しないもの
+</li><li>❝"
+</li></ol>
+
+◎
+The attribute name, followed by zero or more ASCII whitespace, followed by a single U+003D EQUALS SIGN character, followed by zero or more ASCII whitespace, followed by a single U+0022 QUOTATION MARK character ("), followed by the attribute value, which, in addition to the requirements given above for attribute values, must not contain any literal U+0022 QUOTATION MARK characters ("), and finally followed by a second single U+0022 QUOTATION MARK character (").
+</dd>
+	<dd class="example">
+<p>
+次の例の `name$a 属性は、二重引用符付き属性~値~構文で与えられている：
+◎
+In the following example, the name attribute is given with the double-quoted attribute value syntax:
+</p>
+
+`attribute-4^xCode
+
+	</dd>
+	<dd>
+◎
+↓If an attribute using the double-quoted attribute syntax is to be followed by another attribute, then there must be ASCII whitespace separating the two.
+</dd>
+</dl>
+
+<div class="p">
+<p>
+同じ開始tag内にある複数の属性は：
+</p>
+
+<ul>
+	<li>
+利用する属性~構文が何であれ、`~ASCII空白$で互いに分離されなければナラナイ。
+</li>
+	<li>
+互いの名前は`~ASCII大小無視$で合致してはナラナイ。
+</li>
+</ul>
+
+◎
+↑
+◎
+There must never be two or more attributes on the same start tag whose names are an ASCII case-insensitive match for each other.
+</div>
+
+<hr>
+
+<p>
+`外来の要素$が有する名前空間付き属性のうち，次の表の いずれかの行の
+( 1 列目, 2 列目 )
+に与える
+( 局所~名, 名前空間 )
+を持つものは、同じ行の 3 列目に与える名前として書かれなければナラナイ。
+◎
+When a foreign element has one of the namespaced attributes given by the local name and namespace of the first and second cells of a row from the following table, it must be written using the name given by the third cell from the same row.
+</p>
+
+<table><thead><tr><th>局所~名
+</th><th>名前空間
+</th><th>属性~名
+</th></tr></thead>
+
+<tbody><tr><td>`actuate^a
+</td><td>`~XLink名前空間$
+</td><td>`xlink:actuate^a
+</td></tr><tr><td>`arcrole^a
+</td><td>`~XLink名前空間$
+</td><td>`xlink:arcrole^a
+</td></tr><tr><td>`href^a
+</td><td>`~XLink名前空間$
+</td><td>`xlink:href^a
+</td></tr><tr><td>`role^a
+</td><td>`~XLink名前空間$
+</td><td>`xlink:role^a
+</td></tr><tr><td>`show^a
+</td><td>`~XLink名前空間$
+</td><td>`xlink:show^a
+</td></tr><tr><td>`title^a
+</td><td>`~XLink名前空間$
+</td><td>`xlink:title^a
+</td></tr><tr><td>`type^a
+</td><td>`~XLink名前空間$
+</td><td>`xlink:type^a
+</td></tr><tr><td>`lang^a
+</td><td>`~XML名前空間$
+</td><td>`xml:lang^a
+</td></tr><tr><td>`space^a
+</td><td>`~XML名前空間$
+</td><td>`xml:space^a
+</td></tr><tr><td>`xmlns^a
+</td><td>`~XMLNS名前空間$
+</td><td>`xmlns^a
+</td></tr><tr><td>`xlink^a
+</td><td>`~XMLNS名前空間$
+</td><td>`xmlns:xlink^a
+</td></tr></tbody></table>
+
+<p>
+`~HTML構文$においては、他の名前空間付き属性は表出できない。
+◎
+No other namespaced attribute can be expressed in the HTML syntax.
+</p>
+
+<p class="note">注記：
+上の表~内の属性が適合するかどうかは、他の仕様（例： `SVG 2^cite ／ `MathML^cite ）にて定義される。
+この節は、これらの属性が~HTML構文を利用して直列化された場合の構文~規則のみを述べる。
+◎
+Whether the attributes in the table above are conforming or not is defined by other specifications (e.g. SVG 2 and MathML); this section only describes the syntax rules if the attributes are serialized using the HTML syntax.
+</p>
+
+				</section>
+				<section id="optional-tags">
+<h4 title="Optional tags">12.1.2.4. 省略可能な~tag</h4>
+
+<p>
+ある種の~tagは
+`省略-@
+（ `omit^en ）できる。
+◎
+Certain tags can be omitted.
+</p>
+
+<p class="note">注記：
+下に述べる状況において，要素の`開始tag$を省略しても、要素が無いことを意味するものではない。
+それは黙示されるが，依然としてそこにある。
+例えば，~HTML文書には、根 `html$e 要素は常にある
+— 文字列 `&lt;html&gt;^l が~markup内のどこにも現れなくても。
+◎
+Omitting an element's start tag in the situations described below does not mean the element is not present; it is implied, but it is still there. For example, an HTML document always has a root html element, even if the string &lt;html&gt; doesn't appear anywhere in the markup.
+</p>
+
+<p>
+所与の要素の
+`直後の同胞@
+は、要素の親~内で要素の直後に現れる内容を指すとする
+— 要素~自身が親~内の最後の内容ならば無い。
+【この用語は、以下を簡潔に述べるために，この訳に導入している（用いるのはこの節のみ）】
+</p>
+
+<p>
+`html$e 要素の`開始tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+内側にある最初のものは`~comment$でない
+◎
+An html element's start tag may be omitted if the first thing inside the html element is not a comment.
+</p>
+
+<div class="example">
+
+<p>
+例えば次の事例では、 `&lt;html&gt;^l ~tagを除去してもかまわない：
+◎
+For example, in the following case it's ok to remove the "&lt;html&gt;" tag:
+</p>
+
+`optional-html-1^xCode
+
+<p>
+そうした結果の文書は、次の様になる：
+◎
+Doing so would make the document look like this:
+</p>
+
+`optional-html-2^xCode
+
+<p>
+これは、前と正確に同じ~DOMになる。
+特に、構文解析器は，`文書~要素$の前後にある空白を無視することに注意。
+次の例でも，正確に同じ~DOMが得られることになる：
+◎
+This has the exact same DOM. In particular, note that whitespace around the document element is ignored by the parser. The following example would also have the exact same DOM:
+</p>
+
+`optional-html-3^xCode
+
+<p>
+しかしながら，次の例では、開始tagを除去すると，~commentは `html$e 要素の前に移動する：
+◎
+However, in the following example, removing the start tag moves the comment to before the html element:
+</p>
+
+`optional-html-4^xCode
+
+<p>
+~tagが除去されたなら、文書は実際には次と同じに転化される：
+◎
+With the tag removed, the document actually turns into the same as this:
+</p>
+
+`optional-html-5^xCode
+
+<p>
+これが、~commentが後続しない場合に限り，~tagを除去できるわけである：
+~commentがある場合、~tagを除去すると，文書を構文解析した結果の~treeは変化する。
+もちろん，~commentの位置が~~問題にならないなら、~tagは省略できる
+— ~commentは、先ず開始tagの前に移動されたかのようになる。
+◎
+This is why the tag can only be removed if it is not followed by a comment: removing the tag when there is a comment there changes the document's resulting parse tree. Of course, if the position of the comment does not matter, then the tag can be omitted, as if the comment had been moved to before the start tag in the first place.
+</p>
+
+</div>
+
+<p>
+`html$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または`~comment$でない
+◎
+An html element's end tag may be omitted if the html element is not immediately followed by a comment.
+</p>
+
+<p>
+`head$e 要素の`開始tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+内側にある最初のものは、無い（要素は空）, または要素である
+◎
+A head element's start tag may be omitted if the element is empty, or if the first thing inside the head element is an element.
+</p>
+
+<p>
+`head$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または［
+`~ASCII空白$／`~comment$
+］でない
+◎
+A head element's end tag may be omitted if the head element is not immediately followed by ASCII whitespace or a comment.
+</p>
+
+<p>
+`body$e 要素の`開始tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+内側にある最初のものは、無い（要素は空）, または次のいずれでもない
+⇒
+`~ASCII空白$／`~comment$／［
+`meta$e ／ `link$e ／ `script$e ／ `style$e ／ `template$e
+］要素
+◎
+A body element's start tag may be omitted if the element is empty, or if the first thing inside the body element is not ASCII whitespace or a comment, except if the first thing inside the body element is a meta, link, script, style, or template element.
+</p>
+
+<p>
+`body$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または`~comment$でない
+◎
+A body element's end tag may be omitted if the body element is not immediately followed by a comment.
+</p>
+
+<div class="example">
+
+<p>
+上の例において、［
+`head$e 要素の開始tagと終了tag ／
+`body$e 要素の開始tag
+］は省略できないことに注意
+— それらの前／後には空白があるので：
+◎
+Note that in the example above, the head element start and end tags, and the body element start tag, can't be omitted, because they are surrounded by whitespace:
+</p>
+
+`optional-body-1^xCode
+
+<p>
+（
+`body$e ／ `html$e
+要素の終了tagは、~~問題無く省略できる
+— それらの後に空白があろうが， `body$e 要素の中にあるものとして構文解析されるので。）
+◎
+(The body and html element end tags could be omitted without trouble; any spaces after those get parsed into the body element anyway.)
+</p>
+
+<p>
+しかしながら，通例的には、空白は~~問題にならない。
+あらかじめ空白を除去してもかまわない：
+◎
+Usually, however, whitespace isn't an issue. If we first remove the whitespace we don't care about:
+</p>
+
+`optional-body-2^xCode
+
+<p>
+~DOMに影響することなく，いくつかの~tagを省略できる：
+◎
+Then we can omit a number of tags without affecting the DOM:
+</p>
+
+`optional-body-3^xCode
+
+<p>
+さらに、空白を追加し直すこともできる：
+◎
+At that point, we can also add some whitespace back:
+</p>
+
+`optional-body-4^xCode
+
+<p>
+これは、次の文書に等価になる
+— 省略された~tagは、構文解析器により黙示される位置に示されている。
+結果の空白~text~nodeは、 `head$e 要素の内側の終端にある改行文字のみになる：
+◎
+This would be equivalent to this document, with the omitted tags shown in their parser-implied positions; the only whitespace text node that results from this is the newline at the end of the head element:
+</p>
+
+`optional-body-5^xCode
+
+</div>
+
+<p>
+`li$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または `li$e 要素である
+◎
+An li element's end tag may be omitted if the li element is immediately followed by another li element or if there is no more content in the parent element.
+</p>
+
+<p>
+`dt$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または［
+`dt$e ／ `dd$e
+］要素である
+◎
+A dt element's end tag may be omitted if the dt element is immediately followed by another dt element or a dd element.
+</p>
+
+<p>
+`dd$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または［
+`dd$e ／ `dt$e
+］要素である
+◎
+A dd element's end tag may be omitted if the dd element is immediately followed by another dd element or a dt element, or if there is no more content in the parent element.
+</p>
+
+<div class="p">
+<p>
+`p$e 要素の`終了tag$は、要素が次のいずれかを満たすならば省略されてヨイ：
+</p>
+
+<ul>
+	<li>
+`直後の同胞$は、次のいずれかの要素である
+⇒
+`address$e ／ `article$e ／ `aside$e ／ `blockquote$e ／ `details$e ／ `div$e ／ `dl$e ／ `fieldset$e ／ `figcaption$e ／ `figure$e ／ `footer$e ／ `form$e ／ `h6$e ／ `h6$e ／ `h6$e ／ `h6$e ／ `h6$e ／ `h6$e ／ `header$e ／ `hgroup$e ／ `hr$e ／ `main$e ／ `menu$e ／ `nav$e ／ `ol$e ／ `p$e ／ `pre$e ／ `section$e ／ `table$e ／ `ul$e
+</li>
+	<li>
+［
+`直後の同胞$は無い
+］~AND［
+親は［
+`自律的~custom要素$ ／ 次に挙げるもの以外の`~HTML要素$
+］である
+］
+⇒
+`a$e ／ `audio$e ／ `del$e ／ `ins$e ／ `map$e ／ `noscript$e ／ `video$e
+</li>
+</ul>
+◎
+A p element's end tag may be omitted if the p element is immediately followed by an address, article, aside, blockquote, details, div, dl, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, main, menu, nav, ol, p, pre, section, table, or ul element, or if there is no more content in the parent element and the parent element is an HTML element that is not an a, audio, del, ins, map, noscript, or video element, or an autonomous custom element.
+</div>
+
+<div class="example">
+
+<p>
+したがって，先に掲げた例は、次の様に更に単純~化できる：
+◎
+We can thus simplify the earlier example further:
+</p>
+
+`optional-p-1^xCode
+
+</div>
+
+<p>
+`rt$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または［
+`rt$e ／ `rp$e
+］要素である
+◎
+An rt element's end tag may be omitted if the rt element is immediately followed by an rt or rp element, or if there is no more content in the parent element.
+</p>
+
+<p>
+`rp$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または［
+`rt$e ／ `rp$e
+］要素である
+◎
+An rp element's end tag may be omitted if the rp element is immediately followed by an rt or rp element, or if there is no more content in the parent element.
+</p>
+
+<p>
+`optgroup$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または［
+`optgroup$e 要素
+］である
+◎
+An optgroup element's end tag may be omitted if the optgroup element is immediately followed by another optgroup element, or if there is no more content in the parent element.
+</p>
+
+<p>
+`option$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または［
+`option$e ／ `optgroup$e
+］要素である
+◎
+An option element's end tag may be omitted if the option element is immediately followed by another option element, or if it is immediately followed by an optgroup element, or if there is no more content in the parent element.
+</p>
+
+<p>
+`colgroup$e 要素の`開始tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+［
+内側にある最初のものは `col$e 要素である
+］~AND［
+直前に［
+`終了tag$が省略された 別の `colgroup$e 要素
+］はない
+］（要素は空である場合、省略できない。）
+◎
+A colgroup element's start tag may be omitted if the first thing inside the colgroup element is a col element, and if the element is not immediately preceded by another colgroup element whose end tag has been omitted. (It can't be omitted if the element is empty.)
+</p>
+
+<p>
+`colgroup$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または［
+`~ASCII空白$／`~comment$
+］でない
+◎
+A colgroup element's end tag may be omitted if the colgroup element is not immediately followed by ASCII whitespace or a comment.
+</p>
+
+<p>
+`caption$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または［
+`~ASCII空白$／`~comment$
+］でない
+◎
+A caption element's end tag may be omitted if the caption element is not immediately followed by ASCII whitespace or a comment.
+</p>
+
+<p>
+`thead$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、［
+`tbody$e ／ `tfoot$e
+］要素である
+◎
+A thead element's end tag may be omitted if the thead element is immediately followed by a tbody or tfoot element.
+</p>
+
+<p>
+`tbody$e 要素の`開始tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+［
+内側にある最初のものは `tr$e 要素である
+］~AND［
+直前に［
+`終了tag$が省略された［
+`tbody$e ／ `thead$e ／ `tfoot$e
+］要素
+］はない
+］（要素は空である場合、省略できない。）
+◎
+A tbody element's start tag may be omitted if the first thing inside the tbody element is a tr element, and if the element is not immediately preceded by a tbody, thead, or tfoot element whose end tag has been omitted. (It can't be omitted if the element is empty.)
+</p>
+
+<p>
+`tbody$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または［
+`tbody$e ／ `tfoot$e
+］要素である
+◎
+A tbody element's end tag may be omitted if the tbody element is immediately followed by a tbody or tfoot element, or if there is no more content in the parent element.
+</p>
+
+<p>
+`tfoot$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い
+◎
+A tfoot element's end tag may be omitted if there is no more content in the parent element.
+</p>
+
+<p>
+`tr$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または［
+`tr$e 要素
+］である
+◎
+A tr element's end tag may be omitted if the tr element is immediately followed by another tr element, or if there is no more content in the parent element.
+</p>
+
+<p>
+`td$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または［
+`td$e ／ `th$e
+］要素である
+◎
+A td element's end tag may be omitted if the td element is immediately followed by a td or th element, or if there is no more content in the parent element.
+</p>
+
+<p>
+`th$e 要素の`終了tag$は、要素が次を満たすならば省略されてヨイ
+⇒
+`直後の同胞$は、無い, または［
+`td$e ／ `th$e
+］要素である
+◎
+A th element's end tag may be omitted if the th element is immediately followed by a td or th element, or if there is no more content in the parent element.
+</p>
+
+<div class="example">
+
+<p>
+これらの，~tableに関係する~tagを省略する能を用いれば、~table~markupはかなり簡素になる。
+例えば次の~markupに対しては：
+◎
+The ability to omit all these table-related tags makes table markup much terser.
+◎
+Take this example:
+</p>
+
+`optional-table-1^xCode
+
+<p>
+次の様に~mark-upしても、空白の有無の相違を除き，正確に同じ~tableになる：
+◎
+The exact same table, modulo some whitespace differences, could be marked up as follows:
+</p>
+
+`optional-table-2^xCode
+
+<p>
+この仕方により、~cellが占める場所はかなり減るので、各~rowを一行にまとめて，さらに簡素にできる：
+◎
+Since the cells take up much less room this way, this can be made even terser by having each row on one line:
+</p>
+
+`optional-table-3^xCode
+
+<p>
+これらの~tableの間の，~DOM~levelにおける唯一の相違は、（いずれの事例でも意味論的に無色な）空白の精確な位置になる。
+◎
+The only differences between these tables, at the DOM level, is with the precise position of the (in any case semantically-neutral) whitespace.
+</p>
+
+</div>
+
+<p>
+<strong>しかしながら</strong>、属性を有する`開始tag$は，決して省略して書き出されてはナラナイ。
+◎
+However, a start tag must never be omitted if it has any attributes.
+</p>
+
+<div class="example">
+
+<p>
+先に掲げた、すべての空白, すべての省略可能な~tagが除去された例に戻って：
+◎
+Returning to the earlier example with all the whitespace removed and then all the optional tags removed:
+</p>
+
+`optional-attr-1^xCode
+
+<p>
+この例にて，
+`body$e 要素は `class$a 属性を有していて,
+`html$e 要素は `lang$a 属性を有していた場合、~markupは次のようになる：
+◎
+If the body element in this example had to have a class attribute and the html element had to have a lang attribute, the markup would have to become:
+</p>
+
+`optional-attr-2^xCode
+
+</div>
+
+<p class="note">注記：
+この節は、当の文書は適合している
+— 特に，`内容~model$に対する違反はない —
+ものと見做している。
+文書がこの仕様に述べた`内容~model$に適合しない場合、文書~内の~tagを この節にて述べた流儀で省略した結果は，予期されない~DOMの相違をもたらす可能性が高い（内容~modelは、ある程度，これを避けるよう設計されている）。
+◎
+This section assumes that the document is conforming, in particular, that there are no content model violations. Omitting tags in the fashion described in this section in a document that does not conform to the content models described in this specification is likely to result in unexpected DOM differences (this is, in part, what the content models are designed to avoid).
+</p>
+
+				</section>
+				<section id="element-restrictions">
+<h4 title="Restrictions on content models">12.1.2.5. 内容~modelに課される制約</h4>
+
+<p>
+歴史的な理由から、ある種の要素には，その内容~modelに与えた制約を超えるような更なる制約がある。
+◎
+For historical reasons, certain elements have extra restrictions beyond even the restrictions given by their content model.
+</p>
+
+<p>
+`table$e 要素は `tr$e 要素を~~直に包含してはナラナイ
+— `tr$e 要素は、形上では，この仕様に述べた内容~modelに則って `table$e 要素の内側に許容されているが。
+（~markup内で `tr$e 要素が `table$e の内側に~~直に置かれた場合、その前に `tbody$e 開始tagを黙示することになる。）
+◎
+A table element must not contain tr elements, even though these elements are technically allowed inside table elements according to the content models described in this specification. (If a tr element is put inside a table in the markup, it will in fact imply a tbody start tag before it.)
+</p>
+
+<p>
+［
+`pre$e ／ `textarea$e
+］要素の`開始tag$の直後には、 1 個の`改行文字$が置かれてもヨイ。
+これは、要素の処理に影響しない
+— すなわち，要素の内容には含まれない。
+これ以外の後続の`改行文字$は、要素の内容に<em>含められる</em>モノトスル（さもなければ， 内容~内の頭部の改行文字は、省略可能な改行文字の様に扱われ，無視されることになるので）。
+◎
+A single newline may be placed immediately after the start tag of pre and textarea elements. This does not affect the processing of the element. The otherwise optional newline must be included if the element's contents themselves start with a newline (because otherwise the leading newline in the contents would be treated like the optional newline, and ignored).
+</p>
+
+<div class="example">
+
+<p>
+次の 2 個の `pre$e ~blockは、等価になる：
+◎
+The following two pre blocks are equivalent:
+</p>
+
+`content-1^xCode
+
+`content-2^xCode
+
+</div>
+
+				</section>
+				<section id="cdata-rcdata-restrictions">
+<h4 title="Restrictions on the contents of raw text and escapable raw text elements">12.1.2.6. 生~text要素／~escape可能な生~text要素の内容に課される制約</h4>
+
+<div class="p">
+<p>
+［
+`生~text要素$／`~escape可能な生~text要素$
+］内の~textは、次に与える順の文字~並びを包含してはナラナイ：
+</p>
+
+<ol><li>`003C^U `&lt;^smb
+</li><li>❝/
+</li><li>要素の~tag名に`~ASCII大小無視$で合致する文字~並び
+</li><li>`~ASCII空白$ ／ `003E^U `&gt;^smb ／ ❝/
+</li></ol>
+
+◎
+The text in raw text and escapable raw text elements must not contain any occurrences of the string "&lt;/" (U+003C LESS-THAN SIGN, U+002F SOLIDUS) followed by characters that case-insensitively match the tag name of the element followed by one of U+0009 CHARACTER TABULATION (tab), U+000A LINE FEED (LF), U+000C FORM FEED (FF), U+000D CARRIAGE RETURN (CR), U+0020 SPACE, U+003E GREATER-THAN SIGN (&gt;), or U+002F SOLIDUS (/).
+</div>
+
+				</section>
+			</section>
+			<section id="text-2">
+<h3 title="Text">12.1.3. ~text</h3>
+
+<p>
+`~text@
+（ `text^en ）は、［
+`要素$／ `属性~値$ ／ `~comment$
+］の内側に許容される。
+加えて，他の節にて述べられるように、~textが置かれる所に基づいて，
+~text内に何が許容され何が許容されないかの拘束が更に課される。
+◎
+Text is allowed inside elements, attribute values, and comments. Extra constraints are placed on what is and what is not allowed in text based on where the text is to be put, as described in the other sections.
+</p>
+
+				<section id="newlines">
+<h4 title="Newlines">12.1.3.1. 改行文字</h4>
+
+<div class="p">
+<p>
+~HTMLにおける
+`改行文字@
+（ `newline^en ）は、次のいずれかで表現されてもヨイ：
+</p>
+
+<ul ><li>`000D^U CARRIAGE RETURN `CR^smb
+</li><li>`000A^U LINE FEED `LF^smb
+</li><li>
+<p>
+次に与える順の文字~並び：
+</p>
+	<ol><li>`000D^U `CR^smb
+	</li><li>`000A^U `LF^smb
+	</li></ol>
+</li></ul>
+
+◎
+Newlines in HTML may be represented either as U+000D CARRIAGE RETURN (CR) characters, U+000A LINE FEED (LF) characters, or pairs of U+000D CARRIAGE RETURN (CR), U+000A LINE FEED (LF) characters in that order.
+</div>
+
+<p>
+`文字~参照$が許容される所では、
+`000A^U `LF^smb を表す文字~参照も`改行文字$を表現する（が、
+`000D^U `CR^smb 表す文字~参照はそうでない）。
+◎
+Where character references are allowed, a character reference of a U+000A LINE FEED (LF) character (but not a U+000D CARRIAGE RETURN (CR) character) also represents a newline.
+</p>
+
+				</section>
+			</section>
+			<section id="character-references">
+<h3 title="Character references">12.1.4. 文字~参照</h3>
+
+<p>
+他の節にて述べたある種の事例においては、`~text$には
+`文字~参照@
+（ `character reference^en ）を混ぜてもヨイ。
+これを利用すれば、さもなければ`~text$内に合法に含めれない文字を~escapeできる。
+◎
+In certain cases described in other sections, text may be mixed with character references. These can be used to escape characters that couldn't otherwise legally be included in text.
+</p>
+
+<p>
+文字~参照は、
+`0026^U `&amp;^smb 
+から開始され，次の 3 種いずれかが後続していなければナラナイ：
+◎
+Character references must start with a U+0026 AMPERSAND character (&amp;). Following this, there are three possible kinds of character references:
+</p>
+
+<dl>
+	<dt>
+有名~文字~参照：
+◎
+Named character references
+</dt>
+	<dd>
+<p>
+次に与える順の文字~並び：
+</p>
+
+<ol><li>§ `有名~文字~参照$に与えるいずれかの名前（文字大小は区別される）
+</li><li>❝;
+</li></ol>
+
+◎
+The ampersand must be followed by one of the names given in the named character references section, using the same case. The name must be one that is terminated by a U+003B SEMICOLON character (;).
+</dd>
+
+	<dt>
+10 進~数量-文字~参照：
+◎
+Decimal numeric character reference
+</dt>
+	<dd>
+<p>
+次に与える順の文字~並び：
+</p>
+
+<ol><li>❝#
+</li><li>1 個以上の`~ASCII数字$からなる並びであって，［
+下の定義に則って許容される符号位置
+］に対応する基数 10 の整数を表現するもの
+</li><li>❝;
+</li></ol>
+
+◎
+The ampersand must be followed by a U+0023 NUMBER SIGN character (#), followed by one or more ASCII digits, representing a base-ten integer that corresponds to a code point that is allowed according to the definition below. The digits must then be followed by a U+003B SEMICOLON character (;).
+</dd>
+
+	<dt>
+16 進~数量-文字~参照：
+◎
+Hexadecimal numeric character reference
+</dt>
+	<dd>
+<p>
+次に与える順の文字~並び：
+</p>
+
+<ol><li>❝#
+</li><li>［
+❝x ／ ❝X
+］
+</li><li>1 個以上の`~ASCII~hex数字$からなる並びであって，［
+下の定義に則って許容される符号位置
+］に対応する基数 16 の整数を表現するもの
+</li><li>❝;
+</li></ol>
+
+◎
+The ampersand must be followed by a U+0023 NUMBER SIGN character (#), which must be followed by either a U+0078 LATIN SMALL LETTER X character (x) or a U+0058 LATIN CAPITAL LETTER X character (X), which must then be followed by one or more ASCII hex digits, representing a hexadecimal integer that corresponds to a code point that is allowed according to the definition below. The digits must then be followed by a U+003B SEMICOLON character (;).
+</dd>
+</dl>
+
+<p>
+上に述べた［
+数量-文字~参照
+］の形では、次を除く符号位置を参照することが許容される
+⇒
+`000D^U `CR^smb ／ `非文字$ ／［
+`制御文字$のうち`~ASCII空白$でないもの
+］
+◎
+The numeric character reference forms described above are allowed to reference any code point excluding U+000D CR, noncharacters, and controls other than ASCII whitespace.
+</p>
+
+<div class="p">
+<p>
+`0026^U `&amp;^smb は、次に与える順の文字~並びが後続するならば，
+`多義的~ampersand@
+（ `ambiguous ampersand^en ）とされる：
+</p>
+
+<ol ><li>1 個以上の`~ASCII英数字$からなる並びであって，
+§ `有名~文字~参照$に与えるどの名前にも合致しないもの
+</li><li>❝;
+</li></ol>
+◎
+An ambiguous ampersand is a U+0026 AMPERSAND character (&amp;) that is followed by one or more ASCII alphanumerics, followed by a U+003B SEMICOLON character (;), where these characters do not match any of the names given in the named character references section.
+</div>
+
+			</section>
+			<section id="cdata-sections">
+<h3 title="CDATA sections">12.1.5. ~CDATAsec</h3>
+
+<p>
+`~CDATAsec@
+（ `CDATA section^en ）は、次に与える順の文字~並びでなければナラナイ：
+◎
+CDATA sections must consist of the following components, in this order:
+</p>
+
+<ol>
+	<li>
+文字列  `&lt;![CDATA[^l
+◎
+The string "&lt;![CDATA[".
+</li>
+	<li>
+0 〜 1 個の［
+`~text$であって，文字列 `]]&gt;^l を包含しないもの
+］
+◎
+Optionally, text, with the additional restriction that the text must not contain the string "]]&gt;".
+</li>
+	<li>
+文字列 `]]&gt;^l
+◎
+The string "]]&gt;".
+</li>
+</ol>
+
+<div class="example">
+
+<p>
+~CDATAsecを利用できるのは、外来の内容（~MathML／~SVG）内に限られる。
+この例では、~CDATAsecを利用して，~MathML `ms$e 要素の内容を~escapeしている：
+◎
+CDATA sections can only be used in foreign content (MathML or SVG). In this example, a CDATA section is used to escape the contents of a MathML ms element:
+</p>
+
+`CDATA-1^xCode
+
+</div>
+
+			</section>
+			<section id="comments">
+<h3 title="Comments">12.1.6. ~comment</h3>
+
+<p>
+`~comment@
+（ `comment^en ）は、次に与える順の文字~並びでなければナラナイ：
+◎
+Comments must have the following format:
+</p>
+
+<ol>
+	<li>
+文字列 `&lt;!--^l
+◎
+The string "&lt;!--".
+</li>
+	<li>
+<p>
+次をすべて満たすような`~text$：
+</p>
+
+<ul ><li>`&gt;^l  から開始しない
+</li><li>`-&gt;^l から開始しない
+</li><li>`&lt;!--^l を包含しない
+</li><li>`--&gt;^l を包含しない
+</li><li>`--!&gt;^l を包含しない
+</li><li>`&lt;!-^l で終端しない
+</li></ul>
+
+<p>
+（特に，空~文字列はこれらを満たす）
+</p>
+
+◎
+Optionally, text, with the additional restriction that the text must not start with the string "&gt;", nor start with the string "-&gt;", nor contain the strings "&lt;!--", "--&gt;", or "--!&gt;", nor end with the string "&lt;!-".
+</li>
+	<li>
+文字列 `--&gt;^l
+◎
+The string "--&gt;".
+</li>
+</ol>
+
+<p class="note">注記：
+`~text$は
+文字列 `&lt;!^l で終端することは
+許容される
+— 次の様に：
+`&lt;!--お気に入りの演算子は： &gt; と &lt;!--&gt;^c
+◎
+The text is allowed to end with the string "&lt;!", as in &lt;!--My favorite operators are &gt; and &lt;!--&gt;.
+</p>
+
+			</section>
+		</section>
+		<section id="parsing">
+<h2 title="Parsing HTML documents">12.2. ~HTML文書の構文解析-法</h2>
+
+<p class="trans-note">【
+この節の内容は、<a href="~HTMLparsing#parsing">別ページ</a>にて。
+】</p>
+
+		</section>
+		<section id="serialising-html-fragments">
+<h2 title="Serializing HTML fragments">12.3. ~HTML素片の直列化-法</h2>
+
+<p>
+以下の~algoの目的において，
+`~voidとして直列化する要素@
+とは、次に挙げる要素~型の総称である
+⇒
+`~void要素$, `basefont$e, `bgsound$e, `frame$e, `keygen$e
+◎
+For the purposes of the following algorithm, an element serializes as void if its element type is one of the void elements, or is basefont, bgsound, frame, or keygen.
+</p>
+
+<div class="algorithm">
+<p>
+`~HTML素片~直列化~algo@
+は、所与の ~DOM［
+`Element$I ／ `Document$I ／ `DocumentFragment$I
+］~node %~node に対し，文字列を返す：
+◎
+The following steps form the HTML fragment serialization algorithm. The algorithm takes as input a DOM Element, Document, or DocumentFragment referred to as the node, and returns a string.
+</p>
+
+<p class="note">注記：
+この~algoは、 %~node 自身ではなく，その<em>子たち</em>を直列化する。
+◎
+This algorithm serializes the children of the node being serialized, not the node itself.
+</p>
+
+<ol>
+	<li>
+~IF［
+%~node は`~voidとして直列化する要素$である
+］
+⇒
+~RET 空~文字列
+◎
+If the node serializes as void, then return the empty string.
+</li>
+	<li>
+%s ~LET 空~文字列
+◎
+Let s be a string, and initialize it to the empty string.
+</li>
+	<li>
+~IF［
+%~node は `template$e 要素である
+］
+⇒
+%~node ~SET %~node の`~template内容$（ `DocumentFragment$I ~node ）
+◎
+If the node is a template element, then let the node instead be the template element's template contents (a DocumentFragment node).
+</li>
+	<li>
+%~node の~EACH( 子~node %現~node ) に対し，`~tree順序$で
+⇒
+%s に［
+下に与える %現~node を “直列化する下位手続き” を走らせた結果
+］を付加する
+◎
+For each child node of the node, in tree order, run the following steps:
+◎
+Let current node be the child node being processed.
+◎
+Append the appropriate string from the following list to s:
+</li>
+	<li>
+~RET %s
+◎
+↓↓</li>
+</ol>
+
+</div>
+
+<div class="algorithm">
+<p>
+上の目的における %現~node を “直列化する下位手続き” は、
+%現~node に応じて，次を走らす：
+◎
+↑</p>
+
+<dl class="switch">
+	<dt>`Element^I である
+◎
+If current node is an Element
+</dt>
+	<dd>
+		<ol>
+			<li>
+%結果 ~LET 空~文字列
+◎
+↓</li>
+			<li>
+%~tag名 ~LET ［
+%現~node は［
+`~HTML名前空間$ ／ `~MathML名前空間$ ／ `~SVG名前空間$
+］に属するならば %現~node の局所~名 ／
+~ELSE_ %現~nodeの有修飾~名
+］
+◎
+If current node is an element in the HTML namespace, the MathML namespace, or the SVG namespace, then let tagname be current node's local name. Otherwise, let tagname be current node's qualified name.
+</li>
+			<li>
+%結果 に `003C^U `&lt;^smb を付加する
+◎
+↓</li>
+			<li>
+<p>
+%結果 に %~tag名 を付加する
+◎
+Append a U+003C LESS-THAN SIGN character (&lt;), followed by tagname.
+</p>
+
+<p class="note">注記：
+［
+`~HTML構文解析器$ ／ `createElement()$m
+］により作成された`~HTML要素$に対しては、
+%~tag名 は小文字になる。
+◎
+For HTML elements created by the HTML parser or createElement(), tagname will be lowercase.
+</p>
+			</li>
+			<li>
+<p>
+~IF［
+%現~node の`~is0値$ ~NEQ ~NULL
+］~AND［
+%現~node は `is$a 属性を有さない
+<!-- ＊does not have an is attribute in its attribute list -->
+］
+⇒
+%結果 に次に与える文字~並びを順に付加する：
+</p>
+<ol><li>` is="^l
+</li><li>%現~node の`~is0値$を`属性~mode^iの下で`~escape$した結果
+</li><li>`0022^U `"^smb
+</li></ol>
+
+◎
+If current node's is value is not null, and the element does not have an is attribute in its attribute list, then append the string " is="", followed by current node's is value escaped as described below in attribute mode, followed by a U+0022 QUOTATION MARK character (").
+</li>
+			<li>
+<div >
+<p>
+%現~node が有する ~EACH( 属性 %属性 ) に対し
+⇒
+%結果 に次に与える文字~並びを順に付加する：
+</p>
+
+<ol><li>`0020^U SPACE
+</li><li>%属性 の`直列形の名前$
+</li><li>❝=
+</li><li>❝"
+</li><li>%属性 の値を`属性~mode^iの下で`~escape$した結果
+</li><li>❝"
+</li></ol>
+
+◎
+For each attribute that the element has, append a U+0020 SPACE character, the attribute's serialized name as described below, a U+003D EQUALS SIGN character (=), a U+0022 QUOTATION MARK character ("), the attribute's value, escaped as described below in attribute mode, and a second U+0022 QUOTATION MARK character (").
+</div>
+
+<p>
+この段の目的における %属性 の
+`直列形の名前@
+は、 %属性 が属する名前空間に応じて，次を返すモノトスル：
+◎
+An attribute's serialized name for the purposes of the previous paragraph must be determined as follows:
+</p>
+		<dl class="switch">
+			<dt>なし
+◎
+If the attribute has no namespace
+</dt>
+			<dd>
+%属性 の局所~名
+◎
+The attribute's serialized name is the attribute's local name.
+</dd>
+			<dd class="note">注記：
+`~HTML要素$において，［
+`~HTML構文解析器$ ／ `setAttribute()$m
+］により設定された属性に対しては、局所~名は小文字になる。
+◎
+For attributes on HTML elements set by the HTML parser or by setAttribute(), the local name will be lowercase.
+</dd>
+			<dt>`~XML名前空間$
+◎
+If the attribute is in the XML namespace
+</dt>
+			<dd>
+<p>
+次に与える順の文字~並び：
+</p>
+
+<ol ><li>文字列 `xml:^l
+</li><li>%属性 の局所~名
+</li></ol>
+
+◎
+The attribute's serialized name is the string "xml:" followed by the attribute's local name.
+</dd>
+
+			<dt>`~XMLNS名前空間$</dt>
+			<dd>
+<p>
+%属性 の局所~名 ~EQ `xmlns^c ならば 文字列 `xmlns^l ／
+~ELSE_ 次に与える順の文字~並び：
+</p>
+
+<ol ><li>文字列 `xmlns:^l
+</li><li>%属性 の局所~名
+</li></ol>
+
+◎
+If the attribute is in the XMLNS namespace and the attribute's local name is xmlns
+◎
+The attribute's serialized name is the string "xmlns".
+◎
+If the attribute is in the XMLNS namespace and the attribute's local name is not xmlns
+◎
+The attribute's serialized name is the string "xmlns:" followed by the attribute's local name.
+</dd>
+
+			<dt>`~XLink名前空間$
+◎
+If the attribute is in the XLink namespace
+</dt>
+			<dd>
+<p>
+次に与える順の文字~並び：
+</p>
+
+<ol ><li>文字列 `xlink:^l
+</li><li>%属性 の局所~名
+</li></ol>
+
+◎
+The attribute's serialized name is the string "xlink:" followed by the attribute's local name.
+</dd>
+			<dt>その他の名前空間
+◎
+If the attribute is in some other namespace
+</dt>
+			<dd>
+%属性 の有修飾~名
+◎
+The attribute's serialized name is the attribute's qualified name.
+</dd>
+		</dl>
+
+<p>
+属性たちの正確な順序は`実装定義$であり，元の~markupにて属性が与えられた順序などの要因にも依存し得るが、~sort順序は，安定的
+— すなわち、要素に対しこの~algoを続けて呼出しても，属性たちが直列化される順序は同じ —
+にするモノトスル。
+◎
+While the exact order of attributes is implementation-defined, and may depend on factors such as the order that the attributes were given in the original markup, the sort order must be stable, such that consecutive invocations of this algorithm serialize an element's attributes in the same order.
+</p>
+			</li>
+			<li>
+%結果 に `003E^U `&gt;^smb を付加する
+◎
+Append a U+003E GREATER-THAN SIGN character (&gt;).
+</li>
+			<li>
+~IF［
+%現~node は`~voidとして直列化する要素$である
+］
+⇒
+~RET %結果
+◎
+If current node serializes as void, then continue on to the next child node at this point.
+</li>
+			<li>
+<p>
+%結果 に次に与える順の文字~並びを付加する：
+</p>
+
+<ol><li>%現~node に対し`~HTML素片~直列化~algo$を（再帰的に）走らせた結果
+</li><li>`003C^U `&lt;^smb
+</li><li>❝/
+</li><li>%~tag名
+</li><li>`003E^U `&gt;^smb
+</li></ol>
+
+◎
+Append the value of running the HTML fragment serialization algorithm on the current node element (thus recursing into this algorithm for that element), followed by a U+003C LESS-THAN SIGN character (&lt;), a U+002F SOLIDUS character (/), tagname again, and finally a U+003E GREATER-THAN SIGN character (&gt;).
+</li>
+			<li>
+~RET %結果
+◎
+↑</li>
+		</ol>
+	</dd>
+
+	<dt>`Text^I である
+◎
+If current node is a Text node
+</dt>
+	<dd>
+		<ol>
+			<li>
+%data ~LET %現~node の `data^m ~IDL属性の値
+</li>
+			<li>
+~IF［
+%現~node の親は［
+`style$e ／ `script$e ／ `xmp$e ／ `iframe$e ／ `noembed$e ／ `noframes$e ／ `plaintext$e
+］要素である
+］
+⇒
+~RET %data
+</li>
+			<li>
+~IF［
+%現~node の親は `noscript$e 要素である
+］~AND［
+%現~node に対する`~scriptingは可能化-$されている
+］
+⇒
+~RET %data
+</li>
+			<li>
+~RET %data を`~escape$した結果
+</li>
+		</ol>
+◎
+If the parent of current node is a style, script, xmp, iframe, noembed, noframes, or plaintext element, or if the parent of current node is a noscript element and scripting is enabled for the node, then append the value of current node's data IDL attribute literally.
+◎
+Otherwise, append the value of current node's data IDL attribute, escaped as described below.
+</dd>
+
+	<dt>`Comment^I である
+◎
+If current node is a Comment
+</dt>
+	<dd>
+<p>
+~RET 次に与える順の文字~並び
+</p>
+<ol><li>`003C^U `&lt;^smb
+</li><li>❝!
+</li><li>❝-
+</li><li>❝-
+</li><li>%現~node の `data^m ~IDL属性の値
+</li><li>❝-
+</li><li>❝-
+</li><li>`003E^U `&gt;^smb
+</li></ol>
+◎
+Append the literal string "&lt;!--" (U+003C LESS-THAN SIGN, U+0021 EXCLAMATION MARK, U+002D HYPHEN-MINUS, U+002D HYPHEN-MINUS), followed by the value of current node's data IDL attribute, followed by the literal string "--&gt;" (U+002D HYPHEN-MINUS, U+002D HYPHEN-MINUS, U+003E GREATER-THAN SIGN).
+</dd>
+
+	<dt>`ProcessingInstruction^I である
+◎
+If current node is a ProcessingInstruction
+</dt>
+	<dd>
+<p>
+~RET 次に与える順の文字~並び：
+</p>
+
+<ol><li>`003C^U `&lt;^smb
+</li><li>❝?
+</li><li>%現~node の `target^m ~IDL属性の値
+</li><li>`0020^U SPACE
+</li><li>%現~node の `data^m ~IDL属性の値
+</li><li>`003E^U `&gt;^smb
+</li></ol>
+◎
+Append the literal string "&lt;?" (U+003C LESS-THAN SIGN, U+003F QUESTION MARK), followed by the value of current node's target IDL attribute, followed by a single U+0020 SPACE character, followed by the value of current node's data IDL attribute, followed by a single U+003E GREATER-THAN SIGN character (&gt;).
+</dd>
+
+	<dt>`DocumentType^I である
+◎
+If current node is a DocumentType
+</dt>
+	<dd>
+<p>
+~RET 次に与える順の文字~並び：
+</p>
+
+<ol><li>`003C^U `&lt;^smb
+</li><li>❝!
+</li><li>❝D
+</li><li>❝O
+</li><li>❝C
+</li><li>❝T
+</li><li>❝Y
+</li><li>❝P
+</li><li>❝E
+</li><li>`0020^U SPACE
+</li><li>%現~node の `name^m ~IDL属性の値
+</li><li>`003E^U `&gt;^smb
+</li></ol>
+
+◎
+Append the literal string "&lt;!DOCTYPE" (U+003C LESS-THAN SIGN, U+0021 EXCLAMATION MARK, U+0044 LATIN CAPITAL LETTER D, U+004F LATIN CAPITAL LETTER O, U+0043 LATIN CAPITAL LETTER C, U+0054 LATIN CAPITAL LETTER T, U+0059 LATIN CAPITAL LETTER Y, U+0050 LATIN CAPITAL LETTER P, U+0045 LATIN CAPITAL LETTER E), followed by a space (U+0020 SPACE), followed by the value of current node's name IDL attribute, followed by the literal string "&gt;" (U+003E GREATER-THAN SIGN).
+</dd>
+</dl>
+
+<p>
+◎
+Return s.
+</p>
+
+</div>
+
+<p class="warning">
+`~HTML素片~直列化~algo$の出力を`~HTML構文解析器$で構文解析した結果は、元の~tree構造にならない~~可能性もある。
+直列化して再解析する段を往来しないような~tree構造は、`~HTML構文解析器$ 自身からも生産され得る
+— そのような事例は、概して，適合していないが。
+◎
+It is possible that the output of this algorithm, if parsed with an HTML parser, will not return the original tree structure. Tree structures that do not roundtrip a serialize and reparse step can also be produced by the HTML parser itself, although such cases are typically non-conforming.
+</p>
+
+<div class="example">
+
+<p>
+一例として， `textarea$e 要素に `Comment^I ~nodeが付加されていた場合、要素を直列化して再解析した結果の~commentは，~text~control内に表示されることになる。
+同様に、~DOM操作による結果，要素が［
+文字列 `--&gt;^l をそのまま包含するような~comment
+］を包含する場合、要素を直列化して再解析した結果の~commentは，その地点で切落され、残りの部分は~markupとして解釈されることになる。
+他にも、
+`script$e 要素に文字列 `&lt;/script&gt;^l を伴う `Text$I ~nodeを包含させた場合や，
+`p$e 要素に `ul$e 要素を包含させた場合などが挙げられる（ `ul$e 要素の`開始tag$は `p$e に対する終了tagを黙示するので）。
+◎
+For instance, if a textarea element to which a Comment node has been appended is serialized and the output is then reparsed, the comment will end up being displayed in the text control. Similarly, if, as a result of DOM manipulation, an element contains a comment that contains the literal string "--&gt;", then when the result of serializing the element is parsed, the comment will be truncated at that point and the rest of the comment will be interpreted as markup. More examples would be making a script element contain a Text node with the text string "&lt;/script&gt;", or having a p element that contains a ul element (as the ul element's start tag would imply the end tag for the p).
+</p>
+
+<p>
+これは、~XSS攻撃を可能化し得る。
+例えば，ある~pageにおいて、利用者に何らかの~font-family名を手入力してもらい，それを~DOMを介して ~CSS `style$e ~blockの中に挿入してから， `innerHTML$m ~IDL属性を利用して `style$e 要素の~HTML直列化を取得しているとする。
+利用者が~font-family名として
+`&lt;/style&gt;&lt;script&gt;<var>攻撃~code</var>&lt;/script&gt;^l 
+を手入力した場合、 `innerHTML$m は［
+他の文脈にて構文解析されたときには，元の~DOM内には存在しない `script$e ~nodeを包含することになる
+］ような~markupを返すことになる。
+◎
+This can enable cross-site scripting attacks. An example of this would be a page that lets the user enter some font family names that are then inserted into a CSS style block via the DOM and which then uses the innerHTML IDL attribute to get the HTML serialization of that style element: if the user enters "&lt;/style&gt;&lt;script&gt;attack&lt;/script&gt;" as a font family name, innerHTML will return markup that, if parsed in a different context, would contain a script node, even though no script node existed in the original DOM.
+</p>
+
+</div>
+
+<div class="example">
+
+<p>
+例えば、次の~markupを考える：
+◎
+For example, consider the following markup:
+</p>
+
+`serializing-1^xCode
+
+<p>
+これを構文解析した結果は次になる：
+◎
+This will be parsed into:
+</p>
+
+<ul class="domTree"><li>`html$e
+	<ul><li>`head$e
+	</li><li>`body$e
+		<ul><li>`form$e `id$a=`outer^l
+			<ul><li>`div$e
+				<ul><li>`form$e `id$a=`inner^l
+					<ul><li>`input$e
+					</li></ul>
+				</li></ul>
+			</li></ul>
+		</li></ul>
+	</li></ul>
+</li></ul>
+
+<p>
+`input$e 要素は、内縁 `form$e 要素（ `inner^l ）に所有されることになる。
+ここで，この~tree構造が直列化され再解析された場合、開始tag
+`&lt;form id="inner"&gt;^e
+は無視されることになり，
+`input$e 要素は 外縁 `form$e 要素に所有されることになる。
+◎
+The input element will be associated with the inner form element. Now, if this tree structure is serialized and reparsed, the &lt;form id="inner"&gt; start tag will be ignored, and so the input element will be associated with the outer form element instead.
+</p>
+
+`serializing-2^xCode
+
+<ul class="domTree"><li>`html$e
+	<ul><li>`head$e
+	</li><li>`body$e
+		<ul><li>`form$e `id$a=`outer^l
+			<ul><li>`div$e
+				<ul><li>`input$e
+				</li></ul>
+			</li></ul>
+		</li></ul>
+	</li></ul>
+</li></ul>
+
+</div>
+
+<div class="example">
+
+<p>
+別の例として、次の~markupを考える：
+◎
+As another example, consider the following markup:
+</p>
+
+`serializing-3^xCode
+
+<p>
+これを構文解析した結果は次になる：
+◎
+This will be parsed into:
+</p>
+
+<ul class="domTree"><li>`html$e
+	<ul><li>`head$e
+	</li><li>`body$e
+		<ul><li>`a$e
+			<ul><li>`a$e
+			</li><li>`table$e
+			</li></ul>
+		</li></ul>
+	</li></ul>
+</li></ul>
+
+<p>
+すなわち、2 個の `a$e 要素は入子にされる
+— 2 個目の `a$e は`親が違えられ$るので。
+直列化して再解析する往来~後には、［
+`table$e, 2 個の `a$e
+］要素は，互いに同胞になる
+— 2 個目の開始tag `&lt;a&gt;^c が， 1 個目の `a$e 要素を暗黙的に閉じるので。
+◎
+That is, the a elements are nested, because the second a element is foster parented. After a serialize-reparse roundtrip, the a elements and the table element would all be siblings, because the second &lt;a&gt; start tag implicitly closes the first a element.
+</p>
+
+`serializing-4^xCode
+
+<ul class="domTree"><li>`html$e
+	<ul><li>`head$e
+	</li><li>`body$e
+		<ul><li>`a$e
+		</li><li>`a$e
+		</li><li>`table$e
+		</li></ul>
+	</li></ul>
+</li></ul>
+
+</div>
+
+<p>
+歴史的な理由から、この~algoでは，［
+`pre$e ／ `textarea$e ／ `listing$e
+］要素~内の先頭の `000A^U `LF^smb 文字は往来しない
+— ~markupが適合していようが（廃用にされた `listing^e は適合し得ないが）。
+`~HTML構文解析器$は、構文解析-時にそのような文字を落とすことになるが、この~algoは，落とされた `000A^U `LF^smb を直列化する<em>ことはない</em>。
+◎
+For historical reasons, this algorithm does not round-trip an initial U+000A LINE FEED (LF) character in pre, textarea, or listing elements, even though (in the first two cases) the markup being round-tripped can be conforming. The HTML parser will drop such a character during parsing, but this algorithm does not serialize an extra U+000A LINE FEED (LF) character.
+</p>
+
+<div class="example">
+
+<p>
+例えば、次の~markupを考える：
+◎
+For example, consider the following markup:
+</p>
+
+`serializing-5^xCode
+
+<p>
+この文書を最初に構文解析したとき、この `pre$e 要素の`子~text内容$の頭部にある改行文字は， 1 個だけに減る。
+直列化して再解析する往来~後には、また 1 個~減り，`子~text内容$は `Hello.^l だけになる。
+◎
+When this document is first parsed, the pre element's child text content starts with a single newline character. After a serialize-reparse roundtrip, the pre element's child text content is simply "Hello.".
+</p>
+
+</div>
+
+<p id="attr-is-during-serialization">
+`is$a 属性は、`~custom化された組込みの要素$の作成を通達するときに，特別な役割を果たす
+— そこでは、構文解析された~HTML用に，要素の`~is0値$を設定する仕組みが供される —
+ので、直列化の間に特別に取扱われる。
+これは、直列化して構文解析する往来を通しても，要素の`~is0値$は保全されることを確保する。
+◎
+Because of the special role of the is attribute in signaling the creation of customized built-in elements, in that it provides a mechanism for parsed HTML to set the element's is value, we special-case its handling during serialization.This ensures that an element's is value is preserved through serialize-parse roundtrips.
+</p>
+
+<div class="example">
+
+<p>
+構文解析器を介して，`~custom化された組込みの要素$を作成するとき、開発者は `is$a 属性を直に利用する
+— そのような事例では、往来は申し分なく働く。
+◎
+When creating a customized built-in element via the parser, a developer uses the is attribute directly; in such cases serialize-parse roundtrips work fine.
+</p>
+
+<pre class="lang-html">
+&lt;script&gt;
+window.SuperP = class extends HTMLParagraphElement {};
+customElements.define("super-p", SuperP, { extends: "p" });
+&lt;/script&gt;
+
+&lt;div id="container"&gt;&lt;p is="super-p"&gt;Superb!&lt;/p&gt;&lt;/div&gt;
+
+&lt;script&gt;
+console.log(%container.innerHTML); // &lt;p is="super-p"&gt;
+%container.innerHTML = %container.innerHTML;
+console.log(%container.innerHTML); // &lt;p is="super-p"&gt;
+console.assert(%container.firstChild instanceof SuperP);
+&lt;/script&gt;
+</pre>
+
+<p>
+一方で，~custom化された組込みの要素を［
+その`~custom要素~構築子$／ `createElement()$m
+］を介して作成した場合、 `is$a 属性は追加されない。
+代わりに，`~is0値$（それが~custom要素の機構が利用するものである）は、属性を仲介することなく設定される。
+◎
+But when creating a customized built-in element via its constructor or via createElement(), the is attribute is not added. Instead, the is value (which is what the custom elements machinery uses) is set without intermediating through an attribute.
+</p>
+
+<pre class="lang-html">
+&lt;script&gt;
+%container.innerHTML = "";
+const %p = document.createElement("p", { is: "super-p" });
+%container.appendChild(p);
+
+/* <span class="comment">
+~DOM内には `is^a 属性は無い：
+◎
+The is attribute is not present in the DOM:
+</span> */
+console.assert(!p.hasAttribute("is"));
+
+/* <span class="comment">
+が、要素は依然として `super-p^e である：
+◎
+But the element is still a super-p:
+</span> */
+console.assert(%p instanceof SuperP);
+&lt;/script&gt;
+</pre>
+
+<p>
+往来が依然として働くことを確保するため、直列化~処理-では，要素の`~is0値$を明示的に `is$a 属性として書き出す：
+◎
+To ensure that serialize-parse roundtrips still work, the serialization process explicitly writes out the element's is value as an is attribute:
+</p>
+
+<pre class="lang-html">
+&lt;script&gt;
+console.log(%container.innerHTML); // &lt;p is="super-p"&gt;
+%container.innerHTML = %container.innerHTML;
+console.log(%container.innerHTML); // &lt;p is="super-p"&gt;
+console.assert(%container.firstChild instanceof SuperP);
+&lt;/script&gt;
+</pre>
+
+</div>
+
+<div class="algorithm">
+<p>
+（上の~algoの目的において）所与の %文字列 を
+`~escape@
+するときは、次の手続きを走らす：
+◎
+Escaping a string (for the purposes of the algorithm above) consists of running the following steps:
+</p>
+
+<ol>
+	<li>
+%文字列 内の各~文字 `&amp;^l  を文字列 `&amp;amp;^l に置換する
+◎
+Replace any occurrence of the "&amp;" character by the string "&amp;amp;".
+</li>
+	<li>
+%文字列 内の各~文字 `00A0^U NO-BREAK SPACE を文字列 `&amp;nbsp;^l に置換する
+◎
+Replace any occurrences of the U+00A0 NO-BREAK SPACE character by the string "&amp;nbsp;".
+</li>
+	<li>
+~IF［
+この~algoは `属性~mode^i で呼出されている
+］
+⇒
+%文字列 内の各~文字 `"^l を文字列 `&amp;quot;^l に置換する
+◎
+If the algorithm was invoked in the attribute mode, replace any occurrences of the """ character by the string "&amp;quot;".
+</li>
+	<li>
+<p>
+~ELSE：
+</p>
+<ol><li>%文字列 内の各~文字 `&lt;^l を文字列 `&amp;lt;^l に置換する
+</li><li>%文字列 内の各~文字 `&gt;^l を文字列 `&amp;gt;^l に置換する
+</li></ol>
+
+◎
+If the algorithm was not invoked in the attribute mode, replace any occurrences of the "&lt;" character by the string "&amp;lt;", and any occurrences of the "&gt;" character by the string "&amp;gt;".
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="parsing-html-fragments">
+<h2 title="Parsing HTML fragments">12.4. ~HTML素片の構文解析-法</h2>
+
+<p class="trans-note">【
+この節の内容は、<a href="~HTMLparsing#parsing-html-fragments">別ページ</a>にて。
+】</p>
+
+		</section>
+		<section id="named-character-references">
+<h2 title="Named character references">12.5. 有名~文字~参照</h2>
+
+<p class="trans-note">【
+この節の内容は、<a href="~HTMLcharrefs#named-character-references" >別ページ</a>にて。
+】</p>
+
+		</section>
+	</section>
+</main>
+

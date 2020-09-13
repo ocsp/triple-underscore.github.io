@@ -1,0 +1,7972 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Typed OM Level 1（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+
+<style>
+#_x_sum_values > tr > td:first-child {
+	white-space: nowrap;
+}
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+Util.ready = function(){
+	const source_data = {
+		generate: expand,
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	let ctx_ifc = '';
+	let ctx_ifc1 = ''; // local
+
+	return this.html.replace(
+		/%[~\w\-\/一-鿆あ-ん]+|`(.+?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {
+	return `<var>${match.slice(1).replace(/\/(.+)/, '<sub>$1</sub>')}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r': // ref
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'I': // set context & local context
+	ctx_ifc1 = key.toLowerCase();
+	if( indicator === '@' ){
+		ctx_ifc = ctx_ifc1;
+	}
+//	href = '#' + ctx_ifc1;
+	break;
+case 'II': // only set local context
+	ctx_ifc1 = key.toLowerCase();
+	return '';
+case 'I0': // set context
+	ctx_ifc = key.toLowerCase();
+	klass = 'I';
+	break;
+case 'm': // IDL member
+case 'mm':
+case 'm1':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	href = `-${key.toLowerCase()}`;
+	switch(klass){
+	case 'm':
+		href = `#dom-${ctx_ifc}${href}`;
+		break;
+	case 'm1':
+		href = `#dom-${ctx_ifc1}${href}`;
+		break;
+	case 'mm': // 構築子
+		if( indicator === '@' ){
+			ctx_ifc = key.toLowerCase();
+		}
+		href = `#dom${href}${href}`;
+		text = `new ${text}`;
+		break;
+	}
+	break;
+case 'mc': // constructor
+	href = `#dom-${key.toLowerCase()}-${key.toLowerCase()}`;
+	text = 'constructor';
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'f': 
+	text = `${key}()`;
+	break;
+case 'U':
+	text = `U+${key}`;
+	break;
+case 'at':
+	text = `@${key}`;
+	break;
+case 'E':
+	href = `~WEBIDL#${key.toLowerCase()}`;
+	break;
+case 'l':
+	return `"<code class="literal">${key}</code>"`
+case 'sl':
+	text = `[[${key}]]`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`
+	break;
+case 'issue':
+	return(
+`<a href="https://github.com/w3c/css-houdini-drafts/issues/${key}">課題 #${key}</a>`
+	);
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+return text;
+
+	}
+}
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+●●options
+
+spec_date:2020-08-18
+trans_update:2020-08-19
+source_checked:180216
+page_state_key:CSS
+original_url:https://drafts.css-houdini.org/css-typed-om-1/
+	abbr_url:CSSTOM1
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:cssom,css
+conformance:css
+copyright:2020,use
+trans_1st_pub:2018-02-12
+
+
+●●class_map
+p:property
+v:value
+u:unit
+f:func
+t:type
+at:at-rule
+css:css
+e:element
+a:attr
+at:at-rule
+E:error
+sl:js-slot
+U:code-point
+
+●●tag_map
+p:code
+f:code
+u:code
+v:code
+t:var
+at:code
+I:code
+I0:code
+T:code
+C:code
+m:code
+mm:code
+m1:code
+E:code
+e:code
+a:code
+css:code
+c:code
+sl:span
+U:span
+i:i
+em:em
+
+●●original_id_map
+dom-stylepropertymapreadonly-iterable:
+dom-cssunparsedvalue-iterable:
+dom-cssunparsedvalue-getter:
+dom-cssunparsedvalue-setter:
+dom-csstransformvalue-iterable:
+dom-csstransformvalue-getter:
+dom-csstransformvalue-setter:
+
+dom-cssstylevalue-stringifier:CSSStyleValue-stringification-behavior
+dom-cssnumericarray-getter:cssnumericarray-indexed-property-getter
+dom-csstransformcomponent-stringifier:CSSTransformComponent-stringification-behavior
+
+●●mdn_urls
+stylepropertymap:API/StylePropertyMap
+stylepropertymapreadonly:API/StylePropertyMapReadOnly
+cssimagevalue:API/CSSImageValue
+csskeywordvalue:API/CSSKeywordValue
+	cssmathinvert:API/CSSMathInvert
+	cssmathmax:API/CSSMathMax
+	cssmathmin:API/CSSMathMin
+	cssmathclamp:API/CSSMathClamp
+	cssmathnegate:API/CSSMathNegate
+	enumdef-cssmathoperator:API/CSSMathOperator
+	cssmathproduct:API/CSSMathProduct
+cssmathsum:API/CSSMathSum
+cssmathvalue:API/CSSMathValue
+	cssmatrixcomponent:API/CSSMatrixComponent
+	dictdef-cssmatrixcomponentoptions:API/CSSMatrixComponentOptions
+	enumdef-cssnumericbasetype:API/CSSNumericBaseType
+	dictdef-cssnumerictype:API/CSSNumericType
+	cssnumericarray:API/CSSNumericArray
+cssnumericvalue:API/CSSNumericValue
+	cssperspective:API/CSSPerspective
+	cssrotate:API/CSSRotate
+	cssscale:API/CSSScale
+	cssskew:API/CSSSkew
+	cssskewx:API/CSSSkewX
+	cssskewy:API/CSSSkewY
+cssstylevalue:API/CSSStyleValue
+	csstransformcomponent:API/CSSTransformComponent
+	csstransformvalue:API/CSSTransformValue
+	csstranslate:API/CSSTranslate
+cssunitvalue:API/CSSUnitValue
+cssunparsedvalue:API/CSSUnparsedValue
+cssvariablereferencevalue:API/CSSVariableReferenceValue
+
+●●link_map
+
+	●IDL
+Exposed:~WEBIDLjs#Exposed
+SameObject:~WEBIDLjs#SameObject
+
+E.SyntaxError:~WEBIDL#syntaxerror
+E.TypeError:~WEBIDL#exceptiondef-typeerror
+E.RangeError:~WEBIDL#exceptiondef-rangeerror
+
+undefined:~WEBIDL#idl-undefined
+USVString:~WEBIDL#idl-USVString
+DOMString:~WEBIDL#idl-DOMString
+boolean:~WEBIDL#idl-boolean
+double:~WEBIDL#idl-double
+unsigned long:~WEBIDL#idl-unsigned-long
+
+T.double:~WEBIDL#idl-double
+T.USVString:~WEBIDL#idl-USVString
+T.DOMString:~WEBIDL#idl-DOMString
+
+CSSKeywordish:#typedefdef-csskeywordish
+CSSNumberish:#typedefdef-cssnumberish
+CSSUnparsedSegment:#typedefdef-cssunparsedsegment
+
+I.DOMMatrix:~GEOMETRY#dommatrix
+I.DOMMatrixReadOnly:~GEOMETRY#dommatrixreadonly
+I.Element:~DOM4#element
+I.HTMLElement:~HTMLdom#htmlelement
+I.StylePropertyMap:#stylepropertymap
+I.StylePropertyMapReadOnly:#stylepropertymapreadonly
+
+I.CSS:~CSSOM1#namespacedef-css
+I.CSSImageValue:#cssimagevalue
+I.CSSKeywordValue:#csskeywordvalue
+I.CSSMathInvert:#cssmathinvert
+I.CSSMathMax:#cssmathmax
+I.CSSMathMin:#cssmathmin
+I.CSSMathClamp:#cssmathclamp
+I.CSSMathNegate:#cssmathnegate
+I.CSSMathOperator:#enumdef-cssmathoperator
+I.CSSMathProduct:#cssmathproduct
+I.CSSMathSum:#cssmathsum
+I.CSSMathValue:#cssmathvalue
+I.CSSMatrixComponent:#cssmatrixcomponent
+I.CSSMatrixComponentOptions:#dictdef-cssmatrixcomponentoptions
+I.CSSNumericBaseType:#enumdef-cssnumericbasetype
+I.CSSNumericType:#dictdef-cssnumerictype
+I.CSSNumericArray:#cssnumericarray
+I.CSSNumericValue:#cssnumericvalue
+I.CSSPerspective:#cssperspective
+I.CSSRotate:#cssrotate
+I.CSSScale:#cssscale
+I.CSSSkew:#cssskew
+I.CSSSkewX:#cssskewx
+I.CSSSkewY:#cssskewy
+I.CSSStyleRule:~CSSOM1#cssstylerule
+I.CSSStyleValue:#cssstylevalue
+I.CSSTransformComponent:#csstransformcomponent
+I.CSSTransformValue:#csstransformvalue
+I.CSSTranslate:#csstranslate
+I.CSSUnitValue:#cssunitvalue
+I.CSSUnparsedValue:#cssunparsedvalue
+I.CSSVariableReferenceValue:#cssvariablereferencevalue
+
+I.CSSStyleDeclaration:~CSSOM1#cssstyledeclaration
+I.ElementCSSInlineStyle:~CSSOM1#elementcssinlinestyle
+
+
+m.~TCis2D:#dom-csstransformcomponent-is2d
+m.getComputedStyle:~CSSOM1#dom-window-getcomputedstyle
+
+
+	CSSStyleValue
+	m.stringifier
+	m.parse:#dom-cssstylevalue-parse
+	m.parseAll:#dom-cssstylevalue-parseall
+
+	StylePropertyMapReadOnly
+	m.get:#dom-stylepropertymapreadonly-get
+	m.getAll:#dom-stylepropertymapreadonly-getall
+	m.has:#dom-stylepropertymapreadonly-has
+	m.size:#dom-stylepropertymapreadonly-size
+
+	StylePropertyMap
+	m.set:#dom-stylepropertymap-set
+	m.append:#dom-stylepropertymap-append
+	m.delete:#dom-stylepropertymap-delete
+	m.clear:#dom-stylepropertymap-clear
+
+	Element
+	m.computedStyleMap:#dom-element-computedstylemap
+
+	CSSStyleRule
+	m.styleMap:#dom-cssstylerule-attributestylemap
+
+	ElementCSSInlineStyle
+	m.attributeStyleMap:#dom-elementcssinlinestyle-attributestylemap
+
+	CSSUnparsedValue
+	Constructor:#dom-cssunparsedvalue-cssunparsedvalue
+	m.iterable:#dom-cssunparsedvalue-iterable
+	m.length:#dom-cssunparsedvalue-length
+	m.getter:#dom-cssunparsedvalue-getter
+	m.setter:#dom-cssunparsedvalue-setter
+
+
+	CSSVariableReferenceValue
+	Constructor:#dom-cssvariablereferencevalue-cssvariablereferencevalue
+	m.variable:#dom-cssvariablereferencevalue-variable
+	m.fallback:#dom-cssvariablereferencevalue-fallback
+
+	CSSKeywordValue
+	Constructor:#dom-csskeywordvalue-csskeywordvalue
+	m.value:#dom-csskeywordvalue-value
+
+	CSSNumericBaseType
+	m.length:#dom-cssnumericbasetype-length
+	m.angle:#dom-cssnumericbasetype-angle
+	m.time:#dom-cssnumericbasetype-time
+	m.frequency:#dom-cssnumericbasetype-frequency
+	m.resolution:#dom-cssnumericbasetype-resolution
+	m.flex:#dom-cssnumericbasetype-flex
+	m.percent:#dom-cssnumericbasetype-percent
+
+	CSSNumericType
+	m.length:#dom-cssnumerictype-length
+	m.angle:#dom-cssnumerictype-angle
+	m.time:#dom-cssnumerictype-time
+	m.frequency:#dom-cssnumerictype-frequency
+	m.resolution:#dom-cssnumerictype-resolution
+	m.flex:#dom-cssnumerictype-flex
+	m.percent:#dom-cssnumerictype-percent
+	m.percentHint:#dom-cssnumerictype-percenthint
+
+	CSSNumericValue
+	m.add:#dom-cssnumericvalue-add
+	m.sub:#dom-cssnumericvalue-sub
+	m.mul:#dom-cssnumericvalue-mul
+	m.div:#dom-cssnumericvalue-div
+	m.min:#dom-cssnumericvalue-min
+	m.max:#dom-cssnumericvalue-max
+	m.equals:#dom-cssnumericvalue-equals
+	m.to:#dom-cssnumericvalue-to
+	m.toSum:#dom-cssnumericvalue-tosum
+	m.type:#dom-cssnumericvalue-type
+	m.parse:#dom-cssnumericvalue-parse
+
+	CSSUnitValue
+	Constructor:#dom-cssunitvalue-cssunitvalue
+	m.value:#dom-cssunitvalue-value
+	m.unit:#dom-cssunitvalue-unit
+
+	CSSMathValue
+	m.operator:#dom-cssmathvalue-operator
+
+	CSSMathSum
+	Constructor:#dom-cssmathsum-cssmathsum
+	m.values:#dom-cssmathsum-values
+
+	CSSMathProduct
+	Constructor:#dom-cssmathproduct-cssmathproduct
+	m.values:#dom-cssmathproduct-values
+
+	CSSMathNegate
+	Constructor:#dom-cssmathnegate-cssmathnegate
+	m.value:#dom-cssmathnegate-value
+
+	CSSMathInvert
+	Constructor:#dom-cssmathinvert-cssmathinvert
+	m.value:#dom-cssmathinvert-value
+
+	CSSMathMin
+	Constructor:#dom-cssmathmin-cssmathmin
+	m.values:#dom-cssmathmin-values
+
+	CSSMathMax
+	Constructor:#dom-cssmathmax-cssmathmax
+	m.values:#dom-cssmathmax-values
+
+	CSSMathClamp
+	Constructor:#dom-cssmathclamp-cssmathclamp
+	m.min:#dom-cssmathclamp-min
+	m.val:#dom-cssmathclamp-val
+	m.max:#dom-cssmathclamp-max
+
+	CSSNumericArray
+	m.iterable:
+	m.length:#dom-cssnumericarray-length
+	m.getter:
+
+	CSSMathOperator
+	m.sum:#dom-cssmathoperator-sum
+	m.product:#dom-cssmathoperator-product
+	m.negate:#dom-cssmathoperator-negate
+	m.invert:#dom-cssmathoperator-invert
+	m.min:#dom-cssmathoperator-min
+	m.max:#dom-cssmathoperator-max
+	m.clamp:#dom-cssmathoperator-clamp
+
+	CSS
+	m.number:#dom-css-number
+	m.percent:#dom-css-percent
+	m.em:#dom-css-em
+	m.ex:#dom-css-ex
+	m.ch:#dom-css-ch
+	m.ic:#dom-css-ic
+	m.rem:#dom-css-rem
+	m.lh:#dom-css-lh
+	m.rlh:#dom-css-rlh
+	m.vw:#dom-css-vw
+	m.vh:#dom-css-vh
+	m.vi:#dom-css-vi
+	m.vb:#dom-css-vb
+	m.vmin:#dom-css-vmin
+	m.vmax:#dom-css-vmax
+	m.cm:#dom-css-cm
+	m.mm:#dom-css-mm
+	m.Q:#dom-css-q
+	m.in:#dom-css-in
+	m.pt:#dom-css-pt
+	m.pc:#dom-css-pc
+	m.px:#dom-css-px
+	m.deg:#dom-css-deg
+	m.grad:#dom-css-grad
+	m.rad:#dom-css-rad
+	m.turn:#dom-css-turn
+	m.s:#dom-css-s
+	m.ms:#dom-css-ms
+	m.Hz:#dom-css-Hz
+	m.kHz:#dom-css-kHz
+	m.dpi:#dom-css-dpi
+	m.dpcm:#dom-css-dpcm
+	m.dppx:#dom-css-dppx
+	m.fr:#dom-css-fr
+
+
+	CSSTransformValue
+	Constructor:#dom-csstransformvalue-csstransformvalue
+	m.length:#dom-csstransformvalue-length
+	m.iterable:#dom-cssunparsedvalue-iterable
+	m.getter:#dom-cssunparsedvalue-getter
+	m.setter:#dom-cssunparsedvalue-setter
+	m.is2D:#dom-csstransformvalue-is2d
+	m.toMatrix:#dom-csstransformvalue-tomatrix
+
+
+	CSSTransformComponent
+	m.stringifier:#dom-csstransformcomponent-stringifier
+	~TCis2D
+	m.is2D:#dom-csstransformcomponent-is2d
+	m.toMatrix:#dom-csstransformcomponent-toMatrix
+
+	CSSTranslate
+	Constructor:#dom-csstranslate-csstranslate
+	m.x:#dom-csstranslate-x
+	m.y:#dom-csstranslate-y
+	m.z:#dom-csstranslate-z
+
+
+	CSSRotate
+	Constructor:#dom-cssrotate-cssrotate
+	Constructor:#dom-cssrotate-cssrotate-x-y-z-angle
+	m.x:#dom-cssrotate-x
+	m.y:#dom-cssrotate-y
+	m.z:#dom-cssrotate-z
+	m.angle:#dom-cssrotate-angle
+
+	CSSScale
+	Constructor:#dom-cssscale-cssscale
+	m.x:#dom-cssscale-x
+	m.y:#dom-cssscale-y
+	m.z:#dom-cssscale-z
+
+	CSSSkew
+	Constructor:#dom-cssskew-cssskew
+	m.ax:#dom-cssskew-ax
+	m.ay:#dom-cssskew-ay
+
+	CSSSkewX
+	Constructor:#dom-cssskewx-cssskewx
+	m.ax:#dom-cssskewx-ax
+
+	CSSSkewY
+	Constructor:#dom-cssskewy-cssskewy
+	m.ay:#dom-cssskewy-ay
+
+	CSSPerspective
+	Constructor:#dom-cssperspective-cssperspective
+	m.length:#dom-cssperspective-length
+
+	CSSMatrixComponent
+	Constructor:#dom-cssmatrixcomponent-cssmatrixcomponent
+	m.matrix:#dom-cssmatrixcomponent-matrix
+
+	CSSMatrixComponentOptions
+	m.is2D:#dom-cssmatrixcomponentoptions-is2d
+
+
+sl.associatedProperty:#dom-cssstylevalue-associatedproperty-slot
+sl.tokens:#dom-cssunparsedvalue-tokens-slot
+sl.declarations:#dom-stylepropertymapreadonly-declarations-slot
+sl.computedStyleMapCache:#dom-element-computedstylemapcache-slot
+sl.values:#dom-csstransformvalue-values-slot
+
+	●CSS
+f.calc:~CSSVAL#funcdef-calc
+f.image:~CSSIMAGE4#funcdef-image
+f.max:~CSSVAL#funcdef-max
+f.min:~CSSVAL#funcdef-min
+f.perspective:~TRANSFORM2#funcdef-perspective
+f.skew:~TRANSFORM#funcdef-transform-skew
+f.skewX:~TRANSFORM#funcdef-transform-skewx
+f.skewY:~TRANSFORM#funcdef-transform-skewy
+f.url:~CSSVAL#funcdef-url
+f.var:~CSSVAR#funcdef-var
+
+f.linear-gradient:~CSSIMAGE#funcdef-linear-gradient
+f.radial-gradient:~CSSIMAGE#funcdef-radial-gradient
+
+p.animation:~CSSANIM#propdef-animation
+p.background-color:~CSSBG#propdef-background-color
+p.background-image:~CSSBG#propdef-background-image
+p.border-color:~CSSBG#propdef-border-color
+p.border-image:~CSSBG#propdef-border-image
+p.border-image-outset:~CSSBG#propdef-border-image-outset
+p.border-image-repeat:~CSSBG#propdef-border-image-repeat
+p.border-image-slice:~CSSBG#propdef-border-image-slice
+p.border-image-source:~CSSBG#propdef-border-image-source
+p.border-image-width:~CSSBG#propdef-border-image-width
+p.counter-reset:~CSSLIST#propdef-counter-reset
+p.list-style-image:~CSSLIST#propdef-list-style-image
+p.object-position:~CSSIMAGE#propdef-object-position
+p.opacity:~CSSCOLOR#propdef-opacity
+p.transform:~TRANSFORM#propdef-transform
+p.width:~CSS2VISUDET#propdef-width
+p.color:~CSSCOLOR#propdef-color
+p.top:~CSSPOS#propdef-top
+p.right:~CSSPOS#propdef-right
+p.bottom:~CSSPOS#propdef-bottom
+p.left:~CSSPOS#propdef-left
+p.z-index:~CSS2VISUREN#propdef-z-index
+
+t.angle-percentage:~CSSVAL#typedef-angle-percentage
+t.angle:~CSSVAL#angle-value
+	t.calc():~CSSVAL#funcdef-calc
+t.color:~CSSCOLOR#typedef-color
+	t.color:~CSSWG/css-color-3/#valuea-def-color
+t.custom-ident:~CSSVAL#identifier-value
+t.custom-property-name:~CSSVAR#typedef-custom-property-name
+t.dimension-token:~CSSSYN#typedef-dimension-token
+t.dimension:~CSSVAL#typedef-dimension
+t.flex:~CSSGRID#typedef-flex
+t.frequency:~CSSVAL#frequency-value
+t.image:~CSSIMAGE#typedef-image
+t.ident:~CSSVAL#typedef-ident
+	t.ident:~CSSSYN#identifier
+
+t.length-percentage:~CSSVAL#typedef-length-percentage
+t.length:~CSSVAL#length-value
+t.number-token:~CSSSYN#typedef-number-token
+t.number:~CSSVAL#number-value
+t.percentage-token:~CSSSYN#typedef-percentage-token
+t.percentage:~CSSVAL#percentage-value
+t.position:~CSSVAL#typedef-position
+t.resolution:~CSSVAL#resolution-value
+t.time-percentage:~CSSVAL#typedef-time-percentage
+t.time:~CSSVAL#time-value
+t.transform-function:~TRANSFORM#typedef-transform-function
+t.transform-list:~TRANSFORM#typedef-transform-list
+t.url:~CSSVAL#url-value
+
+v.currentcolor:~CSSCOLOR#valdef-color-currentcolor
+v.red:~CSSCOLOR#valdef-color-red
+v.stretch:~CSSBG#valdef-border-image-repeat-stretch
+v.fill:~CSSBG#border-image-slice-fill
+
+	v.auto:~CSSPOS#valdef-top-auto
+	v.Auto:~CSSPOS#valdef-top-auto
+
+u.em:~CSSVAL#em
+u.in:~CSSVAL#in
+u.px:~CSSVAL#px
+
+e.style:~HEmetadata#the-style-element
+a.style:~HTMLdom#the-style-attribute
+
+	●用語
+内部~表現:#css-internal-representation
+
+演算で写像する:#_map-items
+
+~list値をとる:#list-valued-properties
+単独の値をとる:#single-valued-properties
+妥当な~CSS~prop名:#valid-css-property
+~prop名を検査して正規化する:#_check-and-normalize-a-property
+
+単位~mapの積をとる:#product-of-two-unit-maps
+
+算出d~StylePropertyMap:#computed-stylepropertymap
+宣言d~StylePropertyMap:#declared-stylepropertymap
+
+~CSS値を反復成分に細分化する:#subdivide-into-iterations
+内部~表現を作成する:#create-an-internal-representation
+~keywordに類する値を規格化する:#rectify-a-keywordish-value
+実数に類する値を規格化する:#rectify-a-numberish-value
+
+~CSS値を具象化する:#css-reify
+具象化する:#css-reify
+具象化-:#css-reify
+具象化:#css-reify
+数量~値を具象化する:~CSSTOMR#reify-a-numeric-value
+
+~custom~prop名~文字列:#custom-property-name-string
+
+型:#cssnumericvalue-type
+基底~型:#cssnumericvalue-base-type
+純~単位:#_zero-or-one-unit
+百分率hint:#cssnumericvalue-percent-hint
+百分率hintを適用する:#apply-the-percent-hint
+対応する基底~型:#_base-type-for
+型を作成する:#cssnumericvalue-create-a-type
+型を加算する:#cssnumericvalue-add-two-types
+型を乗算する:#cssnumericvalue-multiply-two-types
+型を逆数にする:#cssnumericvalue-invert-a-type
+合致-:#cssnumericvalue-match
+
+総和~値:#cssnumericvalue-sum-value
+sum.値:#sum-value-value
+総和~値を作成する:#create-a-sum-value
+
+単位~map:#sum-value-unit-map
+単位~mapから型を作成する:#create-a-type-from-a-unit-map
+反数にする:#cssmath-negate-a-cssnumericvalue
+逆数にする:#cssmath-invert-a-cssnumericvalue
+単位~値を変換する:#convert-a-cssunitvalue
+総和~値~itemから~CSSUnitValueを作成する:#create-a-cssunitvalue-from-a-sum-value-item
+~CSSStyleValueを構文解析する:#parse-a-cssstylevalue
+~CSSUnitValueを作成する:#create-a-cssunitvalue-from-a-pair
+
+文法に合致-:#cssstylevalue-match-a-grammar
+同等な数量~値:#equal-numeric-value
+
+
+
+互換~単位:~CSSVAL#compatible-units
+正準的~単位:~CSSVAL#canonical-unit
+~math関数:~CSSVAL#math-function
+相対~長さ:~CSSVAL#relative-length
+
+~custom~prop:~CSSVAR#custom-property
+代用され:~CSSVAR#substitute-a-var
+~is2D:~GEOMETRY#matrix-is-2d
+	m.is2D:~GEOMETRY#dom-dommatrixreadonly-is2d
+~3D変形-関数:~TRANSFORM2#3d-transform-functions
+~2D変形-関数:~TRANSFORM#two-d-transform-functions
+
+生成元clean~flag:~CSSOM1#concept-css-style-sheet-origin-clean-flag
+解決d値:~CSSOM1#resolved-value
+
+素片~URL:~CSSVAL#local-urls
+
+	●INFRA
+符号位置:~INFRA#code-point
+文字列:~INFRA#string
+~ASCII大小無視:~INFRA#ascii-case-insensitive
+~ASCII小文字~化する:~INFRA#ascii-lowercase
+~ASCII小文字~化:~INFRA#ascii-lowercase
+区切って連結-:~INFRA#string-concatenate
+
+~list:~INFRA#list
+~item:~INFRA#list-item
+~key:~INFRA#map-key
+~size:~INFRA#list-size
+空:~INFRA#list-is-empty
+前付加する:~INFRA#list-prepend
+除去する:~INFRA#list-remove
+付加する:~INFRA#list-append
+空にする:~INFRA#list-empty
+~clone:~INFRA#list-clone
+	~EACH:~INFRA#list-iterate
+
+有順序~map:~INFRA#ordered-map
+~map:~INFRA#ordered-map
+map.値:~INFRA#map-value
+map.~key:~INFRA#map-key
+map.~size:~INFRA#map-size
+~entry:~INFRA#map-entry
+~entryを包含して:~INFRA#map-exists
+map.除去する:~INFRA#map-remove
+map.設定する:~INFRA#map-set
+	存在する:~INFRA#map-exists
+	~EACH0:~INFRA#map-iterate
+
+~tuple:~INFRA#tuple
+~supportされる~CSS~prop:~CSSOM1#supported-css-property
+
+
+	~THROW:~WEBIDL#dfn-throw
+文字列~化の挙動:~WEBIDL#dfn-stringification-behavior
+~supportする~prop~index:~WEBIDL#dfn-supported-property-indices
+特殊~演算:~WEBIDL#dfn-special-operation
+有index取得子:~WEBIDL#dfn-indexed-property-getter
+	有index設定子:~WEBIDL#dfn-indexed-property-setter
+値~反復子:~WEBIDL#dfn-value-iterator
+有index~propの値を決定する:~WEBIDL#dfn-determine-the-value-of-an-indexed-property
+既存の有index~propの値を設定する:~WEBIDL#dfn-set-the-value-of-an-existing-indexed-property
+新たな有index~propの値を設定する:~WEBIDL#dfn-set-the-value-of-a-new-indexed-property
+反復される値~pairたち:~WEBIDL#dfn-value-pairs-to-iterate-over
+
+識別子:~CSSSYN#identifier
+文法に則って構文解析する:~CSSSYN#css-parse-something-according-to-a-css-grammar
+成分~値:~CSSSYN#component-value
+成分~値を構文解析する:~CSSSYN#parse-a-component-value
+	~CSSSYN#tokenization
+
+
+略式~prop:~CASCADE#shorthand-property
+算出d値:~CASCADE#computed-value
+宣言~list:~CSSOM1#cssstyledeclaration-declarations
+~CSS宣言~block:~CSSOM1#css-declaration-block
+
+	●他
+	…/issues/148
+	…/issues/186
+	…/issues/268
+	…/issues/276
+	…//issues/350#issuecomment-294690156
+
+	~TRANSFORM#mathematical-description
+	~TRANSFORM2#mathematical-description
+
+	§:#declared-stylepropertymap-objects
+	:#type-of-a-cssmathvalue
+	:#type-of-a-cssunitvalue
+	§:#computed-stylepropertymapreadonly-objects
+	§:#cssom-serialization
+	§:#stylevalue-reification
+
+	~CSSOM1#serializing-css-values
+
+	:#serialize-a-cssunparsedvalue
+	:#serialize-a-cssvariablereferencevalue
+	:#serialize-a-csskeywordvalue
+	:#serialize-a-cssunitvalue
+	:#serialize-a-csstransformvalue
+	:#serialize-a-csstranslate
+	:#serialize-a-cssrotate
+	:#serialize-a-cssscale
+	:#serialize-a-cssskew
+	:#serialize-a-cssskewx
+	:#serialize-a-cssskewy
+	:#serialize-a-cssperspective
+	:#serialize-a-cssmatrixcomponent
+
+
+●●words_table1
+CSSTOMR:css-typed-om-reify-ja.html
+FXTF:https://drafts.fxtf.org
+
+TCis2D:is2D
+is2DM:is2D
+●●words_table
+
+
+	●Typed OM／演算
+CSSStyleValue:
+StylePropertyMap:
+CSSUnitValue:
+TypedOM:Typed OM
+OM:
+is2D:is 2D
+
+math:
+2D:
+3D:
+	4×4:4x4
+
+行列:matrix::~
+単位行列:identity matrix::~
+	単位行列:identity
+数量:numeric::~
+実数:number::数
+	実数に類する:numberish:
+百分率hint:percent hint:百分率 hint::百分率ヒント
+
+式:expression::~
+数式:math expression::~
+単位:unit::~
+	単位も~~扱える:unit-aware
+単位元:identity::~
+累乗数:power::~
+指数:exponent::~
+	冪
+	半群:semi-group
+	関数:func
+加算-:add::~
+加算:addition::~
+乗算-:multiply::~
+乗算:multiplication::~
+反数に:negate::~
+反数:negation::~
+	加法逆元
+逆数:inverse::~
+逆数に:invert::~
+	乗法逆元:reciprocal
+乗法的:multiplicative::~
+総和:sum::~
+積:product::~
+算術:arithmetic::~
+可換:commutative::~
+結合的:associative::~
+	結合律を満たす:N-ary
+	monoid
+	semi-group
+簡約-:reduce:~
+換算率:conversion ratio:~
+具象化-:reify::~
+具象化:reification::~
+規格化-:rectify::~
+丸めら:roundさ:~
+切詰めら:clampさ:切り詰めら
+浮動小数点:floating-point:~
+
+	●IDL ／データ型／primitives
+typedef:
+callした結果
+上位class:superclass::上位 class:上位クラス
+	~list値をとる:list-valued
+	単独の値をとる:single-valued
+	〜のみからなる:single-valued
+nullable:::null 可能
+
+未設定:unset::~
+
+
+	型~付け:typing
+	順序:ordering
+	下位-値:subvalue／sub-value
+	被呼出時:called on
+
+
+	●構文／直列化
+comma::::カンマ
+連結-:concatenate::~
+	連結:concatenation
+分割-:split::~
+文字大小正規化:case-folding::~
+	小文字~化:lower-cased
+	符号位置の昇順:increasing code point order
+
+細分化-:subdivide:~
+細分-:divide:~
+読取る:readする:読み取る
+書込む:writeする:書き込む
+
+	~token化:tokenization
+	構文解析し直す:reparse
+	`合致-$~~処理:matching
+	区切らな:separate
+	接頭辞~付き:-prefixed
+	文字列~化-:stringify
+	文字列~化:stringification
+
+	`-^l:dashes HYPHEN-MINUS／:dash
+	^t:ident
+
+	●CSS
+CSSOM:
+	~stylesheet:stylesheet
+	`px^css 単位の:pixel
+宣言d:declared::宣言
+変形-:transform::~
+変形:transform::~
+
+	`linear-gradient$f:linear gradient
+	`radial-gradient$f:radial gradient
+
+
+	●仕様
+factory::::ファクトリ
+	略せる:shortcut
+overhead::::オーバーヘッド
+規定-:dictate:~
+	別の仕方:alternate way
+将来的:future:~
+	であって〜下位classでない:direct
+
+複雑:complicated:~
+精密:precise:~
+不用意:accidental:~
+厳格:rigorous:~
+手作業:hand-wavey:~
+現実的:realistic:~
+厳正:exacting:~
+安価:cheap:~
+拡張p-:expand:拡張
+極力少ない:minimalな:~
+	目的:purposely
+	取扱い:handle
+	~~寛容:forgiving
+	~~緩い:looser
+	ずっと簡潔に:much less verbosely
+	現時点:at the moment
+	わかるよね:you know what we mean
+	上述の:The above talk about
+	:per
+	-:we
+	特に:some particular
+	~~動作:act
+	かなり:fairly
+	〜しようが:matter
+	~~複雑に過ぎる:sufficient complexities
+	きっちり:firmly
+	起ころうとしない:doesn’t happen eagerly
+	突き詰める:go all the way and perform 〜
+	何であれ:regardless of what it is
+	用語:terminology
+	不十分:Not all 〜 are simple enough to
+	対照的に~conversely
+	すなわち、:meaning
+	とする:assuming
+
+	●仕様（動詞
+高処理能:performant:~
+防ぐ:preventする:~
+手助け:facilitate:~
+合意-:agree:~
+翻訳-:translate:~
+	understood
+
+	〜に依存する:-dependent
+	-:attempt
+	仕様~化:spec up
+	特異な:special singular
+	できなくする-:prevent
+	-可能に:allow
+	面した:face した
+	書かれ:written
+	書ける:write
+	気を配る:care
+	壊れ:break
+	選ばれ:chose
+	渡され:ask for
+	~~留意-:recall
+	被り:incur する
+	-:shorthand
+	-:coordinate
+	-:procedure
+	-:loop
+	-:exist
+	-:avoid
+	する必要なく:without having to
+	なままに:left
+	称され／いう:said to
+	伝え:tell
+
+	●未分類（動詞
+
+再生産-:reproduce::~
+反復成分:iterations::~
+	前付加-:prepend
+	変異-不能:immutable
+	-:containing
+入子化:nested::入れ子
+現れる:appearする:~
+隠され:hideされ:~
+	hidden
+
+	切り替え:flip
+	-:switch
+	戻せる／戻す／元へ戻す:back
+	別々に分ける／別々に:separate
+	~~出力:print out
+	置かれ:put
+	-:putting
+	戻-:back
+	増えれば:increase
+	なることになる:will become
+
+	●未分類
+時列線:timeline::~::タイムライン
+生成元clean:origin-clean::生成元-clean::オリジン-clean
+片:fragment:~
+裸の:naked::~
+数学的:mathematical:~
+低速:slow:~
+	素早く:very quickly
+同等:equal:~
+同等性:equality:~
+背後:behind:~
+
+	表:table
+	Custom Paint
+	Typed OM
+	内部~algo:using the original value of ／internal algorithm
+	範囲が制約された:range-restricted
+	範囲~内〜数量:out-of-range number, percentage, or dimension／outside of that range
+	-:getting
+	生の:raw
+	~~成分:entry
+	複数片からなる連続的な:multiple	successive
+	PEMDAS precedence
+	項:term
+	-:categories
+	分類:-
+	一度に 2 個ずつ:manually add them pair-wise
+	変形~成分~list:<a>values to iterate over</a>
+	起こる:happen
+	現在は指定されていない〜ある時点:at some currently-unspecified point
+	この 2 つの:source and destination
+	時点:at 〜-time
+	~~最新:up-to-date
+
+	●指示語
+	新たな:fresh
+旧-:old:~
+新-:new:~
+下位-:sub-:~
+	末尾:end
+	-:maximal
+	いくつでも:any number of
+	に過ぎない:just a
+	単に／だけ:just
+	以前:previous
+	-:differ
+	異なる:differently
+	何であれ:whatever
+	-:anything
+	に対し:against
+	いくつか:multiple
+	何個でも:unbounded
+	2 個~以上ある:Having 2+
+	個別に:individually
+	個数:how many
+	何個の〜ある:how many 〜 going to show up
+	2 個づつ:pair
+	最も小さい:smallest
+	最も大きい:largest
+	所では:place
+	側:side
+	それぞれ:distinct
+	一握りの:the only 〜 certain
+	残りの:the rest of
+	まだ:yet
+	一体:whole
+	唯一の~entryの／-:sole
+	~~末端:leaf／eventually terminating
+	すべての:every
+	大概は:almost always
+	以前までは:previously
+	様々な:various
+	自体:themselves
+	~~付随するすべて:everything besides
+	あらゆる:every／
+	に伴い:as
+	にも:as well
+	対して:against
+
+	●algo
+arg:
+num:
+	~GTE 2:two or more
+	~NEQ ~NULL:non-null
+	不定:auto
+	向き:bias
+	%val
+	%値:val
+	%num
+	%型/3:finalType
+	%基底~型:baseType
+	%文字列:str:#4
+	%関数:func:#21
+	%値~list:thisAndValue
+	%~item:item1:#3
+	item2:#3
+	-:few
+	-:together
+	-:fresh
+	-:provisionally
+	-:revert
+	funcMatrix
+	%基底~型:baseType
+	%U:units1
+	%V:units2
+	%cssText:cssText
+	-:remaining
+	-:remainder
+	-:subsequence
+	-:part
+	成分~値:part
+	-:followed by
+	-:outlined in
+	-:consist
+	-:body
+	-:came
+	-:SPACE
+	%括弧なし:paren-less
+	-:continue to the next step
+	-:beyond
+	-:temp
+	%値~list:temp values
+	parseMultiple
+	%一時~list~temp
+	-:norm 
+
+●●ref_normative
+
+[COMPOSITING-2]
+    Compositing and Blending Level 2 URL: https://drafts.fxtf.org/compositing-2/ 
+[CSS-ALIGN-3]
+    Elika Etemad; Tab Atkins Jr.. CSS Box Alignment Module Level 3. 21 April 2020. WD. URL: https://www.w3.org/TR/css-align-3/ 
+[CSS-ANIMATIONS-1]
+    Dean Jackson; et al. CSS Animations Level 1. 11 October 2018. WD. URL: https://www.w3.org/TR/css-animations-1/ 
+[CSS-ANIMATIONS-2]
+    CSS Animations Module Level 2 URL: https://drafts.csswg.org/css-animations-2/ 
+[CSS-BACKGROUNDS-3]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. 17 October 2017. CR. URL: https://www.w3.org/TR/css-backgrounds-3/ 
+[CSS-BOX-4]
+    Elika Etemad. CSS Box Model Module Level 4. 21 April 2020. WD. URL: https://www.w3.org/TR/css-box-4/ 
+[CSS-BREAK-3]
+    Rossen Atanassov; Elika Etemad. CSS Fragmentation Module Level 3. 4 December 2018. CR. URL: https://www.w3.org/TR/css-break-3/ 
+[CSS-BREAK-4]
+    Rossen Atanassov; Elika Etemad. CSS Fragmentation Module Level 4. 18 December 2018. WD. URL: https://www.w3.org/TR/css-break-4/ 
+[CSS-CASCADE-4]
+    Elika Etemad; Tab Atkins Jr.. CSS Cascading and Inheritance Level 4. 18 August 2020. WD. URL: https://www.w3.org/TR/css-cascade-4/ 
+[CSS-COLOR-3]
+    Tantek Çelik; Chris Lilley; David Baron. CSS Color Module Level 3. 19 June 2018. REC. URL: https://www.w3.org/TR/css-color-3/ 
+[CSS-COLOR-4]
+    Tab Atkins Jr.; Chris Lilley. CSS Color Module Level 4. 5 November 2019. WD. URL: https://www.w3.org/TR/css-color-4/ 
+[CSS-COLOR-ADJUST-1]
+    Elika Etemad; et al. CSS Color Adjustment Module Level 1. 2 April 2020. WD. URL: https://www.w3.org/TR/css-color-adjust-1/ 
+[CSS-CONTAIN-2]
+    Tab Atkins Jr.; Florian Rivoal; Vladimir Levin. CSS Containment Module Level 2. 3 June 2020. WD. URL: https://www.w3.org/TR/css-contain-2/ 
+[CSS-CONTENT-3]
+    Elika Etemad; Dave Cramer. CSS Generated Content Module Level 3. 2 August 2019. WD. URL: https://www.w3.org/TR/css-content-3/ 
+[CSS-DISPLAY-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Display Module Level 3. 19 May 2020. CR. URL: https://www.w3.org/TR/css-display-3/ 
+[CSS-FLEXBOX-1]
+    Tab Atkins Jr.; et al. CSS Flexible Box Layout Module Level 1. 19 November 2018. CR. URL: https://www.w3.org/TR/css-flexbox-1/ 
+[CSS-FONTS-3]
+    John Daggett; Myles Maxfield; Chris Lilley. CSS Fonts Module Level 3. 20 September 2018. REC. URL: https://www.w3.org/TR/css-fonts-3/ 
+[CSS-FONTS-4]
+    John Daggett; Myles Maxfield; Chris Lilley. CSS Fonts Module Level 4. 13 November 2019. WD. URL: https://www.w3.org/TR/css-fonts-4/ 
+[CSS-GCPM-4]
+    CSS Generated Content for Paged Media Module Level 4 URL: https://drafts.csswg.org/css-gcpm-4/ 
+[CSS-GRID-2]
+    Tab Atkins Jr.; Elika Etemad; Rossen Atanassov. CSS Grid Layout Module Level 2. 18 August 2020. CR. URL: https://www.w3.org/TR/css-grid-2/ 
+[CSS-IMAGES-3]
+    Tab Atkins Jr.; Elika Etemad; Lea Verou. CSS Images Module Level 3. 10 October 2019. CR. URL: https://www.w3.org/TR/css-images-3/ 
+[CSS-IMAGES-4]
+    Tab Atkins Jr.; Elika Etemad; Lea Verou. CSS Image Values and Replaced Content Module Level 4. 13 April 2017. WD. URL: https://www.w3.org/TR/css-images-4/ 
+[CSS-INLINE-3]
+    Dave Cramer; Elika Etemad; Steve Zilles. CSS Inline Layout Module Level 3. 18 June 2020. WD. URL: https://www.w3.org/TR/css-inline-3/ 
+[CSS-LINE-GRID-1]
+    Elika Etemad; Koji Ishii; Alan Stearns. CSS Line Grid Module Level 1. 16 September 2014. WD. URL: https://www.w3.org/TR/css-line-grid-1/ 
+[CSS-LISTS-3]
+    Elika Etemad; Tab Atkins Jr.. CSS Lists Module Level 3. 9 July 2020. WD. URL: https://www.w3.org/TR/css-lists-3/ 
+[CSS-LOGICAL-1]
+    Rossen Atanassov; Elika Etemad. CSS Logical Properties and Values Level 1. 27 August 2018. WD. URL: https://www.w3.org/TR/css-logical-1/ 
+[CSS-MASKING-1]
+    Dirk Schulze; Brian Birtles; Tab Atkins Jr.. CSS Masking Module Level 1. 26 August 2014. CR. URL: https://www.w3.org/TR/css-masking-1/ 
+[CSS-MULTICOL-2]
+    CSS Multi-column Layout Module Level 2 URL: https://drafts.csswg.org/css-multicol-2/ 
+[CSS-OVERFLOW-3]
+    David Baron; Elika Etemad; Florian Rivoal. CSS Overflow Module Level 3. 3 June 2020. WD. URL: https://www.w3.org/TR/css-overflow-3/ 
+[CSS-OVERFLOW-4]
+    David Baron; Florian Rivoal. CSS Overflow Module Level 4. 13 June 2017. WD. URL: https://www.w3.org/TR/css-overflow-4/ 
+[CSS-PAGE-3]
+    Elika Etemad; Simon Sapin. CSS Paged Media Module Level 3. 18 October 2018. WD. URL: https://www.w3.org/TR/css-page-3/ 
+[CSS-PAGE-FLOATS-3]
+    Johannes Wilm. CSS Page Floats. 15 September 2015. WD. URL: https://www.w3.org/TR/css-page-floats-3/ 
+[CSS-POSITION-3]
+    Elika Etemad; et al. CSS Positioned Layout Module Level 3. 19 May 2020. WD. URL: https://www.w3.org/TR/css-position-3/ 
+[CSS-PRESLEV-1]
+    CSS Presentation Levels Module Level 1 URL: https://www.w3.org/TR/css3-preslev/ 
+[CSS-REGIONS-1]
+    Rossen Atanassov; Alan Stearns. CSS Regions Module Level 1. 9 October 2014. WD. URL: https://www.w3.org/TR/css-regions-1/ 
+[CSS-RHYTHM-1]
+    Koji Ishii; Elika Etemad. CSS Rhythmic Sizing. 2 March 2017. WD. URL: https://www.w3.org/TR/css-rhythm-1/ 
+[CSS-ROUND-DISPLAY-1]
+    Jihye Hong. CSS Round Display Level 1. 22 December 2016. WD. URL: https://www.w3.org/TR/css-round-display-1/ 
+[CSS-RUBY-1]
+    Elika Etemad; et al. CSS Ruby Layout Module Level 1. 29 April 2020. WD. URL: https://www.w3.org/TR/css-ruby-1/ 
+[CSS-SCROLL-ANCHORING-1]
+    Steve Kobes; Tab Atkins Jr.. CSS Scroll Anchoring Module Level 1. 11 February 2020. WD. URL: https://www.w3.org/TR/css-scroll-anchoring-1/ 
+[CSS-SCROLL-SNAP-1]
+    Matt Rakow; et al. CSS Scroll Snap Module Level 1. 19 March 2019. CR. URL: https://www.w3.org/TR/css-scroll-snap-1/ 
+[CSS-SHAPES-1]
+    Vincent Hardy; Rossen Atanassov; Alan Stearns. CSS Shapes Module Level 1. 20 March 2014. CR. URL: https://www.w3.org/TR/css-shapes-1/ 
+[CSS-SHAPES-2]
+    CSS Shapes Module Level 2 URL: https://drafts.csswg.org/css-shapes-2/ 
+[CSS-SIZE-ADJUST-1]
+    CSS Mobile Text Size Adjustment Module Level 1 URL: https://drafts.csswg.org/css-size-adjust-1/ 
+[CSS-SIZING-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Intrinsic & Extrinsic Sizing Module Level 3. 22 May 2019. WD. URL: https://www.w3.org/TR/css-sizing-3/ 
+[CSS-SPEECH-1]
+    Daniel Weck. CSS Speech Module. 10 March 2020. CR. URL: https://www.w3.org/TR/css-speech-1/ 
+[CSS-SYNTAX-3]
+    Tab Atkins Jr.; Simon Sapin. CSS Syntax Module Level 3. 16 July 2019. CR. URL: https://www.w3.org/TR/css-syntax-3/ 
+[CSS-TABLES-3]
+    François Remy; Greg Whitworth; David Baron. CSS Table Module Level 3. 27 July 2019. WD. URL: https://www.w3.org/TR/css-tables-3/ 
+[CSS-TEXT-3]
+    Elika Etemad; Koji Ishii; Florian Rivoal. CSS Text Module Level 3. 29 April 2020. WD. URL: https://www.w3.org/TR/css-text-3/ 
+[CSS-TEXT-4]
+    Elika Etemad; et al. CSS Text Module Level 4. 13 November 2019. WD. URL: https://www.w3.org/TR/css-text-4/ 
+[CSS-TEXT-DECOR-4]
+    Elika Etemad; Koji Ishii. CSS Text Decoration Module Level 4. 6 May 2020. WD. URL: https://www.w3.org/TR/css-text-decor-4/ 
+[CSS-TRANSFORMS-1]
+    Simon Fraser; et al. CSS Transforms Module Level 1. 14 February 2019. CR. URL: https://www.w3.org/TR/css-transforms-1/ 
+[CSS-TRANSFORMS-2]
+    Tab Atkins Jr.; et al. CSS Transforms Module Level 2. 3 March 2020. WD. URL: https://www.w3.org/TR/css-transforms-2/ 
+[CSS-TRANSITIONS-1]
+    David Baron; et al. CSS Transitions. 11 October 2018. WD. URL: https://www.w3.org/TR/css-transitions-1/ 
+[CSS-UI-4]
+    Florian Rivoal. CSS Basic User Interface Module Level 4. 24 January 2020. WD. URL: https://www.w3.org/TR/css-ui-4/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS-VARIABLES-1]
+    Tab Atkins Jr.. CSS Custom Properties for Cascading Variables Module Level 1. 3 December 2015. CR. URL: https://www.w3.org/TR/css-variables-1/ 
+[CSS-WILL-CHANGE-1]
+    Tab Atkins Jr.. CSS Will Change Module Level 1. 3 December 2015. CR. URL: https://www.w3.org/TR/css-will-change-1/ 
+[CSS-WRITING-MODES-3]
+    Elika Etemad; Koji Ishii. CSS Writing Modes Level 3. 10 December 2019. REC. URL: https://www.w3.org/TR/css-writing-modes-3/ 
+[CSS-WRITING-MODES-4]
+    Elika Etemad; Koji Ishii. CSS Writing Modes Level 4. 30 July 2019. CR. URL: https://www.w3.org/TR/css-writing-modes-4/ 
+[CSS2]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[CSSOM]
+    Simon Pieters; Glenn Adams. CSS Object Model (CSSOM). 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-1/ 
+[CSSOM-VIEW-1]
+    Simon Pieters. CSSOM View Module. 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-view-1/ 
+[DOM]
+    Anne van Kesteren. DOM Standard. Living Standard. URL: https://dom.spec.whatwg.org/ 
+[FILL-STROKE-3]
+    Elika Etemad; Tab Atkins Jr.. CSS Fill and Stroke Module Level 3. 13 April 2017. WD. URL: https://www.w3.org/TR/fill-stroke-3/ 
+[FILTER-EFFECTS-2]
+    Filter Effects Level 2 URL: https://drafts.fxtf.org/filter-effects-2/ 
+[GEOMETRY-1]
+    Simon Pieters; Chris Harrelson. Geometry Interfaces Module Level 1. 4 December 2018. CR. URL: https://www.w3.org/TR/geometry-1/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[INFRA]
+    Anne van Kesteren; Domenic Denicola. Infra Standard. Living Standard. URL: https://infra.spec.whatwg.org/ 
+[MOTION-1]
+    Dirk Schulze; et al. Motion Path Module Level 1. 18 December 2018. WD. URL: https://www.w3.org/TR/motion-1/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[SVG11]
+    Erik Dahlström; et al. Scalable Vector Graphics (SVG) 1.1 (Second Edition). 16 August 2011. REC. URL: https://www.w3.org/TR/SVG11/ 
+[SVG2]
+    Amelia Bellamy-Royds; et al. Scalable Vector Graphics (SVG) 2. 4 October 2018. CR. URL: https://www.w3.org/TR/SVG2/ 
+[WebIDL]
+    Boris Zbarsky. Web IDL. 15 December 2016. ED. URL: https://heycam.github.io/webidl/ 
+
+●●
+ref_informative
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、 W3C により編集者草案として公開された
+<a href="~SPEC_URL">CSS Typed OM Level 1</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新 発行バージョン
+	https://www.w3.org/TR/css-typed-om-1/ 
+
+以前のバージョン
+	https://www.w3.org/TR/2018/WD-css-typed-om-1-20180410/
+	https://www.w3.org/TR/2017/WD-css-typed-om-1-20170801/
+	https://www.w3.org/TR/2016/WD-css-typed-om-1-20160607/
+
+フィードバック
+	<a href="mailto:public-houdini@w3.org?subject=%5Bcss-typed-om%5D%20YOUR%20TOPIC%20HERE">public-houdini@w3.org</a> with subject line “<kbd>[css-typed-om] <i>… message topic …</i></kbd>” (<a href="http://lists.w3.org/Archives/Public/public-houdini/" rel="discussion">archives</a>)</span>
+
+最新の課題
+	<a href="https://github.com/w3c/css-houdini-drafts/labels/css-typed-om-1">GitHub Issues</a>
+
+編集
+	<a href="http://xanthir.com/contact/">Tab Atkins-Bittner</a> (Google)
+	François Remy (Microsoft)
+
+前任編集者
+	<a href="mailto:shanestephens@google.com">Shane Stephens</a>
+	<a href="mailto:nainar@google.com">Naina Raisinghani</a> (Google)
+
+commit 履歴
+	https://github.com/w3c/css-houdini-drafts/commits/master/css-typed-om
+
+</script>
+
+</head><body>
+
+<header>
+	<hgroup>
+<h1>CSS Typed OM Level 1</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+~CSSOM値~文字列を~JSにおいて有意義な型の表現に変換したり，元へ戻すことは、有意な処理能~overheadを被り得る。
+この仕様は、~CSS値を有型~JS~objとして公開して，高処理能な操作を手助けする。
+◎
+Converting CSSOM value strings into meaningfully typed JavaScript representations and back can incur a significant performance overhead. This specification exposes CSS values as typed JavaScript objects to facilitate their performant manipulation.
+</p>
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは、編集者草案の公な複製です…
+【以下，この節の他の内容は、<a href="css-common-ja.html#status">~CSS日本語訳~共通~page</a>／冒頭の仕様~metadataに委譲。】
+</p>
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+<p>
+~CSS~stylesheetは、~CSSの
+`内部~表現@
+と称される，~UAに内部的な抽象-~data構造に構文解析される。
+様々な仕様~algoが，それらを操作する。
+◎
+CSS stylesheets are parsed into abstract UA-internal data structures, the internal representations of CSS, which various specification algorithms manipulate.
+</p>
+
+<p>
+`内部~表現$は、実装に依存するので，直に操作できない
+— 各~UAは、`内部~表現$を`解釈する方法^emについて，合意する必要がある。
+が，それらの表現~自体は、［
+~UAが、自身にとって最も効率的な仕方で，~CSSを格納して操作できる
+］ようにする目的で，定義されないままにされている。
+◎
+Internal representations can’t be directly manipulated, as they are implementation-dependent; UAs have to agree on how to interpret the internal representations, but the representations themselves are purposely left undefined so that UAs can store and manipulate CSS in whatever way is most efficient for them.
+</p>
+
+<p>
+以前までは、`内部~表現$を［
+読取る／書込む
+］には、文字列を介する仕方しかなかった
+— ~stylesheetや~CSSOMで作者に許容されていたのは、［
+`内部~表現$に構文解析される文字列を~UAに送信すること ／
+`内部~表現$を文字列に直列化して戻すよう ~UAに要請すること
+］であった。
+◎
+Previously, the only way to read or write to the internal representations was via strings—stylesheets or the CSSOM allowed authors to send strings to the UA, which were parsed into internal representations, and the CSSOM allowed authors to request that the UA serialize their internal representations back into strings.
+</p>
+
+<p>
+この仕様は、`内部~表現$とヤリトリするための新たな仕方を導入する
+— それらを［
+文字列を
+構文解析したり, 連結する
+よりも，容易かつ依拠-可能に
+操作したり, 解せる
+］ような，特化された~JS~objで表現することにより。
+この新たな~approachは、作者にとってより容易になり（例えば,
+数量~値は実際の~JS `number^c 【！＊】に反映され，それら用に単位も~~扱える数学的な演算が定義される）、また，多くの事例でより高処理能になる
+— 値は直に操作でき、~CSS文字列を築いて構文解析する必要なく，安価に`内部~表現$に翻訳して戻せるので。
+◎
+This specification introduces a new way to interact with internal representations, by representing them with specialized JS objects that can be manipulated and understood more easily and more reliably than string parsing/concatenation. This new approach is both easier for authors (for example, numeric values are reflected with actual JS numbers, and have unit-aware mathematical operations defined for them) and in many cases are more performant, as values can be directly manipulated and then cheaply translated back into internal representations without having to build and then parse strings of CSS.
+</p>
+
+	</section>
+	<section id="_conventions">
+<h2>【この訳に特有な表記規約】</h2>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, コレ, ~IF, ~THROW, 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+また、簡潔に述べるため，次の定義も導入している。
+</p>
+
+<p>
+所与の`~list$ %~list を，各~itemから何かを得る
+`演算で写像する@
+ときは、次を走らす：
+【！ ＊~listの置換-＋複製を利用？】
+</p>
+<ol>
+	<li>
+%結果~list ~LET 新たな`~list$
+</li>
+	<li>
+%~list 内の
+~EACH( %~item )
+に対し
+⇒
+%結果~list に［
+所与の演算を %~item に適用した結果
+］を`付加する$
+</li>
+	<li>
+~RET %結果~list
+</li>
+</ol>
+
+<p>
+~IDL属性 %m に対する “%m 内部~slot” という表記は、当の~obj上の %m に対応する内部~data~fieldを指す。
+原文にて，そのような表記を利用している属性には、暗黙的に次が規定されていると見受けられる：
+</p>
+<ul>
+	<li>
+属性を宣言している~interfaceを実装する各~objは、そのような~data~fieldを有する。
+</li>
+	<li>
+その取得子~手続きは、他が指定されない限り†，単に当の~data~fieldの値を返す。
+</li>
+	<li>
+読専でない場合，その設定子~手続きは、他が指定されない限り†，単に当の~data~fieldの値を所与の値に設定する。
+</li>
+</ul>
+
+<p>†
+他の挙動を指定している属性もあることに注意。
+</p>
+
+	</section>
+	<section id="stylevalue-objects">
+<h2 title="CSSStyleValue objects">2. `CSSStyleValue^I ~obj</h2>
+
+<pre class="idl">
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSStyleValue@I {
+    `stringifier$m;
+    [`Exposed$=Window] static `CSSStyleValue$I `parse$m(`USVString$ %property, `USVString$ %cssText);
+    [`Exposed$=Window] static sequence&lt;`CSSStyleValue$I&gt; `parseAll$m(`USVString$ %property, `USVString$ %cssText);
+};
+</pre>
+
+<p>
+`CSSStyleValue$I ~objは、~TypedOM~APIを介して~access可能なすべての
+~CSS値の基底~classを与える。
+◎
+CSSStyleValue objects are the base class of all CSS values accessible via the Typed OM API.
+</p>
+
+<p>
+`stringifier@m
+における`文字列~化の挙動$は、
+<a href="#stylevalue-serialization">§ `CSSStyleValue^I の直列化</a>
+に定義される。
+◎
+The stringification behavior of CSSStyleValue objects is defined in § 6 CSSStyleValue Serialization.
+</p>
+
+<div class="algo">
+`parse(property, cssText)@m
+~method~手続きは
+⇒
+~RET `~CSSStyleValueを構文解析する$( %property, %cssText, `単数^i )
+◎
+The parse(property, cssText) method, when invoked, must parse a CSSStyleValue with property property, cssText cssText, and parseMultiple set to false, and return the result.
+</div>
+
+<div class="algo">
+`parseAll(property, cssText)@m
+~method~手続きは
+⇒
+~RET `~CSSStyleValueを構文解析する$( %property, %cssText, `複数^i )
+◎
+The parseAll(property, cssText) method, when invoked, must parse a CSSStyleValue with property property, cssText cssText, and parseMultiple set to true, and return the result.
+</div>
+
+<div class="algo">
+<p>
+`~CSSStyleValueを構文解析する@
+ときは、所与の
+( `文字列$ %~prop, `文字列$ %cssText, %単複 ~IN { `単数^i, `複数^i } )
+に対し、次を走らす：
+◎
+To parse a CSSStyleValue given a string property, a string cssText, and a parseMultiple flag, run these steps:
+</p>
+<ol>
+	<li>
+%~prop ~SET `~prop名を検査して正規化する$( %~prop )
+◎
+If property is not a custom property name string, set property to property ASCII lowercased.
+◎
+If property is not a valid CSS property, throw a TypeError.
+</li>
+	<li>
+%一体~値 ~LET 次の結果
+⇒
+%cssText を %~prop の`文法に則って構文解析する$
+◎
+Attempt to parse cssText according to property’s grammar.＼
+</li>
+	<li>
+<p>
+~IF［
+%一体~値 ~EQ `失敗^i
+］
+⇒
+~THROW `TypeError$E
+◎
+If this fails, throw a TypeError. Otherwise, let whole value be the parsed result.
+</p>
+
+<div class="note">
+
+<p>注記：
+~custom~propの挙動は、~JSを介して改変されるときと, ~stylesheet内で定義されるときとで異なる。
+◎
+The behavior of custom properties are different when modified via JavaScript than when defined in style sheets.
+</p>
+<ul>
+	<li>
+~stylesheet内で定義された~custom~propが妥当でない構文を伴う場合、~custom~propの登録-時に あらゆる~stylesheetを構文解析し直すのを避けるため，値は “未設定” として記録される。
+◎
+When a custom property is defined with an invalid syntax in a style sheet, then the value is recorded as "unset", to avoid having to reparse every style sheet when a custom property is registered.
+</li>
+	<li>
+対照的に，~custom~propが~JS~APIを介して改変された場合、構文解析-~errorは，即時に開発者に~feedbackされるよう， `TypeError$E を介して~programming環境へ伝播される。
+◎
+Conversely, when a custom property is modified via the JavaScript API, any parse errors are propagated to the progamming environment via a TypeError. This allows more immediate feedback of errors to developers.
+</li>
+</ul>
+
+</div>
+
+	</li>
+	<li>
+%値~list ~LET `~CSS値を反復成分に細分化する$( %一体~値, %~prop )
+◎
+Subdivide into iterations whole value, according to property, and let values be the result.
+</li>
+	<li>
+<p>
+%値~list ~SET %値~list を，各 %~item から次を得る`演算で写像する$
+⇒
+`具象化する$( %~item, %~prop )
+◎
+For each value in values, replace it with the result of reifying value for property.
+</p>
+
+<p class="issue">
+大域~objを定義する必要がある。
+【`671$issue】
+◎
+Define the global.
+</p>
+	</li>
+	<li>
+~RET %単複 に応じて
+⇒＃
+`単数^i ならば %値~list[0] ／
+`複数^i ならば %値~list
+◎
+If parseMultiple is false, return values[0]. Otherwise, return values.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`~CSS値を反復成分に細分化する@
+ときは、所与の
+( ~CSS値 %一体~値, ~prop %~prop )
+に対し，次を走らす：
+◎
+To subdivide into iterations a CSS value whole value for a property property, execute the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%~prop は`単独の値をとる$
+］
+⇒
+~RET 新たな`~list$ « %一体~値 »
+◎
+If property is a single-valued property, return a list containing whole value.
+</li>
+	<li>
+~RET
+%一体~値 を［
+%~prop 用に適切な，個々の反復成分
+］に細分した結果が成す，同順の反復成分からなる`~list$
+◎
+Otherwise, divide whole value into individual iterations, as appropriate for property, and return a list containing the iterations in order.
+</li>
+</ol>
+</div>
+
+<div class="issue">
+<p>
+`~list値をとる$~propを何個かの反復成分に細分する方法は、意図的に定義されておらず，現時点では手作業である。
+`一般には^em、~top-levelの~commaで分割するだけで済む（文法における ~top-levelの
+<code class="prod">&lt;%foo&gt;#</code>
+項に対応する）。
+しかしながら，旧来の~propには、反復成分を~commaで区切らないもの（ `counter-reset$p など）もある。
+◎
+How to divide a list-valued property into iterations is intentionally undefined and hand-wavey at the moment. Generally, you just split it on top-level commas (corresponding to a top-level &lt;foo&gt;# term in the grammar), but some legacy properties (such as counter-reset) don’t separate their iterations with commas.
+</p>
+
+<p>
+将来には，厳格に定義されるものと期待されているが、現時点では，明示的に
+“わかるよね”
+である。
+◎
+It’s expected to be rigorously defined in the future, but at the moment is explicitly a "you know what we mean" thing.
+</p>
+</div>
+
+		<section id="direct-cssstylevalue">
+<h3 title="Direct CSSStyleValue Objects">2.1. 直な `CSSStyleValue^I ~obj</h3>
+
+<p>
+直に~supportできる［
+より特化された `CSSStyleValue$I の下位class
+］が まだない値は、 `CSSStyleValue$I ~objとして直に表現される
+— そのような各 `CSSStyleValue$I ~objは：
+◎
+Values that can’t yet be directly supported by a more specialized CSSStyleValue subclass are instead represented as CSSStyleValue objects.
+</p>
+
+<ul>
+	<li>
+その `associatedProperty$sl 内部~slotを介して 特定0の~CSS~propが結付けられ，特定0の変異-不能な`内部~表現$が結付けられる。
+これらの~objは、自身が`具象化-$している特定0の`内部~表現$を “表現する” と呼ばれる
+— すなわち，同じ~prop用に~stylesheetの中へ設定し戻された場合には、等価な`内部~表現$を再生産することになる。
+◎
+Each CSSStyleValue object is associated with a particular CSS property, via its [[associatedProperty]] internal slot, and a particular, immutable, internal representation. These objects are said to "represent" the particular internal representation they were reified from, such that if they are set back into a stylesheet for the same property, they reproduce an equivalent internal representation.
+</li>
+	<li>
+~objを得るために構文解析された~prop用に限り妥当になると見なされる。
+これは、各 `CSSStyleValue$I ~objが有する `associatedProperty$sl 内部~slotにより施行される
+◎
+These CSSStyleValue objects are only considered valid for the property that they were parsed for. This is enforced by CSSStyleValue objects having＼
+</li>
+</ul>
+
+<p>
+各 `CSSStyleValue$I ~objは、
+`associatedProperty@sl
+内部~slotを有する
+— それは、次のいずれかを値にとる
+⇒＃
+~NULL （既定 【特に，下位classの場合】）／
+ある~prop名を指定している`文字列$
+◎
+a [[associatedProperty]] internal slot, which is either null (the default) or a string specifying a property name.
+</p>
+
+<p class="note">注記：
+この~slotは、 `StylePropertyMap$I の［
+`set()$m1 ／ `append()$m1
+］により検査される。
+◎
+Note: This slot is checked by StylePropertyMap.set()/append()
+</p>
+
+		</section>
+	</section>
+	<section id="the-stylepropertymap">
+<h2 title="The StylePropertyMap">3. `StylePropertyMap^I</h2>
+
+<pre class="idl">
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `StylePropertyMapReadOnly@I {
+    `iterable$m&lt;`USVString$, sequence&lt;`CSSStyleValue$I&gt;&gt;;
+    any `get$m(`USVString$ %property);
+    /* <span class="comment">
+ここでの `any^c は
+`(undefined or CSSStyleValue)^c を意味する
+— <a href="https://github.com/heycam/webidl/issues/60">https://github.com/heycam/webidl/issues/60</a> を見よ。
+◎
+'any' means (undefined or CSSStyleValue) here, see https://github.com/heycam/webidl/issues/60
+</span> */
+    sequence&lt;`CSSStyleValue$I&gt; `getAll$m(`USVString$ %property);
+    `boolean$ `has$m(`USVString$ %property);
+    readonly attribute `unsigned long$ `size$m;
+};
+
+[`Exposed$=Window]
+interface `StylePropertyMap@I : `StylePropertyMapReadOnly$I {
+    `undefined$ `set$m(`USVString$ %property, (`CSSStyleValue$I or `USVString$)... %values);
+    `undefined$ `append$m(`USVString$ %property, (`CSSStyleValue$I or `USVString$)... %values);
+    `undefined$ `delete$m(`USVString$ %property);
+    `undefined$ `clear$m();
+};
+</pre>
+
+<p>
+`StylePropertyMap$I は、`~CSS宣言~block$を~objで表現する，別の仕方である（
+`CSSOM$r を介して~fetchされる`~CSS宣言~block$は、 `CSSStyleDeclaration$I ~objとして表現される。）
+◎
+StylePropertyMap is an alternate way to represent a CSS declaration block as an object (when fetched via the [cssom], CSS declaration blocks are instead represented as CSSStyleDeclaration objects.)
+</p>
+
+<p>
+`StylePropertyMapReadOnly$I ~objは
+`declarations@sl
+内部~slotを有する
+— それは、`~CSS宣言~block$を成す`宣言~list$を反映している`有順序~map$である。
+◎
+A StylePropertyMapReadOnly object has a [[declarations]] internal slot, which is a map reflecting the CSS declaration block's declarations.
+</p>
+
+<p class="note">注記：
+`宣言~list$は、まだ `INFRA$r の各種用語を利用して定義されていないが、この仕様の目的においては
+`有順序~map$であると見做される。
+その~keyは，~prop名を表現している`文字列$を与え、その値は，その~prop用の`内部~表現$を与える。
+◎
+Note: The declarations are not yet defined using [infra] terminology, but for the purpose of this spec it’s assumed to be a map whose keys are strings (representing property names) and whose values are internal representations for those properties.
+</p>
+
+<p>
+他が指定されない限り，初期~時における `declarations$sl 内部~slotを成す`~entry$たちの順序は、それぞれの~keyに基づいて，次に挙げる順とする：
+◎
+Unless otherwise stated, the initial ordering of the [[declarations]] internal slot is based on the key of each entry:
+</p>
+<ol>
+	<li>
+標準~化された~propたち（`~custom~prop$でも, ~vendor接頭辞~付きでもないもの）
+— これらは、`~ASCII小文字~化$した上で符号位置の昇順で~sortする。
+◎
+Standardized properties (not custom properties or vendor-prefixed properties), ASCII-lowercased and then sorted in increasing code-point order.
+</li>
+	<li>
+~vendor接頭辞~付きまたは試験的な~propたち（名前が 1 個の `002D^U ( `-^l ) から開始するもの）
+— これらも、前項と同様に~sortする。
+◎
+Vendor-prefixed/experimental properties (those whose name starts with a single dash), ASCII-lowercased and then sorted in increasing code-point order.
+</li>
+	<li>
+`~custom~prop$たち
+— これらは、符号位置の昇順で~sortする（これらは決して小文字~化されず，書かれたものが正確に保全される）。
+◎
+Custom properties, sorted in increasing code-point order. (These are never lower-cased; they are preserved exactly as written.)
+</li>
+</ol>
+
+<div class="algo">
+<p>
+`StylePropertyMapReadOnly$I ~obj %O の
+`iterable@m1
+用の`反復される値~pairたち$は、次に従って得される：
+◎
+The value pairs to iterate over for a StylePropertyMapReadOnly object this are obtained as follows:
+</p>
+<ol>
+	<li>
+%宣言~map ~LET %O の `declarations$sl 内部~slot
+◎
+Let declarations be this’s [[declarations]] slot.
+</li>
+	<li>
+%値~pairたち ~LET 新たな`~list$
+◎
+Let value pairs be an empty list.
+</li>
+	<li>
+<p>
+%宣言~map を成す
+~EACH( %~prop → %値 )
+に対し：
+◎
+For each prop → value in declarations:
+</p>
+		<ol>
+			<li>
+%反復成分 ~LET `~CSS値を反復成分に細分化する$( %値 )
+◎
+Let iterations be the result of dividing into iterations value.
+</li>
+			<li>
+%~obj~list ~LET %反復成分 を，各 %~item から次を得る`演算で写像する$
+⇒
+`具象化する$( %~item, %~prop )
+◎
+Reify each item of iterations, and let objects be the result.
+</li>
+			<li>
+%値~pairたち に~pair ( %~prop / %~obj~list ) を付加する
+◎
+Append prop/objects to value pairs.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %値~pairたち
+◎
+Return value pairs.
+</li>
+</ol>
+
+</div>
+
+<p>
+一部の~CSS~propは、
+`~list値をとる@
+— 例： `background-image$p, `animation$p など。
+その種の値は，大概は ~comma区切りの並列的な文法~項の~listであり（例外は， `counter-reset$p の様な一握りの旧来の~prop）、それを成す複数の “値のそれぞれ” は，同じ仕方で解釈されることを指示する。
+他の~propは、（場合によっては複階的な）
+`単独の値をとる@
+とされる
+— 例： `color$p など。
+◎
+Some CSS properties are list-valued properties, such as background-image or animation; their value is a list of parallel grammar terms, almost always comma-separated (the only exceptions are certain legacy properties like counter-reset), indicating multiple distinct "values" interpreted in the same way. Other properties, such as color, are single-valued properties; they take only a single (possibly complex) value.
+</p>
+
+<p class="issue">
+どの~propが~list値をとり，どれがそうでないか精確に定義する
+— おそらく付録にて。
+`644$issue
+◎
+w3c/css-houdini-drafts/644[css-typed-om]Define precisely which properties are list-valued and which aren't, probably in an appendix.
+</p>
+
+<div class="note">
+
+<p>注記：
+~CSS~propには、`単独の値をとる$ものから`~list値をとる$ように遷移した例が，いくつかある。
+~propが`単独の値をとる$頃に書かれた~codeが，将来に`~list値をとる$ようになったときにも壊れないことを確保するため、
+`StylePropertyMap$I は `multi-map^en にされている†
+— それは，各~keyごとに値の`~list^emを格納するが、各~keyに対し，単独の値しかないかのようにヤリトリ-可能にする††。
+◎
+There are multiple examples of CSS properties that have transitioned from being single-valued to list-valued. To ensure that code written at a time when a property was single-valued does not break when it becomes list-valued in the future, the StylePropertyMap is a multi-map; it stores list of values for each key, but allows you to interact with it as if there was only a single value for each key as well.
+</p>
+
+<p class="trans-note">【†
+この “`multi-map^en” は、単に “一対多” を表すと見受けられる。
+】【††
+`get()^m ~methodを通して。
+】</p>
+
+<p>
+このことは、 `StylePropertyMap$I 内の単独の~prop用の複数の値は，その~propの値を成す複数片からなる連続的な定義を表現しないことを意味する。
+それらは代わりに、単独の~prop値において，複数の~comma区切りの下位-値を表現する
+— `background-image$p ~prop内の各 “層” の様に。
+◎
+This means that multiple values for a single property in a StylePropertyMap do not represent multiple successive definition of that property’s value; instead, they represent multiple comma-separated sub-values in a single property value, like each "layer" in a background-image property.
+</p>
+</div>
+
+<!-- 
+`StylePropertyMapReadOnly^I0
+ -->
+<div class="algo">
+<p>
+`get(property)@m
+~method~手続きは：
+◎
+The get(property) method, when called on a StylePropertyMap this, must perform the following steps:
+</p>
+<ol>
+	<li>
+%property ~SET `~prop名を検査して正規化する$( %property )
+◎
+If property is not a custom property name string, set property to property ASCII lowercased..
+◎
+If property is not a valid CSS property, throw a TypeError.
+</li>
+	<li>
+%~prop値 ~LET コレの `declarations$sl 内部~slot[ %property ]
+◎
+Let props be the value of this’s [[declarations]] internal slot.
+</li>
+	<li>
+~IF［
+%~prop値 ~NEQ ε
+］
+⇒
+~RET `具象化する$( 次の結果の最初の~item, %property )
+⇒
+`~CSS値を反復成分に細分化する$( %~prop値 )
+◎
+If props[property] exists, subdivide into iterations props[property], then reify the first item of the result and return it.
+</li>
+	<li>
+~RET `undefined^c
+【！＊jv】
+◎
+Otherwise, return undefined.
+</li>
+</ol>
+
+<p class="issue">
+大域~objを定義する必要がある。
+【`671$issue】
+◎
+Define the global.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`getAll(property)@m
+~method~手続きは：
+◎
+The getAll(property) method, when called on a StylePropertyMap this, must perform the following steps:
+</p>
+<ol>
+	<li>
+%property ~SET `~prop名を検査して正規化する$( %property )
+◎
+If property is not a custom property name string, set property to property ASCII lowercased..
+◎
+If property is not a valid CSS property, throw a TypeError.
+</li>
+	<li>
+%~prop値 ~LET コレの `declarations$sl 内部~slot[ %property ]
+◎
+Let props be the value of this’s [[declarations]] internal slot.
+</li>
+	<li>
+~IF［
+%~prop値 ~NEQ ε
+］
+⇒
+~RET ［
+`~CSS値を反復成分に細分化する$( %~prop値 )
+の結果
+］を，各 %~item から次を得る`演算で写像する$
+⇒
+`具象化する$( %~item, %property )
+◎
+If props[property] exists, subdivide into iterations props[property], then reify each item of the result, and return the list.
+</li>
+	<li>
+~RET 空`~list$
+◎
+Otherwise, return an empty list.
+</li>
+</ol>
+
+<p class="issue">
+大域~objを定義する必要がある。
+【`671$issue】
+◎
+Define the global.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`has(property)@m
+~method~手続きは：
+◎
+The has(property) method, when called on a StylePropertyMap this, must perform the following steps:
+</p>
+<ol>
+	<li>
+%property ~SET `~prop名を検査して正規化する$( %property )
+◎
+If property is not a custom property name string, set property to property ASCII lowercased..
+◎
+If property is not a valid CSS property, throw a TypeError.
+</li>
+	<li>
+%~prop~map ~LET コレの `declarations$sl 内部~slot
+◎
+Let props be the value of this’s [[declarations]] internal slot.
+</li>
+	<li>
+~RET［
+%~prop~map[ %property ] ~NEQ ε ならば ~T ／
+~ELSE_ ~F
+］
+◎
+If props[property] exists, return true. Otherwise, return false.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`size@m
+取得子~手続きは
+⇒
+~RET コレの `declarations$sl 内部~slotの`~size$map
+◎
+The size attribute, on getting from a StylePropertyMap this, must perform the following steps:
+• Return the size of the value of this’s [[declarations]] internal slot.
+</div>
+
+<!-- 
+`StylePropertyMap^I0
+-->
+
+<div class="algo">
+<p>
+`set(property, ...values)@m
+~method~手続きは：
+◎
+The set(property, ...values) method, when called on a StylePropertyMap this, must perform the following steps:
+</p>
+<ol>
+	<li>
+%property ~SET `~prop名を検査して正規化する$( %property )
+◎
+If property is not a custom property name string, set property to property ASCII lowercased.
+◎
+If property is not a valid CSS property, throw a TypeError.
+</li>
+	<li>
+%値~list ~LET %values を成す値たちの`~list$
+◎
+↓</li>
+	<li>
+%個数 ~LET %値~list の`~size$
+◎
+↓</li>
+	<li>
+<p>
+~IF［
+次のいずれかが満たされる
+］
+⇒
+~THROW `TypeError$E：
+◎
+↓</p>
+		<ul>
+			<li>
+［
+%property は`単独の値をとる$
+］~AND［
+%個数 ~GTE 2
+］
+◎
+If property is a single-valued property and values has more than one item, throw a TypeError.
+</li>
+			<li>
+%値~list 内のある`~item$の `associatedProperty$sl 内部~slot値 ~NIN { ~NULL, %property }
+◎
+If any of the items in values have a non-null [[associatedProperty]] internal slot, and that slot’s value is anything other than property, throw a TypeError.
+</li>
+			<li>
+<p>
+［
+%個数 ~GTE 2
+］~AND［
+%値~list 内のある`~item$は［
+`CSSUnparsedValue$I ／ `CSSVariableReferenceValue$I
+］~objである
+］
+◎
+If the size of values is two or more, and one or more of the items are a CSSUnparsedValue or CSSVariableReferenceValue object, throw a TypeError.
+<p>
+
+<p class="note">注記：
+値が 2 個~以上あることは，~list値をとる~propに複数の~itemを設定していることを含意するが、文字列に基づく~OMにおいては， `var$f 関数が在ると すべての構文の構文解析は不能化される
+— 個々の反復成分に分割することも含め（ `var$f 値の内側には もっと~commaがあるかもしれず、実際は何個の~itemがあるか伝えれない）。
+この段の制約は、~TypedOMにおいて同じ意味論を保全する。
+◎
+Note: Having 2+ values implies that you’re setting multiple items of a list-valued property, but the presence of a var() function in the string-based OM disables all syntax parsing, including splitting into individual iterations (because there might be more commas inside of the var() value, so you can’t tell how many items are actually going to show up). This step’s restriction preserves the same semantics in the Typed OM.
+</p>
+			</li>
+		</ul>
+	</li>
+	<li>
+%~prop~map ~LET コレの `declarations$sl 内部~slot
+◎
+Let props be the value of this’s [[declarations]] internal slot.
+</li>
+	<li>
+%~prop~map[ %property ] ~SET 空`~list$
+◎
+If props[property] exists, remove it.
+◎
+Let values to set be an empty list.
+</li>
+	<li>
+%値~list 内の
+~EACH( %値 )
+に対し
+⇒
+%~prop~map[ %property ] に次の結果を付加する
+⇒
+`内部~表現を作成する$( %property, %値 )
+◎
+For each value in values, create an internal representation for property and value, and append the result to values to set.
+◎
+Set props[property] to values to set.
+</li>
+</ol>
+
+<p class="note">注記：
+%property は削除されてから, また追加され、`有順序~map$の末尾に置かれる
+— これにより、`略式~prop$に面したときでも，期待される挙動を与える。
+◎
+Note: The property is deleted then added back so that it gets put at the end of the ordered map, which gives the expected behavior in the face of shorthand properties.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`append(property, ...values)@m
+~method~手続きは：
+◎
+The append(property, ...values) method, when called on a StylePropertyMap this, must perform the following steps:
+</p>
+<ol>
+	<li>
+%property ~SET `~prop名を検査して正規化する$( %property )
+◎
+If property is not a custom property name string, set property to property ASCII lowercased.
+◎
+If property is not a valid CSS property, throw a TypeError.
+</li>
+	<li>
+%値~list ~LET %values を成す値たちの`~list$
+◎
+↓</li>
+	<li>
+<p>
+~IF［
+次のいずれかが満たされる
+］
+⇒
+~THROW `TypeError$E：
+◎
+↓</p>
+		<ul>
+			<li>
+%property は`単独の値をとる$
+◎
+If property is not a list-valued property, throw a TypeError.
+</li>
+			<li>
+%値~list 内のある`~item$の `associatedProperty$sl 内部~slot値 ~NIN { ~NULL, %property }
+◎
+If any of the items in values have a non-null [[associatedProperty]] internal slot, and that slot’s value is anything other than property, throw a TypeError.
+</li>
+			<li>
+<p>
+%値~list 内のある`~item$は［
+`CSSUnparsedValue$I ／ `CSSVariableReferenceValue$I
+］~objである
+◎
+If any of the items in values are a CSSUnparsedValue or CSSVariableReferenceValue object, throw a TypeError.
+<p>
+
+<p class="note">注記：
+~propが文字列に基づく~APIを介して設定されるとき、~prop内に `var$f が在ると，全体が解釈できなくなる。
+言い換えれば、 `var$f に`~~付随するすべて^emは，有意義な型が無い素な`成分~値$になる。
+この段の制約は、~TypedOMにおける同じ意味論を保全する。
+◎
+Note: When a property is set via string-based APIs, the presence of var() in a property prevents the entire thing from being interpreted. In other words, everything besides the var() is a plain component value, not a meaningful type. This step’s restriction preserves the same semantics in the Typed OM.
+</p>
+			</li>
+		</ul>
+	</li>
+	<li>
+%~prop~map ~LET コレの `declarations$sl 内部~slot
+◎
+Let props be the value of this’s [[declarations]] internal slot.
+</li>
+	<li>
+~IF［
+%~prop~map[ %property ] ~EQ ε
+］
+⇒
+%~prop~map[ %property ] ~SET 空`~list$
+◎
+If props[property] does not exist, set props[property] to an empty list.
+</li>
+	<li>
+~IF［
+%~prop~map[ %property ] は `var$f 参照を含む
+］
+⇒
+~THROW `TypeError$E
+◎
+If props[property] contains a var() reference, throw a TypeError.
+</li>
+	<li>
+%値~list 内の
+~EACH( %値 )
+に対し
+⇒
+%~prop~map[ %property ] に次の結果を`付加する$
+⇒
+`内部~表現を作成する$( %property, %値 )
+◎
+Let temp values be an empty list.
+◎
+For each value in values, create an internal representation with property and value, and append the returned value to temp values.
+◎
+Append the entries of temp values to props[property].
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`delete(property)@m
+~method~手続きは：
+◎
+The delete(property) method, when called on a StylePropertyMap this, must perform the following steps:
+</p>
+<ol>
+	<li>
+%property ~SET `~prop名を検査して正規化する$( %property )
+◎
+If property is not a custom property name string, set property to property ASCII lowercased..
+◎
+If property is not a valid CSS property, throw a TypeError.
+</li>
+	<li>
+コレの `declarations$sl 内部~slot[ %property ] ~SET ε
+◎
+If this’s [[declarations]] internal slot contains property, remove it.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`clear()@m
+~method~手続きは
+⇒
+コレの `declarations$sl 内部~slotからすべての宣言を`除去する$map
+◎
+The clear() method, when called on a StylePropertyMap this, must perform the following steps:
+• Remove all of the declarations in this’s [[declarations]] internal slot.
+</div>
+
+<div class="algo">
+<p>
+`内部~表現を作成する@
+ときは、所与の
+( `文字列$ %~prop, `文字列$または `CSSStyleValue$I %値 )
+に対し， %値 の型に応じて次を走らす：
+◎
+To create an internal representation, given a string property and a string or CSSStyleValue value:
+</p>
+<ol>
+	<li>
+<p>
+~IF［
+%値 は `CSSStyleValue$I ~objである
+］：
+◎
+↓</p>
+		<ol>
+			<li>
+~IF［
+%値 は `CSSStyleValue$I の下位classでない
+］
+⇒
+~RET %値 に結付けられている値
+◎
+If value is a direct CSSStyleValue,
+• Return value’s associated value.
+</li>
+			<li>
+~IF［
+%~prop は`~list値をとる$でない
+］~OR［
+%値 は %~prop の反復成分の`文法に合致-$しない
+【！＊property iteration of property】
+］
+⇒
+~THROW `TypeError$E
+◎
+If value is a CSSStyleValue subclass,
+◎
+If value does not match the grammar of a list-valued property iteration of property, throw a TypeError.
+</li>
+			<li>
+<p>
+%~prop の~CSS文法を成す
+~EACH( 数量を表し, かつ範囲は制限されている成分 %成分 )
+に対し：
+</p>
+				<ol>
+					<li>
+%成分~値 ~LET %値 の中の %成分 に対応する部分
+</li>
+					<li>
+~IF［
+%成分~値 は %成分 の範囲~内にある
+］
+⇒
+~CONTINUE
+</li>
+					<li>
+~ELSE（ %成分~値 は `CSSUnitValue$I である ）
+⇒
+%値 の中の %成分~値 を次のようにされた新たな `CSSMathSum$I 内に包装した結果に置換する
+⇒
+`values$m1 内部~slot ~SET « %成分~値 »
+</li>
+				</ol>
+
+◎
+If any component of property’s CSS grammar has a limited numeric range, and the corresponding part of value is a CSSUnitValue that is outside of that range, replace that value with the result of wrapping it in a fresh CSSMathSum whose values internal slot contains only that part of value.
+</li>
+			<li>
+~RET %値
+◎
+Return the value.
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+~ELSE（%値 は `USVString$T である）
+⇒
+~RET `~CSSStyleValueを構文解析する$( %~prop, %値, `単数^i )
+◎
+If value is a USVString,
+• Parse a CSSStyleValue with property property, cssText value, and parseMultiple set to false, and return the result.
+</p>
+
+<p class="note">注記：
+これは `TypeError$E を投出することもある。
+◎
+Note: This can throw a TypeError instead.
+</p>
+	</li>
+</ol>
+
+</div>
+
+<div class="algo">
+<p>
+~CSS~propは、それへの妥当な入力を，［
+`CSS-SYNTAX-3$r の <a href="~CSSSYN#tokenization">§~token化</a> にて定義されるように，文字列を構文解析して得られる~CSS~token列に対して照合すること
+］を前提に書かれた文法で表出する。
+しかしながら、 `CSSStyleValue$I ~objも，これらの文法と照合できる。
+◎
+CSS properties express their valid inputs with grammars, which are written with the assumption of being matched against strings parsed into CSS tokens, as defined in CSS Syntax 3 §4 Tokenization. CSSStyleValue objects can also be matched against these grammars, however.
+</p>
+
+<p>
+`CSSStyleValue$I がどの
+`文法に合致-@
+するとされるかは、次の規則に基づく：
+◎
+A CSSStyleValue is said to match a grammar based on the following rules:
+</p>
+
+<ul>
+
+	<li>
+<p>
+`CSSKeywordValue$I は、その `value$m1 内部~slotが `ident$t に合致するならば，文法~内に指定された `ident$t に合致する。
+◎
+A CSSKeywordValue matches an ident specified in a grammar if its value internal slot matches the ident.
+</p>
+
+<p>
+その `ident^t 用の文字大小正規化~規則による効果が通常にある場合（ `width$p 用の文法~内に指定された~keyword `auto^v に合致している `Auto^v など）、この比較にも適用される。
+◎
+If case-folding rules are in effect normally for that ident (such as Auto matching the keyword auto specified in the grammar for width), they apply to this comparison as well.
+</p>
+	</li>
+	<li>
+`CSSTransformValue$I は、 `transform-list$t に合致する。
+◎
+A CSSTransformValue matches &lt;transform-list&gt;.
+</li>
+	<li>
+`CSSNumericValue$I は［
+その型が`合致-$するもの
+］に合致する。
+◎
+A CSSNumericValue matches what its type matches.
+</li>
+	<li>
+`CSSURLImageValue^I は、 `url$t に合致する。
+◎
+A CSSURLImageValue matches &lt;url&gt;.
+</li>
+	<li>
+`CSSImageValue$I の下位classは、 `image$t に合致する。
+◎
+Any subclass of CSSImageValue matches &lt;image&gt;.
+</li>
+	<li>
+`CSSUnparsedValue$I は、どの文法にも合致する。
+◎
+A CSSUnparsedValue matches any grammar.
+</li>
+	<li>
+［
+`CSSStyleValue$I ~objであって その下位classではないもの
+］のうち，［
+`associatedProperty$sl ~slot ~NEQ ~NULL
+］なるものは、その~slot内に指定された~propの文法に合致する
+— その文法が何であれ。
+◎
+A direct CSSStyleValue object (not a subclass) with a non-null [[associatedProperty]] slot matches the grammar of the property specified in its [[associatedProperty]] slot, regardless of what it is.
+</li>
+</ul>
+
+<p class="note">注記：
+~TypedOMにおいて複階的な値を作成する能がもっと増えれば、それに伴い，この節も もっと複階的になることになる。
+◎
+Note: As the ability to create more complex values in Typed OM increases, this section will become more complex.
+</p>
+
+</div>
+
+<p>
+`--foo^p の様に 2 個の `002D^U ( `-^l  ) から開始される`文字列$ は、
+`~custom~prop名~文字列@
+とされる。
+（これは， `custom-property-name$t 生成規則に対応するが、`識別子$ではなく`文字列$に適用されるので，~CSS構文解析器を呼出すことなく利用できる／され得る。）
+◎
+A string is a custom property name string if it starts with two dashes (U+002D HYPHEN-MINUS), like --foo. (This corresponds to the &lt;custom-property-name&gt; production, but applies to strings, rather than identifiers; it can be used without invoking the CSS parser.)
+</p>
+
+<p>
+次を満たす`文字列$は、
+`妥当な~CSS~prop名@
+とされる
+⇒
+［
+`~custom~prop名~文字列$である
+］~OR［
+~UAが認識する~CSS~prop名である
+【`~supportされる~CSS~prop$】
+］
+◎
+A string is a valid CSS property if it is a custom property name string, or is a CSS property name recognized by the user agent.
+</p>
+
+<div class="algo">
+<p>
+`~prop名を検査して正規化する@
+ときは、所与の
+( 文字列 %property )
+に対し，次を走らす：
+</p>
+
+【この~algoは、他所に共通な記述を集約するために、この訳にて導入している。】
+
+<ol>
+	<li>
+~IF［
+%property は`~custom~prop名~文字列$でない
+］
+⇒
+%property ~LET `~ASCII小文字~化する$( %property )
+</li>
+	<li>
+~IF［
+%property は`妥当な~CSS~prop名$でない
+］
+⇒
+~THROW `TypeError$E
+</li>
+	<li>
+~RET %property
+</li>
+</ol>
+<!-- 
+If property is not a custom property name string, set property to property ASCII lowercased..
+If property is not a valid CSS property, throw a TypeError and exit this algorithm.
+-->
+◎
+↑↑</div>
+
+		<section id="computed-stylepropertymapreadonly-objects">
+<h3 title="Computed StylePropertyMapReadOnly objects">3.1. 算出d `StylePropertyMapReadOnly^I ~obj</h3>
+
+<pre class="idl">
+partial interface `Element$I0 {
+    [`SameObject$] `StylePropertyMapReadOnly$I `computedStyleMap$m();
+};
+</pre>
+
+<p>
+`算出d~StylePropertyMap@
+~objは， `Element$I の`算出d値$を表現する。
+それは、 `computedStyleMap()$m ~methodを~callして~accessされる。
+◎
+Computed StylePropertyMap objects represent the computed values of an Element, and are accessed by calling the computedStyleMap() method.
+</p>
+
+<p>
+各 `Element$I は、
+`computedStyleMapCache@sl
+内部~slotを持ち，初期~時には ~NULL にされるとする。
+それは、 `computedStyleMap()$m ~methodが最初に~callされたときの結果を~cacheする。
+◎
+Every Element has a [[computedStyleMapCache]] internal slot, initially set to null, which caches the result of the computedStyleMap() method when it is first called.
+</p>
+
+<div class="algo">
+<p>
+`computedStyleMap()@m
+~method~手続きは：
+◎
+The computedStyleMap() method must, when called on an Element this, perform the following steps:
+</p>
+	<ol>
+		<li>
+<p>
+~IF［
+コレの `computedStyleMapCache$sl 内部~slot ~EQ ~NULL
+］
+⇒
+コレの `computedStyleMapCache$sl 内部~slot ~SET
+次に従うような新たな `StylePropertyMapReadOnly$I ~obj：
+◎
+If this’s [[computedStyleMapCache]] internal slot is set to null, set its value to a new StylePropertyMapReadOnly object,＼
+</p>
+
+<p>
+この~objの `declarations$sl 内部~slotは：
+◎
+whose [[declarations]] internal slot are
+</p>
+
+			<ul>
+				<li>
+次に該当する すべての~propの［
+名前, `算出d値$
+］からなるとする
+⇒＃
+~UAが~supportする略式でない~CSS~prop,
+登録されている`~custom~prop$,
+登録されていない`~custom~prop$のうち コレ上にて その初期~値に設定されていないもの
+◎
+the name and computed value of every longhand CSS property supported by the User Agent, every registered custom property, and every non-registered custom property which is not set to its initial value on this,＼
+</li>
+				<li>
+標準な順序に~sortされるとする。
+【 `declarations$sl 内部~slotの定義に述べた順序】
+◎
+in the standard order.
+</li>
+				<li>
+<p>
+`declarations$sl 内の`算出d値$は、［
+コレ上の~propに対する~style解決が変化し, それらがどう算出されるか
+］に伴い変化するよう，~~最新であり続けるモノトスル。
+◎
+The computed values in the [[declarations]] of this object must remain up-to-date, changing as style resolution changes the properties on this and how they’re computed.
+</p>
+
+<p class="note">注記：
+実施においては、値は `get()^m ~method~callの背後に “隠される” ので、~UAは，所与の~propが実際に要請されるまでは 算出するのを遅延できる。
+◎
+Note: In practice, since the values are "hidden" behind a .get() method call, UAs can delay computing anything until a given property is actually requested.
+</p>
+			</li>
+		</ul>
+	</li>
+	<li>
+~RET コレの `computedStyleMapCache$sl 内部~slot
+◎
+Return this’s [[computedStyleMapCache]] internal slot.
+</li>
+</ol>
+</div>
+
+<p class="note">注記：
+`getComputedStyle()$m と同様に、この~methodは［
+`生成元clean~flag$ ~EQ ~F
+］にされた~stylesheetからの情報を公開し得る。
+◎
+Note: like Window.getComputedStyle(), this method can expose information from stylesheets with the origin-clean flag unset.
+</p>
+
+<p class="note">注記：
+この~methodが返す `StylePropertyMapReadOnly$I は、
+`getComputedStyle()$m に利用される`解決d値$の概念ではなく，`実際の^em `算出d値$を表現する。
+したがって，一部の~prop（ `width$p など）に対しては、 `getComputedStyle()$m と異なる値を返すこともある。
+◎
+Note: The StylePropertyMapReadOnly returned by this method represents the actual computed values, not the resolved value concept used by Window.getComputedStyle(). It can thus return different values than Window.getComputedStyle() for some properties (such as width).
+</p>
+
+<p class="note">注記：
+<a href="https://github.com/w3c/css-houdini-drafts/issues/350#issuecomment-294690156">WG resolution</a>
+により、疑似要素の~styleは，この~methodを
+新たな `PseudoElement^I ~interfaceに追加することで得せるようになるものと意図されている（ `getComputedStyle()$m が 2 個目の引数（ %pseudoElt ）を利用して行う様にはせずに）。
+◎
+Note: Per WG resolution, pseudo-element styles are intended to be obtainable by adding this method to the new PseudoElement interface (rather than using a pseudoElt argument like Window.getComputedStyle() does).
+</p>
+
+		</section>
+		<section id="declared-stylepropertymap-objects">
+<h3 title="Declared &amp; Inline StylePropertyMap objects">3.2. 宣言d／~inline `StylePropertyMap^I ~obj</h3>
+
+<pre class="idl">
+partial interface `CSSStyleRule$I0 {
+    [`SameObject$] readonly attribute `StylePropertyMap$I `styleMap$m;
+};
+
+partial interface mixin `ElementCSSInlineStyle$I0 {
+    [`SameObject$] readonly attribute `StylePropertyMap$I `attributeStyleMap$m;
+};
+</pre>
+
+<p>
+`宣言d~StylePropertyMap@
+~objは、［
+~style規則 ／ 
+~inline~style
+］内に埋込まれた
+( ~prop / 値 )
+~pairたちが成す~styleを表現する：
+◎
+Declared StylePropertyMap objects represent style property-value pairs embedded in a style rule or inline style, and＼
+</p>
+
+<ul>
+	<li>
+<p>
+それは、次の属性を介して~accessされる：
+</p>
+		<ul>
+			<li>
+~style規則に対しては、
+`CSSStyleRule$I ~objの
+`styleMap@m1
+属性
+</li>
+			<li>
+~inline~styleに対しては、
+（ `HTMLElement$I などの） `ElementCSSInlineStyle$I ~interface~mixinを実装する~objの
+`attributeStyleMap@m1
+属性
+</li>
+		</ul>
+◎
+are accessed via the styleMap attribute of CSSStyleRule objects, or the attributeStyleMap attribute of objects implementing the ElementCSSInlineStyle interface mixin (such as HTMLElements).
+</li>
+	<li>
+その `declarations$sl 内部~slotは、~objの構築-時に，次のように初期化されるとする
+⇒
+各~propのうち，［
+~objが表現する［
+~style規則 ／~inline~style
+］の内側に妥当な値を伴うもの
+］ごとに， 1 個の`~entry$を包含する
+◎
+When constructed, the [[declarations]] internal slot for declared StylePropertyMap objects is initialized to contain an entry for each property with a valid value inside the CSSStyleRule or inline style that the object represents, in the same order as the CSSStyleRule or inline style.
+</li>
+</ul>
+
+		</section>
+	</section>
+	<section id="stylevalue-subclasses">
+<h2 title="CSSStyleValue subclasses">4. `CSSStyleValue^I の下位class</h2>
+
+		<section id="unparsedvalue-objects">
+<h3 title="CSSUnparsedValue objects">4.1. `CSSUnparsedValue^I ~obj</h3>
+
+<pre class="idl">
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSUnparsedValue@I : `CSSStyleValue$I {
+    `CSSUnparsedValue@mc(sequence&lt;`CSSUnparsedSegment$&gt; %members);
+
+    `iterable$m&lt;`CSSUnparsedSegment$&gt;;
+    readonly attribute `unsigned long$ `length$m;
+    `getter$m `CSSUnparsedSegment$ (`unsigned long$ %index);
+    `setter$m `CSSUnparsedSegment$ (`unsigned long$ %index, `CSSUnparsedSegment$ %val);
+};
+
+typedef (`USVString$ or `CSSVariableReferenceValue$I) `CSSUnparsedSegment@;
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSVariableReferenceValue@I {
+    `CSSVariableReferenceValue$mc(`USVString$ %variable, optional `CSSUnparsedValue$I? %fallback = null);
+
+    attribute `USVString$ `variable$m;
+    readonly attribute `CSSUnparsedValue$I? `fallback@m;
+};
+</pre>
+
+<p>
+`CSSUnparsedValue$I ~objは、`~custom~prop$を参照する~prop値を表現する。
+それは，［
+`USVString$T として与えられる文字列~片,
+`CSSVariableReferenceValue$I ~objとして与えられる変数~参照
+］が~~混在する`~list$であり、~objの
+`tokens@sl
+内部~slotに格納される。
+◎
+CSSUnparsedValue objects represent property values that reference custom properties. They are comprised of a list of string fragments and variable references.
+◎
+↓</p>
+
+<!-- ＊
+`CSSUnparsedValue@I0
+ -->
+<div class="algo">
+`iterable@m
+コレの`値~反復子$は、コレの `tokens$sl 内部~slotを成す~itemたちを順に反復する。
+◎
+They have a [[tokens]] internal slot, which is a list of USVStrings and CSSVariableReferenceValue objects. This list is the object’s values to iterate over.
+</div>
+
+<div class="algo">
+`length@m
+取得子~手続きは
+⇒
+~RET コレの `tokens$sl 内部~slotの`~size$
+◎
+The length attribute returns the size of the [[tokens]] internal slot.
+</div>
+
+<div class="algo">
+<p>
+［
+`getter@m／
+`setter@m
+］`特殊~演算$のふるまいは、コレの `tokens$sl に基づく：
+◎
+↓</p>
+		<ul>
+			<li>
+コレが`~supportする~prop~index$は、
+0 以上［
+コレの `tokens$sl 内部~slotの`~size$
+］未満とする。
+◎
+The supported property indexes of a CSSUnparsedValue this are the integers greater than or equal to 0, and less than the size of this’s [[tokens]] internal slot.
+</li>
+			<li>
+コレの`有index~propの値を決定する$ときは、所与の
+( コレが`~supportする~prop~index$ %n )
+に対し，コレの `tokens$sl 内部~slot[ %n ] を返す。
+【 %n が他の値のときにどうなるか言及されていない — ~NULL は返せないので、例外が投出される？】
+◎
+To determine the value of an indexed property of a CSSUnparsedValue this and an index n, let tokens be this’s [[tokens]] internal slot, and return tokens[n].
+</li>
+			<li>
+<p>
+コレの［
+`既存の有index~propの値を設定する$ ／
+`新たな有index~propの値を設定する$
+］ときは、所与の
+( ~index %n, 値 %新たな値 )
+に対し，次を遂行する：
+</p>
+				<ol>
+					<li>
+%~token~list ~LET コレの `tokens$sl 内部~slot
+</li>
+					<li>
+~IF［
+%n はコレが`~supportする~prop~index$である
+］
+⇒
+%~token~list[ %n ] ~SET %新たな値
+</li>
+					<li>
+~ELIF［
+%n ~EQ %~token~list の`~size$
+］
+⇒
+%~token~list に %新たな値 を`付加する$
+</li>
+					<li>
+~ELSE
+⇒
+~THROW `RangeError$E
+</li>
+				</ol>
+
+◎
+To set the value of an existing indexed property of a CSSUnparsedValue this, an index n, and a value new value, let tokens be this’s [[tokens]] internal slot, and set tokens[n] to new value.
+◎
+To set the value of a new indexed property of a CSSUnparsedValue this, an index n, and a value new value, let tokens be this’s [[tokens]] internal slot. If n is not equal to the size of tokens, throw a RangeError. Otherwise, append new value to tokens.
+</li>
+		</ul>
+</div>
+
+<!-- ＊
+`CSSVariableReferenceValue^I0
+ -->
+
+<div class="algo">
+`variable@m
+取得子~手続きは
+⇒
+~RET コレの `variable$m 内部~slot。
+◎
+The getter for the variable attribute of a CSSVariableReferenceValue this must return its variable internal slot. 
+</div>
+
+<div class="algo">
+<p>
+`variable$m 設定子~手続きは、所与の
+( 文字列 %variable )
+に対し，次を走らすモノトスル：
+◎
+The variable attribute of a CSSVariableReferenceValue this must, on setting a variable variable, perform the following steps:
+</p>
+		<ol>
+			<li>
+~IF［
+%variable は`~custom~prop名~文字列$でない
+］
+⇒
+~THROW `TypeError$E
+◎
+If variable is not a custom property name string, throw a TypeError.
+</li>
+			<li>
+コレの `variable$m 内部~slot ~SET %variable
+◎
+Otherwise, set this’s variable internal slot to variable.
+</li>
+		</ol>
+</div>
+
+<div class="algo">
+<p>
+`CSSVariableReferenceValue(variable, fallback)@mm
+構築子~手続きは：
+◎
+The CSSVariableReferenceValue(variable, fallback) constructor must, when called, perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%variable は`~custom~prop名~文字列$でない
+］
+⇒
+~THROW `TypeError$E
+◎
+If variable is not a custom property name string, throw a TypeError.
+</li>
+	<li>
+コレの
+⇒＃
+`variable$m 内部~slot ~SET %variable,
+`fallback$m 内部~slot ~SET %fallback
+◎
+Return a new CSSVariableReferenceValue with its variable internal slot set to variable and its fallback internal slot set to fallback.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="keywordvalue-objects">
+<h3 title="CSSKeywordValue objects">4.2. `CSSKeywordValue^I ~obj</h3>
+
+<p>
+`CSSKeywordValue$I
+~objは、［
+~CSS~keyword／他の`識別子$
+］を表現する。
+◎
+CSSKeywordValue objects represent CSS keywords and other identifiers.
+</p>
+
+<pre class="idl">
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSKeywordValue@I : `CSSStyleValue$I {
+    `CSSKeywordValue$mc(`USVString$ %value);
+
+    attribute `USVString$ `value$m;
+};
+</pre>
+
+<div class="algo">
+<p>
+`CSSKeywordValue(value)@mm
+構築子~手続きは：
+◎
+The CSSKeywordValue(value) constructor must, when called, perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%value ~EQ 空~文字列
+］
+⇒
+~THROW `TypeError$E
+◎
+If value is an empty string, throw a TypeError.
+</li>
+	<li>
+コレの `value$m 内部~slot ~SET %value
+◎
+Otherwise, return a new CSSKeywordValue with its value internal slot set to value.
+</li>
+</ol>
+</div>
+
+<p>
+`CSSKeywordValue$I を受容する所はどこでも、次の~typedefと~algoを利用することにより，生の `USVString$T も受容する：
+◎
+Any place that accepts a CSSKeywordValue also accepts a raw USVString, by using the following typedef and algorithm:
+</p>
+
+<pre class="idl">
+typedef (`DOMString$ or `CSSKeywordValue$I) `CSSKeywordish@;
+</pre>
+
+<div class="algo">
+<p>
+`~keywordに類する値を規格化する@
+ときは、所与の
+( %値 )
+に対し，次を遂行する：
+◎
+To rectify a keywordish value val, perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%値 は `CSSKeywordValue$I 型である
+］
+⇒
+~RET %値
+◎
+If val is a CSSKeywordValue, return val.
+</li>
+	<li>
+~Assert：
+%値 は `DOMString$T 型である
+◎
+If val is a DOMString,＼
+</li>
+	<li>
+~RET 次のようにされた新たな `CSSKeywordValue$I
+⇒＃
+`value$m 内部~slot ~SET %値
+◎
+return a new CSSKeywordValue with its value internal slot set to val.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`value@m
+設定子~手続きは：
+◎
+The value attribute of a CSSKeywordValue this must, on setting a value value, perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%value ~EQ 空~文字列
+］
+⇒
+~THROW `TypeError$E
+◎
+If value is an empty string, throw a TypeError.
+</li>
+	<li>
+コレの `value$m 内部~slot ~SET %value
+◎
+Otherwise, set this’s value internal slot, to value.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="numeric-objects">
+<h3 title="Numeric Values:">4.3. 数量~値</h3>
+
+<p>
+`CSSNumericValue$I ~objは、その資質から数量である~CSS値を表現する（
+`number$t, `percentage$t, `dimension$t
+など）。
+次の 2 つの~interfaceが `CSSNumericValue$I を継承する：
+◎
+CSSNumericValue objects represent CSS values that are numeric in nature (&lt;number&gt;s, &lt;percentage&gt;s, &lt;dimension&gt;s). There are two interfaces that inherit from CSSNumericValue:
+</p>
+
+<ul>
+	<li>
+`CSSUnitValue$I ~objは、単独の単位~型を包含する値を表現する（例： `42px^v ）。
+◎
+CSSUnitValue objects represent values that contain a single unit type (for example "42px").
+</li>
+	<li>
+`CSSMathValue$I ~objは、複数の ( 値/単位 ) ~pairを包含し得るような，数式を表現する
+（例： `calc(56em + 10%)^v ）。
+◎
+CSSMathValue objects represent math expressions, which can contain more than one value/unit (for example "calc(56em + 10%)").
+</li>
+</ul>
+
+<p>
+`CSSNumericValue$I ~objが表現する値の範囲は、制約されない。
+妥当などの数量~値も、 `CSSNumericValue$I により表現できる。
+その値が`宣言d~StylePropertyMap$上に設定されても，［
+切詰められる／ 丸められる／ 却下される
+］ことはない。
+［
+切詰められる／丸められる
+］のは、~styleを算出する間に生じることになる。
+◎
+CSSNumericValue objects are not range-restricted. Any valid numeric value can be represented by a CSSNumericValue, and that value will not be clamped, rounded, or rejected when set on a declared StylePropertyMap. Instead, clamping and/or rounding will occur during computation of style.
+</p>
+
+<div class="example">
+
+<p>
+次の~codeは妥当である：
+◎
+The following code is valid
+</p>
+<pre class="lang-js">
+myElement.attributeStyleMap.set("opacity", CSS.number(3));
+myElement.attributeStyleMap.set("z-index", CSS.number(15.4));
+
+console.log(myElement.attributeStyleMap.get("opacity").value); // 3
+console.log(myElement.attributeStyleMap.get("z-index").value); // 15.4
+
+var %computedStyle = myElement.computedStyleMap();
+var %opacity = computedStyle.get("opacity");
+var %zIndex = computedStyle.get("z-index");
+</pre>
+
+<p>
+実行~後の %opacity の値は `1^v になり（ `opacity$p は範囲が制約される），
+%zIndex の値は `15^v になる（ `z-index$p は整数~値に丸められる）。
+◎
+After execution, the value of opacity is 1 (opacity is range-restricted), and the value of zIndex is 15 (z-index is rounded to an integer value).
+</p>
+</div>
+
+<p class="note">注記：
+変数~参照を組入れる “数量~値” は、代わりに `CSSUnparsedValue$I ~objとして表現され、
+~keywordは `CSSKeywordValue$I ~objとして表現されることになる。
+◎
+Note: "Numeric values" which incorporate variable references will instead be represented as CSSUnparsedValue objects, and keywords as CSSKeywordValue objects.
+</p>
+
+<p>
+`CSSNumericValue$I を受容する所はどこでも、次の~typedefと~algoを利用することにより，生の `double$T も受容する：
+◎
+Any place that accepts a CSSNumericValue also accepts a raw double, by using the following typedef and algorithm:
+</p>
+
+<pre class="idl">
+typedef (`double$ or `CSSNumericValue$I) `CSSNumberish@;
+</pre>
+
+<div class="algo">
+<p>
+`実数に類する値を規格化する@
+ときは、所与の
+( %~num )
+に対し，次を遂行する：
+◎
+To rectify a numberish value num, perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%~num は `CSSNumericValue$I 型である
+］
+⇒
+~RET %~num
+◎
+If num is a CSSNumericValue, return num.
+</li>
+	<li>
+~Assert：
+%~num は `double$T 型である
+◎
+If num is a double,＼
+</li>
+	<li>
+~RET 次のようにされた新たな `CSSUnitValue$I
+⇒＃
+`value$m1 内部~slot ~SET %~num,
+`unit$m1 内部~slot ~SET `number^l
+◎
+return a new CSSUnitValue with its value internal slot set to num and its unit internal slot set to "number".
+</li>
+</ol>
+</div>
+
+			<section id="numeric-value">
+<h4 title="Common Numeric Operations, and the CSSNumericValue Superclass">4.3.1. 共通な数量~演算と `CSSNumericValue^I 上位class</h4>
+
+<p>
+すべての数量~CSS値（
+`number$t, `percentage$t, `dimension$t 
+）は、
+`CSSNumericValue$I ~interfaceの下位classにより表現される。
+◎
+All numeric CSS values (&lt;number&gt;s, &lt;percentage&gt;s, and &lt;dimension&gt;s) are represented by subclasses of the CSSNumericValue interface.
+</p>
+
+<pre class="idl">
+enum `CSSNumericBaseType@I {
+    "`length@m",
+    "`angle@m",
+    "`time@m",
+    "`frequency@m",
+    "`resolution@m",
+    "`flex@m",
+    "`percent@m",
+};
+
+dictionary `CSSNumericType@I {
+    long `length@m;
+    long `angle@m;
+    long `time@m;
+    long `frequency@m;
+    long `resolution@m;
+    long `flex@m;
+    long `percent@m;
+    `CSSNumericBaseType$I `percentHint@m;
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSNumericValue@I : `CSSStyleValue$I {
+    `CSSNumericValue$I `add$m(`CSSNumberish$... %values);
+    `CSSNumericValue$I `sub$m(`CSSNumberish$... %values);
+    `CSSNumericValue$I `mul$m(`CSSNumberish$... %values);
+    `CSSNumericValue$I `div$m(`CSSNumberish$... %values);
+    `CSSNumericValue$I `min$m(`CSSNumberish$... %values);
+    `CSSNumericValue$I `max$m(`CSSNumberish$... %values);
+
+    `boolean$ `equals$m(`CSSNumberish$... %value);
+
+    `CSSUnitValue$I `to$m(`USVString$ %unit);
+    `CSSMathSum$I `toSum$m(`USVString$... %units);
+    `CSSNumericType$I `type$m();
+
+    [`Exposed$=Window] static `CSSNumericValue$I `parse$m(`USVString$ %cssText);
+};
+</pre>
+
+<p>
+上位class `CSSNumericValue$I の各種~methodは、すべての数量~値に遂行できる演算を表現する。
+◎
+The methods on the CSSNumericValue superclass represent operations that all numeric values can perform.
+</p>
+
+<p>
+以下に、各種 次元に遂行できる算術~演算を与える：
+◎
+The following are the arithmetic operations you can perform on dimensions:
+</p>
+
+<div class="algo">
+<p>
+`add(...values)@m
+~method~手続きは：
+◎
+The add(...values) method, when called on a CSSNumericValue this, must perform the following steps:
+</p>
+<ol>
+	<li>
+%値~list ~LET コレは `CSSMathSum$I ~objであるならば コレの `values$m1 内部~slotを`~clone$した結果 ／
+~ELSE_ « コレ »
+◎
+↓</li>
+	<li>
+%values を成す
+~EACH( %値 )
+に対し
+⇒
+%値~list に次の結果を`付加する$
+⇒
+`実数に類する値を規格化する$( %値 )
+◎
+Replace each item of values with the result of rectifying a numberish value for the item.
+◎
+If this is a CSSMathSum object, prepend the items in this’s values internal slot to values. Otherwise, prepend this to values.
+</li>
+	<li>
+<p>
+~IF［
+%値~list 内のどの`~item$も `CSSUnitValue$I である
+］~AND［
+%値~list 内のすべての`~item$の `unit$m1 は互いに同じ %単位 である
+］
+⇒
+~RET 次のようにされた新たな `CSSUnitValue$I ~obj
+⇒＃
+`unit$m1 内部~slot ~SET %単位【！コレの＊ `unit$m1 内部~slot】,
+`value$m1 内部~slot ~SET ［ %値~list 内のすべての`~item$の `value$m1 内部~slot ］の総和†
+</p>
+
+<p>†
+この加算は、 “左から右の順” に行うモノトスル
+— 例えば，値が « 1, 2, 3, 4 » ならば、結果は (((1 + 2) + 3) + 4) になるように（この詳細は、浮動小数点~算術の下で，相互運用能を確保するために必要とされる）。
+</p>
+◎
+If all of the items in values are CSSUnitValues and have the same unit, return a new CSSUnitValue whose unit internal slot is set to this’s unit internal slot, and value internal slot is set to the sum of the value internal slots of the items in values. This addition must be done "left to right" - if values is « 1, 2, 3, 4 », the result must be (((1 + 2) + 3) + 4). (This detail is necessary to ensure interoperability in the presence of floating-point arithmetic.)
+</li>
+	<li>
+%型 ~LET `型を加算する$( %値~list 内のすべての`~item$の`型$ )
+◎
+Let type be the result of adding the types of every item in values.＼
+</li>
+	<li>
+~IF［
+%型 ~EQ `失敗^i
+］
+⇒
+~THROW `TypeError$E
+◎
+If type is failure, throw a TypeError.
+</li>
+	<li>
+~RET 次のようにされた新たな `CSSMathSum$I ~obj
+⇒
+`values$m1 内部~slot ~SET %値~list
+◎
+Return a new CSSMathSum object whose values internal slot is set to values.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`sub(...values)@m
+~method~手続きは：
+◎
+The sub(...values) method, when called on a CSSNumericValue this, must perform the following steps:
+</p>
+<ol>
+	<li>
+%values ~SET %values が成す~listを［
+各 %~item に対し，次の結果を`反数にする$
+］`演算で写像する$
+⇒
+`実数に類する値を規格化する$( %~item )
+◎
+Replace each item of values with the result of rectifying a numberish value for the item, then negating the value.
+</li>
+	<li>
+~RET ( %values ) を渡して，コレ上で `add()$m の内部~algoを~callした結果
+◎
+Return the result of calling the add() internal algorithm with this and values.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`CSSNumericValue$I %V を
+`反数にする@
+ときは：
+◎
+To negate a CSSNumericValue this:
+</p>
+<ol>
+	<li>
+~IF［
+%V は `CSSMathNegate$I ~objである
+］
+⇒
+~RET %V の `value$m1 内部~slot
+◎
+If this is a CSSMathNegate object, return this’s value internal slot.
+</li>
+	<li>
+~IF［
+%V は `CSSUnitValue$I ~objである
+］
+⇒
+~RET 次のようにされた新たな `CSSUnitValue$I
+⇒＃
+`unit$m1 内部~slot ~SET %V の`unit$m1 内部~slot,
+`value$m1 内部~slot ~SET %V の `value$m1 内部~slotの反数
+◎
+If this is a CSSUnitValue object, return a new CSSUnitValue with the same unit internal slot as this, and a value internal slot set to the negation of this’s.
+</li>
+	<li>
+~RET 次のようにされた新たな `CSSMathNegate$I ~obj
+⇒
+`value$m1 内部~slot ~SET %V
+◎
+Otherwise, return a new CSSMathNegate object whose value internal slot is set to this.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`mul(...values)@m
+~method~手続きは：
+◎
+The mul(...values) method, when called on a CSSNumericValue this, must perform the following steps:
+</p>
+<ol>
+	<li>
+%値~list ~LET コレは `CSSMathProduct$I ~objであるならば コレの `values$m1 内部~slotを`~clone$した結果 ／
+~ELSE_ « コレ »
+◎
+↓</li>
+	<li>
+%values を成す
+~EACH( %値 )
+に対し
+⇒
+%値~list に次の結果を`付加する$
+⇒
+`実数に類する値を規格化する$( %値 )
+◎
+Replace each item of values with the result of rectifying a numberish value for the item.
+◎
+If this is a CSSMathProduct object, prepend the items in this’s values internal slot to values. Otherwise, prepend this to values.
+</li>
+	<li>
+<p>
+~IF［
+%値~list 内の どの`~item$も `CSSUnitValue$I である
+］：
+</p>
+		<ol>
+			<li>
+%単位 ~LET %値~list 内の`~item$のうち［
+その `unit$m1 内部~slot ~NEQ `number^l
+］を満たすものの個数に応じて
+⇒＃
+0 個ならば `number^l
+1 個ならば その`~item$の `unit$m1 内部~slot  ／
+2 個以上ならば ε
+</li>
+			<li>
+~IF［
+%単位 ~NEQ ε
+］
+⇒
+~RET 次のようにされた新たな `CSSUnitValue$I ~obj
+⇒＃
+`unit$m1 内部~slot ~SET %単位,
+`value$m1 内部~slot ~SET { %値~list 内のすべての`~item$の `value$m1 内部~slot } の積†
+</li>
+		</ol>
+
+<p>†
+この乗算は、 “左から右の順” に行うモノトスル
+— 例えば，値が « 1, 2, 3, 4 » ならば、結果は (((1 × 2) × 3) × 4) になるように（この詳細は、浮動小数点~算術の下で，相互運用能を確保するために必要とされる）。
+</p>
+
+◎
+If all of the items in values are CSSUnitValues with unit internal slot set to "number", return a new CSSUnitValue whose unit internal slot is set to "number", and value internal slot is set to the product of the value internal slots of the items in values.
+◎
+This multiplication must be done "left to right" - if values is « 1, 2, 3, 4 », the result must be (((1 × 2) × 3) × 4). (This detail is necessary to ensure interoperability in the presence of floating-point arithmetic.)
+◎
+If all of the items in values are CSSUnitValues with unit internal slot set to "number" except one which is set to unit, return a new CSSUnitValue whose unit internal slot is set to unit, and value internal slot is set to the product of the value internal slots of the items in values.
+◎
+This multiplication must be done "left to right" - if values is « 1, 2, 3, 4 », the result must be (((1 × 2) × 3) × 4).
+</li>
+	<li>
+%型 ~LET `型を乗算する$( %値~list 内のすべての`~item$の`型$ )
+◎
+Let type be the result of multiplying the types of every item in values.＼
+</li>
+	<li>
+~IF［
+%型 ~EQ `失敗^i
+］
+⇒
+~THROW `TypeError$E
+◎
+If type is failure, throw a TypeError.
+</li>
+	<li>
+~RET 次のようにされた新たな `CSSMathProduct$I ~obj
+⇒
+`values$m1 内部~slot ~SET %値~list
+◎
+Return a new CSSMathProduct object whose values internal slot is set to values.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`div(...values)@m
+~method~手続きは：
+◎
+The div(...values) method, when called on a CSSNumericValue this, must perform the following steps:
+</p>
+<ol>
+	<li>
+%values ~SET %values が成す~listを［
+各 %~item に対し，次の結果を`逆数にする$
+］`演算で写像する$
+⇒
+`実数に類する値を規格化する$( %~item )
+◎
+Replace each item of values with the result of rectifying a numberish value for the item, then inverting the value.
+</li>
+	<li>
+~RET ( %values ) を渡して，コレ上で `mul()$m の内部~algoを~callした結果
+◎
+Return the result of calling the mul() internal algorithm with this and values.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`CSSNumericValue$I %V を
+`逆数にする@
+ときは：
+◎
+To invert a CSSNumericValue this:
+</p>
+<ol>
+	<li>
+~IF［
+%V は `CSSMathInvert$I ~objである
+］
+⇒
+~RET %V の `value$m1 内部~slot
+◎
+If this is a CSSMathInvert object, return this’s value internal slot.
+</li>
+	<li>
+<p>
+~IF［
+%V は `CSSUnitValue$I ~objである
+］~AND［
+%V の `unit$m1 内部~slot ~EQ `number^l
+］：
+◎
+If this is a CSSUnitValue object with unit internal slot set to "number":
+</p>
+		<ol>
+			<li>
+~IF［
+%V の `value$m1 内部~slot ~IN { 0, −0 }
+］
+⇒
+~THROW `RangeError$E
+◎
+If this’s value internal slot is set to 0 or -0, throw a RangeError.
+</li>
+			<li>
+~RET 次のようにされた新たな `CSSUnitValue$I ~obj
+⇒＃
+`unit$m1 内部~slot ~SET `number^l
+`value$m1 内部~slot ~SET 1 ~DIV ( %V の `value$m1 内部~slot値 )
+◎
+Else return a new CSSUnitValue with the unit internal slot set to "number", and a value internal slot set to 1 divided by this’s {CSSUnitValue/value}} internal slot.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET 次のようにされた新たな `CSSMathInvert$I ~obj
+⇒
+`value$m1 内部~slot ~SET %V
+◎
+Otherwise, return a new CSSMathInvert object whose value internal slot is set to this.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`min(...values)@m
+~method~手続きは：
+◎
+The min(...values) method, when called on a CSSNumericValue this, must perform the following steps:
+</p>
+<ol>
+	<li>
+%値~list ~LET コレは `CSSMathMin$I ~objであるならば コレの `values$m1 内部~slotを`~clone$した結果 ／
+~ELSE_ « コレ »
+◎
+↓</li>
+	<li>
+%values を成す
+~EACH( %値 )
+に対し
+⇒
+%値~list に次の結果を`付加する$
+⇒
+`実数に類する値を規格化する$( %値 )
+◎
+Replace each item of values with the result of rectifying a numberish value for the item.
+◎
+If this is a CSSMathMin object, prepend the items in this’s values internal slot to values. Otherwise, prepend this to values.
+</li>
+	<li>
+~IF［
+%値~list 内のどの`~item$も `CSSUnitValue$I ~objである
+］~AND［
+%値~list 内のすべての`~item$の `unit$m1 は互いに同じ %単位 である
+］
+⇒
+~RET 次のようにされた新たな `CSSUnitValue$I ~obj
+⇒＃
+`unit$m1 内部~slot ~SET %単位【！ コレの＊ `unit$m1 内部~slot】,
+`value$m1 内部~slot ~SET { %値~list 内のすべての`~item$の `value$m1 内部~slot値 } の最小
+◎
+If all of the items in values are CSSUnitValues and have the same unit, return a new CSSUnitValue whose unit internal slot is set to this’s unit internal slot, and value internal slot is set to the minimum of the value internal slots of the items in values.
+</li>
+	<li>
+%型 ~LET `型を加算する$( %値~list 内のすべての`~item$の`型$ )
+◎
+Let type be the result of adding the types of every item in values.＼
+</li>
+	<li>
+~IF［
+%型 ~EQ `失敗^i
+］
+⇒
+~THROW `TypeError$E
+。
+◎
+If type is failure, throw a TypeError.
+</li>
+	<li>
+~RET 次のようにされた新たな `CSSMathMin$I ~obj
+⇒
+`values$m1 内部~slot ~SET %値~list
+◎
+Return a new CSSMathMin object whose values internal slot is set to values.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`max(...values)@m
+~method~手続きは：
+◎
+The max(...values) method, when called on a CSSNumericValue this, must perform the following steps:
+</p>
+<ol>
+	<li>
+%値~list ~LET コレは `CSSMathMax$I ~objであるならば コレの `values$m1 内部~slotを`~clone$した結果 ／
+~ELSE_ « コレ »
+◎
+↓</li>
+	<li>
+%values を成す
+~EACH( %値 )
+に対し
+⇒
+%値~list に次の結果を`付加する$
+⇒
+`実数に類する値を規格化する$( %値 )
+◎
+Replace each item of values with the result of rectifying a numberish value for the item.
+◎
+If this is a CSSMathMax object, prepend the items in this’s values internal slot to values. Otherwise, prepend this to values.
+</li>
+	<li>
+~IF［
+%値~list 内のどの`~item$も `CSSUnitValue$I ~objである
+］~AND［
+%値~list 内のすべての`~item$の `unit$m1 は互いに同じ %単位 である
+］
+⇒
+~RET 次のようにされた新たな `CSSUnitValue$I ~obj
+⇒＃
+`unit$m1 内部~slot ~SET %単位【！ コレの＊ `unit$m1 内部~slot】,
+`value$m1 内部~slot ~SET { %値~list 内のすべての`~item$の `value$m1 内部~slot値 } の最大
+◎
+If all of the items in values are CSSUnitValues and have the same unit, return a new CSSUnitValue whose unit internal slot is set to this’s unit internal slot, and value internal slot is set to the maximum of the value internal slots of the items in values.
+</li>
+	<li>
+%型 ~LET `型を加算する$( %値~list 内のすべての`~item$の`型$ )
+◎
+Let type be the result of adding the types of every item in values.＼
+</li>
+	<li>
+~IF［
+%型 ~EQ `失敗^i
+］
+⇒
+~THROW `TypeError$E
+◎
+If type is failure, throw a TypeError.
+</li>
+	<li>
+~RET 次のようにされた新たな `CSSMathMax$I ~obj
+⇒
+`values$m1 内部~slot ~SET %値~list
+◎
+Return a new CSSMathMax object whose values internal slot is set to values.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`equals(...values)@m
+~method~手続きは：
+◎
+The equals(...values) method, when called on a CSSNumericValue this, must perform the following steps:
+</p>
+<ol>
+	<li>
+~RET ［
+次が満たされるならば ~T ／
+~ELSE_ ~F
+］
+⇒
+%values を成すどの %値 も次を満たす
+⇒
+( コレ, `実数に類する値を規格化する$( %値 ) )
+は`同等な数量~値$である
+◎
+Replace each item of values with the result of rectifying a numberish value for the item.
+◎
+For each item in values, if the item is not an equal numeric value to this, return false.
+◎
+Return true.
+</li>
+</ol>
+
+<div class="note">
+
+<p>注記：
+この同等性は、すべての値が正確に［
+同じ順序で，同じ型かつ同じ値
+］にならない限り，満たされない。
+例えば、次の 2 つは`同等でない^em
+⇒＃
+`CSSMathSum(CSS.px(1), CSS.px(2))^c,
+`CSSMathSum(CSS.px(2), CSS.px(1))^c
+◎
+This notion of equality is purposely fairly exacting; all the values must be the exact same type and value, in the same order. For example, CSSMathSum(CSS.px(1), CSS.px(2)) is not equal to CSSMathSum(CSS.px(2), CSS.px(1)).
+</p>
+
+<p>
+このように，かなり厳正で精密な観念にしている目的は、構造的な同等性を素早く~testできるようにするためである。
+より低速で~~寛容な同等性
+— 引数たちは どの順序で合致することも許容するなど —
+の観念を利用した場合、おそらく，他のあらゆる単純~化
+— `96px^v は `1in^v に同等になることを考慮する様な —
+も突き詰めるよう求まれるであろう
+— 将来的には、このような~~緩い同等性の観念も，追加されるかもしれない。
+◎
+This precise notion is used because it allows structural equality to be tested for very quickly; if we were to use a slower and more forgiving notion of equality, such as allowing the arguments to match in any order, we’d probably want to go all the way and perform other simplifications, like considering 96px to be equal to 1in; this looser notion of equality might be added in the future.
+</p>
+</div>
+
+</div>
+
+<div class="algo">
+<p>
+2 つの `CSSNumericValue$I ~obj
+( %V1, %V2 )
+は、次を走らせた結果が ~T になるならば
+`同等な数量~値@
+であるとされる：
+◎
+To determine whether two CSSNumericValues value1 and value2 are equal numeric values, perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%V1, %V2 の~interfaceは相異なる【！members of ≠ interface member】
+］
+⇒
+~RET ~F
+◎
+If value1 and value2 are not members of the same interface, return false.
+</li>
+	<li>
+<p>
+%V1 の~interfaceに応じて：
+</p>
+		<dl class="switch">
+			<dt>`CSSUnitValue$I
+◎
+If value1 and value2 are both CSSUnitValues,＼
+</dt>
+			<dd>
+~RET ［
+次が満たされるならば ~T ／
+~ELSE_ ~F
+］
+⇒
+`CSSUnitValue^II
+［
+%V1 の `unit$m1 内部~slot ~EQ %V2 の `unit$m1 内部~slot
+］~AND［
+%V1 の `value$m1 内部~slot ~EQ %V2 の `value$m1 内部~slot
+］
+◎
+return true if they have equal unit and value internal slots, or false otherwise.
+</dd>
+
+			<dt>`CSSMathSum$I</dt>
+			<dt>`CSSMathProduct$I</dt>
+			<dt>`CSSMathMin$I</dt>
+			<dt>`CSSMathMax$I
+◎
+If value1 and value2 are both CSSMathSums, CSSMathProducts, CSSMathMins, or CSSMathMaxs:
+</dt>
+			<dd>
+				<ol>
+					<li>
+%~size ~LET %V1 の `CSSMathSum^II `values$m1 内部~slotの`~size$
+◎
+↓</li>
+					<li>
+~IF［
+%~size ~NEQ %V2 の `CSSMathSum^II `values$m1 内部~slotの`~size$
+］
+⇒
+~RET ~F
+◎
+If value1’s values and value2s values internal slots have different sizes, return false.
+</li>
+					<li>
+~RET ［
+次が満たされるならば ~T ／
+~ELSE_ ~F
+］
+⇒
+どの %i ~IN { 0 〜 %~size ~MINUS 1 } に対しても
+⇒
+( %V1 の `values$m1 内部~slot[ %i ], %V2 の `values$m1 内部~slot[ %i ] )
+は`同等な数量~値$である
+◎
+If any item in value1’s values internal slot is not an equal numeric value to the item in value2’s values internal slot at the same index, return false.
+◎
+Return true.
+</li>
+				</ol>
+			</dd>
+
+			<dt>`CSSMathNegate$I</dt>
+			<dt>`CSSMathInvert$I
+◎
+Assert: value1 and value2 are both CSSMathNegates or CSSMathInverts.
+</dt>
+			<dd>
+~RET ［
+次が満たされるならば ~T ／
+~ELSE_ ~F
+］
+⇒
+( %V1 の `CSSMathNegate^II `value$m1, %V2 の `value$m1 )
+は`同等な数量~値$である
+◎
+Return whether value1’s value and value2’s value are equal numeric values.
+</dd>
+		</dl>
+	</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`to(unit)@m
+~method~手続きは：
+◎
+↓</p>
+
+<p class="note">
+この~methodは、アリなら，コレを［
+%unit に指定された単位を伴う，別の `CSSNumericValue$I
+］に変換した結果を返す。
+◎
+The to(unit) method converts an existing CSSNumericValue this into another one with the specified unit, if possible.＼
+When called, it must perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%unit に`対応する基底~型$ ~EQ ε
+］
+⇒
+~THROW `SyntaxError$E
+◎
+Let type be the result of creating a type from unit. If type is failure, throw a SyntaxError.
+</li>
+	<li>
+%総和 ~LET `総和~値を作成する$( コレ )
+◎
+Let sum be the result of creating a sum value from this.＼
+</li>
+	<li>
+~IF［
+%総和 ~EQ `失敗^i
+］
+⇒
+~THROW `TypeError$E
+◎
+If sum is failure, throw a TypeError.
+</li>
+	<li>
+~IF［
+%総和 の`~size$ ~NEQ 1
+］
+⇒
+~THROW `TypeError$E
+◎
+If sum has more than one item, throw a TypeError.＼
+</li>
+	<li>
+%単位~値 ~LET `総和~値~itemから~CSSUnitValueを作成する$( %総和[ 0 ] )
+◎
+Otherwise, let item be the result of creating a CSSUnitValue from the sole item in sum, then＼
+</li>
+	<li>
+%単位~値 ~SET `単位~値を変換する$( %単位~値, %unit )
+◎
+converting it to unit.＼
+</li>
+	<li>
+~IF［
+%単位~値 ~EQ `失敗^i
+］
+⇒
+~THROW `TypeError$E
+◎
+If item is failure, throw a TypeError.
+</li>
+	<li>
+~RET %単位~値
+◎
+Return item.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`総和~値~itemから~CSSUnitValueを作成する@
+ときは、所与の
+( `総和~値$を成すある~item %~item )
+に対し，次を遂行する：
+</p>
+<ol>
+	<li>
+( %~key, %N ) ~LET %~item の`単位~map$を成す`~entry$の個数に応じて
+⇒＃
+0 個ならば ( `number^l, 1 )
+1 個ならば その`~entry$の ( `~key$map, `値$map ) ／
+2 個以上ならば ( ε, ε )
+</li>
+	<li>
+~IF［
+%N ~NEQ 1
+］
+⇒
+~RET `失敗^i
+</li>
+	<li>
+~RET 次のようにされた新たな `CSSUnitValue$I ~obj
+⇒＃
+`unit$m1 内部~slot ~SET %~key,
+`value$m1 内部~slot ~SET %~item の`値$sum
+</li>
+</ol>
+
+◎
+When asked to create a CSSUnitValue from a sum value item item, perform the following steps:
+• If item has more than one entry in its unit map, return failure.
+• If item has no entries in its unit map, return a new CSSUnitValue whose unit internal slot is set to "number", and whose value internal slot is set to item’s value.
+• Otherwise, item has a single entry in its unit map. If that entry’s value is anything other than 1, return failure.
+• Otherwise, return a new CSSUnitValue whose unit internal slot is set to that entry’s key, and whose value internal slot is set to item’s value.
+</div>
+
+<div class="algo">
+<p>
+`toSum(...units)@m
+~method~手続きは：
+◎
+↓</p>
+
+<p class="note">
+この~methodは、アリならコレを［
+%units に指定された単位たちのみを伴う，一連の `CSSUnitValue$I
+］からなる `CSSMathSum$I に変換する（ `to()$m に似るが、結果~内に複数の単位が~~混在することも許容する）。
+%units が省略されて~callされた場合、単にコレを［
+コレを成す `CSSUnitValue$I たちの極力少ない総和
+］に単純~化する。
+◎
+The toSum(...units) method converts an existing CSSNumericValue this into a CSSMathSum of only CSSUnitValues with the specified units, if possible. (It’s like to(), but allows the result to have multiple units in it.) If called without any units, it just simplifies this into a minimal sum of CSSUnitValues.
+◎
+↑When called, it must perform the following steps:
+</p>
+<ol>
+	<li>
+%単位~list ~LET %units が成す引数~list
+◎
+↓</li>
+	<li>
+%単位~list 内の
+~EACH( %単位 )
+に対し
+⇒
+~IF［
+%単位 に`対応する基底~型$ ~EQ ε
+］
+⇒
+~THROW `SyntaxError$E
+◎
+For each unit in units, if the result of creating a type from unit is failure, throw a SyntaxError.
+</li>
+	<li>
+%総和 ~LET `総和~値を作成する$( コレ )
+◎
+Let sum be the result of creating a sum value from this.＼
+</li>
+	<li>
+~IF［
+%総和 ~EQ `失敗^i
+］
+⇒
+~THROW `TypeError$E
+◎
+If sum is failure, throw a TypeError.
+</li>
+	<li>
+%値~list ~LET %総和 を［
+`総和~値~itemから~CSSUnitValueを作成する$
+］`演算で写像する$
+◎
+Let values be the result of creating a CSSUnitValue for each item in sum.＼
+</li>
+	<li>
+~IF［
+`失敗^i ~IN %値~list
+］
+⇒
+~THROW `TypeError$E
+◎
+If any item of values is failure, throw a TypeError.
+</li>
+	<li>
+<p>
+~IF［
+%単位~list は`空$である
+］：
+</p>
+		<ol>
+			<li>
+%値~list を［
+その各`~item$の `CSSUnitValue^II `unit$m1 内部~slotの`符号位置$
+］順に~sortする
+</li>
+			<li>
+~RET 次のようにされた新たな `CSSMathSum$I ~obj
+⇒
+`values$m1 内部~slot ~SET %値~list
+</li>
+		</ol>
+
+◎
+If units is empty, sort values in code point order according to the unit internal slot of its items, then return a new CSSMathSum object whose values internal slot is set to values.
+</li>
+	<li>
+%結果~list ~LET 空`~list$
+◎
+Otherwise, let result initially be an empty list.＼
+</li>
+	<li>
+<p>
+%単位~list 内の
+~EACH( %単位 )
+に対し：
+◎
+For each unit in units:
+</p>
+		<ol>
+			<li>
+%合計 ~LET 0
+◎
+Let temp initially be a new CSSUnitValue whose unit internal slot is set to unit and whose value internal slot is set to 0.
+</li>
+			<li>
+<p>
+%値~list 内の
+~EACH( %値 )
+に対し：
+◎
+For each value in values:
+</p>
+				<ol>
+					<li>
+%値の単位 ~LET %値 の`CSSUnitValue^II `unit$m1 内部~slot
+◎
+Let value unit be value’s unit internal slot.
+</li>
+					<li>
+~IF［
+( %値の単位, %単位 )
+は`互換~単位$でない
+【！＊number の取り扱いは？】
+］
+⇒
+~CONTINUE
+◎
+If value unit is a compatible unit with unit, then:
+</li>
+					<li>
+%合計 ~INCBY %値 の `value$m1 内部~slotの値 ~MUL ( %値の単位 から %単位 への換算率 )
+【！＊単位~値を変換する$( 値, 単位 ) を簡素化】
+◎
+Convert value to unit.
+◎
+Increment temp’s value internal slot by the value of value’s value internal slot.
+</li>
+					<li>
+%値~list から %値 を`除去する$
+◎
+Remove value from values.
+</li>
+				</ol>
+			</li>
+			<li>
+%結果~list に 次のようにされた新たな `CSSUnitValue$I ~objを`付加する$
+⇒＃
+`unit$m1 内部~slot ~SET %単位,
+`value$m1 内部~slot ~SET %合計
+◎
+Append temp to result.
+</li>
+		</ol>
+	</li>
+	<li>
+~IF［
+%値~list は空でない
+］
+⇒
+~THROW `TypeError$E
+<span class="note">
+渡されたどの単位にも互換でない単位の値が，コレ内にある。
+</span>
+◎
+If values is not empty, throw a TypeError. this had units that you didn’t ask for.
+</li>
+	<li>
+~RET 次のようにされた新たな `CSSMathSum$I ~obj
+⇒
+`values$m1 内部~slot ~SET %結果~list
+◎
+Return a new CSSMathSum object whose values internal slot is set to result.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`type()@m
+~method~手続きは：
+◎
+↓</p>
+
+<p class="note">
+この~methodは、コレの`型$の表現を返す。
+◎
+The type() method returns a representation of the type of this.
+◎
+When called, it must perform the following steps:
+</p>
+<ol>
+	<li>
+%結果 ~LET 新たな `CSSNumericType$I 辞書
+◎
+Let result be a new CSSNumericType.
+</li>
+	<li>
+~EACH( `基底~型$ %基底~型 )
+に対し
+⇒
+%結果[ %基底~型 ] ~SET コレの`型$[ %累乗数 ]
+◎
+For each baseType → power in the type of this,
+• If power is not 0, set result[baseType] to power.
+</li>
+	<li>
+~IF［
+コレの`型$の`百分率hint$ ~NEQ ~NULL
+］
+⇒
+%結果 の `percentHint$m1 ~SET コレの`型$の`百分率hint$
+◎
+If the percent hint of this is not null,
+• Set percentHint to the percent hint of this.
+</li>
+	<li>
+~RET %結果
+◎
+Return result.
+</li>
+</ol>
+</div>
+
+<p>
+`総和~値@
+は、何個かの単位~付きの実数の総和により，
+`CSSNumericValue$I を抽象的に表現する（単位は、場合によっては複階的になる）。
+が、`総和~値$で表出できない `CSSNumericValue$I もある。
+◎
+A sum value is an abstract representation of a CSSNumericValue as a sum of numbers with (possibly complex) units. Not all CSSNumericValues can be expressed as a sum value.
+</p>
+
+<div class="p">
+<p>
+`総和~値$は`~list$であり、その各~itemは，
+(
+`値@sum,
+`単位~map@
+)
+が成す`~tuple$である：
+</p>
+<ul>
+	<li>
+`値$sumは、実数を与える。
+</li>
+	<li>
+`単位~map$は、`有順序~map$であり，［
+単位を与える文字列
+］を［
+累乗数を与える整数
+］に対応付ける。
+</li>
+</ul>
+
+◎
+A sum value is a list. Each entry in the list is a tuple of a value, which is a number, and a unit map, which is a map of units (strings) to powers (integers).
+</div>
+
+<div class="example">
+
+<p>
+~CSS値と それに等価な`総和~値$の例：
+</p>
+
+<table><thead><tr><th>~CSS値
+<th>`総和~値$（備考）
+</thead><tbody id="_x_sum_values">
+
+<tr><td>`1px^v
+<td>« (1, «[`px^l → 1]») »
+
+<tr><td>`calc(1px + 1in)^v
+<td>« (97, «[`px^l → 1]») »
+<br>（`in$u , `px$u は`互換~単位$であり， `px$u はそれらの`正準的~単位$なので。）
+
+<tr><td>`calc(1px + 2em)^v
+<td>« (1, «[`px^l → 1]»), (2, «[`em^l → 1]») »
+
+<tr><td>`calc(1px + 2%)^v
+<td>« (1, «[`px^l → 1]»), (2, «[`percent^l → 1]») »
+<br>（百分率は、他の単位に加算するのは許容されるが，`型$内の単位の様に別の単位に解決されることはない。）
+
+<tr><td>`calc(1px * 2em)^v
+<td>« (2, «[`em^l → 1, `px^l → 1]») »
+
+<tr><td>`calc(1px + 1deg)^v
+<td>（算出は妥当でないので`総和~値$として表現できない。）
+
+<tr><td>`calc(1px * 2deg)^v
+<td>« (2, «[`deg^l → 1, `px^l → 1]») »
+
+</tbody></table>
+
+◎
+Here are a few examples of CSS values, and their equivalent sum values:
+• 1px becomes «(1, «["px" → 1]»)»
+• calc(1px + 1in) becomes «(97, «["px" → 1]»)» (because in and px are compatible units, and px is the canonical unit for them)
+• calc(1px + 2em) becomes «(1, «["px" → 1]»), (2, «["em" → 1]»)»
+• calc(1px + 2%) becomes «(1, «["px" → 1]»), (2, «["percent" → 1]»)» (percentages are allowed to add to other units, but aren’t resolved into another unit, like they are in a type)
+• calc(1px * 2em) becomes «(2, «["em" → 1, "px" → 1]»)»
+• calc(1px + 1deg) can’t be represented as a sum value because it’s an invalid computation
+• calc(1px * 2deg) becomes «(2, «["deg" → 1, "px" → 1]»)»
+</div>
+
+<div class="algo">
+<p>
+所与の `CSSNumericValue$I %N から
+`総和~値を作成する@
+ときは、 %N の~classに応じて：
+◎
+To create a sum value from a CSSNumericValue this, the steps differ based on this’s class:
+</p>
+
+<dl class="switch">
+	<dt>`CSSUnitValue$I</dt>
+	<dd>
+		<ol>
+			<li>
+%単位 ~LET %N の `unit$m1 内部~slotの値
+◎
+Let unit be the value of this’s unit internal slot, and＼
+</li>
+			<li>
+%値 ~LET %N の `value$m1 内部~slotの値
+◎
+value be the value of this’s value internal slot.
+</li>
+			<li>
+~IF［
+%単位 ~EQ `number^l
+］
+⇒
+~RET  « ( %値, «[ ]» ) »
+◎
+↓</li>
+			<li>
+~IF［
+%単位 はある`正準的~単位$ %U の`互換~単位$である
+］
+⇒＃
+%値 ~SET %値 ~MUL ( %単位 から %U への換算率 )；
+%単位 ~SET %U 【を表現する文字列】
+◎
+If unit is a member of a set of compatible units, and is not the set’s canonical unit, multiply value by the conversion ratio between unit and the canonical unit, and change unit to the canonical unit.
+</li>
+			<li>
+~RET « (%値, «[%単位 → 1]») »
+◎
+If unit is "number", return «(value, «[ ]»)».
+◎
+Otherwise, return «(value, «[unit → 1]»)».
+</li>
+		</ol>
+	</dd>
+
+	<dt>`CSSMathSum$I</dt>
+	<dd>
+		<ol>
+			<li>
+%値~list ~LET 空`~list$
+◎
+Let values initially be an empty list.
+</li>
+			<li>
+<p>
+%N の `values$m1 内部~slot内の
+~EACH( %~item )
+に対し：
+◎
+For each item in this’s values internal slot:
+</p>
+				<ol>
+					<li>
+%値 ~LET `総和~値を作成する$( %~item )
+◎
+Let value be the result of creating a sum value from item.＼
+</li>
+					<li>
+~IF［
+%値 ~EQ `失敗^i
+］
+⇒
+~RET `失敗^i
+◎
+If value is failure, return failure.
+</li>
+					<li>
+<p>
+%値 を成す
+~EACH( %下位-値 )
+に対し：
+◎
+For each subvalue of value:
+</p>
+
+						<ol>
+							<li>
+~IF［
+%値~list 内にある`~item$ %~item があって，［
+%~item, %下位-値
+］の`単位~map$は互いに一致する
+【！＊一致するの定義】
+］
+⇒
+%~item の`値$sum ~INCBY %下位-値 の`値$sum
+◎
+If values already contains an item with the same unit map as subvalue, increment that item’s value by the value of subvalue.
+</li>
+							<li>
+~ELSE
+⇒
+%値~list に %下位-値 を`付加する$
+◎
+Otherwise, append subvalue to values.
+</li>
+						</ol>
+					</li>
+				</ol>
+			</li>
+			<li>
+%型~list ~LET %値~list を［
+`単位~mapから型を作成する$
+］`演算で写像する$
+◎
+Create a type from the unit map of each item of values, and＼
+</li>
+			<li>
+~IF［
+`型を加算する$( %型~list を成すすべての型 ) ~EQ `失敗^i
+］
+⇒
+~RET `失敗^i
+◎
+add all the types together.＼
+◎
+If the result is failure, return failure.
+</li>
+			<li>
+~RET %値~list
+◎
+Return values.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`CSSMathNegate$I</dt>
+	<dd>
+		<ol>
+			<li>
+%値~list ~LET `総和~値を作成する$( %N の `value$m1 内部~slot )
+◎
+Let values be the result of creating a sum value from this’s value internal slot.
+</li>
+			<li>
+~IF［
+%値~list ~EQ `失敗^i
+］
+⇒
+~RET `失敗^i
+◎
+If values is failure, return failure.
+</li>
+			<li>
+%値~list 内の
+~EACH( `~item$ )
+に対し
+⇒
+~itemの`値$sumを反数にする
+◎
+Negate the value of each item of values.
+</li>
+			<li>
+~RET %値~list
+◎
+Return values.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`CSSMathProduct$I</dt>
+	<dd>
+		<ol>
+			<li>
+%値~list ~LET `総和~値$ «(1, «[ ]»)»
+（すなわち， `1^v から取得されるもの）
+◎
+Let values initially be the sum value «(1, «[ ]»)». (I.e. what you’d get from 1.)
+</li>
+			<li>
+<p>
+%N の `values$m1 内部~slot内の
+~EACH( %~item )
+に対し：
+◎
+For each item in this’s values internal slot:
+</p>
+
+				<ol>
+					<li>
+%新-値~list ~LET `総和~値を作成する$( %~item )
+◎
+Let new values be the result of creating a sum value from item.＼
+</li>
+					<li>
+%一時~list ~LET 空`~list$
+◎
+Let temp initially be an empty list.
+</li>
+					<li>
+~IF［
+%新-値~list ~EQ `失敗^i
+］
+⇒
+~RET `失敗^i
+◎
+If new values is failure, return failure.
+</li>
+					<li>
+<p>
+%値~list 内の
+~EACH( %~item )
+に対し
+⇒
+%新-値~list 内の
+~EACH( %新~item )
+に対し
+⇒
+%一時~list に次に与える`~tuple$を付加する：
+</p>
+								<ul>
+									<li>
+`値$sum ~SET %~item の`値$sum ~MUL %新~item の`値$sum
+</li>
+									<li>
+`単位~map$ ~SET ［
+`単位~mapの積をとる$( %~item の`単位~map$, %新~item の`単位~map$ )
+］の結果から， 0 を値にとる`~entry$はすべて除去した結果
+</li>
+								</ul>
+◎
+For each item1 in values:
+• For each item2 in new values:
+•• Let item be a tuple with its value set to the product of the values of item1 and item2, and its unit map set to the product of the unit maps of item1 and item2, with all entries with a zero value removed.
+•• Append item to temp.
+</li>
+					<li>
+%値~list ~SET %一時~list
+◎
+Set values to temp.
+</li>
+				</ol>
+			</li>
+			<li>
+~RET %値~list
+◎
+Return values.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`CSSMathInvert$I</dt>
+	<dd>
+		<ol>
+			<li>
+%値~list ~LET `総和~値を作成する$( %N の `value$m1 内部~slot )
+◎
+Let values be the result of creating a sum value from this’s value internal slot.
+</li>
+			<li>
+~IF［
+%値~list ~EQ `失敗^i
+］
+⇒
+~RET `失敗^i
+◎
+If values is failure, return failure.
+</li>
+			<li>
+~IF［
+`値$sum の`~size$ ~GT 1
+］
+⇒
+~RET `失敗^i
+◎
+If the length of values is more than one, return failure.
+</li>
+			<li>
+<p>
+%値~list 内の
+~EACH( %~item )
+に対し：
+</p>
+				<ol>
+					<li>
+%~item の`値$sum ~SET その逆数（乗法逆元を見出す）
+</li>
+					<li>
+%~item の`単位~map$内の
+~EACH( %~entry )
+に対し
+⇒
+%~entry の`値$map ~SET その反数（加法逆元を見出す）
+</li>
+				</ol>
+
+◎
+Invert (find the reciprocal of) the value of the item in values, and negate the value of each entry in its unit map.
+</li>
+			<li>
+~RET %値~list
+◎
+Return values.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`CSSMathMin$I</dt>
+	<dt>`CSSMathMax$I</dt>
+	<dd>
+		<ol>
+			<li>
+%総和~値~list ~LET %N の `values$m1 内部~slotを［
+`総和~値を作成する$
+］`演算で写像する$
+◎
+Let args be the result of creating a sum value for each item in this’s values internal slot.
+</li>
+			<li>
+~IF［
+`失敗^i ~IN %総和~値~list
+］~OR［
+ある`総和~値$ ~IN %総和~値~list があって，その`~size$ ~GT 1
+］
+⇒
+~RET `失敗^i
+◎
+If any item of args is failure, or has a length greater than one, return failure.
+</li>
+			<li>
+%~item~list ~LET %総和~値~list を［
+%~item に対し， %~item[0] を得る
+］`演算で写像する$
+◎
+↓</li>
+			<li>
+~IF［
+%~item~list 内に ある 2 つの~itemがあって，それらの`単位~map$は互いに一致しない
+【！＊一致するの定義】
+］
+⇒
+~RET `失敗^i
+◎
+If not all of the unit maps among the items of args are identical, return failure.
+</li>
+			<li>
+%値~list ~LET %~item~list を［
+~itemの`値$sumを得る
+］`演算で写像する$
+◎
+↓</li>
+			<li>
+%N の~classに応じて
+⇒＃
+`CSSMathMin$I ならば %値~list 内の最も小さい値 ／
+`CSSMathMax$I ならば %値~list 内の最も大きい値
+◎
+Return the item of args whose sole item has the smallest value.
+◎
+CSSMathMax
+◎
+Let args be the result of creating a sum value for each item in this’s values internal slot.
+◎
+If any item of args is failure, or has a length greater than one, return failure.
+◎
+If not all of the unit maps among the items of args are identical, return failure.
+◎
+Return the item of args whose sole item has the largest value.
+</li>
+		</ol>
+	</dd>
+</dl>
+
+</div>
+
+<div class="algo">
+<p>
+`単位~mapから型を作成する@
+ときは、所与の
+( %単位~map )
+に対し：
+◎
+To create a type from a unit map unit map:
+</p>
+<ol>
+	<li>
+%型 ~LET `型を作成する$()
+◎
+Let types be an initially empty list.
+</li>
+	<li>
+<p>
+%単位~map 内の
+~EACH( %単位 → %累乗数 )
+に対し：
+</p>
+		<ol>
+			<li>
+%基底~型 ~LET %単位 に`対応する基底~型$
+</li>
+			<li>
+~Assert：
+%基底~型 は`基底~型$である
+</li>
+			<li>
+%型[ %基底~型 ] ~SET %型[ %基底~型 ] ~PLUS %累乗数
+</li>
+		</ol>
+◎
+For each unit → power in unit map:
+• Let type be the result of creating a type from unit.
+• Set type’s sole value to power.
+• Append type to types.
+</li>
+	<li>
+~RET %型
+◎
+Return the result of multiplying all the items of types.
+</li>
+</ol>
+
+<p class="trans-note">【
+原文は`型を乗算する$~algoを利用しているが、この訳では “`対応する基底~型$” を利用して，等価に簡約している。
+】</p>
+
+</div>
+
+<div class="algo">
+<p>
+`単位~mapの積をとる@
+ときは、所与の
+( `単位~map$ %U, `単位~map$ %V )
+に対し，次を走らす：
+◎
+The product of two unit maps units1 and units2 is the result given by the following steps:
+</p>
+<ol>
+	<li>
+%結果 ~LET  %U の複製
+◎
+Let result be a copy of units1.
+</li>
+	<li>
+<p>
+%V 内の
+~EACH( %単位 → %累乗数 )
+に対し：
+◎
+For each unit → power in units2:
+</p>
+		<ol>
+			<li>
+~IF［
+%結果[ %単位 ] ~NEQ ε
+］
+⇒
+%結果[ %単位 ] ~INCBY %累乗数
+◎
+If result[unit] exists, increment result[unit] by power.
+</li>
+			<li>
+~ELSE
+⇒
+%結果[ %単位 ] ~SET %累乗数
+◎
+Otherwise, set result[unit] to power.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %結果
+◎
+Return result.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`parse(cssText)@m
+~method~手続きは：
+◎
+↓</p>
+
+<p class="note">
+この静的~methodは、~CSSを包含している文字列から直に `CSSNumericValue$I を構築-可能にする。
+◎
+The parse() method allows a CSSNumericValue to be constructed directly from a string containing CSS. Note that this is a static method, existing directly on the CSSNumericValue interface object, rather than on CSSNumericValue instances.
+◎
+The parse(cssText) method, when called, must perform the following steps:
+</p>
+<ol>
+	<li>
+%結果 ~LET `成分~値を構文解析する$( %cssText )
+◎
+Parse a component value from cssText and let result be the result.＼
+</li>
+	<li>
+~IF［
+%結果 ~EQ 構文~error
+］
+⇒
+~THROW `SyntaxError$E
+◎
+If result is a syntax error, throw a SyntaxError and abort this algorithm.
+</li>
+	<li>
+~IF［
+%結果 は ［
+`number-token$t,
+`percentage-token$t,
+`dimension-token$t,
+`~math関数$
+］のいずれかである
+］
+⇒
+~RET `数量~値を具象化する$( %結果 )
+◎
+If result is not a &lt;number-token&gt;, &lt;percentage-token&gt;, &lt;dimension-token&gt;, or a math function, throw a SyntaxError and abort this algorithm.
+◎
+Reify a numeric value result, and return the result.
+</li>
+	<li>
+~THROW `SyntaxError$E
+◎
+↑</li>
+</ol>
+</div>
+
+			</section>
+			<section id="numeric-typing">
+<h4 title="Numeric Value Typing">4.3.2. 数量~値の型~付け</h4>
+
+<div class="p">
+<p>
+各 `CSSNumericValue$I ~objには、
+`型@
+が結付けられる：
+</p>
+
+<ul>
+	<li>
+`型$は、各`基底~型$を整数に対応付ける`有順序~map$である。
+</li>
+	<li>
+<p>
+ただし，`型$ %型 においては、所与の`基底~型$ %~key に対し
+%~key を伴う`~entryを包含して$いないならば，
+%型[ %~key ] は 0 を返すとする（ ε ではなく）。
+</p>
+
+<p class="trans-note">【
+この規約は、この訳による追加である。
+原文では、あらゆる箇所で， 2 つの条件［
+%型 は %~key を伴う`~entryを包含して$いない（ %型[ %~key ] ~EQ ε ）
+］と［
+%型[ %~key ] ~EQ 0
+］は同じに扱われている（その違いは外から観測され得ない）。
+なので、この訳では前者の条件を後者に統合して，他所の条件分岐を簡略化している。
+（これは、すべての`基底~型$ %~key に対し暗黙的に［
+%型[ %~key ] ~SET 0
+］に初期化されていると見做しても同じことになる。）
+】</p>
+	</li>
+	<li>
+次に挙げるものが
+`基底~型@
+とされる
+⇒＃
+`length^l,
+`angle^l,
+`time^l,
+`frequency^l,
+`resolution^l,
+`flex^l,
+`percent^l
+</li>
+	<li>
+`型$を成す`~entry$たちの順序は、常に，上に挙げた`基底~型$の順序に従うとする。
+</li>
+	<li>
+<p>
+各`型$には、
+`百分率hint@
+も結付けられる。
+それは、［
+~NULL または `percent^l 以外の`基底~型$
+］のいずれかをとり，他が指定されない限り ~NULL をとる。
+</p>
+
+<p class="trans-note">【
+`百分率hint$は、百分率~値が基準にしている単位を表す
+— おそらく、確定されていない値（~lay-outしないと判明しない，内容に依存する~sizeなど）に相対的な百分率~値を表現-可能にするためにある。
+】【
+この仕様は、どの`型$ %型 に対しても，次の不変則：［
+%型 の`百分率hint$ ~EQ ~NULL
+］~OR［
+%型[ `percent^l ] ~EQ 0 
+］を保ち続ける。
+この訳では、この不変則も利用して，原文の［
+`型を加算する$／`型を乗算する$
+］~algoを論理的に単純~化している（入力の`型$がこの不変則を満たさない場合の結果は、原文の~algoと異なり得る
+— が，原文の~algoは、そのような入力に対しては，結合的でも可換でもなくなる（なので、この不変則を前提に記されていると見受けられる）。
+この訳では、そのような入力に対しても，結合的, かつ可換になるようにしている）。
+】</p>
+	</li>
+</ul>
+
+◎
+Each CSSNumericValue has an associated type, which is a map of base types to integers, and an associated percent hint. The base types are "length", "angle", "time", "frequency", "resolution", "flex", and "percent". The ordering of a type’s entries always matches this base type ordering. The percent hint is either null or a base type other than "percent".
+</div>
+
+<p class="note">注記：
+~CSSに新たな単位~型が追加されれば、それに伴い，この`基底~型$の~listと~CSS`~math関数$にも追加されることになる。
+◎
+Note: As new unit types are added to CSS, they’ll be added to this list of base types, and to the CSS math functions.
+</p>
+
+<div class="algo">
+<p>
+`型を作成する@
+ときは、所与の
+( 文字列 %単位 （省略時は `number^l ） )
+に対し，次を遂行する：
+◎
+To create a type from a string unit, follow the appropriate branch of the following:
+</p>
+<ol>
+	<li>
+<p>
+%基底~型 ~LET %単位 に`対応する基底~型$
+</p>
+
+<p>
+所与の文字列 %単位 に
+`対応する基底~型@
+は、下の表の 1 列目に挙げる分類のうち， %単位 が該当する行の 2 列目に与える値とする
+【この定義は、この訳による追加】
+：
+</p>
+
+<table><tbody>
+<tr><td>`number^l
+<td>`無次元^i
+<tr><td>`percent^l
+<td>`percent^l
+<tr><td>`length$t 単位
+ <td>`length^l
+<tr><td>`angle$t 単位
+ <td>`angle^l
+<tr><td>`time$t 単位
+ <td>`time^l
+<tr><td>`frequency$t 単位
+ <td>`frequency^l
+<tr><td>`resolution$t 単位
+ <td>`resolution^l
+<tr><td>`flex$t 単位
+<td>`flex^l
+<tr><td>その他
+<td>ε
+</tbody></table>
+
+◎
+unit is "number"
+• Return «[ ]» (empty map)
+◎
+unit is "percent"
+• Return «[ "percent" → 1 ]»
+◎
+unit is a &lt;length&gt; unit
+• Return «[ "length" → 1 ]»
+◎
+unit is an &lt;angle&gt; unit
+• Return «[ "angle" → 1 ]»
+◎
+unit is a &lt;time&gt; unit
+• Return «[ "time" → 1 ]»
+◎
+unit is a &lt;frequency&gt; unit
+• Return «[ "frequency" → 1 ]»
+◎
+unit is a &lt;resolution&gt; unit
+• Return «[ "resolution" → 1 ]»
+◎
+unit is a &lt;flex&gt; unit
+• Return «[ "flex" → 1 ]»
+</li>
+	<li>
+~IF［
+%基底~型 ~EQ ε
+］
+⇒
+~RET `失敗^i
+◎
+anything else
+• Return failure.
+</li>
+	<li>
+%型 ~LET 新たな`型$（すなわち， «[ ]» ）
+</li>
+	<li>
+~IF［
+%基底~型 ~NEQ `無次元^i
+］
+⇒
+%型[ %基底~型 ] ~SET 1
+</li>
+	<li>
+%型 の`百分率hint$ ~SET ~NULL
+◎
+In all cases, the associated percent hint is null.
+</li>
+	<li>
+~RET %型
+</li>
+</ol>
+
+</div>
+
+<div class="algo">
+<p>
+`型を加算する@
+ときは、所与の
+( `型$ %型/1, `型$ %型/2 )
+に対し，次を遂行する：
+◎
+To add two types type1 and type2, perform the following steps:
+</p>
+
+<p class="trans-note">【
+入力は 3 個~以上の`型$からなる~listとしても与えられ得る（この節の末尾の注記を見よ）。
+】【
+ここでは、`百分率hint$にて述べた不変則も利用して，原文の~algoを単純~化している。
+】</p>
+<ol>
+	<li>
+%~hint ~LET %型/1 の`百分率hint$
+◎
+↓</li>
+	<li>
+~IF［
+%~hint ~NEQ ~NULL
+］
+⇒
+~IF［
+%型/2 の`百分率hint$ ~NIN { ~NULL, %~hint }
+］
+⇒
+~RET `失敗^i
+— %型/1, %型/2 は加算できない
+◎
+Replace type1 with a fresh copy of type1, and type2 with a fresh copy of type2. Let finalType be a new type with an initially empty ordered map and an initially null percent hint.
+◎
+If both type1 and type2 have non-null percent hints with different values
+• The types can’t be added. Return failure.
+</li>
+	<li>
+~ELSE
+⇒
+%~hint ~SET %型/2 の`百分率hint$
+◎
+↓</li>
+	<li>
+<p>
+~IF［
+%~hint ~NEQ ~NULL
+］
+⇒
+~IF［
+%型/1, %型/2 は %~hint に関して`同値である^i
+］
+⇒
+~GOTO `成功^i
+</p>
+
+<p>
+ここで、［
+%~hint に関して`同値である^i
+］とは、次がいずれも満たされることを意味する：
+</p>
+		<ul>
+			<li>
+どの`基底~型$ %~key ~NIN { `percent^l, %~hint } に対しても
+⇒
+%型/1[ %~key ] ~EQ %型/2[ %~key ]
+</li>
+			<li>
+%型/1[ `percent^l ] ~PLUS %型/1[ %~hint ] ~EQ
+%型/2[ `percent^l ] ~PLUS %型/2[ %~hint ]
+</li>
+		</ul>
+
+◎
+If type1 has a non-null percent hint hint and type2 doesn’t
+• Apply the percent hint hint to type2.
+• Vice versa if type2 has a non-null percent hint and type1 doesn’t.
+◎
+Otherwise
+• Continue to the next step.
+◎
+If all the entries of type1 with non-zero values are contained in type2 with the same value, and vice-versa
+• Copy all of type1’s entries to finalType, and then copy all of type2’s entries to finalType that finalType doesn’t already contain. Set finalType’s percent hint to type1’s percent hint. Return finalType.
+</li>
+	<li>
+<p>
+~ELSE：
+</p>
+		<ol>
+			<li>
+~IF［
+どの`基底~型$ %~key に対しても， %型/1[ %~key ] ~EQ %型/2[ %~key ]
+］
+⇒
+~GOTO `成功^i
+</li>
+			<li>
+~IF［
+ある `percent^l 以外の`基底~型$ %~hint/3 があって，
+%型/1, %型/2 は %~hint/3 に関して`同値である^i
+］
+⇒＃
+%~hint ~SET %~hint/3 （該当する %~hint/3 は、一意に定まる）；
+~GOTO `成功^i
+</li>
+		</ol>
+◎
+If type1 and/or type2 contain "percent" with a non-zero value, and type1 and/or type2 contain a key other than "percent" with a non-zero value
+• For each base type other than "percent" hint:
+•• Provisionally apply the percent hint hint to both type1 and type2.
+•• If, afterwards, all the entries of type1 with non-zero values are contained in type2 with the same value, and vice versa, then copy all of type1’s entries to finalType, and then copy all of type2’s entries to finalType that finalType doesn’t already contain. Set finalType’s percent hint to hint. Return finalType.
+•• Otherwise, revert type1 and type2 to their state at the start of this loop.
+• If the loop finishes without returning finalType, then the types can’t be added. Return failure.
+• Note: You can shortcut this in some cases by just checking the sum of all the values of type1 vs type2. If the sums are different, the types can’t be added.
+</li>
+	<li>
+~RET `失敗^i
+— %型/1, %型/2 は加算できない
+◎
+Otherwise
+• The types can’t be added. Return failure.
+</li>
+	<li>
+<p>
+`成功^i：
+</p>
+		<ol>
+			<li>
+%型 ~SET %型/1 の複製
+</li>
+			<li>
+%型 に`百分率hintを適用する$( %~hint )
+</li>
+			<li>
+~RET %型
+</li>
+		</ol>
+◎
+↑</li>
+</ol>
+
+</div>
+
+<div class="algo">
+<p>
+`型$ %型 に
+`百分率hintを適用する@
+ときは、所与の
+( `百分率hint$ %~hint )
+に対し，次を遂行する：
+◎
+To apply the percent hint hint to a type, perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%~hint ~EQ ~NULL
+］
+⇒
+~RET
+【この段は、他所を単純~化するための，この訳による追加。】
+</li>
+	<li>
+%型[ %~hint ] ~INCBY %型[ `percent^l ]
+◎
+If type doesn’t contain hint, set type[hint] to 0.
+◎
+If type contains "percent", add type["percent"] to type[hint], then＼
+</li>
+	<li>
+%型[ `percent^l ] ~SET 0
+◎
+set type["percent"] to 0.
+</li>
+	<li>
+%型 の`百分率hint$ ~SET %~hint
+◎
+Set type’s percent hint to hint.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`型を乗算する@
+ときは、所与の
+( `型$ %型/1, `型$ %型/2 )
+に対し，次を遂行する：
+◎
+To multiply two types type1 and type2, perform the following steps:
+</p>
+
+<p class="trans-note">【
+入力は 3 個~以上の`型$からなる~listとしても与えられ得る（この節の末尾の注記を見よ）。
+】【
+ここでは、`百分率hint$にて述べた不変則も利用して，原文の~algoを単純~化している。
+】</p>
+<ol>
+	<li>
+%型 ~LET `型を作成する$()
+◎
+Replace type1 with a fresh copy of type1, and type2 with a fresh copy of type2. Let finalType be a new type with an initially empty ordered map and an initially null percent hint.
+</li>
+	<li>
+%~hint ~LET %型/1 の`百分率hint$
+</li>
+	<li>
+~IF［
+%~hint ~NEQ ~NULL
+］
+⇒
+~IF［
+%型/2 の`百分率hint$ ~NIN { ~NULL, %~hint }
+］
+⇒
+~RET `失敗^i
+— %型/1, %型/2 は乗算できない
+◎
+If both type1 and type2 have non-null percent hints with different values, the types can’t be multiplied. Return failure.
+</li>
+	<li>
+~ELSE
+⇒
+%~hint ~SET %型/2 の`百分率hint$
+◎
+If type1 has a non-null percent hint hint and type2 doesn’t, apply the percent hint hint to type2.
+◎
+Vice versa if type2 has a non-null percent hint and type1 doesn’t.
+</li>
+	<li>
+~EACH( `基底~型$ %基底~型 )
+に対し
+⇒
+%型[ %~key ] ~SET %型/1[ %基底~型 ] ~PLUS %型/2[ %基底~型 ]
+◎
+Copy all of type1’s entries to finalType, then for each baseType → power of type2:
+• If finalType[baseType] exists, increment its value by power.
+• Otherwise, set finalType[baseType] to power.
+</li>
+	<li>
+%型 に`百分率hintを適用する$( %~hint )
+◎
+Set finalType’s percent hint to type1’s percent hint.
+</li>
+	<li>
+~RET %型
+◎
+Return finalType.
+</li>
+</ol>
+
+</div>
+
+<div class="algo">
+<p>
+`型を逆数にする@
+ときは、所与の
+( `型$ %型 )
+に対し，次を遂行する：
+◎
+To invert a type type, perform the following steps:
+</p>
+<ol>
+	<li>
+%結果 ~LET `型を作成する$()
+◎
+Let result be a new type with an initially empty ordered map and an initially null percent hint
+</li>
+	<li>
+%型 を成す
+~EACH( %単位 → %指数 )
+に対し
+⇒
+%結果[ %単位 ] ~SET − %指数
+◎
+For each unit → exponent of type, set result[unit] to (-1 * exponent).
+</li>
+	<li>
+~RET %結果
+◎
+Return result.
+</li>
+</ol>
+</div>
+
+<p>
+所与の`型$ %型 が所与の~CSS生成規則に
+`合致-@
+するかどうかは，次に従って定義される：
+◎
+A type is said to match a CSS production in some circumstances:
+</p>
+
+<ul>
+	<li>
+<p>
+この定義の目的においては、
+%型 の
+`純~単位@
+とは、次をいずれも満たす %単位 が［
+在るならばそれ ／
+無いならば ε
+］とする：
+</p>
+		<ul>
+			<li>
+［
+%単位 ~EQ `number^l
+］~OR［［
+%単位 は`基底~型$である
+］~AND［
+%型[ %単位 ] ~EQ 1
+］］
+</li>
+			<li>
+どの`基底~型$ %~key も，次を満たす
+⇒
+［
+%~key ~EQ %単位 
+］~OR［
+%型[ %~key ] ~EQ 0
+］
+</li>
+		</ul>
+<p class="trans-note">【
+この定義は、以下を簡潔に述べるため，この訳に導入している。
+%型 は、`純~単位$に応じて［
+`number^l ならば無次元量（単位なし） ／
+`percent^l ならば他の単位に相対的な一次元量か, 無次元量に相対的な無次元量 ／
+他の非 ε 値ならば単位 %単位 の一次元量 ／
+ε ならば多重次元量
+］を表す。
+】</p>
+
+	</li>
+
+	<li>
+<p>
+%型 は次を満たすならば
+`length$t に`合致-$するとされる
+⇒
+［
+`純~単位$ ~EQ `length^l
+］~AND［
+`百分率hint$ ~EQ ~NULL
+］
+</p>
+
+<p>
+`angle$t,
+`time$t,
+`frequency$t,
+`resolution$t,
+`flex$t
+に対しても，同様に定義される。
+</p>
+◎
+A type matches &lt;length&gt; if its only non-zero entry is «[ "length" → 1 ]» and its percent hint is null. Similarly for &lt;angle&gt;, &lt;time&gt;, &lt;frequency&gt;, &lt;resolution&gt;, and &lt;flex&gt;.
+</li>
+	<li>
+%型 は次を満たすならば
+`percentage$t に`合致-$するとされる
+⇒
+`純~単位$ ~EQ `percent^l
+◎
+A type matches &lt;percentage&gt; if its only non-zero entry is «[ "percent" → 1 ]».
+</li>
+	<li>
+<p>
+%型 は次を満たすならば
+`length-percentage$t に`合致-$するとされる
+⇒
+`純~単位$ ~IN { `length^l, `percent^l }
+</p>
+
+<p>
+`angle-percentage$t,
+`time-percentage$t,
+等々に対しても，同様に定義される。
+</p>
+
+◎
+A type matches &lt;length-percentage&gt; if its only non-zero entry is either «[ "length" → 1 ]» or «[ "percent" → 1 ]» Same for &lt;angle-percentage&gt;, &lt;time-percentage&gt;, etc.
+</li>
+	<li>
+<p>
+%型 は次を満たすならば
+`number$t に`合致-$するとされる
+⇒
+［
+`純~単位$ ~EQ `number^l
+］~AND［
+`百分率hint$ ~EQ ~NULL
+］
+◎
+A type matches &lt;number&gt; if it has no non-zero entries and its percent hint is null.
+</li>
+	<li>
+<p>
+%型 は次を満たすならば
+`number-percentage^t に`合致-$するとされる
+⇒
+`純~単位$ ~IN { `number^l, `percent^l }
+◎
+A type matches &lt;number-percentage&gt; if it has no non-zero entries, or its only non-zero entry is «[ "percent" → 1 ]».
+</li>
+</ul>
+
+<p>
+仕様には、文法において
+`length-percentage$t の代わりに
+<span class="prod">[`length$t | `percentage$t]</span>
+を利用して，注釈文にて
+`length$t と `percentage$t を組合できるものと指定しているものも多い。
+`合致-$~~処理の目的においては、これらの事例は `length-percentage$t として扱われるべきである。
+`angle-percentage$t, 等々に対しても同様に扱われるべきである。
+◎
+Many specifications use ''[ &lt;length&gt; | &lt;percentage&gt; ]'' instead of ''&lt;length-percentage&gt;'' in their grammar, and specify in prose that the &lt;length&gt; and &lt;percentage&gt; can be combined. For the purposes of matching, these cases should be treated as &lt;length-percentage&gt;. Similarly for &lt;angle-percentage&gt;, etc.
+</p>
+
+<p class="note">注記：
+`型$の集合は、加算の下で半群（ `semi-group^en ）を形成し，乗算の下で単位元を有する半群（ `monoid^en ）を形成する（
+【！`百分率hint$に~NULLを伴う «[ ]»】
+`型を作成する$() の結果が乗法的~単位元を与える）。
+すなわち、それらは結合的, かつ可換である。
+したがって仕様は、何個でも一義的に`型を加算する$ことができる
+— 一度に 2 個ずつ`型を加算する$よう記すことに代えて。
+◎
+Note: Types form a semi-group under both addition and a monoid under multiplication (with the multiplicative identity being «[ ]» with a null percent hint), meaning that they’re associative and commutative. Thus the spec can, for example, add an unbounded number of types together unambiguously, rather than having to manually add them pair-wise.
+</p>
+
+			</section>
+			<section id="simple-numeric">
+<h4 title="Value + Unit: CSSUnitValue objects">4.3.3. 単位~付きの値： `CSSUnitValue^I ~obj</h4>
+
+<p>
+単独の単位として表出できる数量~値（あるいは裸の実数／百分率）は `CSSUnitValue$I として表現される。
+◎
+Numeric values that can be expressed as a single unit (or a naked number or percentage) are represented as CSSUnitValues.
+</p>
+
+<div class="example">
+
+<p>
+例えば~stylesheet内の値 `5px^v は、次のようにされた `CSSUnitValue$I により表現される
+⇒＃
+`value^m 属性 ~SET 5,
+`unit^m 属性 ~SET `px^l
+◎
+For example, the value 5px in a stylesheet will be represented by a CSSUnitValue with its value attribute set to 5 and its unit attribute set to "px".
+</p>
+<p>
+同様に，~stylesheet内の値 `10^v は、次のようにされた `CSSUnitValue$I により表現される
+⇒＃
+`value^m 属性 ~SET 10,
+`unit^m 属性 ~SET `number^l
+◎
+Similarly, the value 10 in a stylesheet will be represented by a CSSUnitValue with its value attribute set to 10 and its unit attribute set to "number".
+</p>
+</div>
+
+<pre class="idl">
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSUnitValue@I : `CSSNumericValue$I {
+    `CSSUnitValue$mc(`double$ %value, `USVString$ %unit);
+
+    attribute `double$ `value@m;
+    readonly attribute `USVString$ `unit@m;
+};
+</pre>
+
+<div class="algo">
+<p>
+`CSSUnitValue(value, unit)@mm
+構築子~手続きは：
+◎
+The CSSUnitValue(value, unit) constructor must, when called, perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%unit に`対応する基底~型$ ~EQ ε
+］
+⇒
+~THROW `TypeError$E
+◎
+If creating a type from unit returns failure, throw a TypeError and abort this algorithm.
+</li>
+	<li>
+コレの
+⇒＃
+`value$m 内部~slot ~SET %値,
+`unit$m ~SET %単位
+◎
+Return a new CSSUnitValue with its value internal slot set to value and its unit set to unit.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+<dfn id="type-of-a-cssunitvalue">`CSSUnitValue$I %V の`型$</dfn>
+は、次の結果になる
+⇒
+`型を作成する$( %V の `unit$m 内部~slot )
+◎
+The type of a CSSUnitValue is the result of creating a type from its unit internal slot.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`~CSSUnitValueを作成する@
+ときは、所与の
+( %実数, %単位 )
+に対し，次のようにされた新たな `CSSUnitValue$I ~objを返す
+⇒＃
+`value$m 内部~slot ~SET %実数,
+`unit$m 内部~slot ~SET %単位
+◎
+To create a CSSUnitValue from a pair (num, unit), return a new CSSUnitValue object with its value internal slot set to num, and its unit internal slot set to unit.
+</p>
+</div>
+
+<p class="example">
+例えば、次の結果は `new CSSUnitValue(5, "px")^c の結果と等価な~objになる
+⇒
+`~CSSUnitValueを作成する$( 5, `px^l )
+◎
+For example, creating a CSSUnitValue from (5, "px") creates an object equivalent to new CSSUnitValue(5, "px").
+</p>
+
+<p class="note">注記：
+これは、仕様~内部の~algoであり、単純に，必要なときに単位~付きの値を容易に作成するためにある。
+◎
+Note: This is a spec-internal algorithm, meant simply to make it easier to create unit values in algorithms when needed.
+</p>
+
+<div class="algo">
+<p>
+`単位~値を変換する@
+ときは、所与の
+( `CSSUnitValue$I ~obj %単位~値, 単位 %単位 )
+に対し，次を遂行する：
+◎
+To convert a CSSUnitValue this to a unit unit, perform the following steps:
+</p>
+<ol>
+	<li>
+%旧-単位 ~LET %単位~値 の `unit$m 内部~slotの値
+◎
+Let old unit be the value of this’s unit internal slot,＼
+</li>
+	<li>
+%旧-値 ~LET %単位~値 の `value$m 内部~slotの値
+◎
+and old value be the value of this’s value internal slot.
+</li>
+	<li>
+~IF［
+( %旧-単位, %単位 )
+は`互換~単位$でない
+］
+⇒
+~RET `失敗^i
+◎
+If old unit and unit are not compatible units, return failure.
+</li>
+	<li>
+~RET 次のようにされた新たな `CSSUnitValue$I ~obj
+⇒＃
+`unit$m 内部~slot ~SET %単位,
+`value$m 内部~slot ~SET %旧-値 ~MUL ( %旧-単位 から %単位 への換算率 )
+◎
+Return a new CSSUnitValue whose unit internal slot is set to unit, and whose value internal slot is set to old value multiplied by the conversation ratio between old unit and unit.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="complex-numeric">
+<h4 title="Complex Numeric Values: CSSMathValue objects">4.3.4. 複階的な数量~値： `CSSMathValue^I ~obj</h4>
+
+<p>
+単独の ( 値, 単位 ) 組より複雑な数量~値は，
+`CSSMathValue$I 下位classたちが成す~treeにより表現され、その各~~末端~nodeは `CSSUnitValue$I ~objになる。
+~CSSにおける`~math関数$（ `calc$f, `min$f, `max$f ）は、この仕方で表現される。
+◎
+Numeric values that are more complicated than a single value+unit are represented by a tree of CSSMathValue subclasses, eventually terminating in CSSUnitValue objects at the leaf nodes. The calc(), min(), and max() functions in CSS are represented in this way.
+</p>
+
+<div class="example">
+
+<p>
+例えば~CSS値
+`calc(1em + 5px)^v
+は、
+`CSSMathSum(CSS.em(1), CSS.px(5))^c
+の様に，
+`CSSMathSum$I により表現されることになる。
+◎
+For example, the CSS value calc(1em + 5px) will be represented by a CSSMathSum like CSSMathSum(CSS.em(1), CSS.px(5)).
+</p>
+<p>
+`calc(1em + 5px * 2)^v の様な複階的な式は、
+`CSSMathSum(CSS.em(1), CSSMathProduct(CSS.px(5), 2))^c
+の様な入子の構造により表現されることになる。
+◎
+A more complex expression, like calc(1em + 5px * 2), will be represented by a nested structure like CSSMathSum(CSS.em(1), CSSMathProduct(CSS.px(5), 2)).
+</p>
+</div>
+
+<pre class="idl">
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSMathValue@I : `CSSNumericValue$I {
+    readonly attribute `CSSMathOperator$I `operator$m;
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSMathSum@I : `CSSMathValue$I {
+    `CSSMathSum$mc(`CSSNumberish$... %args);
+
+    readonly attribute `CSSNumericArray$I `values@m;
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSMathProduct@I : `CSSMathValue$I {
+    `CSSMathProduct$mc(`CSSNumberish$... %args);
+
+    readonly attribute `CSSNumericArray$I `values@m;
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSMathNegate@I : `CSSMathValue$I {
+    `CSSMathNegate$mc(`CSSNumberish$ %arg);
+
+    readonly attribute `CSSNumericValue$I `value@m;
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSMathInvert@I : `CSSMathValue$I {
+    `CSSMathInvert$mc(`CSSNumberish$ %arg);
+    readonly attribute `CSSNumericValue$I `value@m;
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSMathMin@I : `CSSMathValue$I {
+    `CSSMathMin$mc(`CSSNumberish$... %args);
+
+    readonly attribute `CSSNumericArray$I `values@m;
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSMathMax@I : `CSSMathValue$I {
+    `CSSMathMax$mc(`CSSNumberish$... %args);
+
+    readonly attribute `CSSNumericArray$I `values@m;
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSMathClamp@I : `CSSMathValue$I {
+    `CSSMathClamp$mc(`CSSNumberish$ %min, `CSSNumberish$ %val, `CSSNumberish$ %max);
+
+    readonly attribute `CSSNumericArray$I `min@m;
+    readonly attribute `CSSNumericArray$I `val@m;
+    readonly attribute `CSSNumericArray$I `max@m;
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSNumericArray@I {
+    iterable&lt;`CSSNumericValue$I&gt;;
+    readonly attribute `unsigned long$ `length$m;
+    `getter$m `CSSNumericValue$I (`unsigned long$ %index);
+};
+
+enum `CSSMathOperator@I {
+    "`sum@m",
+    "`product@m",
+    "`negate@m",
+    "`invert@m",
+    "`min@m",
+    "`max@m",
+    "`clamp@m",
+};
+</pre>
+
+<p class="note">注記：
+`CSSMathValue$I は、純粋な上位classであり，直には構築できない。
+それは，もっぱら、すべての “~math” 演算に共通な属性を~hostするためにある。
+◎
+Note: CSSMathValue, being a pure superclass, cannot be directly constructed. It exists solely to host the common attributes of all the "math" operations.
+</p>
+
+<div class="algo">
+<p>
+`CSSMathValue^II `operator@m1
+取得子~手続きは
+⇒
+~RET コレの~interfaceに応じて，次の表の 2 列目に与える文字列（
+`CSSMathOperator$I 列挙~値
+）：
+</p>
+
+<table><thead><tr><th>~interface
+<th>結果
+</thead><tbody>
+
+<tr><td>`CSSMathSum$I
+<td>`sum^l
+
+<tr><td>`CSSMathProduct$I
+<td>`product^l
+
+<tr><td>`CSSMathMin$I
+<td>`min^l
+
+<tr><td>`CSSMathMax$I
+<td>`max^l
+
+<tr><td>`CSSMathClamp$I
+<td>`clamp^l
+
+<tr><td>`CSSMathNegate$I
+<td>`negate^l
+
+<tr><td>`CSSMathInvert$I
+<td>`invert^l
+
+</tbody></table>
+
+◎
+The operator attribute of a CSSMathValue this must, on getting, return the following string, depending on the interface of this:
+◎
+CSSMathSum
+• "sum"
+CSSMathProduct
+• "product"
+CSSMathMin
+• "min"
+CSSMathMax
+• "max"
+CSSMathNegate
+• "negate"
+CSSMathInvert
+• "invert"
+◎
+Note: These are all instances of the CSSMathOperator enum.
+</div>
+
+<div class="algo">
+<p>
+`CSSMathSum(...args)@mm
+構築子~手続きは：
+◎
+The CSSMathSum(...args) constructor must, when called, perform the following steps:
+</p>
+<ol>
+	<li>
+%args ~SET %args が成す~listを［
+`実数に類する値を規格化する$
+］`演算で写像する$
+◎
+Replace each item of args with the result of rectifying a numberish value for the item.
+</li>
+	<li>
+~IF［
+%args は`空$である
+］
+⇒
+~THROW `SyntaxError$E
+◎
+If args is empty, throw a SyntaxError.
+</li>
+	<li>
+%型 ~LET `型を加算する$( %args を成すすべての`~item$の`型$ )
+◎
+Let type be the result of adding the types of all the items of args.＼
+</li>
+	<li>
+~IF［
+%型 ~EQ `失敗^i
+］
+⇒
+~THROW `TypeError$E
+◎
+If type is failure, throw a TypeError.
+</li>
+	<li>
+コレの `values$m 内部~slot ~SET %args
+◎
+Return a new CSSMathSum whose values internal slot is set to args.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+［
+`CSSMathMin(...args)@mm ／
+`CSSMathMax(...args)@mm
+］構築子~手続きは、
+`CSSMathSum()$mm 構築子~手続きと同じに定義される（最後の段において，各自の `values^m 内部~slotを設定することを除いて）。
+◎
+The CSSMathMin(...args) and CSSMathMax(...args) constructors are defined identically to the above, except that in the last step they return a new CSSMathMin or CSSMathMax object, respectively.
+</div>
+
+<div class="algo">
+`CSSMathProduct(...args)@mm
+構築子~手続きは、次を除いて
+`CSSMathSum()$mm 構築子~手続きと同じに定義される
+⇒
+3 番目の段においては、`型を加算する$代わりに`型を乗算する$（および、最後の段において，自身の `values$m 内部~slotを設定する）
+◎
+The CSSMathProduct(...args) constructor is defined identically to the above, except that in step 3 it multiplies the types instead of adding, and in the last step it returns a CSSMathProduct.
+</div>
+
+<div class="algo">
+<p>
+`CSSMathClamp(min, val, max)@mm
+構築子~手続きは：
+◎
+The CSSMathClamp(min, val, max) constructor must, when called, perform the following steps:
+</p>
+<ol>
+	<li>
+%min ~SET `実数に類する値を規格化する$( %min )
+◎
+↓</li>
+	<li>
+%val ~SET `実数に類する値を規格化する$( %val )
+◎
+↓</li>
+	<li>
+%max ~SET `実数に類する値を規格化する$( %max )
+◎
+Replace min, val, and max with the result of rectifying a numberish value for each.
+</li>
+	<li>
+%型 ~LET `型を加算する$( %min, %val, %max )
+◎
+Let type be the result of adding the types of min, val, and max.＼
+</li>
+	<li>
+~IF［
+%型 ~EQ `失敗^i
+］
+⇒
+~THROW `TypeError$E
+◎
+If type is failure, throw a TypeError.
+</li>
+	<li>
+コレの
+⇒＃
+`min$m 内部~slot ~SET %min,
+`val$m 内部~slot ~SET %val,
+`max$m 内部~slot ~SET %max
+◎
+Return a new CSSMathClamp whose min, val, and max internal slots are set to min, val, and max, respectively.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`CSSMathNegate(arg)@mm
+構築子~手続きは
+⇒
+コレの `value$m 内部~slot ~SET `実数に類する値を規格化する$( %arg )
+◎
+The CSSMathNegate(arg) constructor must, when called, perform the following steps:
+• Replace arg with the result of rectifying a numberish value for arg.
+• Return a new CSSMathNegate whose value internal slot is set to arg.
+</div>
+
+<div class="algo">
+`CSSMathInvert(arg)@mm
+構築子~手続きは
+⇒
+コレの `value$m 内部~slot ~SET `実数に類する値を規格化する$( %arg )
+◎
+The CSSMathInvert(arg) constructor is defined identically to the above, except that in the last step it returns a new CSSMathInvert object.
+</div>
+
+<p>
+<dfn id="type-of-a-cssmathvalue">`CSSMathValue$I %M の`型$</dfn>
+は、
+%M の~classに応じて，次で与えられる：
+◎
+The type of a CSSMathValue depends on its class:
+</p>
+
+<dl class="switch">
+	<dt>`CSSMathSum$I</dt>
+	<dd>
+`型を加算する$( %M の `values$m1 内部~slot内の各`~item$の`型$ )
+</dd>
+
+	<dt>`CSSMathMin$I</dt>
+	<dd>
+`型を加算する$( %M の `values$m1 内部~slot内の各`~item$の`型$ )
+</dd>
+
+	<dt>`CSSMathMax$I</dt>
+	<dd>
+`型を加算する$( %M の `values$m1 内部~slot内の各`~item$の`型$ )
+◎
+The type is the result of adding the types of each of the items in its values internal slot.
+</dd>
+
+	<dt>`CSSMathClamp$I</dt>
+	<dd>
+`型を加算する$( %M の［ `min$m1, `val$m1, `max$m1 ］内部~slotの`型$ )
+◎
+The type is the result of adding the types of the min, val, and max internal slots.
+</dd>
+
+	<dt>`CSSMathProduct$I</dt>
+	<dd>
+`型を乗算する$( %M の `values$m1 内部~slot内の各`~item$の`型$ )
+◎
+The type is the result of multiplying the types of each of the items in its values internal slot.
+</dd>
+
+	<dt>`CSSMathNegate$I</dt>
+	<dd>
+%M の `value$m1 内部~slotの`型$
+◎
+The type is the same as the type of its value internal slot.
+</dd>
+
+	<dt>`CSSMathInvert$I</dt>
+	<dd>
+%M の `value$m1 内部~slotの`型$を，それを成すすべての`~entry$の`値$mapを反数にした結果
+◎
+The type is the same as the type of its value internal slot, but with all values negated.
+</dd>
+</dl>
+
+<p>
+`CSSNumericArray$I0 の：
+</p>
+<ul>
+	<li>
+`length@m
+取得子は、コレが包含する `CSSNumericValue$I の個数を返す。
+◎
+The length attribute of CSSNumericArray indicates how many CSSNumericValues are contained within the CSSNumericArray.
+</li>
+	<li>
+`getter@m
+における`有index取得子$は、供された~indexにある `CSSNumericValue$I を検索取得する。
+◎
+The indexed property getter of CSSNumericArray retrieves the CSSNumericValue at the provided index.
+</li>
+</ul>
+
+			</section>
+			<section id="numeric-factory">
+<h4 title="Numeric Factory Functions">4.3.5. 数量~factory関数</h4>
+
+<p>
+次の~factory関数を利用すれば、
+構築子を直に利用するより，ずっと簡潔に新たな数量~値を作成できる。
+◎
+The following factory functions can be used to create new numeric values much less verbosely than using the constructors directly.
+</p>
+
+<pre class="idl">
+partial namespace `CSS$I0 {
+    `CSSUnitValue$I `number@m(`double$ %value);
+    `CSSUnitValue$I `percent@m(`double$ %value);
+
+    // `length^t
+    `CSSUnitValue$I `em@m(`double$ %value);
+    `CSSUnitValue$I `ex@m(`double$ %value);
+    `CSSUnitValue$I `ch@m(`double$ %value);
+    `CSSUnitValue$I `ic@m(`double$ %value);
+    `CSSUnitValue$I `rem@m(`double$ %value);
+    `CSSUnitValue$I `lh@m(`double$ %value);
+    `CSSUnitValue$I `rlh@m(`double$ %value);
+    `CSSUnitValue$I `vw@m(`double$ %value);
+    `CSSUnitValue$I `vh@m(`double$ %value);
+    `CSSUnitValue$I `vi@m(`double$ %value);
+    `CSSUnitValue$I `vb@m(`double$ %value);
+    `CSSUnitValue$I `vmin@m(`double$ %value);
+    `CSSUnitValue$I `vmax@m(`double$ %value);
+    `CSSUnitValue$I `cm@m(`double$ %value);
+    `CSSUnitValue$I `mm@m(`double$ %value);
+    `CSSUnitValue$I `Q@m(`double$ %value);
+    `CSSUnitValue$I `in@m(`double$ %value);
+    `CSSUnitValue$I `pt@m(`double$ %value);
+    `CSSUnitValue$I `pc@m(`double$ %value);
+    `CSSUnitValue$I `px@m(`double$ %value);
+
+    // `angle^t
+    `CSSUnitValue$I `deg@m(`double$ %value);
+    `CSSUnitValue$I `grad@m(`double$ %value);
+    `CSSUnitValue$I `rad@m(`double$ %value);
+    `CSSUnitValue$I `turn@m(`double$ %value);
+
+    // `time^t
+    `CSSUnitValue$I `s@m(`double$ %value);
+    `CSSUnitValue$I `ms@m(`double$ %value);
+
+    // `frequency^t
+    `CSSUnitValue$I `Hz@m(`double$ %value);
+    `CSSUnitValue$I `kHz@m(`double$ %value);
+
+    // `resolution^t
+    `CSSUnitValue$I `dpi@m(`double$ %value);
+    `CSSUnitValue$I `dpcm@m(`double$ %value);
+    `CSSUnitValue$I `dppx@m(`double$ %value);
+
+    // `flex^t
+    `CSSUnitValue$I `fr@m(`double$ %value);
+};
+</pre>
+
+<div class="algo">
+上に定義されたどの名前 %N （ `number^l, `px^l, 等々）の~methodも，その~method手続きは、所与の
+( %value )
+に対し，次のようにされた新たな `CSSUnitValue$I ~objを返す
+⇒＃
+`value$m1 内部~slot ~SET %value,
+`unit$m1 内部~slot ~SET %N
+◎
+All of the above methods must, when called with a double value, return a new CSSUnitValue whose value internal slot is set to value and whose unit internal slot is set to the name of the method as defined here.
+◎
+Note: The unit used does not depend on the current name of the function, if it’s stored in another variable; let foo = CSS.px; let val = foo(5); does not return a {value: 5, unit: "foo"} CSSUnitValue. The above talk about names is just a shorthand to avoid defining the unit individually for all ~20 functions.
+</div>
+
+			</section>
+		</section>
+		<section id="transformvalue-objects">
+<h3 title="CSSTransformValue objects">4.4. `CSSTransformValue^I ~obj</h3>
+
+<p>
+`CSSTransformValue$I ~objは、
+`transform$p ~propに利用される `transform-list$t 値を表現する。
+それは、個々の `transform-function$t 値を表現する
+1 個~以上の `CSSTransformComponent$I を “包含し” 、~objの
+`values@sl
+内部~slotに格納される。
+◎
+CSSTransformValue objects represent &lt;transform-list&gt; values, used by the transform property. They "contain" one or more CSSTransformComponents, which represent individual &lt;transform-function&gt; values.
+◎
+↓↓</p>
+
+<pre class="idl">
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSTransformValue@I : `CSSStyleValue$I {
+    `CSSTransformValue$mc(sequence&lt;`CSSTransformComponent$I&gt; %transforms);
+
+    `iterable$m&lt;`CSSTransformComponent$I&gt;;
+    readonly attribute `unsigned long$ `length$m;
+    `getter$m `CSSTransformComponent$I (`unsigned long$ %index);
+    `setter$m `CSSTransformComponent$I (`unsigned long$ %index, `CSSTransformComponent$I %val);
+
+    readonly attribute `boolean$ `is2D$m;
+    `DOMMatrix$I `toMatrix$m();
+};
+</pre>
+
+<p>
+`iterable@m
+における`値~反復子$は、コレの `values$sl 内部~slotを成す~itemたちを順に反復する。
+◎
+A CSSTransformValue’s values to iterate over is a list of CSSTransformComponents.
+</p>
+
+<div class="algo">
+<p>
+`CSSTransformValue(transforms)@mm
+構築子~手続きは：
+◎
+The CSSTransformValue(transforms) constructor must, when called, perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%transforms は空である
+］
+⇒
+~THROW `TypeError$E
+◎
+If transforms is empty, throw a TypeError.
+</li>
+	<li>
+コレの `values$sl ~SET %transforms に等価な同順の`~list$
+◎
+Return a new CSSTransformValue whose values to iterate over is transforms.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`is2D@m
+取得子~手続きは
+⇒
+~RET コレの `values$sl 内に次を満たす~itemが［
+在るならば ~F ／
+無いならば ~T
+］
+⇒
+~itemの `~TCis2D$m 属性 ~EQ ~F
+◎
+The is2D attribute of a CSSTransformValue this must, on getting, return true if, for each func in this’s values to iterate over, the func’s is2D attribute would return true; otherwise, the attribute returns false.
+</div>
+
+<div class="algo">
+<p>
+`toMatrix()@m
+~method~手続きは：
+◎
+The toMatrix() method of a CSSTransformValue this must, when called, perform the following steps:
+</p>
+<ol>
+	<li>
+%行列 ~LET 単位行列で初期化された新たな `DOMMatrix$I
+◎
+Let matrix be a new DOMMatrix, initialized to the identity matrix,＼
+</li>
+	<li>
+%行列 の`~is2D$ ~SET ~T
+◎
+with its is2D internal slot set to true.
+</li>
+	<li>
+コレの `values$sl 内の
+~EACH( `CSSTransformComponent$I %成分 )
+に対し
+⇒
+%行列 ~SET %行列 に［
+%成分 上で `toMatrix()$m1 を~callした結果の `DOMMatrix$I
+］で表現される行列を，右から乗算した結果
+【結果の`~is2D$にも %成分 の `~TCis2D$m が影響する。】
+◎
+For each func in this’s values to iterate over:
+• Let funcMatrix be the DOMMatrix returned by calling toMatrix() on func.
+• Set matrix to the result of multiplying matrix and the matrix represented by funcMatrix.
+</li>
+	<li>
+~RET %行列
+◎
+Return matrix.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`length@m
+取得子~手続きは
+⇒
+~RET コレの `values$sl 内部~slotの`~size$
+◎
+The length attribute indicates how many transform components are contained within the CSSTransformValue.
+◎
+They have a [[values]] internal slot, which is a list of CSSTransformComponent objects. This list is the object’s values to iterate over.
+</div>
+
+<div class="algo">
+<p>
+［
+`getter@m ／
+`setter@m
+］`特殊~演算$のふるまいは、コレの `values$sl に基づく：
+◎
+↓</p>
+		<ul>
+			<li>
+コレが`~supportする~prop~index$は、
+0 以上［
+コレの `values$sl 内部~slotの`~size$
+］未満とする。
+◎
+The supported property indexes of a CSSTransformValue this are the integers greater than or equal to 0, and less than the size of this’s [[values]] internal slot.
+</li>
+			<li>
+コレの`有index~propの値を決定する$ときは、所与の
+( コレが`~supportする~prop~index$ %n )
+に対し，コレの `values$sl 内部~slot[ %n ] を返す。
+【 %n が他の値のときにどうなるか言及されていない — ~NULL は返せないので、例外が投出される？】
+◎
+To determine the value of an indexed property of a CSSTransformValue this and an index n, let values be this’s [[values]] internal slot, and return values[n].
+</li>
+			<li>
+<p>
+コレの［
+`既存の有index~propの値を設定する$ ／
+`新たな有index~propの値を設定する$
+］ときは、所与の
+( ~index %n, 値 %新たな値 )
+に対し，次を遂行する：
+</p>
+				<ol>
+					<li>
+%値~list ~LET コレの `values$sl 内部~slot
+</li>
+					<li>
+~IF［
+%n はコレが`~supportする~prop~index$である
+］
+⇒
+%値~list[ %n ] ~SET %新たな値
+</li>
+					<li>
+~ELIF［
+%n ~EQ %値~list の`~size$
+］
+⇒
+%値~list に %新たな値 を`付加する$
+</li>
+					<li>
+~ELSE
+⇒
+~THROW `RangeError$E
+</li>
+				</ol>
+◎
+To set the value of an existing indexed property of a CSSTransformValue this, an index n, and a value new value, let values be this’s [[values]] internal slot, and set values[n] to new value.
+◎
+To set the value of a new indexed property of a CSSTransformValue this, an index n, and a value new value, let values be this’s [[values]] internal slot. If n is not equal to the size of values, throw a RangeError. Otherwise, append new value to values.
+</li>
+		</ul>
+</div>
+
+<pre class="idl">
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSTransformComponent@I {
+    `stringifier@m;
+    attribute `boolean$ `is2D$m;
+    `DOMMatrix$I `toMatrix$m();
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSTranslate@I : `CSSTransformComponent$I {
+    `CSSTranslate$mc(`CSSNumericValue$I %x, `CSSNumericValue$I %y, optional `CSSNumericValue$I %z);
+
+    attribute `CSSNumericValue$I `x@m;
+    attribute `CSSNumericValue$I `y@m;
+    attribute `CSSNumericValue$I `z@m;
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSRotate@I : `CSSTransformComponent$I {
+    `CSSRotate$mc(`CSSNumericValue$I %angle);
+    <a href="#dom-cssrotate-cssrotate-x-y-z-angle">constructor</a>(`CSSNumberish$ %x, `CSSNumberish$ %y, `CSSNumberish$ %z, `CSSNumericValue$I %angle);
+
+    attribute `CSSNumberish$ `x$m;
+    attribute `CSSNumberish$ `y$m;
+    attribute `CSSNumberish$ `z$m;
+    attribute `CSSNumericValue$I `angle@m;
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSScale@I : `CSSTransformComponent$I {
+    `CSSScale$mc(`CSSNumberish$ %x, `CSSNumberish$ %y, optional `CSSNumberish$ %z);
+
+    attribute `CSSNumberish$ `x$m;
+    attribute `CSSNumberish$ `y$m;
+    attribute `CSSNumberish$ `z$m;
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSSkew@I : `CSSTransformComponent$I {
+    `CSSSkew$mc(`CSSNumericValue$I %ax, `CSSNumericValue$I %ay);
+
+    attribute `CSSNumericValue$I `ax@m;
+    attribute `CSSNumericValue$I `ay@m;
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSSkewX@I : `CSSTransformComponent$I {
+    `CSSSkewX$mc(`CSSNumericValue$I %ax);
+
+    attribute `CSSNumericValue$I `ax@m;
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSSkewY@I : `CSSTransformComponent$I {
+    `CSSSkewY$mc(`CSSNumericValue$I %ay);
+
+    attribute `CSSNumericValue$I `ay@m;
+};
+
+/* <span class="comment">
+"`skew(x,y)^v" が表現する変形は、
+"`skewX(x) skewY(y)^v" と`同じではない^emことに注意。
+よって、~interfaceも別々にされている。
+◎
+Note that skew(x,y) is *not* the same as skewX(x) skewY(y), thus the separate interfaces for all three.
+</span> */
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSPerspective@I : `CSSTransformComponent$I {
+    `CSSPerspective$mc(`CSSNumericValue$I %length);
+
+    attribute `CSSNumericValue$I `length@m;
+};
+
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSMatrixComponent@I : `CSSTransformComponent$I {
+    `CSSMatrixComponent$mc(`DOMMatrixReadOnly$I %matrix, optional `CSSMatrixComponentOptions$I %options = {});
+
+    attribute `DOMMatrix$I `matrix@m;
+};
+
+dictionary `CSSMatrixComponentOptions@I {
+    `boolean$ `is2D@m;
+};
+</pre>
+
+<p>
+`~TCis2D@m
+属性は：
+◎
+The is2D attribute＼
+</p>
+
+<ul>
+	<li>
+変形が~2D, ~3Dのどちらなのかを指示する。
+~T のときは、変形の属性のうち~3D変形に関連なもの（ `CSSTranslate^II `z$m1 属性など）による，コレが表現する変形に対する効果はなくなる。
+◎
+indicates whether the transform is 2D or 3D. When it’s true, the attributes of the transform that are relevant to 3D transforms (such as the CSSTranslate.z attribute) simply have no effect on the transform they represent.
+</li>
+	<li class="note">注記：
+これは~objの直列化, および
+~objに “等価な 4×4 行列” などの概念に影響する。
+◎
+Note: This affects the serialization of the object, and concepts such as the object’s "equivalent 4x4 matrix".
+</li>
+	<li>
+<p>
+次に挙げる~obj上の，この属性の設定子~手続きは、何もしないモノトスル：
+</p>
+		<ul>
+			<li id="dom-cssskewy-is2d">
+`CSSSkew$I,
+`CSSSkewX$I,
+`CSSSkewY$I
+</li>
+			<li id="dom-cssperspective-is2d">
+`CSSPerspective$I
+</li>
+		</ul>
+
+【編集上の都合により、ここの記述は、原文から移動している。】
+
+<p class="note">注記：
+［
+`skew$f ／ `skewX$f ／ `skewY$f
+］関数は常に~2D変形を表現する。
+`perspective$f 関数は常に~3D変形を表現する。
+</p>
+
+◎
+↓↓</li>
+	<li>
+<details class="note">
+<summary>
+`~TCis2D$m の設計~上の考慮点
+◎
+is2D Design Considerations
+</summary>
+
+<p>
+旧来の理由から，~2D変形と~3D変形は、効果は互いに一致していても，別個とされる。
+`translateZ(0px)^v による変形は単位行列になると定義されていようが，~UAが当の要素~用に何らかの~3D基づく最適化を作動化する点で，~page上に観測-可能な効果がある。
+◎
+For legacy reasons, 2D and 3D transforms are distinct, even if they have identical effects; a translateZ(0px) has observable effects on a page, even tho it’s defined to be an identity transform, as the UA activates some 3D-based optimizations for the element.
+</p>
+
+<p>
+これを反映する仕方にはいくつかある
+— ~3Dに関係する属性を~nullableにする ／
+~2D, ~3D ~interfaceを別々に分ける,
+等々 —
+が、現在の設計（作者が切り替えて挙動を規定できる）を選んでいるわけは、ほとんどの状況下において，作者が ~2D, ~3Dのどっちかか気を配る必要なく 変形に対し演算-可能にしつつ、~2D変形が “不用意に切り替えられて” ~3Dになるのも防ぐためである。
+◎
+There were several possible ways to reflect this—nullable 3D-related attributes, separate 2D and 3D interfaces, etc—but we chose the current design (an author-flippable switch that dictates the behavior) because it allows authors to, in most circumstances, operate on transforms without having to care whether they’re 2D or 3D, but also prevents "accidentally" flipping a 2D transform into becoming 3D.
+</p>
+</details>
+	</li>
+</ul>
+
+<div class="algo">
+<p>
+`CSSTransformComponent^II
+`toMatrix()@m1
+~method~手続きは：
+◎
+The toMatrix() method of a CSSTransformComponent this must, when called, perform the following steps:
+</p>
+<ol>
+	<li>
+<p>
+%M ~LET 次のように初期化された，新たな `DOMMatrix$I ~obj：
+◎
+Let matrix be a new DOMMatrix object, initialized to＼
+</p>
+		<ul>
+			<li>
+%M は［
+`CSS-TRANSFORMS-1$r の
+<a href="~TRANSFORM#mathematical-description">変形-関数の数学的~記述</a>
+【または <a href="~TRANSFORM2#mathematical-description">~3D変形-関数の数学的~記述</a>】
+］に定義される，コレに等価な変形~行列を表現する
+◎
+this’s equivalent 4x4 transform matrix, as defined in CSS Transforms 1 §14 Mathematical Description of Transform Functions, and＼
+</li>
+			<li>
+<p>
+%M の`~is2D$ ~SET コレの `~TCis2D$m 内部~slotと同じ値
+◎
+with its is2D internal slot set to the same value as this’s is2D internal slot.
+</p>
+
+<p class="note">注記：
+`~TCis2D$m は、 `CSSTransformComponent$I が表現する変形が［
+何になるか，したがって等価な行列は何になるか
+］に影響することに~~留意されたし。
+◎
+Note: Recall that the is2D flag affects what transform, and thus what equivalent matrix, a CSSTransformComponent represents.
+</p>
+
+			</li>
+		</ul>
+	</li>
+	<li>
+~IF［
+前~段にて行列を生成するときに孕まれる `length$t に `px$u と`互換~単位$でないもの（`相対~長さ$や `percentage$t など）がある
+］
+⇒
+~THROW `TypeError$E
+— そのような行列を成す各~~成分は、 `px$u 単位に相対的に定義される必要があるので。
+◎
+As the entries of such a matrix are defined relative to the px unit, if any &lt;length&gt;s in this involved in generating the matrix are not compatible units with px (such as relative lengths or percentages), throw a TypeError.
+</li>
+	<li>
+~RET %M
+◎
+Return matrix.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`CSSTranslate(x, y, z)@mm
+構築子~手続きは：
+◎
+The CSSTranslate(x, y, z) constructor must, when invoked, perform the following steps:
+</p>
+<ol>
+	<li>
+%is2D ~LET ~F
+◎
+↓</li>
+	<li>
+~IF［
+%z ~EQ ε
+］
+⇒＃
+%z ~SET `~CSSUnitValueを作成する$( 0, `px^l )；
+%is2D ~SET ~T
+◎
+↓</li>
+	<li>
+~IF［
+%x, %y いずれかは `length-percentage$t に`合致-$しない
+］~OR［
+%z は`length$t に`合致-$しない
+］
+⇒
+~THROW `TypeError$E
+◎
+If x or y don’t match &lt;length-percentage&gt;, throw a TypeError.
+◎
+If z was passed, but doesn’t match &lt;length&gt;, throw a TypeError.
+</li>
+	<li>
+コレの
+⇒＃
+`x$m 内部~slot ~SET %x,
+`y$m 内部~slot ~SET %y,
+`z$m 内部~slot ~SET %z,
+`~TCis2D$m 内部~slot ~SET %is2D
+◎
+Let this be a new CSSTranslate object, with its x and y internal slots set to x and y.
+◎
+If z was passed, set this’s z internal slot to z, and set this’s is2D internal slot to false.
+◎
+If z was not passed, set this’s z internal slot to new unit value of (0, "px"), and set this’s is2D internal slot to true.
+◎
+Return this.
+</li>
+</ol>
+</div>
+
+<!-- ＊CSSTranslate^I0
+x@m
+y@m
+z@m
+ -->
+
+<div class="algo">
+<p>
+`CSSRotate(angle)@mm
+構築子~手続きは：
+◎
+The CSSRotate(angle) constructor must, when invoked, perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%angle は `angle$t に`合致-$しない
+］
+⇒
+~THROW `TypeError$E
+◎
+If angle doesn’t match &lt;angle&gt;, throw a TypeError.
+</li>
+	<li>
+コレの
+⇒＃
+`angle$m 内部~slot ~SET %angle
+`x$m 内部~slot ~SET `~CSSUnitValueを作成する$( 0, `number^l ),
+`y$m 内部~slot ~SET `~CSSUnitValueを作成する$( 0, `number^l ),
+`z$m 内部~slot ~SET `~CSSUnitValueを作成する$( 1, `number^l ),
+`~TCis2D$m 内部~slot ~SET ~T
+◎
+Return a new CSSRotate with its angle internal slot set to angle, its x and y internal slots set to new unit values of (0, "number"), its z internal slot set to a new unit value of (1, "number"), and its is2D internal slot set to true.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+<dfn id="dom-cssrotate-cssrotate-x-y-z-angle">`new CSSRotate(x, y, z, angle)^m</dfn>
+構築子~手続きは：
+◎
+The CSSRotate(x, y, z, angle) constructor must, when invoked, perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%angle は `angle$t に`合致-$しない
+］
+⇒
+~THROW `TypeError$E
+◎
+If angle doesn’t match &lt;angle&gt;, throw a TypeError.
+</li>
+	<li>
+%x ~SET `実数に類する値を規格化する$( %x )
+◎
+↓</li>
+	<li>
+%y ~SET `実数に類する値を規格化する$( %y )
+◎
+↓</li>
+	<li>
+%z ~SET `実数に類する値を規格化する$( %z )
+◎
+Let x, y, and z be replaced by the result of rectifying a numberish value.
+</li>
+	<li>
+~IF［
+%x, %y, %z
+のいずれかは `number$t に`合致-$しない
+］
+⇒
+~THROW `TypeError$E
+◎
+If x, y, or z don’t match &lt;number&gt;, throw a TypeError.
+</li>
+	<li>
+コレの
+⇒＃
+`angle$m 内部~slot ~SET %angle,
+`x$m 内部~slot ~SET %x,
+`y$m 内部~slot ~SET %y,
+`z$m 内部~slot ~SET %z,
+`~TCis2D$m 内部~slot ~SET ~F
+◎
+Return a new CSSRotate with its angle internal slot set to angle, its x, y, z internal slots set to x, y, and z, and its is2D internal slot set to false.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+［
+`x@m ／
+`y@m ／
+`z@m
+］設定子~手続きは
+⇒
+当の属性に対応する内部~slot ~SET `実数に類する値を規格化する$( 所与の値 )
+◎
+The x, y, and z attributes must, on setting to a new value val, rectify a numberish value from val and set the corresponding internal slot to the result of that.
+</div>
+
+<div class="algo">
+<p>
+`CSSScale(x, y, z)@mm
+構築子~手続きは：
+◎
+The CSSScale(x, y, z) constructor must, when invoked, perform the following steps:
+</p>
+<ol>
+	<li>
+%is2D ~LET ~F
+◎
+↓</li>
+	<li>
+~IF［
+%z ~EQ ε
+］
+⇒＃
+%z ~SET `~CSSUnitValueを作成する$( 1, `number^l )；
+%is2D ~SET ~T
+◎
+↓</li>
+	<li>
+%x ~SET `実数に類する値を規格化する$( %x )
+◎
+↓</li>
+	<li>
+%y ~SET `実数に類する値を規格化する$( %y )
+◎
+↓</li>
+	<li>
+%z ~SET `実数に類する値を規格化する$( %z )
+◎
+Let x, y, and z (if passed) be replaced by the result of rectifying a numberish value.
+</li>
+	<li>
+~IF［
+%x, %y, %z
+のいずれかは `number$t に`合致-$しない
+］
+⇒
+~THROW `TypeError$E
+◎
+If x, y, or z (if passed) don’t match &lt;number&gt;, throw a TypeError.
+</li>
+	<li>
+コレの
+⇒＃
+`x$m 内部~slot ~SET %x,
+`y$m 内部~slot ~SET %y
+`z$m 内部~slot ~SET %z,
+`~TCis2D$m 内部~slot ~SET %is2D
+◎
+Let this be a new CSSScale object, with its x and y internal slots set to x and y.
+◎
+If z was passed, set this’s z internal slot to z, and set this’s is2D internal slot to false.
+◎
+If z was not passed, set this’s z internal slot to a new unit value of (1, "number"), and set this’s is2D internal slot to true.
+◎
+Return this.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+［
+`x@m ／
+`y@m ／
+`z@m
+］設定子~手続きは
+⇒
+当の属性に対応する内部~slot ~SET `実数に類する値を規格化する$( 所与の値 )
+◎
+The x, y, and z attributes must, on setting to a new value val, rectify a numberish value from val and set the corresponding internal slot to the result of that.
+</div>
+
+<div class="algo">
+<p>
+`CSSSkew(ax, ay)@mm
+構築子~手続きは：
+◎
+The CSSSkew(ax, ay) constructor must, when invoked, perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%ax, %ay
+のいずれかは `angle$t に`合致-$しない
+］
+⇒
+~THROW `TypeError$E
+◎
+If ax or ay do not match &lt;angle&gt;, throw a TypeError.
+</li>
+	<li>
+コレの
+⇒＃
+`ax$m 内部~slot ~SET %ax,
+`ay$m 内部~slot ~SET %ay,
+`~TCis2D$m 内部~slot ~SET ~T
+◎
+Return a new CSSSkew object with its ax and ay internal slots set to ax and ay, and its is2D internal slot set to true.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`CSSSkewX(ax)@mm
+構築子~手続きは：
+◎
+The CSSSkewX(ax) constructor must, when invoked, perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%ax は `angle$t に`合致-$しない
+］
+⇒
+~THROW `TypeError$E
+◎
+If ax does not match &lt;angle&gt;, throw a TypeError.
+</li>
+	<li>
+コレの
+⇒＃
+`ax$m 内部~slot ~SET %ax,
+`~TCis2D$m 内部~slot ~SET ~T
+◎
+Return a new CSSSkewX object with its ax internal slot set to ax, and its is2D internal slot set to true.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`CSSSkewY(ay)@mm
+構築子~手続きは：
+◎
+The CSSSkewY(ay) constructor must, when invoked, perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%ay は `angle$t に`合致-$しない
+］
+⇒
+~THROW `TypeError$E
+◎
+If ay does not match &lt;angle&gt;, throw a TypeError.
+</li>
+	<li>
+コレの
+⇒＃
+`ay$m 内部~slot ~SET %ay,
+`~TCis2D$m 内部~slot ~SET ~T
+◎
+Return a new CSSSkewY object with its ay internal slot set to ay, and its is2D internal slot set to true.
+</li>
+</ol>
+<p>
+◎
+↑↑The is2D attribute of a CSSSkew, CSSSkewX, or CSSSkewY object must, on setting, do nothing. 
+◎
+↑↑Note: skew(), skewX(), and skewY() functions always represent 2D transforms.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`CSSPerspective(length)@mm
+構築子~手続きは：
+◎
+The CSSPerspective(length) constructor must, when invoked, perform the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%length は `length$t に`合致-$しない
+］
+⇒
+~THROW `TypeError$E
+◎
+If length does not match &lt;length&gt;, throw a TypeError.
+</li>
+	<li>
+コレの
+⇒＃
+`length$m 内部~slot ~SET %length,
+`~TCis2D$m 内部~slot ~SET ~F
+◎
+Return a new CSSPerspective object with its length internal slot set to length, and its is2D internal slot set to false.
+</li>
+</ol>
+
+<p>
+◎
+↑↑The is2D attribute of a CSSPerspective object must, on setting, do nothing.
+◎
+↑↑Note: perspective() functions always represent 3D transforms.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`CSSMatrixComponent(matrix, options)@mm
+構築子~手続きは：
+</p>
+<ol>
+	<li>
+%is2D ~LET %matrix の`~is2D$
+</li>
+	<li>
+~IF［
+%options は与えられていて，その `CSSMatrixComponentOptions^II `is2D$m1 ~memberは在る
+］
+⇒
+%is2D ~SET その~member値
+</li>
+	<li>
+コレの
+⇒＃
+`matrix$m 内部~slot ~SET %matrix,
+`~TCis2D$m 内部~slot ~SET %is2D
+</li>
+</ol>
+◎
+The CSSMatrixComponent(matrix, options) constructor must, when invoked, perform the following steps:
+◎
+Let this be a new CSSMatrixComponent object with its matrix internal slot set to matrix.
+◎
+If options was passed and has a is2D field, set this’s is2D internal slot to the value of that field.
+◎
+Otherwise, set this’s is2D internal slot to the value of matrix’s is2D internal slot.
+◎
+Return this.
+</div>
+
+<div class="note">
+
+<p>注記：
+`CSSTransformComponent$I ~objに対応する下層の変形-関数は、いくつもあり得る。
+例えば `CSSTranslate$I ~objは、
+( `x$m1, `y$m1, `z$m1 )
+値に
+( `10px^v, `0px^v, `0px^v )
+を伴うならば，次のいずれも表現し得る
+⇒＃
+`translate(10px)^v ／
+`translate(10px, 0)^v ／
+`translateX(10px)^v ／
+`translate3d(10px, 0, 0)^v
+◎
+Each CSSTransformComponent can correspond to one of a number of underlying transform functions. For example, a CSSTranslate with an x value of 10px and y &amp; z values of 0px could represent any of the following:
+• translate(10px)
+• translate(10px, 0)
+• translateX(10px)
+• translate3d(10px, 0, 0)
+</p>
+
+<p>
+しかしながら，文字列~化されるときは、その `~TCis2D$m 内部~slotに応じて，常に次を~~出力することになる
+⇒＃
+~T ならば `translate(10px, 0px)^v ／
+~F ならば `translate3d(10px, 0px, 0px)^v
+◎
+When stringified, however, it will always print out either translate(10px, 0px) or translate3d(10px, 0px, 0px), depending on whether its is2D internal slot is true or false, respectively.
+</p>
+</div>
+
+		</section>
+		<section id="imagevalue-objects">
+<h3 title="CSSImageValue objects">4.6. `CSSImageValue^I ~obj</h3>
+
+<pre class="idl">
+[`Exposed$=(Window, Worker, PaintWorklet, LayoutWorklet)]
+interface `CSSImageValue@I : `CSSStyleValue$I {
+};
+</pre>
+
+<p>
+`CSSImageValue$I0 ~objは、 `image$t 生成規則をとる~prop用の値を表現する
+— 例えば
+⇒
+`background-image$p,
+`list-style-image$p,
+`border-image-source$p
+◎
+CSSImageValue objects represent values for properties that take &lt;image&gt; productions, for example background-image, list-style-image, and border-image-source.
+</p>
+
+<p class="note">注記：
+この~objは，意図的に不透明にされており、それが包含する画像についての詳細は，種類その他, どの側面も公開しない。
+そうなっているのは、［
+Custom Paint 用には、画像を表現するために`何かを持つ^emことが必要とされる
+］が、~URLの取扱いと読込ngを，この仕様の時列線~内できっちり指定するには~~複雑に過ぎ，現実的にはアリでないためである。
+これは、将来~levelにて拡張pされることになる。
+◎
+Note: This object is intentionally opaque, and exposes no details of what kind of image it contains, or any aspect of the image. This is because having something to represent images is necessary for Custom Paint, but there are sufficient complexities in getting URL-handling and loading specified firmly that it’s not realistically possible to specify in the timeline of this specification. This will be expanded on in future levels.
+</p>
+
+<p>
+`CSSImageValue$I ~objの取扱いは、それが~URL孕むような `image$t  （ `url$f や `image$f など ）を表現する場合には，現在の~CSSによる取扱いに一致する。
+特に，相対~URLや`素片~URL$の解決-法は、通常の~CSSにおけるそれと同じ挙動になる。
+◎
+If a CSSImageValue object represents an &lt;image&gt; that involves a URL (such as url() or image()), the handling of such values is identical to how CSS currently handles them. In particular, resolving relative URLs or fragment URLs has the same behavior as in normal CSS.
+</p>
+
+<div class="example">
+
+<p>
+例えば，相対~URLは、それが属する~stylesheetの~URL（あるいは［
+`style$e 要素 ／ `style$a 属性
+］内で指定されている場合は、文書の~URL）に対し解決される。
+この解決は
+— 構文解析-時点では起ころうとしないが —
+現在は指定されていない，値を算出する間の ある時点で起こる。
+◎
+For example, relative URLs are resolved against the URL of the stylesheet they’re within (or the document’s URL, if they’re specified in a style element or style attribute). This resolution doesn’t happen eagerly at parse-time, but at some currently-unspecified point during value computation.
+</p>
+
+<p>
+したがって，ある要素の~styleに
+`background-image: url(foo);^css
+が設定された下で、その指定d値が Typed OM を介して抽出されてから，異なる文書~内のある要素~上に設定された場合、これら 2 つの要素が供する基底~URLは異なるので，それぞれの要素に対し解決した結果の~URLも異なることになる。
+◎
+Thus, if an element’s style is set to background-image: url(foo);, and that specified value is extracted via the Typed OM and then set on an element in a different document, both the source and destination elements will resolve the URL differently, as they provide different base URLs.
+</p>
+
+<p>
+他方，抽出された値が（ `Element^II `computedStyleMap()$m1 からの）`算出d値$であった場合、すでに絶対~URLに解決されているので，後でそれをどこで設定しようが~~動作は一致する（ただし、`素片~URL$の場合は除く
+— ~CSSは、それを全部的に解決することは決してなく，常に現在の文書に対し解決するので、どこで用いられるかに応じて扱いも異なる）。
+◎
+On the other hand, if the extracted value was a computed value (from computedStyleMap()), then it would already be resolved to an absolute URL, and thus would act identically no matter where you later set it to. (Unless it was a fragment URL, which CSS treats differently and never fully resolves, so it always resolves against the current document.)
+</p>
+</div>
+
+		</section>
+	</section>
+	<section id="stylevalue-reification">
+<h2 title="CSSStyleValue Reification">5. `CSSStyleValue^I の具象化</h2>
+
+<p>
+この節は、
+`具象化@
+（ `reification^en ）と称される，`内部~表現$
+【および，~prop名】
+から~TypedOM~objを構築する方法を述べる。
+◎
+This section describes how Typed OM objects are constructed from internal representations, a process called reification
+</p>
+
+<p class="trans-note">【
+以下、この節と下位~節は
+<a href="~CSSTOMR#stylevalue-reification">別ページに分ける</a>
+。
+】</p>
+
+	</section>
+	<section id="stylevalue-serialization">
+<h2 title="CSSStyleValue Serialization">6. `CSSStyleValue^I の直列化</h2>
+
+<p>
+`CSSStyleValue$I 値を直列化する仕方は、それがどう構築されたかに依存する：
+◎
+The way that a CSSStyleValue serializes is dependent on how the value was constructed.
+</p>
+
+<ul>
+	<li>
+`USVString$T %s から構築された場合
+⇒
+直列化は %s になる。
+◎
+if the value was constructed from a USVString
+• the serialization is the USVString from which the value was constructed.
+</li>
+	<li>
+~IDL構築子を利用して構築された場合
+⇒
+この節の下位-節にて指定される。
+◎
+otherwise, if the value was constructed using an IDL constructor
+• the serialization is specified in the sections below.
+</li>
+	<li>
+~CSSOMから抽出された場合
+⇒
+<a href="#cssom-serialization">§ ~CSSOMからの値の直列化</a>
+にて指定される。
+◎
+otherwise, if the value was extracted from the CSSOM
+• the serialization is specified in § 6.7 Serialization from CSSOM Values below.
+</li>
+</ul>
+
+<div class="example">
+
+<p>
+例えば：
+◎
+For example:
+</p>
+
+<pre class="lang-js">
+var %length1 = CSSNumericValue.parse("42.0px");
+%length1.toString(); // "42.0px"
+
+var %length2 = CSS.px(42.0);
+%length2.toString(); // "42px";
+
+element.style.width = "42.0px";
+var %length3 = element.attributeStyleMap.get('width');
+%length3.toString(); // "42px";
+</pre>
+</div>
+
+		<section id="unparsedvalue-serialization">
+<h3 title="CSSUnparsedValue Serialization">6.1. `CSSUnparsedValue^I の直列化</h3>
+
+<div class="algo">
+<p>
+`CSSUnparsedValue$I %O を
+<dfn id="serialize-a-cssunparsedvalue">直列化する</dfn>
+ときは：
+◎
+To serialize a CSSUnparsedValue this:
+</p>
+<ol>
+	<li>
+%s ~LET 空`文字列$
+◎
+Let s initially be the empty string.
+</li>
+	<li>
+<p>
+%O の `tokens$sl 内部~slot内の
+~EACH( %~item )
+に対し：
+◎
+For each item in this’s [[tokens]] internal slot:
+</p>
+		<ol>
+			<li>
+%s に［
+%~item に応じて，次に与える結果
+］を付加する
+⇒＃
+`USVString$T ならば %~item ／
+`CSSVariableReferenceValue$I であるならば %~item を直列化した結果
+◎
+If item is a USVString, append it to s.
+◎
+Otherwise, item is a CSSVariableReferenceValue. Serialize it, then append the result to s.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %s
+◎
+Return s.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`CSSVariableReferenceValue$I0 %O を
+<dfn id="serialize-a-cssvariablereferencevalue">直列化する</dfn>
+ときは：
+</p>
+<ol>
+	<li>
+%fallback ~LET %O の `fallback$m 内部~slot
+</li>
+	<li>
+~IF［
+%fallback ~EQ ~NULL
+］
+⇒
+%fallback ~SET 空~文字列
+</li>
+	<li>
+~ELSE
+⇒
+%fallback ~SET 次を順に連結した結果
+⇒＃
+`, ^l,
+%fallback を直列化した結果
+</li>
+	<li>
+~RET 次を順に連結した結果
+⇒＃
+`var(^l,
+%O の `variable$m 内部~slot,
+%fallback,
+`)^l
+</li>
+</ol>
+
+◎
+To serialize a CSSVariableReferenceValue this:
+• Let s initally be "var(".
+• Append this’s variable internal slot to s.
+• If this’s fallback internal slot is not null, append ", " to s, then serialize the fallback internal slot and append it to s.
+• Append ")" to s and return s.
+</div>
+
+		</section>
+		<section id="keywordvalue-serialization">
+<h3 title="CSSKeywordValue Serialization">6.2. `CSSKeywordValue^I の直列化</h3>
+
+<div class="algo">
+<p>
+`CSSKeywordValue$I0 %O を
+<dfn id="serialize-a-csskeywordvalue">直列化する</dfn>
+ときは：
+◎
+To serialize a CSSKeywordValue this:
+</p>
+<ol>
+	<li>
+~RET %O の `value$m 内部~slot
+◎
+Return this’s value internal slot.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="numericvalue-serialization">
+<h3 title="CSSUnitValue Serialization">6.3. `CSSUnitValue^I の直列化</h3>
+
+<div class="algo">
+<p>
+`CSSUnitValue$I %O を
+<dfn id="serialize-a-cssunitvalue">直列化する</dfn>
+ときは：
+◎
+To serialize a CSSUnitValue this:
+</p>
+<ol>
+	<li>
+%単位 ~LET %O の `unit$m1 内部~slot
+◎
+Let value and unit be this‘s value and unit internal slots.
+</li>
+	<li>
+<p>
+~RET 次を順に連結した結果：
+◎
+↓</p>
+		<ol>
+			<li>
+`CSSOM-1$r に従って，［
+%O の `value$m1 内部~slot
+］が与える~CSS値から `number$t に
+<a href="~CSSOM1#serializing-css-values">直列化-</a>した結果
+◎
+Set s to the result of serializing a &lt;number&gt; from value, per CSSOM 1 §5.7.2 Serializing CSS Values.
+</li>
+			<li>
+%単位 に応じて 次に与える文字列
+⇒＃
+`number^l ならば空~文字列 ／
+`percent^l ならば `%^l ／
+~ELSE_ %単位
+◎
+If unit is "number", return s.
+◎
+Otherwise, if unit is "percent", append "%" to s, then return s.
+◎
+Otherwise, append unit to s, then return s.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+		</section>
+		<section id="calc-serialization">
+<h3 title="CSSMathValue Serialization">6.4. `CSSMathValue^I の直列化</h3>
+
+<div class="algo">
+<p>
+`CSSMathValue$I ~obj %O を直列化するときは、所与の
+( 真偽値 %入子化 （省略時は ~F ） , 真偽値 %括弧なし （省略時は ~F ） )
+に対し，次を走らす：
+◎
+To serialize a CSSMathValue this, with additional flags nested, a boolean (defaulting to false if unspecified), and paren-less, a boolean (defaulting to false if unspecified):
+</p>
+<ol>
+	<li>
+<p>
+~IF［
+%O は［
+`CSSMathMin$I0 ／
+`CSSMathMax$I
+］である
+］
+⇒
+~RET 次を順に連結した結果：
+◎
+Let s initially be the empty string.
+◎
+If this is a CSSMathMin or CSSMathMax:
+</p>
+		<ol>
+			<li>
+%O に応じて
+⇒＃
+`CSSMathMin$I ならば `min(^l ／
+`CSSMathMax$I ならば `max(^l
+◎
+Append "min(" or "max(" to s, as appropriate.
+</li>
+			<li>
+次の結果を `, ^l で`区切って連結-$した結果
+⇒
+%O の `values$m 内部~slotを，次に与える`演算で写像する$
+⇒
+~itemを直列化する( %入子化 ~SET ~T, %括弧なし ~SET ~T ) 
+◎
+For each arg in this’s values internal slot, serialize arg with nested and paren-less both true, and append the result to s, appending a ", " between successive values.
+</li>
+			<li>
+`)^l
+◎
+Append ")" to s and return s.
+</li>
+		</ol>
+	</li>
+	<li>
+%s ~LET 次に与える値
+⇒＃
+%括弧なし ~EQ ~T ならば 空~文字列 ／
+~ELSE_ %入子化 ~EQ ~T ならば `(^l ／
+~ELSE_ `calc(^l
+◎
+↓↓</li>
+	<li>
+<p>
+~IF［
+%O は `CSSMathSum$I である
+］：
+◎
+Otherwise, if this is a CSSMathSum:
+• If paren-less is true, continue to the next step; otherwise, if nested is true, append "(" to s; otherwise, append "calc(" to s.
+</p>
+		<ol>
+			<li>
+<p>
+%O の `values$m1 内部~slot内の
+~EACH( %~arg )
+に対し：
+</p>
+				<ol>
+					<li>
+~IF［
+この反復は初回である
+］
+⇒
+何もしない
+</li>
+					<li>
+~ELIF［
+%~arg は `CSSMathNegate$I である
+］
+⇒＃
+%s に ` - ^l を付加する；
+%~arg ~SET %~arg の `value$m1 内部~slot
+</li>
+					<li>
+~ELSE
+⇒
+%s に ` + ^l を付加する
+</li>
+				</ol>
+◎
+Serialize the first item in this’s values internal slot with nested set to true, and append the result to s.
+◎
+For each arg in this’s values internal slot beyond the first:
+• If arg is a CSSMathNegate, append " - " to s, then serialize arg’s value internal slot with nested set to true, and append the result to s.
+• Otherwise, append " + " to s, then serialize arg with nested set to true, and append the result to s.
+• ↓↓If paren-less is false, append ")" to s,
+• ↓↓Return s.
+</li>
+			<li>
+%s に次を付加する
+⇒
+%~arg を直列化する( %入子化 ~SET ~T )
+◎
+↑</li>
+		</ol>
+	</li>
+	<li>
+<p>
+~ELIF［
+%O は `CSSMathNegate$I である
+］：
+◎
+Otherwise, if this is a CSSMathNegate:
+• If paren-less is true, continue to the next step; otherwise, if nested is true, append "(" to s; otherwise, append "calc(" to s.
+</p>
+		<ol>
+			<li>
+%s に次を順に付加する
+⇒＃
+`-^l,
+%O の `value$m1 内部~slot を直列化する( %入子化 ~SET ~T )
+◎
+Append "-" to s.
+◎
+Serialize this’s value internal slot with nested set to true, and append the result to s.
+◎
+↓↓If paren-less is false, append ")" to s,
+◎
+↓↓Return s.
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+~ELIF［
+%O は `CSSMathProduct$I である
+］：
+◎
+Otherwise, if this is a CSSMathProduct:
+• If paren-less is true, continue to the next step; otherwise, if nested is true, append "(" to s; otherwise, append "calc(" to s.
+</p>
+		<ol>
+			<li>
+<p>
+%O の `values$m1 内部~slot内の
+~EACH( %~arg )
+に対し：
+</p>
+				<ol>
+					<li>
+~IF［
+この反復は初回である
+］
+⇒
+何もしない
+</li>
+					<li>
+~ELIF［
+%~arg は `CSSMathInvert$I である
+］
+⇒＃
+%s に ` / ^l を付加する；
+%~arg ~SET %~arg の `value$m1 内部~slot
+</li>
+					<li>
+~ELSE
+⇒
+%s に ` * ^l を付加する
+</li>
+				</ol>
+◎
+Serialize the first item in this’s values internal slot with nested set to true, and append the result to s.
+◎
+For each arg in this’s values internal slot beyond the first:
+• If arg is a CSSMathInvert, append " / " to s, then serialize arg’s value internal slot with nested set to true, and append the result to s.
+• Otherwise, append " * " to s, then serialize arg with nested set to true, and append the result to s.
+• ↓↓If paren-less is false, append ")" to s,
+• ↓↓Return s.
+</li>
+			<li>
+%s に次を付加する
+⇒
+%~arg を直列化する( %入子化 ~SET ~T )
+◎
+↑</li>
+		</ol>
+	</li>
+	<li>
+~ELIF［
+%O は `CSSMathInvert$I である
+］
+⇒
+%s に次を順に付加する
+⇒＃
+`1 / ^l,
+%O の `value$m1 内部~slotを直列化する( %入子化 ~SET ~T )
+◎
+Otherwise, if this is a CSSMathInvert:
+• If paren-less is true, continue to the next step; otherwise, if nested is true, append "(" to s; otherwise, append "calc(" to s.
+• Append "1 / " to s.
+• Serialize this’s value internal slot with nested set to true, and append the result to s.
+• ↓↓If paren-less is false, append ")" to s,
+• ↓↓Return s.
+</li>
+	<li>
+~IF［
+%括弧なし ~EQ ~F
+］
+⇒
+%s に `)^l を付加する
+◎
+↑↑</li>
+	<li>
+~RET %s
+◎
+↑↑</li>
+</ol>
+</div>
+
+		</section>
+		<section id="transformvalue-serialization">
+<h3 title="CSSTransformValue and CSSTransformComponent Serialization">6.5. `CSSTransformValue^I, `CSSTransformComponent^I の直列化</h3>
+
+<div class="algo">
+<p>
+`CSSTransformValue$I %O を
+<dfn id="serialize-a-csstransformvalue">直列化する</dfn>
+ときは：
+◎
+To serialize a CSSTransformValue this:
+</p>
+<ol>
+	<li>
+~RET 次の結果を ` ^l で`区切って連結-$した結果
+⇒
+%O の `values$sl を［
+~itemを直列化する
+］`演算で写像する$
+◎
+Return the result of serializing each item in this’s values to iterate over, then concatenating them separated by " ".
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`CSSTranslate$I0 %O を
+<dfn id="serialize-a-csstranslate">直列化する</dfn>
+ときは：
+◎
+To serialize a CSSTranslate this:
+</p>
+<ol>
+	<li>
+( %x, %y, %z ) ~LET 順に， %O の［
+`x$m, `y$m, `z$m
+］内部~slotを直列化した結果
+◎
+↓</li>
+	<li>
+~IF［
+%O の `CSSTransformValue^II `is2D$m1 内部~slot ~EQ ~F
+］
+⇒
+~RET 次を順に連結した結果
+⇒＃
+`translate3d(^l,
+%x,
+`, ^l,
+%y,
+`, ^l,
+%z,
+`)^l
+◎
+Let s initially be the empty string.
+◎
+If this’s is2D internal slot is false:
+• Append "translate3d(" to s.
+• Serialize this’s x internal slot, and append it to s.
+• Append ", " to s.
+• Serialize this’s y internal slot, and append it to s.
+• Append ", " to s.
+• Serialize this’s z internal slot, and append it to s.
+• Append ")" to s, and return s.
+</li>
+	<li>
+~RET 次を順に連結した結果
+⇒＃
+`translate(^l,
+%x,
+`, ^l,
+%y,
+`)^l
+◎
+Otherwise:
+• Append "translate(" to s.
+• Serialize this’s x internal slot, and append it to s.
+• Append ", " to s.
+• Serialize this’s y internal slot, and append it to s.
+• Append ")" to s, and return s.
+</li>
+</ol>
+
+</div>
+
+<div class="algo">
+<p>
+`CSSRotate$I0 %O を
+<dfn id="serialize-a-cssrotate">直列化する</dfn>
+ときは：
+◎
+To serialize a CSSRotate this:
+</p>
+<ol>
+	<li>
+( %x, %y, %z, %a ) ~LET 順に， %O の［
+`x$m, `y$m, `z$m, `angle$m
+］内部~slotを直列化した結果
+◎
+↓</li>
+	<li>
+%s ~LET 空`文字列$
+◎
+Let s initially be the empty string.
+</li>
+	<li>
+~IF［
+%O の `CSSTransformValue^II `is2D$m1 内部~slot ~EQ ~F
+］
+⇒
+~RET 次を順に連結した結果
+⇒＃
+`rotate3d(^l,
+%x,
+`, ^l,
+%y,
+`, ^l,
+%z,
+`,^l,
+%a,
+`)^l
+◎
+If this’s is2D internal slot is false:
+• Append "rotate3d(" to s.
+• Serialize this’s x internal slot, and append it to s.
+• Append ", " to s.
+• Serialize this’s y internal slot, and append it to s.
+• Append ", " to s.
+• Serialize this’s z internal slot, and append it to s.
+• Append "," to s.
+• Serialize this’s angle internal slot, and append it to s.
+• Append ")" to s, and return s.
+</li>
+	<li>
+~RET 次を順に連結した結果
+⇒＃
+`rotate(^l,
+%a,
+`)^l
+◎
+Otherwise:
+◎
+Append "rotate(" to s.
+• Serialize this’s angle internal slot, and append it to s.
+• Append ")" to s, and return s.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`CSSScale$I0 %O を
+<dfn id="serialize-a-cssscale">直列化する</dfn>
+ときは：
+◎
+To serialize a CSSScale this:
+</p>
+<ol>
+	<li>
+( %x, %y, %z ) ~LET 順に， %O の［
+`x$m, `y$m, `z$m
+］内部~slotを直列化した結果
+◎
+↓</li>
+	<li>
+<p>
+~IF［
+%O の `CSSTransformValue^II `is2D$m1 内部~slot ~EQ ~F
+］
+⇒
+~RET 次を順に連結した結果
+⇒＃
+`scale3d(^l,
+%x,
+`, ^l,
+%y,
+`, ^l,
+%z,
+`)^l
+◎
+Let s initially be the empty string.
+◎
+If this’s is2D internal slot is false:
+• Append "scale3d(" to s.
+• Serialize this’s x internal slot, and append it to s.
+• Append ", " to s.
+• Serialize this’s y internal slot, and append it to s.
+• Append ", " to s.
+• Serialize this’s z internal slot, and append it to s.
+• Append ")" to s, and return s.
+</li>
+	<li>
+~IF［
+%O の
+( `x$m 内部~slot, `y$m 内部~slot )
+は`同等な数量~値$である
+］
+⇒
+~RET 次を順に連結した結果
+⇒＃
+`scale(^l,
+%x,
+`)^l
+◎
+Otherwise:
+• Append "scale(" to s.
+• Serialize this’s x internal slot, and append it to s.
+◎
+If this’s x and y internal slots are equal numeric values, append ")" to s and return s.
+</li>
+	<li>
+~RET 次を順に連結した結果
+⇒＃
+`scale(^l,
+%x,
+`, ^l,
+%y,
+`)^l
+◎
+Otherwise, append ", " to s.
+• Serialize this’s y internal slot, and append it to s.
+• Append ")" to s, and return s.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`CSSSkew$I0 %O を
+<dfn id="serialize-a-cssskew">直列化する</dfn>
+ときは：
+◎
+To serialize a CSSSkew this:
+</p>
+<ol>
+	<li>
+( %ax, %ay ) ~LET 順に， %O の［
+`ax$m, `ay$m
+］内部~slotを直列化した結果
+◎
+↓</li>
+	<li>
+~IF［
+%O の `ay$m 内部~slotは `CSSUnitValue$I であって，その `value$m1 ~EQ 0
+］
+⇒
+~RET 次を順に連結した結果
+⇒＃
+`skew(^l,
+%ax,
+`)^l
+◎
+Let s initially be "skew(".
+◎
+Serialize this’s ax internal slot, and append it to s.
+◎
+If this’s ay internal slot is a CSSUnitValue with a value of 0, then append ")" to s and return s.
+</li>
+	<li>
+~RET 次を順に連結した結果
+⇒＃
+`skew(^l,
+%ax,
+`, ^l,
+%ay,
+`)^l
+◎
+Otherwise, append ", " to s.
+• Serialize this’s ay internal slot, and append it to s.
+• Append ")" to s, and return s.
+</li>
+</ol>
+</div>
+
+<p class="algo">
+`CSSSkewX$I0 %O を
+<dfn id="serialize-a-cssskewx">直列化する</dfn>
+ときは、次を順に連結した結果を返す
+⇒＃
+`skewX(^l,
+%O の `ax$m 内部~slotを直列化した結果,
+`)^l
+◎
+To serialize a CSSSkewX this:
+• Let s initially be "skewX(".
+• Serialize this’s ax internal slot, and append it to s.
+• Append ")" to s, and return s.
+</p>
+
+<p class="algo">
+`CSSSkewY$I0 %O を
+<dfn id="serialize-a-cssskewy">直列化する</dfn>
+ときは、次を順に連結した結果を返す
+⇒＃
+`skewY(^l,
+%O の `ay$m 内部~slotを直列化した結果,
+`)^l
+◎
+To serialize a CSSSkewY this:
+• Let s initially be "skewY(".
+• Serialize this’s ay internal slot, and append it to s.
+• Append ")" to s, and return s.
+</p>
+
+<p class="algo">
+`CSSPerspective$I0 %O を
+<dfn id="serialize-a-cssperspective">直列化する</dfn>
+ときは、次を順に連結した結果を返す
+⇒＃
+`perspective(^l,
+%O の `length$m 内部~slotを直列化した結果,
+`)^l
+◎
+To serialize a CSSPerspective this:
+• Let s initially be "perspective(".
+• Serialize this’s length internal slot, and append it to s.
+• Append ")" to s, and return s.
+</p>
+
+<p class="algo">
+`CSSMatrixComponent$I0 %O を
+<dfn id="serialize-a-cssmatrixcomponent">直列化する</dfn>
+ときは、次の結果を返す
+⇒
+%O の `matrix$m 内部~slotの<a href="~GEOMETRY#dommatrixreadonly-stringification-behavior">直列化</a>
+◎
+To serialize a CSSMatrixComponent this:
+• Return the serialization of this’s matrix internal slot.
+</p>
+
+		</section>
+		<section id="urlimagevalue-serialization">
+<h3 title="CSSURLImageValue Serialization">6.6. `CSSURLImageValue^I の直列化</h3>
+
+<div class="algo">
+<p>
+`CSSURLImageValue^I ~obj %O を直列化するときは、次を順に連結した結果を返す
+⇒＃
+`url("^l,
+%O の `url^m 値,
+`")^l
+◎
+CSSURLImageValue objects are serialized to the string given by 'url("' + url + '")'.
+</p>
+</div>
+
+		</section>
+		<section id="cssom-serialization">
+<h3 title="Serialization from CSSOM Values">6.7. ~CSSOMからの値の直列化</h3>
+
+<p>
+~UAにより~CSSOM内の値から生産され，作者により直に構築されていない
+`CSSStyleValue$I ~objは、どの~propから得られたかに応じて，次の規則に則って直列化される
+【以下に現れる~CSS~keyword値は、すべて小文字に正規化されているとする】
+：
+◎
+CSSStyleValue objects produced by the user agent from values in the CSSOM, rather than directly constructed by the author, are serialized according to the following rules, depending on the property they came from:
+</p>
+
+<dl>
+	<dt>`background-color$p</dt>
+	<dd>
+`color$p に対するときと同じ。
+◎
+If the value is the currentcolor keyword, return "currentcolor".
+◎
+Otherwise, return the result of serializing the &lt;color&gt; value.
+</dd>
+
+	<dt>`border-color$p</dt>
+	<dd>
+`color$p に対するときと同じ。
+◎
+If the value is the currentcolor keyword, return "currentcolor".
+◎
+Otherwise, return the result of serializing the &lt;color&gt; value.
+</dd>
+
+	<dt>`border-image$p</dt>
+	<dd>
+		<ol>
+			<li>
+%値~list ~LET 空`~list$
+◎
+Let values initially be the empty list.
+</li>
+			<li>
+~IF［
+`border-image-source$p ~NEQ `none^v
+］
+⇒
+%値~list に `border-image-source$p を直列化した結果を付加する
+◎
+If border-image-source is not none, serialize border-image-source and append it to values.
+</li>
+			<li>
+~IF［
+`border-image-slice$p は［［
+すべての側に `100%^v を指定している
+］でない
+］~AND［
+`fill$v ~keywordを省略している
+］］
+⇒＃
+%値~list に `border-image-slice$p を直列化した結果を付加する
+◎
+If border-image-slice does not specify 100% for all sides and omits the fill keyword, serialize border-image-slice and append it to values.
+</li>
+			<li>
+%接頭辞 ~LET  `// ^l （ `002F^U, `002F^U, `0020^U ）
+◎
+↓</li>
+			<li>
+<p>
+~IF［
+`border-image-width$p は ある側に `1^v 以外を指定している
+］：
+</p>
+				<ol>
+					<li>
+%接頭辞 ~SET `/ ^l （ `002F^U, `0020^U ）
+</li>
+					<li>
+%値~list に［
+次を順に連結した結果
+］を付加する
+⇒＃
+%接頭辞,
+`border-image-width$p を直列化した結果
+</li>
+				</ol>
+【！append "/" = prepend ？ 紛らわしい】
+◎
+If border-image-width does not specify 1 for all sides, append "/ " (U+002F FORWARD SLASH followed by U+0020 SPACE) to the result of serializing border-image-width and append it to values.
+</li>
+			<li>
+<p>
+~IF［
+`border-image-outset$p は ある側に `0^v 以外を指定している
+］
+⇒
+%値~list に［
+次を順に連結した結果
+］を付加する
+⇒＃
+%接頭辞,
+`border-image-outset$p を直列化した結果
+◎
+If border-image-outset does not specify 0 for all sides:
+• ↑If the previous border-image-width step did not append anything to values, let prefix be "// " (two U+002F FORWARD SLASH characters followed by U+0020 SPACE); otherwise let prefix be "/ " (U+002F FORWARD SLASH followed by U+0020 SPACE)
+• Append prefix to the result of serializing border-image-outset and append it to values.
+</li>
+			<li>
+~IF［
+`border-image-repeat$p は両~軸とも `stretch$v でない
+］
+⇒
+%値~list に`border-image-repeat$p を直列化した結果を付加する
+◎
+If border-image-repeat is not stretch in both axises, serialize border-image-repeat and append it to values.
+</li>
+			<li>
+~IF［
+%値~list は`空$である
+］
+⇒
+%値~list に `none^l を付加する
+◎
+If values is empty, append "none" to values.
+</li>
+			<li>
+~RET %値~list を ` ^l ( `0020^U ) で`区切って連結-$した結果
+◎
+Return the result of concatenating all the items in values, separated by " " (U+0020 SPACE).
+</li>
+		</ol>
+	</dd>
+
+	<dt>`bottom$p</dt>
+	<dd>
+`top$p に対するときと同じ。
+◎
+If the value is the auto keyword, return "auto".
+◎
+If the value is of type &lt;length&gt;, return the result of serializing the &lt;length&gt; value.
+◎
+Otherwise, return the result of serializing the &lt;percentage&gt; value.
+</dd>
+
+	<dt>`color$p</dt>
+	<dd>
+		<ol>
+			<li>
+~IF［
+~propの値は `currentcolor$v ~keyword
+］
+⇒
+~RET  `currentcolor^l
+◎
+If the value is the currentcolor keyword, return "currentcolor".
+</li>
+			<li>
+~RET `color$t 値を直列化した結果
+◎
+Otherwise, return the result of serializing the &lt;color&gt; value.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`left$p</dt>
+	<dd>
+`top$p に対するときと同じ。
+◎
+If the value is the auto keyword, return "auto".
+◎
+If the value is of type &lt;length&gt;, return the result of serializing the &lt;length&gt; value.
+◎
+Otherwise, return the result of serializing the &lt;percentage&gt; value.
+</dd>
+
+	<dt>`opacity$p</dt>
+	<dd>
+		<ol>
+			<li>
+~IF［
+~propの値は `number$t 型である
+］
+⇒
+~RET  `number^t 値を直列化した結果
+◎
+If the value is of type &lt;number&gt;, return the result of serializing the &lt;number&gt; value.
+</li>
+			<li>
+~RET `percentage$t 値を直列化した結果
+◎
+Otherwise, return the result of serializing the &lt;percentage&gt; value.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`right$p</dt>
+	<dd>
+`top$p に対するときと同じ。
+◎
+If the value is the auto keyword, return "auto".
+◎
+If the value is of type &lt;length&gt;, return the result of serializing the &lt;length&gt; value.
+◎
+Otherwise, return the result of serializing the &lt;percentage&gt; value.
+</dd>
+
+	<dt>`top$p</dt>
+	<dd>
+		<ol>
+			<li>
+~IF［
+~propの値は `auto^v ~keyword
+］
+⇒
+~RET `auto^l
+◎
+If the value is the auto keyword, return "auto".
+</li>
+			<li>
+~IF［
+~propの値は `length$t 型である
+］
+⇒
+~RET `length$t 値を直列化した結果
+◎
+If the value is of type &lt;length&gt;, return the result of serializing the &lt;length&gt; value.
+</li>
+			<li>
+~RET `percentage$t 値を直列化した結果
+◎
+Otherwise, return the result of serializing the &lt;percentage&gt; value.
+</li>
+		</ol>
+	</dd>
+</dl>
+
+		</section>
+	</section>
+	<section id="security-considerations">
+<h2 title="Security Considerations">7. ~securityの考慮点</h2>
+
+<p>
+これらの特能により導入される既知な~security課題は無い。
+◎
+There are no known security issues introduced by these features.
+</p>
+
+	</section>
+	<section id="privacy-considerations">
+<h2 title="Privacy Considerations">8. ~privacyの考慮点</h2>
+
+<p>
+これらの特能により導入される既知な~privacy課題は無い。
+◎
+There are no known privacy issues introduced by these features.
+</p>
+
+	</section>
+
+</main></div>
+
+<!-- TODO
+	values, value 総称
+--> 
+

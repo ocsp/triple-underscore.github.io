@@ -1,0 +1,830 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Scrollbars Module Level 1 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		generate: expand,
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	let context_prop = '';
+
+	return this.html.replace(
+		/%[\w~一-鿆]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'p':
+	if( indicator === '@') {
+		context_prop = `#valdef-${key}-`;
+	}
+	break;
+case 'vt':
+	text = `&lt;${key}&gt;`;
+	href = context_prop + key;
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'v':
+	href = context_prop + key;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+case 'issue':
+	text = `課題 #${key}`;
+	href = `~CSSissue/${key}`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Scrollbars Module Level 1
+spec_date:2020-02-24
+trans_update:2020-02-25
+source_checked:180925
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-scrollbars-1/
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:css-ux,css
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2018-10-30
+
+●●class_map
+p:property
+css:css
+e:element
+v:value
+t:type
+vt:type
+
+●●tag_map
+p:code
+t:var
+vt:var
+css:code
+e:code
+v:code
+m:code
+c:code
+
+●●original_id_map
+
+●●mdn_urls
+propdef-scrollbar-color:CSS/scrollbar-color
+propdef-scrollbar-width:CSS/scrollbar-width
+
+●●link_map
+
+	●p
+p.scrollbar-color:#propdef-scrollbar-color
+p.scrollbar-width:#propdef-scrollbar-width
+
+	v.auto:#valdef-scrollbar-color-auto
+	v.dark:#valdef-scrollbar-color-dark
+	v.light:#valdef-scrollbar-color-light
+	v.auto:#valdef-scrollbar-width-auto
+	v.thin:#valdef-scrollbar-width-thin
+	v.none:#valdef-scrollbar-width-none
+	vt.color:#valdef-scrollbar-color-color
+
+p.overflow:~CSSOVERFLOW3#propdef-overflow
+
+t.color:~CSSCOLOR#typedef-color
+	t.color:https://drafts.csswg.org/css-color-3/#valuea-def-color
+
+	●用語
+~custom~scrollbar:#_custom-scrollbar
+
+	●外部
+~system色:~CSSCOLOR#css-system-colors
+算出d色:~CSSCOLOR#computed-color
+
+●●words_table1
+
+
+●●words_table
+
+	●UI
+contrast::::コントラスト
+hover:
+ツマミ:thumb::つまみ
+筋:track::~::トラック
+太さ:thickness::~
+細い:thinな::~
+細く:thinに::~
+	より細い:thinner
+浮動-:float::~
+幅:width::~
+形状:shape::~
+色:color::~
+色付けて:colorして::~
+色付けら:colorizeさ::~
+色付ける:colorする::~
+背景:background::~
+明るい:lightな::~
+暗い:darkな::~
+
+部位:part:~
+	動かせる:moving
+固定-:fix::~
+
+	~scroll能:scrollability
+	~scrollしている:scrolling
+	環境設定において:configuration option/setting
+	利用者が直に操作する以外の手段:other means instead of direct user manipulation
+	十分:sufficient／:enough
+
+	●CSS
+	の~style:styling
+	名前を付与した:named
+
+	●仕様
+変種:variant:~
+発展-:evolve:~
+原型案:prototyping:~
+文書化-:document:~
+質問票:questionnaire:~
+質問:question:~
+回答:answer:~
+
+	相互運用能:interop
+	誤って:mistakenly
+	より適する:fit better
+	大変に:harder
+	無為:makes no sense
+	-:describe
+	謝意を:thanks to
+	選んだ:choose
+	貢献:contribution
+	~~追加:more
+
+	●未分類
+選択-:select::~
+	設定し直す:reset
+IE:
+Windows:
+	画像:PNG
+WebKit:
+	^en:fading or sliding in/out of view
+隣接な:adjacentな:隣接する
+	されつつある:going to
+
+	●指示語
+	主な:main
+	:thereof
+	どの組み合わせの:of any set of
+	沿って:top of
+	以下にする:no more than
+	対する:against
+	指す:refer
+	ごく:very
+	周りの:around
+	各部:pieces
+	-:previous
+
+●●ref_normative
+
+[CSS-COLOR-3]
+    Tantek Çelik; Chris Lilley; David Baron. CSS Color Module Level 3. 19 June 2018. REC. URL: https://www.w3.org/TR/css-color-3/ 
+[CSS-OVERFLOW-3]
+    David Baron; Elika Etemad; Florian Rivoal. CSS Overflow Module Level 3. 31 July 2018. WD. URL: https://www.w3.org/TR/css-overflow-3/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 31 January 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS2]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+
+●●ref_informative
+
+[WCAG21]
+    Andrew Kirkpatrick; et al. Web Content Accessibility Guidelines (WCAG) 2.1. 5 June 2018. REC. URL: https://www.w3.org/TR/WCAG21/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Scrollbars Module Level 1</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+編集
+	<a href="http://tantek.com/contact">Tantek Çelik</a> (Mozilla)
+	<a href="mailto:ratan@microsoft.com">Rossen Atanassov</a> (Microsoft)
+
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-scrollbars-1/Overview.bs">GitHub Editor</a>
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-scrollbars-1">GitHub Issues</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-scrollbars-1
+
+</script>
+
+</head>
+<body>
+
+<header>
+	<hgroup>
+<h1 id="title">CSS Scrollbars Module Level 1</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+
+<p>
+この仕様は、~scrollbar~controlを~styleする能を標準~化する
+— その色など。
+~scrollbarは、~Windows~IE 5.5 により 2000 年に導入された。
+これは、既定の~platform~scrollbarの外観とごく異なる色~schemeを利用する~web~appを築くときに有用になる。
+◎
+CSS Scrollbars standardizes the ability to style scrollbar controls, such as their color, introduced in 2000 by Windows IE 5.5. This is useful when building web applications which use color schemes very different from the appearance of default platform scrollbars.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公の複製です…
+【以下，この節の他の内容は <a href="css-common-ja.html#status">~CSS日本語訳 共通~page</a>に委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+<p class="note">注記：
+この仕様は、
+<a href="https://github.com/w3c/csswg-drafts/tree/master/css-scrollbars-1">W3C csswg-drafts GitHub repository にて css-scrollbars-1 として保守されている</a>
+。
+◎
+Note: this specification is maintained in the W3C csswg-drafts GitHub repository as css-scrollbars-1 .
+</p>
+
+		<section id="scope">
+<h3 title="Scope">1.1. 視野</h3>
+
+~INFORMATIVE
+
+<p>
+この~moduleは、特定的に~scrollbar~control自体を~styleするためにある（この~level 1 では、それらの色や幅など）
+— ~layoutや内容を~scroll可能にするかどうかではなく。
+【！All layout impacts and... → § 1.1.1】
+◎
+The CSS Scrollbars Module is specifically for styling scrollbar controls themselves, e.g. their color & width in Level 1, and not their layout nor whether any content is scrollable. All layout impacts and content scrollability are specified in the CSS Overflow Module.
+</p>
+
+<p>
+この~moduleが解決しようと意図する，~scrollbar周りの主な利用事例には、
+<a href="https://www.w3.org/wiki/Css-scrollbars#Use-cases">文書化された利用事例</a>
+に基づく，次の 3 つがある：
+◎
+Based on documented use-cases, there are three main use-cases around scrollbars this module intends to resolve:
+</p>
+
+<ol>
+	<li>
+~web~appの~UIにより適するように，~scrollbarを色付けること。
+◎
+Coloring scrollbars to fit better into the UI of a web application.
+</li>
+	<li>
+~scrollしている区画が小さいときに，より細い~scrollbarを利用すること。
+◎
+Using a thinner scrollbar when the scrolling area is small.
+</li>
+	<li>
+~scroll能に影響することなく，~custom化された~scrollbarを築くこと。
+◎
+Building customized scrollbars without affecting scrollability.
+</li>
+</ol>
+
+<p>
+これらの利用事例に取組むため、この~moduleは，要素に~scrollbarが在るときの色と幅を制御するための~propを追加する。
+◎
+For addressing these use-cases, this module adds properties to control the colors and width of scrollbars (if any) of an element.
+</p>
+
+			<section id="out-of-scope">
+<h4 title="Out Of Scope">1.1.1. 視野から外れるもの</h4>
+
+<p>
+~scrollbarの~layoutや［
+関係する内容／隣接な内容
+］の~scroll可否は、この仕様の視野から外れる。
+それらの特能は
+<a href="~CSSOVERFLOW3">CSS Overflow Module</a>
+に指定される。
+◎
+Layout of scrollbars and related or adjacent content, and whether content is scrollable, is out of scope. Those features are specified in the CSS Overflow Module.
+</p>
+
+<p>
+~scrollbarの特定の部位を選択するための疑似要素は、この仕様の視野から外れる。
+~WebKitによる~scrollbar用の疑似要素の実装は、誤って~webに公開された特能であるものと見なされる。
+疑似要素による~approachに対する主な懸念は：
+◎
+Pseudo-elements for selecting specific parts of a scrollbar are out of scope. The WebKit implementation of pseudo-elements for scrollbar is considered to be a feature mistakenly exposed to the web. Main concerns against the pseudo-elements approach are:
+</p>
+
+<ul>
+	<li>
+~OSは、より良い利用者~体験を供するため，自身による~scrollbarの設計を継続的に発展させる
+— 時を経て，これを正確aに~model化するため、各種 疑似要素の組み合わせすべての能を超えるような。
+◎
+Operating systems continuously evolve their scrollbar designs to provide better user experience, beyond the ability of any set of pseudo-elements to accurately model this over time.
+</li>
+	<li>
+~scrollbarの構造は~platformごとに異なるので、相互運用能を~testするのは，より大変になる
+— 作者は，~engineに加えて~platformも織り込む必要が生じるので。
+◎
+Different platforms have different scrollbar structure means testing interop is harder, because authors would need to take not only engine but also platforms into account.
+</li>
+</ul>
+
+			</section>
+		</section>
+		<section id="values">
+<h3 title="Values Definitions">1.2. 値~定義</h3>
+
+<p class="trans-note">【
+この節の内容は <a href="css-common-ja.html#values">~CSS日本語訳 共通~page</a>に委譲。
+】</p>
+
+		</section>
+	</section>
+	<section id="scrollbar-color">
+<h2 title="Scrollbar Colors: the scrollbar-color property">2. ~scrollbarの色： `scrollbar-color^p ~prop</h2>
+
+◎名 `scrollbar-color@p
+◎値 `auto$v | `dark$v | `light$v | `color$vt{2}
+◎初 `auto$v
+◎適
+`overflow$p が適用される~box
+◎
+boxes to which overflow applies
+◎継 される
+◎百 受容しない
+◎算 指定された~keyword／ 2 個の`算出d色$
+◎
+specified keyword or two computed colors
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+この~propは、要素の~scrollbarの色を設定することを，作者に許容する。
+◎
+This property allows the author to set colors of an element’s scrollbars.
+</p>
+
+<p>
+~UAは、根~要素に設定された `scrollbar-color^p 値を表示域に適用するモノトスル。
+◎
+UAs must apply the scrollbar-color value set on the root element to the viewport.
+</p>
+
+<p class="note">注記：
+`overflow$p （および `overflow-*^p ）~propと違って、~HTML `body^e 要素~上に設定された `scrollbar-color^p 値は，表示域へは伝播されない。
+◎
+Note: Unlike overflow (and overflow-*) properties, scrollbar-color value set on the HTML body element are not propagated to the viewport.
+</p>
+
+<dl>
+	<dt>`auto@v</dt>
+	<dd>
+~scrollbar用の既定の~platform描画。
+◎
+default platform rendering for the scrollbar.
+</dd>
+
+	<dt>`dark@v</dt>
+	<dd>
+暗い~scrollbarを示す
+— それは［
+~platformから供される~scrollbarの暗い変種,
+暗い色を伴う`~custom~scrollbar$
+］のどちらにもなり得る。
+◎
+show a dark scrollbar, which can be either a dark variant of scrollbar provided by the platform, or a custom scrollbar with dark colors.
+</dd>
+	<dd class="trans-note">【
+`~custom~scrollbar@
+が何を意味するのか，この仕様では特に言及されていない。
+単に，［
+~platformから供されるものでも ~UAが既定で供するものでもない~scrollbar
+］を意味すると見受けられる
+— それを超える解釈は、この仕様のみからは得られない。
+】</dd>
+
+	<dt>`light@v</dt>
+	<dd>
+明るい~scrollbarを示す
+— それは［
+~platformから供される~scrollbarの明るい変種,
+明るい色を伴う`~custom~scrollbar$
+］のどちらにもなり得る。
+◎
+show a light scrollbar, which can be either a light variant of scrollbar provided by the platform, or a custom scrollbar with light colors.
+</dd>
+
+	<dt id="valdef-scrollbar-color-color" class="prod">`color$t{2}</dt>
+	<dd>
+<p>
+1 個目の色を~scrollbarのツマミに適用し，
+2 個目の色を~scrollbarの筋に適用する。
+◎
+apply the first color to the thumb of the scrollbar, and the second color to the track of the scrollbar.
+◎
+Details:
+</p>
+		<ul>
+			<li>
+筋とは、~scrollbarの背景を指す
+— それは、一般に，~scrollしている位置に関わらず固定される。
+◎
+Track refers to the background of the scrollbar, which is generally fixed regardless of the scrolling position.
+</li>
+			<li>
+ツマミとは、~scrollbar上の動かせる部位を指す
+— それは、通例的に，筋に沿って浮動する。
+◎
+Thumb refers to the moving part of the scrollbar, which usually floats on top of the track.
+</li>
+		</ul>
+	</dd>
+</dl>
+
+<p>
+この~propが `auto$v 以外の値に算出される場合、実装は，既定の~platform~UI描画より単純な~scrollbarを描画して，それに則って色付けてもヨイ。
+◎
+If this property computes to value other than auto, implementations may render a simpler scrollbar than the default platform UI rendering, and color it accordingly.
+</p>
+
+<p class="issue">
+各部に名前を付与した図式を追加する
+— 
+<a href="http://www.howtocreate.co.uk/tutorials/scrlbar.html">http://www.howtocreate.co.uk/tutorials/scrlbar.html</a>
+の様な。
+◎
+(Note: add diagram showing the different named pieces - something like http://www.howtocreate.co.uk/tutorials/scrlbar.html)
+</p>
+
+<p class="issue">
+~pageの~styleに合致するような，色付けられた~scrollbarを伴う要素の例を追加する
+— 現時点でそれを~supportする~browserによる画像を伴わせて。
+◎
+(Note: add example of an overflow element with colorized scrollbars to match page styling, PNG of the same in a browser that supports it currently)
+</p>
+
+<p>
+実装は、下層の~platformに対応する部位が存在しない場合には，どの色も無視してヨイ。
+◎
+Implementations may ignore any of the colors if the corresponding part do not exist on the underlying platform.
+</p>
+
+<p>
+作者は、 `scrollbar-color$p ~propに特定の色~値を利用するときは、［
+指定した色どうしの~contrastが十分になる
+］ことを確保するベキである。
+~UAは、~keyword値に対しては［
+自身が利用する色どうしの~contrastが十分になる
+］ことを確保するベキである。
+~UAは、値［
+`light$v ／ `dark$v
+］用の実際の色~値が，要素の背景との~contrastを十分に供すること確保するベキである（すなわち，［
+`light^v ／ `dark^v
+］は、背景が［
+明るいとき／暗いとき
+］でも常に十分な~contrastを与えるベキである）。
+<a lang="en-x-a0" href="~TR/WCAG21/#non-text-contrast">WCAG 2.1 § SC 1.4.11 Non-text Contrast</a>（非~textの~contrast）
+`WCAG21$r
+を見よ。
+~UAは、明示的な利用者~選好に基づいて，これらの~contrast要件を無視してもヨイ（例えば，
+利用者が環境設定において［
+常に特定0の~scrollbar色を確保する／
+~system既定の~scrollbarの利用する
+］ことを選んだとき）。
+◎
+When using scrollbar-color property with specific color values, authors should ensure the specified colors have enough contrast between them. For keyword values, UAs should ensure the colors they use have enough contrast. UAs should ensure that their actual color values for light and dark should provide sufficient contrast with the element’s background (i.e. light on a light background and dark on a dark background should always have sufficient contrast) See WCAG 2.1 SC 1.4.11 Non-text Contrast [WCAG21]. UAs may ignore these contrast requirements based on explicit user preferences (for example, when users choose a configuration option/setting that always ensures a particular scrollbar color / use of system default scrollbars).
+</p>
+
+<p class="note">注記：
+利用者が~scrollbarとヤリトリするとき（例： ~hoverする／作動化するなどにより）、実装は
+~scrollbarを成すどの部位にどの~scrollbar色を適用するか改めてもヨイ。
+◎
+Note: when a user interacts with a scrollbar (e.g. hovering or activating), implementations may alter which scrollbar colors apply to which scrollbar parts.
+</p>
+
+<p class="note">注記：
+~IEは、各~scrollbar色~propの既定として有名~system色
+【 `~system色$（非推奨にされたものも含む）】
+を利用する。
+関係する課題は `1956$issue を見よ。
+◎
+Note: IE uses named System Colors as defaults for each of the scrollbar color properties. See related Issue 1956.
+</p>
+
+<div class="example">
+
+<p>
+次の例は、~IEにおいて~scrollbar色を設定し直す（この例は
+<a href="https://www.w3.org/Style/Examples/007/scrollbars.en.html">https://www.w3.org/Style/Examples/007/scrollbars.en.html</a>
+から導出されている）：
+◎
+The following example (derived from https://www.w3.org/Style/Examples/007/scrollbars.en.html) resets scrollbar colors in IE.
+</p>
+
+<pre class="lang-css">
+html { 
+    scrollbar-color: ThreeDFace Scrollbar;
+}
+</pre>
+
+</div>
+
+	</section>
+	<section id="scrollbar-width">
+<h2 title="Scrollbar Thickness: the scrollbar-width property">3. ~scrollbarの太さ： `scrollbar-width^p ~prop</h2>
+
+◎名 `scrollbar-width@p
+◎値 `auto$v | `thin$v | `none$v
+◎初 `auto$v
+◎適 
+`overflow$p が適用される~box
+◎
+boxes to which overflow applies
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword／絶対~長さ
+◎
+specified keyword or absolute length
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+この~propは、［
+要素の~scrollbarが示されるときの最大~太さを設定する
+］ことを，作者に許容する。
+◎
+This property allows the author to set the maximum thickness of an element’s scrollbars when they are shown.
+</p>
+
+<dl>
+	<dt>`auto@v</dt>
+	<dd>
+実装は、既定の~platform~scrollbar幅を利用するモノトスル。
+◎
+implementations must use the default platform scrollbar width.
+</dd>
+
+	<dt>`thin@v</dt>
+	<dd>
+実装は、適用-可能なときは， `auto$v より細い~scrollbarを利用するベキである。
+これは、［
+~platformにより供される~scrollbarの細い変種,
+既定の~platform~scrollbarより細い`~custom~scrollbar$
+］のどちらにもなり得る。
+◎
+Implementations should use thinner scrollbars than auto when applicable. This may mean a thin variant of scrollbar provided by the platform, or a custom scrollbar thinner than the default platform scrollbar.
+</dd>
+	<dd class="note">注記：
+既定では，［
+それ以上~細くできないか, 細くしても無為になるような，極小な~scrollbar
+］しか備えない~platformもある。
+その事例では、実装は，この値を `auto$v として扱ってもヨイ。
+◎
+Note: Some platforms may only have a tiny scrollbar by default which cannot be or makes no sense to make thinner. In that case, implementations may treat this value as auto.
+</dd>
+
+	<dt>`none@v</dt>
+	<dd>
+実装は、~scrollbarを表示しないモノトスル
+— しかしながら，要素の~scroll能は影響されない。
+【~scrollする手段が~scrollbarの他に無い環境の場合はどうなる？】
+◎
+implementations must not display any scrollbar, however the element’s scrollability is not affected.
+</dd>
+</dl>
+
+<p>
+~UAは、根~要素~上に設定された `scrollbar-width^p 値は，表示域に適用するモノトスル。
+◎
+UAs must apply the scrollbar-width value set on the root element to the viewport.
+</p>
+
+<p>
+~UAは、
+<a lang="en-x-a0" href="~TR/WCAG21/#target-size">WCAG 2.1 SC 2.5.5 Target Size</a>
+（~targetの~size）
+`WCAG21$r
+に従って，実際の~scrollbar幅に要する最小な~sizeを施行するベキである。
+◎
+UAs should enforce a minimum actual size of scrollbar width per WCAG 2.1 SC 2.5.5 Target Size [WCAG21].
+</p>
+
+<p>
+`scrollbar-width$p に `none$v を利用する作者は、もっと内容があって~scrollはアリなことを視覚的に~hintする［
+代替／等価
+］な何かを供するベキである。
+利用者が直に操作する以外の手段により，要素が~scrollされつつある状況においては（例：~program的に）、作者は， `none$v に代えて
+<code class="css">`overflow$p: `hidden^v</code>
+利用するベキである。
+◎
+Authors that use none should provide an alternative/equivalent visual hint that scrolling is possible and there is more content. For situations where an element is going to be scrolled by other means instead of direct user manipulation (e.g. programmatically), authors should use overflow: hidden instead of none.
+</p>
+
+<p class="note">注記：
+`overflow$p （および `overflow-*^p ）~propと違って、~HTML `body^e 要素~上に設定された `scrollbar-width^p 値は，表示域へは伝播されない。
+◎
+Note: Unlike overflow (and overflow-*) properties, a scrollbar-width value set on the HTML body element is not propagated to the viewport.
+</p>
+
+<p class="note">注記：
+この仕様は、~scrollbarの正確な位置や形状,
+その~animation（ `fading or sliding in/out of view^en など）は，定義しない。
+◎
+Note: This specification does not define the exact position or shape of the scrollbar, or any animation thereof, such as fading or sliding in/out of view.
+</p>
+
+	</section>
+	<section id="acknowledgments">
+<h2 title="Appendix A. Acknowledgments">謝辞</h2>
+
+~INFORMATIVE
+
+<p>
+［
+利用事例, 原型案, 実装, ~feedback
+］を寄せられた
+<a lang="en-x-a0" href="https://xanthir.com/">Tab Atkins</a>,
+<a lang="en-x-a0" href="https://www.upsuper.org/">Xidorn Quan</a>
+両氏に謝意を。
+~accessibilityの考査（ `3315$issue ）に貢献された
+<a lang="en-x-a0" href="https://www.splintered.co.uk">Patrick H. Lauke</a>
+氏に謝意を。
+◎
+Thanks to the use-cases, prototyping, implementation, and feedback from Tab Atkins and Xidorn Quan. Thanks to accessibility review and contributions (#3315) from Patrick H. Lauke.
+</p>
+
+	</section>
+	<section id="changes">
+<h2 title="Appendix B. Changes">変更点</h2>
+
+~INFORMATIVE
+
+<p>
+<a href="~TR/2018/WD-css-scrollbars-1-20180925/">2018年 9月 25日 最初の公な作業草案</a>
+からの変更点は：
+◎
+This appendix describes changes from the First Public Working Draft (FPWD) of 25 Sep 2018.
+</p>
+
+<ul>
+	<li>
+`scrollbar-color$p の算出d値を［
+指定された~keyword／ 2 個の`算出d色$
+］に変更した。
+（ `3237$issue ）
+◎
+#3237: scrollbar-color computed value changed to: specified keyword or two computed colors 
+</li>
+	<li>
+視野を明確化した
+— ~layoutや~scroll能ではなく，~scrollbar~control自体を~styleするものであるよう。
+（ `4693$issue ）
+◎
+#4693: Clarified scope: styling scrollbar controls themselves, no layout or scrollability.
+</li>
+	<li>
+［
+`scrollbar-color$p,
+`scrollbar-width$p
+］に対する~accessibilityの考慮点を~~追加して更新した。
+（ `3315$issue ）
+◎
+#3315: More and updated accessibility considerations for scrollbar-color and scrollbar-width.
+</li>
+</ul>
+
+	</section>
+	<section id="security-privacy-considerations">
+<h2 title="Appendix C. Considerations for Security and Privacy">~security, ~privacyの考慮点</h2>
+
+~INFORMATIVE
+
+<p>
+<a href="~SECQ#questions">自己-考査~質問票による考慮する質問</a>に対する回答は
+【この訳では、~~影響があるものだけ挙げる（他の質問に対する回答は “いいえ” 等）】：
+◎
+Per the Self-Review Questionnaire: Security and Privacy: Questions to Consider
+</p>
+
+<dl>
+	<dt>
+この仕様は、~UAの~native~UIに対する何らかの制御を生成元に許容するか？
+◎
+Does this specification allow an origin some measure of control over a user agent’s native UI?
+</dt>
+	<dd>
+許容する。
+各種 `scrollbar-*^p ~propは、~pageが［
+~UAの~native~UIに備わる~scrollbar
+］の色と幅を変更することを，可能化する
+— 例えば、次に挙げるものなどの
+⇒＃
+~pageの~UIwindow／
+~pageに埋込まれ，~frame化された内容 ／
+~page内にある，~overflowしていて~scrollbarを伴う要素
+◎
+Yes. The scrollbar-* properties enable the page to change the color and width of the scrollbar of the user agent’s native UI, e.g. scrollbars on the page’s window, on framed content embedded in the page, or on overflowing elements with scrollbars in the page.
+</dd>
+</dl>
+
+	</section>
+</main></div>

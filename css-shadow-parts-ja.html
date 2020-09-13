@@ -1,0 +1,1296 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Shadow Parts</title>
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'ps':
+	text = `:${key}`;
+	break;
+case 'pe':
+	text = `::${key}`;
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'U':
+	text = `U+${key}`;
+	break;
+case 'smb':
+	text = `(<span class="char-symbol">${text}</span>)`;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+case 'issue':
+	text = `課題 #${key}`;
+	href= `~CSSissue/${key}`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Shadow Parts
+spec_date:2019-10-15
+trans_update:2019-04-25
+source_checked:181001
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-shadow-parts-1/
+spec_status:ED
+abbr_url:CSSSHADOWPARTS
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:selector,css
+conformance:css
+copyright:2019,permissive
+trans_1st_pub:2018-10-03
+
+
+●●class_map
+p:property
+ps:pseudo
+pe:pseudo
+css:css
+e:element
+a:attr
+v:value
+t:type
+U:code-point
+
+●●tag_map
+I:code
+m:code
+p:code
+ps:code
+pe:code
+at:code
+t:var
+css:code
+e:code
+a:code
+v:code
+c:code
+em:em
+mk:mark
+U:span
+
+●●words_table
+
+
+	●内容／構造
+part:
+shadow:
+component::::コンポーネント
+encapsulation:::カプセル化
+出自の:originating::~
+下位-:sub-:~
+
+閉な:closed::閉じた
+回送-:forward::~
+	回送-法:forwarding
+
+	奥深く継承-:letting inheritance push the values down to
+	分け隔てる:separating out
+	外縁~根:outerRoot
+	内縁~根:innerRoot
+	外縁~名:outerName
+	内縁~名:innerName
+	外縁~名:outerIdent
+	内縁~名:innerIdent
+	内縁~partたち:innerParts
+	子孫:el
+
+	●演算／処理
+
+	●構文
+space:
+comma::::カンマ
+	COLON
+	COMMA
+小構文:microsyntax::~
+	対応付け~文字列:unparsed mapping
+	で区切られた／区切りの:-separated
+	並び:sequence
+分割-:split::~
+
+tagname:::タグ名
+wild-card::::ワイルドカード
+
+	-:initially
+	空~文字列:empty
+	~INCBY:Consume the U+003A COLON character.
+	-:This skips past any leading delimiters
+	~EQ ε:If the end of the input has been reached
+
+	●CSS
+	~styleし過ぎる:over-styling
+	~style付け:styling
+theme::::テーマ
+選択-:select::~
+結合子:combinator::~
+
+
+	●仕様
+不用意:accidental:~
+安定的:stable:~
+理論的:theoretical:~
+略記:shorthand:~
+高価:expensive:~
+明白:obvious:~
+機会:chance:~
+防壁:barrier:~
+高処理能:performant:~
+elegant::::エレガント
+利用性:usability:使い勝手
+表層:surface:~
+	両面:both 〜reason
+	-:It’s important to
+	でなくとも:regardless
+	~~判明した:turned out to be
+	選ばれ:chosen
+	おかしくする:wrong
+	より難しく:harder
+	ある目的で:purposely
+	あきらめる:surrender
+	得られる:bring
+	馬鹿げている:ridiculous
+	悪くする:even worse
+	焼き直し:rehash
+	おそれ:fear
+	かまわない:okay
+	現時点:at the moment
+	総称される:collectively
+	適用され過ぎて:over-applying
+	触れずに:leaving〜untouched
+	処理能に関係する:performance-related
+	とても上手く:very well
+	何ら:absolutely zero
+	一助:help
+	されていようが:no matter
+	関わらない:doesn’t matter
+	単に:merely
+	残された:this left us with
+	ずっと:much more／far more／much
+	組み合わせは膨大になる:combinatorial explosion
+	-:we
+	に対するときと同じに:identically
+	同程度に:as〜~as
+	微細にわたり:too much of 〜 scrutiny
+	元も~~子もない:for its own good
+	能力:capable
+
+	●仕様（動詞
+利用ng:using:利用
+無為に:defeat:~
+広告-:advertise:~
+公表-:publish:~
+複合-:compound:~
+力:power:~
+
+	作者:you
+	立ち往かない:fall down
+	束ねる:bundling
+	生き続ける:live
+	違え:differently
+	にする:making
+	されるだけの:happen
+	自身の好きなように:to do with as it will
+	みなされる:can be thought of
+	関わらない:doesn’t matter
+
+	●未分類（動詞
+export:
+	公開-法:exposing
+選択的:selective:~
+回復:recovery:~
+	~error回復:error-recovery
+重複-:duplicate:~
+	渡す:pass
+
+
+	●未分類
+	-:method
+tabstrip-control:::タブ切り替えコントロール
+tab::::タブ
+
+
+色:color::~
+見かけ:look:~
+
+	要素:el
+	^e:template
+	とも称される:also known as
+	-:issue
+	-:keyed
+	^v:red
+	`x-panel^e:the panel
+	^en:parts
+	^en:superglobal
+	Shadow DOM
+	~~形の:shape
+	“active”
+	“confirm”
+
+
+	●指示語
+
+	次の:second
+	最終的に:eventually
+	1 個の:one
+	一つだけ:single
+	~alone:
+	のみ:alone
+	ただ:just the
+	何もかも:everything
+	何百もの:hundreds of
+	以前に:previous
+	-:against
+	無い:never 〜 anything
+	その他:anything else
+	-:nothing
+	どこか:anywhere
+	何個か:a number of
+	いっときに:at a time
+
+
+●●words_table1
+gt3:&gt;&gt;&gt;
+
+
+●●original_id_map
+
+●●mdn_urls
+selectordef-part:CSS/::part
+	element-attrdef-html-global-part:HTML/Global_attributes/part
+	element-attrdef-html-global-exportparts:HTML/Global_attributes/exportparts
+
+●●link_map
+
+	●IDL
+SameObject:~WEBIDLjs#SameObject
+PutForwards:~WEBIDLjs#PutForwards
+
+I.Element:~DOM4#element
+I.DOMTokenList:~DOM4#domtokenlist
+
+m.part:#dom-element-part
+m.value:~DOM4#dom-domtokenlist-value
+
+
+	●css
+pe.part():#selectordef-part
+ps.hover:~SELECTORS4#hover-pseudo
+
+a.part:#element-attrdef-html-global-part
+a.exportparts:#element-attrdef-html-global-exportparts
+
+t.ident:~CSSVAL#typedef-ident
+
+
+	●用語
+
+~part名~list:#element-part-name-list
+~part要素~map:#shadow-root-part-element-map
+~part名~mapを計算する:#calculate-the-part-element-map
+回送される~part名~list:#element-forwarded-part-name-list
+
+
+妥当な~part対応付け:#valid-part-mapping
+妥当な~part対応付け~list:#valid-list-of-part-mappings
+
+	●用語（外部
+~custom~prop:~CSSVAR#custom-property
+
+	廃：live profile:~SELECTORS4#live-profile
+出自の要素:~SELECTORS4#originating-element
+構造上の疑似類:~SELECTORS4#structural-pseudo-classes
+
+map.存在-:~INFRA#map-exists
+~list:~INFRA#list
+	付加する:~INFRA#list-append
+文字列:~INFRA#string
+有順序~集合:~INFRA#ordered-set
+set.付加する:~INFRA#set-append
+~pair:~INFRA#pair
+
+位置~変数:~INFRA#string-position-variable
+符号位置~並びを収集する:~INFRA#collect-a-sequence-of-code-points
+~commaで分割する:~INFRA#split-on-commas
+
+子孫:~DOM4#concept-tree-descendant
+~shadow~host:~DOM4#element-shadow-host
+~shadow根:~DOM4#concept-shadow-root
+el.~shadow根:~DOM4#concept-element-shadow-root
+~shadow~tree:~DOM4#concept-shadow-tree
+tL.要素:~DOM4#_dtl-element
+tL.属性の局所~名:~DOM4#_dtl-localname
+
+
+
+●●ref_normative
+
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS-VARIABLES-1]
+    Tab Atkins Jr.. CSS Custom Properties for Cascading Variables Module Level 1. 3 December 2015. CR. URL: https://www.w3.org/TR/css-variables-1/ 
+[DOM]
+    Anne van Kesteren. DOM Standard. Living Standard. URL: https://dom.spec.whatwg.org/ 
+[INFRA]
+    Anne van Kesteren; Domenic Denicola. Infra Standard. Living Standard. URL: https://infra.spec.whatwg.org/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[SELECTORS-4]
+    Elika Etemad; Tab Atkins Jr.. Selectors Level 4. 21 November 2018. WD. URL: https://www.w3.org/TR/selectors-4/ 
+[WebIDL]
+    Boris Zbarsky. Web IDL. 15 December 2016. ED. URL: https://heycam.github.io/webidl/ 
+
+●●
+	ref_informative
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Shadow Parts</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新 発行バージョン
+	https://www.w3.org/TR/css-shadow-parts-1/
+
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-shadow-parts-1">GitHub Issues</a>
+
+編集
+	<a href="http://xanthir.com/contact/">Tab Atkins-Bittner</a> (Google)
+	<a href="mailto:fergal@chromium.org">Fergal Daly</a> (Google)
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-shadow-parts-1/Overview.bs">GitHub Editor</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-shadow-parts-1
+
+</script>
+
+</head><body>
+
+<header>
+	<hgroup>
+<h1 id="title">CSS Shadow Parts</h1>
+	</hgroup>
+
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この仕様は、 `~shadow~host$上に `part()$pe 疑似要素を定義する。
+それは、`~shadow~host^が自身の`~shadow~tree$から選ばれた要素たちを，~style付け目的~用に外側にある~pageへ選択的に公開することを許容する。
+◎
+This specification defines the ::part() pseudo-element on shadow hosts, allowing shadow hosts to selectively expose chosen elements from their shadow tree to the outside page for styling purposes.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+<p>
+~shadow~DOMは、~pageから何個かの “~component”
+— ~markupが成す下位treeであって、その詳細は，外側~pageでなく~component自身に限り関連なもの —
+に分離することを，作者に許容する。
+これは、~pageを成す ある~part用に意味された ある~styleが，不用意に適用され過ぎて、~pageの異なる~partの見かけをおかしくする機会を抑制する。
+しかしながら，この~style付け防壁により、~pageが~componentとヤリトリするのも，より難しくなる
+— 実際にそうするよう`求まれた^emときに。
+◎
+Shadow DOM allows authors to separate their page into "components", subtrees of markup whose details are only relevant to the component itself, not the outside page. This reduces the chance of a style meant for one part of the page accidentally over-applying and making a different part of the page look wrong. However, this styling barrier also makes it harder for a page to interact with its components when it actually wants to do so.
+</p>
+
+<p>
+この仕様は、 `part()$pe 疑似要素を定義する。
+それは、［
+`~shadow~tree$内にある, ある目的で公開された特定の要素を，外側にある~pageの文脈から~styleする
+］ことを，作者に許容する。
+これらの疑似要素は、`~custom~prop$（それは、外側~pageが，自身の好きなように特定0の値（~theme色など）を~componentに渡せるようにする）と組合せることにより
+— ~encapsulationを保守しつつ，すべての制御をあきらめることなく —
+~componentと外側~pageが安全かつ強力な仕方でヤリトリすることを許容する。
+◎
+This specification defines the ::part() pseudo-element, which allows an author to style specific, purposely exposed elements in a shadow tree from the outside page’s context. In combination with custom properties, which let the outside page pass particular values (such as theme colors) into the component for it to do with as it will, these pseudo-elements allow components and the outside page to interact in safe, powerful ways, maintaining encapsulation without surrendering all control.
+</p>
+
+		</section>
+		<section id="motivation">
+<h3 title="Motivation">1.1. 動機</h3>
+
+<p>
+~custom要素の能力が
+— 組込みの要素と同程度に —
+全部的に有用になるためには、次がアリになるベキである：
+要素を成す各~partを外側から~styleすること／
+~custom要素の作者が，外側から正確に何を~styleできるか制御すること／
+~custom要素が~style付け用に安定的な “~API” を呈示すること。
+すなわち、~custom要素を成す ある~partを~styleするために利用される選択子は、要素の内部的な詳細~についての知識を［
+公開する／要求する
+］ベキでない。
+~custom要素の作者は、選択子には触れずに，要素の内部的な詳細を変更-可能になるベキである。
+◎
+For custom elements to be fully useful and as capable as built-in elements it should be possible for parts of them to be styled from outside. Exactly what can be styled from outside should be controlled by the element author. Also, it should be possible for a custom element to present a stable "API" for styling. That is, the selector used to style a part of a custom element should not expose or require knowledge of the internal details of the element. The custom element author should be able to change the internal details of the element while leaving the selectors untouched.
+</p>
+
+<p>
+~shadow~treeの内側に対する~style付け用として以前に提案された `~gt3^css 結合子
+【“~shadowを貫く結合子” 】
+は、`強力~過ぎて^em~~元も~~子もないことが~~判明した
+— それは~componentの内部~構造を微細にわたりに公開し過ぎるため、 `Shadow DOM^cite を利用することで得られる~encapsulationの便益の一部を無為にしていた。
+この理由から, および他の処理能に関係する理由から、 `~gt3^css 結合子は最終的に `live profile^en† から除去された。
+【†この用語は `SELECTORS-4$r 仕様から廃された。】
+◎
+The previous proposed method for styling inside the shadow tree, the &gt;&gt;&gt; combinator, turned out to be too powerful for its own good; it exposed too much of a component’s internal structure to scrutiny, defeating some of the encapsulation benefits that using Shadow DOM brings. For this, and other performance-related reasons, the &gt;&gt;&gt; combinator was eventually removed from the live profile.
+</p>
+
+<p>
+唯一残された，~shadow~treeの中まで~styleする仕方は、`~custom~prop$の利用ngである：
+~componentは、［
+一定の`~custom~prop^を利用して，自身の内部を~styleする
+］よう広告する
+— 外縁~pageは、自身が望む~propを`~shadow~host$上に設定することができ，値を必要な所まで奥深く継承させられる。
+これは、多くの単純な~theme法の利用事例には，とても上手く働く。
+◎
+This left us with using custom properties as the only way to style into a shadow tree: the component would advertise that it uses certain custom properties to style its internals, and the outer page could then set those properties as it wished on the shadow host, letting inheritance push the values down to where they were needed. This works very well for many simple theming use-cases.
+</p>
+
+<p>
+しかしながら，これでは立ち往かない事例もある。
+ある~componentが，自身の~shadow~tree内の何かに任意な~style付けを許容したいと望む場合、何百もの`~custom~prop$を定義する他に仕方がない（制御を許容したいと望む~CSS~propごとに 1 個ずつ）
+— それは、利用性, 処理能の両面で明白に馬鹿げている。
+この状況は、作者が~componentの~styleを `hover$ps の様な疑似類に基づいて違えたいと望む場合，さらに複合される
+— ~componentは、利用する`~custom~prop^を各~疑似類~用に重複する必要がある（ `:hover:focus^css の様な各~組合nごとに必要なので、組み合わせは膨大になる）。
+これは、利用性と処理能の問題をさらに悪くする。
+◎
+However, there are some cases where this falls down. If a component wishes to allow arbitrary styling of something in its shadow tree, the only way to do so is to define hundreds of custom properties (one per CSS property they wish to allow control of), which is obviously ridiculous for both usability and performance reasons. The situation is compounded if authors wish to style the component differently based on pseudo-classes like :hover; the component needs to duplicate the custom properties used for each pseudo-class (and each combination, like :hover:focus, resulting in a combinatorial explosion). This makes the usability and performance problems even worse.
+</p>
+
+<p>
+`part()$pe は、この事例を ずっと~elegantかつ高処理能に取扱うために導入される。
+`~custom~prop$名の中に何もかも束ねるのでなく、機能性は，元々意味された様に選択子と~style規則~構文~内に生き続ける。
+これは、~componentの作者にも, 利用者にも，ずっと利用し易くなり、処理能はずっと良くなるベキであり，より良い~encapsulation／~API表層を許容する。
+◎
+We introduce ::part() to handle this case much more elegantly and performantly. Rather than bundling everything into custom property names, the functionality lives in selectors and style rule syntax, like it’s meant to. This is far more usable for both component authors and component users, should have much better performance, and allows for better encapsulation/API surface.
+</p>
+
+<p>
+`part()$pe は、`理論的には，新たな力は何ら提供しない^emことに注意。
+それは， `~gt3^css 結合子の焼き直しではなく、作者が`~custom~prop$ですでに行える何か用の，単純で, より簡便で, 一貫した構文である。
+要素を成すある~part（`~part要素~map$）を明示的に “公表して”，単に包含されるだけの下位-~partから分け隔てることは、~encapsulationの一助にもなる
+— 作者は、不用意に~styleし過ぎるおそれなしに `part()^pe を利用できるので。
+◎
+It’s important to note that ::part() offers absolutely zero new theoretical power. It is not a rehash of the &gt;&gt;&gt; combinator, it is simply a more convenient and consistent syntax for something authors can already do with custom properties. By separating out the explicitly "published" parts of an element (the part element map) from the sub-parts that it merely happens to contain, it also helps with encapsulation, as authors can use ::part() without fear of accidental over-styling.
+</p>
+
+	</section>
+	<section id="exposing">
+<h2 title="Exposing a Shadow Element:">2. ~shadow要素の公開-法</h2>
+
+<p>
+`~shadow~tree$内の要素は、［
+`part$a, `exportparts$a
+］属性を利用して，~treeの外側へ
+— ~stylesheetによる~style付け用に —
+~exportできる。
+◎
+Elements in a shadow tree may be exported for styling by stylesheets outside the tree using the part and exportparts attributes.
+</p>
+
+<p>
+各~要素は、次のものを持つ：
+◎
+↓</p>
+
+<dl class="def-list">
+	<dt>
+`~part名~list@
+【 `part$a 属性で拡充される】
+◎
+Each element has a part name list＼
+</dt>
+	<dd>
+何個かの~tokenからなる`有順序~集合$。
+◎
+which is an ordered set of tokens.
+</dd>
+
+	<dt>
+`回送される~part名~list@
+【 `exportparts$a 属性で拡充される】
+◎
+Each element has a forwarded part name list＼
+
+Each element has a part name map＼
+</dt>
+	<dd>
+0 個以上の［［
+【外縁へ】回送される内縁~part用の`文字列$,
+公開される名前を与える`文字列$
+］が成す`~pair$
+］を包含している`~list$。
+◎
+which is a list of pairs containing a string for the inner part being forwarded and a string giving the name it will be exposed as.
+</dd>
+</dl>
+
+<p>
+各 `~shadow根$は、［
+`文字列$である~keyを，何個かの要素が成す`有順序~集合$である値
+］に対応付ける
+`~part要素~map@
+を持つものとみなされる。
+◎
+Each shadow root can be thought of as having a part element map with keys that are strings and values that are ordered sets of elements.
+</p>
+
+<p>
+`~part要素~map$は、この仕様にて~styleを計算するための~algoの一部としてのみ述べられる
+— この~mapを計算することは、高価にもなり得るので
+【実装には，実際に必要になるまで計算しない裁量の余地がある】
+。
+それはまた、~DOMを介して公開されることはない
+— 公開すると、閉な~shadow根の内側にある要素への~accessを許容するので。
+◎
+The part element map is described only as part of the algorithm for calculating style in this spec. It is not exposed via the DOM, as calculating it may be expensive and exposing it could allow access to elements inside closed shadow roots.
+</p>
+
+<p>
+`~part要素~map$は、要素の追加や除去, および~DOM内の要素の［
+`~part名~list$／`回送される~part名~list$
+］に対する変更により影響される。
+◎
+Part element maps are affected by the addition and removal of elements and changes to the part name lists and forwarded part name lists of elements in the DOM.
+</p>
+
+<div class="algorithm">
+
+<p>
+`~part名~mapを計算する@
+ときは、所与の
+( ~shadow根 %外縁~根 )
+に対し：
+◎
+To calculate the part element map of a shadow root, outerRoot:
+</p>
+
+<ol>
+	<li>
+%外縁~map ~LET %外縁~根 の`~part要素~map$
+◎
+↓</li>
+	<li>
+%外縁~map を空にする
+【この段は、この訳による補完。さもなければ、計算し直す度に~mapは肥大する一方になる。】
+</li>
+	<li>
+<p>
+%外縁~根 の中の
+~EACH( `子孫$ %子孫 )
+に対し：
+◎
+For each descendant el within outerRoot:
+</p>
+		<ol>
+			<li>
+%子孫 の`~part名~list$を成す
+~EACH( %名前 )
+に対し
+⇒
+%外縁~map[ %名前 ] に %子孫 を`付加する$set
+◎
+For each name in el’s part name list, append el to outerRoot’s part element map[name].
+</li>
+			<li>
+~IF［
+%子孫 は`~shadow~host$でない
+］
+⇒
+~CONTINUE
+【この ~CONTINUE は、この訳による補完。】
+◎
+↓</li>
+			<li>
+%内縁~根 ~LET %子孫 の`~shadow根$el
+◎
+If el is a shadow host itself then let innerRoot be its shadow root.
+</li>
+			<li>
+`~part名~mapを計算する$( %内縁~根 )
+【前回の計算と同じ結果になることが判っていれば、実装は，この段を省ける。】
+◎
+Calculate innerRoot’s part element map.
+</li>
+			<li>
+%内縁~map ~LET %内縁~根 の`~part要素~map$
+◎
+↓</li>
+			<li>
+<p>
+%子孫 の`回送される~part名~list$を成す
+~EACH( %内縁~名 / %外縁~名 )
+に対し：
+</p>
+				<ol>
+					<li>
+~IF［
+%内縁~map[ %内縁~名 ] ~EQ ε
+］~OR［
+%内縁~map[ %内縁~名 ] は空である
+］
+⇒
+~CONTINUE
+</li>
+					<li>
+~IF［
+%外縁~map[ %外縁~名 ] ~EQ ε
+］
+⇒
+%外縁~map[ %外縁~名 ] ~SET 新たな`有順序~集合$
+</li>
+					<li>
+%内縁~map[ %内縁~名 ] を成す
+~EACH( %要素 )
+に対し
+⇒
+%外縁~map[ %外縁~名 ] に %要素 を`付加する$set
+</li>
+				</ol>
+
+【この段の中の段 1, 2 は、この訳による補完。】
+
+◎
+For each innerName/outerName in el’s forwarded part name list:
+• Let innerParts be innerRoot’s part element map[innerName]
+• Append the elements in innerParts to outerRoot’s part element map[outerName]
+</li>
+		</ol>
+	</li>
+</ol>
+
+</div>
+
+		<section id="part-attr">
+<h3 title="Naming a Shadow Element: the part attribute">2.1. ~shadow要素の命名-法： `part^a 属性</h3>
+
+<p>
+~shadow~tree内のどの要素にも
+`part@a
+属性を指定できる。
+これは、要素を`~shadow~tree$の外側に公開するために利用される。
+◎
+Any element in a shadow tree can have a part attribute. This is used to expose the element outside of the shadow tree.
+</p>
+
+<p>
+`part$a 属性は、何個かの［
+この要素の~part名を表現している~token
+］からなる，~space区切りの~listとして構文解析される。
+◎
+The part attribute is parsed as a space-separated list of tokens representing the part names of this element.
+</p>
+
+<p class="note">注記：
+同じ~partに複数個の名前を与えてもかまわない。
+“~part名” は、 `id^a や~tagnameではなく， `class^a に類似なものと見なすベキである。
+◎
+Note: It’s okay to give a part multiple names. The "part name" should be considered similar to a class, not an id or tagname.
+</p>
+
+<div class="example">
+<pre class="lang-html">
+&lt;style&gt;
+  c-e`::part(textspan)^mk { color: red; }
+&lt;/style&gt;
+
+&lt;template id="c-e-template"&gt;
+  &lt;span `part="textspan"^mk&gt;<span class="comment">
+この~textの色は `red^v になる
+◎
+This text will be red
+</span>&lt;/span&gt;
+&lt;/template&gt;
+&lt;c-e&gt;&lt;/c-e&gt;
+&lt;script&gt;
+  /* <span class="comment">
+`template^e を，~custom要素 `c-e^e として追加する
+◎
+Add template as custom element c-e
+</span> */
+  ...
+&lt;/script&gt;
+</pre>
+</div>
+
+		</section>
+		<section id="exportparts-attr">
+<h3 title="Forwarding a Shadow Element: the exportparts attribute">2.2. ~shadow要素の回送-法： `exportparts^a 属性</h3>
+
+<p>
+~shadow~tree内のどの要素にも
+`exportparts@a
+属性を指定できる。
+要素は ある`~shadow~tree$ %~shadow~tree 内の`~shadow~host$である場合、これは，［
+要素が~hostしている`~shadow~tree$の内側にある~partたちを， %~shadow~tree の外側にある規則で~styleする
+］のを許容するために利用される（それらが［
+%~shadow~tree 内にある， `part$a 属性で命名された要素
+］であったかのように）。
+【文書~tree内にある, または~shadow~hostでない要素には、効果はない。】
+◎
+Any element in a shadow tree can have a exportparts attribute. If the element is a shadow host, this is used to allow styling of parts from hosts inside the shadow tree by rules outside this the shadow tree (as if they were elements in the same tree as the host, named by a part attribute).
+</p>
+
+<p>
+`exportparts$a 属性は、［
+何個かの~part対応付けからなる，~comma区切りの~list
+］として構文解析される。
+各~part対応付けは、次のいずれかで与えられる：
+◎
+The exportparts attribute is parsed as a comma-separated list of part mappings. Each part mapping is one of:
+</p>
+
+<dl class="switch">
+	<dt>
+<code class="value">%内縁~名 : %外縁~名</code>
+◎
+innerIdent : outerIdent
+</dt>
+	<dd>
+%子孫 の`回送される~part名~list$に
+( %内縁~名 / %外縁~名 )
+を追加する。
+◎
+Adds innerIdent/outerIdent to el’s forwarded part name list.
+</dd>
+
+	<dt>`ident^t</dt>
+	<dd>
+%子孫 の`回送される~part名~list$に
+( `ident^t / `ident^t )
+を追加する。
+◎
+Adds ident/ident to el’s forwarded part name list.
+</dd>
+	<dd class="note">注記：
+これは、
+<code class="value">`ident^t : `ident^t</code>
+用の略記である。
+◎
+Note: This is shorthand for ident : ident.
+</dd>
+
+	<dt>
+その他
+◎
+anything else
+</dt>
+	<dd>
+［
+~error回復／将来の互換性
+］用にあり、無視される。
+◎
+Ignored for error-recovery / future compatibility.
+</dd>
+</dl>
+
+
+<p class="note">注記：
+下位-~partから複数個の名前へ~mapしてもかまわない。
+◎
+Note: It’s okay to map a sub-part to several names.
+</p>
+
+<div class="example">
+
+<pre class="lang-html">
+&lt;style&gt;
+  c-e`::part(textspan)^mk { color: red; }
+&lt;/style&gt;
+
+&lt;template id="c-e-outer-template"&gt;
+  &lt;c-e-inner `exportparts="innerspan: textspan"^mk&gt;&lt;/c-e-inner&gt;
+&lt;/template&gt;
+
+&lt;template id="c-e-inner-template"&gt;
+  &lt;span `part="innerspan"^mk&gt;
+    <span class="comment">
+この~textの `color^p は `red^v になる
+— 包含している~shadow~hostは，
+`innerspan^v を `textspan^v として文書へ回送し，それは文書~styleに合致するので。
+◎
+This text will be red because the containing shadow host forwards innerspan to the document as "textspan" and the document style matches it.
+</span>
+  &lt;/span&gt;
+  &lt;span `part="textspan"^mk&gt;
+    <span class="comment">
+この~textの `color^p は `red^v にならない
+— 文書~style内の `textspan^v は、回送されない場合には，内縁~custom要素の内側にある~partには合致し得ないので。
+◎
+This text will not be red because textspan in the document style cannot match against the part inside the inner custom element if it is not forwarded.
+</span>
+  &lt;/span&gt;
+&lt;/template&gt;
+
+&lt;c-e&gt;&lt;/c-e&gt;
+&lt;script&gt;
+  /* <span class="comment">
+各 `template^e を，~custom要素 `c-e^e, `c-e-inner^e として追加する。
+◎
+Add template as custom elements c-e-inner, c-e-outer
+</span> */
+    ...
+&lt;/script&gt;
+</pre>
+
+</div>
+
+
+
+		</section>
+	</section>
+	<section id="part-theme">
+<h2 title="Selecting a Shadow Element: the ::part() pseudo-element">3. ~shadow要素の選択-法： `part()^pe 疑似要素</h2>
+
+<p>
+`part()@pe
+疑似要素は、
+`part$a 属性を介して公開された要素を選択することを，作者に許容する。
+その構文は：
+◎
+The ::part() pseudo-element allows you to select elements that have been exposed via a part attribute. The syntax is:
+</p>
+
+<pre class="prod">
+::part() = ::part( `ident$t+ )
+</pre>
+
+<p>
+`part()$pe 疑似要素は、［
+その`出自の要素$ %~host は`~shadow~host$である
+］場合に限り，次を満たす %要素 に合致する（他の要素には合致しない）
+⇒
+%要素, および［
+%~host が~hostしている`~shadow根$の`~part要素~map$ %~map
+］は、指定されたどの `ident$t %ident に対しても，次を満たす
+⇒
+［
+%~map[ %ident ] ~NEQ ε
+］~AND［
+%要素 ~IN %~map[ %ident ]
+］
+◎
+The ::part() pseudo-element only matches anything when the originating element is a shadow host. If the originating element’s shadow root’s part element map contains all of the specified &lt;ident&gt;s, ::part() matches the element or elements keyed to that &lt;ident&gt;. Otherwise, it matches nothing.
+</p>
+
+<div class="example">
+
+<p>
+例えば、ある~custom~button（ `id="special-button"^a ）が，~style付け用に（ `part="label"^a を介して）公開される `label^l 要素を【その~buttonが~hostしている~shadow~tree内に】包含する場合、作者は，
+`#special-button::part(label)^css
+でそれを選択できる。
+◎
+For example, if you have a custom button that contains a "label" element that is exposed for styling (via part="label"), you can select it with #the-button::part(label).
+</p>
+</div>
+
+<div class="example">
+
+<p>
+~part名たちは、~classと同様に動作する：
+複数の要素が同じ~part名を持てる／
+単独の要素が複数個の~part名を持てる。
+◎
+Part names act similarly to classes: multiple elements can have the same part name, and a single element can have multiple part names.
+</p>
+
+<p>
+~tabstrip-controlを成す要素たちに
+`part="tab"^a
+を伴わせれば、そのすべては `::part(tab)^css により選択される。
+◎
+A tabstrip control might have multiple elements with part="tab", all of which are selected by ::part(tab).
+</p>
+
+<p>
+いっときに “active” になる~tabは一つだけならば、特別に
+`part="tab active"^a
+で指示した上で，
+`::part(tab active)^css
+により選択できる（順序は関わらないので，
+`::part(active tab)^css 
+でも選択できる）。
+◎
+If a single tab is active at a time, it can be specially indicated with part="tab active" and then selected by ::part(tab active) (or ::part(active tab), as order doesn’t matter).
+</p>
+
+</div>
+
+<p>
+`part()$pe 疑似要素は、その後に追加的な疑似類もとれる
+— `x-button::part(label):hover^css など —
+が、局所的な要素~情報ではなく~tree情報に基づいて合致するような［
+`構造上の疑似類$その他の疑似類
+］には，決して合致しない。
+◎
+The ::part() pseudo-element can take additional pseudo-classes after it, such as x-button::part(label):hover, but never matches the structural pseudo-classes or any other pseudo-classes that match based on tree information rather than local element information.
+</p>
+
+<p>
+`part()$pe 疑似要素は、その後に追加的な疑似要素もとれる
+— `x-button::part(label)::before^css など —
+が、追加的な `part()^pe には，決して合致しない。
+◎
+The ::part() pseudo-element can also take additional pseudo-elements after it, such as x-button::part(label)::before, but never match additional ::part()s.
+</p>
+
+<div class="example">
+
+<p>
+例えば
+`x-panel::part(confirm-button)::part(label)^css
+に合致するものは無い。
+合致すると，構造上の情報を意図される以上に公開することになるので。
+◎
+For example, x-panel::part(confirm-button)::part(label) never matches anything. This is because doing so would expose more structural information than is intended.
+</p>
+
+<p>
+`x-panel^e の内部的な “confirm” ~buttonが
+`part="label =&gt; confirm-label"^a
+の様な何かを利用して，~buttonの内部~partたちを `x-panel^e の自前の`~part要素~map$へ回送していた場合、
+`x-panel::part(confirm-label)^css の様な選択子は、他のどの~labelも無視して，ただ 1 つの~buttonの~labelを選択することになる。
+◎
+If the &lt;x-panel&gt;’s internal confirm button had used something like part="label =&gt; confirm-label" to forward the button’s internal parts up into the panel’s own part element map, then a selector like x-panel::part(confirm-label) would select just the one button’s label, ignoring any other labels.
+</p>
+
+</div>
+
+	</section>
+	<section id="idl">
+<h2 title="Extensions to the Element Interface">4. `Element^I ~interfaceに対する拡張</h2>
+
+<pre class="idl">
+partial interface `Element$I {
+  [`SameObject$, `PutForwards$=`value$m] readonly attribute `DOMTokenList$I `part$m;
+};
+</pre>
+
+<dl class="idl-def">
+	<dt>`part$m</dt>
+	<dd>
+取得子は、次のようにされた `DOMTokenList$I ~objを返すモノトスル
+⇒＃
+`要素$tL ~SET 此れ,
+`属性の局所~名$tL ~SET `part^l
+◎
+The part attribute’s getter must return a DOMTokenList object whose associated element is the context object and whose associated attribute’s local name is part.＼
+</dd>
+	<dd>
+この特定0の `DOMTokenList^I ~objを成す~token集合は、要素の `parts^en とも称される。
+◎
+The token set of this particular DOMTokenList object are also known as the element’s parts.
+</dd>
+</dl>
+
+<p class="issue">
+これを~DOM仕様における `superglobal^en 【すべての名前空間より上位の大域~属性】として定義する。
+（ `3424$issue ）
+◎
+Define this as a superglobal in the DOM spec. &lt;https://github.com/w3c/csswg-drafts/issues/3424&gt;
+</p>
+
+	</section>
+	<section id="parsing">
+<h2 title="Microsyntaxes for parsing">5. 構文解析~用の小構文</h2>
+
+		<section id="parsing-mapping">
+<h3 title="Rules for parsing part mappings">5.1. ~part対応付けを構文解析する規則</h3>
+
+<p>
+`妥当な~part対応付け@
+は、文字~並び［
+0 個以上の~space【文字 `0020^U 】,
+1 個の文字 `003A^U `COLON^smb,
+0 個以上の~space
+］で区切られた，~tokenの`~pair$である。
+各~tokenは、文字［
+`003A^U `COLON^smb ／ `002C^U `COMMA^smb
+］を包含してはナラナイ。
+【~tokenに対するそれ以上の制約は、特に言及されてはいない。】
+◎
+A valid part mapping is a pair of tokens separated by a U+003A COLON character and any number of space characters before or after the U+003A COLON The tokens must not contain U+003A COLON or U+002C COMMA characters.
+</p>
+
+<p>
+~part対応付けとして構文解析する規則は、所与の
+( 文字列 %入力 )
+に対し，次に従う：
+◎
+The rules for parsing a part mapping are as follows:
+• Let input be the string being parsed.
+</p>
+
+<ol>
+	<li>
+%位置 ~LET %入力 の先頭の文字を指している`位置~変数$
+◎
+Let position be a pointer into input, initially pointing at the start of the string.
+</li>
+	<li>
+%入力 内の %位置 から文字 { ~space, `003A^U `COLON^smb } からなる`符号位置~並びを収集する$
+◎
+Collect a sequence of code points that are space characters or U+003A COLON characters. This skips past any leading delimiters.
+</li>
+	<li>
+%最初の~token ~LET %入力 内の %位置 から
+{ ~space, `003A^U `COLON^smb }
+以外の`符号位置~並びを収集する$
+◎
+Collect a sequence of code points that are not space characters or U+003A COLON characters, and let first token be the result.
+</li>
+	<li>
+~IF［
+%最初の~token ~EQ 空~文字列
+］
+⇒
+~RET `~error^i
+◎
+If first token is empty then return error.
+</li>
+	<li>
+%入力 内の %位置 から~space文字からなる`符号位置~並びを収集する$
+◎
+Collect a sequence of code points that are space characters.
+</li>
+	<li>
+~IF［
+%位置↗ ~EQ ε
+］
+⇒
+~RET `~pair$( %最初の~token / %最初の~token )
+◎
+If the end of the input has been reached, return the pair first token/first token
+</li>
+	<li>
+~IF［
+%位置↗ ~NEQ `003A^U `COLON^smb
+］
+⇒
+~RET `~error^i
+◎
+If character at position is not a U+003A COLON character, return error.
+</li>
+	<li>
+%位置 ~INCBY 1
+◎
+Consume the U+003A COLON character.
+</li>
+	<li>
+%入力 内の %位置 から~spaceからなる`符号位置~並びを収集する$
+◎
+Collect a sequence of code points that are space characters.
+</li>
+	<li>
+%次の~token ~LET %入力 内の %位置 から
+{ ~space, `003A^U `COLON^smb }
+以外の`符号位置~並びを収集する$
+◎
+Collect a sequence of code points that are not space characters or U+003A COLON characters. and let second token be the result.
+</li>
+	<li>
+~IF［
+%次の~token ~EQ 空~文字列
+］
+⇒
+~RET `~error^i
+◎
+If second token is empty then return error.
+</li>
+	<li>
+%入力 内の %位置 から~space文字からなる`符号位置~並びを収集する$
+◎
+Collect a sequence of code points that are space characters.
+</li>
+	<li>
+~IF［
+%位置↗ ~NEQ ε
+］
+⇒
+~RET `~error^i
+◎
+If position is not past the end of input then return error.
+</li>
+	<li>
+~RET 
+`~pair$( %最初の~token, %次の~token )
+◎
+Return the pair first token/second token.
+</li>
+</ol>
+
+		</section>
+		<section id="parsing-mapping-list">
+<h3 title="Rules for parsing a list of part mappings">5.2. ~part対応付けが成す~listを構文解析する規則</h3>
+
+<p>
+`妥当な~part対応付け~list@
+は、文字~並び［
+0 個以上の~space,
+1 個の文字 `002C^U `COMMA^smb,
+0 個以上の~space
+］で区切られた，何個かの`妥当な~part対応付け$からなる。
+◎
+A valid list of part mappings is a number of valid part mappings separated by a U+002C COMMA character and any number of space characters before or after the U+002C COMMA
+</p>
+
+<p>
+~part対応付け~listとして構文解析する規則は、所与の
+( 文字列 %入力 )
+に対し，次に従う：
+◎
+The rules for parsing a list of part mappings are as follow:
+• Let input be the string being parsed.
+</p>
+
+<ol>
+	<li>
+%対応付け~list ~LET 空~list
+◎
+↓Split the string input on commas. Let unparsed mappings be the resulting list of strings.
+◎
+Let mappings be an initially empty list of pairs of tokens. This list will be the result of this algorithm.
+</li>
+	<li>
+<p>
+`~commaで分割する$( %入力 ) の結果を成す
+~EACH( %対応付け~文字列 )
+に対し：
+◎
+For each string unparsed mapping in unparsed mappings, run the following substeps:
+</p>
+		<ol>
+			<li>
+~IF［
+%対応付け~文字列 は 0 個~以上の~spaceのみからなる（空~文字列も含め）
+］
+⇒
+~CONTINUE
+◎
+If unparsed mapping is empty or contains only space characters, continue to the next iteration of the loop.
+</li>
+			<li>
+%対応付け ~LET ~part対応付けを構文解析する規則を利用して %対応付け~文字列 を構文解析した結果
+◎
+Let mapping be the result of parsing unparsed mapping using the rules for parsing part mappings.
+</li>
+			<li>
+~IF［
+%対応付け ~EQ `~error^i
+］
+⇒
+~CONTINUE
+◎
+If mapping is an error then continue to the next iteration of the loop. This allows clients to skip over new syntax that is not understood.
+</li>
+			<li>
+%対応付け~list に %対応付け を付加する
+◎
+Append mapping to mappings.
+</li>
+		</ol>
+	</li>
+</ol>
+
+		</section>
+	</section>
+</main></div>
+

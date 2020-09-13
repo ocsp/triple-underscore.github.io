@@ -1,0 +1,2498 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Color Module Level 5 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+
+<style>
+.swatch{
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	border: thin solid silver;
+}
+
+.contrast-ratio {
+	font-family: sans-serif0, sans-serif;
+}
+
+</style>
+
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		collectParts: Util.collectParts,
+		generate: expand,
+	};
+
+	Util.switchWordsInit(source_data);
+
+	return;
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'f':
+	text = `${key}()`;
+	break;
+case 'vc': // color value with swatch
+	return `<span class="swatch" style="background: ${key};"></span> <code class="value">${key}</code>`;
+	break;
+case 'rgb': // rgb swatch
+	return `<span class="swatch" style="background: rgb(${key});"></span>`;
+	break;
+case 'issue':
+	href = `~CSSissue/${key}`;
+	text = `課題 #${key}`;
+	break;
+case 'dgm':
+	return `<a id="_dgm-${key}">＊</a>`;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+
+return text;
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Color Module Level 5
+spec_date:2020-09-07
+trans_update:2020-09-08
+source_checked:200205
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-color-5/
+	abbr_url:CSSCOLOR5
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:paint,css
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2020-02-03
+
+●●class_map
+p:property
+css:css
+u:unit
+f:func
+t:type
+v:value
+cr:contrast-ratio
+
+●●tag_map
+p:code
+t:var
+css:code
+c:code
+f:code
+v:code
+u:code
+em:em
+i:i
+cite:cite
+cr:span
+
+●●original_id_map
+
+●●mdn_urls
+
+	funcdef-color-mix:CSS/color_value#color-mix()
+	funcdef-color-adjust:CSS/color_value#color-adjust()
+	funcdef-color-contrast:CSS/color_value#color-contrast()
+funcdef-hsl:CSS/color_value#hsl()
+	funcdef-hwb:CSS/color_value#hwb()
+	funcdef-lab:CSS/color_value#lab()
+	funcdef-lch:CSS/color_value#lch()
+funcdef-rgb:CSS/color_value#rgb()
+
+●●link_map
+
+t.alpha-value:#typedef-alpha-value
+t.hue:#typedef-hue
+
+t.colorspace:#typedef-colorspace
+t.mix-component:#typedef-mix-component
+t.percentage:~CSSVAL#percentage-value
+t.color-adjuster:#typedef-color-adjuster
+t.srgb-adjuster:#typedef-srgb-adjuster
+t.hsl-adjuster:#typedef-hsl-adjuster
+t.hwb-adjuster:#typedef-hwb-adjuster
+t.xyz-adjuster:#typedef-xyz-adjuster
+t.lab-adjuster:#typedef-lab-adjuster
+t.lch-adjuster:#typedef-lch-adjuster
+t.hue-adjuster:#typedef-hue-adjuster
+
+f.color-mix:#funcdef-color-mix
+f.color-adjust:#funcdef-color-adjust
+f.color-contrast:#funcdef-color-contrast
+
+f.hsl:#funcdef-hsl
+f.hwb:#funcdef-hwb
+f.lab:#funcdef-lab
+f.lch:#funcdef-lch
+f.rgb:#funcdef-rgb
+
+f.color:~CSSCOLOR#funcdef-color
+f.lch:~CSSCOLOR#funcdef-lch
+
+t.number:~CSSVAL#number-value
+t.percentage:~CSSVAL#percentage-value
+t.angle:~CSSVAL#angle-value
+t.color:~CSSCOLOR#typedef-color
+
+
+	●用語（CSS
+色空間:~CSSCOLOR#colorspace
+~Lab色空間:~CSSCOLOR#lab-colors
+~LCH色空間:~CSSCOLOR#lab-colors
+	#specifying-lab-lch
+	~HSL:~CSSCOLOR#the-hsl-notation
+	~sRGB:~CSSCOLOR#numeric-srgb
+	~HWB:~CSSCOLOR#the-hwb-notation
+
+	●用語（外部
+相対~輝度:~TR/WCAG21/#dfn-relative-luminance
+~contrast比:~TR/WCAG21/#dfn-contrast-ratio
+§ ~contrast（最小）:~TR/WCAG21/#contrast-minimum
+
+●●words_table1
+
+●●words_table
+
+	●色
+Lab:
+HSL:
+	~HSL:``hsl()``
+sRGB:
+	~sRGB:srgb
+	~sRGB:``srgb``
+LCH:
+	~LCH:``lch()``／:lch()／:lch
+HWB:
+RGB:
+CIE:
+CIELab:
+P3:
+XYZ:
+D50:
+alpha:
+red:
+green:
+blue:
+gray:
+deep-green:deep green
+sky-blue:sky blue
+	青みがかった:slightly-blueish
+	^v:blue
+	^v:yellow
+	^v:sienna
+	^v:wheat
+	^v:tan
+	^v:peru
+	^v:red
+	^v:purple
+	a:
+	b:
+	L:
+	C:
+	H:
+	X:
+	Y:
+	Z:
+	X／Y／Z:x, y and z
+
+
+色:color::~
+色-:color-::~
+有色:colored::~
+色域:gamut::~
+環:color:~
+色度:chroma::~
+色相:hue::~
+色空間:colorspace::~
+補色:complementary color::~
+透明度:transparency::~
+黒度:blackness::~
+白度:whiteness::~
+白色点:whitepoint::~
+明るい:lightな::~
+	より明るい:lighter
+暗い:darkな::~
+	darker
+明化-:lighten:明るく
+暗化-:darken:暗く
+明度:lightness::~
+	明度（ L ）:Lightness
+輝度:luminance::~
+知覚的:perceptual:~
+彩度:saturation::~
+	同じ彩度:as saturated as
+彩度な:saturatedな::~
+	高~彩度な:saturated
+	低~彩度な:desaturated
+	無~彩度な〜に:fully desaturating
+	彩度が~~復活する:re-saturating again
+無彩色:achromatic::~
+contrast::::コントラスト
+	~contrastが高い:contrasting
+背景:background:~
+階調:scale:~
+光:light::~
+強度:intensity::~
+	光~強度に対し線形な:linear-light-intensity
+	光に線形:linear-light
+
+	°:degree
+
+	●補間
+結合-:combine::~
+gradient:
+組成:compositing:~
+filter::::フィルタ
+数量的:numerical:~
+NaN:
+
+	●算術／幾何
+起点:origin::~
+混合:mixture::~
+混合-:mix::~
+	混合した:mixed
+	混合-法:mixing
+	様々な比による混合:mixtures
+	混合されない:unmixed
+	`color-mix$f:mixing
+	`color-mix$f:mix
+比:ratio:~
+分布-:distribute::~
+	~~分布:spaced
+実数:number:~
+改変子:modifier::~
+調整子:adjuster:~
+一様:uniform:~
+量:amount:~
+変形-:transform::~
+測定-:measure:~
+加算-:add:~
+丸める:roundする:~
+平面:plain:~
+増える:increaseする:~
+減る:decreaseする:~
+差:difference:~
+ズラす:shiftする:ずらす
+線形:linear:~
+拡縮-:scale:~
+総和:sum:~
+中間:intermediate:~
+端点:endpoint:~
+
+	円弧:circle:~
+	弧:arc
+	長い方の弧:long arc
+	短い方の弧:shorter arc
+	周る:around
+	直線:stright line／:line
+	〜内に~~収まる:no 〜 clipping
+	最も高い:highest
+	均等:even
+	均等に:evenly
+	近い:close
+	計算に先立って:early
+	低-:lower
+	L 軸:central neutral axis
+	曲線:curve
+	点線:dashed curve／dashed line
+	より大きくない:not greater than
+	〜上に乗る:lie along
+	よりも:compared to
+	より〜近くを通る:pass close to
+	より狭い:smaller
+	同じ~~係数で:proportionally
+
+	●仕様
+支援-:assist:~
+利用度:usage:~
+前処理器:preprocessor:~
+解決策:solution:~
+省略可能:optional:~
+元は:originalには:~
+大規模適用:scaling::~::スケーリング
+間違った:wrongな:~
+稀:rare:~
+疑似-:pseudo-:~
+	疑似-~JS:pseudo-Javascript
+修復-:fix up:~
+修復:fixup:~
+正した:correctした:~
+
+	単に:merely
+	他にも:besides
+	関わらず:regardless
+	対応する値〜限り:(provided the end result ...) and correspond to:
+	以下では:henceforth
+	称される:referred
+	該当しない:not true
+	現在では:currently
+	可能でない:unable
+	働かない:unable to work
+	選ばれ:chosen
+	増えて:increasing〜increased
+	〜とする:suppose
+	ためにも:even more
+	書く:write
+	助ける:helpする
+	かなり:well
+	一本化する:produce a single
+	そうする必要はない:not necessarily
+	`WCAG21$r:WCAG 2.1
+	主に:mainly
+	欲され:desirable
+	綴り:spelling
+	小さな:minor
+	簡単に:pretty easily
+	別法として:alternatively
+	最大~化:maximising
+	選ぶ:choice
+
+	●未分類
+	^en:Dark-Mode
+Sass:
+PostCSS:
+component::::コンポーネント
+picker:
+	優先される:win
+中立:neutral:~
+階級区分図:chloropleth map:~
+
+	欠落して:missing
+	一定:constant
+	~~情報は失われない:lossless
+	-:second
+	-:expand
+	`number^t:plain number
+	〜が~~保たれるよう:left unchanged
+	そのまま:unchanged
+	-:and correspond to:
+	外れる:outside
+	とても:very
+	詰め込まれ:bunched up
+	保つ:keep
+	保ちながら:keeping
+	最終的:eventual
+	一文字の:single-letter
+	今回:this time
+	最初に与える色:firstly, a single color
+	~~後続の 1 個以上:two or more
+	~~方向から見た俯瞰図:top-down view, looking along
+	:The colors in the list are tested sequentially, …
+	-:six significant figures
+	全部ではなく:Instead 〜 equally
+	個別に:individual
+	どこでも:everywhere
+	~~周に沿う:follow along
+	改変-:modification
+
+
+●●ref_normative
+
+[CSS-COLOR-3]
+    Tantek Çelik; Chris Lilley; David Baron. CSS Color Module Level 3. 19 June 2018. REC. URL: https://www.w3.org/TR/css-color-3/ 
+[CSS-COLOR-4]
+    Tab Atkins Jr.; Chris Lilley. CSS Color Module Level 4. 5 November 2019. WD. URL: https://www.w3.org/TR/css-color-4/ 
+[CSS-COLOR-ADJUST-1]
+    Elika Etemad; et al. CSS Color Adjustment Module Level 1. 2 April 2020. WD. URL: https://www.w3.org/TR/css-color-adjust-1/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[SVG2]
+    Amelia Bellamy-Royds; et al. Scalable Vector Graphics (SVG) 2. 4 October 2018. CR. URL: https://www.w3.org/TR/SVG2/ 
+[WCAG21]
+    Andrew Kirkpatrick; et al. Web Content Accessibility Guidelines (WCAG) 2.1. 5 June 2018. REC. URL: https://www.w3.org/TR/WCAG21/ 
+
+●●
+ref_informative
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Color Module Level 5</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/css-color-5/
+以前のバージョン
+	https://www.w3.org/TR/2020/WD-css-color-5-20200303/
+
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-color-5">GitHub Issues</a>
+
+編集
+	<a href="mailto:chris@w3.org">Chris Lilley</a> (W3C)
+	<a href="https://una.im">Una Kravets</a> (Google)
+	<a href="http://lea.verou.me/about">Lea Verou</a> (Invited Expert)
+	<a href="https://nerdy.dev">Adam Argyle</a> (Google)
+
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-color-5/Overview.bs">GitHub Editor</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-color-5
+
+差分仕様
+	yes
+</script>
+
+</head>
+<body>
+
+<div id="_persisted_parts" hidden>
+
+<img
+	id="_dgm-LC-picker-scale"
+	src="css-color/LC-picker-scale.png"
+	style="height: 20em"
+	alt="LC color picker"
+>
+<img
+	id="_dgm-LC-picker-map2"
+	src="css-color/LC-picker-map2.png"
+	style="height: 20em"
+	alt="合衆国の階級区分図／chloropleth map of the US"
+>
+
+<img
+	id="_dgm-CH-mixing"
+	src="css-color/CH-mixing.svg"
+	style="height: 25em"
+	alt="代替テキストは画像（ SVG ）内"
+>
+
+<img
+	id="_dgm-CH-mixing2"
+	src="css-color/CH-mixing2.svg"
+	style="height: 30em"
+	alt="代替テキストは画像（ SVG ）内"
+>
+
+<img
+	id="_dgm-CH-mixing2b"
+	src="css-color/CH-mixing2b.svg"
+	style="height: 30em"
+	alt="代替テキストは画像（ SVG ）内"
+>
+
+<img
+	id="_dgm-CH-mixing2c"
+	src="css-color/CH-mixing2c.svg"
+	style="height: 30em"
+	alt="代替テキストは画像（ SVG ）内"
+>
+
+<img
+	id="_dgm-CH-mixing3"
+	src="css-color/CH-mixing3.svg"
+	style="height: 30em"
+	alt="代替テキストは画像（ SVG ）内"
+>
+
+</div>
+
+<header>
+	<hgroup>
+<h1>CSS Color Module Level 5</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この~moduleは、 `css-color-4$r を拡張して，色~改変~関数を追加する。
+◎
+This module extends CSS Color [css-color-4] to add color modification functions.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公な複製です…
+【以下，この節の他の内容は <a href="css-common-ja.html#status">CSS 日本語訳 共通ページ</a>／冒頭の仕様メタデータに委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="introduction">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+［
+~web開発者／設計~tool／設計~system開発者
+］は、［
+自身の~componentにおける色~関係の設計
+］の大規模適用を支援するために，色~関数を利用することが多い。
+~UIにおける `暗い~mode^i （ `Dark-Mode^en ）能力の様な，複数の［
+~platform／利用者~選好
+］を~supportする設計~systemの利用度が増えてきている下では、これは［
+色を手動で設定する必要なく，単独の~sourceから~schemeを計算するため
+］ためにも有用になる。
+◎
+Web developers, design tools and design system developers often use color functions to assist in scaling the design of their component color relations. With the increasing usage of design systems that support multiple platforms and multiple user preferences, like the increased capability of Dark Mode in UI, this becomes even more useful to not need to manually set color, and to instead have a single source from which schemes are calculated.
+</p>
+
+<figure>
+`LC-picker-scale^dgm
+`LC-picker-map2^dgm
+<figcaption>
+最初の図は、`~LCH色空間$で演算している色~picker。
+ここでは、2 つの色を利用して，
+C 軸（色度）, L 軸（明度）が成す平面~上で一連の階調を成す色を定義している（ H = 色相は一定）。
+その次の図では、その色~階調を階級区分図に利用している。
+◎
+Above, a color picker operating in LCH space. Here, a pair of colors are being used to define a color scale on the Chroma-Lightness plane (constant Hue). Below, the color scale in use on a chloropleth map.
+</figcaption></figure>
+
+<p>
+現在では、［
+~Sass／~HSL値に対する `calc^f ／~PostCSS
+］がこれを行うために利用されている。
+しかしながら、前処理器は，動的に調整される色には働かないので、現在の解決策はどれも，~sRGB色域に制約され, ~HSLの知覚的な制限にも制約されている（色は色~環~内に詰め込まれているため、視覚的な明度が異なる 2 個の色の~HSL明度は， `yellow^v と `blue^v の様に同じになり得る）。
+◎
+Currently Sass, calc() on HSL values, or PostCSS is used to do this. However, Preprocessors are unable to work on dynamically adjusted colors, all current solutions are restricted to the sRGB gamut and to the perceptual limitations of HSL (colors are bunched up in the color wheel, and two colors with visually different lightness, like yellow and blue, can have the same HSL lightness).
+</p>
+
+<p>
+この~moduleは、次を追加する
+⇒＃
+`color-mix$f 関数,
+`color-contrast$f 関数,
+<a href="#colormodify">色を改変する仕方</a>
+◎
+This module adds three functions: color-mix, color-contrast, and a way to modify colors.
+</p>
+
+<p>
+混合するときには、知覚的に一様な `lch^v 色空間【`~LCH色空間$】が既定で利用される
+— それは、色域の制約が無く，色は均等に分布するので。
+しかしながら，欲されるなら、`hsl^v や `srgb^v も含め，他の色空間も指定できる。
+◎
+The perceptually uniform ``lch()`` colorspace is used for mixing by default, as this has no gamut restrictions and colors are evenly distributed. However, other colorspaces can be specified, including ``hsl()`` or ``srgb`` if desired.
+</p>
+
+	</section>
+	<section id="colorspaces-section">
+<h2 title="Colorspaces">2. 色空間</h2>
+
+<p>
+色を混合した結果, あるいは結合した結果は、利用されている`色空間$に依存して異なる。
+一部の事例では、 2 つの有色な光を物理的に混合した結果が欲される（その事例では、光~強度に対し線形な，~CIE~XYZ色空間が適切になる）。
+他の事例では、色は，知覚的に均等な~~分布が欲される（その事例では、知覚的に一様になるよう設計された，~CIE~Lab色空間が適切になる）。
+別法として、結果が色相~環の~~周に沿うように，色度を最大~化する【~~落とさない】混合が求まれることもある（これ用には、~CIE~LCHが，きちんと働く）。
+最後に，旧来の~Web内容との互換性が最も重要な考慮になることもある（そこでは、光に線形でも 知覚的に一様でもない，~sRGB色空間を選ぶことになる）。
+◎
+Mixing or otherwise combining colors has different results depending on the colorspace used. In some cases, the result of physically mixing two colored lights is desired (in that case, the CIE XYZ colorspace is appropriate, because it is linear in light intensity). In other cases, colors which are evenly spaced perceptually are desired (in which case, the CIE Lab colorspace is designed to be perceptually uniform). Alternatively, maximising chroma so that color mixtures follow along the hue wheel is wanted (CIE LCH works well for this). Lastly, compatibility with legacy Web content may be the most important consideration. (the sRGB colorspace, which is neither linear-light nor perceptually uniform, is the choice here).
+</p>
+
+<pre class="prod">
+`colorspace@t
+    = `srgb^v
+    | `hsl^v
+    | `hwb^v
+    | `xyz^v
+    | `lab^v
+    | `lch^v
+</pre>
+
+<p>
+`色空間$が指定されていない場合、
+`lch^v 色空間~内で混合される。
+`xyz^v 色空間は、~D50白色点を伴う~CIE~XYZであり，光~強度に対し線形な空間~内での算出を許容する。
+◎
+When no colorspace is specified, the mixing is done in the lch colorspace. The xyz colorspace is CIE XYZ, with a D50 whitepoint, and allows computation to be done in a linear-light-intensity space.
+</p>
+
+	</section>
+	<section id="color-mix">
+<h2 title="Mixing colors: the color-mix function">3. 色の混合-法： `color-mix$f 関数</h2>
+
+<p>
+この関数は、
+2 個の `color$t 指定をとり，所与の`色空間$（ `colorspace$t ）内で指定した量により混合した結果を返す。
+◎
+This function takes two &lt;color&gt; specifications and returns the result of mixing them, in a given colorspace, by a specified amount.
+</p>
+
+<p class="trans-note">【
+`colorspace$t がとり得る~keywordは、~level 4 による `color$f 関数~用の
+<a href="~CSSCOLOR#predefined">定義済み色空間</a>
+を指定する~keywordとは別個な集合を成すことに注意。
+】</p>
+
+<p>
+複数個の `color-adjuster$t （色~調整子）を指定できる。
+◎
+Multiple color-adjusters can be specified.
+</p>
+
+<pre class="prod">
+`color-mix@f
+    = color-mix(`colorspace$t?, `mix-component$t#{2})
+</pre>
+
+<pre class="prod">
+`mix-component@t
+    = `color$t [ `percentage$t | `color-adjuster$t+ ]?
+</pre>
+
+<pre class="prod">
+`color-adjuster@t
+    = [ [ `srgb-adjuster$t
+        | `hsl-adjuster$t
+        | `hwb-adjuster$t
+        | `xyz-adjuster$t
+        | `lab-adjuster$t
+        | `lch-adjuster$t
+      ] | `alpha^v ] `percentage$t?
+
+`srgb-adjuster@t = `red^v || `green^v || `blue^v
+`hsl-adjuster@t = `hue-adjuster$t || `saturation^v || `lightness^v
+`hwb-adjuster@t = `hue-adjuster$t || `whiteness^v || `blackness^v
+`xyz-adjuster@t = `x^v || `y^v || `z^v
+`lab-adjuster@t = `lightness^v || `a^v || `b^v
+`lch-adjuster@t = `lightness^v || `chroma^v || `hue-adjuster$t
+`hue-adjuster@t = `hue^v [`shorter^v | `longer^v | `increasing^v | `decreasing^v | `specified^v ]?
+</pre>
+
+<p>
+引数【 `mix-component$t 】は、次に従って正規化される：
+◎
+Arguments are normalized as follows:
+</p>
+
+<ol>
+	<li>
+以下における可用な色~調整子とは、どの色空間にも可用な `alpha^v に加えて，所与の`色空間$用に定義される色~調整子たち（例：色空間が `srgb^v ならば、 `srgb-adjuster$t を成し得る各~keyword `red^v, `green^v, `blue^v に対応するもの）を指す。
+この~algoの目的は、可用な色~調整子~すべてに対し，それぞれの百分率を決定することである。
+【この段は、以下を集約する／明確化するための，この訳による補完。】
+</li>
+	<li>
+<p>
+引数には、可用な色~調整子は与えられていない場合：
+</p>
+		<ol>
+			<li>
+百分率も省略されている場合（引数は `color^t のみからなる）、百分率として `50%^v が与えられたと見做す。
+</li>
+			<li>
+この引数には、可用な色~調整子は すべて在り，そのどれもが所与の百分率を伴うとする。
+</li>
+		</ol>
+◎
+When a percentage is specified without any color-adjusters, it is expanded to all adjusters available for the given colorspace plus alpha.
+◎
+If a percentage is omitted and there are no adjusters present on any color arguments, it defaults to 50% (an equal mix of the two colors).
+</li>
+	<li>
+<p>
+~EACH( 可用な色~調整子 %調整子 )
+に対し：
+</p>
+		<ol>
+			<li>
+引数には %調整子 は無い場合、その百分率は 0% と見做す。
+◎
+Adjusters that are not present on a color default to 0% (i.e. the corresponding components are taken from the other color).
+</li>
+			<li>
+<p>
+引数には %調整子 は在るが，百分率は伴わない場合：
+</p>
+				<ul>
+					<li>
+片方の引数に限り，百分率を伴わない場合、その百分率は，
+100% から［
+もう片方の引数の %調整子 の百分率
+］を減算した結果と見做す。
+</li>
+					<li>
+両~引数とも，百分率を伴わない場合、それらの百分率は…
+【未策定（下の課題）】
+</li>
+				</ul>
+◎
+Adjusters that are only present on one of the colors default to 100% - p on the second color, where p is the percentage of the corresponding adjuster in the other color.
+</li>
+			<li>
+両~引数の %調整子 の百分率の総和は 100% でない場合、総和が正確に 100% になるよう，双方の百分率を同じ~~係数で拡縮する。
+【総和が 0% になる場合、そのように拡縮できない（下の課題）。】
+◎
+If the sum of corresponding adjusters across all colors is not 100%, percentages are scaled proportionally so that the sum is exactly 100%.
+</li>
+		</ol>
+	</li>
+</ol>
+
+<p class="issue">
+欠落している調整子は、どこでも 0% を既定にするか？
+2 個目の色に限りそうするか？
+前者の場合、調整子の総和は，簡単に 0% になり得ることになる。
+◎
+Do missing adjusters default to 0% everywhere, or only in the second color? If the former, we can end up with adjusters that sum to 0% pretty easily.
+</p>
+
+<p>
+調整子の意味は、`色空間$により定義される。
+例えば，色空間が `hsl^v の場合の色相は、~HSL色相を意味し，~LCH色相とは同じでない。
+`lch^v の場合の明度は、~Lab明度と同じ~LCH明度を意味するが，~HSL明度とは異なる。
+◎
+The meaning of the adjusters is defined by colorspace. For example, if the colorspace is hsl, hue means the HSL hue, which is not the same as the LCH hue; if the colorspace is lch, lightness means the LCH Lightness, which is the same as Lab lightness, but different to the HSL Lightness.
+</p>
+
+<p>
+可用になる色~調整子は、所与の色空間~用に定義されるものに限られる。
+【例えば色空間 `srgb^v 用の調整子は `srgb-adjuster$t に限られる，等々。】
+例えば，色空間が `hwb^v でない限り、~HWB `whiteness^v 調整子を利用するのはアリでない。
+`alpha^v 調整子は、どの色空間でも可用である。
+◎
+Only the color-adjusters defined for a given colorspace are available. For example, it is not possible to use the HWB whiteness adjuster unless the colorspace is hwb. The alpha adjuster is available on any colorspace.
+</p>
+
+<p>
+指定した色空間の色域が，調整される色が属するそれより狭い場合、色域の対応付けが生じることになる。
+◎
+If the specified colorspace has a smaller gamut than the one in which the color to be adjusted is specified, gamut mapping will occur.
+</p>
+
+<p class="note">注記：
+すべての色~調整子が等しく有用になるわけではない。
+~LCH内の調整は最も有用であり、それゆえ既定にされている。
+`a^v ／ `b^v 軸に対する調整が必要になることは稀にしかない。
+~sRGBに関係する空間（ `srgb^v 自身, `hsl^v, `hwb^v ）における調整は、主に，~CSS前処理器~内で現在~行われている類の調整との後方-互換性を得るために供されている。
+［
+X／Y／Z
+］~channelを個別に調整した場合、色相を有意にズラす結果を生産することになる。
+しかしながら，これらの~channelすべてを一緒に調整するのは有用であり、色を［
+明化-／暗化-
+］することになる。
+◎
+Note: not all color-adjusters are equally useful. Adjustments in LCH are the most useful, which is why it is the default. Adjustments on the a and b axes are rarely needed. Adjustments in the srgb-related spaces (srgb itself, hsl, hwb) are provided mainly for backward compatibility with the sorts of adjustments currently done in CSS preprocessors. Adjusting the individual x, y and z channels will produce significant hue shifts; however, adjusting all three channels together is useful and will lighten or darken the color.
+</p>
+
+<p>
+色相~調整子（ `hue-adjuster$t ）は、
+<a href="#hue-interpolation">§ 色相の補間</a>を指定する省略可能な~keywordをとる。
+どの~keywordも指定されていない場合、
+`shorter^v が指定されたかのようになる。
+◎
+The hue-adjuster takes optional keywords, to specify the § 6.2 Hue interpolation algorithm. If no keyword is specified, it is as if shorter were specified.
+</p>
+
+<div class="example">
+<p>
+この例は、
+`peru^vc 40%,
+`lightgoldenrod^vc 60% による混合を生産する。
+◎
+This example produces a mixture of 40% peru and 60% lightgoldenrod.
+</p>
+
+<pre class="lang-css">
+color-mix(peru 40%, lightgoldenrod);
+</pre>
+
+<p>
+混合するときは、 `lch$f 色空間にて行われる。
+中立な L 軸~~方向から見た俯瞰図は：
+◎
+The mixing is done in lch() colorspace. Here is a top-down view, looking along the neutral L axis:
+</p>
+
+<figure>`CH-mixing^dgm
+
+<figcaption>
+`peru^v と `lightgoldenrod^v の混合。
+`peru^v の色相は、正な `a^ 軸から測定される角度 63.677° になる一方、
+`lightgoldenrod^v の色相は 98.821° になる。
+`peru^v の色度（ L 軸からの距離）は 54.011 になる一方、
+`lightgoldenrod^v の色度は 31.415 になる。
+様々な比による混合は、図の曲線~上に乗る。
+40% 対 60% による混合も，そこに示される。
+◎
+Mixtures of peru and lightgoldenrod. Peru has a hue angle, measured from the positive a axis, of 63.677 degrees while lightgoldenrod has a hue angle of 98.821 degrees. Peru has a chroma, or distance from the central neutral axis, of 54.011 while lightgoldenrod has a chroma of 31.415. Mixtures lie along the curve. A 40%/60% mixture is shown.
+</figcaption></figure>
+
+<p>
+計算は、次に従う：
+◎
+The calculation is as follows:
+</p>
+<ul>
+	<li>
+`peru^vc =
+`lch(62.253% 54.011 63.677)^v
+◎
+peru is lch(62.253% 54.011 63.677)
+</li>
+	<li>
+`lightgoldenrod^vc =
+`lch(91.374% 31.415 98.821)^v
+◎
+lightgoldenrod is lch(91.374% 31.415 98.821)
+</li>
+	<li>
+混合した明度 =
+62.253 ~MUL 40 ~DIV 100 ~PLUS 91.374 ~MUL (100 ~MINUS 40) ~DIV 100 = 79.7256
+◎
+the mixed lightness is 62.253 * 40/100 + 91.374 * (100-40)/100 = 79.7256
+</li>
+	<li>
+混合した色度 =
+54.011 ~MUL 40 ~DIV 100 ~PLUS 31.415 ~MUL (100 ~MINUS 40) ~DIV 100 = 40.4534
+◎
+the mixed chroma is 54.011 * 40/100 + 31.415 * (100-40)/100 = 40.4534
+</li>
+	<li>
+混合した色相 =
+63.677 ~MUL 40 ~DIV 100 ~PLUS 98.821 ~MUL (100 ~MINUS 40) ~DIV 100 = 84.7634
+◎
+the mixed hue is 63.677 * 40/100 + 98.821 * (100-40)/100 = 84.7634
+</li>
+	<li>
+混合した結果は
+`87.41% 76.03% 47.64%^rgb
+`lch(79.7256% 40.4534 84.7634)^v
+◎
+the mixed result is lch(79.7256% 40.4534 84.7634)
+</li>
+</ul>
+</div>
+
+<div class="example">
+<p>
+この例は、（既定の）~LCH色空間~内で，
+`teal^v と `olive^v の混合を生産する
+— ~LCHの各~channelが `teal^v は値の 65%, `olive^v は値の 35% になるよう。
+◎
+This example produces the mixture of teal and olive, in lch colorspace (the default), with each lch channel being 65% of the value for teal and 35% of the value for olive.
+</p>
+
+<p class="note">注記：
+色相と色度に対する補間-法は、中間~色を端点~色と同じ彩度に保つ。
+◎
+Note: interpolating on hue and chroma keeps the intermediate colors as saturated as the endpoint colors.
+</p>
+
+<pre class="lang-css">
+color-mix(teal 65%, olive);
+</pre>
+
+<figure>`CH-mixing3^dgm
+<figcaption>
+`teal^v と `olive^v の混合。
+`teal^v の色相は、正な `a^ 軸から測定される角度 196.4524° になる一方、
+`olive^v の色相は 99.5746° になる。
+`teal^v の色度（ L 軸からの距離）は 31.6903 になる一方、
+`olive^v の色度は 56.8124 になる。
+様々な比による混合は、図の点線~上に乗る。
+65% 対 35% による混合も，そこに示される。
+◎
+Mixtures of teal and olive. Teal has a hue angle, measured from the positive a axis, of 196.4524 degrees while olive has a hue angle of 99.5746 degrees. Teal has a chroma, or distance from the central neutral axis, of 31.6903 while olive has a chroma of 56.8124. Mixtures lie along the dashed curve. A 65%/35% mixture is shown.
+</figcaption></figure>
+
+<p>
+計算は、次に従う：
+◎
+The calculation is as follows:
+</p>
+<ul>
+	<li>
+~sRGB `teal^vc （ `#008080^v ） =
+`lch(47.9855% 31.6903 196.4524)^v
+◎
+sRGB teal (#008080) is lch(47.9855% 31.6903 196.4524)
+</li>
+	<li>
+~sRGB `olive^vc （ `#808000^v ） =
+`lch(52.1496% 56.8124 99.5746)^v
+◎
+sRGB olive (#808000) is lch(52.1496% 56.8124 99.5746)
+</li>
+	<li>
+混合した明度 =
+47.9855 ~MUL 0.65 ~PLUS 52.1496 ~MUL 0.35 = 49.4429
+◎
+mixed lightness is 47.9855 * 0.65 + 52.1496 * 0.35 = 49.4429
+</li>
+	<li>
+混合した色度 =
+31.6903 ~MUL 0.65 ~PLUS 56.8124 ~MUL 0.35 = 40.4830
+◎
+mixed chroma is 31.6903 * 0.65 + 56.8124 * 0.35 = 40.4830
+</li>
+	<li>
+混合した色相 =
+196.4524 ~MUL 0.65 ~PLUS 99.5746 ~MUL 0.35 = 162.5452
+◎
+mixed hue is 196.4524 * 0.65 + 99.5746 * 0.35 = 162.5452
+</li>
+	<li>
+混合した結果は
+`lch(49.4429% 40.4830 162.5452)^v
+（青みがかった~green `rgb(7.7377% 52.5730% 37.3213%)^vc ）になる。
+◎
+mixed result is lch(49.4429% 40.4830 162.5452)
+◎
+which is a slightly-blueish green: rgb(7.7377% 52.5730% 37.3213%)
+</li>
+</ul>
+</div>
+
+<p>
+全部ではなく一定の~channelに限り混合するときには、 `color-adjuster$t を利用できる。
+結果における混合されない~channelは、`最初^emの色から複製される。
+◎
+Instead of mixing all channels equally, color-adjusters can be used to only mix certain channels. The unmixed channels in the result are copied across from the first color.
+</p>
+
+<div class="example">
+<p>
+この例は、（既定の）~LCH色空間~内で，~deep-greenと~sky-blueの混合を生産する
+— 明度が~greenの明度の 40% （したがって，~blueの明度の 60% ）になり、~greenの色度と色相が混合した結果にも そのまま利用されるよう。
+◎
+This example produces the mixture of a deep green and a sky blue, in lch() colorspace (the default), with the lightness being 40% of the lightness of the green (and thus, 60% of the lightness of the blue). The chroma and hue of the green are used unchanged in the mixed result.
+</p>
+
+<pre class="lang-css">
+color-mix(rgb(0% 42.35% 33.33%) lightness 40%, rgb(41.2% 69.88% 96.64%));
+</pre>
+
+<p>
+計算は、次に従う：
+◎
+The calculation is as follows:
+</p>
+<ul>
+	<li>
+~deep-green
+`rgb(0% 42.35% 33.33%)^vc =
+`lch(40.083% 32.808 171.175)^v
+◎
+rgb(0% 42.35% 33.33%) is lch(40.083% 32.808 171.175)
+</li>
+	<li>
+~sky-blue
+`rgb(41.2% 69.88% 96.64%)^vc =
+`lch(70% 42.5 258.2)^v
+◎
+rgb(41.2% 69.88% 96.64%) is lch(70% 42.5 258.2)
+</li>
+	<li>
+混合した明度 =
+40.083 ~MUL 0.4 ~PLUS 70 ~MUL (1 ~MINUS 0.4) = 58.0332
+◎
+mixed lightness is 40.083 * 0.4 + 70% * (1 - 0.4) = 58.0332
+</li>
+	<li>
+混合した結果 =
+`lch(58.0332 32.808 171.175)^v
+（ `rgb(26.25% 60.68% 50.72%)^vc, より明るい~green）になる。
+◎
+mixed result is lch(58.0332 32.808 171.175)
+◎
+which is a rgb(26.25% 60.68% 50.72%), a lighter green
+</li>
+</ul>
+</div>
+
+<div class="example">
+<p>
+この例は、（既定の）~LCH色空間~内で，~redと~sky-blueの混合を生産する
+— 短い方の色相~弧を利用する下で，結果の色相が ~redの色相の 75.23% （したがって，~blueの色相の 24.77% ）になり、~redの色度と明度が~~保たれるよう。
+◎
+This example produces the mixture of a red and a sky blue, in lch() colorspace (the default), with the hue being 75.23% of that of the red (and thus, 24.77% of that of the blue). The shorter hue arc will be used. The chroma and lightness of the red are left unchanged.
+</p>
+
+<pre class="lang-css">
+color-mix(lch(52% 58.1 22.7) hue 75.23%, lch(56% 49.1 257.1));
+</pre>
+
+<figure>`CH-mixing2^dgm
+<figcaption>
+~redと~sky-blueの混合。
+~redの色相は、正な `a^ 軸から測定される角度 22.7° になる一方、~blueの色相は 257.1° になる。
+~redの色度（ L 軸からの距離）は 58.1 になる。
+ここでは、色相だけ補間され，色度は補間されない。
+したがって，様々な比による混合は、図の円弧~上に乗る。
+◎
+Mixtures of a red and a sky blue. The red has a hue angle, measured from the positive a axis, of 22.7 degrees while the blue has a hue angle of 257.1 degrees. The red has a chroma, or distance from the central neutral axis, of 58.1 and the chroma is not interpolated here, just the hue. Thus, mixtures lie along the dashed circle.
+</figcaption></figure>
+
+<p>
+計算は、次に従う：
+◎
+The calculation is as follows:
+</p>
+<ul>
+	<li>
+~red
+`rgb(82.02% 30.21% 35.02%)^vc =
+`lch(52% 58.1 22.7)^v
+◎
+lch(52% 58.1 22.7)
+</li>
+	<li>
+~sky-blue
+`rgb(5.64% 55.94% 85.31%)^vc =
+`lch(56% 49.1 257.1)^v
+◎
+lch(56% 49.1 257.1)
+</li>
+	<li>
+色相の差は
+`abs^op( 257.1 ~MINUS 22.7 ) = 234.4 であり，
+180° より大きい。
+短い方の弧は 125.6° †になる。
+【！原文誤り 54.4° （ = 234.4 - 180 ）】
+◎
+hue difference is |257.1 - 22.7| = 234.4, which is greater than 180; the shorter arc is 54.4 degrees.
+</li>
+	<li>
+混合した色相 =
+(22.7 ~PLUS 360) ~MUL 0.7523 ~PLUS (257.1 ~MUL 0.2477 ) = 351.59°
+◎
+mixed hue is (22.7 + 360) * 0.7523 +(257.1 * 0.2477 = 351.59 degrees
+</li>
+	<li>
+混合した結果は
+`80.672% 28.822% 55.255%^rgb
+`lch(52% 58.1 351.59)^v
+になる。
+◎
+mixed result is lch(52% 58.1 351.59)
+</li>
+</ul>
+</div>
+
+<div class="example">
+<p>
+この例は、（既定の）~LCH色空間~内で，~redと~sky-blueの混合を生産する
+— 長い方の色相~弧を利用する下で，結果の色相が ~redの色相の 75.23% （したがって，~blueの色相の 24.77% ）になり、~redの色度と明度が~~保たれるよう。
+◎
+This example produces the mixture of a red and a sky blue, in lch() colorspace (the default), with the hue being 75.23% of that of the red (and thus, 24.77% of that of the blue). The longer hue arc has been specified. The chroma and lightness of the red are left unchanged.
+</p>
+
+<pre class="lang-css">
+color-mix(lch(52% 58.1 22.7) hue longer 75.23%, lch(56% 49.1 257.1) );
+</pre>
+
+<figure>`CH-mixing2b^dgm
+<figcaption>
+~redと~sky-blueの混合。
+~redの色相は、正な `a^ 軸から測定される角度 22.7° になる一方、~blueの色相は 257.1° になる。
+~redの色度（ L 軸からの距離）は 58.1 になる。
+ここでは、色相だけ補間され，色度は補間されない。
+したがって，様々な比による混合は、図の円弧~上に乗る。
+◎
+Mixtures of a red and a sky blue. The red has a hue angle, measured from the positive a axis, of 22.7 degrees while the blue has a hue angle of 257.1 degrees. The red has a chroma, or distance from the central neutral axis, of 58.1 and the chroma is not interpolated here, just the hue. Thus, mixtures lie along the dashed circle.
+</figcaption></figure>
+
+<p>
+計算は、次に従う：
+◎
+The calculation is as follows:
+</p>
+<ul>
+	<li>
+~red
+`rgb(82.02% 30.21% 35.02%)^vc =
+`lch(52% 58.1 22.7)^v
+◎
+lch(52% 58.1 22.7)
+</li>
+	<li>
+~sky-blue
+`rgb(5.64% 55.94% 85.31%)^vc =
+`lch(56% 49.1 257.1)^v
+◎
+lch(56% 49.1 257.1)
+</li>
+	<li>
+色相の差は
+`abs^op( 257.1 ~MINUS 22.7 ) = 234.4 であり，
+180° より大きいが、長い方の弧が要請されている。
+◎
+hue difference is |257.1 - 22.7| = 234.4, which is greater than 180, but the long arc was requested.
+</li>
+	<li>
+混合した色相 =
+22.7 ~MUL 0.7523 ~PLUS 257.1 ~MUL 0.2477 = 80.76
+◎
+mixed hue is 22.7 * 0.7523 + 257.1 * 0.2477 = 80.76
+</li>
+	<li>
+混合した結果は
+`61.11% 45.85% 0.41%^rgb
+`lch(52% 58.1 80.76)^v
+になる。
+◎
+mixed result is lch(52% 58.1 80.76)
+</li>
+</ul>
+</div>
+
+<div class="example">
+<p>
+この例は、（既定の）~LCH色空間~内で，前の例と同じ 2 個の色（~redと~sky-blue）の混合を生産する
+— その色相が~redの色相の 75.23% （したがって，~blueの色相の 24.77% ）になり、今回は明度は 68.4% に設定され，~redの色度が~~保たれるよう。
+◎
+This example produces the mixture of the same two colors as the previous example (a red and a sky blue), in lch() colorspace (the default), with the hue being 75.23% of that of the red (and thus, 24.77% of that of the blue). This time, the lightness is set to 68.4% and the chroma is left unchanged.
+</p>
+
+<pre class="lang-css">
+color-mix(rgb(82.02% 30.21% 35.02%) hue 75.23% lightness 68.4%, rgb(5.64% 55.94% 85.31%) );
+</pre>
+
+<p>
+計算は、次に従う：
+◎
+The calculation is as follows:
+</p>
+<ul>
+	<li>
+~red
+`rgb(82.02% 30.21% 35.02%)^vc =
+`lch(52% 58.1 22.7)^v
+◎
+rgb(82.02% 30.21% 35.02%) is lch(52% 58.1 22.7)
+</li>
+	<li>
+~sky-blue
+`rgb(5.64% 55.94% 85.31%)^vc =
+`lch(56% 49.1 257.1)^v
+◎
+rgb(5.64% 55.94% 85.31%) is lch(56% 49.1 257.1)
+</li>
+	<li>
+混合した色相 =
+22.7 ~MUL 0.7523 ~PLUS 257.1 ~MUL 0.2477 = 80.76
+◎
+mixed hue is 22.7 * 0.7523 + 257.1 * 0.2477 = 80.76
+</li>
+	<li>
+新たな明度は 68.4% に指定されている
+◎
+new lightness is specified as 68.4%
+</li>
+	<li>
+混合した結果は
+`lch(68.4% 58.1 80.76)^v
+（ `rgb(79.67% 62.48% 22.09%)^vc ）になる。
+◎
+mixed result is lch(68.4% 58.1 80.76) which is rgb(79.67% 62.48% 22.09%)
+</li>
+</ul>
+</div>
+
+<div class="example">
+<p>
+この例は、 `xyz^v `色空間$内で，前の例と同じ 2 個の色（~redと~sky-blue）の混合を生産する
+— その色相が ~redの色相の 75.23% （したがって，~blueの色相の 24.77% ）になるよう。
+◎
+This example produces the mixture of the same two colors as the previous examples (a red and a sky blue), in xyz colorspace, with the mixture being 75.23% of that of the red (and thus, 24.77% of that of the blue).
+</p>
+
+<pre class="lang-css">
+color-mix(xyz rgb(82.02% 30.21% 35.02%) 75.23%, rgb(5.64% 55.94% 85.31%));
+</pre>
+<p>
+計算は、次に従う：
+◎
+The calculation is as follows:
+</p>
+<ul>
+	<li>
+~red
+`rgb(82.02% 30.21% 35.02%)^vc =
+`lch(52% 58.1 22.7)^v
+は、 X=0.3214, Y=0.2014, Z=0.0879
+◎
+rgb(82.02% 30.21% 35.02%) is lch(52% 58.1 22.7) which is X=0.3214, Y=0.2014, Z=0.0879.
+</li>
+	<li>
+~sky-blue
+`rgb(5.64% 55.94% 85.31%)^vc =
+`lch(56% 49.1 257.1)^v
+は、 X=0.2070, Y=0.2391, Z=0.5249.
+◎
+rgb(5.64% 55.94% 85.31%) is lch(56% 49.1 257.1) which is X=0.2070, Y=0.2391, Z=0.5249.
+</li>
+	<li>
+混合した結果の X
+= (0.3214 ~MUL 0.7523) ~PLUS (0.2070 ~MUL (1 ~MINUS 0.7523))
+= 0.29306
+◎
+mixed result X=(0.3214 * 0.7523) + (0.2070 * (1 - 0.7523)) = 0.29306.
+</li>
+	<li>
+混合した結果の Y
+= (0.2014 ~MUL 0.7523) ~PLUS (0.2391 ~MUL (1 ~MINUS 0.7523))
+= 0.21074
+◎
+mixed result Y=(0.2014 * 0.7523) + (0.2391 * (1 - 0.7523)) = 0.21074.
+</li>
+	<li>
+混合した結果の Z
+= (0.0879 ~MUL 0.7523) ~PLUS (0.5249 ~MUL (1 ~MINUS 0.7523))
+= 0.19614
+◎
+mixed result Z=(0.0879 * 0.7523) + (0.5249 * (1 - 0.7523)) = 0.19614.
+</li>
+	<li>
+混合した結果は
+`lch(53.0304% 38.9346, 352.8138)^v
+（ `rgb(72.300% 38.639% 53.557%)^vc ）になる。
+◎
+mix result is lch(53.0304% 38.9346, 352.8138) which is rgb(72.300% 38.639% 53.557%)
+</li>
+</ul>
+</div>
+
+<div class="example">
+<p>
+この例は、（既定の）~LCH色空間~内で， `red^v と `yellow^v の混合を生産する
+— その明度が `red^v の明度の 30% （したがって, `yellow^v の明度の 70% ）になり、
+`red^v の色度と色相が~~保たれるよう。
+◎
+This example produces the mixture of red and yellow, in lch() colorspace (the default), with the lightness being 30% of the lightness of red (and thus, 70% of the lightness of yellow). The chroma and hue of red are left unchanged.
+</p>
+
+<pre class="lang-css">
+color-mix(red lightness 30%, yellow);
+</pre>
+
+<p>
+計算は、次に従う：
+◎
+The calculation is as follows:
+</p>
+<ul>
+	<li>
+~sRGB `red^vc （ `#F00^v ） =
+`lch(54.2917% 106.8390 40.8526)^v
+◎
+sRGB red (#F00) is lch(54.2917% 106.8390 40.8526)
+</li>
+	<li>
+~sRGB `yellow^vc（ `#FF0^v ） =
+`lch(97.6071% 94.7077 99.5746)^v
+◎
+sRGB yellow (#FF0) is lch(97.6071% 94.7077 99.5746)
+</li>
+	<li>
+混合した明度 =
+54.2917 ~MUL 0.3 ~PLUS 97.6071 ~MUL 0.7 = 84.6125
+◎
+mixed lightness is 54.2917 * 0.3 + 97.6071 * 0.7 = 84.6125
+</li>
+	<li>
+混合した結果は
+`lch(84.6125% 106.8390 40.8526)^v
+になり、とても明るい高~彩度な~redになる
+⇒＃
+~sRGB色域からは かなり外れる： `rgb(140.4967% 51.2654% 32.6891%)^v ／
+~P3色域からも外れる： `color(display-p3 1.3033 0.5756 0.4003)^v 
+◎
+mixed result is lch(84.6125% 106.8390 40.8526)
+◎
+which is a very light, saturated red
+• (and well outside the gamut of sRGB: rgb(140.4967% 51.2654% 32.6891%))
+• even outside the gamut of P3: color(display-p3 1.3033 0.5756 0.4003)
+</li>
+</ul>
+
+<p>
+この例は、混合できても，現在の機器で表示できない色があることをデモる。
+◎
+This example demonstrates that not all colors which can be mixed, can be displayed on current devices.
+</p>
+
+</div>
+
+<div class="example">
+<p>
+この例は、`~Lab色空間$内で，前の例と同じ 2 個の色（~redと~sky-blue）の混合を生産する
+— `a^, `b^ とも 1 個目の色の 38% になり、~redの明度が~~保たれるよう。
+◎
+This example produces the mixture of the same two colors as the previous example (a red and a sky blue), in Lab colorspace, with 38% of a and 38% of b. The lightness of the red is left unchanged.
+</p>
+
+<p>
+これは、~LCH補間よりも低~彩度な結果を示す
+— 補間は `a^, `b^ 平面~上の直線~内で行われ、より L 軸~近くを通るので。
+◎
+This shows a desaturated result, compared to LCH interpolation, because interpolation is in a stright line on the a,b plane and can thus pass close to the central, neutral axis.
+</p>
+
+<pre class="lang-css">
+color-mix(lab rgb(82.02% 30.21% 35.02%) a 38% b 38%, rgb(5.64% 55.94% 85.31%));
+</pre>
+
+<figure>`CH-mixing2c^dgm
+<figcaption>
+~redと~sky-blueの混合。
+~redの色相は、正な `a^ 軸から測定される角度 22.7° になる一方、~blueの色相は 257.1° になる。
+補間は `a^, `b^ 平面~上で行われ、様々な比による混合は，図の点線（ L 軸に近づく直線）上に乗る。
+◎
+Mixtures of a red and a sky blue. The red has a hue angle, measured from the positive a axis, of 22.7 degrees while the blue has a hue angle of 257.1 degrees. Interpolation is on the a,b plane. Thus, mixtures lie along the dashed line and pass closer to the neutral axis.
+</figcaption></figure>
+
+<p>
+計算は、次に従う：
+◎
+The calculation is as follows:
+</p>
+<ul>
+	<li>
+~red
+`rgb(82.02% 30.21% 35.02%)^vc =
+`lab(52% 53.599 22.421)^v
+◎
+rgb(82.02% 30.21% 35.02%) is lab(52% 53.599 22.421)
+</li>
+	<li>
+~sky-blue
+`rgb(5.64% 55.94% 85.31%)^vc =
+`lab(56% -10.962 -47.861)^v
+◎
+rgb(5.64% 55.94% 85.31%) is lab(56% -10.962 -47.861)
+</li>
+	<li>
+`a^ =
+( 53.599 ~MUL 0.38 ) ~PLUS ( −10.962 ~MUL 0.62 ) = 13.572
+◎
+a is (53.599 * 0.38) + (-10.962 * 0.62) = 13.572
+</li>
+	<li>
+`b^ =
+( 22.421 ~MUL 0.38 ) ~PLUS ( −47.861 ~MUL 0.62 ) = −21.154
+◎
+b is (22.421 * 0.38) + (-47.861 * 0.62) = -21.154
+</li>
+	<li>
+結果は
+`lab(52% 13.572 -21.154)^v
+（ `rgb(52.446% 45.821% 62.953%)^vc ）になる。
+◎
+result is lab(52% 13.572 -21.154) which is rgb(52.446% 45.821% 62.953%)
+</li>
+</ul>
+</div>
+
+<p class="issue">
+`color-mix^f に 3 個以上の色を許容するか？
+（ `4711$issue ）
+◎
+color-mix to allow more than two colors?
+</p>
+
+	</section>
+	<section id="colorcontrast">
+<h2 title="Selecting the most contrasting color: the color-contrast() function">4. 最も~contrastが高い色の選定-法： `color-contrast^f 関数</h2>
+
+<p>
+この関数は、最初に与える色（概して，背景~色が与えられるが、そうする必要はない）, および~~後続の 1 個以上の色からなる~listをとり，~listから［
+最初に与えた色との輝度`~contrast比$が最も高くなる色
+］を選定する（例えば、 `§ ~contrast（最小）$を確保するため）。
+`WCAG21$r
+◎
+This function takes, firstly, a single color (typically a background, but not necessarily), and then second, a list of two or more colors; it selects from that list the color with highest luminance contrast [WCAG21] to the single color.
+</p>
+
+<pre class="prod">
+`color-contrast@f
+    = color-contrast( `color$t vs `color$t# )
+</pre>
+
+<p class="issue">
+`color-contrast^f に~target~contrast比を追加するか？
+（ `4749$issue ）
+◎
+add target contrast ratio to color-contrast?
+</p>
+
+<div class="example">
+<pre class="lang-css">
+color-contrast(wheat vs tan, sienna, var(--myAccent), #d2691e)
+</pre>
+
+<p>
+計算は、次に従う：
+◎
+The calculation is as follows:
+</p>
+<ul>
+	<li>
+最初に与えた色 `wheat^vc （ `#f5deb3^v ）の`相対~輝度$は 0.749 である。
+◎
+wheat (#f5deb3), the background, has relative luminance 0.749
+</li>
+	<li>
+`tan^vc （ `#d2b48c^v ）の相対~輝度は 0.482 なので、~contrast比は `1.501^cr になる。
+◎
+tan (#d2b48c) has relative luminance 0.482 and contrast ratio 1.501
+</li>
+	<li>
+`sienna^vc （ `#a0522d^v ）の相対~輝度は 0.137 なので、~contrast比は `4.273^cr になる。
+◎
+sienna (#a0522d) has relative luminance 0.137 and contrast ratio 4.273
+</li>
+	<li>
+ここでの `--myAccent^p の値は `#b22222^vc とする
+— その相対~輝度は 0.107 なので、~contrast比は `5.081^cr になる。
+◎
+Suppose myAccent has the value #b22222:
+◎
+#b22222 has relative luminance 0.107 and contrast ratio 5.081
+</li>
+	<li>
+`#d2691e^vc の相対~輝度は 0.305 なので、~contrast比は `2.249^cr になる。
+◎
+#d2691e has relative luminance 0.305 and contrast ratio 2.249
+</li>
+</ul>
+
+<p>
+最も高い~contrast比は `5.081^cr なので、
+`var(--myAccent)^v が選定される。
+◎
+The highest contrast ratio is 5.081 so var(--myAccent) wins
+</p>
+</div>
+
+<p>
+~list内に（~keyword `vs^v より後に）~contrast比が等しいものが複数ある場合、最初のものが優先される。
+◎
+The colors in the list (after the keyword vs) are tested sequentially, from left to right; a color is the temporary winner if it has the highest contrast of all those tested so far, and once the end of the list is reached, the current temporary winner is the overall winner. Thus, if two colors in the list happen to have the same contrast, the earlier in the list wins because the later one has the same contrast, not higher.
+</p>
+
+<div class="example">
+<pre class="lang-css">
+foo {
+  --bg: hsl(200 50% 80%);
+  --purple-in-hsl: hsl(300 100% 25%);
+  color: color-contrast(var(--bg) vs hsl(200 83% 23%), purple, var(--purple-in-hsl));
+}
+</pre>
+
+
+<p>
+計算は、次に従う：
+◎
+The calculation is as follows:
+</p>
+<ul>
+	<li>
+`--bg^p の値 `hsl(200 50% 80%)^vc （ `rgb(179 213 230)^v ）の`相対~輝度$は 0.628835 である。
+◎
+--bg is rgb(179 213 230) which has relative luminance 0.628835
+</li>
+	<li>
+`hsl(200 83% 23%)^vc （ `rgb(10 75 107)^v ）の相対~輝度は 0.061575 なので、~contrast比は `6.08409^cr になる。
+◎
+hsl(200 83% 23%) is rgb(10 75 107) which has relative luminance 0.061575 and contrast ratio 6.08409
+</li>
+	<li>
+`purple^vc （ `rgb(128 0 128)^v ）の相対~輝度は 0.061487 なので、~contrast比は `6.08889^cr になる。
+◎
+purple is rgb(128 0 128) which has relative luminance 0.061487 and contrast ratio 6.08889
+</li>
+	<li>
+`--purple-in-hsl^p の値 `hsl(300 100% 25%)^vc （ `rgb(128 0 128)^vc ）の相対~輝度は 0.061487 なので、~contrast比は `6.08889^cr になる。
+これは， `purple^v に対する~contrastより大きくないので、
+`purple^v が優先される。
+◎
+--purple-in-hsl is also rgb(128 0 128) which has relative luminance 0.061487 and contrast ratio 6.08889. This is not greater than the contrast for purple, so purple wins.
+</li>
+</ul>
+
+<p>
+【！are shown to six significant figures？】
+この例は、［
+計算に先立って低-精度に丸めると，間違った結果を与える
+］ことをデモる（ `0.061575^cr は `0.061487^cr に, `6.08409^cr は `6.08889^cr にとても近い）。
+◎
+The calculated values here are shown to six significant figures, to demonstrate that early rounding to a lower precision would have given the wrong result (0.061575 is very close to 0.061487; 6.08409 is very close to 6.08889).
+</p>
+</div>
+
+	</section>
+	<section id="colormodify">
+<h2 title="Modifying colors">5. 色の改変-法</h2>
+
+<p class="note">注記：
+色を改変するための提案として、現時点では次の 2 つがある
+⇒＃
+`color-adjust$f ／
+<a href="#relative-colors">相対~色の構文</a>
+◎
+Note: There are currently two proposals for modifying colors: color-adjust and Relative color syntax.
+</p>
+
+<p class="issue">
+色の改変~用に 2 つの提案がある（
+<a href="~CSSissue/3187#issuecomment-499126198">提案 1</a>,
+<a href="https://gist.github.com/una/edcfa0d3600e0b89b2ebf266bf549721">提案 2</a>
+）。
+~CSS~WGは、最終的な解決策が一本化されるよう，それぞれの最良な側面が選ばれるものと期待している（ `3187$issue ）。
+◎
+there are two proposals for color modification (proposal 1, proposal 2). The CSS WG expects that the best aspects of each will be chosen to produce a single eventual solution. &lt;https://github.com/w3c/csswg-drafts/issues/3187&gt;
+</p>
+
+		<section id="coloradjust">
+<h3 title="Adjusting colors: the color-adjust function">5.1. 色の調整-法： `color-adjust^f 関数</h3>
+
+<p>
+この関数は、 1 個の `color$t 指定をとり，その色を
+— 所与の`色空間$内で，指定した `color-adjuster^v により —
+調整した結果を返す。
+◎
+This function takes one &lt;color&gt; specification and returns the result of adjusting that color, in a given colorspace, by a specified color-adjuster.
+</p>
+
+<p>
+他が指定されない限り，この調整は `lch^v 色空間【`~LCH色空間$】内で行われる。
+◎
+Unless otherwise specified, the adjustment is done in the lch colorspace.
+</p>
+
+<p>
+複数個【？】の色~関数を指定できる。
+◎
+Multiple color functions can be specified.
+</p>
+
+<pre class="prod">
+`color-adjust@f
+    = color-adjust( `color$t [ color-adjuster `colorspace$t? ]? )
+</pre>
+
+<p class="trans-note">【
+`color-adjuster^v は、
+`color-adjuster$t 意図していると見受けられるが，それに似た何らかの構文かもしれない。
+】</p>
+
+<div class="example">
+<p>
+この例は、（既定の）~LCH色空間~内で，
+`peru^v （ `#CD853F^v ）の調整を生産する
+— 明度を【明度 100% の】 20% まで抑制し，【！~redの】その色度と色相が~~保たれるよう。
+◎
+This example produces the adjustment of peru (#CD853F), in lch() colorspace (the default), with the lightness being reduced by 20%. The chroma and hue of red are left unchanged.
+</p>
+
+<pre class="lang-css">
+color-adjust(peru lightness -20%);
+</pre>
+
+<p>
+計算は、次に従う：
+◎
+The calculation is as follows:
+</p>
+<ul>
+	<li>
+`peru^vc（ `#CD853F^v ） =
+`lch(62.2532% 54.0114 63.6769)^v
+◎
+ peru (#CD853F) is lch(62.2532% 54.0114 63.6769)
+</li>
+	<li>
+調整-済み明度 =
+ 62.2532% ~MINUS 20% = 42.2532%
+◎
+adjusted lightness is 62.2532% - 20% = 42.2532%
+</li>
+	<li>
+調整-済み結果は
+`lch( 42.2532% 54.0114 63.6769 )^v
+（ `rgb(57.58% 32.47% 3.82%)^vc ）になる
+◎
+adjusted result is lch(42.2532% 54.0114 63.6769)
+◎
+which is rgb(57.58% 32.47% 3.82%)
+</li>
+</ul>
+</div>
+
+		</section>
+		<section id="relative-colors">
+<h3 title="Relative color syntax">5.2. 相対~色の構文</h3>
+
+<p>
+絶対~座標を指定する他にも，すべての色~関数は、`相対~構文^emを利用することにより，既存の色
+— 以下では “起点~色” と称される —
+に基づく色を関数の~target`色空間$~内に生産できる。
+この構文は、
+~keyword `from^v と【その直後の，起点~色を与える】 `color$t 値に加え，省略可能な［
+色~関数に特有な数量的な座標
+］からなる。
+元の色の座標の計算を許容するため、［
+各~座標~用に，一文字の~keywordがいくつか
+］, および［
+色の~alphaに対応する `alpha^v ~keyword
+］がある。
+座標が指定されていない場合、関数は単に起点~色を~target関数の`色空間$へ変換する。
+◎
+Besides specifying absolute coordinates, all color functions can also be used with a *relative syntax* to produce colors in the function’s target colorspace, based on an existing color (henceforth referred to as "origin color"). This syntax consists of the keyword from, a &lt;color&gt; value, and optionally numerical coordinates specific to the color function. To allow calculations on the original color’s coordinates, there are single-letter keywords for each coordinate and `alpha` that corresponds to the color’s alpha. If no coordinates are specified, the function merely converts the origin color to the target function’s colorspace.
+</p>
+
+<p>
+以下の各~節に、各~色~関数用の相対~色~構文を要旨する。
+◎
+The following sections outline the relative color syntax for each color function.
+</p>
+
+<p class="issue">
+この仕様の将来~versionは、 `color$f 用の相対~構文も定義し得る。
+◎
+A future version of this specification may define a relative syntax for color() as well.
+</p>
+
+			<section id="relative-RGB">
+<h4 title="Relative RGB colors">5.2.1. 相対~RGB色</h4>
+
+<p>
+`rgb$f 関数の文法は、次のように拡張される：
+◎
+The grammar of the rgb() function is extended as follows:
+</p>
+
+<pre class="prod">
+`rgb@f
+    = rgb([from `color$t]? `percentage$t{3} [ / `alpha-value$t ]? )
+    | rgb([from `color$t]? `number$t{3} [ / `alpha-value$t ]? )
+`alpha-value@t
+    = `number$t
+    | `percentage$t
+</pre>
+
+<p>
+起点~色が在るときは、次に挙げる~keywordもこの関数に利用できる（対応する値が~parameterに期待される型に適合する限り）：
+◎
+When an origin color is present, the following keywords can also be used in this function (provided the end result conforms to the expected type for the parameter) and correspond to:
+</p>
+<ul>
+	<li>
+`r^v ：
+~sRGBへの変換~後における，起点~色の~red~channelに対応する `percentage$t を与える
+◎
+r is a &lt;percentage&gt; that corresponds to the origin color’s red channel after its conversion to sRGB
+</li>
+	<li>
+`g^v ：
+~sRGBへの変換~後における，起点~色の~green~channelに対応する
+`percentage$t を与える
+◎
+g is a &lt;percentage&gt; that corresponds to the origin color’s green channel after its conversion to sRGB
+</li>
+	<li>
+`b^v ：
+~sRGBへの変換~後における，起点~色の~blue~channelに対応する
+`percentage$t を与える
+◎
+b is a &lt;percentage&gt; that corresponds to the origin color’s blue channel after its conversion to sRGB
+</li>
+	<li>
+`alpha^v ：
+起点~色の~alpha透明度に対応する `percentage$t を与える
+◎
+alpha is a &lt;percentage&gt; that corresponds to the origin color’s alpha transparency
+</li>
+</ul>
+
+<div class="example">
+<p>
+~sRGB色空間~内で色~channelを操作するときは：
+◎
+To manipulate color channels in the sRGB colorspace:
+</p>
+
+<pre class="lang-css">
+rgb(from `indianred^vc 255 g b)
+</pre>
+
+<p>
+これは、~sRGB値 `indianred^vc（ `rgb(205 92 92)^v ）をとり，~red~channelを 255 に置換する。
+その結果は、 `rgb(255 92 92)^vc になる。
+◎
+This takes the sRGB value of indianred (205 92 92) and replaces the red channel with 255 to give rgb(255 92 92).
+</p>
+</div>
+
+			</section>
+			<section id="relative-HSL">
+<h4 title="Relative HSL colors">5.2.2. 相対~HSL色</h4>
+
+<p>
+`hsl$f 関数の文法は、次のように拡張される：
+◎
+The grammar of the hsl() function is extended as follows:
+</p>
+
+<pre class="prod">
+`hsl@f
+    = hsl([from `color$t]? `hue$t `percentage$t `percentage$t [ / `alpha-value$t ]? )
+`hue@t
+    = `number$t
+    | `angle$t
+</pre>
+
+<p>
+起点~色が在るときは、次に挙げる~keywordもこの関数に利用できる（対応する値が~parameterに期待される型に適合する限り）：
+◎
+When an origin color is present, the following keywords can also be used in this function (provided the end result conforms to the expected type for the parameter) and correspond to:
+</p>
+<ul>
+	<li>
+`h^v ：
+~sRGBへの変換~後における，起点~色の~HSL色相に対応する
+`number$t を与え，範囲 [0, 360) に正規化される。
+◎
+h is a &lt;number&gt; that corresponds to the origin color’s HSL hue after its conversion to sRGB, normalized to a [0, 360) range.
+</li>
+	<li>
+`s^v ：
+~sRGBへの変換~後における，起点~色の~HSL彩度に対応する
+`percentage$t を与える
+◎
+s is a &lt;percentage&gt; that corresponds to the origin color’s HSL saturation after its conversion to sRGB
+</li>
+	<li>
+`l^v ：
+~sRGBへの変換~後における，起点~色の~HSL明度に対応する
+`percentage$t を与える
+◎
+l is a &lt;percentage&gt; that corresponds to the origin color’s HSL lightness after its conversion to sRGB
+</li>
+	<li>
+`alpha^v ：
+起点~色の~alpha透明度に対応する
+`percentage$t を与える
+◎
+alpha is a &lt;percentage&gt; that corresponds to the origin color’s alpha transparency
+</li>
+</ul>
+
+<div class="example">
+<p>
+これは、色相~角度に 180° を加算して，補色を与える：
+◎
+This adds 180 degrees to the hue angle, giving a complementary color.
+</p>
+
+<pre class="lang-css">
+--accent: lightseagreen;
+--complement: hsl(from var(--accent) calc(h + 180) s l);
+</pre>
+
+<p>
+`--accent^p の値 `lightseagreen^v は
+`hsl(177deg 70% 41%)^vc
+なので、
+`--complement^p は
+`hsl(357deg 70% 41%)^vc
+になる。
+◎
+lightseagreen is hsl(177deg 70% 41%), so --complement is hsl(357deg 70% 41%)
+</p>
+</div>
+
+			</section>
+			<section id="relative-HWB">
+<h4 title="Relative HWB colors">5.2.3. 相対~HWB色</h4>
+
+<p>
+`hwb$f 関数の文法は、次のように拡張される：
+◎
+The grammar of the hwb() function is extended as follows:
+</p>
+
+<pre class="prod">
+`hwb@f
+    = hwb([from `color$t]? `hue$t `percentage$t `percentage$t [ / `alpha-value$t ]? )
+</pre>
+
+<p>
+起点~色が在るときは、次に挙げる~keywordもこの関数に利用できる（対応する値が~parameterに期待される型に適合する限り）：
+◎
+When an origin color is present, the following keywords can also be used in this function (provided the end result conforms to the expected type for the parameter) and correspond to:
+</p>
+<ul>
+	<li>
+`h^v ：
+~sRGBへの変換~後における，起点~色の~HWB色相に対応する
+`number$t を与える
+◎
+h is a &lt;number&gt; that corresponds to the origin color’s HWB hue after its conversion to sRGB
+</li>
+	<li>
+`w^v ：
+~sRGBへの変換~後における，起点~色の~HWB白度に対応する
+`percentage$t を与える
+◎
+w is a &lt;percentage&gt; that corresponds to the origin color’s HWB whiteness after its conversion to sRGB
+</li>
+	<li>
+`b^v ：
+~sRGBへの変換~後における，起点~色の~HWB黒度に対応する
+`percentage$t を与える
+◎
+b is a &lt;percentage&gt; that corresponds to the origin color’s HWB blackness after its conversion to sRGB
+</li>
+	<li>
+`alpha^v ：
+起点~色の~alpha透明度に対応する
+`percentage$t を与える
+◎
+alpha is a &lt;percentage&gt; that corresponds to the origin color’s alpha transparency
+</li>
+</ul>
+
+			</section>
+			<section id="relative-Lab">
+<h4 title="Relative Lab colors">5.2.4. 相対~Lab色</h4>
+
+<p>
+`lab$f 関数の文法は、次のように拡張される：
+◎
+The grammar of the lab() function is extended as follows:
+</p>
+
+<pre class="prod">
+`lab@f
+    = lab([from `color$t]? `percentage$t `number$t `number$t [ / `alpha-value$t ]? )
+</pre>
+
+<p>
+起点~色が在るときは、次に挙げる~keywordもこの関数に利用できる（対応する値が~parameterに期待される型に適合する限り）：
+◎
+When an origin color is present, the following keywords can also be used in this function (provided the end result conforms to the expected type for the parameter) and correspond to:
+</p>
+<ul>
+	<li>
+`l^v ：
+起点~色の~CIE明度（ L【！Lightness】 ）に対応する
+`percentage$t を与える
+◎
+l is a &lt;percentage&gt; that corresponds to the origin color’s CIE Lightness
+</li>
+	<li>
+`a^v ：
+起点~色の~CIELab `a^ 軸に対応する
+`number$t を与える
+◎
+a is a &lt;number&gt; that corresponds to the origin color’s CIELab a axis
+</li>
+	<li>
+`b^v ：
+起点~色の~CIELab `b^ 軸に対応する
+`number$t を与える
+◎
+b is a &lt;number&gt; that corresponds to the origin color’s CIELab b axis
+</li>
+	<li>
+`alpha^v ：
+起点~色の~alpha透明度に対応する
+`percentage$t を与える
+◎
+alpha is a &lt;percentage&gt; that corresponds to the origin color’s alpha transparency
+</li>
+</ul>
+
+<div class="example">
+<p>
+基底~色の透明度を調整する複数の仕方：
+◎
+Multiple ways to adjust the transparency of a base color:
+</p>
+<ul>
+	<li>
+`lab(from var(--mycolor) l a b / 100%)^v
+は、
+`var(--mycolor)^v の~alphaを 100% に設定する
+— 元は何であったかに関わらず。
+◎
+lab(from var(--mycolor) l a b / 100%) sets the alpha of var(--mycolor) to 100% regardless of what it originally was.
+</li>
+	<li>
+`lab(from var(--mycolor) l a b / calc(alpha * 0.8))^v
+`var(--mycolor)^v の~alphaを元の値の 20% に抑制する。
+◎
+lab(from var(--mycolor) l a b / calc(alpha * 0.8)) reduces the alpha of var(--mycolor) by 20% of its original value.
+</li>
+	<li>
+`lab(from var(--mycolor) l a b / calc(alpha - 20%))^v
+`var(--mycolor)^v の~alphaを 100% の 20% だけ抑制する。
+◎
+lab(from var(--mycolor) l a b / calc(alpha - 20%)) reduces the alpha of var(--mycolor) by 20% of 100%.
+</li>
+</ul>
+
+<p>
+~Labは，可視なすべての色を包摂するので、すべての調整は色域~内に~~収まり，そのイミで~~情報は失われないことに注意。
+これは、~sRGBに基づく関数（ `rgb^f, `hsl^f, `hwb^f など）における~alpha調整には該当しない
+— それは、~alpha透明度を調整することに加え，~sRGBへ変換することになるので。
+◎
+Note that all the adjustments are lossless in the sense that no gamut clipping occurs, since lab() encompasses all visible color. This is not true for the alpha adjustments in the sRGB based functions (such as’rgb()', 'hsl()', or 'hwb()'), which would also convert to sRGB in addition to adjusting the alpha transparency.
+</p>
+</div>
+
+<div class="example">
+<p>
+正確に同じ明度を保ちながら，色を無~彩度な~grayにする：
+◎
+Fully desaturating a color to gray, keeping the exact same lightness:
+</p>
+
+<pre class="lang-css">
+--mycolor: `orchid^v;
+/* <span class="comment">
+`orchid^vc は `lab(62.753% 52.460 -34.103)^v
+◎
+orchid is lab(62.753% 52.460 -34.103)
+</span> */
+--mygray: lab(from var(--mycolor) l 0 0);
+/* <span class="comment">
+`--mygray^p は `lab(62.753% 0 0)^v
+（ `rgb(59.515% 59.515% 59.515%)^vc ）になる
+◎
+mygray is lab(62.753% 0 0) which is rgb(59.515% 59.515% 59.515%)
+</span> */
+</pre>
+</div>
+
+			</section>
+			<section id="relative-LCH">
+<h4 title="Relative LCH colors">5.2.5. 相対~LCH色</h4>
+
+<p>
+`lch$f 関数の文法は、次のように拡張される：
+◎
+The grammar of the lch() function is extended as follows:
+</p>
+
+<pre class="prod">
+`lch@f
+    = lch([from `color$t]? `percentage$t `number$t `hue$t [ / `alpha-value$t ]? )
+</pre>
+
+<p>
+起点~色が在るときは、次に挙げる~keywordもこの関数に利用できる（対応する値が~parameterに期待される型に適合する限り）：
+◎
+When an origin color is present, the following keywords can also be used in this function (provided the end result conforms to the expected type for the parameter) and correspond to:
+</p>
+<ul>
+	<li>
+`l^v ：
+起点~色の~CIE明度（ L ）に対応する
+`percentage$t を与える
+◎
+l is a &lt;percentage&gt; that corresponds to the origin color’s CIE Lightness
+</li>
+	<li>
+`c^v ：
+起点~色の~LCH色度（ C ）に対応する
+`number$t を与える
+◎
+c is a &lt;number&gt; that corresponds to the origin color’s LCH chroma
+</li>
+	<li>
+`h^v ：
+起点~色の~LCH色相（ H ）に対応する
+`number$t を与える,
+範囲 [0, 360）に正規化される。
+◎
+h is a &lt;number&gt; that corresponds to the origin color’s LCH hue, normalized to a [0, 360) range.
+</li>
+	<li>
+`alpha^v ：
+起点~色の~alpha透明度に対応する
+`percentage$t を与える
+◎
+alpha is a &lt;percentage&gt; that corresponds to the origin color’s alpha transparency
+</li>
+</ul>
+
+<div class="example">
+<p>
+`lch(from peru calc(l * 0.8) c h)^v
+は、
+`peru^vc （ `lch(62.2532% 54.0114 63.6769)^v ）より 20% 暗い色を生産する
+— その色度と色相が~~保たれるよう。
+結果は
+`57.58% 32.47% 3.82%^rgb
+`lch(49.80256% 54.0114 63.6769)^v
+になる
+◎
+lch(from peru calc(l * 0.8) c h) produces a color that is 20% darker than peru or lch(62.2532% 54.0114 63.6769), with its chroma and hue left unchanged. The result is lch(49.80256% 54.0114 63.6769)
+</p>
+</div>
+
+<div class="example">
+<p>
+これは、色相~角度に 180° を加算して，補色を与える：
+◎
+This adds 180 degrees to the hue angle, giving the complementary color.
+</p>
+
+<pre>
+--accent: lightseagreen;
+--complement: lch(from var(--accent) l c calc(h + 180));
+</pre>
+
+<p>
+`lightseagreen^vc は
+`lch(65.4937% 39.4484 190.1013)^v
+なので、
+`--complement^p は
+`88.2814% 51.1047% 58.3039%^rgb
+`lch(65.4937% 39.4484 370.1013)^v
+になる。
+◎
+lightseagreen is LCH(65.4937% 39.4484 190.1013), so --complement is LCH(65.4937% 39.4484 370.1013)
+</p>
+</div>
+
+<div class="example">
+<p>
+正確に同じ明度を保ちながら，色を無~彩度な~grayにする：
+◎
+Fully desaturating a color to gray, keeping the exact same lightness:
+</p>
+
+<pre class="lang-css">
+--mycolor: `orchid^v;
+/* <span class="comment">
+`orchid^vc は `lch(62.753% 62.571 326.973)^v
+◎
+orchid is lch(62.753% 62.571 326.973)
+</span> */
+--mygray: lch(from var(--mycolor) l 0 h);
+/* <span class="comment">
+`--mygray^p は `lch(62.753% 0 326.973)^v
+（ `rgb(59.515% 59.515% 59.515%)^vc ）になる
+◎
+mygray is lch(62.753% 0 326.973) which is rgb(59.515% 59.515% 59.515%)
+</span> */
+</pre>
+
+<p>
+次の結果は、彩度が~~復活する（色相は保全されているので）：
+◎
+But now (since the hue was preserved) re-saturating again
+</p>
+
+<pre class="lang-css">
+--mymuted: lch(from var(--mygray) l 30 h);
+/* <span class="comment">
+`--mymuted^p は `lch(62.753% 30 326.973)^v
+（ `rgb(72.710% 53.293% 71.224%)^vc ）になる
+◎
+mymuted is lch(62.753% 30 326.973) which is rgb(72.710% 53.293% 71.224%)
+</span> */
+</pre>
+</div>
+
+			</section>
+		</section>
+	</section>
+	<section id="interpolation">
+<h2 title="Interpolation">6. 補間</h2>
+
+<p>
+色~補間は、次に挙げる所で起こる
+⇒＃
+~gradient,
+組成,
+~filter,
+遷移,
+~animation,
+色を混合する関数【 `color-mix$f など】,
+色を改変する関数【 `color-adjust$f など】
+◎
+Color interpolation happens with gradients, compositing, filters, transitions, animations, and color mixing and color modification functions.
+</p>
+
+<p>
+一般に，同じ色~空間に属する `color$t 値どうしの補間は、その色空間~内で，当の色の算出d値を成す各成分ごとに別々に, かつ線形に補間することにより生じる。
+これは、~Web互換性を供する
+— 旧来の~sRGB内容は、既定では~sRGB空間~内で補間されるので。
+◎
+In general, interpolation between &lt;color&gt; values of the same colorspace occurs by linearly interpolating each component of the computed value of the color separately, in that colorspace. This provides Web compatibility; legacy sRGB content interpolates in the sRGB space by default.
+</p>
+
+<p class="issue">
+色域の対応付けは、補間の前, 後どちらで生じるべきか？
+◎
+Should gamut mapping occur before or after interpolation?
+</p>
+
+<p class="issue">
+無彩色の補間を取扱う方法は？
+（ `4928$issue ）
+◎
+How to handle achromatic interpolation? &lt;https://github.com/w3c/csswg-drafts/issues/4928&gt;
+</p>
+
+		<section id="interpolation-space">
+<h3 title="Color space for interpolation">6.1. 補間~用の色~空間</h3>
+
+<p>
+同じ色~空間に属さない色どうしは、まず，~Labに変換されてから ~Lab色として補間される。
+~host構文は、補間~用に利用する色~空間を上書きするよう指定し得る。
+例えば，［
+`color-mix$f ／ `color-adjust$f【！`color-adjust$p】
+］は、~LCHを既定とするよう上書きする。
+◎
+If colors are not in the same color space, they are first converted to Lab and and interpolated as Lab colors. Host syntax can override the interpolation color space and specify which color space is used for interpolation. For example, color-mix and color-adjust override the default to LCH.
+</p>
+
+<p class="issue">
+［
+0% ／ 100%
+］にある色は、［
+元の色~空間, 補間~空間に変換したもの
+］どちらで直列化されるべきか？
+◎
+Should the colors at 0% and 100% be serialized with their original color spaces or converted to the interpolation space?
+</p>
+
+		</section>
+		<section id="hue-interpolation">
+<h3 title="Hue interpolation">6.2. 色相の補間</h3>
+
+<p>
+色相~角度を伴う色~関数（ ~LCH, ~HSL, ~HWB 等々）用に補間する仕方は、複数ある。
+360° を超える弧は、稀にしか欲されないので，概して避けることが求まれる。
+なので，ほとんどの事例では、角度は
+— 成分ごとの補間が［
+360° 未満, 多くは 180° 未満
+］に対し行われるよう —
+補間に先立って修復される。
+◎
+For color functions with a hue angle (LCH, HSL, HWB etc), there are multiple ways to interpolate. We typically want to avoid arcs over 360 for the difference between the angles, as they are rarely desirable, so in most cases angles are fixed up prior to interpolation so that per-component interpolation is done over less than 360 degrees, often less than 180.
+</p>
+
+<p>
+~host構文は、色相~補間~用に次に挙げる~algoを指定できる（以下における角度は `deg^u 単位によるが、どう指定されようが，~logicは同じである）。
+◎
+Host syntax can specify any of the following algorithms for hue interpolation (angles in the following are in degrees, but the logic is the same regardless of how they are specified).
+</p>
+
+<div>
+<p>
+色相~補間の種別が `specified^v でない限り、補間に先立って両~角度とも [0, 360）に拘束される必要がある
+— 例えば次の仕方で：
+</p>
+
+<pre class="lang-js">
+θ = ((θ % 360) + 360) % 360
+</pre>
+
+<p class="trans-note">【
+以下における θ₁, θ₂ は、 1 個目, 2 個目の色の色相~角度（ ~IN [0 360) ）を表す。
+】</p>
+
+◎
+Unless the type of hue interpolation is specified, both angles need to be constrained to [0, 360) prior to interpolation. One way to do this is θ = ((θ % 360) + 360) % 360.
+</div>
+
+<dl>
+	<dt>`shorter^v</dt>
+	<dd>
+<p>
+角度は［
+θ₂ ~MINUS θ₁ ~IN [-180, 180]
+］になるよう調整される。
+【短い方の弧に乗るよう混合する。】
+疑似-~JSでは：
+◎
+Angles are adjusted so that θ₂ - θ₁ ∈ [-180, 180]. In pseudo-Javascript:
+</p>
+
+<pre class="lang-js">
+if (θ₂ - θ₁ &gt; 180) {
+  θ₁ += 360;
+}
+else if (θ₂ - θ₁ &lt; -180) {
+  θ₂ += 360;
+}
+</pre>
+	</dd>
+
+	<dt>`longer^v</dt>
+	<dd>
+<p>
+角度は［
+θ₂ ~MINUS θ₁ ~IN { 0, [180, 360) }
+］になるよう調整される。
+【長い方の弧に乗るよう混合する。】
+疑似-~JSでは：
+◎
+Angles are adjusted so that θ₂ - θ₁ ∈ {0, [180, 360)}. In pseudo-Javascript:
+
+Angles are adjusted so that θ₂ - θ₁ ∈ [180, 360). In pseudo-Javascript:
+</p>
+
+<pre class="lang-js">
+if (0 &lt; θ₂ - θ₁ &lt; 180) {
+  θ₁ += 360;
+}
+else if (-180 &lt; θ₂ - θ₁ &lt; 0) {
+  θ₂ += 360;
+}
+</pre>
+	</dd>
+
+	<dt>`increasing^v</dt>
+	<dd>
+<p>
+角度は［
+θ₂ ~MINUS θ₁ ~IN [0, 360)
+］になるよう調整される。
+【色相~角度がθ₁ から増えるように周る。】
+疑似-~JSでは：
+◎
+Angles are adjusted so that θ₂ - θ₁ ∈ [0, 360). In pseudo-Javascript:
+</p>
+
+<pre class="lang-js">
+if (θ₂ &lt; θ₁) {
+  θ₂ += 360;
+}
+</pre>
+	</dd>
+
+	<dt>`decreasing^v</dt>
+	<dd>
+<p>
+角度は［
+θ₂ ~MINUS θ₁ ~IN (-360, 0]
+］になるよう調整される。
+【色相~角度が θ₁ から減るように周る。】
+疑似-~JSでは：
+◎
+Angles are adjusted so that θ₂ - θ₁ ∈ (-360, 0]. In pseudo-Javascript:
+</p>
+
+<pre class="lang-js">
+if (θ₁ &lt; θ₂) {
+  θ₁ += 360;
+}
+</pre>
+	</dd>
+
+	<dt>`specified^v</dt>
+	<dd>
+修復は遂行されない。
+角度は、他の成分と同じ仕方で補間される。
+◎
+No fixup is performed. Angles are interpolated in the same way as every other component.
+</dd>
+</dl>
+
+<p>
+他が指定されない限り、~host構文が特定の色相~補間~algoを選定しない場合の既定は，
+`shorter^v とする。
+◎
+Unless otherwise specified, if no specific hue interpolation algorithm is selected by the host syntax, the default is shorter.
+</p>
+
+<p>
+【色相~角度 θ₂ ／ θ₁ は、それを供している色の色度が 0 に極めて近い場合，~NaNもとり得る。その事例では、】
+色相~角度のうち，片方だけ~NaN値をとる場合、補間~用には，他方の値に置換される。
+両方とも~NaN値をとる場合、補間~用には，両~角度とも 値 0 に置換される。
+◎
+If one of the angles has the value NaN, then for interpolation, NaN is replaced by the value of the other hue angle. If both angles have the value NaN, then for interpolation, NaN is replaced by the value 0 for both angles.
+</p>
+
+<p class="issue">
+複数個の色を補間するとき、これらは どう働く？
+`5277$issue
+◎
+How do these work when interpolating between multiple colors? &lt;https://github.com/w3c/csswg-drafts/issues/5277&gt;
+</p>
+
+		</section>
+	</section>
+	<section id="SecPriv">
+<h2 title="Security and Privacy Considerations">~securityと~privacyの考慮点</h2>
+
+<p>
+この仕様に対し報告された，新たな［
+~security／~privacy
+］の考慮点はない。
+◎
+No new security or privacy considerations have been reported on this specification.
+</p>
+
+	</section>
+	<section id="Ally">
+<h2 title="Accessibility Considerations">~accessibilityの考慮点</h2>
+
+<p>
+この仕様は、~stylesheet作者が
+`WCAG21$r による `§ ~contrast（最小）$に適合する~stylesheetを書くのを助ける，新たな特能を導入する。
+◎
+This specification introduces a new feature to help stylesheet authors write stylesheets which conform to WCAG 2.1 section 1.4.3 Contrast (Minimum).
+</p>
+	</section>
+	<section id="changes">
+<h2 title="Changes">変更点</h2>
+
+<dl>
+	<dt id="changes-20200303">
+<a href="~TR/2020/WD-css-color-5-20200303/">2020年 6 月 10日 最初の公な草案</a>
+からの変更点
+◎
+9.1. Since the FPWD of 10 June 2020
+</dt>
+	<dd>
+<a href="#interpolation">§ 補間</a>を追加した。
+◎
+added interpolation section
+</dd>
+	<dd>
+色相~角度の補間を定義した。
+◎
+defined hue angle interpolation
+</dd>
+	<dd>
+`color-contrast$f に `vs^v ~keywordを追加した。
+◎
+added vs keyword to color-contrast
+</dd>
+	<dd>
+文法に `xyz^v 用の調整子（ `xyz-adjuster$t ）を追加した。
+◎
+added xyz adjuster to grammar
+</dd>
+	<dd>
+色相~調整子（ `hue-adjuster$t ）用の各種~keywordを追加した。
+◎
+added hue adjuster keywords
+</dd>
+	<dd>
+`color-mix$f 用に，~XYZ色空間として `xyz^v を追加した。
+◎
+add XYZ colorspace for mixing
+</dd>
+	<dd>
+色~調整子（ `color-adjuster$t ）と色空間（ `colorspace$t ）を定義した。
+◎
+defined color-adjuster and colorspace
+</dd>
+	<dd>
+`color-mix$f 用に，省略-時の既定（ `50%^v ）を許容した。
+◎
+allowed mix percent to default to 50%
+</dd>
+	<dd>
+作業した例と図式を追加した。
+◎
+added worked examples and diagrams
+</dd>
+	<dd>
+［
+綴り／構文／整形
+］に関する小さな課題を正した。
+◎
+corrected minor spelling, syntax and formatting issues
+</dd>
+</dl>
+
+	</section>
+</main></div>

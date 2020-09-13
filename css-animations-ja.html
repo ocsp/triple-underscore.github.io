@@ -1,0 +1,2885 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Animations （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+
+<style>
+
+div.prod { margin: 1em 2em; }
+
+samp.css {
+	white-space:nowrap;
+}
+
+._ex-anim-container {
+	contain: strict;
+	padding: 0;
+	border: solid black 1px;
+	display: inline-block;
+	position: relative;
+	width: 200px;
+	height: 120px;
+	background: url("data:image/svg+xml;base64,PHN2ZwoJdmVyc2lvbj0iMS4xIgoJeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgoJdmlld0JveD0iMCAwIDIwMCAxMjAiCj4KPHBhdGgKCWZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMSIKCWQ9Ik01MCw1NSBoMTAwIE01MCw1MiB2MTAgTTEwMCw1MiB2MTAgTTE1MCw1MiB2MTAiCi8+Cgk8ZyBmaWxsPSJibGFjayIgc3Ryb2tlPSJub25lIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjEyIj4KPHRleHQgeD0iNTAiIHk9IjgwIj41MHB4PC90ZXh0Pgo8dGV4dCB4PSIxMDAiIHk9IjgwIj4xMDBweDwvdGV4dD4KPHRleHQgeD0iMTUwIiB5PSI4MCI+MTUwcHg8L3RleHQ+Cgk8L2c+Cjwvc3ZnPgo="), white;
+}
+
+._ex-anim-container > div {
+	position: absolute;
+	top: 20px;
+	width: 25px;
+	height: 25px;
+	background: red;
+}
+
+._ex-anim-container > span {
+	display: block;
+	width:100%;
+	position: absolute;
+	bottom: 5px;
+	text-align: center;
+	margin: auto;
+}
+
+
+._ex_wobble {
+	animation-name: _ex_wobble;
+	animation-timing-function: linear;
+	animation-duration: 10s;
+}
+
+@keyframes _ex_wobble {
+  0% {
+    left: 100px;
+  }
+
+  40% {
+    left: 150px;
+  }
+
+  60% {
+    left: 75px;
+  }
+
+  100% {
+    left: 100px;
+  }
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+
+<script>
+Util.ready = function(){
+	const source_data = {
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w~一-鿆]+|`(.*?)([$@^!])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'prod': // production
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'at':
+	text = `@${key}`;
+	break;
+case 'ps':
+	text = `:${key}`;
+	break;
+case 'pe':
+	text = `::${key}`;
+	break;
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+default:
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+	}
+}
+
+function _ex_anim_toggle(id){
+	let e = E(id);
+	e.className = e.className ? '' : id;
+	e.addEventListener('animationend', _ex_anim_end, false);
+
+	function _ex_anim_end(){
+		e.className = '';
+		console.log('animation completed.');
+		e.removeEventListener('animationend', _ex_anim_end, false);
+	}
+}
+
+
+</script>
+
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Animations Level 1
+spec_date:2020-08-18
+trans_update:2020-08-19
+source_checked:180615
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-animations-1/
+	abbr_url:CSSANIM
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:css-anim,css
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2013-10-22
+
+●●class_map
+r:ref
+p:property
+ps:pseudo
+pe:pseudo
+at:at-rule
+prod:production
+t:type
+v:value
+et:event-type
+E:error
+css:css
+f:func
+
+●●tag_map
+p:code
+pe:code
+ps:code
+t:var
+prod:var
+css:code
+at:code
+f:code
+et:code
+E:code
+I:code
+m:code
+v:code
+V:var
+c:code
+em:em
+
+
+●●words_table1
+
+important: <span class="css">!important</span>
+
+●●words_table
+
+
+	●animation
+keyframe:
+	交替アニメーション:alternating animation
+	〜している:animating
+	~animate値:animated value
+	animatable
+稼働-:run::~
+稼働中:running::~
+稼働中の:running::~
+	稼働状態
+
+始値:begin value:~
+終値:end value:~
+開始値:starting value:~
+	:starting
+	から開始-:restart
+	始-:begin
+	:beginning
+	-:begin
+	:beginning
+終了-:terminate:~
+静止-:pause::~
+	静止-が解かれ:unpaused
+
+周回:cycle::~
+交替:alternate::~
+	反復~回数:iteration-count
+	回数:count
+	偶奇:even or odd
+	奇数回:odd count
+	偶数回:even count
+
+遅延期間:delay period::~
+絶対値:absolute value:~
+延伸:fill::~
+
+再生-:play::~
+再生:playback::~
+逆にさ:reverseさ::~
+逆再生:reverse に play::~
+逆方向:reverse direction::reverse 方向:~
+順方向:normal direction::normal 方向:~
+作動時間:active duration::~::アクティブ時間
+過去:past:~
+瞬時:instantaneous:~
+~easing:
+移行-:move:~
+繰返n:repetition:繰り返し
+繰返して:repeatして:繰り返して
+
+	executing
+
+経過-:elapse::~
+階段:step::~
+中途:part-way:~
+進展:progression::~
+
+	:changing
+永遠:forever:~
+
+	looping:ループ中の
+	時区間:time window／interval
+	時機／時刻／時間差／時点:time
+	時間外:outside the time
+	~fill
+	満了:expired
+	時間差:offset
+	瞬間:moment
+	時系列順:increasing order by time
+	進み始:started again
+	引き伸ば:extend
+	戻る様に:back to
+	前方:forwards
+	動きを緩める:slowing down
+	動きを速める:speeding up
+	秒:seconds
+	同時に:simultaneous
+	経過時間
+	落下:falls back
+	進行する:proceeds
+	切り捨て:truncation
+	優先される:wins
+	数える:count
+
+	●CSS
+割合:percentage:~
+	~cascade法:cascading
+選択-:select::~
+全域:-wide:~
+単位:unit:~
+疑似:pseudo:~
+
+	呈示~用の:presentational
+
+	●構文
+	優先され:win する
+導入部:prelude:~
+comma::::カンマ
+区切りの:-separated:~
+
+colon::::コロン
+	-:delimit
+
+
+	●DOM／event ／ CSSOM
+
+文脈情報:context info:~
+文脈上の:contextual:~
+scripting::::スクリプティング
+
+	●仕様
+機能的:functional:~
+	やり方:approach
+	ので:because
+	併用:in conjunction
+	~~詳細:more information
+	主要な:principal
+	似た様に:similar manner
+	すなわち，／-:Therefore
+	逆に:conversely
+
+	●仕様（動詞
+	-related
+	要する:require
+
+	●未分類（動詞
+算定-:calculate:~
+持続-:persist:~
+重複-:duplicate:~
+遭遇-:encounter:~
+	読み込み:load
+写像-:map:~
+	-:sorted
+	得る:archive
+	〜からなる:consists of
+	含んでいる:containing
+	:contains
+	し続ける:continues to
+	-:examined
+	~~検索-:find
+	から生じる:coming from
+	生じる:happen
+	:express
+	~~対応付けられ:matched up
+	何もしない:does nothing
+	:lead
+	近付くに連れ:reaches
+	参照-:reference
+	〜にする:renders
+	戻され:returned
+
+	●未分類
+中括弧:curly braces:~
+	~~長さ:how long
+	長さ:number of items
+	実数:number
+	パラメタ:parameters
+	位置:position
+	:previous
+	:qualified
+	光過敏性発作:seizures
+	テキスト:text
+	~type
+	vs:versus
+
+	●指示語
+	超える:excess
+	より大きい:greater
+	より高い:higher
+	最高の:highest
+	最も近い:closest
+	遅い方:latter
+	限られた:little
+	次の:next
+	非:non
+	ある時点で:one point
+	先行の:preceding
+	後半:second half
+	上部:top
+	:above
+	:total
+	様々な時点:various points
+
+●●original_id_map
+
+	dom-globaleventhandlers-onanimationend:dom-document-onanimationend
+	dom-globaleventhandlers-onanimationiteration:dom-document-onanimationiteration
+	dom-globaleventhandlers-onanimationstart:dom-document-onanimationstart
+	dom-globaleventhandlers-onanimationcancel:dom-document-onanimationcancel
+	dom-animationevent-animationevent:funcdef-animationevent
+
+●●mdn_urls
+propdef-animation:CSS/animation
+propdef-animation-delay:CSS/animation-delay
+propdef-animation-direction:CSS/animation-direction
+propdef-animation-duration:CSS/animation-duration
+propdef-animation-fill-mode:CSS/animation-fill-mode
+propdef-animation-iteration-count:CSS/animation-iteration-count
+propdef-animation-name:CSS/animation-name
+propdef-animation-play-state:CSS/animation-play-state
+propdef-animation-timing-function:CSS/animation-timing-function
+
+at-ruledef-keyframes:CSS/@keyframes
+
+animationevent:API/AnimationEvent
+csskeyframerule:API/CSSKeyframeRule
+csskeyframesrule:API/CSSKeyframesRule
+	dictdef-animationeventinit:API/AnimationEventInit
+
+eventdef-animationevent-animationend:API/HTMLElement/animationend_event
+eventdef-animationevent-animationiteration:API/HTMLElement/animationiteration_event
+eventdef-animationevent-animationstart:API/HTMLElement/animationstart_event
+eventdef-animationevent-animationcancel:API/HTMLElement/animationcancel_event
+
+●●link_map
+
+p.animation-delay:#propdef-animation-delay
+p.animation-direction:#propdef-animation-direction
+p.animation-duration:#propdef-animation-duration
+p.animation-fill-mode:#propdef-animation-fill-mode
+p.animation-iteration-count:#propdef-animation-iteration-count
+p.animation-name:#propdef-animation-name
+p.animation-play-state:#propdef-animation-play-state
+p.animation-timing-function:#propdef-animation-timing-function
+p.animation:#propdef-animation
+p.display:~CSSDISP#propdef-display
+p.left:~CSSPOS#propdef-left
+p.transition-timing-function:~TRANSITION#propdef-transition-timing-function
+p.will-change:~CSSWILLCHANGE#propdef-will-change
+p.background-image:~CSSBG#propdef-background-image
+
+pe.before:~CSSPSEUDO#selectordef-before
+pe.after:~CSSPSEUDO#selectordef-after
+
+	!important:~CASCADE#important
+at.keyframes:#at-ruledef-keyframes
+
+
+t.keyframe-selector:#typedef-keyframe-selector
+t.keyframes-name:#typedef-keyframes-name
+t.keyframe-block:#typedef-keyframe-block
+
+t.single-animation-direction:#typedef-single-animation-direction
+t.single-animation-fill-mode:#typedef-single-animation-fill-mode
+t.single-animation-iteration-count:#typedef-single-animation-iteration-count
+t.single-animation-name:#typedef-single-animation-name
+t.single-animation-play-state:#typedef-single-animation-play-state
+t.single-animation:#typedef-single-animation
+t.easing-function:~CSSEASING#typedef-easing-function
+
+t.declaration-list:~CSSSYN#typedef-declaration-list
+t.rule-list:~CSSSYN#typedef-rule-list
+t.custom-ident:~CSSVAL#identifier-value
+t.string:~CSSVAL#string-value
+t.length:~CSSVAL#length-value
+t.number:~CSSVAL#number-value
+t.time:~CSSVAL#time-value
+t.percentage:~CSSVAL#percentage-value
+
+v.alternate-reverse:#valdef-animation-direction-alternate-reverse
+v.alternate:#valdef-animation-direction-alternate
+v.backwards:#valdef-animation-fill-mode-backwards
+v.both:#valdef-animation-fill-mode-both
+v.forwards:#valdef-animation-fill-mode-forwards
+v.infinite:#valdef-animation-iteration-count-infinite
+v.none:#valdef-animation-name-none
+v.normal:#valdef-animation-direction-normal
+v.paused:#valdef-animation-play-state-paused
+v.reverse:#valdef-animation-direction-reverse
+v.running:#valdef-animation-play-state-running
+
+v.ease-in-out:~CSSEASING#valdef-cubic-bezier-easing-function-ease-in-out
+v.ease-in:~CSSEASING#valdef-cubic-bezier-easing-function-ease-in
+v.ease-out:~CSSEASING#valdef-cubic-bezier-easing-function-ease-out
+v.start:~CSSEASING#valdef-steps-start
+
+	●IDL
+SameObject:~WEBIDLjs#SameObject
+PutForwards:~WEBIDLjs#PutForwards
+Exposed:~WEBIDLjs#Exposed
+
+E.SyntaxError:~WEBIDL#syntaxerror
+
+undefined:~WEBIDL#idl-undefined
+unsigned short:~WEBIDL#idl-unsigned-short
+CSSOMString:~CSSOM1#cssomstring
+
+I.AnimationEvent:#animationevent
+I.AnimationEventInit:#dictdef-animationeventinit
+I.CSSGroupingRule:~CSSOM1#cssgroupingrule
+I.CSSKeyframeRule:#csskeyframerule
+I.CSSKeyframesRule:#csskeyframesrule
+I.CSSRule:~CSSOM1#cssrule
+I.CSSRuleList:~CSSOM1#cssrulelist
+I.CSSStyleDeclaration:~CSSOM1#cssstyledeclaration
+I.Event:~DOM4#event
+I.EventInit:~DOM4#dictdef-eventinit
+I.EventHandler:~WAPI#eventhandler
+I.GlobalEventHandlers:~WAPI#globaleventhandlers
+I.Window:~WINDOW#window
+I.Document:~DOM4#document
+
+	mc.AnimationEvent:#dom-animationevent-animationevent
+m.AnimationEvent:#dom-animationevent-animationevent
+m.KEYFRAMES_RULE:#dom-cssrule-keyframes_rule
+m.KEYFRAME_RULE:#dom-cssrule-keyframe_rule
+m.animationName:#dom-animationevent-animationname
+m.appendRule:#dom-csskeyframesrule-appendrule
+m.cssRules:#dom-csskeyframesrule-cssrules
+m.deleteRule:#dom-csskeyframesrule-deleterule
+m.elapsedTime:#dom-animationevent-elapsedtime
+m.findRule:#dom-csskeyframesrule-findrule
+m.keyText:#dom-csskeyframerule-keytext
+m.name:#dom-csskeyframesrule-name
+
+m.onanimationend:#dom-globaleventhandlers-onanimationend
+m.onanimationiteration:#dom-globaleventhandlers-onanimationiteration
+m.onanimationstart:#dom-globaleventhandlers-onanimationstart
+m.onanimationcancel:#dom-globaleventhandlers-onanimationcancel
+
+m.cssText:~CSSOM1#dom-cssstyledeclaration-csstext
+
+m.pseudoElement:#dom-animationevent-pseudoelement
+m.style:#dom-csskeyframerule-style
+
+
+	●dict member
+dm.animationName:#dom-animationeventinit-animationname
+dm.elapsedTime:#dom-animationeventinit-elapsedtime
+dm.pseudoElement:#dom-animationeventinit-pseudoelement
+
+
+et.animationend:#eventdef-animationevent-animationend
+et.animationiteration:#eventdef-animationevent-animationiteration
+et.animationstart:#eventdef-animationevent-animationstart
+et.animationcancel:#eventdef-animationevent-animationcancel
+
+
+	●用語
+
+作動時間:#active-duration
+遅延:#animation-delay
+反復:#animation-iteration-count
+定義された~animation:#defined-animations
+延伸:#animation-fill-mode
+
+~animation~prop:#_animation-properties
+~keyframe選択子:#_keyframe-selector
+選択子の値:#_keyframe-selector-value
+~keyframe~style規則:#_keyframe-style-rule
+~keyframe規則:#keyframe-style-rule
+交替:#_alternate
+反復~回数:#_iteration-count
+所要時間:#_duration
+時系列順:#_increasing-order-by-time
+暗黙の:#_implied-keyframe
+
+	●用語（外部
+~CSS識別子:~CSSVAL#css-identifier
+	識別子:~CSSSYN#identifier
+補間-:~CSSVAL#interpolation
+
+~animation~level:~CASCADE#cascade-origin-animation
+指定d値:~CASCADE#specified-value
+算出d値:~CASCADE#computed-value
+使用~値:~CASCADE#used-value
+略式~prop:~CASCADE#shorthand-property
+出現順序:~CASCADE#cascade-order
+
+入力~進捗~値:~CSSEASING#input-progress-value
+出力~進捗~値:~CSSEASING#output-progress-value
+階段~easing関数:~CSSEASING#step-easing-function
+計時~関数:~CSSEASING#easing-function
+段~位置:~CSSEASING#step-position
+
+指定d順:~CSSOM1#concept-declarations-specified-order
+算出d~flag:~CSSOM1#cssstyledeclaration-computed-flag
+	読専~flag:~CSSOM1#cssstyledeclaration-readonly-flag
+親~CSS規則:~CSSOM1#cssstyledeclaration-parent-css-rule
+所有者~node:~CSSOM1#cssstyledeclaration-owner-node
+宣言:~CSSOM1#cssstyledeclaration-declarations
+
+~event~handler内容~属性:~WAPI#event-handler-content-attributes
+~event~handler~event型:~WAPI#event-handler-event-type
+~event~handler~IDL属性:~WAPI#event-handler-idl-attributes
+~event~handler:~WAPI#event-handlers
+
+文字大小区別:~INFRA#string-is
+~HTML要素:~HTMLINFRA#html-elements
+~event構築子:~DOM4#constructing-events
+
+●●ref_normative
+
+[CSS-DISPLAY-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Display Module Level 3. 19 May 2020. CR. URL: https://www.w3.org/TR/css-display-3/ 
+[CSS-EASING-1]
+    Brian Birtles; Dean Jackson; Matt Rakow. CSS Easing Functions Level 1. 30 April 2019. CR. URL: https://www.w3.org/TR/css-easing-1/ 
+[CSS-SYNTAX-3]
+    Tab Atkins Jr.; Simon Sapin. CSS Syntax Module Level 3. 16 July 2019. CR. URL: https://www.w3.org/TR/css-syntax-3/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS-WILL-CHANGE-1]
+    Tab Atkins Jr.. CSS Will Change Module Level 1. 3 December 2015. CR. URL: https://www.w3.org/TR/css-will-change-1/ 
+[CSS2]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[CSS3CASCADE]
+    Elika Etemad; Tab Atkins Jr.. CSS Cascading and Inheritance Level 3. 17 August 2020. CR. URL: https://www.w3.org/TR/css-cascade-3/ 
+[CSSOM-1]
+    Simon Pieters; Glenn Adams. CSS Object Model (CSSOM). 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-1/ 
+[DOM]
+    Anne van Kesteren. DOM Standard. Living Standard. URL: https://dom.spec.whatwg.org/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[WCAG20]
+    Ben Caldwell; et al. Web Content Accessibility Guidelines (WCAG) 2.0. 11 December 2008. REC. URL: https://www.w3.org/TR/WCAG20/ 
+[WebIDL]
+    Boris Zbarsky. Web IDL. 15 December 2016. ED. URL: https://heycam.github.io/webidl/ 
+
+●●ref_informative
+
+[CSS-BACKGROUNDS-3]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. 17 October 2017. CR. URL: https://www.w3.org/TR/css-backgrounds-3/ 
+[CSS-POSITION-3]
+    Elika Etemad; et al. CSS Positioned Layout Module Level 3. 19 May 2020. WD. URL: https://www.w3.org/TR/css-position-3/ 
+[CSS3-TRANSITIONS]
+    David Baron; et al. CSS Transitions. 11 October 2018. WD. URL: https://www.w3.org/TR/css-transitions-1/ 
+
+
+●●trans_metadata
+
+<p>
+~THIS_PAGEは、~W3Cにより
+編集者草案として公開された
+<a href="~SPEC_URL">CSS Animations Level 1</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/css-animations-1/
+以前のバージョン
+	https://www.w3.org/TR/2018/WD-css-animations-1-20181011/
+	https://www.w3.org/TR/2017/WD-css-animations-1-20171130/
+	https://www.w3.org/TR/2013/WD-css3-animations-20130219/
+	https://www.w3.org/TR/2012/WD-css3-animations-20120403/
+
+テスト一式
+	http://test.csswg.org/suites/css-animations-1_dev/nightly-unstable/
+
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-animations-1">GitHub Issues</a>
+
+編集
+	<a href="mailto:dino@apple.com">Dean Jackson</a> (Apple Inc.)
+	<a href="https://dbaron.org/">L. David Baron</a> (Mozilla)
+	<a href="http://xanthir.com/contact/">Tab Atkins Jr.</a> (Google)
+	<a href="mailto:brian@birchill.co.jp">Brian Birtles</a> (Invited Expert)
+前任編集者
+	<a href="mailto:hyatt@apple.com">David Hyatt</a> (Apple Inc.)
+	<a href="mailto:cmarrin@apple.com">Chris Marrin</a> (Apple Inc.)
+	<a href="mailto:galineau@adobe.com">Sylvain Galineau</a> (Adobe)
+
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-animations-1/Overview.bs">GitHub Editor</a>
+
+課題一覧
+	<a href="https://www.w3.org/Bugs/Public/buglist.cgi?component=Animations&amp;list_id=36653&amp;product=CSS&amp;query_format=advanced&amp;resolution=---">In Bugzilla</a>
+
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-animations-1
+</script>
+
+<body>
+
+<header>
+	<hgroup>
+<h1>CSS アニメーション — CSS Animations Level 1</h1>
+	</hgroup>
+
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この~CSS~moduleは、作者が，一連の~keyframeを利用して
+~CSS~propの値を時間とともに~animateさせる仕方を述べる。
+これらの~keyframe~animationの挙動は、［
+それらの`所要時間$, 繰返nの回数とその挙動
+］を指定することを通して制御できる。
+◎
+This CSS module describes a way for authors to animate the values of CSS properties over time, using keyframes. The behavior of these keyframe animations can be controlled by specifying their duration, number of repeats, and repeating behavior.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは、編集者草案の公な複製です…
+【以下，この節の内容は、<a href="css-common-ja.html#status">~CSS日本語訳~共通~page</a>／冒頭の仕様~metadataに委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+CSS Transitions
+`CSS3-TRANSITIONS$r
+（遷移）は、下層の~prop変化に応じて，~CSS~prop値が変化したときに補間する仕方を供する。
+これは，単純な~animationを容易に行う仕方を供するが、~animationの開始-／終止-の状態は，既存の~prop値により制御され、~animationがどの様に進捗するかについては，限られた制御しか作者に供していない。
+◎
+CSS Transitions [CSS3-TRANSITIONS] provide a way to interpolate CSS property values when they change as a result of underlying property changes. This provides an easy way to do simple animation, but the start and end states of the animation are controlled by the existing property values, and transitions provide little control to the author on how the animation progresses.
+</p>
+
+<p>
+この仕様は、作者が一連の~keyframeを通して，時経過にわたる~CSS~propの変化を指定できるようにするための，
+`定義された~animation@
+（ defined animation ）を導入する。
+~animationは、~CSS~propの呈示~用の値を時間とともに変化させる点で，遷移に類似する。
+その主要な相違は、遷移が，~prop値が変化したときに `暗黙的に^em 
+【言い換えれば，受動的に】
+誘発される一方で、~animationは，~animation~propが適用される際に `明示的に^em
+【言い換えれば，能動的に】
+実行される点にある。
+この~~理由から、~animationは，~animateされる~propにあてがうための明示的な値を要する。
+これらの値は，以下に述べる~animation~keyframeを利用して指定される。
+◎
+This proposal introduces defined animations, in which the author can specify the changes in CSS properties over time as a set of keyframes. Animations are similar to transitions in that they change the presentational value of CSS properties over time. The principal difference is that while transitions trigger implicitly when property values change, animations are explicitly executed when the animation properties are applied. Because of this, animations require explicit values for the properties being animated. These values are specified using animation keyframes, described below.
+</p>
+
+<div class="p">
+<p>
+次に挙げるものも含め、~animationの多くの側面を制御できる：
+</p>
+
+<ul><li>反復させる回数（ `animation-iteration-count$p）
+</li><li>始値と終値を`交替$させる（ `alternate$v ）かどうか
+</li><li>稼働中（ `running$v ）に置くか静止-（ `paused$v ）させるか
+</li><li>実際の開始-時機を`遅延$させる（ `animation-delay$p ）
+</li></ul>
+
+◎
+Many aspects of the animation can be controlled, including how many times the animation iterates, whether or not it alternates between the begin and end values, and whether or not the animation should be running or paused. An animation can also delay its start time.
+</div>
+
+		<section id="values">
+<h3 title="Value Definitions">1.1. 値~定義</h3>
+
+<p class="trans-note">【
+この節の内容は <a href="css-common-ja.html#values">~CSS日本語訳 共通~page</a>に委譲。
+】</p>
+
+		</section>
+	</section>
+	<section id="animations">
+<h2 title="Animations">2. ~animation</h2>
+
+<p>
+CSS Animations は、~propの`算出d値$に影響する。
+この効果は、（ CSS Animations に適応する Level の）~CSS~cascadeに［
+`~animation~level$の`指定d値$
+`CSS3CASCADE$r
+］を追加して，［
+~animationの現在の状態を与える正しい`算出d値$
+］を生産することにより、生じる。
+~animationは， ~important規則により上書きされるものを除く，通常の規則すべてを<a href="~CASCADE#cascade-origin">上書きする</a>
+`CSS3CASCADE$r。
+◎
+CSS Animations affect computed property values. This effect happens by adding a specified value to the CSS cascade ([CSS3CASCADE]) (at the level for CSS Animations) that will produce the correct computed value for the current state of the animation. As defined in [CSS3CASCADE], animations override all normal rules, but are overridden by !important rules.
+</p>
+
+<p>
+同じ~propに対し，ある時点で同時に複数の~animationから 挙動が指定されている場合、
+`animation-name$p 値の中で最後に現れる~animationが，その時点における他の~animationを上書きすることになる。
+◎
+If at some point in time there are multiple animations specifying behavior for the same property, the animation which occurs last in the value of animation-name will override the other animations at that point.
+</p>
+
+<p class="trans-note">【
+“同時に”
+—
+いずれかに`遅延$, あるいは`延伸$が指定されていて，その期間のみ重なっている場合も、 “同時” とみなされる？
+】</p>
+
+<p>
+~animationは、それが［
+適用される時点（すなわち，要素に `animation-name$p ~propが設定された時点）より前 ／
+除去された後
+］の`算出d値$には，影響しない。
+加えて、~animationは概して，［
+その遅延が満了する前 ／ その終止-後
+］の`算出d値$にも影響しないが、
+`animation-fill-mode$p ~propの値によっては影響することもある。
+◎
+An animation does not affect the computed value before the application of the animation (that is, when the animation-name property is set on an element) or after it is removed. Furthermore, typically an animation does not affect the computed value before the animation delay has expired or after the end of the animation, but may do so depending on the animation-fill-mode property.
+</p>
+
+<p>
+稼働中の~animationは，対象の~propの値を算出する。
+~CSS~cascadeに則って，他の値がその~animateされた値より優先されることもある。
+`CSS3CASCADE$r
+◎
+While running, the animation computes the value of those properties it animates. Other values may take precedence over the animated value according to the CSS cascade ([CSS3CASCADE]).
+</p>
+
+<p>
+~animationが適用されていて，まだ完遂していない, あるいは
+完遂していても `animation-fill-mode$p は［
+`forwards$v ／ `both$v
+］にされている場合、~UAは，［
+要素~上の `will-change$p ~prop `css-will-change-1$r が，当の~animationにより~animateされているすべての~prop名をその値に含んでいる
+］かのように動作するモノトスル。
+◎
+While an animation is applied but has not finished, or has finished but has an animation-fill-mode of forwards or both, the user agent must act as if the will-change property ([css-will-change-1]) on the element additionally includes all the properties animated by the animation.
+</p>
+
+<p>
+~animationの開始-時機は，~animationを適用する~style, および対応する `keyframes$at 規則の両者が解決される時点になる。
+要素に~animationが指定されつつ，対応する `keyframes$at 規則が未だ存在しない場合，開始されることはない
+— 
+【 `animation-name$p ~propが与える名前に 】
+合致する `keyframes$at 規則を解決できるようになり次第，始めから開始することになる。
+要素の~styleを動的に改変して指定される~animationは、その~styleが解決された時点に開始されることになる
+— それは、即時（ `hover^ps などの疑似~style規則の場合）にも,
+~scripting ~engineが~browserに制御を返した時点（~scriptにより~styleが適用された場合）にもなり得る。
+`~keyframe~style規則$を動的に更新しても，~animationは開始-／再-開始されないことに注意。
+◎
+The start time of an animation is the time at which the style applying the animation and the corresponding @keyframes rule are both resolved. If an animation is specified for an element but the corresponding @keyframes rule does not yet exist, the animation cannot start; the animation will start from the beginning as soon as a matching @keyframes rule can be resolved. An animation specified by dynamically modifying the element’s style will start when this style is resolved; that may be immediately in the case of a pseudo style rule such as hover, or may be when the scripting engine returns control to the browser (in the case of style applied by script). Note that dynamically updating keyframe style rules does not start or re-start an animation.
+</p>
+
+<p>
+~animationは、その名前が，要素~上の `animation-name$p ~propの`算出d値$の中のいずれかの識別子として現れ, かつ
+その~animationが妥当な `keyframes$at 規則を利用している場合に，要素に適用される。
+いったん~animationが開始されたなら、終止するか, または
+`animation-name$p
+が除去されるまで，継続される。
+<!-- ＊
+精確には、~animationの名前が animation-name ~propの算出d値に現れなくされるまで。
+-->
+稼働中の~animationに対し`~animation~prop$の値を変更した場合、始めからその値にされていたかのように~animationに適用される。
+例えば， `animation-delay$p を短くすれば、~animationは，前方へ飛ぶか, または
+即時に完遂して `animationend$et ~eventが配送されることになる。
+逆に， `animation-delay$p を引き伸ばせば、~animationは再-開始され得る 
+— その場合、 `animationstart$et ~eventが配送されることになる。
+◎
+An animation applies to an element if its name appears as one of the identifiers in the computed value of the animation-name property and the animation uses a valid @keyframes rule. Once an animation has started it continues until it ends or the animation-name is removed. Changes to the values of animation properties while the animation is running apply as if the animation had those values from when it began. For example, shortening the animation-delay may cause the animation to jump forwards or even finish immediately and dispatch an animationend event. Conversely, extending the animation-delay may cause an animation to re-start and dispatch an animationstart event.
+</p>
+
+<p>
+`animation-name$p の中で，同じ `keyframes$at 規則~名が繰返されてもヨイ。
+`animation-name$p が変化したときは、［
+~animationの新たな~listを最後から最初の順に反復して、その各~animation名に対し，既存の~animation~list内で`最後^emに合致する~animation名を見出す
+］ことにより，既存の~animationは更新される：
+◎
+The same @keyframes rule name may be repeated within an animation-name. Changes to the animation-name update existing animations by iterating over the new list of animations from last to first, and, for each animation, finding the last matching animation in the list of existing animations.＼
+</p>
+
+<ul>
+	<li>
+合致するものが見出された場合、既存の~animationは，［
+新たな~list内での，~animation名の位置
+］に対応する各種~animation~propを利用して更新される
+— ただし，上に述べたように、その現在の再生~時刻は保守する。
+合致した~animationは、重ねて合致することの無いよう，既存の~animation~listから除去される。
+◎
+If a match is found, the existing animation is updated using the animation properties corresponding to its position in the new list of animations, whilst maintaining its current playback time as described above. The matching animation is removed from the existing list of animations such that it will not match twice.＼
+</li>
+	<li>
+合致するものが見出されなかった場合、新たな~animationが作成される。
+その結果、例えば `animation-name$p を "`a^v" から "`a, a^v" に更新した場合、
+`a^v に対する既存の~animationは~list内の `2 個目の^em~animationになり，~list内の 1 個目の項に対し新たな~animationが作成されることになる。
+◎
+If a match is not found, a new animation is created. As a result, updating animation-name from ‘a’ to ‘a, a’ will cause the existing animation for ‘a’ to become the second animation in the list and a new animation will be created for the first item in the list.
+</li>
+</ul>
+
+<div class="example">
+
+<pre class="lang-css">
+div {
+  animation-name: diagonal-slide;
+  animation-duration: 5s;
+  animation-iteration-count: 10;
+  position: relative; /* <span class="comment"> `left^p, `top^p を有効化</span> */
+}
+
+@keyframes diagonal-slide {
+  from {
+    left: 0;
+    top: 0;
+  }
+
+  to {
+    left: 100px;
+    top: 100px;
+  }
+}
+</pre>
+
+<p>
+これは、要素を 5 秒間に (0, 0) から (100px, 100px) へ移動させて，それをあと 9 回~繰返す（したがって計 10 回の反復）~animationを生産することになる。
+◎
+This will produce an animation that moves an element from (0, 0) to (100px, 100px) over five seconds and repeats itself nine times (for a total of ten iterations).
+</p>
+
+</div>
+
+<p>
+`display$p ~propが `none^v にされた場合、要素とその子孫に適用されている，稼働中のどの~animationも終了させる。
+要素の `display$p が `none^v から他の値に更新された場合、 `animation-name$p ~propにより要素に適用されているすべての~animationに加え，
+`display$p が `none^v でない子孫に適用されるすべての~animationも開始させる。
+◎
+Setting the display property to none will terminate any running animation applied to the element and its descendants. If an element has a display of none, updating display to a value other than none will start all animations applied to the element by the animation-name property, as well as all animations applied to descendants with display other than none.
+</p>
+
+<p>
+~animationは 内容を動的に変化させるものであり，一部の利用者に光過敏性発作（ seizure ）を引き起こし得る。
+内容が光過敏性発作を避ける仕方については
+<a href="http://www.w3.org/TR/WCAG20/#seizure">指針 2.3 : 光過敏性発作を引き起こさないように内容を設計すること</a>
+`WCAG20$r
+を見よ。
+◎
+While authors can use animations to create dynamically changing content, dynamically changing content can lead to seizures in some users. For information on how to avoid content that can lead to seizures, see Guideline 2.3: Seizures: Do not design content in a way that is known to cause seizures ([WCAG20]).
+</p>
+
+<p>
+実装は、対話的（ interactive ）でない媒体へ具現化する際には（例えば印刷時），~animationを無視してもヨイ。
+この仕様の将来~versionは、その種の媒体への具現化-法を定義し得る。
+◎
+Implementations may ignore animations when the rendering medium is not interactive e.g. when printed. A future version of this specification may define how to render animations for these media.
+</p>
+
+	</section>
+	<section id="keyframes">
+<h2 title="Keyframes">3. ~keyframe</h2>
+
+<p>
+~animateされる~propに，~animationの様々な時点における値を指定するためには、一連の~keyframeを利用する。
+これらの~keyframeは、~animationの 1 周回の挙動を指定する
+— すなわち、~animationは 0 回以上 反復させられる。
+◎
+Keyframes are used to specify the values for the animating properties at various points during the animation. The keyframes specify the behavior of one cycle of the animation; the animation may iterate zero or more times.
+</p>
+
+<p>
+一連の~keyframeは、以下に定義される
+`keyframes@at
+~at-ruleを利用して指定される：
+◎
+Keyframes are specified using the @keyframes at-rule, defined as follows:
+</p>
+
+<pre class="prod">
+@keyframes
+    = @keyframes `keyframes-name$t { `rule-list$t }
+
+`keyframes-name@t
+    = `custom-ident$t
+    | `string$t
+
+`keyframe-block@t
+    = `keyframe-selector$t# { `declaration-list$t }
+
+`keyframe-selector@t
+    = from
+    | to
+    | `percentage$t
+</pre>
+
+<p>
+`keyframes$at の内側の `rule-list$t が包含できるのは、
+`keyframe-block$t 規則に限られる。
+◎
+The &lt;rule-list&gt; inside of @keyframes can only contain &lt;keyframe-block&gt; rules.
+</p>
+
+<p>
+`keyframe-block$t の内側の `declaration-list$t は、この仕様に定義されるものを除くどの~CSS~propも受容することに加え、
+`animation-timing-function$p ~propも受容し，それを特別に解釈する。
+どの~propも~cascadeとヤリトリすることはない（よって、 ~importantの利用は，~propを無効にし、その~propは無視されることになる）。
+◎
+The &lt;declaration-list&gt; inside of &lt;keyframe-block&gt; accepts any CSS property except those defined in this specification, but does accept the animation-timing-function property and interprets it specially. None of the properties interact with the cascade (so using !important on them is invalid and will cause the property to be ignored).
+</p>
+
+<p>
+`keyframes$at ~blockには、その導入部（ `keyframes-name$t ）における［
+`custom-ident$t または `string$t
+］値により，名前が付与される。
+この 2 つの構文は、機能的には等価になる。
+通常の［
+`custom-ident$t ／ `string$t 
+］に対するときのように、この名前は全部的に`文字大小区別$である。
+加えて、 `custom-ident$t からは~keyword `none$v も除外される
+【下の例に示されるように、文字大小無視で合致するものも含めて】
+。
+◎
+A @keyframes block has a name given by the &lt;custom-ident&gt; or &lt;string&gt; in its prelude. The two syntaxes are equivalent in functionality; the name is the value of the ident or string. As normal for &lt;custom-ident&gt;s and &lt;string&gt;s, the names are fully case-sensitive; two names are equal only if they are codepoint-by-codepoint equal. The &lt;custom-ident&gt; additionally excludes the none keyword.
+</p>
+
+<div class="example">
+
+<p>
+例えば、次の 2 つの `keyframes$at 規則の名前は同じになるので，最初の方は無視されることになる：
+◎
+For example, the following two @keyframes rules have the same name, so the first will be ignored:
+</p>
+
+<pre class="lang-css">
+@keyframes foo { /* ... */ }
+@keyframes "foo" { /* ... */ }
+</pre>
+
+<p>
+一方で、次の `keyframes$at 規則の名前は，前の 2 つの規則と`異なる^em：
+◎
+On the other hand, the following @keyframes rule’s name is different from the previous two rules:
+</p>
+
+<pre class="lang-css">
+@keyframes FOO { /* ... */ }
+</pre>
+
+<p>
+次の `keyframes$at 規則は、
+`custom-ident$t に許容されない値を利用しているので，無効になる：
+◎
+The following @keyframes rules are invalid because they use disallowed &lt;custom-ident&gt; values:
+</p>
+
+<pre class="lang-css">
+@keyframes initial { /* ... */ }
+@keyframes None { /* ... */ }
+</pre>
+
+<p id="_keyframe-name-as-string">
+しかしながら，これらの名前は `string$t で`指定できる^emので、次のいずれも`妥当になる^em：
+◎
+However, those names can be specified with a &lt;string&gt;, so the following are both valid:
+</p>
+
+<pre class="lang-css">
+@keyframes "initial" { /* ... */ }
+@keyframes "None" { /* ... */ }
+</pre>
+
+</div>
+
+<p>
+`keyframe-block$t の導入部は、一連の `keyframe-selector$t
+— `~keyframe選択子@ —
+からなる，~comma区切りの~listであり、各
+`選択子の値@
+は，［
+百分率, ~keyword `from^v, ~keyword `to^v
+］のいずれかをとる。
+これらの値は、この~keyframeが表現する［
+~animationの`所要時間$に対する割合
+］を指定する†。
+~keyframe自身は、その選択子に伴われる~block内で宣言される一連の~prop値により指定される。
+~keyword［
+`from^v ／ `to^v
+］は，値［
+`0%^v ／ `100%^v
+］と等価になる。
+`0%^v を下回る値や `100%^v を上回る値は，無効であり、その `keyframe-block$t は無視される。
+◎
+The &lt;keyframe-selector&gt; for a &lt;keyframe-block&gt; consists of a comma-separated list of percentage values or the keywords from or to. The selector is used to specify the percentage along the duration of the animation that the keyframe represents. The keyframe itself is specified by the block of property values declared on the selector. The keyword from is equivalent to the value 0%. The keyword to is equivalent to the value 100%. Values less than 0% or higher than 100% are invalid and cause their &lt;keyframe-block&gt; to be ignored.
+</p>
+
+<p class="note">注記：
+百分率~値には，百分率 単位~指定子（ "`%^css" ）が利用されなければならない
+— `0^v は、`~keyframe選択子$としては妥当でない。
+◎
+Note that the percentage unit specifier must be used on percentage values. Therefore, 0 is an invalid keyframe selector.
+</p>
+
+<p class="trans-note">【†
+すなわち、~animationの 1 周回の中の ある時点を（その所要時間に対する割合により） “選択する” 。
+】【
+`~keyframe選択子$や `選択子の値$などの用語は、原文では用語として定義されて（~mark-upされて）いないが，他所に現れるこれらの語の意味を明確化するため、この訳では，用語として与えている
+— そのような用語は、他にもいくつかある。
+】</p>
+
+<p>
+［
+`0%^v （または `from^v ） ／ `100%^v （または `to^v ）
+］~keyframeが指定されていない場合、~UAは，~animateされる~propの`算出d値$を利用して，
+`暗黙の@
+［
+`0%^v ／ `100%^v 
+］~keyframeを構築することになる。
+◎
+If a 0% or from keyframe is not specified, then the user agent constructs a 0% keyframe using the computed values of the properties being animated. If a 100% or to keyframe is not specified, then the user agent constructs a 100% keyframe using the computed values of the properties being animated.
+</p>
+
+<div class="p">
+<p>
+各 `keyframe-block$t 
+【 を成す `declaration-list$t 】
+は、いくつかの
+`~keyframe~style規則@
+— ~propとその値の組 —
+からなる。
+これらの規則においては、次に該当する~propは無視される：
+</p>
+<ul>
+	<li>
+この仕様にて定義される~prop
+— ただし、 `animation-timing-function$p は除く（その挙動は後述する）。
+</li>
+	<li>
+~important が付与されているもの。
+</li>
+</ul>
+
+◎
+The &lt;keyframe-block&gt; contains properties and values. The properties defined by this specification are ignored in these rules, with the exception of animation-timing-function, the behavior of which is described below. In addition, properties qualified with !important are invalid and ignored.
+</div>
+
+<p>
+複数の `keyframes$at 規則が，同じ名前を伴って定義されている場合、文書~順序で最後のものが優先され，他のものは無視される。
+◎
+If multiple @keyframes rules are defined with the same name, the last one in document order wins, and all preceding ones are ignored.
+</p>
+
+<div class="example">
+
+<pre class="lang-css">
+div {
+  animation-name: slide-right;
+  animation-duration: 2s;
+}
+
+@keyframes slide-right {
+
+  from {
+    margin-left: 0px;
+  }
+
+  50% {
+    margin-left: 110px;
+    opacity: 1;
+  }
+
+  50% {
+     opacity: 0.9;
+  }
+
+  to {
+    margin-left: 200px;
+  }
+
+}
+</pre>
+
+<p>
+上の 2 つの 50% 規則は、下に示すように，等価な単独の規則に組合せることもできる：
+◎
+The two 50% rules from above can also be combined into an equivalent single rule as illustrated below:
+</p>
+
+<pre class="lang-css">
+@keyframes slide-right {
+
+  from {
+    margin-left: 0px;
+  }
+
+  50% {
+    margin-left: 110px;
+    opacity: 0.9;
+  }
+
+  to {
+    margin-left: 200px;
+  }
+
+}
+</pre>
+
+</div>
+
+<p>
+一連の~keyframeを決定するため、それらはまず，`選択子の値$により
+`時系列順@（昇順）に~sortされた上で、
+`keyframes$at 規則の中で，各 規則が~cascadeされる
+<!-- 
+`出現順序$ `CSS3CASCADE$r？
+-->
+— したがって，~keyframeの一連の~propは、`選択子の値$が同じであるような複数の `keyframes$at 規則から導出され得る。
+◎
+To determine the set of keyframes, all of the values in the selectors are sorted in increasing order by time. The rules within the @keyframes rule then cascade; the properties of a keyframe may thus derive from more than one @keyframes rule with the same selector value.
+</p>
+
+<p class="trans-note">【
+2 つの`選択子の値$が（抽象的な数として）非常に近い場合（例えば "0%" と "0.00000001%" など）、<a href="~CSSVAL#numeric-ranges">実装が~supportする精度</a>に依存して，同じ値に見なされるかもしれない。
+これは例えば、~keyframeを選択子の値で~sortするときに影響するので，各~実装~間で目に見える相違をもたらし得る。
+】</p>
+
+<p>
+~keyframe内に［
+指定されていない，または
+指定されているが値は妥当でない
+］~propに対する~animationは、その~keyframeが存在しなかったかのように進行する。
+概念的には、いずれかの~keyframe内に在るような~propのそれぞれに対し，~keyframeの集合が構築された上で、各~propに対し，~animationが独立に稼働するかのように。
+◎
+If a property is not specified for a keyframe, or is specified but invalid, the animation of that property proceeds as if that keyframe did not exist. Conceptually, it is as if a set of keyframes is constructed for each property that is present in any of the keyframes, and an animation is run independently for each property.
+</p>
+
+<div class="example">
+
+<pre class="lang-css">
+@keyframes wobble {
+  0% {
+    left: 100px;
+  }
+
+  40% {
+    left: 150px;
+  }
+
+  60% {
+    left: 75px;
+  }
+
+  100% {
+    left: 100px;
+  }
+}
+</pre>
+
+<p>
+名前 "wobble" の~animationに対し，４個の~keyframeが指定されている。
+最初の~keyframeにより~animateされる `left$p
+~propの値は `100px^v になり、~animation周回の始まりにて示される。
+~animation`所要時間$の 40% 経過時点で， `left$p は `150px^v まで~animateされる。
+~animation`所要時間$の 60% の時点で， `left$p は `75px^v へ戻る様に ~animateされる。
+~animation周回の終端-時における `left$p の値は `100px^v に戻される。
+下の図式に，`所要時間$に `10s^v が与えられた場合の~animationの状態を示す。
+◎
+Four keyframes are specified for the animation named "wobble". In the first keyframe, shown at the beginning of the animation cycle, the value of the left property being animated is 100px. By 40% of the animation duration, left has animated to 150px. At 60% of the animation duration, left has animated back to 75px. At the end of the animation cycle, the value of left has returned to 100px. The diagram below shows the state of the animation if it were given a duration of 10s.
+</p>
+
+<figure><!-- animation1.png -->
+<div class="_ex-anim-container">
+	<div style="left:100px;"></div><span>0 秒後</span>
+</div>
+<div class="_ex-anim-container">
+	<div style="left:125px;"></div><span>2 秒後</span>
+</div>
+<div class="_ex-anim-container">
+	<div style="left:150px;"></div><span>4 秒後</span>
+</div>
+<div class="_ex-anim-container">
+	<div style="left:75px;"></div><span>6 秒後</span>
+</div>
+<div class="_ex-anim-container">
+	<div style="left:87.5px;"></div><span>8 秒後</span>
+</div>
+<div class="_ex-anim-container">
+	<div style="left:100px;"></div><span>10 秒後</span>
+</div>
+<figcaption>
+~keyframeにより指定される~animation状態
+◎
+Animation states specified by keyframes
+</figcaption></figure>
+
+<div class="trans-note">
+<p>【
+上の~animationを，利用中の~browserで試す
+— 下のボックスをクリックして~~開始／~~停止：
+】</p>
+<figure>
+<div class="_ex-anim-container" onclick="_ex_anim_toggle('_ex_wobble')">
+	<div id="_ex_wobble" style="left: 100px;"></div>
+</div>
+</figure>
+</div>
+
+</div>
+
+<p class="issue">
+この仕様は、 CSS Transitions の
+<a href="~TRANSITION#application">遷移の適用</a>
+節の様に，~keyframeから値がどう決定されるかを定義する必要がある。
+◎
+This specification needs to define how the value is determined from the keyframes, like the section on Application of transitions does for CSS Transitions.
+</p>
+
+		<section id="timing-functions">
+<h3 title="Timing functions for keyframes">3.1.~keyframe用の計時~関数</h3>
+
+<p>
+各`~keyframe~style規則$では、~animationが次の~keyframeへ移行するときに利用される`計時~関数$を宣言できる。
+◎
+A keyframe style rule may also declare the timing function that is to be used as the animation moves to the next keyframe.
+</p>
+
+<div class="example">
+
+<pre class="lang-css">
+@keyframes bounce {
+  from {
+    top: 100px;
+    animation-timing-function: ease-out;
+  }
+
+  25% {
+    top: 50px;
+    animation-timing-function: ease-in;
+  }
+
+  50% {
+    top: 100px;
+    animation-timing-function: ease-out;
+  }
+
+  75% {
+    top: 75px;
+    animation-timing-function: ease-in;
+  }
+
+  to {
+    top: 100px;
+  }
+}
+</pre>
+
+<p>
+名前 "bounce" の~animationには、 5 個の~keyframeが指定されている。
+1 個目と 2 個目の~keyframeの合間（すなわち， 0% 〜 25% ）には，
+`ease-out$v
+`計時~関数$が利用され、
+2 個目と 3 個目の~keyframeの合間（すなわち， 25% 〜 50% ）には，
+`ease-in$v
+`計時~関数$が利用される，等々。
+その効果は、次の様に現れることになる：
+要素は~pageの上方へ `50px^v 移動され,
+その最高点に近付くに連れて動きは~~緩められ,
+`100px^v
+の所まで落下するに連れて動きは~~速められる。
+~animationの後半では、要素が
+`25px^v
+だけ~page上方へ移動されることを除き，似た様に挙動する。
+◎
+Five keyframes are specified for the animation named "bounce". Between the first and second keyframe (i.e., between 0% and 25%) an ease-out timing function is used. Between the second and third keyframe (i.e., between 25% and 50%) an ease-in timing function is used. And so on. The effect will appear as an element that moves up the page 50px, slowing down as it reaches its highest point then speeding up as it falls back to 100px. The second half of the animation behaves in a similar manner, but only moves the element 25px up the page.
+</p>
+
+</div>
+
+<p>
+"`to^v" （ `100%^v ）~keyframe上に指定されている`計時~関数$は，無視される。
+◎
+A timing function specified on the to or 100% keyframe is ignored.
+</p>
+
+<p>
+~~詳細は `animation-timing-function$p ~propにて。
+◎
+See the animation-timing-function property for more information.
+</p>
+
+		</section>
+		<section id="animation-name">
+<h3 title="The animation-name property">3.2. `animation-name^p ~prop</h3>
+
+<p>
+`animation-name$p ~propは、適用される~animationの~listを定義する。
+その値の中の各 名前は、［
+~animation用の~prop値を供する
+`keyframes$at ~at-rule
+］を選択するために利用される。
+どの `keyframes$at ~at-ruleにも合致しない名前に対しては、~animateされる~propは無いので，~animationは実行されないことになる。
+これを，~cascadeから生じる~animationの上書きに利用できる。
+複数の~animationが，同じ~propを改変しようと試みている場合、名前が~listの末尾側に最も近い~animationが優先される。
+◎
+The animation-name property defines a list of animations that apply. Each name is used to select the keyframe at-rule that provides the property values for the animation. If the name does not match any keyframe at-rule, there are no properties to be animated and the animation will not execute. Furthermore, if the animation name is none then there will be no animation. This can be used to override any animations coming from the cascade. If multiple animations are attempting to modify the same property, then the animation closest to the end of the list of names wins.
+</p>
+
+<p id="list-matching">
+名前により挙げられる各~animationは、他の各種`~animation~prop$（以下の各節に挙げられる）用に，対応する値を持つべきである。
+他の`~animation~prop$にあてがわれた~comma区切りの値の~list %~list は、［
+~animationの開始-時点に `animation-name$p に与えられている~list
+］の長さ %L と同じに揃えられるよう，最初の値から~~対応付けられる：
+◎
+Each animation listed by name should have a corresponding value for the other animation properties listed below. If the lists of values for the other animation properties do not have the same length, the length of the animation-name list determines the number of items in each list examined when starting animations. The lists are matched up from the first value:＼
+</p>
+
+<ul>
+	<li>
+%~list の末尾側にある， %L 個を超える部分の値は利用されない。
+◎
+excess values at the end are not used.＼
+</li>
+	<li>
+%~list にあてがわれた値が %L 個に満たない場合、~UAは，
+%L 個 の値が得られるまで %~list を繰返す†ことにより、その`使用~値$を算定しなければならない
+【値が 0 個の場合（全くあてがわれていない場合）、初期~値が利用されることになる。】
+◎
+If one of the other properties doesn’t have enough comma-separated values to match the number of values of animation-name, the UA must calculate its used value by repeating the list of values until there are enough.＼
+</li>
+	<li>
+この切り捨て／繰返nは、`算出d値$には影響しない。
+◎
+This truncation or repetition does not affect the computed value.
+</li>
+</ul>
+
+<p class="note">注記：
+これは、 `background-*^p ~propの挙動に相似的になる（
+`background-image$p が `animation-name$p
+の役割に相似的になる）。
+【<a href="~CSSBG#layering">参照</a> 】
+◎
+Note: This is analogous to the behavior of the background-* properties, with background-image analogous to animation-name.
+</p>
+
+◎名 `animation-name@p
+◎値 [ none | `keyframes-name$t ]#
+◎初 `none$v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算
+~list：各~itemは［
+`~CSS識別子$／~keyword `none$v
+］を与える
+◎
+list, each item either a case-sensitive css identifier or the keyword none
+◎順 文法に従う
+◎ア ~animate不可
+◎表終 
+
+<p>
+各種 値の意味は：
+◎
+The values of animation-name have the following meanings:
+</p>
+
+<dl data-dfn-for="animation-name">
+	<dt>`none@v</dt>
+	<dd>
+`keyframes$at は全く指定されず，~animationはない。
+この~animationに指定される他のどの`~animation~prop$も効果を持たない。
+◎
+No keyframes are specified at all, so there will be no animation. Any other animations properties specified for this animation have no effect. 
+</dd>
+
+	<dt id="valdef-animation-name-keyframes-name">`keyframes-name$t</dt>
+	<dd>
+~animationは、 `keyframes-name$t に指定された名前の `keyframes$at を利用する。
+その様な名前の `keyframes$at 規則が無ければ、~animationも無い。
+◎
+The animation will use the keyframes with the name specified by the &lt;keyframes-name&gt;, if they exist. If no @keyframes rule with that name exists, there is no animation.
+</dd>
+
+</dl>
+
+		</section>
+		<section id="animation-duration">
+<h3 title="The animation-duration property">3.3. `animation-duration^p ~prop</h3>
+
+<p>
+`animation-duration$p
+~propは、~animationの 1 周回の
+`所要時間@
+を定義する。
+◎
+The animation-duration property defines duration of a single animation cycle.
+</p>
+
+◎名 `animation-duration@p
+◎値 `time$t#
+◎初 `0s^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算
+~list：各~itemは 所要時間を与える
+◎
+list, each item a duration 
+◎順 文法に従う
+◎ア ~animate不可
+◎表終
+
+<dl>
+	<dt id="valdef-animation-duration-time">`time$t</dt>
+	<dd>
+~animationの 1 周回にかかる時間の長さを指定する。
+負な `time$t は無効。
+◎
+The &lt;time&gt; specifies the length of time that an animation takes to complete one cycle. A negative &lt;time&gt; is invalid.
+</dd>
+	<dd>
+<p>
+`time$t に対する `0s^v （初期~値）は、~animationを瞬時に終わらせる。
+`keyframes$at の効果はなくなるが、~animationそれ自体は生じる
+— 特に、開始-／終止-~event（
+`animationstart$et ／ `animationend$et
+）は発火され、
+`animation-fill-mode$p の定義により，その値に応じて：
+</p>
+		<ul>
+			<li>
+`backwards$v ／ `both$v
+ならば
+⇒
+`animation-delay$p の間に，~animationの最初の~frameが表示される。
+</li>
+			<li>
+`forwards$v ／ `both$v
+ならば
+⇒
+`animation-delay$p の後に，~animationの最後の~frameが表示される。
+</li>
+			<li>
+<a href="#valdef-animation-fill-mode-none">`none^v</a>
+ならば
+⇒
+~animationによる視覚的な効果はない。
+</li>
+		</ul>
+
+◎
+If the &lt;time&gt; is 0s, like the initial value, the keyframes of the animation have no effect, but the animation itself still occurs instantaneously. Specifically, start and end events are fired; if animation-fill-mode is set to backwards or both, the first frame of the animation, as defined by animation-direction, will be displayed during the animation-delay. After the animation-delay the last frame of the animation, as defined by animation-direction, will be displayed if animation-fill-mode is set to forwards or both. If animation-fill-mode is set to none the animation will have no visible effect.
+</dd>
+
+</dl>
+
+		</section>
+		<section id="animation-timing-function">
+<h3 title="The animation-timing-function property">3.4. `animation-timing-function^p ~prop</h3>
+
+<p>
+`animation-timing-function$p ~propは、`計時~関数$
+— ~animationが 各~keyframe間で どう進捗するか —
+を記述する。
+計時~関数は、 `CSS-EASING-1$r にて別に定義される。
+◎
+The animation-timing-function property describes how the animation will progress between each pair of keyframes. Timing functions are defined in the separate CSS Easing Functions module [css-easing-1].
+</p>
+
+<p>
+`入力~進捗~値$には、 `animation-direction$p ~propによる効果を`組入れた上で^em†，現在の~keyframeの`所要時間$に対する ~keyframeの開始から経過した時間の割合が利用される。
+【†すなわち，逆方向に再生されるときは、時計も逆方向に進める下で`出力~進捗~値$を生産する。】
+◎
+The input progress value used is the percentage of the time elapsed between the current keyframe and the next keyframe after incorporating the effect of the animation-direction property.
+</p>
+
+<p>
+`animation-delay$p の間は、 `animation-timing-function$p は適用されない。
+◎
+During the animation-delay, the animation-timing-function is not applied.
+</p>
+
+<p class="note">注記：
+この定義は必要とされる
+— さもなければ，`計時~関数$が`階段~easing関数$であって，その`段~位置$が `start$v にされている場合、 `backwards$v による`延伸$の間，関数の最初の段の上端側の`出力~進捗~値$を生産することになるので。
+◎
+Note: This definition is necessary because otherwise a step easing function with a step position of start would produce a backwards fill equal to the top of the first step in the function.
+</p>
+
+<p>
+`出力~進捗~値$は、現在の~keyframeと次の~keyframeの間の~prop値を`補間-$するときの %p 値として利用される。
+◎
+The output progress value is used as the p value when interpolating the property values between the current and next keyframe.
+</p>
+
+◎名 `animation-timing-function@p
+◎値 `easing-function$t#
+◎初 `ease^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算
+~list：各~itemは 算出された `easing-function$t を与える
+◎
+list, each item a computed &lt;timing-function&gt;
+◎順 文法に従う
+◎ア ~animate不可
+◎表終
+
+<p>
+~keyframe内†に指定された
+`animation-timing-function$p は、その~keyframeから`時系列順$で††次の［
+`animation-timing-function$p を定義するような~keyframe
+］, もしくは `100%^v ~keyframe（`暗黙の$それも含む）までの，~animationの進展を定義する。
+◎
+When specified in a keyframe, animation-timing-function defines the progression of the animation between the current keyframe and the next keyframe for the animating property in sorted keyframe selector order (which may be an implicit 100% keyframe).
+</p>
+
+<p class="trans-note">【†
+すなわち， `keyframe-block$t 内の `declaration-list$t 内
+】【††
+すなわち，~keyframe`選択子の値$の昇順
+】</p>
+
+		</section>
+		<section id="animation-iteration-count">
+<h3 title="The animation-iteration-count property">3.5. `animation-iteration-count^p ~prop</h3>
+
+<p>
+`animation-iteration-count$p
+~propは、~animationが再生される周回 数
+—
+`反復~回数@
+—
+を指定する。
+初期~値
+`1^v
+は、~animationがその開始-から終止-までの間， 1 回だけ再生されることを意味する。
+この~propは、 `animation-direction$p に対する値 `alternate$v と併用されることも多い
+— それは、`交替$周回において~animationを逆再生させることになる。
+◎
+The animation-iteration-count property specifies the number of times an animation cycle is played. The initial value is 1, meaning the animation will play from beginning to end once. This property is often used in conjunction with an animation-direction value of alternate, which will cause the animation to play in reverse on alternate cycles.
+</p>
+
+<p>
+~animationが作動中の時区間（ `所要時間$ × `反復~回数$ ）は、
+`作動時間@
+と呼ばれる。
+◎
+The time window during which the animation is active (duration x iteration-count) is known as the active duration.
+</p>
+
+◎名 `animation-iteration-count@p
+◎値 `single-animation-iteration-count$t#
+◎初 `1^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算
+~list：各~itemは 実数, あるいは~keyword `infinite$v を与える
+◎
+list, each item either a number or the keyword infinite
+◎順 文法に従う
+◎ア ~animate不可
+◎表終
+
+<div class="prod">
+`single-animation-iteration-count@t
+= `infinite$v | `number$t
+</div>
+
+<dl data-dfn-for="animation-iteration-count">
+	<dt>`infinite@v</dt>
+	<dd>
+~animationは、永遠に繰返されることになる。
+◎
+The animation will repeat forever. 
+</dd>
+
+	<dt id="valdef-animation-iteration-count-number">`number$t</dt>
+	<dd>
+~animationは、指定された回数だけ繰返されることになる。
+数値が整数でない場合、~animationは最後の周回の中途で終止することになる。
+負な数は妥当でない。
+◎
+The animation will repeat the specified number of times. If the number is not an integer, the animation will end partway through its last cycle. Negative numbers are invalid.
+</dd>
+	<dd>
+値 `0^v は妥当であり、
+`animation-duration$p に対する値 `0s^v
+と類似に，~animationを瞬時に終わらせる。
+◎
+A value of 0 is valid and, similar to an animation-duration of 0s, causes the animation to occur instantaneously.
+</dd>
+</dl>
+
+<p>
+`所要時間$ `0s^v の~animationは、
+`animation-iteration-count$p に対する妥当な値が何であれ
+— `infinite$v であっても —
+瞬時に生じて終わる。
+◎
+If the animation has a duration of 0s, it will occur instantaneously for any valid value of animation-iteration-count, including infinite.
+</p>
+
+		</section>
+		<section id="animation-direction">
+<h3 title="The animation-direction property">3.6. `animation-direction^p ~prop</h3>
+
+<p>
+`animation-direction$p
+~propは、~animationを
+<span id="_alternate">どの周回において逆再生させるか</span>
+を定義する。
+~animationが逆再生されるときは`計時~関数$も逆にされる。
+例えば，逆再生されたときの `ease-in$v ~animation
+【 `animation-timing-function$p の値が `ease-in$v にされた~animation 】
+は、 `ease-out$v ~animationとして現れることになる。
+◎
+The animation-direction property defines whether or not the animation should play in reverse on some or all cycles. When an animation is played in reverse the timing functions are also reversed. For example, when played in reverse an ease-in animation would appear to be an ease-out animation.
+</p>
+
+◎名 `animation-direction@p
+◎値 `single-animation-direction$t#
+◎初 `normal$v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算
+~list：各~itemは 指定された~keywordを与える
+◎
+list, each item a keyword as specified
+◎順 文法に従う
+◎ア ~animate不可
+◎表終
+
+<div class="prod">
+`single-animation-direction@t
+    = `normal$v
+    | `reverse$v
+    | `alternate$v
+    | `alternate-reverse$v
+</div>
+
+<dl>
+	<dt>`normal@v</dt>
+	<dd>
+~animationのすべての反復は、指定dどおりに（順方向に）再生される。
+◎
+All iterations of the animation are played as specified.
+</dd>
+
+	<dt>`reverse@v</dt>
+	<dd>
+~animationのすべての反復は、指定dとは逆方向に再生される
+◎
+All iterations of the animation are played in the reverse direction from the way they were specified.
+</dd>
+
+	<dt>`alternate@v</dt>
+	<dd>
+~animationの各 周回のうち，奇数回目の反復は順方向に再生され，偶数回目の反復は逆方向に再生される。
+◎
+The animation cycle iterations that are odd counts are played in the normal direction, and the animation cycle iterations that are even counts are played in a reverse direction.
+</dd>
+
+	<dt>`alternate-reverse@v</dt>
+	<dd>
+~animationの各 周回のうち，奇数回目の反復は逆方向に再生され，偶数回目の反復は順方向に再生される。
+◎
+The animation cycle iterations that are odd counts are played in the reverse direction, and the animation cycle iterations that are even counts are played in a normal direction.
+</dd>
+
+</dl>
+
+<p class="note">注記：
+反復の偶奇を決定する目的においては、回数は 1 から数えることに注意。
+◎
+Note: For the purpose of determining whether an iteration is even or odd, iterations start counting from 1.
+</p>
+
+		</section>
+		<section id="animation-play-state">
+<h3 title="The animation-play-state property">3.7. `animation-play-state^p ~prop</h3>
+
+<p>
+`animation-play-state$p
+~propは、~animationを稼働中にするか／静止させるかを定義する。
+◎
+The animation-play-state property defines whether the animation is running or paused.
+</p>
+
+◎名 `animation-play-state@p
+◎値 `single-animation-play-state$t#
+◎初 `running$v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算
+~list：各~itemは 指定された~keywordを与える
+◎
+list, each item a keyword as specified
+◎順 文法に従う
+◎ア ~animate不可
+◎表終
+
+<div class="prod">
+`single-animation-play-state@t
+    = `running$v
+    | `paused$v
+</div>
+
+<dl data-dfn-for="animation-play-state">
+	<dt>`running@v</dt>
+	<dd>
+~animationは、この~propが `running$v に設定されている間は，通常通り進行する。
+◎
+While this property is set to running, the animation proceeds as normal.
+</dd>
+
+	<dt>`paused@v</dt>
+	<dd>
+<p>
+この~propが `paused$v に設定されている間は、~animationは，それを制御する “時計” が停止されたかのように 静止され，それまでの進捗は要素に適用され続ける。
+静止-が解かれた（ `running$v に戻された）時点で、~animationは，時計が進み始めたかのように，その状態から開始される。
+◎
+While this property is set to paused, the animation is paused. The animation continues to apply to the element with the progress it had made before being paused. When unpaused (set back to running), it restarts from where it left off, as if the "clock" that controls the animation had stopped and started again.
+</dd>
+	<dd>
+遅延の段階で `animation-play-state$p ~propが `paused$v にされた場合、遅延~時計も静止され， `running$v に戻され次第 再開される。
+◎
+If the property is set to paused during the delay phase of the animation, the delay clock is also paused and resumes as soon as animation-play-state is set back to running.
+</dd>
+</dl>
+
+		</section>
+		<section id="animation-delay">
+<h3 title="The animation-delay property">3.8. `animation-delay^p ~prop</h3>
+
+<p>
+`animation-delay$p
+~propは、~animationがいつ開始することになるかを定義する。
+これは、~animationを，それが適用された時点から ある時間だけ経過した後に始めさせたり、あるいは，その時点より ある時間だけ前の時点ですでに実行が始まっていたかのように現れさせる。
+◎
+The animation-delay property defines when the animation will start. It allows an animation to begin execution some time after it is applied, or to appear to have begun execution some time before it is applied.
+</p>
+
+◎名 `animation-delay@p
+◎値 `time$t#
+◎初 `0s^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算
+~list：各~itemは 所要時間を与える
+◎
+list, each item a duration
+◎順 文法に従う
+◎ア ~animate不可
+◎表終
+
+<dl data-dfn-for="animation-fill-delay">
+	<dt>`time@t</dt>
+	<dd>
+~animationの開始-（これらの~propを通して~animationが適用される時点）から，その実際の開始-までの遅延の~~長さを定義する。
+遅延 `0s^v （初期~値）は、~animationが適用され次第，その実行を開始させることを意味する。
+◎
+The &lt;time&gt; defines how long of a delay there is between the start of the animation (when the animation is applied to the element via these properties) and when it begins executing. A delay of 0s (the initial value) means that the animation will execute as soon as it is applied.
+</dd>
+	<dd>
+負な遅延も<strong>妥当である</strong>。
+遅延 `0s^v と類似に、それは，~animationを即時に実行に移すことを意味するが、~animationは遅延の絶対値の分だけ進捗され，
+<span id="_virtual-start-time_">指定された時間だけ過去の時点ですでに開始されていた</span>かのように
+—
+すなわち，その`作動時間$の中途から開始されるように
+—
+現れさせる。
+~animationの開始値を与える ~keyframeが，`暗黙の$値をとる場合、その値は、過去の時点ではなく，~animationが開始した時点から得られる。
+◎
+A negative delay is valid. Similar to a delay of 0s, it means that the animation executes immediately, but is automatically progressed by the absolute value of the delay, as if the animation had started the specified time in the past, and so it appears to start partway through its active duration. If an animation’s keyframes have an implied starting value, the values are taken from the time the animation starts, not some time in the past.
+</dd>
+</dl>
+
+		</section>
+		<section id="animation-fill-mode">
+<h3 title="The animation-fill-mode property">3.9. `animation-fill-mode^p ~prop</h3>
+
+<div class="p">
+
+<p>
+`animation-fill-mode$p
+~propは、~animation実行の時間外に適用される値を定義する。
+既定（初期~値 `none^v ）では、~animationは，次に挙げる期間においては，~prop値には影響しない：
+</p>
+
+<ul>
+	<li>
+それが適用された時点（要素 上に
+`animation-name$p
+~propが設定された時点）から実際に実行される時点（
+`animation-delay$p
+~propにより決定される）までの間
+</li>
+	<li>
+~animationが終止した時点（
+`animation-duration$p,
+`animation-iteration-count$p
+~propにより決定される）より後
+</li>
+</ul>
+
+<p>
+`animation-fill-mode$p
+~propにより，この挙動を上書きできる。
+また、この~propが動的に更新されたときは、~animationの遅延の段階／終止した後, いずれの間かに従って，必要に応じて
+【~animationが適用される】
+各~prop値にも反映されることになる。
+</p>
+
+◎
+The animation-fill-mode property defines what values are applied by the animation outside the time it is executing. By default, an animation will not affect property values between the time it is applied (the animation-name property is set on an element) and the time it begins execution (which is determined by the animation-delay property). Also, by default an animation does not affect property values after the animation ends (determined by the animation-duration and animation-iteration-count properties). The animation-fill-mode property can override this behavior. Dynamic updates to the property will be reflected by property values as needed, whether during the animation delay or after the animation ends.
+</div>
+
+◎名 `animation-fill-mode@p
+◎値 `single-animation-fill-mode$t#
+◎初 `none^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算
+~list：各~itemは 指定された~keywordを与える
+◎
+list, each item a keyword as specified
+◎順 文法に従う
+◎ア ~animate不可
+◎表終
+
+<div class="prod">
+`single-animation-fill-mode@t
+    = `none^v
+    | `forwards$v
+    | `backwards$v
+    | `both$v
+</div>
+
+<dl data-dfn-for="animation-fill-mode">
+	<dt>`none@v</dt>
+	<dd>
+~animationは、適用されていても，実行されていない間の効果はない。
+◎
+The animation has no effect when it is applied but not executing. 
+</dd>
+
+	<dt>`forwards@v</dt>
+	<dd>
+<p>
+~animationは、終止した時点（その
+`animation-iteration-count$p
+により決定される）の~prop値を，その後にも引き続き適用することになる。
+`animation-iteration-count$p
+が正な整数の場合、~animationが最後の反復を完了した時点の値が適用されることになる（次の反復の開始-時の値ではなく）。
+`animation-iteration-count$p
+が 0 の場合、最初の反復の開始-時の値が適用されることになる（ 
+`animation-fill-mode$p が `backwards$v のときとちょうど同じになる）。
+◎
+After the animation ends (as determined by its animation-iteration-count), the animation will apply the property values for the time the animation ended. When animation-iteration-count is an integer greater than zero, the values applied will be those for the end of the last completed iteration of the animation (rather than the values for the start of the iteration that would be next). When animation-iteration-count is zero, the values applied will be those that would start the first iteration (just as when animation-fill-mode is backwards).
+</dd>
+
+	<dt>`backwards@v</dt>
+	<dd>
+<p>
+~animationは， `animation-delay$p により定義される遅延期間の間，［
+~animationの最初の反復を開始させる~keyframe
+］内で定義された一連の~prop値を適用することになる。
+この~keyframeは、 `animation-direction$p 値に応じて，次のいずれかになる：
+</p>
+
+		<dl class="switch">
+			<dt>`normal$v</dt>
+			<dt>`alternate$v</dt>
+			<dd>
+`from^v （ `0%^v ）~keyframe
+</dd>
+
+			<dt>`reverse$v</dt>
+			<dt>`alternate-reverse$v</dt>
+			<dd>
+`to^v （ `100%^v ）~keyframe
+</dd>
+		</dl>
+
+◎
+During the period defined by animation-delay, the animation will apply the property values defined in the keyframe that will start the first iteration of the animation. These are either the values of the from keyframe (when animation-direction is normal or alternate) or those of the to keyframe (when animation-direction is reverse or alternate-reverse).
+</dd>
+
+	<dt>`both@v</dt>
+	<dd>
+`forwards$v, `backwards$v 両~効果とも適用される。
+◎
+The effects of both forwards and backwards fill apply. 
+</dd>
+</dl>
+
+		</section>
+		<section id="animation">
+<h3 title="The animation shorthand property">3.10. `animation^p 略式~prop</h3>
+
+<p>
+`animation$p `略式~prop$は，~comma区切りによる~animation定義の~listである。
+~list内の各項目は、そのすべての下位propの，それぞれに対する値を与える。
+これらの下位propは、
+`~animation~prop@
+とも総称される。
+（ `animation$p 略式~propのみを用いて定義したときには生じることはないが、これらの下位propが与える~listの長さが互いに異なるときにどうなるかについては， `animation-name$p の定義を見よ。）
+◎
+The animation shorthand property is a comma-separated list of animation definitions. Each item in the list gives one item of the value for all of the subproperties of the shorthand, which are known as the animation properties. (See the definition of animation-name for what happens when these properties have lists of different lengths, a problem that cannot occur when they are defined using only the animation shorthand.)
+</p>
+
+◎名 `animation@p
+◎値 `single-animation$t#
+◎初 個々の~propを見よ
+◎適 すべての要素
+◎継 個々の~propを見よ
+◎百 受容しない
+◎算 個々の~propを見よ
+◎順 文法に従う
+◎ア ~animate不可
+◎表終
+
+<pre class="prod">
+`single-animation@t
+    = `time$t
+    || `easing-function$t
+    || `time$t
+    || `single-animation-iteration-count$t
+    || `single-animation-direction$t
+    || `single-animation-fill-mode$t
+    || `single-animation-play-state$t
+    || [ `none^v | `keyframes-name$t ]
+</pre>
+
+<p>
+各~animation定義の中の順序は重要であることに注意：
+各 `single-animation$t 内において、
+`time$t に構文解析し得る値のうち， 1 個目の値が
+`animation-duration$p にアテガわれ, 2 個目の値が
+`animation-delay$p にアテガわれる。
+◎
+Note that order is important within each animation definition: the first value in each &lt;single-animation&gt; that can be parsed as a &lt;time&gt; is assigned to the animation-duration, and the second value in each &lt;single-animation&gt; that can be parsed as a &lt;time&gt; is assigned to animation-delay.
+</p>
+
+<p>
+各~animation定義の中での順序は、
+`keyframes-name$t 値を他の~keywordと判別するためにも重要になることに注意。
+構文解析-時には、［
+`animation-name$p 以外の~propに妥当な~keywordであって,
+値がこの略式~propの中でより前に現れていないもの
+］は、 `animation-name$p に対するものではなく，それらの~propに対するものとして受容されなければならない。
+更に，直列化する際には、それらの~propの既定~値は，少なくとも，別の~propの値にもなり得る `animation-name$p を判別できるように出力されなければならず、また，その必要がなくとも追加的に出力されてもヨイ。
+◎
+Note that order is also important within each animation definition for distinguishing &lt;keyframes-name&gt; values from other keywords. When parsing, keywords that are valid for properties other than animation-name whose values were not found earlier in the shorthand must be accepted for those properties rather than for animation-name. Furthermore, when serializing, default values of other properties must be output in at least the cases necessary to distinguish an animation-name that could be a value of another property, and may be output in additional cases.
+</p>
+
+<div class="example">
+<p>
+例えば、
+<samp class="css">animation: `3s none backwards^v</samp>
+を構文解析して得られた値（
+`animation-fill-mode$p は `none^v,
+`animation-name$p は `backwards^v
+になる）が，
+<samp class="css">animation: `3s backwards^v</samp>
+に直列化されてはならない（これは
+`animation-fill-mode$p が `backwards^v,
+`animation-name$p が `none^v
+になる）。
+◎
+For example, a value parsed from animation: 3s none backwards (where animation-fill-mode is none and animation-name is backwards) must not be serialized as animation: 3s backwards (where animation-fill-mode is backwards and animation-name is none).
+</p>
+</div>
+		</section>
+	</section>
+	<section id="events">
+<h2 title="Animation Events">4. ~animation ~event</h2>
+
+<p>
+~animationに関係する いくつかの~eventが、
+<a href="~DOM4#interface-event">DOM `Event^I ~system</a>
+を通して可用である。
+DOM ~eventは、~animationの［
+開始-と終止-, および各~反復の終端
+］の すべての時点において，生成される。
+要素~上では，複数の~propが同時に~animateされ得る。
+これが生じ得るのは、要素~上の `animation-name$p に指定されている値を成す［
+ある名前の `keyframes$at が 複数の~propを含んでいる ／
+複数の名前の `keyframes$at が それぞれ異なる~propを含んでいる
+］ときである。
+しかしながら，~eventの目的においては、
+`animation-name$p 値を成す各 名前が 1 個の~animationを指定する。
+すなわち，~eventが生成されるのは、~animateされる各~propごとではなく，各 名前ごとになる。
+◎
+Several animation-related events are available through the DOM Event system. The start and end of an animation, and the end of each iteration of an animation, all generate DOM events. An element can have multiple properties being animated simultaneously. This can occur either with a single animation-name value with keyframes containing multiple properties, or with multiple animation-name values. For the purposes of events, each animation-name specifies a single animation. Therefore an event will be generated for each animation-name value and not necessarily for each property being animated.
+</p>
+
+<p>
+妥当な`~keyframe規則$が定義されているどの~animationも、稼働して，~eventを生成することになる
+— これには、空な`~keyframe規則$を伴う~animationも含まれる。
+◎
+Any animation for which a valid keyframe rule is defined will run and generate events; this includes animations with empty keyframe rules.
+</p>
+
+<p>
+生成されて送信される各~eventには，~animationの経過時間も伴われる。
+これにより，~event~handlerにおいては、~loop中の~animationの現在の反復や, `交替$~animationの現在の位置を決定できるようになる。
+この経過時間には、~animationが `paused$v 状態にあった時間は含まれない。
+【下の `elapsedTime$m の記述から、遅延時間も含まれない, もしくは 負である場合は “<a href="#_virtual-start-time_">仮想の開始-時</a>” からの経過時間になる。】
+◎
+The time the animation has been running is sent with each event generated. This allows the event handler to determine the current iteration of a looping animation or the current position of an alternating animation. This time does not include any time the animation was in the paused play state.
+</p>
+
+		<section id="interface-animationevent">
+<h3 title="The AnimationEvent Interface">4.1. `AnimationEvent^I ~interface</h3>
+
+<p>
+`AnimationEvent$I ~interfaceは、 Animation ~eventに結付けられている特定の文脈上の情報を供する。
+◎
+The AnimationEvent interface provides specific contextual information associated with Animation events.
+◎
+5.1.1. IDL Definition
+</p>
+
+<pre class="idl" id="interface-animationevent-idl">
+[`Exposed$=Window]
+interface `AnimationEvent@I : `Event$I {
+  <a href="#dom-animationevent-animationevent">constructor</a>(`CSSOMString$ %type, optional `AnimationEventInit$I %animationEventInitDict = {});
+  readonly attribute `CSSOMString$ `animationName$m;
+  readonly attribute double `elapsedTime$m;
+  readonly attribute `CSSOMString$ `pseudoElement$m;
+};
+</pre>
+
+<pre class="idl">
+dictionary `AnimationEventInit@I : `EventInit$I {
+  `CSSOMString$ `animationName@dm = "";
+  double `elapsedTime@dm = 0.0;
+  `CSSOMString$ `pseudoElement@dm = "";
+};
+</pre>
+
+<div id="interface-animationevent-attributes">
+◎
+5.1.2. Attributes
+</div>
+
+<dl class="idl-def">
+	<dt>`animationName@m
+◎
+animationName, of type CSSOMString, readonly
+</dt>
+	<dd>
+~eventを発火した~animationの `animation-name$p ~propの値。
+◎
+The value of the animation-name property of the animation that fired the event.
+</dd>
+
+	<dt>`elapsedTime@m
+◎
+elapsedTime, of type double, readonly
+</dt>
+	<dd>
+この~eventが発火された時点における，~animationの経過時間（秒）。
+~animationが静止されていた時間は除外される。
+この~memberに対する精確な計算は、各~event型ごとに定義される
+◎
+The amount of time the animation has been running, in seconds, when this event fired, excluding any time the animation was paused. The precise calculation for of this member is defined along with each event type.
+</dd>
+
+	<dt>`pseudoElement@m
+◎
+pseudoElement, of type CSSOMString, readonly 
+</dt>
+	<dd>
+~animationが~CSS疑似要素 上で稼働している場合は，その疑似要素の名前（先頭は 2 個の~colon）になる（この場合，~eventの `target^m はその疑似要素の出自の要素になる）。
+~animationが要素 上で稼働している場合は空~文字列になる（すなわち~eventの `target^m はその要素）。
+◎
+The name (beginning with two colons) of the CSS pseudo-element on which the animation runs (in which case the target of the event is that pseudo-element’s corresponding element), or the empty string if the animation runs on an element (which means the target of the event is that element).
+</dd>
+
+	<dt>`AnimationEvent( type,  animationEventInitDict )@m</dt>
+	<dd>
+`~event構築子$。
+◎
+AnimationEvent(type, animationEventInitDict) is an event constructor.
+</dd>
+</dl>
+
+		</section>
+		<section id="event-animationevent">
+<h3 title="Types of AnimationEvent">4.2. `AnimationEvent^I の種類</h3>
+
+<p>
+次の型の~eventが~animation ~eventとして生じ得る：
+◎
+The different types of animation events that can occur are:
+</p>
+
+<dl>
+	<dt>`animationstart@et</dt>
+	<dd>
+`animationstart$et
+~eventは、~animationの開始-時に生じる。
+`animation-delay$p がある場合、この~eventは，それによる遅延期間が満了したときに発火することになる。
+◎
+The animationstart event occurs at the start of the animation. If there is an animation-delay then this event will fire once the delay period has expired.
+</dd>
+	<dd>
+この~eventに対する `elapsedTime$m 値は、
+min( max( − `animation-delay$p の値, 0), `作動時間$ )
+になる（遅延が負でなければ 0 ）。
+負な遅延に対しては、
+`animation-play-state$p が［
+`running$v ／ `paused$v
+］に設定されたとき，発火されることになる。
+◎
+A negative delay will cause the event to fire with an elapsedTime equal to the absolute value of the delay capped to the active duration of the animation, that is, min(max(-animation-delay, 0), active duration); in this case the event will fire whether animation-play-state is set to running or paused. 
+</dd>
+	<dd>
+<ul><li>浮上する
+</li><li>取消~不可
+</li><li>文脈情報： `animationName$m, `elapsedTime$m, `pseudoElement$m
+</li></ul>
+◎
+Bubbles: Yes
+◎
+Cancelable: No
+◎
+Context Info: animationName, elapsedTime, pseudoElement
+</dd>
+
+	<dt>`animationend@et</dt>
+	<dd>
+この~eventは、~animationの完遂-時に生じる。
+◎
+↓</dd>
+	<dd>
+この~eventに対する `elapsedTime$m 値は、`作動時間$になる。
+◎
+The animationend event occurs when the animation finishes. In this case the value of the elapsedTime member of the event is equal to the active duration. 
+</dd>
+	<dd>
+<ul><li>浮上する
+</li><li>取消~不可
+</li><li>文脈情報： `animationName$m, `elapsedTime$m, `pseudoElement$m
+</li></ul>
+◎
+Bubbles: Yes
+◎
+Cancelable: No
+◎
+Context Info: animationName, elapsedTime, pseudoElement
+</dd>
+
+	<dt>`animationiteration@et</dt>
+	<dd>
+この~eventは、 `animationend$et ~eventが同時に発火されることになる場合を除く，~animationの各 反復の終端~時に生じる。
+したがって，この~eventは、`反復~回数$が 1 以下の~animationにおいては，生じないことになる。
+【また、`所要時間$が 0 秒の場合も，`反復~回数$に関わらず生じないことになる。】
+◎
+The animationiteration event occurs at the end of each iteration of an animation, except when an animationend event would fire at the same time. This means that this event does not occur for animations with an iteration count of one or less.
+</dd>
+	<dd>
+この~eventに対する `elapsedTime$m 値は、
+( `animation-duration$p の値 × 反復し終えた回数 )
+になる（すなわち，初回の回数は 1 ）。
+◎
+The elapsedTime member in this case is equal to the product of the current iteration and animation-duration where the current iteration is the zero-based index of the new iteration. For example, assuming no negative animation-delay, after one iteration completes the current iteration would be one.
+</dd>
+	<dd>
+<ul><li>浮上する
+</li><li>取消~不可
+</li><li>文脈情報： `animationName$m, `elapsedTime$m, `pseudoElement$m
+</li></ul>
+
+◎
+Bubbles: Yes
+◎
+Cancelable: No
+◎
+Context Info: animationName, elapsedTime, pseudoElement
+</dd>
+
+	<dt>`animationcancel@et</dt>
+	<dd>
+この~eventは、 `animationend$et ~eventが同時に発火されることになる場合を除く，稼働中の~animationが停止されたときに生じる
+— `animation-name$p が変更され 当の~animationが除去されたときや，
+~animateしている要素または その先祖の `display$p が `none^v にされたときなど。
+◎
+The animationcancel event occurs when the animation stops running in a way that does not fire an animationend event, such as a change in the animation-name that removes the animation, or the animating element or one of its ancestors becoming display:none.
+</dd>
+	<dd>
+この~eventに対する `elapsedTime$m 値は、~animationの始まりから~animationが取消された時点までの秒数になる。
+ただし、~animationが静止していた時間は除外される。
+~animationの `animation-delay$p が負である場合、~animationの始まりは，~animationが実際に誘発された時点から `animation-delay$p  の絶対値（秒数）だけ前の時点とする。
+対して，遷移の `animation-delay$p が正である場合に，~animationが遅延~段階を終える前に発火された場合、 `elapsedTime$m は 0 になる。
+◎
+The elapsedTime member for this event indicates the number of seconds that had elapsed since the beginning of the animation at the moment when the animation was canceled. This excludes any time where the animation was paused. If the animation had a negative animation-delay, the beginning of the animation is the moment equal to the absolute value of animation-delay seconds prior to when the animation was actually triggered. Alternatively, if the animation had a positive animation-delay and the event is fired before the animation’s delay has expired, the elapsedTime will be zero.
+</dd>
+
+	<dd>
+<ul><li>浮上する
+</li><li>取消~不可
+</li><li>文脈情報： `animationName$m, `elapsedTime$m, `pseudoElement$m
+</li></ul>
+
+◎
+Bubbles: Yes
+◎
+Cancelable: No
+◎
+Context Info: animationName, elapsedTime, pseudoElement
+</dd>
+</dl>
+
+		</section>
+		<section id="event-handlers-on-elements-document-objects-and-window-objects">
+<h3 title="Event handlers on elements, Document objects, and Window objects">4.3. 要素, `Document^I ~obj, `Window^I ~obj上の~event~handler</h3>
+
+<div class="p">
+<p>
+以下に挙げる各種`~event~handler$, および
+対応する各種`~event~handler~event型$は：
+</p>
+
+<ul>
+	<li>
+`~HTML要素$においては、［
+`~event~handler内容~属性$,
+`~event~handler~IDL属性$
+］の両者として，~supportされるモノトスル。
+</li>
+	<li>
+［
+`Document$I ／ `Window$I
+］~objにおいては、`~event~handler~IDL属性$として，~supportされるモノトスル。
+</li>
+</ul>
+
+◎
+The following are the event handlers (and their corresponding event handler event types) that must be supported by all HTML elements, as both event handler content attributes and event handler IDL attributes; and that must be supported by all Document and Window objects, as event handler IDL attributes:
+</div>
+
+<table><thead><tr><th>`~event~handler$
+<th>`~event~handler~event型$
+</thead><tbody>
+
+<tr><td>`onanimationstart@m
+<td>`animationstart$et
+<tr><td>`onanimationiteration@m
+<td>`animationiteration$et
+<tr><td>`onanimationend@m
+<td>`animationend$et
+<tr><td>`onanimationcancel@m
+<td>`animationcancel$et
+</tbody></table>
+
+		</section>
+	</section>
+	<section id="interface-dom">
+<h2 title="DOM Interfaces">5. DOM ~interface</h2>
+
+<p>
+~CSS~animationは、~keyframeを表現するために新たに導入された~interfaceを通して `CSSOM$r に公開される。
+◎
+CSS animations are exposed to the CSSOM through a pair of new interfaces describing the keyframes.
+</p>
+
+<p class="note">注記：
+下に定義される~interfaceは、この仕様の~levelにて可用な相互運用可能な API を反映するものである。
+将来~levelでは、この API の一部は，非推奨にされたり，拡張されるかもしれない。
+◎
+Note: the interfaces defined below reflect the interoperable API available as of this level of the specification. Future levels may deprecate parts of this API and extend others.
+</p>
+
+		<section id="interface-cssrule">
+<h3 title="The CSSRule Interface">5.1. `CSSRule^I ~interface</h3>
+
+<p>
+次の 2 つの規則 型が
+`CSSRule@I
+~interfaceに追加される。
+これらは、新たに導入された
+`~keyframe規則$, および
+`keyframes$at 規則
+を表現する派生~interfaceの識別を供する。
+◎
+The following two rule types are added to the CSSRule interface. They provide identification for the new keyframe and keyframes rules.
+◎
+6.1.1. IDL Definition
+</p>
+
+<pre class="idl" id="interface-cssrule-idl">
+partial interface `CSSRule$I {
+  const `unsigned short$ `KEYFRAMES_RULE@m = 7;
+  const `unsigned short$ `KEYFRAME_RULE@m = 8;
+};
+</pre>
+
+<p class="trans-note">【
+これらの定数は、順に，派生~interface
+`CSSKeyframesRule$I, `CSSKeyframeRule$I
+に対応する。
+】</p>
+
+		</section>
+		<section id="interface-csskeyframerule">
+<h3 title="The CSSKeyframeRule Interface">5.2. `CSSKeyframeRule^I ~interface</h3>
+
+<p>
+`CSSKeyframeRule$I
+~interfaceは、 1 個の key
+【 `~keyframe選択子$ 】
+に対応する~style規則を表現する。
+◎
+The CSSKeyframeRule interface represents the style rule for a single key.
+◎
+6.2.1. IDL Definition
+</p>
+
+<pre class="idl" id="interface-csskeyframerule-idl">
+[`Exposed$=Window]
+interface `CSSKeyframeRule@I : `CSSRule$I {
+  attribute `CSSOMString$ `keyText$m;
+  [`SameObject$, `PutForwards$=`cssText$m]  readonly attribute `CSSStyleDeclaration$I `style$m;
+};
+</pre>
+
+<div id="interface-csskeyframerule-attributes">
+◎
+6.2.2. Attributes
+</div>
+
+<dl class="idl-def">
+	<dt>`keyText@m
+◎
+keyText, of type CSSOMString 
+</dt>
+	<dd>
+`~keyframe選択子$を百分率~値からなる~comma区切りの~listとして表現する。
+`from^v ／ `to^v
+~keywordは，それぞれ
+`0%^v ／ `100%^v
+に写像される。
+◎
+This attribute represents the keyframe selector as a comma-separated list of percentage values. The from and to keywords map to 0% and 100%, respectively.
+</dd>
+	<dd>
+`keyText$m が無効な~keyframe選択子に更新されようとした場合、値は変更しないまま， `SyntaxError$E 例外が投出されなければならない。
+◎
+If keyText is updated with an invalid keyframe selector, a SyntaxError exception must be thrown and the value of keyText must remain unchanged.
+</dd>
+
+	<dt>`style@m
+◎
+style, of type CSSStyleDeclaration, readonly
+</dt>
+	<dd>
+次のようにされた， `CSSStyleDeclaration$I ~objを返すモノトスル
+⇒＃
+`算出d~flag$ ~SET ~F,
+`宣言$ ~SET `指定d順$による 規則~内に宣言されている宣言,
+`親~CSS規則$ ~SET この `CSSKeyframeRule$I ~obj,
+`所有者~node$ ~SET ~NULL,
+◎
+Must return a CSSStyleDeclaration object for the keyframe rule, with the following properties:
+
+readonly flag
+• Unset. 
+declarations
+• The declared declarations in the rule, in specified order. 
+parent CSS rule
+• The context object (i.e. this CSSKeyframeRule). 
+owner node
+• Null. 
+</dd>
+</dl>
+
+		</section>
+		<section id="interface-csskeyframesrule">
+
+<h3 title="The CSSKeyframesRule Interface">5.3. `CSSKeyframesRule^I ~interface</h3>
+
+<p>
+`CSSKeyframesRule$I
+~interfaceは、単独の~animationに対する一連の~keyframeの完全な集合を表現する。
+◎
+The CSSKeyframesRule interface represents a complete set of keyframes for a single animation.
+◎
+6.3.1. IDL Definition
+</p>
+
+<pre class="idl" id="interface-csskeyframesrule-idl">
+[`Exposed$=Window]
+interface `CSSKeyframesRule@I : `CSSRule$I {
+           attribute `CSSOMString$   `name$m;
+  readonly attribute `CSSRuleList$I `cssRules$m;
+
+  `undefined$ `appendRule$m(`CSSOMString$ %rule);
+  `undefined$ `deleteRule$m(`CSSOMString$ %select);
+  `CSSKeyframeRule$I? `findRule$m(`CSSOMString$ %select);
+};
+</pre>
+
+<div id="interface-csskeyframesrule-attributes">
+◎
+6.3.2. Attributes
+</div>
+
+<dl class="idl-def">
+	<dt>`name@m
+◎
+name, of type CSSOMString
+</dt>
+	<dd>
+`animation-name$p ~propにて利用される， `keyframes$at の名前。
+【設定-時に与える文字列には、<a href="#_keyframe-name-as-string">制約はない</a>。】
+◎
+This attribute is the name of the keyframes, used by the animation-name property.
+</dd>
+
+	<dt>`cssRules@m
+◎
+cssRules, of type CSSRuleList, readonly
+</dt>
+	<dd>
+~list内の各~keyframeへの~accessを与える。
+◎
+This attribute gives access to the keyframes in the list.
+</dd>
+
+	<dt id="interface-csskeyframesrule-appendrulerule">
+`appendRule( rule )@m
+◎
+6.3.3. The appendRule method
+</dt>
+	<dd>
+<p>
+渡された CSSKeyframeRule を， `keyframes$at 規則の~listの末尾に付加する。
+</p>
+
+<p class="trans-note">【
+“渡された CSSKeyframeRule”
+— おそらく， %rule 引数を
+<a href="~CSSSYN#parse-a-rule">構文解析-</a>して得られる［
+`~keyframe選択子$ （ “key” ）, `CSSKeyframeRule$I
+］の組を指す。
+構文エラーの場合、下記の “例外なし” から，何もしないことになる（例外が投出される
+`CSSGroupingRule$I の `insertRule()^m
+~methodと挙動が異なる）。
+】</p>
+◎
+The appendRule method appends the passed CSSKeyframeRule at the end of the keyframes rule.
+</dd>
+	<dd>
+引数 %rule には、付加する規則を与える
+— `keyframes$at 規則 内の 1 個の~entryと同じ構文で記す。
+規則が妥当であれば、~list内に すでに同じ key が存在していたとしても，常に付加される。
+◎
+Parameters:
+
+rule of type CSSOMString
+• The rule to be appended, expressed in the same syntax as one entry in the @keyframes rule. A valid rule is always appended e.g. even if its key(s) already exists. 
+◎
+No Return Value
+</dd>
+	<dd>
+例外なし。
+◎
+No Exceptions
+</dd>
+
+	<dt id="interface-csskeyframesrule-deleteruleselect">
+`deleteRule( select )@m
+◎
+6.3.4. The deleteRule method
+</dt>
+	<dd>
+指定された~keyframe選択子 %select に合致するような，最後に宣言された
+`CSSKeyframeRule$I を削除する。
+合致する規則が存在しない場合、何もしない。
+◎
+The deleteRule method deletes the last declared CSSKeyframeRule matching the specified keyframe selector. If no matching rule exists, the method does nothing.
+</dd>
+	<dd>
+<p>
+引数 %select には、削除される規則の `~keyframe選択子$からなる~comma区切りの~listを与える：
+</p>
+
+		<ul>
+			<li>
+各~keyframe選択子は、
+`0%^v 〜 `100%^v
+の百分率~値, または~keyword［
+`from^v ／ `to^v
+］（ ［
+0% ／ 100%
+］に解決される）。
+</li>
+			<li>
+［
+値の個数と順序
+］は、対象の `~keyframe規則$たちのそれと合致しなければならない
+— 値の前後の空白は無視して。
+</li>
+		</ul>
+◎
+Parameters:
+
+select of type CSSOMString
+• The keyframe selector of the rule to be deleted: a comma-separated list of percentage values between 0% and 100% or the keywords from or to which resolve to 0% and 100%, respectively.
+• The number and order of the values in the specified keyframe selector must match those of the targeted keyframe rule(s). The match is not sensitive to white space around the values in the list.
+◎
+No Return Value
+</dd>
+	<dd>
+例外なし。
+◎
+No Exceptions
+</dd>
+
+	<dt id="interface-csskeyframesrule-findrule">
+`findRule( select )@m
+◎
+6.3.5. The findRule method
+</dt>
+	<dd>
+指定された~keyframe選択子 %select に合致するような，最後に宣言された
+`CSSKeyframeRule$I を返す。
+合致する規則が存在しない場合、 null を返す†。
+【†原文の記述は明らかに誤記なので修正している。】
+◎
+The findRule returns the last declared CSSKeyframeRule matching the specified keyframe selector. If no matching rule exists, the method does nothing.
+</dd>
+	<dd>
+<p>
+引数 %select には、~~検索する規則の `~keyframe選択子$からなる~comma区切りの~listを与える：
+</p>
+
+		<ul>
+			<li>
+各、~keyframe選択子は
+`0%^v 〜 `100%^v
+の百分率~値, または~keyword［
+`from^v ／ `to^v
+］（ ［
+0% ／ 100%
+］に解決される）。
+</li>
+			<li>
+［
+値の個数と順序
+］は、対象の `~keyframe規則$たちのそれと合致しなければならない
+— 値の前後の空白は無視して。
+</li>
+		</ul>
+◎
+Parameters:
+
+select of type CSSOMString
+• The keyframe selector of the rule to be deleted: a comma-separated list of percentage values between 0% and 100% or the keywords from or to which resolve to 0% and 100%, respectively.
+
+• The number and order of the values in the specified keyframe selector must match those of the targeted keyframe rule(s). The match is not sensitive to white space around the values in the list.
+◎
+Return Value:
+
+CSSKeyframeRule
+• The found rule.
+</dd>
+	<dd>
+例外なし。
+◎
+No Exceptions
+</dd>
+</dl>
+
+<div class="example">
+<p>
+例えば、次の~animationが与えられたとき:
+◎
+For example, given the following animation:
+</p>
+
+<pre class="lang-css">
+@keyframes colorful-diagonal-slide {
+  from {
+    left: 0;
+    top: 0;
+  }
+  
+  10% {
+    background-color: blue; 
+  }
+  
+  10% {
+    background-color: green;
+  }
+  
+  25%, 75% {
+    background-color: red;
+  }
+  
+  100% {
+    left: 100px;
+    top: 100px;
+  }
+}
+</pre>
+
+<p>
+変数 %anim は、この~animationに対する `CSSKeyframesRule$I ~objへの参照を保持しているとする。
+次のコードは：
+◎
+Assuming the variable anim holds a reference to a CSSKeyframesRule object for this animation, then:
+</p>
+
+<pre class="lang-js">
+%anim.deleteRule('10%');
+var %tenPercent = %anim.findRule('10%');
+</pre>
+
+<p>
+最後の 10% 規則（
+<samp class="css">background-color: green</samp>
+）を削除してから、残る規則
+<samp class="css">background-color: blue</samp>
+を見出して，それを %tenPercent に返す。
+◎
+will start by deleting the last 10% rule i.e. the green background color rule; then find the remaining blue background rule and return it into tenPercent.
+</p>
+
+<p>
+次のコードは：
+◎
+The following:
+</p>
+
+<pre class="lang-js">
+var %red = %anim.findRule('75%');
+</pre>
+
+<p>
+%red を ~NULL に設定する。
+代わりに，規則
+<samp class="css">background-color: red</samp>
+に対する全部的な選択子が利用されなければならない：
+◎
+will set red to null. The full selector for the red background color rule must be used instead:
+</p>
+
+<pre class="lang-js">
+var %red = %anim.findRule('25%,75%');
+</pre>
+
+<p>
+`from^v は 0% に,
+`to^v は 100% に写像されるので、次では，どちらの値を利用しても規則を見出せる：
+◎
+Since from maps to 0% and to maps to 100%, we can find these rules using either value:
+</p>
+
+<pre class="lang-js">
+var %from = %anim.findRule('0%'); /*
+    <span class="comment"><samp class="css">from { left: 0; top: 0; }</samp> 規則を返す</span> */
+var %to = %anim.findRule('to');   /*
+    <span class="comment"><samp class="css">100% { left: 100px; top: 100px; }</samp> 規則を返す</span> */
+</pre>
+
+</div>
+
+		</section>
+		<section id="interface-globaleventhandlers">
+
+<h3 title="Extensions to the GlobalEventHandlers Interface Mixin">5.4. `GlobalEventHandlers^I ~interface~mixinに対する拡張</h3>
+
+<p>
+この仕様は、［
+<a href="#event-handlers-on-elements-document-objects-and-window-objects">要素, `Document^I ~obj, `Window^I ~obj上の~event~handler</a>
+］節に定義される各種
+<a href="#events">~animation~event</a>
+用の`~event~handler~IDL属性$を追加するために、
+~HTMLの `GlobalEventHandlers$I ~interface~mixinを拡張する：
+◎
+This specification extends the GlobalEventHandlers interface mixin from HTML to add event handler IDL attributes for animation events as defined in § 5.3 Event handlers on elements, Document objects, and Window objects.
+◎
+6.4.1. IDL Definition
+</p>
+
+<pre class="idl" id="interface-globaleventhandlers-idl">
+partial interface mixin `GlobalEventHandlers$I {
+  attribute `EventHandler$I `onanimationstart$m;
+  attribute `EventHandler$I `onanimationiteration$m;
+  attribute `EventHandler$I `onanimationend$m;
+  attribute `EventHandler$I `onanimationcancel$m;
+};
+</pre>
+
+		</section>
+	</section>
+	<section id="priv-sec">
+<h2 title="Privacy and Security Considerations">6. ~privacy／~securityの考慮点</h2>
+
+<p>
+この仕様により導入される［
+~privacy／~security
+］の考慮点は無い。
+◎
+This specification introduces no new privacy or security considerations.
+</p>
+
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">8. 謝辞</h2>
+
+<p>
+とりわけ、次の方々からの~feedbackに。
+加えて、
+<a href="https://lists.w3.org/Archives/Public/www-style/">www-style</a>
+~communityのすべての方々に。
+</p>
+
+<p lang="en-x-a0">
+Thanks especially to the feedback from
+Tab Atkins,
+Brian Birtles,
+Shane Stephens,
+Carine Bournez,
+Christian Budde,
+Anne van Kesteren,
+Øyvind Stenhaug,
+Estelle Weyl,
+and all the rest of the www-style community.
+</p>
+
+	</section>
+	<section id="other-open-issues">
+<h2 title="Other open issues">9. 他の open な課題</h2>
+
+<p class="issue">
+<a href="https://lists.w3.org/Archives/Public/www-style/2015Jul/0391.html">~keyframe間のヤリトリを指定する</a>
+必要がある。
+◎
+Need to specify how keyframes interact.
+</p>
+
+	</section>
+	<section id="wg-resolutions-pending">
+<h3 title="Working Group Resolutions that are pending editing">10. まだ編集を要する Working Group による解決</h3>
+
+【この節の内容は未訳。】
+	</section>
+
+</main></div>

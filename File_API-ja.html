@@ -1,0 +1,4897 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>File API （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-w3c.css" type="text/css" />
+
+
+<style>
+.attr-state {
+	font-family: sans-serif0, sans-serif;
+}
+
+/* tables */
+tr {
+	border-bottom: thin solid #DDDDDD;
+}
+
+samp {
+	white-space: nowrap;
+	background: #F0F0F0;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+}
+
+.arg {
+	font-family: monospace0, monospace;
+}
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN0',
+		generate: expand,
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+	const unicode_map = this.unicode_map;
+
+	return this.html.replace(
+		/%[\w~一-鿆あ-ん]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r': // ref
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'm':
+case 'mS':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'mc':
+	text = 'constructor';
+	klass = 'm';
+	key = `new ${key}`;
+	break;
+case 'mC':
+	klass = 'm';
+	text = 'constructor';
+	break;
+case 'l': // literal
+	text = `"<code class="literal">${key}</code>"`
+	break;
+case 'sl': // internal slot
+	text = `[[${key}]]`;
+	break;
+case 'sc': // internal slot
+	text = key.replace(/_/, ':');
+	break;
+case 'U':
+	text = `U+${key}`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:File API
+spec_date:2020-08-18
+trans_update:2020-08-28
+source_checked:190315
+original_url:https://w3c.github.io/FileAPI/
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:storage
+conformance:w3c
+copyright:2020,permissive
+trans_1st_pub:2012-01-03
+
+
+●●class_map
+FR:reason
+e:element
+a:attr
+sc:scheme
+h:header
+E:error
+P:production
+et:event-type
+sl:js-slot
+st:attr-state
+U:code-point
+V:arg
+op:op
+
+●●tag_map
+samp:samp
+FR:i
+E:code
+et:code
+e:code
+a:code
+sc:code
+h:code
+I:code
+m:code
+mS:code
+dm:code
+V:var
+sl:span
+st:span
+U:span
+P:var
+i:i
+c:code
+em:em
+op:span
+
+●●original_id_map
+
+
+blob:dfn-Blob
+file:dfn-file
+filelist:dfn-filelist
+filereader:dfn-filereader
+filereadersync:dfn-FileReaderSync
+dom-filereader-filereader:filereaderConstrctr
+
+	dfn-readAsArrayBuffer:readAsArrayBuffer
+	dfn-readAsBinaryString:readAsBinaryString
+	dfn-readAsDataURL:readAsDataURL
+	dfn-readAsText:readAsText
+	dfn-readAsArrayBufferSync:readAsArrayBufferSyncSection
+	dfn-readAsBinaryStringSync:readAsBinaryStringSyncSection
+	dfn-readAsDataURLSync:readAsDataURLSync-section
+	dfn-readAsTextSync:readAsTextSync
+	dfn-abort:abort
+	dom-filereadersync-filereadersync:filereadersyncConstrctr
+	dom-blob-stream:stream-method-algo
+	dom-blob-text:text-method-algo
+	dom-blob-arraybuffer:arraybuffer-method-algo
+	dfn-slice:slice-method-algo
+
+●●mdn_urls
+blob:API/Blob
+file:API/File
+filelist:API/FileList
+filereader:API/FileReader
+filereadersync:API/FileReaderSync
+	dfn-BlobPropertyBag:API/BlobPropertyBag
+	dfn-FilePropertyBag:API/FilePropertyBag
+	enumdef-endingtype:API/EndingType
+	typedefdef-blobpart:API/BlobPart
+
+dfn-abort-event:API/FileReader/abort_event
+dfn-error-event:API/FileReader/error_event
+dfn-load-event:API/FileReader/load_event
+dfn-loadend-event:API/FileReader/loadend_event
+dfn-loadstart-event:API/FileReader/loadstart_event
+dfn-progress-event:API/FileReader/progress_event
+
+●●link_map
+
+
+	●IDL
+Exposed:~WEBIDLjs#Exposed
+Clamp:~WEBIDLjs#Clamp
+NewObject:~WEBIDLjs#NewObject
+Serializable:~HTMLcloning#serializable
+
+E.NotFoundError:~WEBIDL#notfounderror
+E.NotReadableError:~WEBIDL#notreadableerror
+E.SecurityError:~WEBIDL#securityerror
+E.InvalidStateError:~WEBIDL#invalidstateerror
+
+undefined:~WEBIDL#idl-undefined
+unsigned short:~WEBIDL#idl-unsigned-short
+unsigned long:~WEBIDL#idl-unsigned-long
+long long:~WEBIDL#idl-long-long
+unsigned long long:~WEBIDL#idl-unsigned-long-long
+DOMString:~WEBIDL#idl-DOMString
+I.DOMString:~WEBIDL#idl-DOMString
+USVString:~WEBIDL#idl-USVString
+I.USVString:~WEBIDL#idl-USVString
+ArrayBuffer:~WEBIDL#idl-ArrayBuffer
+I.ArrayBuffer:~WEBIDL#idl-ArrayBuffer
+	I.ArrayBufferView:~WEBIDL#
+BufferSource:~WEBIDL#BufferSource
+I.BufferSource:~WEBIDL#BufferSource
+
+I.Blob:#blob
+I.BlobPart:#typedefdef-blobpart
+I.BlobPropertyBag:#dfn-BlobPropertyBag
+I.EndingType:#enumdef-endingtype
+I.DataTransfer:~HTMLdnd#datatransfer
+	I.Document:~DOM4#document
+	~DOM4#concept-document
+I.EventHandler:~WAPI#eventhandler
+I.EventTarget:~DOM4#eventtarget
+I.File:#file
+I.FileList:#filelist
+I.FilePropertyBag:#dfn-FilePropertyBag
+I.HTMLInputElement:~HEinput#htmlinputelement
+I.ProgressEvent:~XHR#progressevent
+I.Worker:~WORKERS#worker
+I.XMLHttpRequest:~XHR#xmlhttprequest
+I.URL:~URL1#url
+I.FileReader:#filereader
+I.FileReaderSync:#filereadersync
+I.MediaSource:http://w3c.github.io/media-source/#mediasource
+I.ReadableStream:~STREAMS#readablestream
+
+I.Array:~TC39#sec-array-constructor
+I.Date:~TC39#sec-date-constructor
+I.DOMException:~WEBIDL#idl-DOMException
+
+	●constructor
+m.new Blob:#dom-blob-blob
+	m.Blob:#dom-blob-blob-blobparts-options
+m.new File:#dom-file-file
+m.new FileReader:#dom-filereader-filereader
+m.new FileReaderSync:#dom-filereadersync-filereadersync
+
+	■attrs/method
+
+	Blob
+m.size:#dfn-size
+m.type:#dfn-type
+m.slice:#dfn-slice
+m.stream:#dom-blob-stream
+m.text:#dom-blob-text
+m.arrayBuffer:#dom-blob-arraybuffer
+
+	File
+m.name:#dfn-name
+m.lastModified:#dfn-lastModified
+
+	FileList
+m.item:#dfn-item
+m.length:#dfn-length
+
+	FileReader
+m.readAsArrayBuffer:#dfn-readAsArrayBuffer
+m.readAsBinaryString:#dfn-readAsBinaryString
+m.readAsDataURL:#dfn-readAsDataURL
+m.readAsText:#dfn-readAsText
+m.abort:#dfn-abort
+m.DONE:#dom-filereader-done
+m.EMPTY:#dom-filereader-empty
+m.LOADING:#dom-filereader-loading
+m.readyState:#dom-filereader-readystate
+m.result:#dom-filereader-result
+m.error:#dom-filereader-error
+m.onabort:#dfn-onabort
+m.onerror:#dfn-onerror
+m.onload:#dfn-onload
+m.onloadend:#dfn-onloadend
+m.onloadstart:#dfn-onloadstart
+m.onprogress:#dfn-onprogress
+
+	FileReaderSync
+mS.readAsArrayBuffer:#dfn-readAsArrayBufferSync
+mS.readAsBinaryString:#dfn-readAsBinaryStringSync
+mS.readAsDataURL:#dfn-readAsDataURLSync
+mS.readAsText:#dfn-readAsTextSync
+
+	URL
+m.createObjectURL:#dfn-createObjectURL
+m.revokeObjectURL:#dfn-revokeObjectURL
+
+m.postMessage:~WORKERS#dom-worker-postmessage-options
+m.send:~XHR#dom-xmlhttprequest-send
+
+	■variable
+V.blobParts:#dfn-blobParts
+V.options:#dfn-blobOptions
+V.fileBits:#dfn-fileBits
+V.fileName:#dfn-fileName
+V.fileOptions:#dfn-fileOptions
+	V.index:#dfn-index
+	V.url:#dom-url-revokeobjecturl-url-url
+	V.contentType:#dfn-contentTypeBlob
+	V.start:#dfn-start
+	V.end:#dfn-end
+
+	■idl-dictionary-member
+dm.lastModified:#dfn-FPdate
+dm.type:#dfn-BPtype
+dm.endings:#dom-blobpropertybag-endings
+
+	enum
+l.transparent:#dom-endingtype-transparent
+l.native:#dom-endingtype-native
+
+	■event
+et.abort:#dfn-abort-event
+et.error:#dfn-error-event
+et.load:#dfn-load-event
+et.loadend:#dfn-loadend-event
+et.loadstart:#dfn-loadstart-event
+et.progress:#dfn-progress-event
+
+	■error
+FR.FileLock:#FileLockFR
+FR.NotFound:#NotFoundFR
+FR.SnapshotState:#SnapshotStateFR
+FR.TooManyReads:#TooManyReadsFR
+FR.UnsafeFile:#UnsafeFileFR
+
+	■element
+e.iframe:~HEembed#the-iframe-element
+e.img:~HEimages#the-img-element
+e.input:~HEinput#the-input-element
+e.a:~HEtextlevel#the-a-element
+e.form:~HEforms#the-form-element
+
+	■content attr
+a.download:~HTMLlinks#attr-hyperlink-download
+	~SVGlinking#AElementDownloadAttribute
+
+	●用語
+終了-:#terminate-an-algorithm
+
+~byte列~data:#_ref-bytes
+~Blob:#_blob-object
+~data_URL:#biblio-rfc2397
+
+fR.~error:#filereader-error
+fR.結果:#filereader-result
+fR.状態:#filereader-state
+
+~streamを取得する:#blob-get-stream
+~dataを梱包する:#blob-package-data
+~Blobを同期的に読取る:#~read-blob
+
+~blobを成す各部を処理する:#process-blob-parts
+~native行末に変換する:#convert-line-endings-to-native
+~native行末に変換-:#convert-line-endings-to-native
+
+~blob~URL~store:#BlobURLStore
+~blob~URL:#blob-url
+新たな~blob~URLを生成する:#unicodeBlobURL
+~blob~URL~storeに~entryを追加する:#add-an-entry
+~blob~URL~storeから~entryを除去する:#removeTheEntry
+~blob~URLを解決する:#blob-url-resolve
+
+~blob~URL~entry:#blob-url-entry
+bU.環境:#blob-url-entry-environment
+bU.~obj:#blob-url-entry-object
+
+選択looping:#selection-looping
+~systemに敏感な~file:#sensitive-files
+Unix Epoch:#UnixEpoch
+
+読取り~error:#file-error-read
+~error条態:#file-error-read
+失敗~事由:#failureReason
+~file読取~task源:#fileReadingTaskSource
+~file型~指針:#file-type-guidelines
+進捗~eventを発火する:#fire-a-progress-event
+存続期間:#lifeTime
+
+読取り演算:#readOperation
+読取り~method:#read-method
+非同期~読取り~method:#asynchronous-read-methods
+同期~読取り~method:#read-method-sync
+
+~snapshot状態:#snapshot-state
+
+	●§
+	new Blob():#constructorBlob
+	new File():#file-constructor
+	slice():#slice-method-algo】
+
+	●外部
+~byte:~INFRA#byte
+~byte列:~INFRA#byte-sequence
+~surrogate:~INFRA#surrogate
+~list:~INFRA#list
+	~EACH:~INFRA#list-iterate
+付加する:~INFRA#list-append
+~map:~INFRA#ordered-map
+map.~key:~INFRA#map-key
+map.値:~INFRA#map-value
+	値を設定する:~INFRA#map-set
+	~entryを除去する:~INFRA#map-remove
+
+符号位置~並びを収集する:~INFRA#collect-a-sequence-of-code-points
+位置~変数:~INFRA#string-position-variable
+文字列:~INFRA#string
+文字:~INFRA#code-point
+	符号位置:~INFRA#code-point
+同型に復号する:~INFRA#isomorphic-decode
+~JS文字列:~INFRA#javascript-string
+~scalar値~文字列に変換する:~INFRA#javascript-string-convert
+	＊廃：~Unicode文字~並びに変換する:~WEBIDL#dfn-obtain-unicode
+
+並列的:~HTMLINFRA#in-parallel
+
+~URL:~URL1#concept-url
+url.~host:~URL1#concept-url-host
+url.~path:~URL1#concept-url-path
+url.~scheme:~URL1#concept-url-scheme
+url.生成元:~URL1#concept-url-origin
+妥当な~URL文字列:~URL1#valid-url-string
+~URL構文解析-:~URL1#concept-url-parser
+~URL構文解析する:~URL1#concept-url-parser
+~URLを直列化する:~URL1#concept-url-serializer
+
+
+~fetch:~FETCH#concept-fetch
+~network~error:~FETCH#concept-network-error
+
+~ReadableStream~objを構築する:~FETCH#concept-construct-readablestream
+RS.~errorにする:~FETCH#concept-error-readablestream
+RS.~errorした:~FETCH#concept-readablestream-errored
+RS.読取器を取得する:~FETCH#concept-get-reader
+RS.すべての~byte列を読取る:~FETCH#concept-read-all-bytes-from-readablestream
+RS.~chunkを読取る:~FETCH#concept-read-chunk-from-readablestream
+RS.~byte列を~enqueueする:~FETCH#concept-enqueue-readablestream
+
+~UTF-8:~ENCODING#utf-8
+~labelから符号化法を取得する:~ENCODING#concept-encoding-get
+~UTF-8符号化する:~ENCODING#utf-8-encode
+~UTF-8復号する:~ENCODING#utf-8-decode
+~Unicodeに復号する:~ENCODING#decode
+
+~eventを発火する:~DOM4#concept-event-fire
+発火-:~DOM4#concept-event-fire
+発火:~DOM4#concept-event-fire
+
+~MIME型:~MIMESNIFF#mime-type
+~MIME型を構文解析する:~MIMESNIFF#parse-a-mime-type
+~parameter~map:~MIMESNIFF#parameters
+構文解析-可能な~MIME型:#parsable-mime-type
+	廃＊~MIMESNIFF#parsable-mime-type
+妥当な~MIME型:~MIMESNIFF#valid-mime-type
+
+~supportする~prop~index:~WEBIDL#dfn-supported-property-indices
+投出-:~WEBIDL#dfn-throw
+~byte列の複製を取得-:~WEBIDL#dfn-get-buffer-source-copy
+
+新たな~promise:~WEBIDLjs#a-new-promise
+却下される~promise:~WEBIDLjs#a-promise-rejected-with
+反応-:~WEBIDLjs#dfn-perform-steps-once-promise-is-settled
+
+~chunk:~STREAMS#chunk
+
+~ASCII小文字~化する:~INFRA#ascii-lowercase
+文書:~DOM4#concept-document
+
+	●HTML
+~event~handler内容~属性:~WAPI#event-handler-content-attributes
+~event~handler ~event型:~WAPI#event-handler-event-type
+現在の設定群~obj:~WAPI#current-settings-object
+環境~設定群~obj:~WAPI#environment-settings-object
+関連な設定群~obj:~WAPI#relevant-settings-object
+~queueされ:~WAPI#queue-a-task
+~taskを~queueする:~WAPI#queue-a-task
+~task源:~WAPI#task-source
+~task:~WAPI#concept-task
+
+	生成元:~ORIGIN#concept-origin
+同一-生成元:~ORIGIN#same-origin
+不透明な生成元:~ORIGIN#concept-origin-opaque
+生成元を直列化する:~ORIGIN#ascii-serialisation-of-an-origin
+enV.生成元:~WAPI#concept-settings-object-origin
+文書~unload時の片付け手続き:~NAVI#unloading-document-cleanup-steps
+
+
+st.File:~HEinput#file-upload-state-(type=file)
+
+直列化-可能:~HTMLcloning#serializable-objects
+直列化~手続き:~HTMLcloning#serialization-steps
+逆直列化~手続き:~HTMLcloning#deserialization-steps
+下位-直列化:~HTMLcloning#sub-serialization
+下位-逆直列化:~HTMLcloning#sub-deserialization
+
+
+●●words_table1
+
+
+PublicML:https://lists.w3.org/Archives/Public
+
+
+●●words_table
+
+	●network／URL／IO／storage
+Blob:
+blob:
+ReadableStream:
+data_URL:Data URL
+	~data_URL:DataURL
+remote::::リモート
+local::::ローカル
+UUID:
+unload:
+memory::::メモリ
+disk::::ディスク
+directory::::ディレクトリ
+drive::::ドライブ
+
+chunk::::チャンク
+梱包-:package::~
+	梱包-法:packaging
+読取器:reader::読み取り器
+読取っ:readし::読み取っ
+読取られ:readされ::読み取られ
+読取れ:readでき::読み取れ
+読取る:readする::読み取る
+読取り:read::読み取り
+読取:reading::読み取り
+	読取り不能:unreadable
+	読取中:reading → read 中
+store::::ストア
+
+同型:isomorphic:~
+	~ASCII小文字に符号化された文字列:ASCII-encoded string in lower case
+	伝送-済み:transmitted
+直列形:serialized::~::シリアル形
+逆直列化:deserialization::~::逆シリアル化
+
+切出す:sliceする::切り出す
+切出し:slice::切り出し
+
+	●構文
+UTF-16:
+行末:line ending:~
+surrogate::::サロゲート
+改行文字:newline:~
+
+	●一般処理
+snapshot::::スナップショット
+main::::メイン
+創出-:mint:~
+存続期間:lifetime::~
+条態:condition::~::コンディション
+終了-:terminate:~
+片付け:cleanup::~
+続行-:proceed:~
+同時並行的:concurrent::~
+廃止-:revoke::~
+廃止:revocation::~
+
+	~error状況:error condition
+	進捗~bar:prog bar
+	引数:parameter
+	invocation
+	呼び出し元
+	呼び出し
+
+	●データ型／構造／操作
+一対一:one-to-one:~
+検索-:look up::~
+	生データ:raw data
+	~byte列:bytes:バイト列
+scalar::::スカラー
+
+	●保安
+防護:guarding:~
+防止:preventing:~
+曝露-:expose:~
+選択-:select:~
+選択:selection:~
+選択dialog:picker::選択ダイアログ
+選択攻撃:selection attacks:~
+選択looping:selection looping:選択ループ
+	選択強制:must choose
+	際限なく:loop
+permission::::パーミッション
+
+
+	●仕様
+選択肢:option::~::オプション
+省略可:optional::~
+
+趨勢:general trend:~
+参考:informative:~
+統計的手法:statistical method:~
+多彩:rich:~
+欠損:loss:~
+広範囲:wide:~
+	~~理論的に:In theory,
+柔軟性:flexibility:~
+自明:trivial:~
+黙って:silentに:~
+種類:kind:~
+具体的:concrete:~
+要覧:summary:~
+
+	解る様に:meaningfully
+	方法
+	不要になり次第:as soon as 〜 no longer needed
+	可能:
+	可能性:likelihood of／
+	かも:may
+	注意しておく:take care
+	成す:constitute
+	従うように:in keeping with
+	揃える:align
+	概ね:roughly
+	滞りなく:streamlined
+
+	●仕様（動詞
+ベース:base::~
+
+獲得-:acquire:~
+無反応:freezing:~
+	integration
+提携の:affiliated:~
+提携-:affiliate:~
+義務付け:mandating:~
+補足-:supplement:~
+補足的:supplemental:~
+
+	好ましい:preferable
+	努める:endeavor する
+	用意されて:avail of
+	由来:originally／originating
+	由来の:に originate している
+	説明:illustrate／
+	意味:
+	注意
+	知り得ない:not known
+	伴用
+	可能にする:allow
+	伝えられ:informs
+	揃う:align
+	近く:better
+
+	●未分類（動詞
+参照解決-:dereference::~
+参照解決:dereferencing::~
+注釈付き:annotated::~
+
+mime:
+bar::::バー
+mount::::マウント
+DnD:drag and drop:::ドラッグ＆ドロップ
+消去る:go awayする:消え去る
+
+	あり続ける:remain
+	指す:refer
+	生じ:occur
+	起こる:happen
+	~~反映:set
+	連鎖:chaining
+	開始
+	取得:get／
+	呼応
+	喪失:lost
+	成す:constitute
+	渡-:pass
+
+	●未分類
+	~JS文字列:utf-16
+	-:token
+日時:date::~
+最終更新日:last modified date:~
+時刻:time::~
+	時刻印:time stamp
+charset:
+	文字~並び:characters／sequence of character
+sample::::見本コード
+
+	参照~先:-
+	~MIME型:media type
+	指す:refer／
+	数:number
+	一覧:table／list
+	利用回数
+	後半を成す~chunk:1/2 chunk starting at middle of 
+	前半を成す~chunk:1/2 chunk starting at beginning of
+		記述
+	代入:assignment
+	名称:name
+	実行中:it is on
+	数値
+	数値比較:mathematical comparisons
+	数値演算:mathematical operation
+	集合
+	最大値:maximum
+	最小値:minimum
+	頻度:frequent
+
+	●§利用事例
+Calendar::::カレンダー
+offline::::オフライン
+spreadsheet::::スプレッドシート
+transaction::::トランザクション
+viewer::::ビューア
+併合-:merge:~
+保存-:save:~
+閲覧-:browse:~
+写真:photo:~
+予定表:calendar:~
+今日:today:~
+	sortable
+	actionable
+
+	会社:company
+	個人情報:personal info
+	期間:slots
+	多忙:busy
+	楽曲:song
+	歌詞:lyrics
+	自分用:his
+	program
+	介在抜きに:without user intervention
+	入る:takes place
+	入れられ
+	別名で保存:Save As
+	単一の:one
+	印
+	組み合せ
+	巨大:large
+	応える
+	探して
+	曲
+	漏れない
+	示され
+	節
+	組み入れ
+	読みたい
+	課され
+	通知を受ける:notify
+	開かれ
+
+	●言い換え／変数名
+	subject to
+	応じて:switch
+	同型に復号する:bytes as a binary string, in which every byte...
+	省略時は:optional
+	~charset~parameter:Charset Parameter
+	^P:media-type
+
+	~chunk~promise:chunkPromise
+	最初の~chunk:isFirstChunk
+	符号化法の名前:encodingName
+	~MIME型:mimeType
+
+	●指示語
+	ある種:certain
+	一部:
+	下記
+	両者
+	上述:
+	以上:
+	以下:
+	以外:
+	以降:
+	任意:
+	together
+	後続:
+	手前
+	対応
+	部分
+	重複
+	個の:one:two
+	個目:second
+	個数
+	直前
+	直後
+	一度
+
+	各種
+	同上
+	時点
+	時機:when
+	複数回
+	下位節:-
+	現在
+	先頭:beginning of／start of
+	全体
+	各部:parts
+	その:said
+	後続の:subsequent
+	-:known
+	以降は:anymore
+	どうやっても:anyway
+	範囲
+	連続する:consecutive
+	~~経過した:since／:pass
+	最終結果:
+	最長:-
+	末尾:end
+	回数:
+	場合
+	対象:
+	as long as
+	更なる:futher
+	なる:consist
+	それ以降:no longer
+	成す一部:part of
+	部位:portion
+
+●●ref_normative
+[DOM]
+    Anne van Kesteren. DOM Standard. Living Standard. URL: https://dom.spec.whatwg.org/ 
+[ECMA-262]
+    ECMAScript Language Specification. URL: https://tc39.es/ecma262/ 
+[ENCODING]
+    Anne van Kesteren. Encoding Standard. Living Standard. URL: https://encoding.spec.whatwg.org/ 
+[Fetch]
+    Anne van Kesteren. Fetch Standard. Living Standard. URL: https://fetch.spec.whatwg.org/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[INFRA]
+    Anne van Kesteren; Domenic Denicola. Infra Standard. Living Standard. URL: https://infra.spec.whatwg.org/ 
+[MEDIA-SOURCE]
+    Matthew Wolenetz; et al. Media Source Extensions™. 17 November 2016. REC. URL: https://www.w3.org/TR/media-source/ 
+[MIMESNIFF]
+    Gordon P. Hemsley. MIME Sniffing Standard. Living Standard. URL: https://mimesniff.spec.whatwg.org/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[RFC2397]
+    L. Masinter. The "data" URL scheme. August 1998. Proposed Standard. URL: https://tools.ietf.org/html/rfc2397 
+[RFC4122]
+    P. Leach; M. Mealling; R. Salz. A Universally Unique IDentifier (UUID) URN Namespace. July 2005. Proposed Standard. URL: https://tools.ietf.org/html/rfc4122 
+[STREAMS]
+    Adam Rice; Domenic Denicola; 吉野剛史 (Takeshi Yoshino). Streams Standard. Living Standard. URL: https://streams.spec.whatwg.org/ 
+[URL]
+    Anne van Kesteren. URL Standard. Living Standard. URL: https://url.spec.whatwg.org/ 
+[WebIDL]
+    Boris Zbarsky. Web IDL. 15 December 2016. ED. URL: https://heycam.github.io/webidl/ 
+[XHR]
+    Anne van Kesteren. XMLHttpRequest Standard. Living Standard. URL: https://xhr.spec.whatwg.org/ 
+
+●●ref_informative
+
+[SVG2]
+    Amelia Bellamy-Royds; et al. Scalable Vector Graphics (SVG) 2. 4 October 2018. CR. URL: https://www.w3.org/TR/SVG2/ 
+[Workers]
+    Ian Hickson. Web Workers. 24 September 2015. WD. URL: https://www.w3.org/TR/workers/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">File API</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/FileAPI/
+以前のバージョン
+	https://www.w3.org/TR/2019/WD-FileAPI-20190531/
+バージョン履歴
+	https://github.com/w3c/FileAPI/commits/master
+
+最新の課題
+	<a href="https://github.com/w3c/FileAPI/issues/">GitHub</a>
+編集
+	<a href="mailto:mek@chromium.org">Marijn Kruisselbrink</a> (Google)
+前任編集者
+	<a href="http://arunranga.com/">Arun Ranganathan</a> (Mozilla Corporation) <a href="mailto:arun@mozilla.com">arun@mozilla.com</a>
+テスト
+	<a href="https://github.com/web-platform-tests/wpt/tree/master/FileAPI">web-platform-tests FileAPI/</a> (<a href="https://github.com/web-platform-tests/wpt/labels/FileAPI">ongoing work</a>)
+実装報告（自動生成）
+	https://wpt.fyi/results/FileAPI
+最新情報
+	https://github.com/w3c/FileAPI
+前回の最終作業草案に対するフィードバック
+	https://www.w3.org/wiki/Webapps/LCWD-FileAPI-20130912
+フィードバック
+	<a href="https://github.com/w3c/FileAPI/issues">GitHub issues</a>
+過去 ML アーカイブ
+	https://lists.w3.org/Archives/Public/public-webapps/
+発行者
+	<a href="https://www.w3.org/2019/webapps/">Web Applications Working Group</a>
+
+</script>
+
+</head>
+
+<body>
+
+<header>
+	<hgroup>
+<h1 id="title">File API</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この仕様は、~Web~appにおいて ~file~objを表現するための
+<abbr title="Application Programming Interface">~API</abbr>，および
+~fileを~program的に選択して その~dataへ~accessすることを供する。
+これには次が含まれる：
+◎
+This specification provides an API for representing file objects in web applications, as well as programmatically selecting them and accessing their data.＼
+This includes:
+</p>
+
+<dl>
+	<dt>`FileList$I ~interface</dt>
+	<dd>
+下層~systemから個別に選択された~fileの配列を表現する。
+選択~用の~UIは `&lt;input type="file"&gt;^c —
+すなわち， `File$st 状態にある `input$e 要素 `HTML$r
+— を通して呼出すことができる。
+◎
+A FileList interface, which represents an array of individually selected files from the underlying system.＼
+The user interface for selection can be invoked via &lt;input type="file"&gt;, i.e. when the input element is in the File Upload state [HTML].
+</dd>
+
+	<dt>`Blob$I ~interface</dt>
+	<dd>
+変異-不能な生~binary~dataを表現する。
+`Blob$I ~obj内の一定範囲の~byteに対する~accessも，別個の `Blob$I を通して可能にする。
+◎
+A Blob interface, which represents immutable raw binary data, and allows access to ranges of bytes within the Blob object as a separate Blob.
+</dd>
+
+	<dt>`File$I ~interface</dt>
+	<dd>
+~fileの名前や（~disk上の）更新日など，~fileについての情報を~~供する読専の属性を備える。
+◎
+A File interface, which includes readonly informational attributes about a file such as its name and the date of the last modification (on disk) of the file.
+</dd>
+
+	<dt>`FileReader$I ~interface</dt>
+	<dd>
+`File$I や `Blob$I を読取るための~method,
+それらの読取った結果を得するための~event~modelを供する。
+◎
+A FileReader interface, which provides methods to read a File or a Blob, and an event model to obtain the results of these reads.
+</dd>
+
+	<dt><a href="#url">~URL~scheme</a></dt>
+	<dd>
+~fileなどの~binary~dataを~Web~appから参照する用途に利用できる。
+◎
+A URL scheme for use with binary data such as files, so that they can be referenced within web applications.
+</dd>
+
+</dl>
+
+<p>
+加えて、この仕様では、~thread化された~Web~appにおける，同期的な~file読取に利用できる~objを定義する。
+◎
+Additionally, this specification defines objects to be used within threaded web applications for the synchronous reading of files.
+</p>
+
+<p>
+<a href="#requirements">§ 要件と利用事例</a>
+では、この仕様の背後にある動機を説明する。
+◎
+§ 10 Requirements and Use Cases covers the motivation behind this specification.
+</p>
+
+<div >
+<p>
+この~APIは、他の~APIや~Web~platformを成す要素と伴用されるものとして設計されている。
+特に、次に挙げるものからは，~program的に~fileの~listが得することがアリになるべきである：
+</p>
+
+<ul><li>`XMLHttpRequest$I `XHR$r （例えば
+`File$I ／ `Blob$I
+型の引数をとる，多重定義された `send()$m ~method）
+</li><li>`postMessage()$m
+</li><li>`DataTransfer$I （
+`HTML$r に定義されている `~DnD~API^em の一部）
+</li><li>Web Workers `WORKERS$r
+</li><li>`File$st 状態にある `input$e 要素 `HTML$r
+</li></ul>
+
+<p>
+これらの種類の挙動は、適切な提携の仕様にて定義される。
+</p>
+◎
+This API is designed to be used in conjunction with other APIs and elements on the web platform, notably: XMLHttpRequest (e.g. with an overloaded send() method for File or Blob arguments), postMessage(), DataTransfer (part of the drag and drop API defined in [HTML]) and Web Workers. Additionally, it should be possible to programmatically obtain a list of files from the input element when it is in the File Upload state [HTML]. These kinds of behaviors are defined in the appropriate affiliated specifications.
+</div>
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+`この節では、発行時点における…^em
+【以下，この節の他の内容は、<a href="w3c-common-ja.html#status">W3C 日本語訳 共通~page</a>／冒頭の仕様~metadataに委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+~Web~appは、~fileを~remoteの~serverへ~uploadしたり, 多彩な~Web~appの中で扱うことも含め、利用者からの入力をアリな限り広範囲に扱えるようになっているべきである。
+この仕様は、~file, ~fileの~list, ~fileに~accessする際の~error, ~fileを~program的に読取る仕方についての基本的な表現を定義する。
+加えて、適合~UAの~main~threadと非同期に処理できる， “生~data” を表現する~interfaceも定義する。
+仕様で定義される~interfaceと~APIは、~Web~platformに公開されている他の~interfaceや~APIと伴用できるものになる。
+◎
+Web applications should have the ability to manipulate as wide as possible a range of user input, including files that a user may wish to upload to a remote server or manipulate inside a rich web application.＼
+This specification defines the basic representations for files, lists of files, errors raised by access to files, and programmatic ways to read files.＼
+Additionally, this specification also defines an interface that represents "raw data" which can be asynchronously processed on the main thread of conforming user agents. The interfaces and API defined in this specification can be used with other interfaces and APIs exposed to the web platform.
+</p>
+
+<p>
+`File$I ~interfaceは、概して，（利用者 環境の）下層の~file~systemから得された~file~dataを表現する。
+`Blob$I ~interface（ "`Binary Large Object^en"
+— 元々は
+<a href="https://developers.google.com/gears/?csw=1">Google Gears</a>
+の~Web~APIに由来する名称）は、変異-不能な生~dataを表現する。
+`File$I／`Blob$I
+の読取は~main~threadと非同期に行われるべきものであり、~thread化された~Web~app
+【~worker環境下】
+においては，同期的~APIを利用する選択肢もある。
+非同期~APIによる~fileの読取りにより、~UAの~main~threadの~UIの “無反応” は防止される。
+この仕様は、［
+`File$I／`Blob$I
+］~dataの読取りと~access用に、`~event~model^em に基づく非同期~APIを定義する。
+`FileReader$I ~objは、~event~handler内容~属性と~eventの発火を通して ~file~dataへの~accessを行うための，`非同期~読取り~method$を供する。
+~eventと~event~handlerの利用により、`読取りの進捗^emを監視するとき（~file~accessの処理能が~local~driveとは異なる，~remoteの~driveや~mountされた~driveに特に有用になる）と, ~file読取り中に起こり得る`~error条態$を監視するときとで，別々の~code~blockを利用できるようになる。
+例で示す：
+◎
+The File interface represents file data typically obtained from the underlying file system, and the Blob interface ("Binary Large Object" - a name originally introduced to web APIs in Google Gears) represents immutable raw data. File or Blob reads should happen asynchronously on the main thread, with an optional synchronous API used within threaded web applications. An asynchronous API for reading files prevents blocking and UI "freezing" on a user agent’s main thread. This specification defines an asynchronous API based on an event model to read and access a File or Blob’s data. A FileReader object provides asynchronous read methods to access that file’s data through event handler content attributes and the firing of events. The use of events and event handlers allows separate code blocks the ability to monitor the progress of the read (which is particularly useful for remote drives or mounted drives, where file access performance may vary from local drives) and error conditions that may arise during reading of a file. An example will be illustrative.
+</p>
+
+<div class="example">
+<p>
+次の例では［
+進捗, ~error, 成功
+］の，それぞれの条態に応じて、別々の~code~blockが取扱う。
+◎
+In the example below, different code blocks handle progress, error, and success conditions.
+</p>
+
+<pre class="lang-js">
+function startRead() {
+  /* <span class="comment">
+`input$e 要素を~DOMから得する
+◎
+obtain input element through DOM
+</span> */
+
+  var %file = document.getElementById('file').files[0];
+  if(%file){
+    getAsText(%file);
+  }
+}
+
+function getAsText(%readFile) {
+
+  var %reader = new FileReader();
+
+  /* <span class="comment">
+~UTF-16として~fileを~memory内に読取る
+◎
+Read file into memory as UTF-16
+</span> */
+  %reader.readAsText(%readFile, "UTF-16");
+
+  /* <span class="comment">
+進捗, 成功, ~error を取扱う
+◎
+Handle progress, success, and errors
+</span> */
+  %reader.onprogress = updateProgress;
+  %reader.onload = loaded;
+  %reader.onerror = errorHandler;
+}
+
+function updateProgress(%evt) {
+  if (%evt.lengthComputable) {
+    /* <span class="comment">
+%evt . `loaded^m および %evt . `total^m は `ProgressEvent$I の~prop
+◎
+evt.loaded and evt.total are ProgressEvent properties
+</span> */
+    var %loaded = (%evt.loaded / %evt.total);
+    if (%loaded &lt; 1) {
+      /* <span class="comment">
+進捗~barの長さを増やす
+◎
+Increase the prog bar length
+</span> */
+      // style.width = (%loaded * 200) + "px";
+    }
+  }
+}
+
+function loaded(%evt) {
+  /* <span class="comment">
+読取られた~file~data（この事例では文字列）を得する
+◎
+Obtain the read file data
+</span> */
+  var %fileString = %evt.target.result;
+  /* <span class="comment">
+得られた~dataを取扱う
+◎
+Handle UTF-16 file dump
+</span> */
+  if(utils.regexp.isChinese(%fileString)) {
+    /* <span class="comment">
+Chinese 文字~並びの~~処理
+◎
+Chinese Characters + Name validation
+</span> */
+  }
+  else {
+    /* <span class="comment">
+他の~charsetについての~test
+◎
+run other charset test
+</span> */
+  }
+  // xhr.send(%fileString)
+}
+
+function errorHandler(%evt) {
+  if(%evt.target.error.name == "NotReadableError") {
+    /* <span class="comment">
+~fileを読取れなかった
+◎
+The file could not be read
+</span> */
+  }
+}
+</pre>
+</div>
+
+	</section>
+	<section id="terminology">
+<h2 title="Terminology and Algorithms">2. 各種用語と~algo</h2>
+
+<p>
+この仕様において，~algoを
+`終了-@
+する所では、~UAが~~実行中の段を終えた所で~algoを終了するモノトスル。
+この仕様で定義される`非同期~読取り~method$は、当の~algo【が並列的に走らす手続き】が終了する前に返ることがあり、また， `abort()$m ~callにより終了され得る。
+◎
+When this specification says to terminate an algorithm the user agent must terminate the algorithm after finishing the step it is on. Asynchronous read methods defined in this specification may return before the algorithm in question is terminated, and can be terminated by an abort() call.
+</p>
+
+<p>
+常に整数 %a, %b に対する［
+`max^op( %a, %b ) ／ `min^op( %a, %b )
+］は、 %a, %b の［
+最大値／最小値
+］を返す。
+<!-- as they are defined in WebIDL [WebIDL]？ -->
+◎
+The algorithms and steps in this specification use the following mathematical operations:
+◎
+max(a,b) returns the maximum of a and b, and is always performed on integers as they are defined in WebIDL [WebIDL]; in the case of max(6,4) the result is 6. This operation is also defined in ECMAScript [ECMA-262].
+◎
+min(a,b) returns the minimum of a and b, and is always performed on integers as they are defined in WebIDL [WebIDL]; in the case of min(6,4) the result is 4. This operation is also defined in ECMAScript [ECMA-262].
+◎
+Mathematical comparisons such as &lt; (less than), ≤ (less than or equal to), and &gt; (greater than) are as in ECMAScript [ECMA-262].
+</p>
+
+<p>
+この仕様に利用される語 
+`Unix Epoch@
+は、時刻
+00:00:00 UTC 1970 年 1 月 1 日（ 1970-01-01T00:00:00Z ISO 8601 ）を指す。
+これは、 `ECMA-262$r においては，概念的な 時刻 “0” と同じになる。
+◎
+The term Unix Epoch is used in this specification to refer to the time 00:00:00 UTC on January 1 1970 (or 1970-01-01T00:00:00Z ISO 8601); this is the same time that is conceptually "0" in ECMA-262 [ECMA-262].
+</p>
+
+	</section>
+	<section id="_conventions">
+<h2>【この訳に特有な表記規約】</h2>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, ~IF, ~THROW, コレ, 等々）の意味や定義の詳細は，~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+<p>
+`~Blob@
+とは、 `Blob$I ~interfaceを実装する~objの略記である（したがって， `File$I ~objも含まれる）。
+</p>
+
+<p>
+原文が参照している `MIMESNIFF$r の用語には、今や，廃された／改称されたものもある。
+この訳では、その現在の仕様に揃うように，手を加えている：
+</p>
+<ul>
+	<li>
+原文の “`media type^en” に代えて、 “`~MIME型$（ `MIME type^en ）” を利用している。
+</li>
+	<li>
+原文で `MIMESNIFF$r を参照していた用語
+`構文解析-可能な~MIME型@
+は、今やその仕様から廃されている。
+おそらく，この用語を利用している箇所は、`妥当な~MIME型$を利用するべきであろう。
+</li>
+</ul>
+
+	</section>
+	<section id="blob-section">
+<h2 title="The Blob Interface and Binary Data">3. `Blob^I ~interfaceと~binary~data</h2>
+
+<p>
+各`~Blob$は、
+`~byte列~data@
+を~~参照する。
+~Blobの
+`size$m 属性は，この~dataの総~byte数を表現し、
+`type$m 属性は，この~dataの~MIME型を（~ASCII小文字に符号化された文字列として）表現する。
+◎
+A Blob object refers to a byte sequence, and has a size attribute which is the total number of bytes in the byte sequence, and a type attribute, which is an ASCII-encoded string in lower case representing the media type of the byte sequence.
+</p>
+
+<p>
+各`~Blob$は、
+`~snapshot状態@
+を内部的に持ち、`~byte列~data$が下層~storageから得られるものである場合に限り，その~storageの状態に初期化されるモノトスル【他の場合、 ~snapshot状態は “ない” 】。
+`~snapshot状態$についての更なる規範的な定義は，
+<a href="#file-section">§ `File^I ~interface</a>
+にて。
+◎
+Each Blob must have an internal snapshot state, which must be initially set to the state of the underlying storage, if any such underlying storage exists. Further normative definition of snapshot state can be found for Files.
+</p>
+
+<pre class="idl">
+[ `Exposed$=(Window,Worker), `Serializable$]
+interface `Blob@I {
+  `Blob$mc(
+      optional sequence&lt;`BlobPart$I&gt; `blobParts$V,
+      optional `BlobPropertyBag$I `options$V = {}
+  );
+
+  readonly attribute `unsigned long long$ `size$m;
+  readonly attribute `DOMString$ `type$m;
+
+  /* <span class="comment">
+`Blob^I から~byte範囲の~chunkを切出す
+◎
+slice Blob into byte-ranged chunks
+</span> */
+  Blob `slice$m(
+      optional [`Clamp$] `long long$ %start,
+      optional [`Clamp$] `long long$ %end,
+      optional `DOMString$ %contentType
+  );
+  /* <span class="comment">
+~Blobから読取る。
+◎
+read from the Blob.
+</span> */
+  [`NewObject$] `ReadableStream$I `stream$m();
+  [`NewObject$] Promise&lt;`USVString$&gt; `text$m();
+  [`NewObject$] Promise&lt;`ArrayBuffer$&gt; `arrayBuffer$m();
+};
+
+enum `EndingType@I { `transparent@l, `native@l };
+
+dictionary `BlobPropertyBag@I {
+  `DOMString$ `type$dm = "";
+  `EndingType$I `endings$dm = `transparent$l;
+};
+
+typedef (`BufferSource$ or `Blob$I or `USVString$) `BlobPart@I;
+</pre>
+
+<p>
+`Blob$I ~objは、`直列化-可能$である：
+◎
+Blob objects are serializable objects.＼
+</p>
+
+<ul>
+	<li>
+<p>
+その`直列化~手続き$は、所与の
+( %値, %直列形 )
+に対し，次を走らす：
+◎
+Their serialization steps, given value and serialized, are:
+</p>
+		<ol>
+			<li>
+%直列形 . `SnapshotState^sl ~SET %値 の`~snapshot状態$
+◎
+Set serialized.[[SnapshotState]] to value’s snapshot state.
+</li>
+			<li>
+%直列形 . `ByteSequence^sl ~SET 
+%値 の下層の~byte列
+◎
+Set serialized.[[ByteSequence]] to value’s underlying byte sequence.
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+その`逆直列化~手続き$は、所与の
+( %値, %直列形 )
+に対し，次を走らす：
+◎
+Their deserialization step, given serialized and value, are:
+</p>
+		<ol>
+			<li>
+%値 の`~snapshot状態$ ~SET %直列形 . `SnapshotState^sl
+◎
+Set value’s snapshot state to serialized.[[SnapshotState]].
+</li>
+			<li>
+%値 の下層の~byte列 ~SET %直列形 . `ByteSequence^sl
+◎
+Set value’s underlying byte sequence to serialized.[[ByteSequence]].
+</li>
+		</ol>
+	</li>
+</ul>
+
+<div class="algo">
+
+<p>
+各 `Blob$I %blob には、次の手続きを走らす
+`~streamを取得する@
+~algoが結付けられる：
+◎
+A Blob blob has an associated get stream algorithm, which runs these steps:
+</p>
+
+<ol>
+	<li>
+%~stream ~LET `~ReadableStream~objを構築する$()
+◎
+Let stream be the result of constructing a ReadableStream object.
+</li>
+	<li>
+~RET %~stream
+— ただし、以降も`並列的$に走らす
+◎
+Run the following steps in parallel:
+</li>
+	<li>
+<p>
+~WHILE［
+%blob 内にまだ読取っていない~byteがある
+］：
+◎
+While not all bytes of blob have been read:
+</p>
+		<ol>
+			<li>
+%~byte列 ~LET %blob から`~chunk$を読取った結果を成す`~byte列$
+⇒
+~IF［
+`読取り~error$が生じた
+］
+⇒＃
+%~stream を`~errorにする$RS( `失敗~事由$ )；
+~BREAK
+◎
+Let bytes be the byte sequence that results from reading a chunk from blob.＼
+If a file read error occured while reading bytes, error stream with a failure reason and abort these steps.
+</li>
+			<li>
+%~stream に`~byte列を~enqueueする$RS( %~byte列 )†
+◎
+Enqueue a Uint8Array object wrapping an ArrayBuffer containing bytes into stream.＼
+</li>
+			<li>
+~IF［
+%~stream は`~errorした$RS
+］
+⇒
+~BREAK
+◎
+If that threw an exception, error stream with that exception and abort these steps.
+</li>
+		</ol>
+
+<p class="trans-note">【†
+この~enqueueする~algoの内容は，
+`FETCH$r の更新により改められたので、この訳では，それに整合するよう この段を改めている。
+】</p>
+
+
+<p class="issue">
+~Blobからの読取が実際には何を行うか，起こり得る~errorは何かについて、もっと具体的に指定する必要がある
+— たぶん，~chunk~sizeについての何か, 等々。
+◎
+We need to specify more concretely what reading from a Blob actually does, what possible errors can happen, perhaps something about chunk sizes, etc.
+◎
+↑↑Return stream.
+</p>
+	</li>
+</ol>
+</div>
+
+		<section id="constructorBlob">
+<h3 title="Constructors">3.1. 構築子</h3>
+
+<div class="algo">
+<p>
+`new Blob(blobParts, options)@m
+構築子~手続きは：
+◎
+The Blob() constructor can be invoked with zero or more parameters. When the Blob() constructor is invoked, user agents must run the following steps:
+</p>
+<ol>
+	<li>
+%~mime型 ~LET 空~文字列
+◎
+↓</li>
+	<li>
+%~byte列 ~LET 空~byte列
+◎
+↓
+◎
+If invoked with zero parameters, return a new Blob object consisting of 0 bytes, with size set to 0, and with type set to the empty string.
+</li>
+	<li>
+~IF［
+%blobParts ~NEQ ε
+］
+⇒
+%~byte列 ~LET `~blobを成す各部を処理する$( `blobParts$V, `options$V )
+◎
+Let bytes be the result of processing blob parts given blobParts and options.
+</li>
+	<li>
+%type ~LET `options$V[ "`type$dm" ]
+◎
+↓</li>
+	<li>
+~IF［
+%type ~NEQ ε
+］~AND［
+%type を成すどの文字も 範囲 { `0020^U 〜 `007E^U } に入る
+］
+⇒
+%~mime型 ~SET `~ASCII小文字~化する$( %type )
+◎
+If the type member of the options argument is not the empty string, run the following sub-steps:
+• Let t be the type dictionary member. If t contains any characters outside the range U+0020 to U+007E, then set t to the empty string and return from these substeps.
+• Convert every character in t to ASCII lowercase.
+</li>
+	<li>
+<p>
+~RET 次のように初期化された，新たな `Blob$I ~obj
+⇒＃
+`~byte列~data$ ~SET %~byte列,
+`size$m ~SET %~byte列 の長さ,
+`type$m ~SET %~mime型
+◎
+Return a Blob object referring to bytes as its associated byte sequence, with its size set to the length of bytes, and its type set to the value of t from the substeps above.
+</li>
+</ol>
+</div>
+
+<p id="constructorParams">
+`new Blob()$m 構築子は、次を引数に呼出せる：
+◎
+3.1.1. Constructor Parameters"
+The Blob() constructor can be invoked with the parameters below:
+</p>
+<ol>
+	<li>
+`blobParts@V
+⇒
+任意個数の要素からなる~IDL連列~型の引数
+— 各~要素ごとに、次のいずれかの型の値をとり得る
+⇒
+`BufferSource$I ／ `Blob$I ／ `USVString$I
+◎
+A blobParts sequence
+• which takes any number of the following types of elements, and in any order:
+•• BufferSource elements.
+•• Blob elements.
+•• USVString elements.
+</li>
+	<li>
+<p>
+`options@V
+（省略可, `BlobPropertyBag$I 型）は、次の~memberを持つ：
+◎
+An optional BlobPropertyBag
+• which takes these optional members:
+</p>
+		<dl id="dfn-BlobPropertyBagMembers">
+			<dt>`type@dm</dt>
+			<dd>
+`~Blob$の~MIME型を表現する，~ASCII小文字に符号化された文字列。
+この~member用の規範的な条件は、
+`new Blob()$m 構築子
+にて与えられる。
+◎
+type, the ASCII-encoded string in lower case representing the media type of the Blob. Normative conditions for this member are provided in the § 3.1 Constructors.
+</dd>
+
+			<dt>`endings@dm</dt>
+			<dd>
+次のいずれかををとり得る
+⇒
+`transparent$l （既定の値）／
+`native$l
+◎
+endings, an enum which can take the values "transparent" or "native".＼
+</dd>
+			<dd>
+`native$l に設定された場合、
+`blobParts$V 内の各 `USVString$I は，`~native行末に変換-$されることになる
+◎
+By default this is set to "transparent". If set to "native", line endings will be converted to native in any USVString elements in blobParts.
+</dd>
+		</dl>
+	</li>
+</ol>
+
+<div class="algo">
+<p>
+`~blobを成す各部を処理する@
+ときは、所与の
+( 一連の `BlobPart$I 値が成す連列 %parts, `BlobPropertyBag$I 型の値 %options )
+に対し，次を走らす：
+◎
+To process blob parts given a sequence of BlobPart's parts and BlobPropertyBag options, run the following steps:
+</p>
+
+<ol>
+	<li>
+%~byte列 ~LET 空`~byte列$
+◎
+Let bytes be an empty sequence of bytes.
+</li>
+	<li>
+<p>
+%parts を成す~EACH ( %e ) に対し，順に
+⇒
+%~byte列 に［
+%e の型に応じて 次の下位手続きを走らせた結果
+］を付加する：
+◎
+For each element in parts:
+</p>
+		<dl class="switch">
+			<dt>
+`USVString$I
+◎
+If element is a USVString, run the following substeps:
+</dt>
+			<dd>
+				<ol>
+					<li>
+~IF［
+%options の `endings$dm ~member ~EQ `native$l 
+］
+⇒
+%e ~SET `~native行末に変換する$( %e )
+◎
+Let s be element.
+◎
+If the endings member of options is "native", set s to the result of converting line endings to native of element.
+</li>
+					<li>
+~RET `~UTF-8符号化する$( %e )
+◎
+Append the result of UTF-8 encoding s to bytes.
+</li>
+				</ol>
+			</dd>
+			<dd class="note">注記：
+渡された`~JS文字列$内の対を成さない（従って妥当でない）`~surrogate$は、
+`USVString$I 型になるよう`~scalar値~文字列に変換する$ときに，
+`FFFD^U 置換~文字に置換される。
+そのため、 `Blob$I 構築子においては，文字~並びの喪失や並び替わりに因る何らかの~data欠損も生じ得る。
+◎
+Note: The algorithm from WebIDL [WebIDL] replaces unmatched surrogates in an invalid utf-16 string with U+FFFD replacement characters. Scenarios exist when the Blob constructor may result in some data loss due to lost or scrambled character sequences.
+</dd>
+
+			<dt>`BufferSource$I</dt>
+			<dd>
+~RET %e が保持している`~byte列の複製を取得-$した結果
+◎
+If element is a BufferSource, get a copy of the bytes held by the buffer source, and append those bytes to bytes.
+</dd>
+
+			<dt>`~Blob$</dt>
+			<dd>
+~RET %e が表現する~byte列
+◎
+If element is a Blob, append the bytes it represents to bytes.
+</dd>
+			<dd class="note">
+%e の `type$m 属性は無視され、返される`~Blob$の `type$m には影響しない。
+◎
+Note: The type of the Blob array element is ignored and will not affect type of returned Blob object.
+</dd>
+		</dl>
+	</li>
+	<li>
+~RET %~byte列
+◎
+Return bytes.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`~native行末に変換する@
+ときは、所与の
+( `文字列$ %s )
+に対し，次を走らす：
+◎
+To convert line endings to native in a string s, run the following steps:
+</p>
+
+<ol>
+	<li>
+%CR ~LET `文字$ `000D^U CR
+◎
+↓</li>
+	<li>
+%LF ~LET `文字$ `000A^U LF
+◎
+↓</li>
+	<li>
+%~native行末 ~LET ［
+下層の~platform規約は 改行文字を［
+%CR, %LF
+］並びとして表現するならば その並び ／
+~ELSE_ %LF のみ
+］が成す文字列
+◎
+Let native line ending be be the code point U+000A LF.
+◎
+If the underlying platform’s conventions are to represent newlines as a carriage return and line feed sequence, set native line ending to the code point U+000D CR followed by the code point U+000A LF.
+</li>
+	<li>
+%結果 ~LET 空`文字列$
+◎
+Set result to the empty string.
+</li>
+	<li>
+%位置 ~LET %s の先頭を指している`位置~変数$
+◎
+Let position be a position variable for s, initially pointing at the start of s.
+</li>
+	<li>
+<p>
+~WHILE %位置↗ ~NEQ ε
+◎
+＊不要
+Let token be the result of collecting a sequence of code points that are not equal to U+000A LF or U+000D CR from s given position.
+◎
+Append token to result.
+◎
+While position is not past the end of s:
+</p>
+		<ol>
+			<li>
+<p>
+~IF［
+%位置↗ ~IN { %CR, %LF }
+］：
+</p>
+				<ol>
+					<li>
+%結果 に %~native行末 を付加する
+</li>
+					<li>
+~IF［
+%位置↗ ~EQ %CR
+］~AND［
+( %位置 ~PLUS 1 )↗ ~EQ %LF
+］
+⇒
+%位置 ~INCBY 1
+</li>
+					<li>
+%位置 ~INCBY 1
+</li>
+				</ol>
+◎
+If the code point at position within s equals U+000D CR:
+• Append native line ending to result.
+• Advance position by 1.
+• If position is not past the end of s and the code point at position within s equals U+000A LF advance position by 1.
+◎
+Otherwise if the code point at position within s equals U+000A LF, advance position by 1 and append native line ending to result.
+</li>
+			<li>
+%結果 に次の結果を付加する
+⇒
+%s 内の %位置 から［
+%LF, %CR
+］でない`符号位置~並びを収集する$
+◎
+Let token be the result of collecting a sequence of code points that are not equal to U+000A LF or U+000D CR from s given position.
+◎
+Append token to result.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %結果
+◎
+Return result.
+</li>
+</ol>
+</div>
+
+<div class="example">
+<p>
+構築子の用例：
+◎
+Examples of constructor usage follow.
+</p>
+
+<pre class="lang-js">
+/* <span class="comment">
+新たな `Blob^I ~objを作成する
+◎
+Create a new Blob object
+</span> */
+
+var %a = new Blob();
+
+/* <span class="comment">
+1024 ~byteの `ArrayBuffer^I を作成する
+◎
+Create a 1024-byte ArrayBuffer
+</span> */
+/* <span class="comment">
+~bufferは `File^I 読取りからも得られる
+◎
+buffer could also come from reading a File
+</span> */
+
+var %buffer = new ArrayBuffer(1024);
+
+/* <span class="comment">
+~bufferに基づく `ArrayBufferView^I ~objを作成する
+◎
+Create ArrayBufferView objects based on buffer
+</span> */
+
+var %shorts = new Uint16Array(%buffer, 512, 128);
+var %bytes = new Uint8Array(
+  %buffer,
+  %shorts.byteOffset + %shorts.byteLength
+);
+
+var %b = new Blob(
+  ["foobarbazetcetc" + "birdiebirdieboo"],
+  {type: "text/plain;charset=utf-8"}
+);
+
+var %c = new Blob([%b, %shorts]);
+
+var %a = new Blob([%b, %c, %bytes]);
+
+var %d = new Blob([%buffer, %b, %c, %bytes]);
+
+</pre>
+</div>
+
+		</section>
+		<section id="attributes-blob">
+<h3 title="Attributes">3.2. 属性</h3>
+
+<dl>
+	<dt>`size@m</dt>
+	<dd>
+取得子は、［
+`FileReader$I ／ `FileReaderSync$I
+］~objにより読取られた，`~byte列~data$の総~byte数を返すモノトスル。
+◎
+size, of type unsigned long long, readonly
+◎
+Returns the size of the byte sequence in number of bytes.＼
+◎
+On getting, conforming user agents must return the total number of bytes that can be read by a FileReader or FileReaderSync object, or 0 if the Blob has no bytes to be read. 
+</dd>
+
+	<dt>`type@m</dt>
+	<dd>
+`~Blob$の~MIME型を表現する，~ASCII小文字に符号化された文字列。
+◎
+type, of type DOMString, readonly
+◎
+The ASCII-encoded string in lower case representing the media type of the Blob.＼
+</dd>
+	<dd>
+取得子は、~byte列に変換した結果が`構文解析-可能な~MIME型$になるような，~ASCII小文字に符号化された文字列
+— ただし，`~Blob$の~MIME型を決定できない場合は 空~文字列（~byte列に変換されたときに 0 ~byteになる） —
+を返すモノトスル。
+◎
+On getting, user agents must return the type of a Blob as an ASCII-encoded string in lower case, such that when it is converted to a byte sequence, it is a parsable MIME type, or the empty string – 0 bytes – if the type cannot be determined.
+</dd>
+	<dd>
+`type$m 属性は、~Web~app自身からも［
+構築子／ `slice()$m
+］の~callを通して設定できる。
+これらの場合に更に適用される規範的な条件は、［
+`new Blob()$m 構築子,
+`new File()$m 構築子,
+`slice()$m ~method
+］にて与えられる。
+</dd>
+	<dd>
+~UAは
+— とりわけ `~byte列~data$が~disk上の~file由来のものである場合には —
+ 決定 `type$m 属性をできる。
+この場合に適用される更なる規範的な条件は、`~file型~指針$にて与えられる。
+◎
+The type attribute can be set by the web application itself through constructor invocation and through the slice() call; in these cases, further normative conditions for this attribute are in § 3.1 Constructors, § 4.1 Constructor, and § 3.3.1 The slice() method respectively. User agents can also determine the type of a Blob, especially if the byte sequence is from an on-disk file; in this case, further normative conditions are in the file type guidelines.
+</dd>
+	<dd class="note">注記：
+`type$m 属性は、それを表現している~ASCIIに符号化された文字列を~byte列に変換した結果を `~MIME型を構文解析する$~algoに渡した結果が `失敗^i でないとき，`構文解析-可能な~MIME型$であるものと見なされる。
+◎
+Note: The type t of a Blob is considered a parsable MIME type, if performing the parse a MIME type algorithm to a byte sequence converted from the ASCII-encoded string representing the Blob object’s type does not return failure.
+</dd>
+	<dd class="note">注記：
+`type$m 属性の利用は、`~dataを梱包する$~algoに伝えられ，`~blob~URL$を`~fetch$する際の `Content-Type^h ~headerを決定する。
+◎
+Note: Use of the type attribute informs the package data algorithm and determines the Content-Type header when fetching blob URLs.
+</dd>
+</dl>
+
+		</section>
+		<section id="methodsandparams-blob">
+<h3 title="Methods and Parameters">3.3. ~method</h3>
+
+<div class="algo">
+
+<div>
+<p>
+`slice(start, end, contentType)@m
+~method（引数はいずれも省略可）は、次のようにされた新たな `Blob$I ~objを返す：
+</p>
+<ul>
+	<li>
+その`~byte列~data$は、コレの`~byte列~data$の中の［
+%start （ 0 から数える）から %end の直前まで
+］の範囲を成す~byte列になる。
+</li>
+	<li>
+その `type$m 属性は、返される `Blob^I の~MIME型を表現する %contentType 引数で与えられる。
+</li>
+</ul>
+
+<p>
+その~method~手続きは：
+</p>
+
+◎
+3.3.1. The slice() method
+◎
+The slice() method returns a new Blob object with bytes ranging from the optional start parameter up to but not including the optional end parameter, and with a type attribute that is the value of the optional contentType parameter. It must act as follows:
+</div>
+
+<ol>
+	<li>
+%size ~LET コレの`~byte列~data$の総~byte数
+◎
+↓</li>
+	<li>
+%start ~SET %start に応じて
+⇒＃
+ε ならば 0 ／
+負であるならば `max^op( ( %size ~PLUS %start ), 0) ／
+~ELSE_ `min^op( %start, %size )
+◎
+Let O be the Blob context object on which the slice() method is being called.
+◎
+The optional start parameter is a value for the start point of a slice() call, and must be treated as a byte-order position, with the zeroth position representing the first byte. User agents must process slice() with start normalized according to the following:
+• If the optional start parameter is not used as a parameter when making this call, let relativeStart be 0.
+• If start is negative, let relativeStart be max((size + start), 0).
+• Else, let relativeStart be min(start, size).
+</li>
+	<li>
+%end ~SET %end に応じて
+⇒＃
+ε ならば %size ／
+負であるならば `max^op( ( %size ~PLUS %end ), 0 ) ／
+~ELSE_ `min^op( %end, %size )
+◎
+The optional end parameter is a value for the end point of a slice() call. User agents must process slice() with end normalized according to the following:
+• If the optional end parameter is not used as a parameter when making this call, let relativeEnd be size.
+• If end is negative, let relativeEnd be max((size + end), 0).
+• Else, let relativeEnd be min(end, size).
+</li>
+	<li>
+%内容~型 ~LET 空~文字列
+◎
+↓</li>
+	<li>
+~IF［
+%contentType ~NEQ ε
+］~AND［
+%contentType を成すどの文字も 範囲 { `0020^U 〜 `007E^U } に入る
+］
+⇒
+%内容~型 ~SET `~ASCII小文字~化する$( %contentType )
+◎
+The optional contentType parameter is used to set the ASCII-encoded string in lower case representing the media type of the Blob. User agents must process the slice() with contentType normalized according to the following:
+• If the contentType parameter is not provided, let relativeContentType be set to the empty string.
+• Else let relativeContentType be set to contentType and run the substeps below:
+•• If relativeContentType contains any characters outside the range of U+0020 to U+007E, then set relativeContentType to the empty string and return from these substeps.
+•• Convert every character in relativeContentType to ASCII lowercase.
+</li>
+	<li>
+%span ~LET `max^op( ( %end − %start ), 0 )
+◎
+Let span be max((relativeEnd - relativeStart), 0).
+</li>
+	<li>
+%data ~LET コレの`~byte列~data$の中の，~byte位置 %start から連続する %span 個の`~byte列$
+◎
+↓</li>
+	<li>
+~RET 次のように初期化された，新たな `Blob$I ~obj
+⇒＃
+`~byte列~data$ ~SET %data,
+`size$m 属性 ~SET %span,
+`type$m 属性 ~SET %内容~型
+◎
+Return a new Blob object S with the following characteristics:
+• S refers to span consecutive bytes from O, beginning with the byte at byte-order position relativeStart.
+• S.size = span.
+• S.type = relativeContentType.
+</li>
+</ol>
+</div>
+
+<div class="example">
+<p>
+`slice()$m の用例
+— この例では、 `Blob$I ~interfaceを継承する `File$I ~interfaceを利用している：
+◎
+The examples below illustrate the different types of slice() calls possible. Since the File interface inherits from the Blob interface, examples are based on the use of the File interface.
+</p>
+
+<pre class="lang-js">
+/* <span class="comment">
+~DOMから得される `input$e 要素から， `File$I ~objを得る
+◎
+obtain input element through DOM
+</span> */
+var %file = document.getElementById('file').files[0];
+
+if(%file) {
+  /* <span class="comment">
+%file を複製する
+— 次の 2 つの~callは等価
+◎
+create an identical copy of file
+the two calls below are equivalent
+</span> */
+  var %fileClone = %file.slice();
+  var %fileClone2 = %file.slice(0, %file.size);
+
+  /* <span class="comment">
+%file の後半を成す~chunkを切出す
+— 負な数を利用していることに注意
+◎
+slice file into 1/2 chunk starting at middle of file
+Note the use of negative number
+</span> */
+  var %fileChunkFromEnd = %file.slice(-(Math.round(%file.size/2)));
+
+  /* <span class="comment">
+%file の前半を成す~chunkを切出す
+◎
+slice file into 1/2 chunk starting at beginning of file
+</span> */
+  var %fileChunkFromStart = %file.slice(0, Math.round(%file.size/2));
+
+  /* <span class="comment">
+%file の［
+先頭から，末尾から 150 ~byte手前まで
+］の部分を切出す
+◎
+slice file from beginning till 150 bytes before end
+</span> */
+  var %fileNoMetadata = %file.slice(0, -150, "application/experimental");
+}
+</pre>
+
+</div>
+
+<div class="algo">
+`stream()@m
+~method~手続きは
+⇒
+~RET コレの`~streamを取得する$
+◎
+3.3.2. The stream() method
+◎
+The stream() method, when invoked, must return the result of calling get stream on the context object.
+</div>
+
+<div class="algo">
+<p>
+`text()@m
+~method~手続きは：
+◎
+3.3.3. The text() method
+◎
+The text() method, when invoked, must run these steps:
+</p>
+<ol>
+	<li>
+%~stream ~LET コレの`~streamを取得する$
+◎
+Let stream be the result of calling get stream on the context object.
+</li>
+	<li>
+%読取器 ~LET `読取器を取得する$RS( %~stream )
+⇒
+例外が投出されたときは
+⇒
+~RET その例外で`却下される~promise$
+◎
+Let reader be the result of getting a reader from stream. If that threw an exception, return a new promise rejected with that exception.
+</li>
+	<li>
+%~promise ~LET %~stream から`すべての~byte列を読取る$RS( %読取器 )
+◎
+Let promise be the result of reading all bytes from stream with reader.
+</li>
+	<li>
+~RET ［
+所与の ( %引数 ) に対し次の結果を返す充足~handler
+］で
+%~promise に`反応-$した結果
+⇒
+`~UTF-8復号する$( %引数 )
+◎
+Return the result of transforming promise by a fulfillment handler that returns the result of running UTF-8 decode on its first argument.
+</li>
+</ol>
+
+<p class="note">注記：
+`readAsText()$m の挙動とは異なり、これは， `Fetch$r による
+<a href="~FETCH#dom-body-text">`text()^m</a>
+の挙動に近く揃うようにしている。
+特定的には、この~methodは，符号化法として常に~UTF-8を利用する一方で、
+`FileReader$I は，~blobの型, 渡された符号化法の名前に依存して異なる符号化法が利用され得る。
+◎
+Note: This is different from the behavior of readAsText() to align better with the behavior of Fetch’s text(). Specifically this method will always use UTF-8 as encoding, while FileReader can use a different encoding depending on the blob’s type and passed in encoding name.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`arrayBuffer()@m
+~method~手続きは：
+◎
+3.3.4. The arrayBuffer() method
+◎
+The arrayBuffer() method, when invoked, must run these steps:
+</p>
+<ol>
+	<li>
+%~stream ~LET コレの`~streamを取得する$
+◎
+Let stream be the result of calling get stream on the context object.
+</li>
+	<li>
+%読取器 ~LET `読取器を取得する$RS( %~stream )
+⇒
+例外が投出されたときは
+⇒
+~RET その例外で`却下される~promise$
+◎
+Let reader be the result of getting a reader from stream. If that threw an exception, return a new promise rejected with that exception.
+</li>
+	<li>
+%~promise ~LET %~stream から`すべての~byte列を読取る$RS( %読取器 )
+◎
+Let promise be the result of reading all bytes from stream with reader.
+</li>
+	<li>
+~RET ［
+所与の ( %引数 ) に対し次を返す充足~handler
+］で
+%~promise に`反応-$した結果
+⇒
+%引数 を内容とする新たな `ArrayBuffer$I
+◎
+Return the result of transforming promise by a fulfillment handler that returns a new ArrayBuffer whose contents are its first argument.
+</li>
+</ol>
+</div>
+
+		</section>
+	</section>
+	<section id="file-section">
+<h2 title="The File Interface">4. `File^I ~interface</h2>
+
+<p>
+`File$I ~objは、［
+文字列を値にとる `name$m 属性
+］も伴う， `Blob$I ~objである。
+それは、~Web~appの中で構築子を通して作成されるか，あるいは
+下層の~OS~file~systemからの~fileを成す`~byte列$への参照である。
+◎
+A File object is a Blob object with a name attribute, which is a string; it can be created within the web application via a constructor, or is a reference to a byte sequence from a file from the underlying (OS) file system.
+</p>
+
+<p>
+`File$I ~objの`~byte列~data$が~disk上の~file由来の`~byte列$である場合、その`~snapshot状態$は，~objの作成-時点における~fileの状態を~~反映するべきである。
+◎
+If a File object is a reference to a byte sequence originating from a file on disk, then its snapshot state should be set to the state of the file on disk at the time the File object is created.
+</p>
+
+<p class="note">注記：
+これは~UAにとって実装するのは自明でない要件であるため、
+“`〜するモノトスル^em” ではなく， “`〜するベキ^em”
+とされている `RFC2119$r。
+~UAは、 `File$I ~objの`~snapshot状態$が，参照が得られる時点における~disk上の下層~storageの状態に設定されるように、努めるべきである。
+その時点より後に~disk上の~fileが改変された場合、`~snapshot状態$は，下層~storageの状態と異なるようになる。
+~UAは、改変~時刻印その他の仕組みを利用して，`~snapshot状態$を保守してもヨイが、それについては実装の詳細~に委ねられる。
+◎
+Note: This is a non-trivial requirement to implement for user agents, and is thus not a must but a should [RFC2119]. User agents should endeavor to have a File object’s snapshot state set to the state of the underlying storage on disk at the time the reference is taken. If the file is modified on disk following the time a reference has been taken, the File's snapshot state will differ from the state of the underlying storage. User agents may use modification time stamps and other mechanisms to maintain snapshot state, but this is left as an implementation detail.
+</p>
+
+<p>
+`File$I ~objが~disk上の~fileを~~参照している場合、~UAは，~objの `type$m 属性の取得子が［
+以下に与える
+`~file型~指針@
+に従うような，~MIME型
+］を返すようにするモノトスル：
+◎
+When a File object refers to a file on disk, user agents must return the type of that file, and must follow the file type guidelines below:
+</p>
+
+<ul>
+	<li>
+<p>
+~MIME型は、次のようにすること：
+</p>
+		<ul class="switch">
+			<li>
+~fileの~MIME型を決定できる場合
+⇒
+［
+~byte列に変換した結果が`構文解析-可能な~MIME型$になる
+］ような，~ASCII小文字に符号化された文字列
+</li>
+			<li>
+他の場合
+⇒
+空~文字列（~byte列に変換されたときに 0 ~byteになる）
+</li>
+		</ul>
+◎
+User agents must return the type as an ASCII-encoded string in lower case, such that when it is converted to a corresponding byte sequence, it is a parsable MIME type, or the empty string – 0 bytes – if the type cannot be determined.
+</li>
+	<li>
+［
+`~Blob$の `type$m ~EQ `text/plain^l
+］の場合
+⇒
+~MIME型の［
+`~parameter~map$ `MIMESNIFF$r にあたる部位
+］には、~charset~parameterを`付加しない^emこと。
+◎
+When the file is of type text/plain user agents must NOT append a charset parameter to the dictionary of parameters portion of the media type [MIMESNIFF].
+</li>
+	<li>
+（統計的手法も含め）経験則により符号化法を決定しようと試みないこと。
+◎
+User agents must not attempt heuristic determination of encoding, including statistical methods.
+</li>
+</ul>
+
+<pre class="idl">
+[`Exposed$=(Window,Worker), `Serializable$]
+interface `File@I : `Blob$I {
+  `File$mc(【！原文引数抜け】
+      sequence&lt;`BlobPart$I&gt; `fileBits$V,
+      `USVString$ `fileName$V,
+      optional `FilePropertyBag$I `fileOptions$V = {}
+  );
+  readonly attribute `DOMString$ `name$m;
+  readonly attribute `long long$ `lastModified$m;
+};
+
+dictionary `FilePropertyBag@I : `BlobPropertyBag$I {
+      `long long$ `lastModified$dm;
+};
+</pre>
+
+<p>
+`File$I ~objは、`直列化-可能$である：
+◎
+File objects are serializable objects.＼
+</p>
+
+<ul>
+	<li>
+<p>
+その`直列化~手続き$は、所与の
+( %値, %直列形 )
+に対し，次を走らす：
+◎
+Their serialization steps, given value and serialized, are:
+</p>
+		<ol>
+			<li>
+%直列形 . `SnapshotState^sl ~SET %値 の`~snapshot状態$
+◎
+Set serialized.[[SnapshotState]] to value’s snapshot state.
+</li>
+			<li>
+%直列形 . `ByteSequence^sl ~SET %値 の下層の~byte列
+◎
+Set serialized.[[ByteSequence]] to value’s underlying byte sequence.
+</li>
+			<li>
+%直列形 . `Name^sl ~SET %値 の `name$m 属性の値
+◎
+Set serialized.[[Name]] to the value of value’s name attribute.
+</li>
+			<li>
+%直列形 . `LastModified^sl ~SET %値 の `lastModified$m 属性の値
+◎
+Set serialized.[[LastModified]] to the value of value’s lastModified attribute.
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+その`逆直列化~手続き$は、所与の
+( %値, %直列形 )
+に対し，次を走らす：
+◎
+Their deserialization steps, given value and serialized, are:
+</p>
+
+		<ol>
+			<li>
+%値 の`~snapshot状態$ ~SET %直列形 . `SnapshotState^sl
+◎
+Set value’s snapshot state to serialized.[[SnapshotState]].
+</li>
+			<li>
+%値 の下層の~byte列 ~SET %直列形 . `ByteSequence^sl
+◎
+Set value’s underlying byte sequence to serialized.[[ByteSequence]].
+</li>
+			<li>
+%値 の `name$m 属性~値 ~SET %直列形 . `Name^sl に初期化する
+◎
+Initialize the value of value’s name attribute to serialized.[[Name]].
+</li>
+			<li>
+%値 の `lastModified$m 属性~値 ~SET %直列形 . `LastModified^sl に初期化する
+◎
+Initialize the value of value’s lastModified attribute to serialized.[[LastModified]].
+</li>
+		</ol>
+	</li>
+</ul>
+
+		<section id="file-constructor">
+<h3 title="Constructor">4.1. 構築子</h3>
+
+<div class="algo">
+<p>
+`new File(fileBits, fileName, fileOptions)@m
+構築子~手続きは：
+◎
+The File constructor is invoked with two or three parameters, depending on whether the optional dictionary parameter is used. When the File() constructor is invoked, user agents must run the following steps: 
+</p>
+<ol>
+	<li>
+%~byte列 ~LET `~blobを成す各部を処理する$( `fileBits$V , `fileOptions$V )
+◎
+Let bytes be the result of processing blob parts given fileBits and options.
+</li>
+	<li>
+<p>
+%名前 ~LET `fileName$V 引数を成す各
+`002F^U ( `/^l )
+を
+`003A^U ( `:^l )
+に置換した結果
+◎
+Let n be a new string of the same size as the fileName argument to the constructor. Copy every character from fileName to n, replacing any "/" character (U+002F SOLIDUS) with a ":" (U+003A COLON).
+</p>
+
+<p class="note">注記：
+~file名に利用される規約は、下層の~OS~file~system間で異なる
+— 構築された~fileに対する~UTF-16の義務付けは、~file名が`~byte列$に変換されたときの多義性を起こり難くする。
+◎
+Note: Underlying OS filesystems use differing conventions for file name; with constructed files, mandating UTF-16 lessens ambiquity when file names are converted to byte sequences.
+</p>
+
+	</li>
+	<li>
+%~mime型 ~LET 空~文字列
+◎
+↓</li>
+	<li>
+%type ~LET `fileOptions$V[ "`type$dm" ]
+◎
+↓</li>
+	<li>
+~IF［
+%type ~NEQ ε
+］~AND［
+%type を成すどの文字も 範囲 { `0020^U 〜 `007E^U } に入る
+］
+⇒
+%~mime型 ~SET `~ASCII小文字~化する$( %type )
+◎
+Process FilePropertyBag dictionary argument by running the following substeps:
+• If the type member is provided and is not the empty string, let t be set to the type dictionary member. If t contains any characters outside the range U+0020 to U+007E, then set t to the empty string and return from these substeps.
+• Convert every character in t to ASCII lowercase.
+</li>
+	<li>
+%日時 ~LET `fileOptions$V[ "`lastModified$dm" ]
+◎
+↓</li>
+	<li>
+<p>
+~IF［
+%日時 ~EQ ε
+］
+⇒
+%日時 ~SET `Unix Epoch$ から~~経過したミリ秒数（
+`Date.now()^m `ECMA-262$r
+と等価）
+◎
+If the lastModified member is provided, let d be set to the lastModified dictionary member. If it is not provided, set d to the current date and time represented as the number of milliseconds since the Unix Epoch (which is the equivalent of Date.now() [ECMA-262]).
+</p>
+
+<p class="note">注記：
+`ECMA-262$r `Date$I ~objは， `Unix Epoch$ から~~経過したミリ秒数を表現する `long long^c 値に変換されるので、 `lastModified$dm ~member値に `Date^I ~objを渡すこともできる。
+◎
+Note: Since ECMA-262 Date objects convert to long long values representing the number of milliseconds since the Unix Epoch, the lastModified member could be a Date object [ECMA-262].
+</p>
+	</li>
+	<li>
+~RET 次のように初期化された，新たな `File$I ~obj
+⇒＃
+`~byte列~data$ ~SET %~byte列,
+`size$m ~SET %~byte列 の総~byte数,
+`name$m ~SET %名前,
+`type$m ~SET %~mime型,
+`lastModified$m ~SET %日時
+◎
+Return a new File object F such that:
+• F refers to the bytes byte sequence.
+• F.size is set to the number of total bytes in bytes.
+• F.name is set to n.
+• F.type is set to t.
+• F.lastModified is set to d.
+</li>
+</ol>
+</div>
+
+<p id="file-constructor-params">
+`new File()$m 構築子は次の引数を伴って呼出され得る：
+◎
+4.1.1. Constructor Parameters
+◎
+The File() constructor can be invoked with the parameters below:
+</p>
+<ol>
+	<li>
+`fileBits@V
+⇒
+`blobParts$V と同じ。
+◎
+A fileBits sequence
+• which takes any number of the following elements, and in any order:
+•• BufferSource elements.
+•• Blob elements, which includes File elements.
+•• USVString elements.
+</li>
+	<li>
+`fileName@V
+（ `USVString$I 型）
+⇒
+~fileの名前を表現する文字列。
+この引数~用の規範的な条件は，
+`new File()$m 構築子にて与えられる。
+◎
+A fileName parameter
+• A USVString parameter representing the name of the file; normative conditions for this constructor parameter can be found in § 4.1 Constructor.
+</li>
+	<li>
+<p>
+`fileOptions@V
+（省略可, `FilePropertyBag$I 型）
+⇒
+この引数は、
+`BlobPropertyBag$I の~memberに加えて，~fileの更新日を表現する
+`lastModified@dm
+~member（省略可, `long long^c 型）を持つ。
+この~member用の規範的な条件は，
+`new File()$m 構築子にて与えられる。
+◎
+An optional FilePropertyBag dictionary
+• which in addition to the members of BlobPropertyBag takes one member:
+•• An optional lastModified member, which must be a long long; normative conditions for this member are provided in § 4.1 Constructor.
+</p>
+
+<p class="trans-note">【
+原文の引数~名は %options だが、 `new Blob()$m 構築子の同じ名前の引数と紛らわしいので，名前を違えている。
+】</p>
+	</li>
+</ol>
+
+		</section>
+		<section id="file-attrs">
+<h3 title="Attributes">4.2. 属性</h3>
+
+<dl>
+	<dt>`name@m</dt>
+	<dd>
+取得子は、~fileの名前を文字列として返すモノトスル。
+~file名には，下層の~OS~file~system間でいくつもの規約があるが、これは~path情報の無い単なる~fileの名前である。
+~UAは、取得-時に この情報を可用にできない場合は，空~文字列を返すモノトスル。
+◎
+name, of type DOMString, readonly
+◎
+The name of the file. On getting, this must return the name of the file as a string. There are numerous file name variations and conventions used by different underlying OS file systems; this is merely the name of the file, without path information. On getting, if user agents cannot make this information available, they must return the empty string.＼
+◎
+↓If a File object is created using a constructor, further normative conditions for this attribute are found in § 4.1 Constructor.
+</dd>
+
+	<dt>`lastModified@m</dt>
+	<dd>
+取得子は、次の日時を表す［
+`Unix Epoch$ から~~経過したミリ秒数による `long long^c 型の値
+］を返すモノトスル
+⇒＃
+~fileの最終更新日の情報を可用にできるならば その日時／
+知り得ない場合は現在の日時（ `Date.now()^m `ECMA-262$r に等価）
+◎
+lastModified, of type long long, readonly
+◎
+The last modified date of the file. On getting, if user agents can make this information available, this must return a long long set to the time the file was last modified as the number of milliseconds since the Unix Epoch. If the last modification date and time are not known, the attribute must return the current date and time as a long long representing the number of milliseconds since the Unix Epoch; this is equivalent to Date.now() [ECMA-262].＼
+</dd>
+</dl>
+
+<p>
+構築子を利用して作成された `File$I ~objにおける，これらの属性に更に適用される規範的な条件は、
+`new File()$m 構築子にて与えられる。
+◎
+If a File object is created using a constructor, further normative conditions for this attribute are found in § 4.1 Constructor.
+</p>
+
+		</section>
+
+<div class="p">
+<p>
+`File$I ~interfaceは、
+`FileList$I 型の属性を公開する~objにて可用にされる。
+その種の~objは~HTML `HTML$r にて定義されている。
+`File$I ~objは、 `Blob$I を継承する変異-不能な~objであり，`読取り演算$が起動された時点で~memory内に読取り可能な~file~dataを表現する。
+~UAは、読取り中に~fileが存在しなくなっていた場合には，`読取り~error$にするモノトスル
+— すなわち：
+</p>
+<ul>
+	<li>
+（ Web Worker `WORKERS$r の下で）
+`FileReaderSync$I が利用されている場合は `NotFoundError$E 例外を投出する。
+</li>
+	<li>
+他の場合は、［
+`error$m 属性は `NotFoundError$E 例外を返す
+］ようにした上で `error$et `~eventを発火する$
+</li>
+</ul>
+◎
+The File interface is available on objects that expose an attribute of type FileList; these objects are defined in HTML [HTML]. The File interface, which inherits from Blob, is immutable, and thus represents file data that can be read into memory at the time a read operation is initiated. User agents must process reads on files that no longer exist at the time of read as errors, throwing a NotFoundError exception if using a FileReaderSync on a Web Worker [Workers] or firing an error event with the error attribute returning a NotFoundError.
+</div>
+
+<div class="example">
+<p>
+下の例では、~file~objからの~metadataが解る様に表示された上で，名前と最終更新日が伴われた `File$I ~objが作成される：
+◎
+In the examples below, metadata from a file object is displayed meaningfully, and a file object is created with a name and a last modified date.
+</p>
+
+<pre class="lang-js">
+var %file = document.getElementById("filePicker").files[0];
+var %date = new Date(%file.lastModified);
+println(
+    "選択された~file: " + %file.name +
+    "~fileの最終更新日: " + %date.toDateString() + "."
+);
+
+...
+
+/* <span class="comment">
+特定の最終更新日が伴われた~fileを生成する
+◎
+Generate a file with a specific last modified date
+</span> */
+
+var %d = new Date(2013, 12, 5, 16, 23, 45, 600);
+var %generatedFile = new File(
+    ["Rough Draft ...."],
+    "Draft1.txt",
+    {type: "text/plain", lastModified: %d}
+);
+
+...
+</pre>
+<!-- 
+    "You selected the file " + file.name +
+    " which was modified on " + date.toDateString() + "."
+ -->
+
+</div>
+
+	</section>
+	<section id="filelist-section">
+<h2 title="The FileList Interface">5. `FileList^I ~interface</h2>
+
+<p class="note">注記：
+`FileList^I ~interfaceは “~risk下にある” ものと見なされるべきである。
+~Web~platformでは、この種の~interfaceを
+`ECMA-262$r における `Array$I ~platform~objに置換するのが，趨勢なので。
+特に、
+`filelist.item(0)^c の類の構文は~risk下にある。
+他のほとんどの［
+~programにおける `FileList^I の利用
+］については、最終的に `Array^I 型に移行されたとしても，およそ影響されないものと見込まれる。
+◎
+Note: The FileList interface should be considered "at risk" since the general trend on the Web Platform is to replace such interfaces with the Array platform object in ECMAScript [ECMA-262]. In particular, this means syntax of the sort filelist.item(0) is at risk; most other programmatic use of FileList is unlikely to be affected by the eventual migration to an Array type. 
+</p>
+
+<p>
+この~interfaceは `File$I ~objの~listを表現する。
+◎
+This interface is a list of File objects.
+</p>
+
+<pre class="idl">
+[`Exposed$=(Window,Worker), `Serializable$]
+interface `FileList@I {
+  getter `File$I? <a href="#dfn-item">item</a>(`unsigned long$ %index);
+  readonly attribute `unsigned long$ `length$m;
+};
+</pre>
+
+<div class="algo">
+<p>
+`FileList$I ~objは、`直列化-可能$である：
+◎
+FileList objects are serializable objects.＼
+</p>
+
+<ul>
+	<li>
+<p>
+その`直列化~手続き$は、所与の
+( %値, %直列形 )
+に対し，次を走らす：
+◎
+Their serialization steps, given value and serialized, are:
+</p>
+		<ol>
+			<li>
+%直列形 . `Files^sl ~SET 空`~list$
+◎
+Set serialized.[[Files]] to an empty list.
+</li>
+			<li>
+%値 内の~EACH( %~file ) に対し
+⇒
+%直列形 . `Files^sl に %~file の`下位-直列化$を`付加する$
+◎
+For each file in value, append the sub-serialization of file to serialized.[[Files]].
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+その`逆直列化~手続き$は、所与の
+( %値, %直列形 )
+に対し，次を走らす：
+◎
+Their deserialization step, given serialized and value, are:
+</p>
+		<ol>
+			<li>
+%直列形 . `Files^sl 内の~EACH( %~file ) に対し
+⇒
+%~file の`下位-逆直列化$を %値 に追加する
+◎
+For each file of serialized.[[Files]], add the sub-deserialization of file to value.
+</li>
+		</ol>
+	</li>
+</ul>
+</div>
+
+<div class="example">
+<p>
+~sampleにおいては、概して，~form内の `&lt;input type="file"&gt;^e 要素への~DOM~access, および選択された~fileへの~accessが含められる。
+◎
+Sample usage typically involves DOM access to the &lt;input type="file"&gt; element within a form, and then accessing selected files.
+</p>
+
+<pre class="lang-js">
+/* <span class="comment">
+`uploadData^c は `form$e 要素 ／
+`fileChooser^c は `type='file'^c の `input$e 要素
+◎
+uploadData is a form element
+fileChooser is input element of type 'file'
+</span> */
+var %file = document.forms['uploadData']['fileChooser'].files[0];
+
+/* <span class="comment">
+等価な構文
+◎
+alternative syntax can be
+</span> */
+// var %file = document.forms['uploadData']['fileChooser'].files.item(0);
+
+if(%file)
+{
+  /* <span class="comment">
+~fileを開く
+◎
+Perform file ops
+</span> */
+}
+</pre>
+</div>
+
+<a id="attributes-filelist"></a>
+<a id="filelist-methods-params"></a>
+
+<div class="algo">
+<p>
+`length@m
+取得子~手続きは
+⇒
+~RET コレが含んでいる `File$I ~objの個数（なければ 0 になる）
+◎
+Attributes
+◎
+length, of type unsigned long, readonly
+◎
+must return the number of files in the FileList object. If there are no files, this attribute must return 0.
+</div>
+
+<div class="algo">
+<p>
+`item(index)@m
+~method~手続きは：
+</p>
+<ol>
+	<li>
+~IF［
+%index ~IN { コレが`~supportする~prop~index$ }
+］
+⇒
+~RET コレの中の %index 番の `File$I ~obj（ 0 から数える）
+</li>
+	<li>
+~RET ~NULL
+</li>
+</ol>
+<p>
+`FileList$I ~obj %O が`~supportする~prop~index$は、
+0 以上［
+%O が含んでいる `File$I ~objの総数
+］未満とする。
+</p>
+◎
+5.2. Methods and Parameters
+◎
+item(index)
+• must return the indexth File object in the FileList. If there is no indexth File object in the FileList, then this method must return null.
+• index must be treated by user agents as value for the position of a File object in the FileList, with 0 representing the first file. Supported property indices are the numbers in the range zero to one less than the number of File objects represented by the FileList object. If there are no such File objects, then there are no supported property indices.
+</div>
+
+<p class="note">注記：
+`HTML$r における `FileList^I 型の読専~属性を持つ~interfaceには、
+`HTMLInputElement$I, `DataTransfer$I
+がある。
+前者は，上の例でも~accessされている。
+◎
+Note: The HTMLInputElement interface has a readonly attribute of type FileList, which is what is being accessed in the above example. Other interfaces with a readonly attribute of type FileList include the DataTransfer interface.
+</p>
+
+	</section>
+	<section id="reading-data-section">
+<h2 title="Reading Data">6. ~dataの読取</h2>
+
+		<section id="blobreader-task-source">
+<h3 title="The File Reading Task Source">6.1. ~file読取~task源</h3>
+
+<p>
+この仕様は、
+`~file読取~task源@
+と呼ばれる，新たな汎用`~task源$を定義する。
+それは、この仕様にて、`~Blob$に結付けられている~byte列を読取るために，`~queueされ$る~task
+］すべてから利用される。
+それはまた、~binary~dataの非同期的な読取に呼応して誘発される特能
+【~eventなど】
+用にも利用される。
+◎
+This specification defines a new generic task source called the file reading task source, which is used for all tasks that are queued in this specification to read byte sequences associated with Blob and File objects. It is to be used for features that trigger in response to asynchronously reading binary data.
+</p>
+
+		</section>
+		<section id="APIASynch">
+<h3 title="The FileReader API">6.2. `FileReader^I ~API</h3>
+
+<pre class="idl">
+[`Exposed$=(Window,Worker)]
+interface `FileReader@I: `EventTarget$I {
+  `FileReader$mc();
+  /* <span class="comment">
+`非同期~読取り~method$
+◎
+async read methods
+</span> */
+  `undefined$ `readAsArrayBuffer$m(`Blob$I %blob);
+  `undefined$ `readAsBinaryString$m(`Blob$I %blob);
+  `undefined$ `readAsText$m(`Blob$I %blob, optional `DOMString$ %encoding);
+  `undefined$ `readAsDataURL$m(`Blob$I %blob);
+  `undefined$ `abort()$m;
+
+  /* <span class="comment">
+状態
+◎
+states
+</span> */
+  const `unsigned short$ `EMPTY@m = 0;
+  const `unsigned short$ `LOADING@m = 1;
+  const `unsigned short$ `DONE@m = 2;
+
+  readonly attribute `unsigned short$ `readyState$m;
+
+  /* <span class="comment">
+`File^I または `Blob^I ~data
+◎
+File or Blob data
+</span> */
+  readonly attribute (`DOMString$ or `ArrayBuffer$)? `result$m;
+
+  readonly attribute `DOMException$I? `error$m;
+
+  /* <span class="comment">
+~event~handler内容~属性
+◎
+event handler content attributes
+</span> */
+  attribute `EventHandler$I `onloadstart$m;
+  attribute `EventHandler$I `onprogress$m;
+  attribute `EventHandler$I `onload$m;
+  attribute `EventHandler$I `onabort$m;
+  attribute `EventHandler$I `onerror$m;
+  attribute `EventHandler$I `onloadend$m;
+
+};
+</pre>
+
+<p>
+各 `FileReader$I には、次に挙げるものが結付けられる：
+◎
+↓</p>
+
+<dl class="def-list">
+	<dt>
+`状態@fR
+◎
+A FileReader has an associated state,＼
+</dt>
+	<dd>
+［
+`empty^l, `loading^l, `done^l
+］のいずれか。
+初期~時は `empty^l とする。
+◎
+that is "empty", "loading", or "done". It is initially "empty".
+</dd>
+
+	<dt>
+`結果@fR
+◎
+A FileReader has an associated result＼
+</dt>
+	<dd>
+［
+~NULL, `DOMString$I, `ArrayBuffer$I
+］のいずれか。
+初期~時は ~NULL とする。
+◎
+(null, a DOMString or an ArrayBuffer). It is initially null.
+</dd>
+
+	<dt>
+`~error@fR
+◎
+A FileReader has an associated error＼
+</dt>
+	<dd>
+［
+~NULL, `DOMException$I
+］のいずれか。
+初期~時は ~NULL とする。
+◎
+(null or a DOMException). It is initially null.
+</dd>
+</dl>
+
+<div class="algo">
+`new FileReader()@m
+構築子~手続きは、何もしない。
+◎
+The FileReader() constructor, when invoked, must return a new FileReader object.
+</div>
+
+<div class="algo">
+`readyState@m
+取得子~手続きは
+⇒
+~RET コレの`状態$fRに応じて
+⇒＃
+`empty^l ならば `EMPTY$m ／
+`loading^l ならば `LOADING$m ／
+`done^l ならば `DONE$m
+◎
+The readyState attribute’s getter, when invoked, switches on the context object's state and runs the associated step:
+◎
+"empty"
+• Return EMPTY
+"loading"
+• Return LOADING
+"done"
+• Return DONE
+</div>
+
+<div class="algo">
+`result@m
+取得子~手続きは
+⇒
+~RET コレの`結果$fR
+◎
+The result attribute’s getter, when invoked, must return the context object's result.
+</div>
+
+<div class="algo">
+`error@m
+取得子~手続きは
+⇒
+~RET コレの`~error$fR
+◎
+The error attribute’s getter, when invoked, must return the context object's error.
+</div>
+
+<div class="algo">
+<p>
+各 `FileReader$I %fr には
+`読取り演算@
+が結付けられ、所与の
+( %blob, %種別, %符号化法の名前 （省略時は ε） )
+に対し，次の手続きを走らす：
+◎
+A FileReader fr has an associated read operation algorithm, which given blob, a type and an optional encodingName, runs the following steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+%fr の`状態$fR ~EQ `loading^l
+］
+⇒
+~THROW `InvalidStateError$E
+◎
+If fr’s state is "loading", throw an InvalidStateError DOMException.
+</li>
+	<li>
+%fr の
+⇒＃
+`状態$fR ~SET `loading^l,
+`結果$fR ~SET ~NULL,
+`~error$fR ~SET ~NULL
+◎
+Set fr’s state to "loading".
+◎
+Set fr’s result to null.
+◎
+Set fr’s error to null.
+</li>
+	<li>
+%~stream ~LET %blob の`~streamを取得する$
+◎
+Let stream be the result of calling get stream on blob.
+</li>
+	<li>
+%読取器 ~LET `読取器を取得する$RS( %~stream )
+◎
+Let reader be the result of getting a reader from stream.
+</li>
+	<li>
+%~byte列 ~LET 空 `~byte列$
+◎
+Let bytes be an empty byte sequence.
+</li>
+	<li>
+%~chunk~promise ~LET %~stream から`~chunkを読取る$RS( %読取器, 【必要な引数が足りない】 )
+◎
+Let chunkPromise be the result of reading a chunk from stream with reader.
+</li>
+	<li>
+%最初の~chunk ~LET ~T
+◎
+Let isFirstChunk be true.
+</li>
+	<li>
+~RET
+— ただし、以降も`並列的$に走らす
+◎
+In parallel, while true:
+</li>
+	<li>
+`(A)^i
+%~chunk~promise が［
+充足される／却下される
+］まで待機する
+◎
+Wait for chunkPromise to be fulfilled or rejected.
+</li>
+	<li>
+<p>
+~IF［
+%~chunk~promise は %~obj で充足された
+］：
+◎
+↓</p>
+		<ol>
+			<li>
+<p>
+~IF［
+%最初の~chunk ~EQ ~T
+］
+⇒
+次を走らす`~taskを~queueする$
+⇒
+`進捗~eventを発火する$( %fr, `loadstart$et )
+◎
+If chunkPromise is fulfilled, and isFirstChunk is true, queue a task to fire a progress event called loadstart at fr.
+</p>
+
+<p class="issue">
+`XMLHttpRequest$I の挙動と揃えるため、
+`loadstart$et は同期的に配送するよう変更するかもしれない。
+<a href="https://github.com/w3c/FileAPI/issues/119">issue #119</a>
+◎
+We might change loadstart to be dispatched synchronously, to align with XMLHttpRequest behavior. &lt;https://github.com/w3c/FileAPI/issues/119&gt;
+</p>
+			</li>
+			<li>
+%最初の~chunk ~SET ~F
+◎
+Set isFirstChunk to false.
+</li>
+			<li>
+<p>
+~IF［
+%~obj の `done^c ~prop ~EQ ~F
+］：
+◎
+If chunkPromise is fulfilled with an object whose done property is false and＼
+</p>
+				<ol>
+					<li>
+~Assert：
+%~obj の `value^c ~prop は `Uint8Array^I ~objである
+【これは、原文では条件であるかのように記されているが，おそらく表明と解釈するべきであろう。】
+◎
+whose value property is a Uint8Array object, run these steps:
+</li>
+					<li>
+%~byte列 に［
+%~obj の `value^c ~propが表現する`~byte列$
+］を付加する
+◎
+Let bs be the byte sequence represented by the Uint8Array object.
+◎
+Append bs to bytes.
+</li>
+					<li>
+~IF［
+この手続きが最後に呼出されてから概ね 50ms ~~経過した
+］
+⇒
+次を走らす`~taskを~queueする$
+⇒
+`進捗~eventを発火する$( %fr, `progress$et )
+◎
+If roughly 50ms have passed since these steps were last invoked, queue a task to fire a progress event called progress at fr.
+</li>
+					<li>
+%~chunk~promise ~SET %~stream から`~chunkを読取る$RS( %読取器, 【必要な引数が足りない】 )
+◎
+Set chunkPromise to the result of reading a chunk from stream with reader.
+</li>
+					<li>
+~GOTO `(A)^i
+◎
+↑↑</li>
+				</ol>
+			</li>
+			<li>
+<p>
+次を走らす`~taskを~queueする$：
+◎
+Otherwise, if chunkPromise is fulfilled with an object whose done property is true, queue a task to run the following steps and abort this algorithm:
+</p>
+				<ol>
+					<li>
+%fr の`状態$fR ~SET `done^l
+◎
+Set fr’s state to "done".
+</li>
+					<li>
+%結果 ~LET %blob の`~dataを梱包する$( %~byte列, %種別, %blob の `type$m, %符号化法の名前 )
+◎
+Let result be the result of package data given bytes, type, blob’s type, and encodingName.
+</li>
+					<li>
+<p>
+~IF［
+前~段にて例外 %~error が投出された
+］：
+◎
+If package data threw an exception error:
+</p>
+						<ol>
+							<li>
+%fr の`~error$fR ~SET %~error
+◎
+Set fr’s error to error.
+</li>
+							<li>
+`進捗~eventを発火する$( %fr, `error$et )
+◎
+Fire a progress event called error at fr.
+</li>
+						</ol>
+					</li>
+					<li>
+<p>
+~ELSE：
+◎
+Else:
+</p>
+						<ol>
+							<li>
+%fr の`結果$fR ~SET %結果
+◎
+Set fr’s result to result.
+</li>
+							<li>
+`進捗~eventを発火する$( %fr, `load$et )
+◎
+Fire a progress event called load at the fr.
+</li>
+						</ol>
+					</li>
+					<li>
+<p>
+~IF［
+%fr の`状態$fR ~NEQ `loading^l
+］
+⇒
+`進捗~eventを発火する$( %fr, `loadend$et )
+◎
+If fr’s state is not "loading", fire a progress event called loadend at the fr.
+</p>
+
+<p class="note">注記：
+［
+`load$et ／ `error$et
+］~event用の~event~handlerは別の読込nを開始することもでき、それが起きた場合、この読込n用の `loadend$et ~eventは発火されない。
+◎
+Note: Event handler for the load or error events could have started another load, if that happens the loadend event for this load is not fired.
+</p>
+					</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+	<li>
+<p>
+~ELSE（ %~chunk~promise は %~error で却下された ）
+⇒
+次を走らす`~taskを~queueする$：
+◎
+Otherwise, if chunkPromise is rejected with an error error, queue a task to run the following steps and abort this algorithm:
+</p>
+		<ol>
+			<li>
+%fr の`状態$fR ~SET `done^l
+◎
+Set fr’s state to "done".
+</li>
+			<li>
+%fr の`~error$fR ~SET %~error
+◎
+Set fr’s error to error.
+</li>
+			<li>
+`進捗~eventを発火する$( %fr, `error$et )
+◎
+Fire a progress event called error at fr.
+</li>
+			<li>
+<p>
+~IF［
+%fr の`状態$fR ~NEQ `loading^l
+］
+⇒
+`進捗~eventを発火する$( %fr, `loadend$et )
+◎
+If fr’s state is not "loading", fire a progress event called loadend at fr.
+</p>
+
+<p class="note">注記：
+`error$et ~event用の~event~handlerは，別の読込nを開始することもでき、それが起きた場合，この読込n用の `loadend$et ~eventは発火されない。
+◎
+Note: Event handler for the error event could have started another load, if that happens the loadend event for this load is not fired.
+</p>
+			</li>
+		</ol>
+	</li>
+</ol>
+
+<p>
+上に現れる すべての~taskは、`~file読取~task源$を利用する。
+◎
+Use the file reading task source for all these tasks.
+</p>
+</div>
+
+			<section id="event-handler-attributes-section">
+<h4 title="Event Handler Content Attributes">6.2.1. ~event~handler内容~属性</h4>
+
+<p>
+~UAは、 `FileReader$I の~DOM属性として，次の`~event~handler内容~属性$（およびそれらに対応する`~event~handler ~event型$
+）を~supportするモノトスル：
+◎
+The following are the event handler content attributes (and their corresponding event handler event types) that user agents must support on FileReader as DOM attributes:
+</p>
+
+<table><thead>
+<tr><th>`~event~handler内容~属性$
+<th>`~event~handler ~event型$
+</thead>
+
+<tbody><tr><td>`onloadstart@m
+<td>`loadstart$et
+
+<tr><td>`onprogress@m
+<td>`progress$et
+
+<tr><td>`onabort@m
+<td>`abort$et
+
+<tr><td>`onerror@m
+<td>`error$et
+
+<tr><td>`onload@m
+<td>`load$et
+
+<tr><td>`onloadend@m
+<td>`loadend$et
+
+</tbody></table>
+
+			</section>
+			<section id="blobreader-state">
+<h4 title="FileReader States">6.2.2. `FileReader^I の状態</h4>
+
+<div class="note">
+
+<p>
+`FileReader$I ~objは、次に挙げる 3 種の状態をとり得る。
+~objがどの状態にあるかは、 `readyState$m 属性から得られる：
+◎
+The FileReader object can be in one of 3 states. The readyState attribute tells you in which state the object is: 
+</p>
+
+<dl>
+	<dt>`EMPTY$m （数値 0 ）</dt>
+	<dd>
+~objは構築-済みだが、まだ読取り待ちは生じていない。
+`読取り~method$は、まだ一度も~callされていない。
+◎
+The FileReader object has been constructed, and there are no pending reads. None of the read methods have been called.＼
+</dd>
+	<dd>
+これが、いずれかの`読取り~method$が~callされるまでの，新たに創出された `FileReader$I ~objにおける既定の状態である。
+◎
+This is the default state of a newly minted FileReader object, until one of the read methods have been called on it.
+</dd>
+
+	<dt>`LOADING$m （数値 1 ）</dt>
+	<dd>
+`~Blob$は読取り中の状態にある。
+`読取り~method$のいずれかが処理されていて，読取りにまだ~errorは生じていない。
+◎
+A File or Blob is being read. One of the read methods is being processed, and no error has occurred during the read.
+</dd>
+
+	<dt>`DONE$m （数値 2 ）</dt>
+	<dd>
+`~Blob$の全体が~memory内に読取られたか, `または^em
+`読取り~error$が生じたか, `または^em
+読取りは `abort()$m により中止された。
+~objは、それ以降は`~Blob$の読取を行わない。
+`readyState$m がこの値に設定された場合、少なくともいずれかの`読取り~method$が，~obj上で~callされたことを意味する。
+◎
+The entire File or Blob has been read into memory, OR a file read error occurred, OR the read was aborted using abort(). The FileReader is no longer reading a File or Blob. If readyState is set to DONE it means at least one of the read methods have been called on this FileReader.
+</dd>
+</dl>
+</div>
+
+			</section>
+			<section id="reading-a-file">
+<h4 title="Reading a File or Blob">6.2.3. `File^I／`Blob^I の読取</h4>
+
+<p>
+`FileReader$I ~interfaceには、~fileを非同期的に~memory内に読取る数種の
+`非同期~読取り~method@
+— `readAsArrayBuffer()$m, `readAsBinaryString()$m, `readAsText()$m, `readAsDataURL()$m —
+が可用にされている。
+◎
+The FileReader interface makes available several asynchronous read methods—readAsArrayBuffer(), readAsBinaryString(), readAsText() and readAsDataURL(), which read files into memory.
+</p>
+
+<p class="note">注記：
+これらの読取り~methodが，同じ `FileReader$I ~objに対し同時並行的に重ねて~callされた場合、~UAは［
+`readyState$m ~EQ `LOADING$m
+］の間に生じたどの読取り~methodに対しても，
+`InvalidStateError$E が投出される。
+◎
+Note: If multiple concurrent read methods are called on the same FileReader object, user agents throw an InvalidStateError on any of the read methods that occur when readyState = LOADING.
+</p>
+
+<p>
+`FileReaderSync$I も，数種の`同期~読取り~method$を可用にする。
+これらの同期な／非同期な読取り~methodは、併せて，
+`読取り~method@
+と総称される。
+◎
+(FileReaderSync makes available several synchronous read methods. Collectively, the sync and async read methods of FileReader and FileReaderSync are referred to as just read methods.)
+</p>
+
+<div class="algo">
+`readAsDataURL(blob)@m
+~method~手続きは
+⇒
+コレの`読取り演算$を起動する( %blob, `DataURL^i ) ／
+◎
+6.2.3.1. The readAsDataURL() method
+• The readAsDataURL(blob) method, when invoked, must initiate a read operation for blob with DataURL.
+</div>
+
+<div class="algo">
+`readAsText(blob, encoding)@m
+~method~手続きは
+⇒
+コレの`読取り演算$を起動する( %blob, `Text^i, %encoding ) ／
+◎
+6.2.3.2. The readAsText() method
+• The readAsText(blob, encoding) method, when invoked, must initiate a read operation for blob with Text and encoding.
+</div>
+
+<div class="algo">
+`readAsArrayBuffer(blob)@m
+~method~手続きは
+⇒
+コレの`読取り演算$を起動する( %blob, `ArrayBuffer^i ) ／
+◎
+6.2.3.3. The readAsArrayBuffer()
+• The readAsArrayBuffer(blob) method, when invoked, must initiate a read operation for blob with ArrayBuffer.
+</div>
+
+<div class="algo">
+<p>
+`readAsBinaryString(blob)@m
+~method~手続きは
+⇒
+コレの`読取り演算$を起動する( %blob, `BinaryString^i )
+◎
+6.2.3.4. The readAsBinaryString() method
+• The readAsBinaryString(blob) method, when invoked, must initiate a read operation for blob with BinaryString.
+</p>
+
+<p class="note">注記：
+`readAsBinaryString()$m よりも
+`readAsArrayBuffer()$m の利用が選好される 
+— 前者は後方-互換性を得るために供されている。
+◎
+Note: The use of readAsArrayBuffer() is preferred over readAsBinaryString(), which is provided for backwards compatibility.
+</p>
+
+</div>
+
+<div class="algo">
+<p>
+`abort()@m
+~method~手続きは：
+◎
+6.2.3.5. The abort() method
+◎
+When the abort() method is called, the user agent must run the steps below:
+</p>
+<ol>
+	<li>
+~IF［
+コレの`状態$fR ~IN { `enpty^l, `done^l }
+］
+⇒＃
+コレの`結果$fR ~SET ~NULL；
+~RET
+◎
+If context object's state is "empty" or if context object's state is "done" set context object's result to null and terminate this algorithm.
+</li>
+	<li>
+~Assert：
+コレの`状態$fR ~EQ `loading^l
+◎
+If context object's state is "loading"＼
+</li>
+	<li>
+コレの`状態$fR ~SET `done^l
+◎
+set context object's state to "done" and＼
+</li>
+	<li>
+コレの`結果$fR ~SET ~NULL
+◎
+set context object's result to null.
+</li>
+	<li>
+コレに提携して`~queueされ$た すべての`~task$を、`~file読取~task源$から除去する
+◎
+If there are any tasks from the context object on the file reading task source in an affiliated task queue, then remove those tasks from that task queue.
+</li>
+	<li>
+`読取り~method$が処理-中であれば、それを`終了-$させる
+◎
+Terminate the algorithm for the read method being processed.
+</li>
+	<li>
+`進捗~eventを発火する$( コレ, `abort$et )
+◎
+Fire a progress event called abort at the context object.
+</li>
+	<li>
+~IF［
+コレの`状態$fR ~NEQ `loading^l
+］
+⇒
+`進捗~eventを発火する$( コレ, `loadend$et )
+◎
+If context object's state is not "loading", fire a progress event called loadend at the context object.
+</li>
+</ol>
+</div>
+
+			</section>
+		</section>
+		<section id="packaging-data">
+<h3 title="Packaging data">6.3. ~dataの梱包-法</h3>
+
+<div class="algo">
+
+<p>
+各 `Blob$I には
+`~dataを梱包する@
+~algoが結付けられ、所与の
+( %~byte列, %種別, %~mime型 （省略時は ε） , %符号化法の名前 （省略時は ε） )
+に対し， %種別 に応じて次の手続きを走らす：
+◎
+A Blob has an associated package data algorithm, given bytes, a type, a optional mimeType, and a optional encodingName, which switches on type and runs the associated steps:
+</p>
+
+<dl class="switch">
+	<dt>`DataURL^i</dt>
+	<dd>
+<p>
+~RET `~data_URL$としての %~byte列
+— 次の考慮点を織り込む下で：
+◎
+Return bytes as a DataURL [RFC2397] subject to the considerations below:
+</p>
+		<ul>
+			<li>
+%~mime型 は可用ならば†、`~data_URL$ 仕様に従うように，それを~data_URLを成す一部に利用する。
+【†すなわち、 %~mime型 ~NEQ ε ？ 他にも必要な条件がある？】
+◎
+Use mimeType as part of the Data URL if it is available in keeping with the Data URL specification [RFC2397].
+</li>
+			<li>
+%~mime型 は可用でないならば、~data_URLは `media-type^P を伴わない。
+◎
+If mimeType is not available return a Data URL without a media-type. [RFC2397].
+</li>
+		</ul>
+<p class="issue">
+~data_URLがどう生成されるか，もっと良く指定する。
+<a href="https://github.com/w3c/FileAPI/issues/104">issue #104</a>
+◎
+Better specify how the DataURL is generated. &lt;https://github.com/w3c/FileAPI/issues/104&gt;
+</p>
+</dd>
+
+	<dt>`Text^i</dt>
+	<dd>
+		<ol>
+			<li>
+%符号化法 ~LET `失敗^i
+◎
+Let encoding be failure.
+</li>
+			<li>
+~IF［
+%符号化法の名前 ~NEQ ε
+］
+⇒
+%符号化法 ~SET `~labelから符号化法を取得する$( %符号化法の名前 )
+◎
+If the encodingName is present, set encoding to the result of getting an encoding from encodingName.
+</li>
+			<li>
+<p>
+~IF［
+%符号化法 ~EQ `失敗^i
+］~AND［
+%~mime型 ~NEQ ε
+］：
+◎
+If encoding is failure, and mimeType is present:
+</p>
+
+				<ol>
+					<li>
+%~mime型 ~LET `~MIME型を構文解析する$( %~mime型 )
+◎
+Let type be the result of parse a MIME type given mimeType.
+</li>
+					<li>
+<p>
+~IF［
+%~mime型 ~NEQ `失敗^i
+］
+⇒
+%符号化法 ~SET `~labelから符号化法を取得する$( %~mime型 の`~parameter~map$[ `charset^l ] )
+◎
+If type is not failure, set encoding to the result of getting an encoding from type’s parameters["charset"].
+</p>
+
+<p class="example">
+%blob の `type$m 属性が `text/plain;charset=utf-8^c ならば、`~labelから符号化法を取得する$ときには，~labelとして `utf-8^l を~~渡すことになる。
+~UAは、符号化法の`~label^emを構文解析して，その~charset~parameterが成す部位を抽出しなければならないことに注意。
+◎
+If blob has a type attribute of text/plain;charset=utf-8 then getting an encoding is run using "utf-8" as the label. Note that user agents must parse and extract the portion of the Charset Parameter that constitutes a label of an encoding.
+</p>
+					</li>
+				</ol>
+			</li>
+			<li>
+~IF［
+%符号化法 ~EQ `失敗^i
+］
+⇒
+%符号化法 ~SET `~UTF-8$
+◎
+If encoding is failure, then set encoding to UTF-8.
+</li>
+			<li>
+~RET `~Unicodeに復号する$( %~byte列, %符号化法 )
+◎
+Decode bytes using fallback encoding encoding, and return the result.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`ArrayBuffer^i</dt>
+	<dd>
+~RET %~byte列 を内容とする新たな `ArrayBuffer^c
+◎
+Return a new ArrayBuffer whose contents are bytes.
+</dd>
+
+	<dt>`BinaryString^i</dt>
+	<dd>
+~RET `同型に復号する$( %~byte列 )
+◎
+Return bytes as a binary string, in which every byte is represented by a code unit of equal value [0..255].
+</dd>
+</dl>
+
+</div>
+
+		</section>
+		<section id="events">
+<h3 title="Events">6.4. ~event</h3>
+
+<p>
+この仕様に定義される すべての~eventは，
+`FileReader$I ~objがその~targetになるモノトスル。
+◎
+The FileReader object must be the event target for all events in this specification.
+</p>
+
+<p>
+`進捗~eventを発火する@
+ときは、所与の
+(  %~target,  %~event名 )
+に対し，次を走らすモノトスル
+⇒
+%~target に向けて，名前 %~event名 の`~eventを発火する$
+— `ProgressEvent$I を利用して
+（ `DOM$r による定義により，~eventの `bubbles^m, `cancelable^m 両~属性とも ~F になる）
+◎
+When this specification says to fire a progress event called e (for some ProgressEvent e at a given FileReader reader as the context object), the following are normative:
+• The progress event e does not bubble. e.bubbles must be false [DOM]
+• The progress event e is NOT cancelable. e.cancelable must be false [DOM]
+</p>
+
+			<section id="event-summary">
+<h4 title="Event Summary">6.4.1. ~event要覧</h4>
+
+<p>
+次の表に、 `FileReader$I ~objに向けて`発火-$される~eventを挙げる
+— どれも， `ProgressEvent$I ~interfaceを利用する：
+◎
+The following are the events that are fired at FileReader objects.
+</p>
+
+<table id="event-summary-table">
+
+<thead><tr><th>~event名
+<th>発火-時機
+</thead>
+
+<tbody><tr><td>`loadstart@et
+<td>
+読取りが開始されるとき。
+◎
+When the read starts.
+
+<tr><td>`progress@et
+<td>
+~blobを読取り中（および復号-中）の間
+◎
+While reading (and decoding) blob
+
+<tr><td>`abort@et
+<td>
+読取りが中止されたとき。
+例えば `abort()$m ~methodが呼出されたとき。
+◎
+When the read has been aborted.
+For instance, by invoking the abort() method.
+
+<tr><td>`error@et
+<td>
+読取りが失敗したとき（`読取り~error$を見よ）。
+◎
+When the read has failed (see file read errors).
+
+<tr><td>`load@et
+<td>
+読取りが成功裡に完了したとき。
+◎
+When the read has successfully completed.
+
+<tr><td>`loadend@et
+<td>
+要請が完了したとき（成功／失敗のいずれでも）。
+◎
+When the request has completed (either in success or failure).
+
+</tbody></table>
+
+			</section>
+			<section id="eventInvariants">
+<h4 title="Summary of Event Invariants">6.4.2. ~event不変則の要約</h4>
+
+~INFORMATIVE
+
+<p>
+この仕様が与える非同期`読取り~method$に対する~eventの発火には、次の不変則が成り立つ：
+◎
+The following are invariants applicable to event firing for a given asynchronous read method in this specification:
+</p>
+
+<ol>
+	<li>
+<p>
+一度 `loadstart$et が発火された後、読取り完了~時に，対応する `loadend$et が発火される。
+`ただし^em、次のいずれかに該当する場合を除く：
+◎
+Once a loadstart has been fired, a corresponding loadend fires at completion of the read, UNLESS any of the following are true:
+</p>
+
+		<ul>
+			<li>
+`abort()$m により`読取り~method$が取消され，新たに`読取り~method$が呼出された場合
+◎
+the read method has been cancelled using abort() and a new read method has been invoked
+</li>
+			<li>
+`load$et ~event用の~event~handler関数が，新たな読取りを起動させた場合
+◎
+the event handler function for a load event initiates a new read
+</li>
+			<li>
+`error$et ~event用の~event~handler関数が，新たな読取りを起動させた場合
+◎
+the event handler function for a error event initiates a new read.
+</li>
+		</ul>
+
+<p class="note">注記：
+2 つの~event `loadstart$et と `loadend$et は、一対一の組にされるわけではない。
+◎
+Note: The events loadstart and loadend are not coupled in a one-to-one manner.
+</p>
+
+<div class="example">
+<p>
+“読取りの連鎖”，すなわち “最初の” 読取り処理は継続しつつ，~event~handlerの中で別の読取りを起動する例を示す：
+◎
+This example showcases "read-chaining": initiating another read from within an event handler while the "first" read continues processing.
+</p>
+
+<pre class="lang-js">
+/* <span class="comment">
+次の類いの~codeにおいて …
+◎
+In code of the sort...
+</span> */
+%reader.readAsText(%file);
+%reader.onload = function(){%reader.readAsText(%alternateFile);}
+
+.....
+
+/* <span class="comment">
+… 最初の読取りに対しては `loadend^et ~eventは発火されてはナラナイ
+◎
+... the loadend event must not fire for the first read
+</span> */
+
+%reader.readAsText(%file);
+%reader.abort();
+%reader.onabort = function(){%reader.readAsText(%updatedFile);}
+
+/* <span class="comment">
+… 最初の読取りに対しては `loadend^et ~eventは発火されてはナラナイ
+◎
+... the loadend event must not fire for the first read
+</span> */
+</pre>
+
+		</div>
+	</li>
+	<li>
+~blobが~memory内に完全に読取られた時点で `progress$et ~eventが 1 回 発火されることになる。
+◎
+One progress event will fire when blob has been completely read into memory.
+</li>
+	<li>
+`loadstart$et より前に `progress$et ~eventが発火されることはない。
+◎
+No progress event fires before loadstart.
+</li>
+	<li>
+`abort$et,
+`load$et,
+`loadend$et
+の，どの発火-後にも
+`progress$et ~eventが発火されることはない。
+所与の読取りに対し，少なくとも
+`abort$et,
+`load$et,
+`error$et
+のいずれかが発火される。
+◎
+No progress event fires after any one of abort, load, and error have fired. At most one of abort, load, and error fire for a given read.
+</li>
+	<li>
+`loadend$et の後に
+`abort$et,
+`load$et,
+`error$et
+~eventが発火されることはない。
+◎
+No abort, load, or error event fires after loadend.
+</li>
+</ol>
+			</section>
+		</section>
+		<section id="readingOnThreads">
+<h3 title="Reading on Threads">6.5. ~threadによる読取り</h3>
+
+<p>
+Web Workers `WORKERS$r においては，`~Blob$に対する同期的な読取り~APIも利用できる。
+その種の読取り~threadが~main~threadを阻むことはない。
+この節では、~workerにて利用できる同期的~APIを定義する。
+~workerには非同期~API（ `FileReader$I ~obj）
+`および^em
+同期的~API（ `FileReaderSync$I ~obj）が用意されている。
+◎
+Web Workers allow for the use of synchronous File or Blob read APIs, since such reads on threads do not block the main thread. This section defines a synchronous API, which can be used within Workers [[Web Workers]]. Workers can avail of both the asynchronous API (the FileReader object) and the synchronous API (the FileReaderSync object).
+</p>
+
+			<section id="FileReaderSync">
+<h3 title="The FileReaderSync API">6.5.1. `FileReaderSync^I ~API</h3>
+
+<p>
+この~interfaceは
+`~Blob$を~memory内に同期的に読取るための
+`同期~読取り~method@
+を供する。
+◎
+This interface provides methods to synchronously read File or Blob objects into memory.
+</p>
+
+<pre class="idl">
+[
+ `Exposed$=(DedicatedWorker,SharedWorker)]
+interface `FileReaderSync@I {
+  `FileReaderSync$mc();
+
+  /* <span class="comment">
+同期的に文字列を返す
+◎
+Synchronously return strings
+</span> */
+
+  `ArrayBuffer$ `readAsArrayBuffer$mS(`Blob$I %blob);
+  `DOMString$ `readAsBinaryString$mS(`Blob$I %blob);
+  `DOMString$ `readAsText$mS(`Blob$I %blob, optional `DOMString$ %encoding);
+  `DOMString$ `readAsDataURL$mS(`Blob$I %blob);
+};
+</pre>
+
+<div class="algo">
+`new FileReaderSync()@m
+構築子~手続きは、何もしない。
+◎
+6.5.1.1. Constructors
+◎
+When the FileReaderSync() constructor is invoked, the user agent must return a new FileReaderSync object.
+</div>
+
+<div class="algo">
+`readAsText(blob, encoding)@mS
+~method~手続きは
+⇒
+`~Blobを同期的に読取る$( %blob, `Text^i, %encoding ) ／
+◎
+6.5.1.2. The readAsText()
+
+The readAsText(blob, encoding) method, when invoked, must run these steps:
+• Let stream be the result of calling get stream on blob.
+• Let reader be the result of getting a reader from stream.
+• Let promise be the result of reading all bytes from stream with reader.
+• Wait for promise to be fulfilled or rejected.
+• If promise fulfilled with a byte sequence bytes:
+•• Return the result of package data given bytes, Text, blob’s type, and encoding.
+• Throw promise’s rejection reason.
+</div>
+
+<div class="algo">
+`readAsDataURL(blob)@mS
+~method~手続きは
+⇒
+`~Blobを同期的に読取る$( %blob, `DataURL^i ) ／
+◎
+6.5.1.3. The readAsDataURL() method
+
+The readAsDataURL(blob) method, when invoked, must run these steps:
+• Let stream be the result of calling get stream on blob.
+• Let reader be the result of getting a reader from stream.
+• Let promise be the result of reading all bytes from stream with reader.
+• Wait for promise to be fulfilled or rejected.
+• If promise fulfilled with a byte sequence bytes:
+•• Return the result of package data given bytes, DataURL, and blob’s type.
+• Throw promise’s rejection reason.
+</div>
+
+<div class="algo">
+`readAsArrayBuffer(blob)@mS
+~method~手続きは
+⇒
+`~Blobを同期的に読取る$( %blob, `ArrayBuffer^i )
+◎
+6.5.1.4. The readAsArrayBuffer() method
+
+The readAsArrayBuffer(blob) method, when invoked, must run these steps:
+• Let stream be the result of calling get stream on blob.
+• Let reader be the result of getting a reader from stream.
+• Let promise be the result of reading all bytes from stream with reader.
+• Wait for promise to be fulfilled or rejected.
+• If promise fulfilled with a byte sequence bytes:
+•• Return the result of package data given bytes, ArrayBuffer, and blob’s type.
+• Throw promise’s rejection reason.
+</div>
+
+<div class="algo">
+<p>
+`readAsBinaryString(blob)@mS
+~method~手続きは
+⇒
+`~Blobを同期的に読取る$( %blob, `BinaryString^i )
+◎
+6.5.1.5. The readAsBinaryString() method
+
+The readAsBinaryString(blob) method, when invoked, must run these steps:
+• Let stream be the result of calling get stream on blob.
+• Let reader be the result of getting a reader from stream.
+• Let promise be the result of reading all bytes from stream with reader.
+• Wait for promise to be fulfilled or rejected.
+• If promise fulfilled with a byte sequence bytes:
+•• Return the result of package data given bytes, BinaryString, and blob’s type.
+• Throw promise’s rejection reason.
+</p>
+
+<p class="note">注記：
+`readAsBinaryString()$mS よりも
+`readAsArrayBuffer()$mS の利用が選好される
+— 前者は後方-互換性を得るために供されている。
+◎
+Note: The use of readAsArrayBuffer() is preferred over readAsBinaryString(), which is provided for backwards compatibility.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`~Blobを同期的に読取る@
+ときは、所与の
+( %blob, %種別, %符号化法（省略時は ε ）)
+に対し：
+</p>
+<ol>
+	<li>
+%~stream ~LET %blob の`~streamを取得する$
+</li>
+	<li>
+%読取器 ~LET `読取器を取得する$RS( %~stream )
+</li>
+	<li>
+%~promise ~LET 次の結果
+⇒
+%~stream から`すべての~byte列を読取る$RS( %読取器 )
+</li>
+	<li>
+<p>
+%~promise が［
+充足される／却下される
+］まで待機する：
+</p>
+		<ul>
+			<li>
+<p>
+`~byte列$ %~byte列 で充足されたときは：
+</p>
+				<ol>
+					<li>
+%~mime型 ~LET %blob の `type$m 【取得子~手続きを遂行した結果】
+【空~文字列になる場合は ε と見なす？】
+</li>
+					<li>
+~RET %blob の`~dataを梱包する$( %~byte列, %種別, %~mime型, %符号化法 )
+</li>
+				</ol>
+			</li>
+			<li>
+事由 %r で却下されたときは
+⇒
+~THROW %r を表現する例外【`失敗~事由$を見よ】
+</li>
+		</ul>
+	</li>
+</ol>
+
+<p class="trans-note">【
+この手続きは、共通な記述を集約するために，この訳に導入している。
+】</p>
+◎
+↑</div>
+
+			</section>
+		</section>
+	</section>
+	<section id="ErrorAndException">
+<h2 title="Errors and Exceptions">7. ~errorと例外</h2>
+
+<p>
+`読取り~error@
+は下層の~file~systemから~fileを読取る際に生じ得る。
+起こり得る~errorのいくつかを下に挙げる。
+これらは `参考^em である。
+◎
+File read errors can occur when reading files from the underlying filesystem. The list below of potential error conditions is informative.
+</p>
+
+<ul>
+	<li>
+~accessされている `~Blob$
+【の~~参照先の~data】
+は、`非同期~読取り~method$や`同期~読取り~method$が~callされた時点では，存在しないかもしれない。
+例えば、その参照が獲得された後に移動されたか削除されたことに因り（例えば他の~appにより同時並行的に）。
+`NotFoundError$E を見よ。
+◎
+The File or Blob being accessed may not exist at the time one of the asynchronous read methods or synchronous read methods are called. This may be due to it having been moved or deleted after a reference to it was acquired (e.g. concurrent modification with another application). See NotFoundError.
+</li>
+	<li>
+`~Blob$は読取り不能かもしれない。
+例えば、`~Blob$への参照が獲得された後の~permission問題に因り（例えば他の~appにより同時並行的に~lockされたなど）。
+あるいは，`~snapshot状態$が変化したかもしれない。
+`NotReadableError$E を見よ。
+◎
+A File or Blob may be unreadable. This may be due to permission problems that occur after a reference to a File or Blob has been acquired (e.g. concurrent lock with another application). Additionally, the snapshot state may have changed. See NotReadableError.
+</li>
+	<li>
+~UAは，一部の~fileについて ~Web~app内での利用を安全でないものと決定してもヨイ。
+~disk上の~fileは 元々の~file選択から変化し得るので、読取り結果は無効なものになり得る。
+加えて、一部の~fileや~directory構造は，下層の~file~systemにおいて制約されていることもある。
+例えば それらからの読取りは，~security違反と見なされ得る。
+<a href="#security-discussion">~security上の考慮点</a>,
+`SecurityError$E を見よ。
+◎
+User agents MAY determine that some files are unsafe for use within Web applications. A file may change on disk since the original file selection, thus resulting in an invalid read. Additionally, some file and directory structures may be considered restricted by the underlying filesystem; attempts to read from them may be considered a security violation. See § 9 Security and Privacy Considerations and SecurityError.
+</li>
+</ul>
+
+		<section id="dfn-error-codes">
+<h3 title="Throwing an Exception or Returning an Error">7.1. 例外の投出-法／返される~error</h3>
+
+<p>
+この節は規範的である。
+◎
+This section is normative.
+</p>
+
+<p>
+`~error条態$は`~Blob$の読取り中に生じ得る。
+◎
+Error conditions can arise when reading a File or a Blob.
+</p>
+
+<p>
+`読取り演算$は、`~Blob$の読取~中における`~error条態$に因り終了し得る。
+`~streamを取得する$~algoを失敗させるような個々の`~error条態$は、
+`失敗~事由@
+と呼ばれ，下の表の 2 列目に挙げるものがあり得る。
+◎
+The read operation can terminate due to error conditions when reading a File or a Blob; the particular error condition that causes the get stream algorithm to fail is called a failure reason. A failure reason is one of NotFound, UnsafeFile, TooManyReads, SnapshotState, or FileLock.
+</p>
+
+<ul>
+	<li>
+`同期~読取り~method$に対しては、ある`失敗~事由$により~errorが生じた場合、下の一覧に挙げる型の例外が投出される。
+◎
+Synchronous read methods throw exceptions of the type in the table below if there has been an error owing to a particular failure reason.
+</li>
+	<li>
+`非同期~読取り~method$に対しては、
+`FileReader$I ~objの `error$m 属性が利用される。
+それは、［
+ある`失敗~事由$により~errorが生じた場合は，下の一覧の中で最も適切な名前の
+`DOMException$I ~obj ／
+~ELSE_ ~NULL
+］を返すモノトスル。
+◎
+Asynchronous read methods use the error attribute of the FileReader object, which must return a DOMException object of the most appropriate type from the table below if there has been an error owing to a particular failure reason, or otherwise return null.
+</li>
+</ul>
+
+<table><thead><tr><th>
+~error名
+◎
+Type
+<th>`失敗~事由$とその~~説明
+◎
+Description and Failure Reason
+</thead><tbody>
+
+<tr><td>`NotFoundError$E
+<td>
+<p>
+次に該当する`失敗~事由$には、この型の例外を利用するモノトスル：
+</p>
+
+<dl>
+	<dt>`NotFound@FR</dt>
+	<dd>
+読取りが処理された時点で`~Blob$の資源が見つからない。
+</dd>
+</dl>
+
+◎
+If the File or Blob resource could not be found at the time the read was processed, this is the NotFound failure reason.
+◎
+For asynchronous read methods the error attribute must return a NotFoundError exception and synchronous read methods must throw a NotFoundError exception.
+
+<tr><td>`SecurityError$E
+<td>
+
+<p>
+次に該当する`失敗~事由$には、この型の例外が利用されてもヨイ：
+</p>
+
+<dl>
+	<dt> `UnsafeFile@FR</dt>
+	<dd>
+ある種の~fileに対する ~Web~app内からの~accessが、安全でないものとされた。
+</dd>
+
+	<dt>`TooManyReads@FR</dt>
+	<dd>
+`~Blob$の資源に対する読取り~call回数が多すぎるものとされた。
+</dd>
+
+</dl>
+
+<p>
+これは、他の `失敗~事由$に該当しない状況に利用される~security上の~errorである。
+</p>
+
+◎
+If:
+• it is determined that certain files are unsafe for access within a Web application, this is the UnsafeFile failure reason.
+• it is determined that too many read calls are being made on File or Blob resources, this is the TooManyReads failure reason.
+◎
+For asynchronous read methods the error attribute may return a SecurityError exception and synchronous read methods may throw a SecurityError exception.
+◎
+This is a security error to be used in situations not covered by any other failure reason.
+
+<tr><td>`NotReadableError$E
+<td>
+
+<p>
+次に該当する`失敗~事由$には、この型の例外を利用するモノトスル：
+</p>
+
+<dl>
+	<dt>`SnapshotState@FR</dt>
+	<dd>
+`~Blob$の`~snapshot状態$が下層~storageの状態に合致しない。
+</dd>
+
+	<dt>`FileLock@FR</dt>
+	<dd>
+概して`~snapshot状態$の確立-後に生じた~permission問題に因り（例えば他の~appにより同時並行的に下層~storageが~lockされたなど）、`~Blob$を読取れない。
+</dd>
+
+</dl>
+
+◎
+If:
+• the snapshot state of a File or a Blob does not match the state of the underlying storage, this is the SnapshotState failure reason.
+• the File or Blob cannot be read, typically due due to permission problems that occur after a snapshot state has been established (e.g. concurrent lock on the underlying storage with another application) then this is the FileLock failure reason.
+◎
+For asynchronous read methods the error attribute must return a NotReadableError exception and synchronous read methods must throw a NotReadableError exception.
+
+</tbody></table>
+
+		</section>
+	</section>
+	<section id="url">
+<h2 title="A URL for Blob and MediaSource reference">8. `Blob^I ／ `MediaSource^I への~URL参照</h2>
+
+<p>
+この節では［
+`~Blob$／ `MediaSource$I ~obj
+］を指すために利用される`~URL$の`~scheme$urlを定義する。
+◎
+This section defines a scheme for a URL used to refer to Blob and MediaSource objects.
+</p>
+
+		<section id="url-intro">
+<h3 title="Introduction">8.1. 序論</h3>
+
+~INFORMATIVE
+
+<p>
+`~blob~URL$は、
+`blob:http://example.com/550e8400-e29b-41d4-a716-446655440000^l
+の様な~URLである。
+これは、`img$e 要素などの，［
+~~普通の~URLを利用するように設計された他の~Web~API
+］に［
+`~Blob$／ `MediaSource$I ~obj
+］を統合することを可能化する。
+`~blob~URL$は、~navigateするときや,
+~localに生成された~dataの~downloadを誘発するときにも利用できる。
+◎
+Blob (or object) URLs are URLs like blob:http://example.com/550e8400-e29b-41d4-a716-446655440000. This enables integration of Blobs and MediaSources with other APIs that are only designed to be used with URLs, such as the img element. Blob URLs can also be used to navigate to as well as to trigger downloads of locally generated data.
+</p>
+
+<p>
+この目的で `URL$I ~interfaceには 2 つの静的~method
+— `createObjectURL()$m, `revokeObjectURL()$m —
+が公開される。
+前者は `~URL$から `Blob$I への対応付けを作成し，後者は その対応付けを廃止する。
+対応付けが存在する限り， `Blob$I は~garbage収集できないので、参照が不要になり次第 ~URLを廃止するよう，【作者は】注意しておく必要がある。
+どの`~blob~URL$も、それを作成した大域~objが消去るに伴い，廃止される。
+◎
+For this purpose two static methods are exposed on the URL interface, createObjectURL(obj) and revokeObjectURL(url). The first method creates a mapping from a URL to a Blob, and the second method revokes said mapping. As long as the mapping exist the Blob can’t be garbage collected, so some care must be taken to revoke the URL as soon as the reference is no longer needed. All URLs are revoked when the global that created the URL itself goes away.
+</p>
+
+		</section>
+		<section id="url-model">
+<h3 title="Model">8.2. ~model</h3>
+
+<div >
+<p>
+各~UAは、
+`~blob~URL~store@
+を保守するモノトスル
+— それは`~map$であり、それを成す各~entryは：
+</p>
+
+<ul>
+	<li>
+<p>
+`~blob~URL@
+を`~key$mapとする。
+それは、`妥当な~URL文字列$であって，それを`~URL構文解析-$した結果の`~URL$は次をすべて満たすものである：
+</p>
+				<ul>
+					<li>
+`~scheme$url ~EQ `blob^l
+</li>
+					<li>
+`~host$urlは<a href="~URL1#empty-host">空</a>である
+</li>
+					<li>
+`~path$urlは［
+自身も`妥当な~URL文字列$である 1 個の要素
+］のみからなる
+</li>
+				</ul>
+	</li>
+	<li>
+<p>
+`~blob~URL~entry@
+を`値$mapとする。
+それは、次のものからなる組である：
+</p>
+		<dl class="def-list">
+			<dt>`~obj@bU</dt>
+			<dd>
+`Blob$I 型, または `MediaSource$I 型。
+</dd>
+
+			<dt>`環境@bU</dt>
+			<dd>
+`環境~設定群~obj$。
+</dd>
+		</dl>
+	</li>
+</ul>
+
+◎
+Each user agent must maintain a blob URL store. A blob URL store is a map where keys are valid URL strings and values are blob URL Entries.
+◎
+A blob URL entry consists of an object (of type Blob or MediaSource), and an environment (an environment settings object).
+◎
+Keys in the blob URL store (also known as blob URLs) are valid URL strings that when parsed result in a URL with a scheme equal to "blob", an empty host, and a path consisting of one element itself also a valid URL string.
+</div>
+
+<div class="algo">
+<p>
+`新たな~blob~URLを生成する@
+ときは、次を走らす：
+◎
+To generate a new blob URL, run the following steps:
+</p>
+
+<ol>
+	<li>
+%直列形 ~LET `生成元を直列化する$( `現在の設定群~obj$の`生成元$enV )
+◎
+Let result be the empty string.
+◎
+Append the string "blob:" to result.
+◎
+Let settings be the current settings object
+◎
+Let origin be settings’s origin.
+◎
+Let serialized be the ASCII serialization of origin.
+</li>
+	<li>
+~IF［
+%直列形 ~EQ `null^l
+］
+⇒
+%直列形 ~SET 実装により定義される値
+◎
+If serialized is "null", set it to an implementation-defined value.
+</li>
+	<li>
+~RET 次を順に連結した結果
+⇒＃
+文字列 `blob:^l,
+%直列形,
+`0024^U SOLIDUS ( `/^c ),
+~UUID `RFC4122$r を文字列として生成した結果
+◎
+Append serialized to result.
+◎
+Append U+0024 SOLIDUS (/) to result.
+◎
+Generate a UUID [RFC4122] as a string and append it to result.
+◎
+Return result.
+</li>
+</ol>
+</div>
+
+<p class="example">
+この~algoにより生成できる~blob~URLの例
+⇒
+`blob:https://example.org/40a5fb5a-d56d-4a33-b4e2-0acf6a8e5f64^l
+◎
+An example of a blob URL that can be generated by this algorithm is blob:https://example.org/40a5fb5a-d56d-4a33-b4e2-0acf6a8e5f64.
+</p>
+
+<div class="algo">
+<p>
+`~blob~URL~storeに~entryを追加する@
+ときは、所与の
+( %~obj )
+に対し，次を走らす：
+◎
+To add an entry to the blob URL store for a given object, run the following steps:
+</p>
+
+<ol>
+	<li>
+%~url ~LET `新たな~blob~URLを生成する$
+◎
+Let store be the user agent’s blob URL store.
+◎
+Let url be the result of generating a new blob URL.
+</li>
+	<li>
+~UAの`~blob~URL~store$[ %~url ] ~SET 次のようにされた，新たな`~blob~URL~entry$
+⇒＃
+`~obj$bU ~SET %~obj,
+`環境$bU ~SET `現在の設定群~obj$
+◎
+Let entry be a new blob URL entry consisting of object and the current settings object.
+◎
+Set store[url] to entry.
+</li>
+	<li>
+~RET %~url
+◎
+Return url.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`~blob~URL~storeから~entryを除去する@
+ときは、所与の
+( %~url )
+に対し，次を走らす：
+◎
+To remove an entry from the blob URL store for a given url, run the following steps:
+</p>
+
+<ol>
+	<li>
+%~url文字列 ~LET `~URLを直列化する$( %~url )
+◎
+Let store be the user agent’s blob URL store;
+◎
+Let url string be the result of serializing url.
+</li>
+	<li>
+~UAの`~blob~URL~store$[ %~url文字列 ] ~SET ε
+◎
+Remove store[url string].
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="requestResponseModel">
+<h3 title="Dereferencing Model for blob URLs">8.3. ~blob~URL用の参照解決~model</h3>
+
+<p class="trans-note">【
+参照解決（ `dereference^en ）
+— 参照を参照-先の~dataに解決する。
+】</p>
+
+<div class="algo">
+<p>
+`~blob~URLを解決する@
+ときは、所与の
+( `~URL$ %~url )
+に対し，次を走らす：
+◎
+To resolve a blob URL given a url (a URL), run the following steps:
+</p>
+
+<ol>
+	<li>
+~Assert：
+%~url の`~scheme$url ~EQ `blob^l
+◎
+Assert: url’s scheme is "blob".
+</li>
+	<li>
+%~url文字列 ~LET 
+`~URLを直列化する$( %~url, `素片は除外する^i )
+◎
+Let store be the user agent’s blob URL store.
+◎
+Let url string be the result of serializing url with the exclude fragment flag set.
+</li>
+	<li>
+~RET ［
+次の結果 ~NEQ ε ならば それ ／
+~ELSE_ `失敗^i
+］
+⇒
+~UAの`~blob~URL~store$[ %~url文字列 ]
+◎
+If store[url string] exists, return store[url string]; otherwise return failure.
+</li>
+</ol>
+</div>
+
+<p>
+`~blob~URL$用の［
+構文解析-法／~fetch法
+］~model用の更なる要件は、［
+`URL$r ／ `Fetch$r
+］仕様に定義される。
+◎
+Futher requirements for the parsing and fetching model for blob URLs are defined in the [URL] and [Fetch] specifications.
+</p>
+
+			<section id="originOfBlobURL">
+<h4 title="Origin of blob URLs">8.3.1. ~blob~URLの生成元</h4>
+
+~INFORMATIVE
+
+<p>
+`~blob~URL$が廃止されるまでは、［
+その`生成元$url, それを作成した環境の`生成元$enV
+］は常に同じになる。
+これは `URL$r 仕様により達成される
+— ~URLの構文解析-時に`~blob~URL~store$内を検索して得られる~entryを利用して，正しい生成元を返すことにより。
+◎
+The origin of a blob URL is always the same as that of the environment that created the URL, as long as the URL hasn’t been revoked yet. This is achieved by the [URL] spec looking up the URL in the blob URL store when parsing a URL, and using that entry to return the correct origin.
+</p>
+
+<p>
+~URLが廃止された場合，両~生成元の直列化は依然として同じであり続けるが、`不透明な生成元$は，それ自身と別個になるかもしれない。
+~blob~URLは，廃止されて以降はどうやっても解決-／~fetchできなくなるので、この相違は観測-可能にならないが。
+◎
+If the URL was revoked the serialization of the origin will still remain the same as the serialization of the origin of the environment that created the blob URL, but for opaque origins the origin itself might be distinct. This difference isn’t observable though, since a revoked blob URL can’t be resolved/fetched anymore anyway.
+</p>
+
+			</section>
+			<section id="lifeTime">
+<h4 title="Lifetime of blob URLs">8.3.2. ~blob~URLの存続期間</h4>
+
+<p>
+この仕様は、`文書~unload時の片付け手続き$を，所与の
+( `文書$ %文書 )
+に対し，次を走らすように拡張する：
+◎
+This specification extends the unloading document cleanup steps with the following steps:
+</p>
+
+<ol>
+	<li>
+~UAの`~blob~URL~store$から，次を満たす~entryをすべて除去する
+⇒
+`値$mapの`環境$bU ~EQ %文書 に`関連な設定群~obj$
+◎
+Let environment be the Document's relevant settings object.
+◎
+Let store be the user agent’s blob URL store;
+◎
+Remove from store any entries for which the value's environment is equal to environment.
+</li>
+</ol>
+
+<p class="issue">
+~workerの~unload時にも，類似な~hookを与える必要がある。
+◎
+This needs a similar hook when a worker is unloaded.
+</p>
+
+			</section>
+		</section>
+		<section id="creating-revoking">
+<h3 title="Creating and Revoking a blob URL">8.4. ~blob~URLの作成-法と廃止-法</h3>
+
+<p>
+`~blob~URL$は，
+`URL$I ~objに公開される静的~methodを利用して作成され, 廃止される。
+`~blob~URL$を廃止する（ `revoke^en する）ことにより、それが~~参照する資源と`~blob~URL$は切り離される。
+廃止-後に参照解決しようとされた場合、~UAは`~network~error$が生じたかのように動作するモノトスル。
+この節では、~URL仕様 `URL$r に対する補足的~interface, および
+`~blob~URL$の作成／廃止~用の~methodについて述べる。
+◎
+Blob URLs are created and revoked using static methods exposed on the URL object. Revocation of a blob URL decouples the blob URL from the resource it refers to, and if it is dereferenced after it is revoked, user agents must act as if a network error has occurred. This section describes a supplemental interface to the URL specification [URL] and presents methods for blob URL creation and revocation.
+</p>
+
+<pre class="idl">
+[`Exposed$=(Window,DedicatedWorker,SharedWorker)]
+partial interface `URL$I {
+    static `DOMString$ `createObjectURL$m((`Blob$I or MediaSource) %obj);
+    static `undefined$ `revokeObjectURL$m(`DOMString$ %url);
+};
+</pre>
+
+<div class="algo">
+<p>
+`createObjectURL(obj)@m
+静的~method~手続きは
+⇒
+~RET `~blob~URL~storeに~entryを追加する$( %obj )
+◎
+The createObjectURL(obj) static method must return the result of adding an entry to the blob URL store for obj.
+</div>
+
+<div class="algo">
+<p>
+`revokeObjectURL(url)@m
+静的~method~手続きは：
+◎
+The revokeObjectURL(url) static method must run these steps:
+</p>
+<ol>
+	<li>
+%~url~record ~LET `~URL構文解析する$( %~url )
+◎
+Let url record be the result of parsing url.
+</li>
+	<li>
+~IF［
+%~url~record の`~scheme$url ~NEQ `blob^
+］
+⇒
+~RET
+◎
+If url record’s scheme is not "blob", return.
+</li>
+	<li>
+%生成元 ~LET %~url~record の`生成元$url
+◎
+Let origin be the origin of url record.
+</li>
+	<li>
+%設定群 ~LET `現在の設定群~obj$
+◎
+Let settings be the current settings object.
+</li>
+	<li>
+~IF［
+( %生成元, %設定群 の`生成元$enV )
+は`同一-生成元$でない
+］
+⇒
+~RET
+◎
+If origin is not same origin with settings’s origin, return.
+</li>
+	<li>
+`~blob~URL~storeから~entryを除去する$( %~url )
+◎
+Remove an entry from the Blob URL Store for url.
+</li>
+</ol>
+
+<p class="note">注記：
+これは，登録されていない~URLを廃止しようと試みたときには、~errorを投出することなく，黙って失敗することを意味する。
+これが起きたときには、~UAは，~error~consoleに~messageを表示することもできる。
+◎
+Note: This means that rather than throwing some kind of error, attempting to revoke a URL that isn’t registered will silently fail. User agents might display a message on the error console if this happens.
+</p>
+
+<p class="note">注記：
+廃止された %~url を参照解決しようと試みた場合、`~network~error$になる。
+%~url が廃止される前に開始された要請は、依然として成功するべきである。
+◎
+Note: Attempts to dereference url after it has been revoked will result in a network error. Requests that were started before the url was revoked should still succeed.
+</p>
+</div>
+
+<div class="example">
+<p>
+次の例の
+%window1, %window2 は、別々であるが`同一-生成元$であるとする
+— %window2 は、 %window1 の内側にある `iframe$e にもなり得る。
+◎
+In the example below, window1 and window2 are separate, but in the same origin; window2 could be an iframe inside window1.
+</p>
+
+<pre class="lang-js">
+%myurl = %window1.URL.createObjectURL(%myblob);
+%window2.URL.revokeObjectURL(%myurl);
+</pre>
+
+<p>
+~UAが有する大域`~blob~URL~store$は一つだけなので、ある~obj~URLを それを作成しなかった異なる~windowから廃止することもアリになる。
+`revokeObjectURL()$m を~callすれば、［［
+それ以降に %myurl を参照解決した結果は，`~network~error$になる
+］かのように，~UAが動作する
+］ようになることが確保される。
+◎
+Since a user agent has one global blob URL store, it is possible to revoke an object URL from a different window than from which it was created. The URL.revokeObjectURL() call ensures that subsequent dereferencing of myurl results in a the user agent acting as if a network error has occurred.
+</p>
+</div>
+
+			<section id="examplesOfCreationRevocation">
+<h4 title="Examples of blob URL Creation and Revocation">8.4.1. ~blob~URLの作成と廃止の用例</h4>
+
+<p>
+`~blob~URL$は、`~Blob$を`~fetch$するために利用される文字列であり，
+`createObjectURL()$m を利用してそれを創出した`文書$に残り続け得る（
+<a href="#lifeTime">~blob~URLの存続期間</a>
+を見よ）。
+◎
+Blob URLs are strings that are used to fetch Blob objects, and can persist for as long as the document from which they were minted using URL.createObjectURL()—see § 8.3.2 Lifetime of blob URLs.
+</p>
+
+<p>
+この節では、説明を交えながら`~blob~URL$の作成と廃止の用例を示す。
+◎
+This section gives sample usage of creation and revocation of blob URLs with explanations.
+</p>
+
+<div class="example">
+<p>
+次の例では、 2 個の `img$e 要素 `HTML$r が，同じ`~blob~URL$を~~参照する：
+◎
+In the example below, two img elements [HTML] refer to the same blob URL:
+</p>
+
+<pre class="lang-js">
+%url = URL.createObjectURL(%blob);
+%img1.src = %url;
+%img2.src = %url;
+</pre>
+
+<p>
+次の例では、 `revokeObjectURL()$m が明示的に~callされる：
+◎
+In the example below, URL.revokeObjectURL() is explicitly called.
+</p>
+
+<pre class="lang-js">
+var %blobURLref = URL.createObjectURL(%file);
+%img1 = new Image();
+%img2 = new Image();
+
+/* <span class="comment">
+次の両~代入とも期待したとおり働く：
+◎
+Both assignments below work as expected
+</span> */
+%img1.src = %blobURLref;
+%img2.src = %blobURLref;
+
+/* <span class="comment">
+… body の読込nに後続して、画像が 2 つとも読込まれたかどうか検査する
+◎
+... Following body load
+Check if both images have loaded
+</span> */
+if(%img1.complete &amp;&amp; %img2.complete)
+{
+  /* <span class="comment">
+以降の~~参照では例外が投出されるようにする
+◎
+Ensure that subsequent refs throw an exception
+</span> */
+  URL.revokeObjectURL(%blobURLref);
+}
+else {
+  msg("Images cannot be previewed!");
+
+  /* <span class="comment">
+文字列に基づく参照を廃止する
+◎
+revoke the string-based reference
+</span> */
+  URL.revokeObjectURL(%blobURLref);
+}</pre>
+
+</div>
+
+<p>
+上の例では、 1 個の`~blob~URL$に対する複数回の参照が可能になる。
+`~blob~URL$文字列は，画像~objがいずれも読込まれた後に廃止されている。
+`~blob~URL$の利用回数が制約されない分，柔軟性は得られるが、漏洩の可能性も高まる。
+開発者は、 `revokeObjectURL()$m の~callと対にするべきである。
+◎
+The example above allows multiple references to a single blob URL, and the web developer then revokes the blob URL string after both image objects have been loaded. While not restricting number of uses of the blob URL offers more flexibility, it increases the likelihood of leaks; developers should pair it with a corresponding call to URL.revokeObjectURL().
+</p>
+
+			</section>
+		</section>
+	</section>
+	<section id="security-discussion">
+<h2 title="Security and Privacy Considerations">9. ~securityと~privacy上の考慮点</h2>
+
+~INFORMATIVE
+
+<p>
+この仕様は、~Web内容が 下層の~file~systemから~fileを読取ることを許容し，一意な識別子を通して~fileに~accessする手段を与えるが、その種のものは~securityの考慮点になる。
+この仕様は、利用者とのヤリトリが首に~HTML~formの
+`&lt;input type="file"/&gt;^e 要素 `HTML$r
+によるものであり、 `FileReader$I ~objから読取られるすべての~fileは，最初に利用者の手により選択されたものであると見做している。
+重要な~security上の考慮点には、悪意的な~file選択攻撃（選択looping）の防止, `~systemに敏感な~file$への~accessの防止, 選択-後の~disk上の~fileに対する改変からの防護がある。
+◎
+This specification allows web content to read files from the underlying file system, as well as provides a means for files to be accessed by unique identifiers, and as such is subject to some security considerations.＼
+This specification also assumes that the primary user interaction is with the &lt;input type="file"/&gt; element of HTML forms [HTML], and that all files that are being read by FileReader objects have first been selected by the user.＼
+Important security considerations include preventing malicious file selection attacks (selection looping), preventing access to system-sensitive files, and guarding against modifications of files on disk after a selection has taken place.
+</p>
+
+<dl>
+	<dt>
+`選択looping@
+の防止
+◎
+Preventing selection looping
+</dt>
+	<dd>
+~file選択の間、利用者は `&lt;input type="file"/&gt;^e に結付けられた~file選択dialogにより攻撃され得る（選択しない限り，~file選択dialogが際限なく現れる “選択強制” ）。
+~UAは、返される `FileList$I ~objの~sizeを 0 にすることにより，~file~accessを防止してもヨイ。
+◎
+During file selection, a user may be bombarded with the file picker associated with &lt;input type="file"/&gt; (in a "must choose" loop that forces selection before the file picker is dismissed) and a user agent may prevent file access to any selections by making the FileList object returned be of size 0.
+</dd>
+
+	<dt>
+`~systemに敏感な~file@
+◎
+System-sensitive files
+</dt>
+	<dd>
+（ `system-sensitive files^en — 例えば /usr/bin の~file, password ~file, 他の~OS~nativeの実行-可能~file）は、概して，~Web内容に曝露されるべきではなく，`~blob~URL$を通して~accessされるべきではない。
+~UAは、`同期~読取り~method$に対し `SecurityError$E 例外を`投出-$してもよく, また `非同期~読取り~method$においては `SecurityError$E 例外を返してもヨイ。
+◎
+(e.g. files in /usr/bin, password files, and other native operating system executables) typically should not be exposed to web content, and should not be accessed via blob URLs. User agents may throw a SecurityError exception for synchronous read methods, or return a SecurityError exception for asynchronous reads.
+</dd>
+</dl>
+
+<p class="issue">課題：
+この節は暫定的なものである。
+後続の草案には、より多くの~security上の考慮点が補足され得る。
+◎
+This section is provisional; more security data may supplement this in subsequent drafts.
+</p>
+
+	</section>
+	<section id="requirements">
+<h2 title="Requirements and Use Cases">10. 要件と利用事例</h2>
+
+<p>
+この節では、この~API用にどのような要件が課されるかについて, および
+一部の利用事例についての~~説明を与える。
+この~versionの~APIは、すべての利用事例に応えるものではない。
+それらに取組むことは後続の~versionに委ねられる。
+◎
+This section covers what the requirements are for this API, as well as illustrates some use cases.＼
+This version of the API does not satisfy all use cases; subsequent versions may elect to address these.
+</p>
+
+<ul>
+	<li>
+<p>
+利用者からの許可を得たなら、~UAは，~local~fileからの~dataを ~program的に直に読取って構文解析する能を供するべきである。
+◎
+Once a user has given permission, user agents should provide the ability to read and parse data directly from a local file programmatically.
+</p>
+
+<p class="example">例：
+歌詞~viewer。
+利用者は自身の plist ~file
+【プレイリスト】
+の楽曲の歌詞を読みたいとする。
+利用者は plist ~fileを閲覧するとき、~fileは開かれ, 読取られ, 構文解析され, ~Web~app内で~sort可能／動作~可能な一覧として利用者に示される。
+利用者は曲を選択してその歌詞を閲覧できる。
+利用者は “~fileを閲覧-” ~dialogを利用する。
+◎
+A lyrics viewer. User wants to read song lyrics from songs in his plist file. User browses for plist file. File is opened, read, parsed, and presented to the user as a sortable, actionable list within a web application. User can select songs to fetch lyrics. User uses the "browse for file" dialog.
+</p>
+	</li>
+	<li>
+<p>
+~dataは後の利用のために~localに格納できるべきである。
+それは~Web~appにおける~offline~data~accessに有用になる。
+◎
+Data should be able to be stored locally so that it is available for later use, which is useful for offline data access for web applications.
+</p>
+
+<p class="example">例：
+~Calendar~app。
+利用者の会社には予定表があり、利用者は自身の~eventと会社の “多忙” 期間の印が付けられた予定表との~~同期を（個人情報が漏れないように）とりたいとする。
+利用者は一覧から~fileを探して選択する。
+text/calendar ~fileは~browserにより構文解析され、単一の予定表~viewに併合できるようになる。
+利用者はそれを自分用の予定表~fileに保存したり（ “~~別名で保存…” を利用して）、統合された予定表~fileを非同期に送信して~serverに格納させることもできる。
+◎
+A Calendar App. User’s company has a calendar. User wants to sync local events to company calendar, marked as "busy" slots (without leaking personal info).＼
+User browses for file and selects it. The text/calendar file is parsed in the browser, allowing the user to merge the files to one calendar view. The user wants to then save the file back to his local calendar file. (using "Save As" ?). The user can also send the integrated calendar file back to the server calendar store asynchronously.
+</p>
+	</li>
+	<li>
+<p>
+~UAは、所与の~dataと~file名から，~program的に~local~fileに保存する能を供するべきである。
+◎
+User agents should provide the ability to save a local file programmatically given an amount of data and a file name.
+</p>
+
+<p class="note">注記：
+この仕様は，~downloadを誘発させる明示的な~API~callは供さないが、それは HTML5 仕様にて取組まれている。
+`a$e 要素の `download$a 属性 `HTML$r は、~downloadを起動させ，
+`File$I を指定された名前で保存する。
+この~APIと `a^e 要素の `download^a 属性との組み合せにより、~Web~appの中で~fileを作成して，~localに保存することが可能になる。
+◎
+Note: While this specification doesn’t provide an explicit API call to trigger downloads, the HTML5 specification has addressed this. The download attribute of the a element initiates a download, saving a File with the name specified. The combination of this API and the download attribute on a elements allows for the creation of files within web applications, and the ability to save them locally.
+</p>
+
+<p class="example">例：
+~spreadsheet ~app。
+利用者は~formを通して何らかの入力を生成する。
+しかる後、~formから，~spreadsheetに組み入れられる CSV （ `Comma Separated Variables^en ）出力が生成され，“保存…" が行われる。
+生成された出力を直に~Webベースの~spreadsheetに統合させたり, 非同期に~uploadさせる事もできる。
+◎
+A Spreadsheet App. User interacts with a form, and generates some input. The form then generates a CSV (Comma Separated Variables) output for the user to import into a spreadsheet, and uses "Save...". The generated output can also be directly integrated into a web-based spreadsheet, and uploaded asynchronously.
+</p>
+	</li>
+	<li>
+<p>
+~UAは、今日における~formに基づく~uploadより効率的に働くような，~fileから~remote~serverへ滞りなく~dataを送信するための，~program的な能を供するべきである。
+◎
+User agents should provide a streamlined programmatic ability to send data from a file to a remote server that works more efficiently than form-based uploads today.
+</p>
+
+<p class="example">例：
+動画や写真の~upload~app。
+利用者は~uploadに巨大な~fileを選択でき，~chunkごとに~serverに送信できる。
+◎
+A Video/Photo Upload App.＼
+User is able to select large files for upload, which can then be "chunk-transfered" to the server.
+</p>
+	</li>
+	<li>
+~UAは、上述の特能を可能にする~APIを~scriptに公開するべきである。
+~file~systemとのヤリトリに入るときは、常に，~UIを通して利用者に通知される
+— 利用者が、あらゆる~transactionを取消せる／中止できるような形で。
+いかなる~file選択も，利用者に通知され、利用者は，それを取消せる。
+これらの~APIが、利用者の介在抜きに黙って呼出されることはない。
+◎
+User agents should provide an API exposed to script that exposes the features above. The user is notified by UI anytime interaction with the file system takes place, giving the user full ability to cancel or abort the transaction. The user is notified of any file selections, and can cancel these. No invocations to these APIs occur silently without user intervention.
+</li>
+</ul>
+
+	</section>
+	<section id="acknowledgements-section">
+<h2 title="Acknowledgements">謝辞</h2>
+
+<p>
+この仕様は元々は SVG Working Group により開発された。
+`Mark Baker^en,
+`Anne van Kesteren^en
+両氏からの~feedbackに。
+◎
+This specification was originally developed by the SVG Working Group. Many thanks to Mark Baker and Anne van Kesteren for their feedback.
+</p>
+
+<p>
+元々の仕様の編集を行った
+`Robin Berjon^en,
+`Jonas Sicking^en,
+`Vsevolod Shmyroff^en
+各氏に。
+◎
+Thanks to Robin Berjon, Jonas Sicking and Vsevolod Shmyroff for editing the original specification.
+</p>
+
+<p>次の方々に：</p>
+
+<p lang="en-x-a0">
+Special thanks to Olli Pettay, Nikunj Mehta, Garrett Smith, Aaron Boodman, Michael Nordman, Jian Li, Dmitry Titov, Ian Hickson, Darin Fisher, Sam Weinig, Adrian Bateman and Julian Reschke.
+</p>
+
+<p>
+W3C WebApps WG, および public-webapps@w3.org listserv の参加者達に。
+◎
+Thanks to the W3C WebApps WG, and to participants on the public-webapps@w3.org listserv
+</p>
+
+	</section>
+</main></div>

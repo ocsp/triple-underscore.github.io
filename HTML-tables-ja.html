@@ -1,0 +1,5109 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8" />
+<title>HTML Standard — Tabular data （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+
+<style>
+.dice-example > caption {
+	width: 100%;
+	max-width: 30em;
+}
+.dice-example th,
+.dice-example td {
+	min-width: 2em;
+	text-align: right;
+	border: solid thin gray;
+}
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+
+Util.ready = function(){
+	const source_data = {
+		persisted_parts: collect_parts(),
+		toc_main: 'tables',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+
+	return;
+
+	function collect_parts(){
+		const parts = Util.collectHtmlCodeList();
+		Util.collectParts(parts);
+		return parts;
+	}
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+	const html_code_map = this.html_code_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'm':
+case 'rG': // for row group
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'AA':
+	return `<a href="~HTMLARIA#el-${key}">作者~向け</a>／<a href="~HTMLAAM#el-${key}">実装者~向け</a>`;
+	break;
+case 'obsMb':
+	text = '廃用にされた~memberもある';
+	href= `~HTMLLS/obsolete.html#${key}-partial`;
+	break;
+case 'xCode':
+	return `<pre class="lang-html" id="_ex-${key}">＊</pre>`;
+	break;
+case 'dgm':
+	return `<a id="_dgm-${key}">＊</a>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-08-18
+trans_update:2020-08-19
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/tables.html
+	abbr_url:HEtables
+nav_prev:HEtrack
+nav_next:HTML-forms-intro-ja.html
+trans_1st_pub:2017-01-16
+
+
+●●class_map
+E:error
+e:element
+a:attr
+v:value
+st:attr-state
+obsMb:comment
+
+●●tag_map
+I:code
+m:code
+rG:code
+E:code
+c:code
+e:code
+a:code
+v:code
+st:span
+i:i
+obsMb:span
+
+●●original_id_map
+
+●●mdn_urls
+the-table-element:HTML/Element/table
+the-td-element:HTML/Element/td
+the-th-element:HTML/Element/th
+the-tr-element:HTML/Element/tr
+the-caption-element:HTML/Element/caption
+the-colgroup-element:HTML/Element/colgroup
+the-tbody-element:HTML/Element/tbody
+the-tfoot-element:HTML/Element/tfoot
+the-thead-element:HTML/Element/thead
+the-col-element:HTML/Element/col
+
+htmltablecaptionelement:API/HTMLTableCaptionElement
+htmltablecellelement:API/HTMLTableCellElement
+htmltablecolelement:API/HTMLTableColElement
+htmltableelement:API/HTMLTableElement
+htmltablerowelement:API/HTMLTableRowElement
+htmltablesectionelement:API/HTMLTableSectionElement
+
+●●link_map
+
+
+	●
+CEReactions:~HEcustom#cereactions
+HTMLConstructor:~HTMLdom#htmlconstructor
+
+E.HierarchyRequestError:~WEBIDL#hierarchyrequesterror
+E.IndexSizeError:~WEBIDL#indexsizeerror
+
+I.DOMException:~WEBIDL#idl-DOMException
+I.Document:~HTMLdom#document
+I.HTMLCollection:~DOM4#interface-htmlcollection
+I.HTMLElement:~HTMLdom#htmlelement
+I.HTMLTableCaptionElement:#htmltablecaptionelement
+I.HTMLTableCellElement:#htmltablecellelement
+I.HTMLTableColElement:#htmltablecolelement
+I.HTMLTableElement:#htmltableelement
+I.HTMLTableRowElement:#htmltablerowelement
+I.HTMLTableSectionElement:#htmltablesectionelement
+
+
+m.abbr:#dom-th-abbr
+m.caption:#dom-table-caption
+m.cellIndex:#dom-tdth-cellindex
+m.cells:#dom-tr-cells
+m.colSpan:#dom-tdth-colspan
+m.createCaption:#dom-table-createcaption
+m.createTBody:#dom-table-createtbody
+m.createTFoot:#dom-table-createtfoot
+m.createTHead:#dom-table-createthead
+m.deleteCaption:#dom-table-deletecaption
+m.deleteCell:#dom-tr-deletecell
+m.deleteRow:#dom-table-deleterow
+m.deleteTFoot:#dom-table-deletetfoot
+m.deleteTHead:#dom-table-deletethead
+m.headers:#dom-tdth-headers
+m.insertCell:#dom-tr-insertcell
+m.insertRow:#dom-table-insertrow
+m.rowIndex:#dom-tr-rowindex
+m.rowSpan:#dom-tdth-rowspan
+m.rows:#dom-table-rows
+m.scope:#dom-th-scope
+m.sectionRowIndex:#dom-tr-sectionrowindex
+m.span:#dom-col-span
+m.~span0:#dom-colgroup-span
+m.tBodies:#dom-table-tbodies
+m.tFoot:#dom-table-tfoot
+m.tHead:#dom-table-thead
+
+rG.deleteRow:#dom-tbody-deleterow
+rG.insertRow:#dom-tbody-insertrow
+rG.rows:#dom-tbody-rows
+
+
+e.caption:#the-caption-element
+e.col:#the-col-element
+e.colgroup:#the-colgroup-element
+e.table:#the-table-element
+e.tbody:#the-tbody-element
+e.td:#the-td-element
+e.tfoot:#the-tfoot-element
+e.th:#the-th-element
+e.thead:#the-thead-element
+e.tr:#the-tr-element
+
+e.details:~HEinteractive#the-details-element
+e.figcaption:~HEgrouping#the-figcaption-element
+e.figure:~HEgrouping#the-figure-element
+e.footer:~HEsections#the-footer-element
+e.header:~HEsections#the-header-element
+e.template:~HEscripting#the-template-element
+
+a.abbr:#attr-th-abbr
+a.border:~HTMLobs#attr-table-border
+a.cellpadding:~HTMLobs#attr-table-cellpadding
+a.cellspacing:~HTMLobs#attr-table-cellspacing
+a.colspan:#attr-tdth-colspan
+a.headers:#attr-tdth-headers
+a.rowspan:#attr-tdth-rowspan
+a.scope:#attr-th-scope
+a.span:#attr-col-span
+a.~span0:#attr-colgroup-span
+a.summary:~HTMLobs#attr-table-summary
+a.role:~HTMLdep#attr-aria-role
+
+v.presentation:~ARIA1#presentation
+
+v.colgroup:#attr-th-scope-colgroup
+v.rowgroup:#attr-th-scope-rowgroup
+v.column:#attr-th-scope-col
+v.row:#attr-th-scope-row
+v.auto:#attr-th-scope-auto
+
+st.Colgroup:#attr-th-scope-colgroup
+st.Rowgroup:#attr-th-scope-rowgroup
+st.Column:#attr-th-scope-col
+st.Row:#attr-th-scope-row
+st.Auto:#attr-th-scope-auto
+
+
+次の要素へ進む:#concept-table-advance
+~header~cellたちをアテガう:#algorithm-for-assigning-header-cells
+~row~groupを終端する:#algorithm-for-ending-a-row-group
+~y方向に延びる~cellたちを延ばす:#algorithm-for-growing-downward-growing-cells
+	~y方向に延びる~cell:#_downward-growing-cells
+~row~groupを処理する:#algorithm-for-processing-row-groups
+~rowを処理する:#algorithm-for-processing-rows
+内部的に~header~cellを走査してアテガう:#internal-algorithm-for-scanning-and-assigning-header-cells
+
+
+~cell:#concept-cell
+~col~group~header:#column-group-header
+~col~group:#concept-column-group
+~col~header:#column-header
+~col:#concept-column
+空~cell:#empty-cell
+	group:#concept-column-group
+~row~group~header:#row-group-header
+~row~group:#concept-row-group
+~block:#concept-row-group
+~row~header:#row-header
+~row:#concept-row
+~slotたち:#concept-slots
+~table~model~error:#table-model-error
+~table~model:#table-model
+新たな~table内~要素:#table-created
+	~table-created:#table-created
+	table-create:#table-created
+~table:#concept-table
+
+	provide such information:#table-descriptions-techniques
+	table design techniques:#table-layout-techniques
+
+
+分類:~HTMLdom#concept-element-categories
+内容~属性:~HTMLdom#concept-element-attributes
+内容~model:~HTMLdom#concept-element-content-model
+この要素を利用できる文脈:~HTMLdom#concept-element-contexts
+text/html における~tag省略:~HTMLdom#concept-element-tag-omission
+~accessibilityの考慮点:~HTMLdom#concept-element-accessibility-considerations
+~DOM~interface:~HTMLdom#concept-element-dom
+~flow内容:~HTMLdom#flow-content-2
+大域~属性:~HTMLdom#global-attributes
+なし:~HTMLdom#concept-content-nothing
+可触~内容:~HTMLdom#palpable-content-2
+
+~header内容:~HTMLdom#heading-content-2
+表現-:~HTMLdom#represents
+参照-:~HTMLdom#referenced
+~scriptを~supportする要素:~HTMLdom#script-supporting-elements-2
+~scriptを~supportする要素:~HTMLdom#script-supporting-elements-2
+~sectioning内容:~HTMLdom#sectioning-content-2
+
+~sectioning根:~HEsections#sectioning-root
+
+終了tag:~HTMLwriting#syntax-end-tag
+開始tag:~HTMLwriting#syntax-start-tag
+~comment:~HTMLwriting#syntax-comments
+
+~node文書:~DOM4#concept-node-document
+~tree順序:~DOM4#concept-tree-order
+~ID:~DOM4#concept-id
+~nodeを付加する:~DOM4#concept-node-append
+要素を作成する:~DOM4#concept-create-element
+~nodeを子の前に挿入する:~DOM4#concept-node-insert
+挿入-:~DOM4#concept-node-insert
+過去互換~mode:~DOM4#concept-document-quirks
+~nodeを除去する:~DOM4#concept-node-remove
+子~text内容:~DOM4#concept-child-text-content
+
+~HTML名前空間:~INFRA#html-namespace
+~ASCII空白:~INFRA#ascii-whitespace
+~ASCII空白で分割-:~INFRA#split-on-ascii-whitespace
+一致-:~INFRA#string-is
+
+反映する:~HTMLcdom#reflect
+既知な値のみに制限され:~HTMLcdom#limited-to-only-known-values
+切詰められ:~HTMLcdom#clamped-to-the-range
+
+列挙d属性:~HTMLcms#enumerated-attribute
+値なし用の既定:~HTMLcms#missing-value-default
+妥当でない値~用の既定:~HTMLcms#invalid-value-default
+負でない整数として構文解析-:~HTMLcms#rules-for-parsing-non-negative-integers
+空白区切りの一意な~token集合:~HTMLcms#_set-of-unique-space-separated-tokens
+妥当な負でない整数:~HTMLcms#valid-non-negative-integer
+
+
+●●words_table1
+
+span0:span
+
+●●words_table
+
+
+	●仕様
+強調-:highlight:~
+指標:indicator:~
+略称-:abbreviate:~
+読解する:understandする:読み解く
+
+誤用-:misuse:~
+説明的:explanatory:~
+読取る:readする:~
+読易く:readableに:読み易く
+複雑:complicated:~
+類別-:classify:~
+教える:teachする:~
+読者:reader:~
+補助-:help:~
+
+	し難く:difficult
+	難がありそう:might have difficulty
+	実用的でない:impractical
+	導入-用の:introducing
+	本文:main prose
+	-:help
+	適宜:as appropriate
+	必要なら:if required
+	不要に:no 〜 needed／:removing the need for
+	ようにする:ensure
+	種々の:various
+	様々／種々:variety
+	見て取れる:observe
+	-:similarly
+	あり得る:possible:可能
+	できるようにする:allowing
+	もっとはっきりする:makes more sense
+	欠いている:lack している
+	代るものになる:in favor of
+	所では:ever
+	とても／ごく:very
+	もちろん:of course
+	見分け易く:help users see 
+	し易くする:easier
+	言い換え:different phrasing
+	主に:primarily
+	十分あり得る:It is quite possible
+	詳しく調べて:elaborating
+	方法:how to
+	満たされ:met
+	様々:variety of
+	単なる:merely
+	要点:key
+	略称:abbreviated
+
+	●table
+table:
+cell:
+row:
+col:column
+header:
+span:
+	table状の:tabular
+tfoot:
+	~row~group:section
+x:
+y:
+方向:方向
+起点:anchor:~
+	指されて:targeted
+重合する:overlapする:重なり合う
+重合して:overlapして:重なり合って
+占めて:coverして:~
+占める:coverする:~
+	占める:occupy／assigned
+延びる:growする:~
+走査-:scan:~
+footer::::
+spreadsheet::::
+	同じ~row内にある以降の:right
+	配列し直す:rearrangement
+側:side:~
+二次元の:two-dimensional: 2 次元の
+格子:grid::~::グリッド
+	~index:position
+行止まり:opaque:行き止まり
+形:form:~
+
+整列-:align:~
+見出し:heading:~
+凡例:legend:~
+進む:advanceする:~
+
+	~y方向に延びる:downward-growing
+	~header~block内:in header block
+	現~header~blockに属する~header:headers from current header block list
+	同じ~col内にある以降の:directly down to
+
+	●内容
+mark::::マーク
+sectioning::::セクショニング
+可触:palpable::~
+
+分類:categories:~
+
+	●UI ／ CSS
+	lay out
+発話:speech::~::スピーチ
+reader::::リーダ
+等幅:monospaced:~
+傾向:trend:~
+編集-:edit:~
+	隣に:next to
+	交替的に:alternating
+
+数的:numeric:~
+
+	●構文
+空白区切りの:space-separated:~
+分割-:split:~
+開始tag:start tag::開始 tag:開始タグ
+終了tag:end tag::終了 tag:終了タグ
+省略:omission:~
+省略不可:omissibleでない:~
+	終端-:end
+	末尾
+
+	●未分類
+
+filter::::フィルタ
+背景:background:~
+	-:near
+重複:duplicate:~
+分析:analysis:~
+処理待ち:pending:~
+切詰めら:clampさ:切り詰めら
+最大:最大
+最小:最小
+
+	clear:clear
+	-:item
+	-:jump
+	collection:list
+	main::::
+	-:option::::
+	-:initially
+	同じ~row内にある以降の:right
+	合計:total score
+	Characteristic
+	~~登録~attach
+	とっては〜可能性が高い:likely to find it
+	-:substep
+	GOTO:step labeled
+	見当はずれの:very confusing
+	consisting
+	なぞるように:fashion
+	着目:notice
+	前後には，任意個数の:optionally intermixed
+	-:tuple
+	we
+	~code片:snippet
+	-:now
+	ending
+	6 面:six-sided
+	サイ:dice／die
+	巨大:large volumes
+	振って:rolling
+	数独パズル:Sudoku puzzle
+
+	●指示語
+元の:
+	主:principal
+	一部を成す:takes part in 
+	共に:together
+	周囲の:surround
+	zero or more
+	greater than zero and less than or equal to
+	大きい:large
+	次の:next
+	以降の:remaining
+	番:th
+	もの:thing
+
+
+●●html_code_list
+
+■table-sudoku
+<style>
+ #数独 { border-collapse: collapse; border: solid thick; }
+ #数独 colgroup, table#数独 tbody { border: solid medium; }
+ #数独 td { border: solid thin; height: 1.4em; width: 1.4em; text-align: center; padding: 0; }
+</style>
+％<h1>今日の数独</h1>
+<table id="数独">
+ <colgroup><col><col><col>
+ <colgroup><col><col><col>
+ <colgroup><col><col><col>
+ <tbody>
+  <tr> <td> 1 <td>   <td> 3 <td> 6 <td>   <td> 4 <td> 7 <td>   <td> 9
+  <tr> <td>   <td> 2 <td>   <td>   <td> 9 <td>   <td>   <td> 1 <td>
+  <tr> <td> 7 <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td> 6
+ <tbody>
+  <tr> <td> 2 <td>   <td> 4 <td>   <td> 3 <td>   <td> 9 <td>   <td> 8
+  <tr> <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>   <td>
+  <tr> <td> 5 <td>   <td>   <td> 9 <td>   <td> 7 <td>   <td>   <td> 1
+ <tbody>
+  <tr> <td> 6 <td>   <td>   <td>   <td> 5 <td>   <td>   <td>   <td> 2
+  <tr> <td>   <td>   <td>   <td>   <td> 7 <td>   <td>   <td>   <td>
+  <tr> <td> 9 <td>   <td>   <td> 8 <td>   <td> 2 <td>   <td>   <td> 5
+</table>
+
+
+ #sudoku { ... }
+％<h1>Today's Sudoku</h1>
+
+
+■table-desc-x1
+＜<p>次の表では、特徴は中央列に, 否定的な面は左列に, 肯定的な面は右列に示される。</p>＞
+<table>
+ <caption>肯定的, 否定的な面がある特徴</caption>
+ <thead>
+  <tr>
+   <th id="n">否定的
+   <th>特徴
+   <th>肯定的
+ <tbody>
+  <tr>
+   <td headers="n r1">悲しい
+   <th id="r1">気分
+   <td>嬉しい
+  <tr>
+   <td headers="n r2">不合格
+   <th id="r2">等級
+   <td>合格
+</table>
+
+■table-desc-x2
+<table>
+＜ <caption>
+  <strong>肯定的, 否定的な面がある特徴。</strong>
+  <p>特徴は中央列に, 否定的な面は左列に, 肯定的な面は右列に示される。</p>＞
+ </caption>
+ <thead>
+  <tr>
+   <th id="n">否定的
+   <th>特徴
+   <th>肯定的
+ <tbody>
+  <tr>
+   <td headers="n r1">悲しい
+   <th id="r1">気分
+   <td>嬉しい
+  <tr>
+   <td headers="n r2">不合格
+   <th id="r2">等級
+   <td>合格
+</table>
+
+
+■table-desc-x3
+<table>
+ <caption>
+  <strong>肯定的, 否定的な面がある特徴。</strong>
+＜  <details>
+   <summary>Help</summary>
+   <p>特徴は中央列に, 否定的な面は左列に, 肯定的な面は右列に示される。</p>
+  </details>＞
+ </caption>
+ <thead>
+  <tr>
+   <th id="n">否定的
+   <th>特徴
+   <th>肯定的
+ <tbody>
+  <tr>
+   <td headers="n r1">悲しい
+   <th id="r1">気分
+   <td>嬉しい
+  <tr>
+   <td headers="n r2">不合格
+   <th id="r2">等級
+   <td>合格
+</table>
+
+■table-desc-x4
+<figure>
+ <figcaption>肯定的, 否定的な面がある特徴</figcaption>
+＜ <p>特徴は中央列に, 否定的な面は左列に, 肯定的な面は右列に示される。</p>＞
+<table>
+ <thead>
+  <tr>
+   <th id="n">否定的
+   <th>特徴
+   <th>肯定的
+ <tbody>
+  <tr>
+   <td headers="n r1">悲しい
+   <th id="r1">気分
+   <td>嬉しい
+  <tr>
+   <td headers="n r2">不合格
+   <th id="r2">等級
+   <td>合格
+</table>
+</figure>
+
+■table-desc-x5
+<figure>
+ <figcaption>
+  <strong>肯定的, 否定的な面がある特徴</strong>
+＜  <p>特徴は中央列に, 否定的な面は左列に, 肯定的な面は右列に示される。</p>＞
+ </figcaption>
+<table>
+ <thead>
+  <tr>
+   <th id="n">否定的
+   <th>特徴
+   <th>肯定的
+ <tbody>
+  <tr>
+   <td headers="n r1">悲しい
+   <th id="r1">気分
+   <td>嬉しい
+  <tr>
+   <td headers="n r2">不合格
+   <th id="r2">等級
+   <td>合格
+</table>
+</figure>
+
+■table-desc-x6
+<table>
+ <caption>肯定的, 否定的な面がある特徴</caption>
+ <thead>
+  <tr>
+   <th>特徴
+   <th>否定的
+   <th>肯定的
+ <tbody>
+  <tr>
+   <th>気分
+   <td>悲しい
+   <td>嬉しい
+  <tr>
+   <th>等級
+   <td>不合格
+   <td>合格
+</table>
+
+
+特徴は中央列に, 否定的な面は左列に, 肯定的な面は右列に示される。
+Characteristics are given in the second column, with the negative side in the left column and the positive side in the right column.
+
+肯定的, 否定的な面がある特徴
+Characteristics with positive and negative sides
+
+ <thead>
+  <tr>
+   <th id="n"> Negative
+   <th> Characteristic
+   <th> Positive
+ <tbody>
+  <tr>
+   <td headers="n r1"> Sad
+   <th id="r1"> Mood
+   <td> Happy
+  <tr>
+   <td headers="n r2"> Failing
+   <th id="r2"> Grade
+   <td> Passing
+
+
+table-dice-info
+
+table-dice
+
+■table-dice-caption
+<caption>
+<p>表 1.
+<p>次の表に、2 個の 6 面サイを振って得られた合計を示す。
+最初の行, 最初の列に、それぞれのサイの目が示される。
+その合計は、2 個のサイの目に対応するマスに示される。
+</caption>
+
+This table shows the total score obtained from rolling two six-sided dice. The first row represents the value of the first die, the first column the value of the second die. The total is given in the cell that corresponds to the values of the two dice.
+
+
+■thead-1
+<table>
+ <caption>学校オークション申込書</caption>
+＜<thead>
+  <tr>
+   <th><label for=e1>お名前</label>
+   <th><label for=e2>品物</label>
+   <th><label for=e3>写真</label>
+   <th><label for=e4>価格</label>
+  <tr>
+   <td>売主の名前
+   <td>何を売りますか？
+   <td>写真へのリンク
+   <td>最低落札価格＞
+<tbody>
+  <tr>
+   <td>堂夏味甘
+   <td>ドーナツ
+   <td><img src="https://example.com/mydoughnuts.png" title="堂夏さんの手作りドーナツ">
+   <td>2500 円
+  <tr>
+   <td><input id=e1 type=text name=who required form=f>
+   <td><input id=e2 type=text name=what required form=f>
+   <td><input id=e3 type=url name=pic form=f>
+   <td><input id=e4 type=number step=0.01 min=0 value=0 required form=f>
+</table>
+<form id=f action="/auction.cgi">
+ <input type=button name=add value="Submit">
+</form>
+
+
+<table>
+ <caption> School auction sign-up sheet </caption>
+<thead>
+  <tr>
+   <th><label for=e1>Name</label>
+   <th><label for=e2>Product</label>
+   <th><label for=e3>Picture</label>
+   <th><label for=e4>Price</label>
+  <tr>
+   <td>Your name here
+   <td>What are you selling?
+   <td>Link to a picture
+   <td>Your reserve price
+<tbody>
+  <tr>
+   <td>Ms Danus
+   <td>Doughnuts
+   <td><img src="https://example.com/mydoughnuts.png" title="Doughnuts from Ms Danus">
+   <td>$45
+  <tr>
+   <td><input id=e1 type=text name=who required form=f>
+   <td><input id=e2 type=text name=what required form=f>
+   <td><input id=e3 type=url name=pic form=f>
+   <td><input id=e4 type=number step=0.01 min=0 value=0 required form=f>
+</table>
+<form id=f action="/auction.cgi">
+ <input type=button name=add value="Submit">
+</form>
+
+
+■td-1
+<table>
+ <tr>
+  <th><input value="Name">
+  <th><input value="Paid ($)">
+ <tr>
+  <td><input value="Jeff">
+  <td><input value="14">
+ <tr>
+  <td><input value="Britta">
+  <td><input value="9">
+ <tr>
+  <td><input value="Abed">
+  <td><input value="25">
+ <tr>
+  <td><input value="Shirley">
+  <td><input value="2">
+ <tr>
+  <td><input value="Annie">
+  <td><input value="5">
+ <tr>
+  <td><input value="Troy">
+  <td><input value="5">
+ <tr>
+  <td><input value="Pierce">
+  <td><input value="1000">
+ <tr>
+  <th><input value="Total">
+  <td><output value="1060">
+</table>
+
+■th-1
+<table>
+ <thead>
+  <tr> <th> ID <th> Measurement <th> Average <th> Maximum
+ <tbody>
+  <tr> <td> <th scope=rowgroup> Cats <td> <td>
+  <tr> <td> 93 <th scope=row> Legs <td> 3.5 <td> 4
+  <tr> <td> 10 <th scope=row> Tails <td> 1 <td> 1
+ <tbody>
+  <tr> <td> <th scope=rowgroup> English speakers <td> <td>
+  <tr> <td> 32 <th scope=row> Legs <td> 2.67 <td> 4
+  <tr> <td> 35 <th scope=row> Tails <td> 0.33 <td> 1
+</table>
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる HTML 仕様の
+<a href="~SPEC_URL">§ Tabular data</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+<body>
+
+<!--%resource pool -->
+<div id="_persisted_parts" hidden>
+
+
+<figure id="_dgm-table-desc-0">
+<table><caption>肯定的, 否定的な面がある特徴</caption>
+ <thead>
+  <tr>
+   <th id="n">否定的
+   <th>特徴
+   <th>肯定的
+ <tbody>
+  <tr>
+   <td headers="n r1">悲しい
+   <th id="r1">気分
+   <td>嬉しい
+  <tr>
+   <td headers="n r2">不合格
+   <th id="r2">等級
+   <td>合格
+</table>
+
+</figure>
+
+
+<span id="_dgm-table-desc-caption">
+特徴は中央列に, 否定的な面は左列に, 肯定的な面は右列に示される。
+</span>
+
+<figure id="_dgm-table-dice-1">
+<table class="dice-example">
+<tbody><tr><th> <th>1<th>2<th>3<th>4<th>5<th>6
+<tr><th>1<td>2<td>3<td>4<td>5<td>6<td>7
+<tr><th>2<td>3<td>4<td>5<td>6<td>7<td>8
+<tr><th>3<td>4<td>5<td>6<td>7<td>8<td>9
+<tr><th>4<td>5<td>6<td>7<td>8<td>9<td>10
+<tr><th>5<td>6<td>7<td>8<td>9<td>10<td>11
+<tr><th>6<td>7<td>8<td>9<td>10<td>11<td>12
+</tbody></table>
+</figure>
+
+<figure id="_dgm-table-dice-2">
+<table class="dice-example">
+<caption>
+<p>表 1.
+<p>次の表に、2 個の 6 面サイを振って得られた合計を示す。
+最初の行, 最初の列に、それぞれのサイの目が示される。
+その合計は、2 個のサイの目に対応するマスに示される。
+</caption>
+
+<tbody><tr><th> <th>1<th>2<th>3<th>4<th>5<th>6
+<tr><th>1<td>2<td>3<td>4<td>5<td>6<td>7
+<tr><th>2<td>3<td>4<td>5<td>6<td>7<td>8
+<tr><th>3<td>4<td>5<td>6<td>7<td>8<td>9
+<tr><th>4<td>5<td>6<td>7<td>8<td>9<td>10
+<tr><th>5<td>6<td>7<td>8<td>9<td>10<td>11
+<tr><th>6<td>7<td>8<td>9<td>10<td>11<td>12
+</tbody></table>
+</figure>
+
+<figure id="_dgm-th-1">
+<table>
+ <thead>
+  <tr> <th> ID <th> Measurement <th> Average <th> Maximum
+ <tbody>
+  <tr> <td> <th scope=rowgroup> Cats <td> <td>
+  <tr> <td> 93 <th scope=row> Legs <td> 3.5 <td> 4
+  <tr> <td> 10 <th scope=row> Tails <td> 1 <td> 1
+ <tbody>
+  <tr> <td> <th scope=rowgroup> English speakers <td> <td>
+  <tr> <td> 32 <th scope=row> Legs <td> 2.67 <td> 4
+  <tr> <td> 35 <th scope=row> Tails <td> 0.33 <td> 1
+</table>
+</figure>
+
+<img
+	id="_dgm-table-scope-diagram"
+	src="HTML-resources/table-scope-diagram.png" alt="" width="459" height="256"
+>
+</div>
+
+<header id="head">
+	<hgroup id="living-standard">
+<h1>テーブル — Tabular data</h1>
+	</hgroup>
+
+</header>
+
+<main id="MAIN" hidden>
+
+		<section id="tables">
+<h2 title="Tabular data">4.9. ~table状の~data</h2>
+
+			<section id="_conventions">
+<h3>【この訳に固有の表記規約】</h3>
+
+<p>
+この訳の，~algoの記述に利用されている各種記号（コレ, ~LET, ~IF, ~RET, 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+<p>
+要素の
+<dfn>同胞</dfn>
+とは、要素と同じ親を共有している~nodeを指す。
+</p>
+
+			</section>
+			<section id="the-table-element">
+<h3 title="The table element">4.9.1. `table^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+`~flow内容$ ／ `可触~内容$
+◎
+Flow content.
+◎
+Palpable content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`~flow内容$が期待される所。
+◎
+Where flow content is expected.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+<p>
+次の要素からなる挙げられる順による並び：
+</p>
+
+<ol><li>0 〜 1 個の `caption$e 要素
+</li><li>0 個~以上の `colgroup$e 要素
+</li><li>0 〜 1 個の `thead$e 要素
+</li><li>［
+0 個~以上の `tbody$e 要素
+］または［
+1 個~以上の `tr$e 要素†
+］
+</li><li>0 〜 1 個の `tfoot$e 要素
+</li></ol>
+
+<p>
+加えて、これらの要素の前後には，任意個数の`~scriptを~supportする要素$があってよい。
+</p>
+◎
+In this order: optionally a caption element, followed by zero or more colgroup elements, followed optionally by a thead element, followed by either zero or more tbody elements or one or more tr elements, followed optionally by a tfoot element, optionally intermixed with one or more script-supporting elements.
+</dd>
+	<dd class="trans-note">【†
+~HTML~markup内で `table^e の子として記された `tr^e の連なりは、構文解析-時に暗黙的に生成される `tbody^e により包装され， `table^e の子にはならない。
+一方で，~scriptにより `table^e の子として挿入された `tr^e は、そのまま `table^e の子になる。
+いずれにせよ、そのような `tr^e は， `~table$内の`~row$に対応する。
+】</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`table$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLTableElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [`CEReactions$] attribute `HTMLTableCaptionElement$I? `caption$m;
+  `HTMLTableCaptionElement$I `createCaption$m();
+  [`CEReactions$] undefined `deleteCaption$m();
+
+  [`CEReactions$] attribute `HTMLTableSectionElement$I? `tHead$m;
+  `HTMLTableSectionElement$I `createTHead$m();
+  [`CEReactions$] undefined `deleteTHead$m();
+
+  [`CEReactions$] attribute `HTMLTableSectionElement$I? `tFoot$m;
+  `HTMLTableSectionElement$I `createTFoot$m();
+  [`CEReactions$] undefined `deleteTFoot$m();
+
+  [SameObject] readonly attribute `HTMLCollection$I `tBodies$m;
+  `HTMLTableSectionElement$I `createTBody$m();
+
+  [SameObject] readonly attribute `HTMLCollection$I `rows$m;
+  `HTMLTableRowElement$I `insertRow$m(optional long %index = -1);
+  [`CEReactions$] undefined `deleteRow$m(long %index);
+
+  // `HTMLTableElement$obsMb
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`table$e 要素は、`~table$の形による，複数~次元の~dataを`表現-$する。
+◎
+The table element represents data with more than one dimension, in the form of a table.
+</p>
+
+<p>
+`table$e 要素は、`~table~model$の一部を成す。
+各~tableは、［
+~row, ~col
+］たち, および それらの子孫により与えられる~cellたちからなる。
+一連の
+~row／~col
+は、格子を形成する
+— ~tableの~cellたちは，重合することなく その格子を完全に占めていなければナラナイ。
+◎
+The table element takes part in the table model. Tables have rows, columns, and cells given by their descendants. The rows and columns form a grid; a table's cells must completely cover that grid without overlap.
+</p>
+
+<p class="note">注記：
+この適合性~要件が満たされるかどうかを決定するための精確な規則は、`~table~model$にて述べる。
+◎
+Precise rules for determining whether this conformance requirement is met are described in the description of the table model.
+</p>
+
+<p>
+作者には、複階的な~tableに対しては，それをどう解釈するか述べる情報を供することが奨励される。
+<a href="#table-descriptions-techniques">そのような情報を供する</a>
+方法の指導は下に与えられる。
+◎
+Authors are encouraged to provide information describing how to interpret complex tables. Guidance on how to provide such information is given below.
+</p>
+
+<p>
+~tableは、~layout援助として利用されてはナラナイ。
+歴史的に，一部の~web作者は、~tableを自身の~HTML~pageの~layoutを制御する仕方として誤用していたが、そのような用法は不適合である
+— そのような文書から~table状の~dataを抽出しようと試みる~toolは、見当はずれの結果を得することになるので。
+特に，~screen~readerの様な~accessibility~toolの利用者にとっては、~page内に~layout用に利用された~tableがあると，とても~navigateし難くなる可能性が高い。
+◎
+Tables must not be used as layout aids. Historically, some web authors have misused tables in HTML as a way to control their page layout. This usage is non-conforming, because tools attempting to extract tabular data from such documents would obtain very confusing results. In particular, users of accessibility tools like screen readers are likely to find it very difficult to navigate pages with tables used for layout.
+</p>
+
+<p class="note">注記：
+~HTML~tableを利用する~layout方法に対する代替には、主に，［
+~CSSによる位置決め, ~CSS~table~model
+］を利用する様々な方法がある。
+`CSS$r
+◎
+There are a variety of alternatives to using HTML tables for layout, primarily using CSS positioning and the CSS table model. [CSS]
+</p>
+
+<hr>
+
+<p>
+~tableは、読解する／~navigateするのが複雑にもなり得る。
+これについて利用者を補助するため、~UAは，その~tableを（不適合な）~layout用に類別したのでない限り、~table内の~cellどうしを明瞭に描き分けるべきである。
+◎
+Tables can be complicated to understand and navigate. To help users with this, user agents should clearly delineate cells in a table from each other, unless the user agent has classified the table as a (non-conforming) layout table.
+</p>
+
+<p class="note">注記：
+作者／実装者には、下に記述される
+<a href="#table-layout-techniques">~table設計-技法</a>
+のいくつかを利用して，~tableを 利用者にとって~navigateし易くすることを考慮することが奨励される。
+◎
+Authors and implementers are encouraged to consider using some of the table design techniques described below to make tables easier to navigate for users.
+</p>
+
+<p>
+~UA
+— とりわけ，任意な内容に対する~table分析を行うもの —
+には、各~tableのうち どれが実際に~dataを包含し, どれが単なる~layout用に利用されているかを決定する経験則を見出すことが奨励される。
+この仕様は，精確な経験則は定義しないが、あり得る指標としては，次のものが示唆される：
+◎
+User agents, especially those that do table analysis on arbitrary content, are encouraged to find heuristics to determine which tables actually contain data and which are merely being used for layout. This specification does not define a precise heuristic, but the following are suggested as possible indicators:
+</p>
+
+<table><thead><tr><th>特能◎ Feature
+<th>指示◎ Indication
+</thead>
+
+<tbody><tr><td>
+値 `presentation$v を伴う `role$a 属性が利用されている
+◎
+The use of the role attribute with the value presentation
+<td>
+おそらく~layout用の~table
+◎
+Probably a layout table
+<tr><td>
+不適合な値 0 を伴う不適合な `border$a 属性が利用されている
+◎
+The use of the non-conforming border attribute with the non-conforming value 0
+<td>
+おそらく~layout用の~table
+◎
+Probably a layout table
+<tr><td>
+値 0 を伴う，不適合な［
+`cellspacing$a ／ `cellpadding$a
+］属性が利用されている
+◎
+The use of the non-conforming cellspacing and cellpadding attributes with the value 0
+<td>
+おそらく~layout用の~table
+◎
+Probably a layout table
+</tbody><tbody><tr><td>
+［
+`caption$e ／ `thead$e ／ `th$e
+］要素が利用されている
+◎
+The use of caption, thead, or th elements
+<td>
+おそらく~layout用でない~table
+◎
+Probably a non-layout table
+<tr><td>
+［
+`headers$a ／ `scope$a
+］属性が利用されている
+◎
+The use of the headers and scope attributes
+<td>
+おそらく~layout用でない~table
+◎
+Probably a non-layout table
+<tr><td>
+0 以外の値を伴う不適合な `border$a 属性が利用されている
+◎
+The use of the non-conforming border attribute with a value other than 0
+<td>
+おそらく~layout用でない~table
+◎
+Probably a non-layout table
+<tr><td>
+明示的に可視な~borderを設定する~CSSが利用されている
+◎
+Explicit visible borders set using CSS
+<td>
+おそらく~layout用でない~table
+◎
+Probably a non-layout table
+</tbody><tbody><tr><td>
+`summary$a 属性が利用されている
+◎
+The use of the summary attribute
+<td>
+良い指標でない（この属性は、歴史的に，~layout用の~tableにも そうでない~tableにも与えられている）
+◎
+Not a good indicator (both layout and non-layout tables have historically been given this attribute)
+</tbody></table>
+
+<p class="note">注記：
+上の示唆が誤っていることも十分あり得る。
+実装者には、~layout用の~tableを検出する経験則を作成して，その試行-結果を詳しく調べた上で、その経験から~feedbackを供することが督促される。
+◎
+It is quite possible that the above suggestions are wrong. Implementers are urged to provide feedback elaborating on their experiences with trying to create a layout table detection heuristic.
+</p>
+
+<p>
+（不適合な） `summary$a 属性を有するような `table$e 要素に対しては、~UAは，それを~layout用の~tableに類別しないならば，その属性の内容を利用者に報告してもヨイ。
+◎
+If a table element has a (non-conforming) summary attribute, and the user agent has not classified the table as a layout table, the user agent may report the contents of that attribute to the user.
+</p>
+
+<hr>
+
+<dl class="domintro">
+
+	<dt>%table . `caption$m [ = %value ]</dt>
+	<dd>
+この~tableの `caption$e 要素を返す。
+◎
+Returns the table's caption element.
+</dd>
+	<dd>
+設定して， `caption$e 要素を置換できる。
+◎
+Can be set, to replace the caption element.
+</dd>
+
+	<dt>%caption = %table . `createCaption()$m</dt>
+	<dd>
+この~tableは `caption$e 要素を持つようにした上で、それを返す。
+◎
+Ensures the table has a caption element, and returns it.
+</dd>
+
+	<dt>%table . `deleteCaption()$m</dt>
+	<dd>
+この~tableは `caption$e 要素を持たないようにする。
+◎
+Ensures the table does not have a caption element.
+</dd>
+
+	<dt>%table . `tHead$m [ = %value ]</dt>
+	<dd>
+この~tableの `thead$e 要素を返す。
+◎
+Returns the table's thead element.
+</dd>
+	<dd>
+設定して `thead$e 要素を置換できる。
+%value が `thead$e 要素でない場合、
+`HierarchyRequestError$E が投出される。
+◎
+Can be set, to replace the thead element. If the new value is not a thead element, throws a "HierarchyRequestError" DOMException.
+</dd>
+
+	<dt>%thead = %table . `createTHead()$m</dt>
+	<dd>
+この~tableが `thead$e 要素を持つようにした上で、それを返す。
+◎
+Ensures the table has a thead element, and returns it.
+</dd>
+
+	<dt>%table . `deleteTHead()$m</dt>
+	<dd>
+この~tableが `thead$e 要素を持たないようにする。
+◎
+Ensures the table does not have a thead element.
+</dd>
+
+	<dt>%table . `tFoot$m [ = %value ]</dt>
+	<dd>
+この~tableの `tfoot$e 要素を返す。
+◎
+Returns the table's tfoot element.
+</dd>
+	<dd>
+設定して `tfoot$e 要素を置換できる。
+%value が `tfoot$e 要素でない場合、
+`HierarchyRequestError$E が投出される。
+◎
+Can be set, to replace the tfoot element. If the new value is not a tfoot element, throws a "HierarchyRequestError" DOMException.
+</dd>
+
+	<dt>%tfoot = %table . `createTFoot()$m</dt>
+	<dd>
+この~tableは `tfoot$e 要素を持つようにした上で、それを返す。
+◎
+Ensures the table has a tfoot element, and returns it.
+</dd>
+
+	<dt>%table . `deleteTFoot()$m</dt>
+	<dd>
+この~tableは `tfoot$e 要素を持たないようにする。
+◎
+Ensures the table does not have a tfoot element.
+</dd>
+
+	<dt>%table . `tBodies$m</dt>
+	<dd>
+この~tableの `tbody$e 要素たちからなる `HTMLCollection$I を返す。
+◎
+Returns an HTMLCollection of the tbody elements of the table.
+</dd>
+
+	<dt>%tbody = %table . `createTBody()$m</dt>
+	<dd>
+新たな `tbody$e 要素を、この~tableの中に挿入した上で，返す。
+◎
+Creates a tbody element, inserts it into the table, and returns it.
+</dd>
+
+	<dt>%table . `rows$m</dt>
+	<dd>
+この~tableの `tr$e 要素たちからなる `HTMLCollection$I を返す。
+◎
+Returns an HTMLCollection of the tr elements of the table.
+</dd>
+
+	<dt>%tr = %table . `insertRow( [ index ] )$m</dt>
+	<dd>
+`tr$e 要素を作成し、それに伴い必要なら `tbody$e も作成し、それらを~tableの中の %index 番の~rowとして挿入した上で、作成した `tr$e を返す。
+◎
+Creates a tr element, along with a tbody if required, inserts them into the table at the position given by the argument, and returns the tr.
+</dd>
+	<dd>
+%index に対する値 −1 は、その引数の省略-時の既定でもあり，この~tableの終端に挿入することに等価になる。
+◎
+The position is relative to the rows in the table. The index −1, which is the default if the argument is omitted, is equivalent to inserting at the end of the table.
+</dd>
+	<dd>
+［
+−1 ~LTE %index ~LTE ~rowの本数
+］でない場合、 `IndexSizeError$E が投出される。
+◎
+If the given position is less than −1 or greater than the number of rows, throws an "IndexSizeError" DOMException.
+</dd>
+
+	<dt>%table . `deleteRow(index)$m</dt>
+	<dd>
+この~table内の %index 番の~rowである `tr$e 要素を除去する。
+◎
+Removes the tr element with the given position in the table.
+</dd>
+	<dd>
+%index に対する値 −1 は、この~tableの最後の~rowを削除することに等価になる。
+◎
+The position is relative to the rows in the table. The index −1 is equivalent to deleting the last row of the table.
+</dd>
+	<dd>
+%index ~NEQ −1 であって，［
+0 ~LTE %index ~LT ~rowの本数
+］でない場合、
+`IndexSizeError$E が投出される。
+◎
+If the given position is less than −1 or greater than the index of the last row, or if there are no rows, throws an "IndexSizeError" DOMException.
+</dd>
+</dl>
+
+<p>
+以下における `table$e 要素 %~table 上の 属性／~method定義において、
+`新たな~table内~要素@( %局所~名 )
+と記された所は、次を意味する
+⇒
+`要素を作成する$( %~table の`~node文書$, %局所~名, `~HTML名前空間$ )
+◎
+In all of the following attribute and method definitions, when an element is to be table-created, that means to create an element given the table element's node document, the given local name, and the HTML namespace.
+</p>
+
+<div class="algo">
+`caption@m
+取得子~手続きは
+⇒
+~RET コレの子に `caption$e 要素は［
+在るならば それらのうち最初のもの ／
+無いならば ~NULL
+］
+◎
+The caption IDL attribute must return, on getting, the first caption element child of the table element, if any, or null otherwise.＼
+</div>
+
+<div class="algo">
+<p>
+`caption$m 設定子~手続きは：
+</p>
+<ol>
+	<li>
+~IF［
+コレの子に `caption$e 要素は在る
+］
+⇒
+それらのうち最初のものを除去する
+</li>
+	<li>
+~IF［
+所与の値 ~NEQ ~NULL
+］
+⇒
+所与の値をコレ内の最初の~nodeとして挿入する
+</li>
+</ol>
+◎
+On setting, the first caption element child of the table element, if any, must be removed, and the new value, if not null, must be inserted as the first node of the table element.
+</div>
+
+<div class="algo">
+<p>
+`createCaption()@m
+~method~手続きは：
+</p>
+<ol>
+	<li>
+~IF［
+コレの子に `caption$e 要素は在る
+］
+⇒
+~RET それらのうち最初のもの
+</li>
+	<li>
+%caption ~LET `新たな~table内~要素$( `caption$e )
+</li>
+	<li>
+コレ内の最初の~nodeとして %caption を挿入する
+</li>
+	<li>
+~RET %caption
+</li>
+</ol>
+◎
+The createCaption() method must return the first caption element child of the table element, if any; otherwise a new caption element must be table-created, inserted as the first node of the table element, and then returned.
+</div>
+
+<div class="algo">
+`deleteCaption()@m
+~method~手続きは：
+⇒
+~IF［
+コレの子に `caption$e 要素は在る
+］
+⇒
+それらのうち最初のものを除去する
+◎
+The deleteCaption() method must remove the first caption element child of the table element, if any.
+</div>
+
+<div class="algo">
+`tHead@m
+取得子~手続きは
+⇒
+~RET コレの子に `thead$e 要素は［
+在るならば それらのうち最初のもの ／
+無いならば ~NULL
+］
+◎
+The tHead IDL attribute must return, on getting, the first thead element child of the table element, if any, or null otherwise.＼
+</div>
+
+<div class="algo">
+<p>
+`tHead$m 設定子~手続きは：
+</p>
+<ol>
+	<li>
+%thead ~LET 所与の値
+</li>
+	<li>
+~IF［
+%thead ~NEQ ~NULL
+］~AND［
+%thead は `thead$e 要素でない
+］
+⇒
+~THROW
+`HierarchyRequestError$E
+</li>
+	<li>
+コレの子に `thead$e 要素が在るならば それらのうち最初のものを除去する
+</li>
+	<li>
+~IF［
+%thead ~EQ ~NULL
+］
+⇒
+~RET
+</li>
+	<li>
+~IF［
+コレの子に［
+`caption$e ／ `colgroup$e
+］でない要素は在る
+］
+⇒
+それらのうち最初のものの直前に %thead を挿入する
+</li>
+	<li>
+~ELSE
+⇒
+コレの終端に %thead を挿入する
+</li>
+</ol>
+◎
+On setting, if the new value is null or a thead element, the first thead element child of the table element, if any, must be removed, and the new value, if not null, must be inserted immediately before the first element in the table element that is neither a caption element nor a colgroup element, if any, or at the end of the table if there are no such elements. If the new value is neither null nor a thead element, then a "HierarchyRequestError" DOMException must be thrown instead.
+</div>
+
+<div class="algo">
+<p>
+`createTHead()@m
+~method~手続きは：
+</p>
+<ol>
+	<li>
+~IF［
+コレの子に `thead$e 要素は在る
+］
+⇒
+~RET それらのうち最初のもの
+</li>
+	<li>
+%thead ~LET `新たな~table内~要素$( `thead$e )
+</li>
+	<li>
+~IF［
+コレの子に［
+`caption$e ／ `colgroup$e
+］でない要素は在る
+］
+⇒
+それらのうち最初のものの直前に %thead を挿入する
+</li>
+	<li>
+~ELSE
+⇒
+コレの終端に %thead を挿入する
+</li>
+	<li>
+~RET %thead
+</li>
+</ol>
+◎
+The createTHead() method must return the first thead element child of the table element, if any; otherwise a new thead element must be table-created and inserted immediately before the first element in the table element that is neither a caption element nor a colgroup element, if any, or at the end of the table if there are no such elements, and then that new element must be returned.
+</div>
+
+<div class="algo">
+`deleteTHead()@m
+~method~手続きは：
+⇒
+~IF［
+コレの子に `thead$e 要素は在る
+］
+⇒
+それらのうち最初のものを除去する
+◎
+The deleteTHead() method must remove the first thead element child of the table element, if any.
+</div>
+
+<div class="algo">
+`tFoot@m
+取得子~手続きは
+⇒
+~RET コレの子に `tfoot$e 要素は［
+在るならば それらのうち最初のもの ／
+無いならば ~NULL
+］
+◎
+The tFoot IDL attribute must return, on getting, the first tfoot element child of the table element, if any, or null otherwise.＼
+</div>
+
+<div class="algo">
+<p>
+`tFoot$m 設定子~手続きは：
+</p>
+<ol>
+	<li>
+%tfoot ~LET 所与の値
+</li>
+	<li>
+~IF［
+%tfoot ~NEQ ~NULL
+］~AND［
+%tfoot は `tfoot$e 要素でない
+］
+⇒
+~THROW
+`HierarchyRequestError$E
+</li>
+	<li>
+コレの子に `tfoot$e 要素が在るならば それらのうち最初のものを除去する
+</li>
+	<li>
+~IF［
+%tfoot ~EQ ~NULL
+］
+⇒
+~RET
+</li>
+	<li>
+~IF［
+コレの子に［
+`caption$e ／ `colgroup$e
+］でない要素は在る
+］
+⇒
+それらのうち最初のものの直前に %tfoot を挿入する
+</li>
+	<li>
+~ELSE
+⇒
+コレの終端に %tfoot を挿入する
+</li>
+</ol>
+◎
+On setting, if the new value is null or a tfoot element, the first tfoot element child of the table element, if any, must be removed, and the new value, if not null, must be inserted at the end of the table. If the new value is neither null nor a tfoot element, then a "HierarchyRequestError" DOMException must be thrown instead.
+</div>
+
+<div class="algo">
+<p>
+`createTFoot()@m
+~method~手続きは：
+</p>
+<ol>
+	<li>
+~IF［
+コレの子に `tfoot$e 要素は在る
+］
+⇒
+~RET それらのうち最初のもの
+</li>
+	<li>
+%tfoot ~LET `新たな~table内~要素$( `tfoot$e )
+</li>
+	<li>
+コレの終端に %tfoot を挿入する
+</li>
+	<li>
+~RET %tfoot
+</li>
+</ol>
+◎
+The createTFoot() method must return the first tfoot element child of the table element, if any; otherwise a new tfoot element must be table-created and inserted at the end of the table, and then that new element must be returned.
+</div>
+
+<div class="algo">
+`deleteTFoot()@m
+~method~手続きは
+⇒
+~IF［
+コレの子に `tfoot$e 要素は在る
+］
+⇒
+それらのうち最初のものを除去する
+◎
+The deleteTFoot() method must remove the first tfoot element child of the table element, if any.
+</div>
+
+<div class="algo">
+`tBodies@m
+取得子~手続きは
+⇒
+~RET 次のようにされた `HTMLCollection$I
+⇒＃
+根 ~SET コレ,
+~filterは コレの子である `tbody$e 要素のみに合致する
+◎
+The tBodies attribute must return an HTMLCollection rooted at the table node, whose filter matches only tbody elements that are children of the table element.
+</div>
+
+<div class="algo">
+<p>
+`createTBody()@m
+~method~手続きは：
+</p>
+<ol>
+	<li>
+%tbody ~LET `新たな~table内~要素$( `tbody$e )
+</li>
+	<li>
+コレの子に `tbody$e 要素が［
+在るならば それらのうち最後ののものの直後 ／
+無いならば コレの終端
+］に %tbody を挿入する
+</li>
+	<li>
+~RET %tbody
+</li>
+</ol>
+◎
+The createTBody() method must table-create a new tbody element, insert it immediately after the last tbody element child in the table element, if any, or at the end of the table element if the table element has no tbody element children, and then must return the new tbody element.
+</div>
+
+<div class="algo">
+<p>
+`rows@m
+取得子~手続きは
+⇒
+~RET 次のようにされた `HTMLCollection$I
+⇒＃
+根 ~SET コレ,
+~filterは 次のいずれかに該当する `tr$e 要素のみに合致する：
+</p>
+
+<ol><li>コレの子である `thead$e 要素の子である
+</li><li>コレの子であるか, コレの子である `tbody$e 要素の子である
+</li><li>コレの子である `tfoot$e 要素の子である
+</li></ol>
+
+<p>
+返される~collection内の要素たちの順序は、上に挙げた順に, かつ
+各項ごとに`~tree順序$とする
+</p>
+
+◎
+The rows attribute must return an HTMLCollection rooted at the table node, whose filter matches only tr elements that are either children of the table element, or children of thead, tbody, or tfoot elements that are themselves children of the table element. The elements in the collection must be ordered such that those elements whose parent is a thead are included first, in tree order, followed by those elements whose parent is either a table or tbody element, again in tree order, followed finally by those elements whose parent is a tfoot element, still in tree order.
+</div>
+
+<div class="algo">
+<p>
+`insertRow(index)@m
+~methodの挙動は、この~tableの状態に依存する
+— その~method~手続きは：
+◎
+The behavior of the insertRow(index) method depends on the state of the table. When it is called, the method must act as required by the first item in the following list of conditions that describes the state of the table and the index argument:
+</p>
+<ol>
+	<li>
+%rows ~LET コレの `rows$m ~collection
+◎
+↓</li>
+	<li>
+%N ~LET %rows 内の要素~数
+◎
+↓</li>
+	<li>
+~IF［
+%index ~NIN { −1 〜 %N }
+］
+⇒
+~THROW `IndexSizeError$E
+◎
+If index is less than −1 or greater than the number of elements in rows collection:
+• The method must throw an "IndexSizeError" DOMException.
+</li>
+	<li>
+%tr ~LET `新たな~table内~要素$( `tr$e )
+◎
+↓</li>
+	<li>
+<p>
+~IF［
+%N ~EQ 0
+］~AND［
+コレの子である `tbody$e 要素は無い
+］：
+</p>
+
+<ol><li>%tbody ~LET `新たな~table内~要素$( `tbody$e )
+</li><li>%tbody に %tr を付加する
+</li><li>コレに %tbody を付加する
+</li></ol>
+
+◎
+If the rows collection has zero elements in it, and the table has no tbody elements in it:
+• The method must table-create a tbody element, then table-create a tr element, then append the tr element to the tbody element, then append the tbody element to the table element, and finally return the tr element.
+</li>
+	<li>
+~ELIF［
+%N ~EQ 0
+］
+⇒
+コレ内の最後の `tbody$e 要素に %tr を付加する
+◎
+If the rows collection has zero elements in it:
+• The method must table-create a tr element, append it to the last tbody element in the table, and return the tr element.
+</li>
+	<li>
+~ELIF［
+%index ~IN { −1, %N }
+］
+⇒
+%rows 内の最後の `tr$e 要素の親に %tr を付加する
+◎
+If index is −1 or equal to the number of items in rows collection:
+• The method must table-create a tr element, and append it to the parent of the last tr element in the rows collection. Then, the newly created tr element must be returned.
+</li>
+	<li>
+~ELSE
+⇒
+%rows 内の %index 番の `tr$e 要素 %E の親の中で %E の直前に %tr を挿入する
+◎
+Otherwise:
+• The method must table-create a tr element, insert it immediately before the indexth tr element in the rows collection, in the same parent, and finally must return the newly created tr element.
+</li>
+	<li>
+~RET %tr
+◎
+↑</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`deleteRow(index)@m
+~method~手続きは：
+</p>
+
+<ol>
+	<li>
+%rows ~LET コレの `rows$m ~collection
+</li>
+	<li>
+%最大 ~LET %rows 内の要素~数 − 1
+</li>
+	<li>
+<p>
+~IF［
+%index ~EQ −1
+］：
+</p>
+		<ol>
+			<li>
+~IF［
+%最大 ~EQ −1
+］
+⇒
+~RET
+</li>
+			<li>
+%index ~SET %最大
+</li>
+		</ol>
+	</li>
+	<li>
+~ELIF［
+%index ~NIN { 0 〜 %最大 }
+］
+⇒
+~THROW `IndexSizeError$E
+</li>
+	<li>
+`~nodeを除去する$( %rows 内の %index 番の要素 )
+</li>
+</ol>
+◎
+When the deleteRow(index) method is called, the user agent must run the following steps:
+• If index is less than −1 or greater than or equal to the number of elements in the rows collection, then throw an "IndexSizeError" DOMException.
+• If index is −1, then remove the last element in the rows collection from its parent, or do nothing if the rows collection is empty.
+• Otherwise, remove the indexth element in the rows collection from its parent.
+</div>
+
+<div class="example">
+
+<p>
+次の例では、数独パズルを~mark-upするために~tableが利用されている。
+~headerを欠いていることが見て取れるが、この種の~tableには必要とされない。
+◎
+Here is an example of a table being used to mark up a Sudoku puzzle. Observe the lack of headers, which are not necessary in such a table.
+</p>
+
+`table-sudoku^xCode
+
+</div>
+
+				<section id="table-descriptions-techniques">
+<h4 title="Techniques for describing tables">4.9.1.1. ~tableを記述するための技法</h4>
+
+<p id="table-descriptions">
+単に［
+最初の~row, 最初の~col
+］内に一連の~headerを伴う，いくつかの~cellからなる格子
+］を超えるような~tableや，読者が内容を読解するのは一般に難がありそうな~tableに対しては、作者は，導入-用の説明的な情報を含めるべきある。
+そのような情報は，どの利用者にも有用になるが、~screen~readerの利用者など，~tableを見れない利用者には とりわけ有用になる。
+◎
+For tables that consist of more than just a grid of cells with headers in the first row and headers in the first column, and for any table in general where the reader might have difficulty understanding the content, authors should include explanatory information introducing the table. This information is useful for all users, but is especially useful for users who cannot see the table, e.g. users of screen readers.
+</p>
+
+<div>
+<p>
+そのような説明的な情報は、次を導入するべきである：
+</p>
+
+<ul ><li>当の~tableの目的
+</li><li>基本的な~cell構造を要旨する
+</li><li>傾向や~patternがあれば，それを強調する
+</li><li>~tableを利用する一般的な方法を利用者に教える
+</li></ul>
+
+◎
+Such explanatory information should introduce the purpose of the table, outline its basic cell structure, highlight any trends or patterns, and generally teach the user how to use the table.
+</div>
+
+<p>
+一例として、次の~tableでは：
+◎
+For instance, the following table:
+</p>
+
+`table-desc-0^dgm
+
+<p>
+この~tableの~layoutについて説明する記述から便益を得られる
+— 例えば次の様に
+⇒
+“`table-desc-caption^dgm”
+◎
+...might benefit from a description explaining the way the table is laid out, something like "Characteristics are given in the second column, with the negative side in the left column and the positive side in the right column".
+</p>
+
+<p>
+この情報は、次に挙げるような種々の仕方で含ませれる：
+◎
+There are a variety of ways to include this information, such as:
+</p>
+
+<dl>
+	<dt>
+~tableの周囲の注釈文にて：
+◎
+In prose, surrounding the table
+</dt>
+	<dd class="example">
+`table-desc-x1^xCode
+	</dd>
+
+	<dt>
+~table内の `caption$e 内に：
+◎
+In the table's caption
+</dt>
+	<dd class="example">
+`table-desc-x2^xCode
+	</dd>
+
+	<dt>
+~table内の `caption$e 内の `details$e 要素~内に：
+◎
+In the table's caption, in a details element
+</dt>
+	<dd class="example">
+`table-desc-x3^xCode
+	</dd>
+
+	<dt>
+同じ `figure$e 内の，~tableの隣に：
+◎
+Next to the table, in the same figure
+</dt>
+	<dd class="example">
+`table-desc-x4^xCode
+	</dd>
+
+	<dt>
+`figure$e 内の，~tableの隣にある `figcaption$e 内に：
+◎
+Next to the table, in a figure's figcaption
+</dt>
+	<dd class="example">
+`table-desc-x5^xCode
+	</dd>
+</dl>
+
+<p>
+作者は、上の技法との組合nも含め，他の技法を適宜~利用してもヨイ。
+◎
+Authors may also use other techniques, or combinations of the above techniques, as appropriate.
+</p>
+
+<p>
+もちろん，~tableの~layoutについて説明する記述を書くより、説明が不要になるよう~tableを調整できれば最良である。
+◎
+The best option, of course, rather than writing a description explaining the way the table is laid out, is to adjust the table such that no explanation is needed.
+</p>
+
+<div class="example">
+
+<p>
+上の各~例で利用された~tableの事例では、単純に，上端~側と左端~側に~headerが来るように~tableを配列し直せば、説明も `headers$a 属性も不要になる：
+◎
+In the case of the table used in the examples above, a simple rearrangement of the table so that the headers are on the top and left sides removes the need for an explanation as well as removing the need for the use of headers attributes:
+</p>
+
+`table-desc-x6^xCode
+
+</div>
+
+				</section>
+				<section id="table-layout-techniques">
+<h4 title="Techniques for table design">4.9.1.2. ~tableを設計するための技法</h4>
+
+<p>
+良い~table設計は、~tableをより読易く かつ利用し易くするための要点になる。
+◎
+Good table design is key to making tables more readable and usable.
+</p>
+
+<p>
+視覚-媒体においては、各 ~col, ~rowに~borderを供した上で, 各~row背景も交替的に色分けすれば、複雑な~tableもごく効果的に読易くできる。
+◎
+In visual media, providing column and row borders and alternating row backgrounds can be very effective to make complicated tables more readable.
+</p>
+
+<p>
+巨大で数的な内容を伴う~tableに対しては、等幅~fontを利用すれば
+— とりわけ~UAが~borderを描画しない所では —
+利用者は~patternを見分け易くなり得る。
+（あいにく，歴史的な理由から、~tableに対しては~borderは描画しないことが共通な既定になっている。）
+◎
+For tables with large volumes of numeric content, using monospaced fonts can help users see patterns, especially in situations where a user agent does not render the borders. (Unfortunately, for historical reasons, not rendering borders on tables is a common default.)
+</p>
+
+<p>
+発話~媒体においては、~tableの内容~全体を~source順に直列化するよりも，［
+~cellの内容を読取る前に，対応する~headerを報告する ／
+~tableの格子をなぞるように~navigate可能にする
+］方が、利用者は各~table~cellを判別し易い。
+◎
+In speech media, table cells can be distinguished by reporting the corresponding headers before reading the cell's contents, and by allowing users to navigate the table in a grid fashion, rather than serializing the entire contents of the table in source order.
+</p>
+
+<p>
+作者には、~CSSを利用して これらの効果を達成することが奨励される。
+◎
+Authors are encouraged to use CSS to achieve these effects.
+</p>
+
+<p>
+~pageが~CSSを利用していない場合、~UAには，~layout用に類別されない~tableに対しては，これらの技法を利用して~tableを描画することが奨励される。
+◎
+User agents are encouraged to render tables using these techniques whenever the page does not use CSS and the table is not classified as a layout table.
+</p>
+
+				</section>
+			</section>
+			<section id="the-caption-element">
+<h3 title="The caption element">4.9.2. `caption^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+なし。
+◎
+None.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`table$e 要素の最初の子~要素として。
+◎
+As the first element child of a table element.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`~flow内容$
+— ただし、子孫に `table$e 要素は無いとする。
+◎
+Flow content, but with no descendant table elements.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+次が満たされるならば、`終了tag$を省略できる
+⇒
+直後に［
+`~ASCII空白$／`~comment$
+］が続かない
+◎
+A caption element's end tag can be omitted if the caption element is not immediately followed by ASCII whitespace or a comment.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`caption$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLTableCaptionElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  // `HTMLTableCaptionElement$obsMb
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`caption$e 要素
+は、その親が `table$e であるならば，その~titleを`表現-$する。
+◎
+The caption element represents the title of the table that is its parent, if it has a parent and that is a table element.
+</p>
+
+<p>
+`caption$e 要素は、`~table~model$の一部を成す。
+◎
+The caption element takes part in the table model.
+</p>
+
+<p>
+`table$e 要素が `figure$e 要素~内の`figcaption$e 以外の唯一の内容である場合、
+`caption$e 要素は省略されるべきである
+— `figcaption$e がそれに代るものになるので。
+◎
+When a table element is the only content in a figure element other than the figcaption, the caption element should be omitted in favor of the figcaption.
+</p>
+
+<p>
+~captionは，~tableに対する文脈を導入でき、読解するのも有意に容易になる。
+◎
+A caption can introduce context for a table, making it significantly easier to understand.
+</p>
+
+<div class="example">
+
+<p>
+一例として、次の~tableを考える：
+◎
+Consider, for instance, the following table:
+</p>
+
+`table-dice-1^dgm
+
+<p>
+この~tableは、抽象的で明瞭でない。
+しかしながら，次のような、（本文から`参照-$するための）~table番号を与える~captionと, 説明を伴っていれば，もっとはっきりする：
+◎
+In the abstract, this table is not clear. However, with a caption giving the table's number (for reference in the main prose) and explaining its use, it makes more sense:
+</p>
+
+`table-dice-caption^xCode
+
+<p>
+次のものは、利用者に もっと文脈を供する：
+◎
+This provides the user with more context:
+</p>
+
+`table-dice-2^dgm
+
+</div>
+
+			</section>
+			<section id="the-colgroup-element">
+<h3 title="The colgroup element">4.9.3. `colgroup^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+なし。
+◎
+None.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`table$e 要素の子として
+— ただし、同胞に `caption$e 要素が在るならばそれより後, かつ
+同胞に［
+`thead$e ／ `tbody$e ／ `tfoot$e ／ `tr$e
+］要素が在るならば それらより前に限る。
+◎
+As a child of a table element, after any caption elements and before any thead, tbody, tfoot, and tr elements.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+<p>
+この要素が `~span0$a 属性を
+</p>
+<ul><li>有するならば、`なし$。
+</li><li>有さないならば、
+0 個~以上の［
+`col$e ／ `template$e
+］要素。
+</li></ul>
+◎
+If the span attribute is present: Nothing.
+◎
+If the span attribute is absent: Zero or more col and template elements.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+<p>
+次が満たされるならば、`開始tag$を省略できる
+⇒
+［
+この要素の内側にある最初のものは `col$e 要素である
+］~AND［
+この要素の直前に［
+`終了tag$が省略されている別の `colgroup$e 要素
+］は無い
+］
+</p>
+<p>
+（この要素が空である場合は省略できない。）
+</p>
+◎
+A colgroup element's start tag can be omitted if the first thing inside the colgroup element is a col element, and if the element is not immediately preceded by another colgroup element whose end tag has been omitted. (It can't be omitted if the element is empty.)
+</dd>
+	<dd>
+次が満たされるならば、`終了tag$を省略できる
+⇒
+直後に［
+`~ASCII空白$／`~comment$
+］が続かない
+◎
+A colgroup element's end tag can be omitted if the colgroup element is not immediately followed by ASCII whitespace or a comment.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+`~span0$a
+—
+この要素が~spanする~col数
+◎
+span — Number of columns spanned by the element
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`colgroup$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLTableColElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [`CEReactions$] attribute unsigned long `~span0$m;
+
+  // `HTMLTableColElement$obsMb
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`colgroup$e 要素は、その親が `table$e であるならば，それ内の 1 個~以上の`~col$からなる`~col~group$を`表現-$する。
+◎
+The colgroup element represents a group of one or more columns in the table that is its parent, if it has a parent and that is a table element.
+</p>
+
+<p>
+`col$e 要素を包含しない `colgroup$e 要素には、
+`~span0@a
+内容~属性が指定されてもヨイ
+— 指定する値は、 1 以上 1000 以下の`妥当な負でない整数$でなければナラナイ。
+◎
+If the colgroup element contains no col elements, then the element may have a span content attribute specified, whose value must be a valid non-negative integer greater than zero and less than or equal to 1000.
+</p>
+
+<p>
+`colgroup$e 要素, および その `~span0$a 属性は、`~table~model$の一部を成す。
+◎
+The colgroup element and its span attribute take part in the table model.
+</p>
+
+<p>
+`~span0@m
+~IDL属性は、［
+1 以上 1000 以下に`切詰められ$，既定の値は 1 とする
+］下で，
+`~span0$a 内容~属性を`反映する$モノトスル。
+◎
+The span IDL attribute must reflect the content attribute of the same name. It is clamped to the range [1, 1000], and its default value is 1.
+</p>
+
+			</section>
+			<section id="the-col-element">
+<h3 title="The col element">4.9.4. `col^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+なし。
+◎
+None.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`span$a 属性を有さない `colgroup$e 要素の子として。
+◎
+As a child of a colgroup element that doesn't have a span attribute.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`なし$。
+◎
+Nothing.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+`終了tag$は無い。
+◎
+No end tag.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+`span$a
+— この要素が~spanする~col数
+◎
+span — Number of columns spanned by the element
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`col$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+`HTMLTableColElement$I を利用する。
+— `colgroup$e 要素に定義されるそれと同じく。
+◎
+Uses HTMLTableColElement, as defined for colgroup elements.
+</dd>
+</dl>
+
+<p>
+`col$e 要素は、［
+その親は `colgroup$e 要素である, かつ
+そのまた親は `table$e 要素である
+］ならば、親の `colgroup$e により表現される`~col~group$内の 1 本~以上の`~col$を`表現-$する。
+◎
+If a col element has a parent and that is a colgroup element that itself has a parent that is a table element, then the col element represents one or more columns in the column group represented by that colgroup.
+</p>
+
+<p>
+この要素には
+`span@a
+内容~属性が指定されてもヨイ
+— 指定する値は、 1 以上 1000 以下の`妥当な負でない整数$でなければナラナイ。
+◎
+The element may have a span content attribute specified, whose value must be a valid non-negative integer greater than zero and less than or equal to 1000.
+</p>
+
+<p>
+`col$e 要素とその `span$a 属性は、`~table~model$の一部を成す。
+◎
+The col element and its span attribute take part in the table model.
+</p>
+
+<p>
+`span@m
+~IDL属性は、［
+1 以上 1000 以下に`切詰められ$，既定の値は 1 とする
+］下で，
+`span$a 内容~属性を`反映する$モノトスル。
+◎
+The span IDL attribute must reflect the content attribute of the same name. It is clamped to the range [1, 1000], and its default value is 1.
+</p>
+
+			</section>
+			<section id="the-tbody-element">
+<h3 title="The tbody element">4.9.5. `tbody^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+なし。
+◎
+None.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`table$e 要素の子として
+— ただし、同胞に［
+`caption$e ／ `colgroup$e ／ `thead$e
+］要素が在るならば それらより後, かつ［
+同胞の `tr$e 要素は他に無い
+］場合に限る。
+◎
+As a child of a table element, after any caption, colgroup, and thead elements, but only if there are no tr elements that are children of the table element.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+0 個~以上の［
+`tr$e 要素／ `~scriptを~supportする要素$
+］。
+◎
+Zero or more tr and script-supporting elements.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+次が満たされるならば、`開始tag$を省略できる
+⇒
+［
+この要素の内側にある最初のものは `tr$e 要素である
+］~AND［
+この要素の直前に，`終了tag$が省略されている［
+`tbody$e ／ `thead$e ／ `tfoot$e
+］要素はない
+］
+◎
+A tbody element's start tag can be omitted if the first thing inside the tbody element is a tr element, and if the element is not immediately preceded by a tbody, thead, or tfoot element whose end tag has been omitted. (It can't be omitted if the element is empty.)
+</dd>
+	<dd>
+次が満たされるならば、`終了tag$を省略できる
+⇒
+［
+この要素の直後に［
+`tbody$e ／ `tfoot$e
+］要素はある
+］~OR［
+この要素の親~要素~内に，この要素に後続する内容は無い
+］
+◎
+A tbody element's end tag can be omitted if the tbody element is immediately followed by a tbody or tfoot element, or if there is no more content in the parent element.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`tbody$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLTableSectionElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [SameObject] readonly attribute `HTMLCollection$I `rows$rG;
+  `HTMLTableRowElement$I `insertRow$rG(optional long index = -1);
+  [`CEReactions$] undefined `deleteRow$rG(long index);
+
+  // `HTMLTableSectionElement$obsMb
+};
+</pre>
+
+<p>
+`HTMLTableSectionElement$I
+~interfaceも［
+`thead$e ／ `tfoot$e
+］要素に対し利用される。
+◎
+The HTMLTableSectionElement interface is also used for thead and tfoot elements.
+</p>
+	</dd>
+</dl>
+
+<p>
+`tbody$e 要素は、その親が `table$e 要素であるならば，その~dataの本体を成す一連の`~row$からなる`~block$を`表現-$する。
+◎
+The tbody element represents a block of rows that consist of a body of data for the parent table element, if the tbody element has a parent and it is a table.
+</p>
+
+<p>
+`tbody$e 要素は、`~table~model$の一部を成す。
+◎
+The tbody element takes part in the table model.
+</p>
+
+<dl class="domintro">
+
+	<dt>%tbody . `rows$rG</dt>
+	<dd>
+この~table~row~groupを成す一連の `tr$e 要素からなる `HTMLCollection$I を返す。
+◎
+Returns an HTMLCollection of the tr elements of the table section.
+</dd>
+
+	<dt>%tr = %tbody . `insertRow( [ index ] )$rG</dt>
+	<dd>
+新たな `tr$e 要素を、この~table~row~groupの中の %index 番の~rowとして挿入した上で，返す。
+◎
+Creates a tr element, inserts it into the table section at the position given by the argument, and returns the tr.
+</dd>
+	<dd>
+%index に対する値 −1 は、その引数の省略-時の既定でもあり，この~table~row~groupの終端に挿入することに等価になる。
+◎
+The position is relative to the rows in the table section. The index −1, which is the default if the argument is omitted, is equivalent to inserting at the end of the table section.
+</dd>
+	<dd>
+［
+−1 ~LTE %index ~LTE ~rowの本数
+］でない場合、 `IndexSizeError$E が投出される。
+◎
+If the given position is less than −1 or greater than the number of rows, throws an "IndexSizeError" DOMException.
+</dd>
+
+	<dt>%tbody . `deleteRow(index)$rG</dt>
+	<dd>
+この~table~row~group内の %index 番の~rowである `tr$e 要素を除去する。
+◎
+Removes the tr element with the given position in the table section.
+</dd>
+	<dd>
+%index に対する値 −1 は、この~table~row~groupの最後の~rowを削除することに等価になる。
+◎
+The position is relative to the rows in the table section. The index −1 is equivalent to deleting the last row of the table section.
+</dd>
+	<dd>
+%index ~NEQ −1 であって，［
+0 ~LTE %index ~LT ~rowの本数
+］でない場合、
+`IndexSizeError$E が投出される。
+◎
+If the given position is less than −1 or greater than the index of the last row, or if there are no rows, throws an "IndexSizeError" DOMException.
+</dd>
+</dl>
+
+<div class="algo">
+`rows@rG
+取得子~手続きは
+⇒
+~RET 次のようにされた `HTMLCollection$I
+⇒＃
+根 ~SET コレ,
+~filterは コレの子である `tr$e 要素のみに合致する
+◎
+The rows attribute must return an HTMLCollection rooted at this element, whose filter matches only tr elements that are children of this element.
+</div>
+
+<div class="algo">
+<p>
+`insertRow(index)@rG
+~method~手続きは：
+◎
+The insertRow(index) method must act as follows:
+</p>
+<ol>
+	<li>
+%rows ~LET コレの `rows$rG ~collection
+◎
+↓</li>
+	<li>
+%N ~LET %rows 内の要素~数
+◎
+↓</li>
+	<li>
+~IF［
+%index ~NIN { −1 〜 %N }
+］
+⇒
+~THROW `IndexSizeError$E
+◎
+If index is less than −1 or greater than the number of elements in the rows collection, throw an "IndexSizeError" DOMException.
+</li>
+	<li>
+%~row ~LET 
+`要素を作成する$( コレの`~node文書$, `tr$e, `~HTML名前空間$ )
+◎
+Let table row be the result of creating an element given this element's node document, tr, and the HTML namespace.
+</li>
+	<li>
+~IF［
+%index ~IN { −1 , %N }
+］
+⇒
+コレに`~nodeを付加する$( %~row )
+◎
+If index is −1 or equal to the number of items in the rows collection, then append table row to this element.
+</li>
+	<li>
+~ELSE
+⇒
+コレの中で`~nodeを子の前に挿入する$( %~row, %rows 内の %index 番の `tr$e 要素 )
+◎
+Otherwise, insert table row as a child of this element, immediately before the indexth tr element in the rows collection.
+</li>
+	<li>
+~RET %~row
+◎
+Return table row.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`deleteRow(index)@rG
+~method~手続きは：
+</p>
+<ol>
+	<li>
+%rows ~LET コレの `rows$rG ~collection
+</li>
+	<li>
+%最大 ~LET %rows 内の要素~数 − 1
+</li>
+	<li>
+<p>
+~IF［
+%index ~EQ −1
+］：
+</p>
+		<ol>
+			<li>
+~IF［
+%最大 ~EQ −1
+］
+⇒
+~RET
+</li>
+			<li>
+%index ~SET %最大
+</li>
+		</ol>
+	</li>
+	<li>
+~ELIF［
+%index ~NIN { 0 〜 %最大 }
+］
+⇒
+~THROW `IndexSizeError$E
+</li>
+	<li>
+`~nodeを除去する$( %rows 内の %index 番の要素 )
+</li>
+</ol>
+◎
+The deleteRow(index) method must, when invoked, act as follows:
+• If index is less than −1 or greater than or equal to the number of elements in the rows collection, then throw an "IndexSizeError" DOMException.
+• If index is −1, then remove the last element in the rows collection from this element, or do nothing if the rows collection is empty.
+• Otherwise, remove the indexth element in the rows collection from this element.
+</div>
+
+			</section>
+			<section id="the-thead-element">
+<h3 title="The thead element">4.9.6. `thead^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+なし。
+◎
+None.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`table$e 要素の子として
+— ただし、同胞に［
+`caption$e／`colgroup$e
+］要素が在るならば それらより後, かつ
+同胞に［
+`tbody$e ／ `tfoot$e ／ `tr$e
+］要素が在るならば それらより前, かつ［
+同胞の `thead$e 要素は他に無い
+］場合に限る。
+◎
+As a child of a table element, after any caption, and colgroup elements and before any tbody, tfoot, and tr elements, but only if there are no other thead elements that are children of the table element.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+0 個~以上の［
+`tr$e 要素 ／ `~scriptを~supportする要素$
+］。
+◎
+Zero or more tr and script-supporting elements.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+次が満たされるならば、`終了tag$を省略できる
+⇒
+直後に［
+`tbody$e ／ `tfoot$e
+］要素が続く
+◎
+A thead element's end tag can be omitted if the thead element is immediately followed by a tbody or tfoot element.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`thead$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+`HTMLTableSectionElement$I を利用する。
+— `tbody$e 要素に定義されるそれと同じく。
+◎
+Uses HTMLTableSectionElement, as defined for tbody elements.
+</dd>
+</dl>
+
+<p>
+`thead$e 要素は、親が `table$e 要素であるならば，その一連の~colに対する~label（~header）を成す 一連の`~row$からなる`~block$を`表現-$する。
+◎
+The thead element represents the block of rows that consist of the column labels (headers) for the parent table element, if the thead element has a parent and it is a table.
+</p>
+
+<p>
+`thead$e 要素は、`~table~model$の一部を成す。
+◎
+The thead element takes part in the table model.
+</p>
+
+<div class="example">
+
+<p>
+`thead$e 要素の用例を次に示す。
+`thead$e 要素~内に［
+`th$e, `td$e
+］両~要素とも利用していることに着目されたし：
+1 本目の~rowは，一連の~headerを成し、
+2 本目の~rowは，~table内の各~欄をどう埋めるかの説明を与えている：
+◎
+This example shows a thead element being used. Notice the use of both th and td elements in the thead element: the first row is the headers, and the second row is an explanation of how to fill in the table.
+</p>
+
+`thead-1^xCode
+
+</div>
+
+			</section>
+			<section id="the-tfoot-element">
+<h3 title="The tfoot element">4.9.7. `tfoot^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+なし。
+◎
+None.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`table$e 要素の子として
+— ただし、同胞に［
+`caption$e ／ `colgroup$e ／ `thead$e ／ `tbody$e ／ `tr$e
+］要素が在るならば それらより後, かつ［
+同胞の `tfoot$e 要素は他に無い
+］場合に限る。
+◎
+As a child of a table element, after any caption, colgroup, thead, tbody, and tr elements, but only if there are no other tfoot elements that are children of the table element.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+0 個~以上の［
+`tr$e 要素 ／ `~scriptを~supportする要素$
+］。
+◎
+Zero or more tr and script-supporting elements.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+次が満たされるならば、`終了tag$を省略できる
+⇒
+親~要素~内に，この要素に後続する内容は無い
+◎
+A tfoot element's end tag can be omitted if there is no more content in the parent element.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`tfoot$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+`HTMLTableSectionElement$I を利用する。
+— `tbody$e 要素に定義されるそれと同じく。
+◎
+Uses HTMLTableSectionElement, as defined for tbody elements.
+</dd>
+</dl>
+
+<p>
+`tfoot$e 要素は、親が `table$e 要素であるならば，その一連の~colに対する要約（~footer）を成す 一連の`~row$からなる`~block$を`表現-$する。
+◎
+The tfoot element represents the block of rows that consist of the column summaries (footers) for the parent table element, if the tfoot element has a parent and it is a table.
+</p>
+
+<p>
+`tfoot$e 要素は、`~table~model$の一部を成す。
+◎
+The tfoot element takes part in the table model.
+</p>
+
+			</section>
+			<section id="the-tr-element">
+<h3 title="The tr element">4.9.8. `tr^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+なし。
+◎
+None.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`thead$e 要素の子として。
+◎
+As a child of a thead element.
+</dd>
+	<dd>
+`tbody$e 要素の子として。
+◎
+As a child of a tbody element.
+</dd>
+	<dd>
+`tfoot$e 要素の子として。
+◎
+As a child of a tfoot element.
+</dd>
+	<dd>
+`table$e 要素の子として
+— ただし、同胞に［
+`caption$e ／ `colgroup$e ／ `thead$e
+］要素が在るならば それらより後, かつ［
+同胞の `tbody$e 要素は他に無い
+］場合に限る。
+◎
+As a child of a table element, after any caption, colgroup, and thead elements, but only if there are no tbody elements that are children of the table element.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+0 個~以上の［
+`td$e 要素 ／ `th$e 要素 ／ `~scriptを~supportする要素$
+］。
+◎
+Zero or more td, th, and script-supporting elements.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+次が満たされるならば、`終了tag$を省略できる
+⇒
+［
+直後に［
+別の `tr$e
+］要素が続く
+］~OR［
+親~要素~内に，この要素に後続する内容は無い
+］
+◎
+A tr element's end tag can be omitted if the tr element is immediately followed by another tr element, or if there is no more content in the parent element.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`tr$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLTableRowElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  readonly attribute long `rowIndex$m;
+  readonly attribute long `sectionRowIndex$m;
+  [SameObject] readonly attribute `HTMLCollection$I `cells$m;
+  `HTMLTableCellElement$I `insertCell$m(optional long %index = -1);
+  [`CEReactions$] undefined `deleteCell$m(long %index);
+
+  // `HTMLTableRowElement$obsMb
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`tr$e 要素は、`~table$内の`~row$内の一連の`~cell$を`表現-$する。
+◎
+The tr element represents a row of cells in a table.
+</p>
+
+<p>
+`tr$e 要素は、`~table~model$の一部を成す。
+◎
+The tr element takes part in the table model.
+</p>
+
+<dl class="domintro">
+
+	<dt>%tr . `rowIndex$m</dt>
+	<dd>
+この~rowが属する~tableの `rows$m ~collectionにおける，この~rowの~indexを返す。
+◎
+Returns the position of the row in the table's rows list.
+</dd>
+	<dd>
+この要素が~table内にない場合は −1 を返す。
+◎
+Returns −1 if the element isn't in a table.
+</dd>
+
+	<dt>%tr . `sectionRowIndex$m</dt>
+	<dd>
+この~rowが属する~table~row~groupの `rows$rG ~collectionにおける この~rowの~indexを返す。
+◎
+Returns the position of the row in the table section's rows list.
+</dd>
+	<dd>
+この要素が~table~row~group内にない場合は −1 を返す。
+◎
+Returns −1 if the element isn't in a table section.
+</dd>
+
+	<dt>%tr . `cells$m</dt>
+	<dd>
+この~row内の［
+`td$e ／ `th$e
+］要素からなる `HTMLCollection$I を返す。
+◎
+Returns an HTMLCollection of the td and th elements of the row.
+</dd>
+
+	<dt>%cell = %tr . `insertCell( [ index ] )$m</dt>
+	<dd>
+新たな `td$e 要素を、この~table~rowの中の %index 番の~cellとして挿入した上で，返す。
+◎
+Creates a td element, inserts it into the table row at the position given by the argument, and returns the td.
+</dd>
+	<dd>
+%index に対する値 −1 は、その引数の省略-時の既定でもあり，この~rowの終端に挿入することに等価になる。
+◎
+The position is relative to the cells in the row. The index −1, which is the default if the argument is omitted, is equivalent to inserting at the end of the row.
+</dd>
+	<dd>
+［
+−1 ~LTE %index ~LTE ~cellの個数
+］でない場合、
+`IndexSizeError$E が投出される。
+◎
+If the given position is less than −1 or greater than the number of cells, throws an "IndexSizeError" DOMException.
+</dd>
+
+	<dt>%tr . `deleteCell(index)$m</dt>
+	<dd>
+この~row内の %index 番の~cellである［
+`td$e ／ `th$e
+］要素を除去する。
+◎
+Removes the td or th element with the given position in the row.
+</dd>
+	<dd>
+%index に対する値 −1 は、この~row内の最後の~cellを削除することに等価になる。
+◎
+The position is relative to the cells in the row. The index −1 is equivalent to deleting the last cell of the row.
+</dd>
+	<dd>
+%index ~NEQ −1 であって，［
+0 ~LTE %index ~LT ~cellの個数
+］でない場合、
+`IndexSizeError$E が投出される。
+◎
+If the given position is less than −1 or greater than the index of the last cell, or if there are no cells, throws an "IndexSizeError" DOMException.
+</dd>
+</dl>
+
+<div class="algo">
+<p>
+`rowIndex@m
+取得子~手続きは：
+</p>
+<ol>
+	<li>
+%親 ~LET コレの親
+</li>
+	<li>
+~IF［
+%親 は［
+`tbody$e ／ `thead$e ／ `tfoot$e
+］要素である
+］
+⇒
+%親 ~LET %親 の親
+</li>
+	<li>
+~IF［
+%親 は `table$e 要素である
+］
+⇒
+~RET %親 の`rows$m ~collectionにおける コレの~index
+</li>
+	<li>
+~RET −1
+</li>
+</ol>
+◎
+The rowIndex attribute must, if this element has a parent table element, or a parent tbody, thead, or tfoot element and a grandparent table element, return the index of this tr element in that table element's rows collection. If there is no such table element, then the attribute must return −1.
+</div>
+
+<div class="algo">
+<p>
+`sectionRowIndex@m
+取得子~手続きは：
+</p>
+<ol>
+	<li>
+%親 ~LET コレの親
+</li>
+	<li>
+~IF［
+%親 は `table$e 要素である
+］
+⇒
+~RET %親 （ `HTMLTableElement$I） の`rows$m ~collectionにおける コレの~index
+</li>
+	<li>
+~IF［
+%親 は［
+`tbody$e ／ `thead$e ／ `tfoot$e
+］要素である
+］
+⇒
+~RET %親 （ `HTMLTableSectionElement$I） の`rows$rG ~collectionにおける コレの~index
+</li>
+	<li>
+~RET −1
+</li>
+</ol>
+
+◎
+The sectionRowIndex attribute must, if this element has a parent table, tbody, thead, or tfoot element, return the index of the tr element in the parent element's rows collection (for tables, that's HTMLTableElement's rows collection; for table sections, that's HTMLTableSectionElement's rows collection). If there is no such parent element, then the attribute must return −1.
+</div>
+
+<div class="algo">
+`cells@m
+取得子~手続きは
+⇒
+~RET 次のようにされた `HTMLCollection$I
+⇒＃
+根 ~SET コレ,
+~filterは コレの子である［ `td$e ／ `th$e ］要素のみに合致する
+◎
+The cells attribute must return an HTMLCollection rooted at this tr element, whose filter matches only td and th elements that are children of the tr element.
+</div>
+
+<div class="algo">
+<p>
+`insertCell(index)@m
+~method~手続きは：
+◎
+The insertCell(index) method must act as follows:
+</p>
+<ol>
+	<li>
+%cells ~LET コレの `cells$m ~collection
+◎
+↓</li>
+	<li>
+%N ~LET %cells 内の要素~数
+◎
+↓</li>
+	<li>
+~IF［
+%index ~NIN { −1 〜 %N }
+］
+⇒
+~THROW `IndexSizeError$E
+◎
+If index is less than −1 or greater than the number of elements in the cells collection, then throw an "IndexSizeError" DOMException.
+</li>
+	<li>
+%~table~cell ~LET `要素を作成する$( コレの`~node文書$, `td$e, `~HTML名前空間$ )
+◎
+Let table cell be the result of creating an element given this tr element's node document, td, and the HTML namespace.
+</li>
+	<li>
+~IF［
+%index ~IN { −1, %N }
+］
+⇒
+コレに`~nodeを付加する$( %~table~cell )
+◎
+If index is equal to −1 or equal to the number of items in cells collection, then append table cell to this tr element.
+</li>
+	<li>
+~ELSE
+⇒
+コレの中で`~nodeを子の前に挿入する$( %~table~cell, %cells 内の %index 番の［
+`td$e ／ `th$e
+］要素 )
+◎
+Otherwise, insert table cell as a child of this tr element, immediately before the indexth td or th element in the cells collection.
+</li>
+	<li>
+~RET %~table~cell
+◎
+Return table cell.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`deleteCell(index)@m
+~method~手続きは：
+</p>
+<ol>
+	<li>
+%cells ~LET コレの `cells$m ~collection
+</li>
+	<li>
+%最大 ~LET %cells 内の要素~数 − 1
+</li>
+	<li>
+<p>
+~IF［
+%index ~EQ −1
+］：
+</p>
+		<ol>
+			<li>
+~IF［
+%最大 ~EQ −1
+］
+⇒
+~RET
+</li>
+			<li>
+%index ~SET %最大
+</li>
+		</ol>
+	</li>
+	<li>
+~ELIF［
+%index ~NIN { 0 〜 %最大 }
+］
+⇒
+~THROW `IndexSizeError$E
+</li>
+	<li>
+%cell ~LET %cells 内の %index 番の要素
+</li>
+	<li>
+`~nodeを除去する$( %cell )
+</li>
+</ol>
+◎
+The deleteCell(index) method must act as follows:
+• If index is less than −1 or greater than or equal to the number of elements in the cells collection, then throw an "IndexSizeError" DOMException.
+• If index is −1, then remove the last element in the cells collection from its parent, or do nothing if the cells collection is empty.
+• Otherwise, remove the indexth element in the cells collection from its parent.
+</div>
+
+			</section>
+			<section id="the-td-element">
+<h3 title="The td element">4.9.9. `td^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+`~sectioning根$
+◎
+Sectioning root.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`tr$e 要素の子として。
+◎
+As a child of a tr element.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`~flow内容$
+。
+◎
+Flow content.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+次が満たされるならば、`終了tag$を省略できる
+⇒
+［
+直後に［
+`td$e ／ `th$e
+］要素が続く
+］~OR［
+親~要素~内に，この要素に後続する内容は無い
+］
+◎
+A td element's end tag can be omitted if the td element is immediately followed by a td or th element, or if there is no more content in the parent element.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+`colspan$a
+— この~cellが~spanする~col数
+◎
+colspan — Number of columns that the cell is to span
+</dd>
+	<dd>
+`rowspan$a
+— この~cellが~spanする~row数
+◎
+rowspan — Number of rows that the cell is to span
+</dd>
+	<dd>
+`headers$a
+— この~cellに対する~header~cellたち
+◎
+headers — The header cells for this cell
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`td$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLTableCellElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [`CEReactions$] attribute unsigned long `colSpan$m;
+  [`CEReactions$] attribute unsigned long `rowSpan$m;
+  [`CEReactions$] attribute DOMString `headers$m;
+  readonly attribute long `cellIndex$m;
+
+  [`CEReactions$] attribute DOMString `scope$m; /* <span class="comment">
+`th^e 要素~用に限り適合する
+◎
+only conforming for th elements
+</span> */
+  [`CEReactions$] attribute DOMString `abbr$m;  /* <span class="comment">
+`th^e 要素~用に限り適合する
+◎
+only conforming for th elements
+</span> */
+
+  // `HTMLTableCellElement$obsMb
+};
+</pre>
+
+<p>
+`HTMLTableCellElement$I
+~interfaceは `th$e 要素にも利用される。
+◎
+The HTMLTableCellElement interface is also used for th elements.
+</p>
+	</dd>
+</dl>
+
+<p>
+`td$e 要素は、~table内の~data `~cell$を`表現-$する。
+◎
+The td element represents a data cell in a table.
+</p>
+
+<p>
+`td$e 要素とその［
+`colspan$a, `rowspan$a, `headers$a
+］属性は、`~table~model$の一部を成す。
+◎
+The td element and its colspan, rowspan, and headers attributes take part in the table model.
+</p>
+
+<p>
+~UAは、とりわけ視覚的でない環境においては, あるいは
+~tableを2D格子として表示するのは実用的にならない所では、~cellの内容を描画するときに
+その~cell用の利用者~文脈を与えてもヨイ。
+一例として、`~table~model$におけるその位置を与えたり，
+（`~header~cellたちをアテガう$~algoにより決定される）~cellに対する~header~cellたちを挙げるなど。
+~UAは、~cellに対する~header~cellがあって `abbr$a 属性を有する場合には、~header~cellの内容に代えて その属性~値を利用してもヨイ。
+◎
+User agents, especially in non-visual environments or where displaying the table as a 2D grid is impractical, may give the user context for the cell when rendering the contents of a cell; for instance, giving its position in the table model, or listing the cell's header cells (as determined by the algorithm for assigning header cells). When a cell's header cells are being listed, user agents may use the value of abbr attributes on those header cells, if any, instead of the contents of the header cells themselves.
+</p>
+
+<div class="example">
+<p>
+次の例では、ある~web~appの~code片を見てみる。
+それは、編集-可能な一連の~cellが成す格子である（本質的には単純な~spreadsheet）。
+最初の 2 個と最後の方の 1 個の~cellは、 `td$e 要素の代わりに `th$e 要素を利用して，見出しとして~markされている。
+最後の~cellは、その上にある一連の~cellたちの総和を示すように環境設定されている
+— ~scriptは、その合計を保守するために，これらの要素に~event~handlerを~~登録することになろう。
+◎
+In this example, we see a snippet of a web application consisting of a grid of editable cells (essentially a simple spreadsheet). One of the cells has been configured to show the sum of the cells above it. Three have been marked as headings, which use th elements instead of td elements. A script would attach event handlers to these elements to maintain the total.
+</p>
+
+`td-1^xCode
+
+</div>
+
+			</section>
+			<section id="the-th-element">
+<h3 title="The th element">4.9.10. `th^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+なし。
+◎
+None.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`tr$e 要素の子として。
+◎
+As a child of a tr element.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`~flow内容$
+— ただし，子孫に次に挙げるものは無いとする
+⇒
+`header$e 要素／
+`footer$e 要素／
+`~sectioning内容$ ／
+`~header内容$
+◎
+Flow content, but with no header, footer, sectioning content, or heading content descendants.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+次が満たされるならば、`終了tag$を省略できる
+⇒
+［
+直後に［
+`td$e ／ `th$e
+］要素が続く
+］~OR［
+親~要素~内に，この要素に後続する内容は無い
+］
+◎
+A th element's end tag can be omitted if the th element is immediately followed by a td or th element, or if there is no more content in the parent element.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+`colspan$a
+— この~cellが~spanする~col数
+◎
+colspan — Number of columns that the cell is to span
+</dd>
+	<dd>
+`rowspan$a
+— この~cellが~spanする~row数
+◎
+rowspan — Number of rows that the cell is to span
+</dd>
+	<dd>
+`headers$a
+— この~cellに対する~header~cellたち
+◎
+headers — The header cells for this cell
+</dd>
+	<dd>
+`scope$a
+— この~header~cellをどの~cellたちに適用するかを指定する
+◎
+scope — Specifies which cells the header cell applies to
+</dd>
+	<dd>
+`abbr$a
+— 他の文脈にて この~header~cellを参照するときに，~headerとして利用する代替~labelを与える。
+◎
+abbr — Alternative label to use for the header cell when referencing the cell in other contexts
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`th$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+`HTMLTableCellElement$I を利用する
+— `td$e 要素に定義されるそれと同じく。
+◎
+Uses HTMLTableCellElement, as defined for td elements.
+</dd>
+</dl>
+
+<p>
+`th$e 要素は、~table内の~header`~cell$を`表現-$する。
+◎
+The th element represents a header cell in a table.
+</p>
+
+<p>
+`th$e 要素には
+`scope@a
+内容~属性が指定されてもヨイ。
+`scope$a 属性は、`列挙d属性$であり，指定する~keywordに応じて次の 5 種の状態をとり得る：
+◎
+The th element may have a scope content attribute specified. The scope attribute is an enumerated attribute with five states, four of which have explicit keywords:
+</p>
+
+<p class="trans-note">【
+~keywordと状態との対応関係を簡明にするため、この訳では，状態~名を単に~keywordの先頭の文字を大文字にしただけの名前で表すことにする。
+】</p>
+
+<dl>
+	<dt>`row@v</dt>
+	<dd>
+`Row^st 状態に対応付けられる。
+◎
+The row keyword, which maps to the row state
+</dd>
+	<dd>
+この状態は、この~header~cellが，同じ~row（たち）内の後続する~cellたちの一部に適用されることを意味する。
+◎
+The row state means the header cell applies to some of the subsequent cells in the same row(s).
+</dd>
+
+	<dt>`column@v</dt>
+	<dd>
+`Column^st 状態に対応付けられる。
+◎
+The col keyword, which maps to the column state
+</dd>
+	<dd>
+この状態は、この~header~cellが，同じ~col（たち）内の後続する~cellたちの一部に適用されることを意味する。
+◎
+The column state means the header cell applies to some of the subsequent cells in the same column(s).
+</dd>
+
+	<dt>`rowgroup@v</dt>
+	<dd>
+`Rowgroup^st 状態に対応付けられる。
+◎
+The rowgroup keyword, which maps to the row group state
+</dd>
+	<dd>
+この状態は、この~header~cellが，この~cellの起点がある`~row~group$内の以降の~cellすべてに適用されることを意味する。
+`th$e 要素の起点が`~row~group$内に無い場合、この状態にはならないモノトスル。
+◎
+The row group state means the header cell applies to all the remaining cells in the row group. A th element's scope attribute must not be in the row group state if the element is not anchored in a row group.
+</dd>
+
+	<dt>`colgroup@v</dt>
+	<dd>
+`Colgroup^st 状態に対応付けられる。
+◎
+The colgroup keyword, which maps to the column group state
+</dd>
+	<dd>
+この状態は、この~header~cellが，この~cellの起点が属する`~col~group$内の以降の~cellすべてに適用されることを意味する。
+`th$e 要素の起点が`~col~group$内に無い場合、この状態にはならないモノトスル。
+◎
+The column group state means the header cell applies to all the remaining cells in the column group. A th element's scope attribute must not be in the column group state if the element is not anchored in a column group.
+</dd>
+
+	<dt>`auto@v</dt>
+	<dt>`値なし用の既定$</dt>
+	<dt>`妥当でない値~用の既定$</dt>
+	<dd>
+`Auto^st 状態に対応付けられる。
+◎
+The auto state
+</dd>
+	<dd>
+この状態は、この~header~cellが［
+文脈に基づいて選定される~cellたちの集合
+］に適用されるようにする。
+◎
+The auto state makes the header cell apply to a set of cells selected based on context.
+◎
+The scope attribute's missing value default and invalid value default are the auto state.
+</dd>
+</dl>
+
+<p>
+`th$e 要素には
+`abbr@a
+内容~属性が指定されてもヨイ。
+指定する値は、［
+他の文脈にて この~cellを参照するときに~headerに利用するための，この~header~cell用の代替~label
+］でなければナラナイ（例： ある~data~cellに適用される~header~cellたちを記述するとき）。
+概して、~header~cellの全部的な内容の略称-形であるが、追記, あるいは単なる言い換えにもなり得る。
+◎
+The th element may have an abbr content attribute specified. Its value must be an alternative label for the header cell, to be used when referencing the cell in other contexts (e.g. when describing the header cells that apply to a data cell). It is typically an abbreviated form of the full header cell, but can also be an expansion, or merely a different phrasing.
+</p>
+
+<p>
+`th$e 要素と その［
+`colspan$a, `rowspan$a, `headers$a, `scope$a
+］属性は、`~table~model$の一部を成す。
+◎
+The th element and its colspan, rowspan, headers, and scope attributes take part in the table model.
+</p>
+
+<div class="example">
+
+<p>
+次の例に、［
+どの~data~cellたちに~header~cellが適用されるか
+］に， `scope$a 属性の `rowgroup$v 値がどう影響するかを示す：
+◎
+The following example shows how the scope attribute's rowgroup value affects which data cells a header cell applies to.
+</p>
+
+<p>
+まずは、~tableの~markup片を示す：
+◎
+Here is a markup fragment showing a table:
+</p>
+
+`th-1^xCode
+
+<p>
+結果は、次のようになる：
+◎
+This would result in the following table:
+</p>
+
+`th-1^dgm
+
+<ul>
+	<li>
+最初の~row内の~headerは、以降の~rowにある, かつ同じ~col内にある すべての~cellに適用される。
+◎
+The headers in the first row all apply directly down to the rows in their column.
+</li>
+	<li>
+<!-- 明示的に -->
+`scope$a 属性に値 `rowgroup^v を伴う~headerは、最初の~col内には無い, かつ同じ~row~group内に在る すべての~cellに適用される。
+◎
+The headers with the explicit scope attributes apply to all the cells in their row group other than the cells in the first column.
+</li>
+	<li>
+他の~header（ `scope$a 属性は `row^v ）は、単に，同じ~row内にある以降の~cellに適用される。
+◎
+The remaining headers apply just to the cells to the right of them.
+</li>
+</ul>
+
+`table-scope-diagram^dgm
+
+</div>
+
+			</section>
+			<section id="attributes-common-to-td-and-th-elements">
+<h3 title="Attributes common to td and th elements">4.9.11. `td^e, `th^e 要素に共通な属性</h3>
+
+<p>
+［
+`td$e ／ `th$e
+］要素には、
+`colspan@a
+内容~属性が指定されてもヨイ
+— 指定する値は、 1 以上 1000 以下の`妥当な負でない整数$でなければナラナイ。
+この属性は、この~cellが~spanする~col数を与える。
+◎
+The td and th elements may have a colspan content attribute specified, whose value must be a valid non-negative integer greater than zero and less than or equal to 1000.
+</p>
+
+<p>
+［
+`td$e ／ `th$e
+］要素には、
+`rowspan@a
+内容~属性も指定されてもヨイ
+— 指定する値は、
+65534 以下の`妥当な負でない整数$でなければナラナイ。
+この属性は、この~cellが~spanする~row数を与える。
+この属性に対する値 0 は、この~cellが［
+この~cellが~spanする~col内, かつ この~cellが属する~row~group内の，以降の~row
+］すべてに~spanすることを意味する。
+◎
+The td and th elements may also have a rowspan content attribute specified, whose value must be a valid non-negative integer less than or equal to 65534. For this attribute, the value zero means that the cell is to span all the remaining rows in the row group.
+</p> 
+
+<p>
+これらの属性を利用するときは、`~table~model$に述べるように，~cellどうしが重合してはナラナイ。
+◎
+These attributes give the number of columns and rows respectively that the cell is to span. These attributes must not be used to overlap cells, as described in the description of the table model.
+</p> 
+
+<hr>
+
+<p>
+［
+`td$e ／ `th$e
+］要素には
+`headers@a
+内容~属性が指定されてもヨイ。
+`headers$a
+属性に指定する値は、`空白区切りの一意な~token集合$（大小区別）を成していて，それを成す どの~tokenも［
+当の要素と同じ`~table$の一部を成している（`~table~model$にて定義される），ある `th$e 要素
+］の`~ID$の値を与えていなければナラナイ。
+◎
+The td and th element may have a headers content attribute specified. The headers attribute, if specified, must contain a string consisting of an unordered set of unique space-separated tokens, none of which are identical to another token and each of which must have the value of an ID of a th element taking part in the same table as the td or th element (as defined by the table model).
+</p>
+
+<div class="p">
+<p>
+`th$e 要素は自身から`指されて^iいてはナラナイ
+— ここで， %A は %B から`指されて^iいるとは、
+( %A, %B ) が次のいずれかを満たすことを意味する：
+</p>
+
+<ul><li>%A は %B から `直に指されて^i いる
+</li><li>次を満たす ある %C が存在する
+⇒
+［
+%A は %C から`直に指されて^iいる
+］~AND［
+%C は %B から`指されて^iいる
+］
+</li></ul>
+
+<p>
+ここで， %A は %B から `直に指されて^iいるとは、
+( %A, %B ) が次をすべて満たすことを意味する：
+</p>
+
+<ul ><li>%A は `th$e 要素である
+</li><li>%B は［
+`th$e ／ `td$e
+］要素である
+</li><li>%A, %B は同じ `~table$内にある
+</li><li>%A は`~ID$を有する
+</li><li>%B は `headers$a 属性を有する
+</li><li>%A の`~ID$ ~IN { %B の `headers$a 属性の値を成す~tokenたち }
+</li></ul>
+
+<p class="trans-note">【
+%A, %B は、互いに異なることは必要とされない。
+】</p>
+
+◎
+A th element with ID id is said to be directly targeted by all td and th elements in the same table that have headers attributes whose values include as one of their tokens the ID id. A th element A is said to be targeted by a th or td element B if either A is directly targeted by B or if there exists an element C that is itself targeted by the element B and A is directly targeted by C.
+◎
+A th element must not be targeted by itself.
+</div>
+
+<p>
+［
+`colspan$a, `rowspan$a, `headers$a
+］属性は、`~table~model$の一部を成す。
+◎
+The colspan, rowspan, and headers attributes take part in the table model.
+</p>
+
+<hr>
+
+<dl class="domintro">
+
+	<dt>%cell . `cellIndex$m</dt>
+	<dd>
+この~cellが属する~rowの `cells$m ~collectionにおける，この~cellの~indexを返す。
+これは、この~cellの［
+~tableにおける %~x 座標
+］に対応するとは限らない
+— 先にある~cellが 複数の~row／~colを占めることもあるので。
+◎
+Returns the position of the cell in the row's cells list. This does not necessarily correspond to the x-position of the cell in the table, since earlier cells might cover multiple rows or columns.
+</dd>
+	<dd>
+要素が~rowに属さない場合、
+−1 を返す。
+◎
+Returns −1 if the element isn't in a row.
+</dd>
+</dl>
+
+<p>
+`colSpan@m
+~IDL属性は、
+［
+1 以上 1000 以下に`切詰められ$，既定の値は 1 とする
+］下で， `colspan$a 内容~属性を`反映する$モノトスル。
+◎
+The colSpan IDL attribute must reflect the colspan content attribute. It is clamped to the range [1, 1000], and its default value is 1.
+</p>
+
+<p>
+`rowSpan@m
+~IDL属性は、［
+0 以上 65534 以下に`切詰められ$，既定の値は 1 とする
+］下で， `rowspan$a 内容~属性を`反映する$モノトスル。
+◎
+The rowSpan IDL attribute must reflect the rowspan content attribute. It is clamped to the range [0, 65534], and its default value is 1.
+</p>
+
+<p>
+`headers@m
+~IDL属性は、
+`headers$a 内容~属性を`反映する$モノトスル。
+◎
+The headers IDL attribute must reflect the content attribute of the same name.
+</p>
+
+<div class="algo">
+<p>
+`cellIndex@m
+取得子~手続きは：
+</p>
+<ol>
+	<li>
+~IF ［
+コレの親は `tr$e 要素である
+］
+⇒
+~RET コレの親の `cells$m ~collectionにおける，コレの~index 
+</li>
+	<li>
+~RET  −1
+</li>
+</ol>
+◎
+The cellIndex IDL attribute must, if the element has a parent tr element, return the index of the cell's element in the parent element's cells collection. If there is no such parent element, then the attribute must return −1.
+</div>
+
+<p>
+`scope@m
+~IDL属性は、`既知な値のみに制限され$る下で，
+`scope$a 内容~属性を`反映する$モノトスル。
+◎
+The scope IDL attribute must reflect the content attribute of the same name, limited to only known values.
+</p>
+
+<p>
+`abbr@m
+~IDL属性は、
+`abbr$a 内容~属性を`反映する$モノトスル。
+◎
+The abbr IDL attribute must reflect the content attribute of the same name.
+</p>
+
+			</section>
+			<section id="table-processing-model">
+<h3 title="Processing model">4.9.12. 処理~model</h3>
+
+<span id="processing-model-2"></span>
+
+<p class="trans-note">【
+以下を簡潔に記述するため、この訳では次の表記を導入する：
+】</p>
+
+<ul>
+	<li>
+整数 %N, %S に対する
+“{ %N +〜 %S }”
+という表記は、
+%N 以上 ( %N + %S ) 未満の整数~範囲を表す。
+特に， %S が 0 以下の場合、範囲は空になる。
+</li>
+	<li>
+整数~範囲 %X, %Y に対する
+“ 区画 %X × %Y ”
+という表記は、［
+~x座標 ~IN %X
+］~AND［
+~y座標 ~IN %Y
+］なる整数~座標の範囲（すなわち直積~集合）を表すとする。
+</li>
+	<li>
+区画 %X × %Y に対する座標
+( %X の最小~値, %Y の最小~値 )
+は、その区画の起点と称される。
+</li>
+</ul>
+
+<p>
+種々の~table要素, および それらの内容~属性は、共に
+`~table~model@
+を定義する：
+◎
+The various table elements and their content attributes together define the table model.
+</p>
+
+<ul>
+	<li>
+`~table@
+は、それぞれが座標 ( %~x, %~y ) を伴う
+`~slotたち@
+が成す二次元の格子に整列された，一連の~cellからなる。
+格子は有限であり、 0 個~以上の~slotからなる。
+格子~内の どの~slotも、その座標は常に，~~一定の区画
+{ 0 +〜 %~x全幅 } × { 0 +〜 %~y全幅 }
+に入る。
+%~x全幅, %~y全幅
+のいずれかが 0 の場合、~tableは空になる（~slotは 0 個）。
+各~tableは `table$e 要素に対応する。
+◎
+A table consists of cells aligned on a two-dimensional grid of slots with coordinates (x, y). The grid is finite, and is either empty or has one or more slots. If the grid has one or more slots, then the x coordinates are always in the range 0 ≤ x &lt; xwidth, and the y coordinates are always in the range 0 ≤ y &lt; yheight. If one or both of xwidth and yheight are zero, then the table is empty (has no slots). Tables correspond to table elements.
+</li>
+	<li>
+<p>
+`~cell@
+は、ある区画
+{ %~x +〜 %~x幅 } × { %~y +〜 %~y幅 }
+に入る~slotからなる集合である。
+各~cellは、［
+~data~cellと呼ばれる `td$e 要素に対応するもの,
+~header~cellと呼ばれる `th$e 要素に対応するもの
+］に分けられる。
+いずれにせよ、各~cellには， 0 個~以上の~header~cellが結付けられる。
+◎
+A cell is a set of slots anchored at a slot (cellx, celly), and with a particular width and height such that the cell covers all the slots with coordinates (x, y) where cellx ≤ x &lt; cellx+width and celly ≤ y &lt; celly+height. Cells can either be data cells or header cells. Data cells correspond to td elements, and header cells correspond to th elements. Cells of both types can have zero or more associated header cells.
+</p>
+
+<p>
+ある種の~error事例では、複数の~cellが同じ~slotを占めることもあり得る。
+◎
+It is possible, in certain error cases, for two cells to occupy the same slot.
+</p>
+	</li>
+	<li>
+`~row@
+は、特定0の値 %~y に対し，区画
+{ 0 +〜 %~x全幅 } × { %~y }
+に入る~slotすべてを占める。
+各~rowは通例的に `tr$e 要素に対応する
+— 複数の~rowに~spanしている`~cell$を孕んでいるような一部の事例では、`~row~group$の終端には，何本かの暗黙の`~row$が加えられ得るが。
+◎
+A row is a complete set of slots from x=0 to x=xwidth-1, for a particular value of y. Rows usually correspond to tr elements, though a row group can have some implied rows at the end in some cases involving cells spanning multiple rows.
+</li>
+	<li>
+`~col@
+は、特定0の値 %~x に対し，区画
+{ %~x } × { 0 +〜 %~y全幅 }
+に入る~slotすべてを占める。
+各~colは、ある `col$e 要素に対応し得る
+— 対応する `col$e 要素が無い場合、暗黙の~colになる。
+◎
+A column is a complete set of slots from y=0 to y=yheight-1, for a particular value of x. Columns can correspond to col elements. In the absence of col elements, columns are implied.
+</li>
+	<li>
+`~row~group@
+は、一連の`~row$からなる集合であり、特定0の %~y, %~y幅 に対し，区画
+{ 0 +〜 %~x全幅 } ×  { %~y +〜 %~y幅 }
+に入る~slotすべてを占める。
+各~row~groupは、ある［
+`tbody$e ／ `thead$e ／ `tfoot$e
+］要素に対応する。
+~rowは、~row~groupに属するとは限らない。
+◎
+A row group is a set of rows anchored at a slot (0, groupy) with a particular height such that the row group covers all the slots with coordinates (x, y) where 0 ≤ x &lt; xwidth and groupy ≤ y &lt; groupy+height. Row groups correspond to tbody, thead, and tfoot elements. Not every row is necessarily in a row group.
+</li>
+	<li>
+`~col~group@
+は、一連の`~col$からなる集合であり、特定0の %~x, %~x幅 に対し，区画
+{ %~x +〜 %~x幅 } × { 0 +〜 %~y全幅 }
+に入る~slotすべてを占める。
+各~col~groupは、ある `colgroup$e 要素に対応する。
+~colは、~col~groupに属するとは限らない。
+◎
+A column group is a set of columns anchored at a slot (groupx, 0) with a particular width such that the column group covers all the slots with coordinates (x, y) where groupx ≤ x &lt; groupx+width and 0 ≤ y &lt; yheight. Column groups correspond to colgroup elements. Not every column is necessarily in a column group.
+</li>
+</ul>
+
+<p>
+［
+`~row~group$どうし ／ `~col~group$どうし
+］が重合することはない。
+◎
+Row groups cannot overlap each other. Similarly, column groups cannot overlap each other.
+</p>
+
+<p>
+同じ`~cell$が，異なる`~row~group$に属する~slotたちを占めることはない一方で、複数の`~col~group$に属する~slotたちを占めることはあり得る。
+ある~cellの一部を形成するような，どの~slotも、
+0 〜 1 個の`~row~group$の一部を成し, また
+0 個~以上の`~col~group$の一部を成す。
+◎
+A cell cannot cover slots that are from two or more row groups. It is, however, possible for a cell to be in multiple column groups. All the slots that form part of one cell are part of zero or one row groups and zero or more column groups.
+</p>
+
+<p>
+`~cell$,
+`~col$,
+`~row$,
+`~row~group$,
+`~col~group$
+に加えて、`~table$には， `caption$e 要素も結付けられ得る。
+これは、~tableに対する見出しや凡例を与える。
+◎
+In addition to cells, columns, rows, row groups, and column groups, tables can have a caption element associated with them. This gives the table a heading, or legend.
+</p>
+
+<p>
+`~table~model~error@
+とは、 `table$e 要素や その子孫により表現される~dataにおける~errorである。
+文書には、~table~model~errorがあってはナラナイ。
+◎
+A table model error is an error with the data represented by table elements and their descendants. Documents must not have table model errors.
+</p>
+
+				<section id="forming-a-table">
+<h4 title="Forming a table">4.9.12.1. ~tableの形成-法</h4>
+
+<div class="algorithm">
+<p>
+所与の `table$e 要素 %~table要素 に結付けられている`~table$に対し，［
+それを成す どの~slotに どの要素が対応するか,
+その寸法 ( %~x全幅, %~y全幅 ),
+`~table~model~error$の有無
+］を決定するときは、~UAは，次の~algoを利用するモノトスル：
+◎
+To determine which elements correspond to which slots in a table associated with a table element, to determine the dimensions of the table (xwidth and yheight), and to determine if there are any table model errors, user agents must use the following algorithm:
+</p>
+
+<ol>
+	<li>
+<p>
+( %~x全幅, %~y全幅 ) ~LET ( 0, 0 )
+</p>
+<p class="trans-note">【
+加えて，以下の手続きにおいて作成される各［
+~row／~col
+］が占める区画は、［
+%~x全幅 ／ %~y全幅
+］が増大されるに伴い，自動的に伸長されると見なされる。
+】</p>
+◎
+Let xwidth be zero.
+◎
+Let yheight be zero.
+</li>
+	<li>
+%処理待ち~tfoot要素~list ~LET 空~list
+◎
+Let pending tfoot elements be a list of tfoot elements, initially empty.
+</li>
+	<li>
+%~table ~LET 新たな空な`~table$
+◎
+↓</li>
+	<li>
+%~table要素 により表現される`~table$ ~SET %~table
+◎
+Let the table be the table represented by the table element. The xwidth and yheight variables give the table's dimensions. The table is initially empty.
+</li>
+	<li>
+~IF［
+%~table要素 内に子~要素は無い
+］
+⇒
+~RET %~table
+◎
+If the table element has no children elements, then return the table (which will be empty).
+</li>
+	<li>
+<p>
+~IF［
+%~table要素 の子に `caption$e 要素はある
+］
+⇒
+それらのうち最初のものを %~table に結付ける
+— そのような子が無ければ、結付けられる `caption$e 要素は無い。
+◎
+Associate the first caption element child of the table element with the table. If there are no such children, then it has no associated caption element.
+</li>
+	<li>
+<p>
+%現~要素 ~LET %~table要素 の子である最初の要素
+◎
+Let the current element be the first element child of the table element.
+</p>
+
+<div >
+<p>
+以下において、
+`次の要素へ進む@
+と記された所では、次を走らすとする：
+</p>
+
+		<ol>
+			<li>
+~IF［
+%現~要素 に後続する同胞~要素は無い
+］
+⇒
+~GOTO `終端^i
+</li>
+			<li>
+%現~要素 ~SET %現~要素 の次の同胞~要素
+</li>
+		</ol>
+
+◎
+If a step in this algorithm ever requires the current element to be advanced to the next child of the table when there is no such next child, then the user agent must jump to the step labeled end, near the end of this algorithm.
+</div>
+	</li>
+	<li>
+<p>	
+~WHILE 無条件
+（この段は、各~col~group／~colを処理する）
+◎
+↓</p>
+		<ol>
+			<li>
+~WHILE %現~要素 ~NIN { `colgroup$e, `thead$e, `tbody$e, `tfoot$e, `tr$e }
+⇒
+`次の要素へ進む$
+◎
+While the current element is not one of the following elements, advance the current element to the next child of the table:
+• colgroup
+• thead
+• tbody
+• tfoot
+• tr
+</li>
+			<li>
+~IF［
+%現~要素 は `colgroup$e でない
+］
+⇒
+~BREAK
+◎
+If the current element is a colgroup, follow these substeps:
+◎
+Column groups: Process the current element according to the appropriate case below:
+</li>
+			<li>
+%元の~x全幅 ~LET %~x全幅
+◎
+↓</li>
+			<li>
+<p>
+~IF［
+%現~要素 の子に `col$e 要素はある
+］：
+◎
+If the current element has any col element children
+• Follow these steps:
+</p>
+				<ol>
+					<li>
+<p>
+%現~要素 の子である~EACH( `col$e 要素 %col ) に対し：
+</p>
+						<ol>
+							<li>
+%span ~LET ［［
+%col は `span$a 属性を有する
+］~AND［
+その値を`負でない整数として構文解析-$した結果 ~NIN { `失敗^i, 0 }
+］ならば max( その結果, 1000 ) ／
+~ELSE_ 1
+］
+</li>
+							<li>
+%~x全幅 ~INCBY %span
+</li>
+							<li>
+%col に対応する`~col$たち ~SET %~table 内の最後の %span 本の`~col$
+</li>
+						</ol>
+◎
+Let xstart have the value of xwidth.
+◎
+Let the current column be the first col element child of the colgroup element.
+◎
+Columns: If the current column col element has a span attribute, then parse its value using the rules for parsing non-negative integers.
+◎
+If the result of parsing the value is not an error or zero, then let span be that value.
+◎
+Otherwise, if the col element has no span attribute, or if trying to parse the attribute's value resulted in an error or zero, then let span be 1.
+◎
+If span is greater than 1000, let it be 1000 instead.
+◎
+Increase xwidth by span.
+◎
+Let the last span columns in the table correspond to the current column col element.
+◎
+If current column is not the last col element child of the colgroup element, then let the current column be the next col element child of the colgroup element, and return to the step labeled columns.
+◎
+Let all the last columns in the table from x=xstart to x=xwidth-1 form a new column group, anchored at the slot (xstart, 0), with width xwidth-xstart, corresponding to the colgroup element.
+</li>
+				</ol>
+			</li>
+			<li>
+<p>
+~ELSE：
+◎
+If the current element has no col element children
+</p>
+				<ol>
+					<li>
+%~x全幅 ~INCBY ［
+%現~要素 は `~span0$a 属性を有する
+］~AND［
+その値を`負でない整数として構文解析-$した結果 ~NIN { `失敗^i, 0 }
+］ならば max( その結果, 1000 ) ／
+~ELSE_ 1
+］
+◎
+If the colgroup element has a span attribute, then parse its value using the rules for parsing non-negative integers.
+◎
+If the result of parsing the value is not an error or zero, then let span be that value.
+◎
+Otherwise, if the colgroup element has no span attribute, or if trying to parse the attribute's value resulted in an error or zero, then let span be 1.
+◎
+If span is greater than 1000, let it be 1000 instead.
+◎
+Increase xwidth by span.
+◎
+Let the last span columns in the table form a new column group, anchored at the slot (xwidth-span, 0), with width span, corresponding to the colgroup element.
+</li>
+				</ol>
+			</li>
+			<li>
+%現~要素 に対応する`~col~group$ ~SET %~table 内の最後の［
+%~x全幅 − %元の~x全幅
+］本の`~col$が形成する新たな `~col~group$
+◎
+↑</li>
+			<li>
+`次の要素へ進む$
+◎
+Advance the current element to the next child of the table.
+◎
+While the current element is not one of the following elements, advance the current element to the next child of the table:
+• colgroup
+• thead
+• tbody
+• tfoot
+• tr
+◎
+If the current element is a colgroup element, jump to the step labeled column groups above.
+</li>
+		</ol>
+	</li>
+	<li>
+%現~y ~LET  0
+◎
+Let ycurrent be zero.
+</li>
+	<li>
+%~y方向に延びる~cellたち ~LET 空~list
+◎
+Let the list of downward-growing cells be an empty list.
+</li>
+	<li>
+<p>	
+~WHILE 無条件
+（この段は、各~row~groupを処理する）
+◎
+↓</p>
+		<ol>
+			<li>
+<p>
+~WHILE %現~要素 ~NIN { `thead$e, `tbody$e, `tfoot$e, `tr$e }
+⇒
+`次の要素へ進む$
+◎
+Rows: While the current element is not one of the following elements, advance the current element to the next child of the table:
+• thead
+• tbody
+• tfoot
+• tr
+</li>
+			<li>
+<p>
+~IF［
+%現~要素 は `tr$e である
+］：
+</p>
+<ol><li>%現~要素 を成す`~rowを処理する$
+</li><li>`次の要素へ進む$
+</li><li>~CONTINUE
+</li></ol>
+
+◎
+If the current element is a tr, then run the algorithm for processing rows, advance the current element to the next child of the table, and return to the step labeled rows.
+</li>
+			<li>
+`~row~groupを終端する$
+◎
+Run the algorithm for ending a row group.
+</li>
+			<li>
+<p>
+~IF［
+%現~要素 は `tfoot$e である
+］：
+</p>
+
+<ol><li>%現~要素 を %処理待ち~tfoot要素~list に追加する
+</li><li>`次の要素へ進む$
+</li><li>~CONTINUE
+</li></ol>
+◎
+If the current element is a tfoot, then add that element to the list of pending tfoot elements, advance the current element to the next child of the table, and return to the step labeled rows.
+</li>
+			<li>
+%現~要素 を成す`~row~groupを処理する$
+◎
+The current element is either a thead or a tbody.
+◎
+Run the algorithm for processing row groups.
+</li>
+			<li>
+`次の要素へ進む$
+◎
+Advance the current element to the next child of the table.
+◎
+Return to the step labeled rows.
+</li>
+		</ol>
+	</li>
+	<li>
+`終端^i：<br >
+%処理待ち~tfoot要素~list 内の ~EACH( `tfoot$e 要素 %要素 )
+に対し，`~tree順序$で
+⇒
+%要素 を成す`~row~groupを処理する$
+◎
+End: For each tfoot element in the list of pending tfoot elements, in tree order, run the algorithm for processing row groups.
+</li>
+	<li>
+%~table 内の ある［
+`~row$ ／ `~col$
+］に対し，その区画~内の~slotを起点にしている`~cell$は無い場合、
+`~table~model~error$とする
+◎
+If there exists a row or column in the table containing only slots that do not have a cell anchored to them, then this is a table model error.
+</li>
+	<li>
+~RET %~table
+◎
+Return the table.
+</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+上の手続きにて［
+`thead$e ／ `tbody$e ／ `tfoot$e
+］要素 %要素 を成す
+`~row~groupを処理する@
+ときは、次を走らす：
+◎
+The algorithm for processing row groups, which is invoked by the set of steps above for processing thead, tbody, and tfoot elements, is:
+</p>
+
+<ol>
+	<li>
+%元の~y全幅 ~LET %~y全幅 の値
+◎
+Let ystart have the value of yheight.
+</li>
+	<li>
+%要素 の子である
+~EACH ( `tr$e 要素 %tr )
+に対し，~tree順序で
+⇒
+%tr を成す`~rowを処理する$
+◎
+For each tr element that is a child of the element being processed, in tree order, run the algorithm for processing rows.
+</li>
+	<li>
+~IF［
+%~y全幅 ~GT %元の~y全幅
+］
+⇒
+%要素 に対応する`~row~group$ ~SET
+%~table 内の最後の［
+%~y全幅 ~MINUS %元の~y全幅
+］本の`~row$で形成される新たな`~row~group$
+◎
+If yheight &gt; ystart, then let all the last rows in the table from y=ystart to y=yheight-1 form a new row group, anchored at the slot with coordinate (0, ystart), with height yheight-ystart, corresponding to the element being processed.
+</li>
+	<li>
+`~row~groupを終端する$
+◎
+Run the algorithm for ending a row group.
+</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+上のいずれかの手続きにて，一連の~rowが成す~blockの［
+開始-時／終端-時
+］に
+`~row~groupを終端する@
+ときは、次を走らす：
+◎
+The algorithm for ending a row group, which is invoked by the set of steps above when starting and ending a block of rows, is:
+</p>
+
+<ol>
+	<li>
+%~y方向に延びる~cellたち 内の~EACH ( `~cell$ %cell ) に対し
+⇒
+%cell の区画を，その~x座標の範囲はそのままに，［
+~y座標の範囲が ( %~y全幅 − 1 ) をちょうど含む
+］まで拡張する
+◎
+While ycurrent is less than yheight, follow these steps:
+• Run the algorithm for growing downward-growing cells.
+• Increase ycurrent by 1.
+</li>
+	<li>
+%~y方向に延びる~cellたち を空にする
+◎
+Empty the list of downward-growing cells.
+</li>
+	<li>
+%現~y ~SET %~y全幅
+◎
+↑</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+上のいずれかの手続きにて
+`tr$e 要素 %tr を成す
+`~rowを処理する@
+ときは、次を走らす：
+◎
+The algorithm for processing rows, which is invoked by the set of steps above for processing tr elements, is:
+</p>
+
+<ol>
+	<li>
+%~y全幅 ~SET max( %~y全幅, %現~y ~PLUS 1 )
+◎
+If yheight is equal to ycurrent, then increase yheight by 1. (ycurrent is never greater than yheight.)
+</li>
+	<li>
+%~y方向に延びる~cellたち 内の~EACH ( `~cell$ %cell ) に対し
+⇒
+%cell の区画を，その~x座標の範囲はそのままに，［
+~y座標の範囲が ( %~y全幅 − 1 ) をちょうど含む
+］まで拡張する
+◎
+↓</li>
+	<li>
+%現~x ~LET 0
+◎
+Let xcurrent be 0.
+◎
+Run the algorithm for growing downward-growing cells.
+</li>
+	<li>
+<p>
+%tr の子である ~EACH (［
+`td$e ／ `th$e
+］要素  %~cell要素 ) に対し，~tree順序で：
+◎
+If the tr element being processed has no td or th element children, then increase ycurrent by 1, abort this set of steps, and return to the algorithm above.
+◎
+Let current cell be the first td or th element child in the tr element being processed.
+</p>
+		<ol>
+			<li>
+~WHILE［
+%現~x ~LT %~x全幅
+］~AND［
+~slot ( %現~x, %現~y ) を占めている~cellがすでにある
+］
+⇒
+%現~x ~INCBY 1
+◎
+Cells: While xcurrent is less than xwidth and the slot with coordinate (xcurrent, ycurrent) already has a cell assigned to it, increase xcurrent by 1.
+</li>
+			<li>
+%~x全幅 ~SET max( %~x全幅, %現~x )
+◎
+If xcurrent is equal to xwidth, increase xwidth by 1. (xcurrent is never greater than xwidth.)
+</li>
+			<li>
+( %~x幅, %~y幅 ) ~LET ( 1, 1 )
+◎
+↓</li>
+			<li>
+~IF［
+%~cell要素 は `colspan$a 属性を有する
+］~AND［
+その値を`負でない整数として構文解析-$した結果 ~NIN { `失敗^i, 0 }
+］
+⇒
+%~x幅 ~SET max( その結果, 1000 )
+◎
+If the current cell has a colspan attribute, then parse that attribute's value, and let colspan be the result.
+◎
+If parsing that value failed, or returned zero, or if the attribute is absent, then let colspan be 1, instead.
+◎
+If colspan is greater than 1000, let it be 1000 instead.
+</li>
+			<li>
+~IF［
+%~cell要素 は `rowspan$a 属性を有する
+］~AND［
+その値を`負でない整数として構文解析-$した結果 ~NEQ `失敗^i
+］
+⇒
+%~y幅 ~SET max( その結果, 65534 )
+◎
+If the current cell has a rowspan attribute, then parse that attribute's value, and let rowspan be the result.
+◎
+If parsing that value failed or if the attribute is absent, then let rowspan be 1, instead.
+◎
+If rowspan is greater than 65534, let it be 65534 instead.
+</li>
+			<li>
+%~cellは~y方向に延びる ~LET ~F
+◎
+↓</li>
+			<li>
+<p>
+~IF［
+%~y幅 ~EQ 0
+］：
+</p>
+				<ol>
+					<li>
+~IF［
+%~table要素 の`~node文書$は`過去互換~mode$でない
+］
+⇒
+%~cellは~y方向に延びる ~SET ~T
+</li>
+					<li>
+%~y幅 ~SET 1
+</li>
+				</ol>
+
+<p class="trans-note">【
+原文のこの段の記述は、過去互換~modeである場合には，何もせず %~y幅 は 0 のままにされるように読めるが、そうすると 以下で空な区画を占める~cellを作成することになり、おかしいので修正を加えている。
+】</p>
+
+◎
+If rowspan is zero and the table element's node document is not set to quirks mode, then let cell grows downward be true, and set rowspan to 1. Otherwise, let cell grows downward be false.
+</li>
+			<li>
+%~x全幅 ~SET max( %~x全幅, %現~x ~PLUS %~x幅 )
+◎
+If xwidth &lt; xcurrent+colspan, then let xwidth be xcurrent+colspan.
+</li>
+			<li>
+%~y全幅 ~SET max( %~y全幅, %現~y ~PLUS %~y幅 )
+◎
+If yheight &lt; ycurrent+rowspan, then let yheight be ycurrent+rowspan.
+</li>
+			<li>
+<p>
+%新~cell ~LET 次のようにされた新たな`~cell$
+</p>
+
+<ul><li>区画 { %現~x +〜 %~x幅 } × { %現~y +〜 %~y幅 } を占める
+</li><li>%~cell要素 に応じて
+⇒
+`th$e 要素であるならば ~header~cellとする ／
+`td$e 要素であるならば ~data~cellとする
+</li></ul>
+◎
+Let the slots with coordinates (x, y) such that xcurrent ≤ x &lt; xcurrent+colspan and ycurrent ≤ y &lt; ycurrent+rowspan be covered by a new cell c, anchored at (xcurrent, ycurrent), which has width colspan and height rowspan, corresponding to the current cell element.
+◎
+If the current cell element is a th element, let this new cell c be a header cell; otherwise, let it be a data cell.
+</li>
+			<li>
+<p>
+%~cell要素 に対応する`~cell$ ~SET %新~cell：
+</p>
+
+<ul><li>%~cell要素 に どの~header~cellたちが適用されるかを確立するためには、次~節に述べる`~header~cellたちをアテガう$~algoを利用すること。
+</li><li>%新~cell が占める区画~内に，すでに他のある`~cell$が占めている~slotがある場合、`~table~model~error$とされる
+— そのような~slotには複数の~cellが重合している。
+</li></ul>
+◎
+To establish which header cells apply to the current cell element, use the algorithm for assigning header cells described in the next section.
+◎
+If any of the slots involved already had a cell covering them, then this is a table model error. Those slots now have two cells overlapping.
+</li>
+			<li>
+~IF［
+%~cellは~y方向に延びる ~EQ ~T
+］
+⇒
+%新~cell を %~y方向に延びる~cellたち に追加する
+◎
+If cell grows downward is true, then add the tuple {c, xcurrent, colspan} to the list of downward-growing cells.
+</li>
+			<li>
+%現~x ~INCBY %~x幅
+◎
+Increase xcurrent by colspan.
+</li>
+		</ol>
+	</li>
+	<li>
+%現~y ~INCBY 1
+◎
+If current cell is the last td or th element child in the tr element being processed, then increase ycurrent by 1, abort this set of steps, and return to the algorithm above.
+◎
+Let current cell be the next td or th element child in the tr element being processed.
+◎
+Return to the step labeled cells.
+◎
+When the algorithms above require the user agent to run the algorithm for growing downward-growing cells, the user agent must, for each {cell, cellx, width} tuple in the list of downward-growing cells, if any, extend the cell cell so that it also covers the slots with coordinates (x, ycurrent), where cellx ≤ x &lt; cellx+width.
+</li>
+</ol>
+</div>
+
+				</section>
+				<section id="header-and-data-cell-semantics">
+<h4 title="Forming relationships between data cells and header cells">4.9.12.2. ~data~cellたちと~header~cellたちとの関係性の形成-法</h4>
+
+<div class="algorithm">
+<p>
+各 ~cellには 0 個~以上の~header~cellがアテガわれる
+— それは、次の
+`~header~cellたちをアテガう@
+~algoの結果で与えられる：
+◎
+Each cell can be assigned zero or more header cells. The algorithm for assigning header cells to a cell principal cell is as follows.
+</p>
+
+<ol>
+	<li>
+%主~cell ~SET 当の~cell
+◎
+↑</li>
+	<li>
+%~header~list ~LET ~cellたちの空~list
+◎
+Let header list be an empty list of cells.
+◎
+Let (principalx, principaly) be the coordinate of the slot to which the principal cell is anchored.
+</li>
+	<li>
+<p>
+~IF［
+%主~cell は `headers$a 属性を有する
+］
+⇒
+その属性の値を`~ASCII空白で分割-$した結果 内の ~EACH( %~token ) に対し
+⇒
+%主~cell と同じ`~table$内に 次を満たす`~cell$が在るならば それを %~header~list に追加する
+⇒
+対応する要素は、同じ `Document$I 内にある［
+`~ID$ ~EQ %~token
+］なる要素のうち，最初のものである
+<!-- , かつ主~cell でない：後で除去するので不要 -->
+◎
+If the principal cell has a headers attribute specified
+• Take the value of the principal cell's headers attribute and split it on ASCII whitespace, letting id list be the list of tokens obtained.
+• For each token in the id list, if the first element in the Document with an ID equal to the token is a cell in the same table, and that cell is not the principal cell, then add that cell to header list.
+</li>
+	<li>
+<p>
+~ELSE：
+◎
+If principal cell does not have a headers attribute specified
+</p>
+		<ol>
+			<li>
+( %主~起点, %主~区画 ) ~LET %主~cell の ( 起点, 区画 )
+◎
+Let principalwidth be the width of the principal cell.
+◎
+Let principalheight be the height of the principal cell.
+</li>
+			<li>
+%主~区画 の~y座標の範囲~内の ~EACH ( %~y ) に対し，昇順に
+⇒
+次を与える下で
+`内部的に~header~cellを走査してアテガう$
+⇒
+( %主~cell, %~header~list , 座標 ( %主~起点 の~x座標, %~y ), `~row方向^i )
+◎
+For each value of y from principaly to principaly+principalheight-1, run the internal algorithm for scanning and assigning header cells, with the principal cell, the header list, the initial coordinate (principalx,y), and the increments Δx=−1 and Δy=0.
+</li>
+			<li>
+%主~区画 の~x座標の範囲~内の ~EACH ( %~x ) に対し，昇順に
+⇒
+次を与える下で
+`内部的に~header~cellを走査してアテガう$
+⇒
+( %主~cell, %~header~list, 座標 ( %~x, %主~起点 の~y座標 ), `~col方向^i )
+◎
+For each value of x from principalx to principalx+principalwidth-1, run the internal algorithm for scanning and assigning header cells, with the principal cell, the header list, the initial coordinate (x,principaly), and the increments Δx=0 and Δy=−1.
+</li>
+			<li>
+%区画 ~LET 
+区画 { 0 〜 %主~区画 の最~大な~x座標 } ×  { 0 〜 %主~区画 の最~大な~y座標 }
+◎
+↓</li>
+			<li>
+~IF［
+%主~起点 ~IN ある`~row~group$の区画 %A
+］
+⇒
+［
+次を満たすような すべての~header~cell
+］を %~header~list に追加する
+⇒
+［
+`~row~group~header$である
+］~AND［
+その起点 ~IN %A
+］~AND［
+その起点 ~IN %区画
+］
+◎
+If the principal cell is anchored in a row group, then add all header cells that are row group headers and are anchored in the same row group with an x-coordinate less than or equal to principalx+principalwidth-1 and a y-coordinate less than or equal to principaly+principalheight-1 to header list.
+</li>
+			<li>
+~IF［
+%主~起点 ~IN ある`~col~group$ の区画 %A
+］
+⇒
+［
+次を満たすような すべての~header~cell
+］を %~header~list に追加する
+⇒
+［
+`~col~group~header$である
+］~AND［
+その起点 ~IN %A
+］~AND［
+その起点 ~IN %区画
+］
+◎
+If the principal cell is anchored in a column group, then add all header cells that are column group headers and are anchored in the same column group with an x-coordinate less than or equal to principalx+principalwidth-1 and a y-coordinate less than or equal to principaly+principalheight-1 to header list.
+</li>
+		</ol>
+	</li>
+	<li>
+%~header~list 内に［
+`空~cell$ ／ %主~cell
+］が在るならば，それらを除去する
+◎
+Remove all the empty cells from the header list.
+</li>
+	<li>
+%~header~list 内に重複する~cellが在るならば，一つを残して除去する
+◎
+Remove any duplicates from the header list.
+◎
+Remove principal cell from the header list if it is there.
+</li>
+	<li>
+~RET %~header~list
+◎
+Assign the headers in the header list to the principal cell.
+</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+`内部的に~header~cellを走査してアテガう@
+ときは、所与の
+( %主~cell, %~header~list, 座標 ( %~x, %~y ), %方向 )
+に対し、次を走らす：
+◎
+The internal algorithm for scanning and assigning header cells, given a principal cell, a header list, an initial coordinate (initialx, initialy), and Δx and Δy increments, is as follows:
+</p>
+
+<ol>
+	<li>
+%行止まり~headerたち ~LET ~cellたちの空~集合
+◎
+Let x equal initialx.
+◎
+Let y equal initialy.
+◎
+Let opaque headers be an empty list of cells.
+</li>
+	<li>
+%~header~block内 ~LET ~F
+◎
+↓</li>
+	<li>
+%現~header~blockに属する~headerたち ~LET ~cellたちの空~集合
+◎
+↓</li>
+	<li>
+~IF［
+%主~cell は~header~cellである
+］：
+<ol><li>%~header~block内 ~SET ~T
+</li><li>%主~cell を %現~header~blockに属する~headerたち に追加する
+</li></ol>
+◎
+If principal cell is a header cell
+• Let in header block be true, and let headers from current header block be a list of cells containing just the principal cell.
+◎
+Otherwise
+• Let in header block be false and let headers from current header block be an empty list of cells.
+</li>
+	<li>
+<p>
+%~slot~list ~LET %方向 に応じて，次で与えられる~list：
+</p>
+		<ul class="switch">
+			<li>
+`~row方向^i
+⇒
+区画 { 0 +〜 %~x } × { %~y }
+内の~slotたちからなる~x座標の降順による~list
+</li>
+			<li>
+`~col方向^i
+⇒
+区画 { %~x } × { 0 +〜 %~y }
+内の~slotたちからなる~y座標の降順による~list
+</li>
+		</ul>
+
+<p>
+（［
+%~x ／ %~y
+］ ~EQ 0 ならば空になる。）
+</p>
+◎
+Loop: Increment x by Δx; increment y by Δy.
+◎
+For each invocation of this algorithm, one of Δx and Δy will be −1, and the other will be 0.
+</li>
+	<li>
+<p>
+%~slot~list 内の~EACH( %~slot ) に対し：
+◎
+If either x or y are less than 0, then abort this internal algorithm.
+</p>
+		<ol>
+			<li>
+~IF［
+%~slot を占めている~cellの個数 ~NEQ 1
+］
+⇒
+~CONTINUE
+◎
+If there is no cell covering slot (x, y), or if there is more than one cell covering slot (x, y), return to the substep labeled loop.
+</li>
+			<li>
+%現~cell ~LET %~slot を占めている~cell
+◎
+Let current cell be the cell covering slot (x, y).
+</li>
+			<li>
+<p>
+~IF［
+%現~cell は~header~cellである
+］：
+◎
+If current cell is a header cell
+</p>
+				<ol>
+					<li>
+%~header~block内 ~SET ~T
+◎
+Set in header block to true.
+</li>
+					<li>
+%現~cell を %現~header~blockに属する~headerたち に追加する
+◎
+Add current cell to headers from current header block.
+</li>
+					<li>
+<p>
+%方向 に応じて：
+◎
+Let blocked be false.
+</p>
+						<ul class="switch">
+							<li>
+`~col方向^i
+⇒
+~IF［
+%現~cell は`~col~header$でない
+］~OR［
+%行止まり~headerたち 内にある~cellがあって，その区画の~x座標の範囲と %現~cell のそれは一致する
+］
+⇒
+~CONTINUE
+◎
+If Δx is 0
+• If there are any cells in the opaque headers list anchored with the same x-coordinate as the current cell, and with the same width as current cell, then let blocked be true.
+• If the current cell is not a column header, then let blocked be true.
+</li>
+							<li>
+`~row方向^i
+⇒
+~IF［
+%現~cell は`~row~header$でない
+］~OR［
+%行止まり~headerたち 内にある~cellがあって，その区画の~y座標の範囲と %現~cell のそれは一致する
+］
+⇒
+~CONTINUE
+◎
+If Δy is 0
+• If there are any cells in the opaque headers list anchored with the same y-coordinate as the current cell, and with the same height as current cell, then let blocked be true.
+• If the current cell is not a row header, then let blocked be true.
+</li>
+						</ul>
+					</li>
+					<li>
+%現~cell を %~header~list に追加する
+◎
+If blocked is false, then add the current cell to the headers list.
+</li>
+				</ol>
+			</li>
+			<li>
+<p>
+~ELSE（ %現~cell は~data~cellである）：
+◎
+If current cell is a data cell＼
+</p>
+				<ol>
+					<li>
+~IF［
+%~header~block内 ~EQ ~F
+］
+⇒
+~CONTINUE
+◎
+and in header block is true
+</li>
+					<li>
+%~header~block内 ~SET ~F
+◎
+Set in header block to false.＼
+</li>
+					<li>
+%行止まり~headerたち に %現~header~blockに属する~headerたち を成すすべての~cellを追加する
+◎
+Add all the cells in headers from current header block to the opaque headers list, and＼
+</li>
+					<li>
+%現~header~blockに属する~headerたち を空にする
+◎
+empty the headers from current header block list.
+◎
+Return to the step labeled loop.
+</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<p>
+~header~cell %~cell は、対応する要素の `scope$a 属性の状態を %状態 とするとき：
+◎
+↓</p>
+
+<ul>
+	<li>
+<p>
+次のいずれかを満たすならば
+`~col~header@
+とされる：
+◎
+A header cell anchored at the slot with coordinate (x, y) with width width and height height is said to be a column header if any of the following conditions are true:
+</p>
+
+		<ul>
+			<li>
+%状態 ~EQ `Column$st
+◎
+The cell's scope attribute is in the column state, or
+</li>
+			<li>
+［
+%状態 ~EQ `Auto$st
+］~AND［
+どの~data~cellも［
+~y座標 ~IN %~cell が占める区画の~y座標の範囲†
+］なる~slotを占めていない
+］
+◎
+The cell's scope attribute is in the auto state, and there are no data cells in any of the cells covering slots with y-coordinates y .. y+height-1.
+</li>
+		</ul>
+
+<p class="trans-note">【†
+不可解な条件。
+おそらく、［
+座標 ~IN 区画 { %~cell が占める区画の~x座標の範囲 } × { 0 +〜 %~cell の起点の~y座標 }
+］に改められるべきに思われる。
+次項についても同様。
+】</p>
+
+	</li>
+	<li>
+<p>
+次のいずれかを満たすならば
+`~row~header@
+とされる：
+◎
+A header cell anchored at the slot with coordinate (x, y) with width width and height height is said to be a row header if any of the following conditions are true:
+</p>
+
+		<ul>
+			<li>
+%状態 ~EQ `Row$st
+◎
+The cell's scope attribute is in the row state, or
+</li>
+			<li>
+［
+%状態 ~EQ `Auto$st
+］~AND［
+%~cell は`~col~header$でない
+］~AND［
+どの~data~cellも［
+~x座標 ~IN %~cell が占める区画の~x座標の範囲†
+］なる~slotを占めていない
+］：
+◎
+The cell's scope attribute is in the auto state, the cell is not a column header, and there are no data cells in any of the cells covering slots with x-coordinates x .. x+width-1.
+</li>
+		</ul>
+	</li>
+	<li >
+次を満たすならば
+`~col~group~header@
+とされる
+⇒
+%状態 ~EQ `Colgroup$st
+◎
+A header cell is said to be a column group header if its scope attribute is in the column group state.
+</li>
+	<li >
+次を満たすならば
+`~row~group~header@
+とされる
+⇒
+%状態 ~EQ `Rowgroup$st
+◎
+A header cell is said to be a row group header if its scope attribute is in the row group state.
+</li>
+</ul>
+
+<p>
+~cellは、対応する要素が次を満たすならば
+`空~cell@
+とされる
+⇒
+［
+要素を包含しない
+］~AND［
+`子~text内容$は空, または`~ASCII空白$のみからなる
+］
+◎
+A cell is said to be an empty cell if it contains no elements and its child text content, if any, consists only of ASCII whitespace.
+</p>
+
+				</section>
+			</section>
+			<section id="table-examples">
+<h3 title="Examples">4.9.13. 例</h3>
+
+~INFORMATIVE
+
+<p class="trans-note">【
+この節は未訳。
+】</p>
+
+			</section>
+		</section>
+</main>

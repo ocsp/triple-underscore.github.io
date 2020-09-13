@@ -1,0 +1,5700 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Transforms Module Level 1 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+
+<style>
+small.cp {
+	color: gray;
+}
+
+td[colspan] {
+	text-align: center;
+}
+
+#supporting-functions-table > tr > td:first-child {
+	font-family: monospace0, monospace;
+}
+
+.upper-alpha > li {
+	list-style-type: upper-alpha;
+}
+
+._matrix tr {
+	border: none;
+}
+._matrix td {
+	text-align: center;
+}
+._matrix {
+	border-collapse: separate;
+	border-spacing: 0;
+	border: thin solid black;
+	border-style: none solid;
+	border-radius: 5px;
+}
+
+._math-formula {
+	display: flex;
+	align-items: center;
+	column-gap: 0.4em;
+}
+
+</style>
+
+<style>
+@namespace svg url(http://www.w3.org/2000/svg);
+
+/* the same as css-syntax’ */
+
+svg|svg{
+	background-color: hsl(30 20% 95%);
+}
+svg|path{
+	stroke-width: 3;
+	stroke: black;
+	fill: none;
+}
+svg|text{
+	font:bold 14px monospace;
+	text-anchor: middle;
+}
+svg|text.label{
+	text-anchor: start;
+}
+svg|text.comment{
+	font: italic 12px monospace;
+}
+svg|rect{
+	stroke-width: 3;
+	stroke: black;
+	fill: hsl(120 100% 90%);
+}
+
+dd.railroad {
+	overflow: auto;
+}
+</style>
+
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		collectParts: collectParts,
+		generate: expand
+	};
+
+	Util.switchWordsInit(source_data);
+
+	return;
+
+	function collectParts(parts){
+		Util.collectParts(parts);
+		// generate_matrix_markup(parts);
+		let data = PAGE_DATA.matrix_data
+.replace( /\s*●(.+)/g,
+	'</tbody></table><table id="_dgm-$1" class="_matrix"><tbody>' )
+.replace(/[\s\S]*?<\/table>/, '')
+.replace(/\n(?=[^<\s])/g, '<tr><td>')
+.replace(/,[ \t]*/g, '<td>')
+.replace(/\.(\w+)/g, '<sub>$1</sub>')
+.replace(/%([\wα-ε]+)/g, '<var>$1</var>')
++ '</tbody></table>';
+
+		delete PAGE_DATA.matrix_data;
+
+		const div = C('div');
+		div.innerHTML = data;
+		for(let e = div.firstElementChild; e; e = e.nextElementSibling){
+			if(e.id){
+				parts[e.id] = e;
+			}
+		}
+	}
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+	const unicode_map = this.unicode_map;
+
+	return this.html.replace(
+		/%[\wα-ε\-~一-鿆あ-ん]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+let classname = class_map[klass];
+let tag = tag_map[klass];
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'pe': 
+	text = `::${key}`;
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'vo': // transform-origin
+	href=`#valdef-transform-origin-${key}`;
+	break;
+case 'vb': // transform-box
+	href=`#valdef-transform-box-${key}`;
+	break;
+// case 'tf': // TODO 
+case 'ft': // func porduction
+	text = `&lt;<code class="func">${key}()</code>&gt;`;
+	klass = 'f';
+	break;
+case 'f':
+	text = `${key}()`;
+	break;
+case 'M': // 行列成分
+	text = `<var>m</var><sub>${key}</sub>`;
+	break;
+case 'U':
+	text = `U+${key}`;
+	break;
+case 'dgm':
+	return `<a id="_dgm-${key}">＊</a>`;
+	break;
+case 'cmt':
+	return `/* <span class="comment">${key}</span> */`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+if(tag) {
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(tag) {
+	text = '<' + tag + (
+		classname ? ' class="' + classname + '"' : ''
+	) + '>' + text + '</' + tag + '>';
+}
+
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Transforms Module Level 1
+spec_date:2020-03-11
+trans_update:2020-03-13
+source_checked:180807
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-transforms-1/
+	https://www.w3.org/TR/css-transforms-1/
+	abbr_url:TRANSFORM
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:transform,svg,css
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2014-04-04
+
+●●class_map
+p:property
+e:element
+a:attr
+css:css
+f:func
+sf:production
+t:type
+ft:type
+u:unit
+v:value
+vo:value
+vb:value
+U:code-point
+cn:cp-name
+
+●●tag_map
+p:code
+svg:code
+css:code
+e:code
+a:code
+c:code
+I:code
+m:code
+t:var
+ft:var
+sf:var
+f:code
+u:code
+v:code
+vo:code
+vb:code
+U:span
+cn:span
+V:var
+
+●●words_table1
+
+TRANSFORM2:css-transforms2-ja.html
+	https://drafts.csswg.org/css-transforms-2/
+
+●●words_table
+
+
+
+	●座標系／行列演算／変形関数
+座標軸:axes::~
+変形-:transform::~
+変形:transform::~
+変形d:transformed::変形
+変形n:transformation::変形
+行列:matrix::~
+行列式:determinant:~
+転置行列:transpose matrix:~
+逆行列:inverse:~
+列主導順:column-major order:~
+恒等:identity:~
+	identity transform function:恒等~変形-関数
+不可逆:non-invertible:~
+
+回転-:rotate::~
+回転:rotation::~
+回転角:angle::~
+並進-:translate::~
+並進:translation::~
+拡縮-:scale::~
+	拡縮-法:scaling
+拡縮:scale::~
+拡縮率:scale::~
+拡大-:scale up::~
+斜傾:skew::~::スキュー
+
+写像:mapping:~::マッピング
+写像-:map:~::マップ
+線型:linear::~
+
+補助関数:supporting function:~
+累積:accumulation::~
+累積-:accumulate::~
+	累積して:accumulating
+累積3D:accumulated 3D::~
+累積的:cumulative::~
+単位i:identity::単位
+単位元:neutral element:~
+特異的:singular::~
+再構成-:recompose::~
+分解-:decompose::~
+	分解-法:decomposing
+分解形:decomposed::~
+分解:decomposition::~
+組成-:composite::~
+	行列を組成し直す:recomposition
+派生:derivative::~
+派生-:derive::~
+派生関数:derived transform function:derived transform 関数:~
+原始関数:primitive:~
+二乗根:root square:~
+余弦:cosine:~
+正弦:sine:~
+逆余弦:inverse cosine:~
+換算-:convert:~
+換算:conversion:~
+	converting
+加算-:add:~
+乗算-:multiply:~
+乗算:multiplication:~
+	multiple／multiplication／multiplying／multiply／multiplied
+	右から乗算:post-multiplied
+	先祖から順に乗算-:post-multiplied
+	左から乗算:pre-multiplied
+	unflip
+
+	〜次元の:dimensional
+	二次元
+vector::::ベクター
+scalar::::スカラー
+点乗積:dot product::~
+作用-:operate:~
+作用:operation:~
+
+column:
+row:
+	~~成分:entry
+	項:item
+
+	●幾何
+3D:
+2D:
+	2D:two-dimensional
+	3D:three-dimensional
+4x4:4×4
+3x2:3×2
+矩形:rectangle:~
+
+	周:turns
+時計回り:clockwise:~
+度数:degree:~
+	°
+
+横:horizontal:~
+	~ly
+縦:vertical:~
+	~ly
+隅:corner:~
+	左上隅:top-left／top-left corner
+	左上:upper-left
+	右方
+	下方
+	中心
+	隅
+	原点:origin of point
+	原点:point of origin
+	固定
+	located
+	移動:
+	移動量:
+	移動／変動-:move
+	覆う:cover／obscure
+	面積:typical geometric size
+	CTM:
+
+	●アニメーション
+加法:addition::~
+反転-:flip:~
+値域:domain:~
+開始:start:~
+終止:end:~
+
+値a:<var>V</var><sub>a</sub>
+値b:<var>V</var><sub>b</sub>
+	%結果:<var>V<sub>result</sub>
+
+	値a を成す:source
+	値b を成す:destination:終値-
+
+	●CSS レイアウト
+不可分:atomic::~
+stroke::::ストローク
+限界:bounding::~
+	限界~box:bounding box
+限界域:bounds::~
+和集合:union:~
+基準:reference:~
+	基準~box:reference box
+	establishing
+包装:wrapper::~
+積層:stacking::~
+	~scroll可能な:scrollable
+固定的:fixed::~
+縮短-:shrink:~
+拡幅-:extend:~
+
+	●CSS
+table::::テーブル
+背景:background:~
+背景画:backdrop:~
+色:color:~
+詳細度:specificity:~
+数値:number value:~
+hover:
+塗ng:painting:塗り
+塗る:paintする:~
+塗り:paint:~
+	算出された~style:computed style
+
+	●構文
+BNF:
+単位:unit:~
+単位無し:unitless:~
+space::::スペース
+comma::::カンマ
+丸括弧:parenthesis::~
+英字:letter::~
+二重引用符:double quote::~
+線路図式:railroad diagram:~
+	線路図式:rail road diagram
+	~group分け:grouping
+	右:right
+	左:left
+	括る:surround
+	~~選択肢どうし:alternatives
+	一連の:collection
+	1 個だけとるもの:single value version
+
+
+	●保安
+推定-:infer:~
+仕掛ける:mountする:~
+学習-:study:~
+	現時点では:at this point
+	かかる時間:amount of time it takes for 〜 to occur
+	-:potential
+
+	●仕様
+	CSS-VALUES-3:CSS Values and Units Module
+client:
+	互換性:compat
+機能的:functional:~
+表記:notation:~
+可能性:possibility:~
+指示書き:instruction:~
+
+	規範的でない:informative
+	ゆえに:consequence
+	いずれにせよ:anyway
+	参考:
+	不能
+	ふるまう:act
+	失われ:get lost
+	序論:
+	当該の:in question／respective
+	必要な／不要:necessary／
+	正味の効果:net effect
+	~~決定
+	注意:
+	~~理由:why
+	可能／不能~list:black list／white list
+	片:snippet
+	-:way
+	従って:following
+	~~実質的:substantive
+
+	●仕様（動詞
+
+統制-:govern:~
+	指定していた:specification
+	applying
+収束:convergence:~
+省略可:optional:~
+訂正:correction:~
+緩めた:relaxした:~
+	省略-:omit／-／
+	修正:
+	満たす:fulfill
+	捉えれる:can be thought
+	要する:require
+	保つ:keep
+	取り込む:backport
+
+	●未分類（動詞
+	呼応:equivalent
+	参照~元:referencing／in place at〜referenced
+続行-:proceed:~
+
+	解く:solve
+	指す:refer／address
+	~~効果:impact
+	記す:write
+	変化:
+	作用-:operate
+	現れる:appear する
+	繰り~~返し模様:repeating
+	~~見なされ:-
+	見なし:-
+	区切り／区切る:-separated／
+	含む:include
+	-:individual
+	-:get
+
+	●未分類
+SVG-11:SVG 1.1
+SVG-2:SVG 2
+数学的:mathematical:~
+数量的:numerical:~
+gradient::::グラデーション
+
+radian::::ラジアン
+
+graphics::::グラフィックス
+疑似code:pseudo code:~
+dot::::ドット
+
+切抜き:clipping::切り抜き
+	-:algorithm
+
+	入子階層
+固定:anchor:~
+固定長:fixed length:~
+舞台:stage:~
+	-／対:pair
+
+	-:不変の
+	増大-:increases
+	比例する:proportional
+	一時変数
+	一時的:temporarily
+		using
+	引数:parameter
+	成分:parameter
+	成分値
+	最大値
+	補完:-
+	集合:
+	失われ:lost
+	-:match
+	-:extend
+	-:compare
+	-:setting
+	-:start
+
+	●指示語
+参照元の:referencing:~
+
+	おいて:duration
+	~animateされる属性:target attribute
+	〜からなる:consists
+	より大きい:greater
+	より大きい:larger
+	より小さく:smaller
+	一方
+	一部
+	一部分:part
+	他方
+	以下
+	以外
+	上述
+	後者
+	後述
+	先頭
+	最後:end
+	前の例:previous example
+	前節:
+	前節による:former
+	前後
+	前者:
+	各行
+	同じに:identical
+	周囲の
+	時点:
+	自体
+	自身
+	対応:
+	対象:
+	最終的な:final
+	全体:complete
+	片方:
+	末尾:
+	次節:
+	次項:
+	段落:paragraphs
+	再度
+	一連の:collection／
+	逆方向:
+	小さい:small
+	およそ:about
+	半分:half
+	部分:part
+	-:starting
+	-:ending
+	以前の:previous
+	-:next
+	残り:remainder
+	短い方:shorter
+	長い方:longer
+
+●●original_id_map
+
+
+viewer:
+notes-on-accumulation:
+
+	post-multiply:post-multiplied
+	pre-multiply:pre-multiplied
+
+●●mdn_urls
+propdef-transform:CSS/transform
+propdef-transform-box:CSS/transform-box
+propdef-transform-origin:CSS/transform-origin
+
+typedef-transform-function:CSS/transform-function
+	typedef-transform-list:CSS/？
+
+funcdef-transform-matrix:CSS/transform-function/matrix
+funcdef-transform-scale:CSS/transform-function/scale
+funcdef-transform-scalex:CSS/transform-function/scaleX
+funcdef-transform-scaley:CSS/transform-function/scaleY
+funcdef-transform-skew:CSS/transform-function/skew
+funcdef-transform-skewx:CSS/transform-function/skewX
+funcdef-transform-skewy:CSS/transform-function/skewY
+funcdef-transform-rotate:CSS/transform-function/rotate
+funcdef-transform-translate:CSS/transform-function/translate
+funcdef-transform-translatex:CSS/transform-function/translateX
+funcdef-transform-translatey:CSS/transform-function/translateY
+
+●●link_map
+
+
+I.DOMMatrix:~GEOMETRY#DOMMatrix
+
+	●types
+t.transform-function:#typedef-transform-function
+t.transform-list:#typedef-transform-list
+
+t.angle:~CSSVAL#angle-value
+t.length:~CSSVAL#length-value
+t.number:~CSSVAL#number-value
+t.percentage:~CSSVAL#percentage-value
+t.length-percentage:~CSSVAL#typedef-length-percentage
+t.zero:~CSSVAL#zero-value
+
+t.number-token:~CSSSYN#typedef-number-token
+
+	●property
+p.transform:#propdef-transform
+p.transform-origin:#propdef-transform-origin
+p.transform-box:#propdef-transform-box
+
+	●property
+p.background-position:~CSSBG#propdef-background-position
+p.fill:~SVGpainting#FillProperty
+	p.fill:~SVG11/painting.html#FillProperty
+p.stroke:~SVGpainting#StrokeProperty
+	p.stroke:~SVG11/painting.html#StrokeProperty
+p.overflow:~CSSOVERFLOW3#propdef-overflow
+p.position:~CSSPOS#propdef-position
+p.z-index:~CSS2VISUREN#propdef-z-index
+p.background-attachment:~CSSBG#propdef-background-attachment
+	~CSS22/colors.html#propdef-background-attachment
+
+v.none:#perspective-none
+v.fixed:~CSSBG#valdef-background-attachment-fixed
+v.scroll:~CSSBG#valdef-background-attachment-scroll
+	~center:valuedef-center
+	~center:valuedef-center0
+
+	●values external
+		~CSSOVERFLOW
+	v.scroll:~CSSOVERFLOW3#valdef-overflow-scroll
+	v.auto:~CSSOVERFLOW3#valdef-overflow-auto
+	v.visible:~CSSOVERFLOW3#valdef-overflow-visible
+	v.normal:~COMPOSITING#valdef-blend-mode-normal
+	v.linear:~TRANSITION#valdef-transition-timing-function-linear
+
+	v.table-row:~CSSDISP#valdef-display-table-row
+	v.table-row-group:~CSSDISP#valdef-display-table-row-group
+	v.table-header-group:~CSSDISP#valdef-display-table-header-group
+	v.table-footer-group:~CSSDISP#valdef-display-table-footer-group
+	v.table-cell:~CSSDISP#valdef-display-table-cell
+	v.table-caption:~CSSDISP#valdef-display-table-caption
+
+
+u.deg:~CSSVAL#deg
+u.px:~CSSVAL#px
+
+
+	funcdef-skew(.?)"
+		funcdef-transform-skew$1"
+	●funcdef `f
+f.matrix:#funcdef-transform-matrix
+f.scale:#funcdef-transform-scale
+f.scaleX:#funcdef-transform-scalex
+f.scaleY:#funcdef-transform-scaley
+f.skew:#funcdef-transform-skew
+f.skewX:#funcdef-transform-skewx
+f.skewY:#funcdef-transform-skewy
+f.rotate:#funcdef-transform-rotate
+f.translate:#funcdef-transform-translate
+f.translateX:#funcdef-transform-translatex
+f.translateY:#funcdef-transform-translatey
+
+f.matrix3d:~TRANSFORM2#funcdef-matrix3d
+f.perspective:~TRANSFORM2#funcdef-perspective
+f.rotateX:~TRANSFORM2#funcdef-rotatex
+f.rotateY:~TRANSFORM2#funcdef-rotatey
+f.rotateZ:~TRANSFORM2#funcdef-rotatez
+f.rotate3d:~TRANSFORM2#funcdef-rotate3d
+f.scaleZ:~TRANSFORM2#funcdef-scalez
+f.scale3d:~TRANSFORM2#funcdef-scale3d
+f.translateZ:~TRANSFORM2#funcdef-translatez
+f.translate3d:~TRANSFORM2#funcdef-translate3d
+
+
+f.calc:~CSSVAL#funcdef-calc
+
+
+
+sf.comma:#svg-comma
+sf.wsp:#svg-wsp
+sf.comma-wsp:#svg-comma-wsp
+sf.translate:#svg-translate
+sf.scale:#svg-scale
+sf.rotate:#svg-rotate
+sf.skewX:#svg-skewX
+sf.skewY:#svg-skewY
+sf.matrix:#svg-matrix
+sf.transform:#svg-transform-function
+sf.transforms:#svg-transforms
+sf.transform-list:#svg-transform-list
+
+	●IDL
+I.Element
+I.SVGAnimatedTransformList:~SVGcoords#InterfaceSVGAnimatedTransformList
+	~SVG11/coords.html#InterfaceSVGAnimatedTransformList
+
+m.getBoundingClientRect():~CSSOMVIEW#dom-element-getboundingclientrect
+m.getClientRects():~CSSOMVIEW#dom-element-getclientrects
+
+	●用語
+右から乗算-:#post-multiply
+	#post-multiplied（同じ用語に複数の id ）
+左から乗算-:#pre-multiply
+	#pre-multiplied
+乗算-:#multiply
+
+~2D~3x2行列:#MatrixDefined
+~2D並進:#TranslateDefined
+~2D回転:#RotateDefined
+~2D拡縮:#ScaleDefined
+~2D斜傾:#SkewDefined
+X 軸~不変の~2D斜傾:#SkewXDefined
+Y 軸~不変の~2D斜傾:#SkewYDefined
+
+~3D回転:~TRANSFORM2#Rotate3dDefined
+~3D拡縮:~TRANSFORM2#Scale3dDefined
+~3D並進:~TRANSFORM2#Translate3dDefined
+
+	transformation matrix:#MatrixDefined
+並進ion:#TranslateDefined
+
+変形の補間:#interpolation-of-transforms
+行列の補間:#matrix-interpolation
+原始関数と派生関数の補間:#interpolation-of-transform-functions
+変形-関数の数学的~記述:#mathematical-description
+	SVG ~data型:#svg-data-types
+
+	:#interpolation-of-transforms
+	below:#accumulated-3d-transformation-matrix-computation
+	below:#perspective-matrix-computation
+	below:#transformation-matrix-computation
+
+基準~box:#reference-box
+変形-可能:#transformable-element
+利用元~座標系:#user-coordinate-system
+局所~座標系:#local-coordinate-system
+変形d要素:#transformed-element
+
+変形n行列:#transformation-matrix
+現在の変形n行列:#current-transformation-matrix
+~2D行列:#2d-matrix
+恒等~変形-関数:#identity-transform-function
+
+	#interpolation-of-2d-matrices
+
+	~primitive:#transform-primitives
+	~rotate~with~three~arguments:#svg-transform-functions
+
+構文:#svg-syntax
+変形-関数:#transform-functions
+	~transform:#interpolation-of-transforms
+
+原始関数:#transform-primitives
+	派生関数:#transform-primitives
+
+すべての子孫~用の包含塊:#containing-block-for-all-descendants
+
+	●element
+e.a:~HEtextlevel#the-a-element
+e.div:~HEgrouping#the-div-element
+
+e.clipPath:~MASKING1#elementdef-clippath
+e.mask:~MASKING1#elementdef-mask
+
+e.g:~SVGstruct#elementdef-g
+e.linearGradient:~SVGpservers#elementdef-linearGradient
+e.pattern:~SVGpservers#elementdef-pattern
+e.radialGradient:~SVGpservers#elementdef-radialGradient
+e.rect:~SVGshapes#elementdef-rect
+e.svg:~SVGstruct#elementdef-svg
+
+e.animate:~SVG11/animate.html#AnimateElement
+e.set:~SVG11/animate.html#SetElement
+
+	●SVG attr
+a.gradientTransform:~SVGpservers#LinearGradientElementGradientTransformAttribute
+a.patternTransform:~SVGpservers#PatternElementPatternTransformAttribute
+a.patternUnits:~SVGpservers#PatternElementPatternUnitsAttribute
+a.gradientUnits:~SVGpservers#LinearGradientElementGradientUnitsAttribute
+a.clipPathUnits:~MASKING1#element-attrdef-clippath-clippathunits
+a.transform:~SVGcoords#TransformProperty
+a.viewBox:~SVGcoords#ViewBoxAttribute
+
+	a.gradientTransform:~SVG11/pservers.html#LinearGradientElementGradientTransformAttribute
+	a.patternTransform:~SVG11/pservers.html#PatternElementPatternTransformAttribute
+	a.patternUnits:~SVG11/pservers.html#PatternElementPatternUnitsAttribute
+	a.gradientUnits:~SVG11/pservers.html#LinearGradientElementGradientUnitsAttribute
+	a.transform:~SVG11/coords.html#TransformAttribute
+	a.viewBox:~SVG11/coords.html#ViewBoxAttribute
+
+	●SVG term
+容器~要素:~SVGstruct#container-element
+呈示~属性:~SVGstyling#TermPresentationAttribute
+塗り~server要素:~SVGpainting#TermPaintServerElement
+描画-可能な要素:~SVGrender#TermRenderableElement
+~text内容~要素:~SVGtext#TermTextContentElement
+~obj限界~box:~SVGcoords#TermObjectBoundingBox
+~stroke限界~box:~SVGcoords#TermStrokeBoundingBox
+表示域~座標系:~SVGcoords#TermViewportCoordinateSystem
+	~SVG11/coords.html#
+	~SVG11/intro.html#TermUserUnits
+~SVG表示域:~SVGcoords#TermSVGViewport
+	~SVG表示域:~SVG11/intro.html#TermSVGViewport
+反映する:~SVGtypes#TermReflect
+	基底~値:~SVGtypes#_base-value
+	~SVG11/animate.html#
+
+
+	●css
+英字:~CSSSYN#letter
+
+視覚-整形~model:~CSS2VISUREN#visuren
+~table包装~box:~CSS22/tables.html#model
+~border~box:~CSSBOX#border-box
+内容~box:~CSSBOX#content-box
+積層~文脈:~CSS2VISUREN#stacking-context
+置換され:~CSSDISP#replaced-element
+包含塊:~CSSDISP#containing-block
+使用~値:~CASCADE#used-value
+算出d値:~CASCADE#computed-value
+解決d値:~CSSOM1#resolved-value
+
+固定された背景:~CSSBG#valdef-background-attachment-fixed
+根~要素~用の背景~塗ng区画:~CSSBG#special-backgrounds
+
+~scroll可能な~overflow区画:~CSSOVERFLOW3#scrollable-overflow-region
+	詳細度:
+作者~stylesheet:~CASCADE#cascade-origin-author
+
+補間:~CSSVAL#interpolation
+開始~値:~TRANSITION#transition-start-value
+終止~値:~TRANSITION#transition-end-value
+
+
+●●matrix_data
+
+●tm-1
+1, 0, 0, −10
+0, 1, 0, −20
+0, 0, 1, 0
+0, 0, 0, 1
+
+●tm-2
+2, 0, 0, 0
+0, 2, 0, 0
+0, 0, 1, 0
+0, 0, 0, 1
+
+●tm-3
+cos(45), −sin(45), 0, 0
+sin(45), cos(45), 0, 0
+0, 0, 1, 0
+0, 0, 0, 1
+
+●tm-map-1
+%Q.x
+%Q.y
+0
+1
+
+●tm-map-2
+%P.x
+%P.y
+0
+1
+
+●ctm-1
+1, 0, 0, −10
+0, 1, 0, −20
+0, 0, 1, 0
+0, 0, 0, 1
+
+●ctm-2
+2, 0, 0, 0
+0, 2, 0, 0
+0, 0, 1, 0
+0, 0, 0, 1
+
+●ctm-3
+cos(45), −sin(45), 0, 0
+sin(45), cos(45), 0, 0
+0, 0, 1, 0
+0, 0, 0, 1
+
+●ctm-map-1
+%Q.x
+%Q.y
+0
+1
+
+●ctm-map-2
+%P.x
+%P.y
+0
+1
+
+●4x4matrix
+%m.11, %m.21, %m.31, %m.41
+%m.12, %m.22, %m.32, %m.42
+%m.13, %m.23, %m.33, %m.43
+%m.14, %m.24, %m.34, %m.44
+
+●matrix
+%a, %c, 0, %e
+%b, %d, 0, %f
+0, 0, 1, 0
+0, 0, 0, 1
+
+●skew
+1, tan( %α ), 0, %e
+tan( %β ), 1, 0, %f
+0, 0, 1, 0
+0, 0, 0, 1
+
+●skewX
+1, tan( %α ), 0, 0
+0, 1, 0, 0
+0, 0, 1, 0
+0, 0, 0, 1
+
+●skewY
+1, 0, 0, 0
+tan( %β ), 1, 0, 0
+0, 0, 1, 0
+0, 0, 0, 1
+
+●translate2D
+1, 0, 0, %tx
+0, 1, 0, %ty
+0, 0, 1, 0
+0, 0, 0, 1
+
+●scale2D
+%sx, 0, 0, 0
+0, %sy, 0, 0
+0, 0, 1, 0
+0, 0, 0, 1
+
+●rot2D
+cos( %α ), −sin( %α ), 0, 0
+sin( %α ), cos( %α ), 0, 0
+0, 0, 1, 0
+0, 0, 0, 1
+
+
+●●ref_normative
+
+[CSS-CASCADE-4]
+    Elika Etemad; Tab Atkins Jr.. CSS Cascading and Inheritance Level 4. 28 August 2018. CR. URL: https://www.w3.org/TR/css-cascade-4/ 
+[CSS-MASKING]
+    Dirk Schulze; Brian Birtles; Tab Atkins Jr.. CSS Masking Module Level 1. 26 August 2014. CR. URL: https://www.w3.org/TR/css-masking-1/ 
+[CSS-OVERFLOW-3]
+    David Baron; Elika Etemad; Florian Rivoal. CSS Overflow Module Level 3. 31 July 2018. WD. URL: https://www.w3.org/TR/css-overflow-3/ 
+[CSS-POSITION-3]
+    Rossen Atanassov; Arron Eicholz. CSS Positioned Layout Module Level 3. 17 May 2016. WD. URL: https://www.w3.org/TR/css-position-3/ 
+[CSS-SYNTAX-3]
+    Tab Atkins Jr.; Simon Sapin. CSS Syntax Module Level 3. 16 July 2019. CR. URL: https://www.w3.org/TR/css-syntax-3/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS2]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[CSS3BG]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. 17 October 2017. CR. URL: https://www.w3.org/TR/css-backgrounds-3/ 
+[CSSOM]
+    Simon Pieters; Glenn Adams. CSS Object Model (CSSOM). 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-1/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[SVG11]
+    Erik Dahlström; et al. Scalable Vector Graphics (SVG) 1.1 (Second Edition). 16 August 2011. REC. URL: https://www.w3.org/TR/SVG11/ 
+[SVG2]
+    Amelia Bellamy-Royds; et al. Scalable Vector Graphics (SVG) 2. 4 October 2018. CR. URL: https://www.w3.org/TR/SVG2/ 
+
+●●ref_informative
+
+[CSS-TRANSFORMS-2]
+    Tab Atkins Jr.; et al. CSS Transforms Module Level 2. 3 March 2020. WD. URL: https://www.w3.org/TR/css-transforms-2/ 
+
+[CSSOM-VIEW]
+    Simon Pieters. CSSOM View Module. 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-view-1/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより勧告候補として公開された
+<a href="~SPEC_URL">CSS Transforms Module Level 1</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/css-transforms-1/
+編集者草案
+	https://drafts.csswg.org/css-transforms/
+以前のバージョン
+	https://www.w3.org/TR/2019/CR-css-transforms-1-20190214/
+	https://www.w3.org/TR/2018/WD-css-transforms-1-20181130/
+	https://www.w3.org/TR/2017/WD-css-transforms-1-20171130/
+	https://www.w3.org/TR/2013/WD-css-transforms-1-20131126/
+	https://www.w3.org/TR/2012/WD-css3-transforms-20120911/
+	https://www.w3.org/TR/2012/WD-css3-transforms-20120403/
+
+テスト一式
+	http://test.csswg.org/suites/css-transforms-1_dev/nightly-unstable/
+
+編集
+	<a href="mailto:simon.fraser@apple.com">Simon Fraser</a> (Apple Inc)
+	<a href="mailto:dino@apple.com">Dean Jackson</a> (Apple Inc)
+	<a href="mailto:eoconnor@apple.com">Theresa O’Connor</a> (Apple Inc)
+	<a href="mailto:dschulze@adobe.com">Dirk Schulze</a> (Adobe Inc)
+前任編集者
+	<a href="mailto:hyatt@apple.com">David Hyatt</a> (Apple Inc)
+	<a href="mailto:cmarrin@apple.com">Chris Marrin</a> (Apple Inc)
+	<a href="mailto:ayg@aryeh.name">Aryeh Gregor</a> (Mozilla)
+
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-transforms-1/Overview.bs">GitHub Editor</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-transforms-1
+
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-transforms-1">GitHub Issues</a>
+
+暫定的な実装報告
+	https://test.csswg.org/harness/results/css-transforms-1_dev/grouped/
+
+</script>
+
+</head>
+
+<body>
+
+
+<div id="_persisted_parts" hidden>
+<!--%resource pool -->
+
+<img id="_dgm-translate1"
+	src="css-transforms/translate1.svg"
+	height="250" width="470"
+	alt="The 100px translation in X and Y"
+>
+
+<img id="_dgm-origin1"
+	src="css-transforms/origin1.svg"
+	height="250" width="735"
+	alt="The point of origin gets translated temporary"
+>
+
+<img id="_dgm-compound_transform"
+	height="270" width="270"
+	src="css-transforms/compound_transform.svg"
+	alt="The transform specified above"
+>
+
+<img id="_dgm-svg-translate1"
+	src="css-transforms/svg-translate1.svg"
+	height="240" width="470"
+	alt="Translated SVG container element."
+>
+
+<svg
+	id="_dgm-svg-wsp"
+	class="railroad-diagram"
+	width="180"
+	height="152"
+	viewBox="0 0 180 152"
+>
+ <g transform="translate(.5 .5)">
+<path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path>
+  <g>
+<path d="M40 31h0"></path>
+<path d="M140 31h0"></path>
+<path d="M40 31h20"></path>
+   <g class="terminal">
+<path d="M60 31h0"></path>
+<path d="M120 31h0"></path>
+<rect height="22" rx="10" ry="10" width="60" x="60" y="20"></rect>
+<text x="90" y="35">space</text>
+   </g>
+<path d="M120 31h20"></path>
+<path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path>
+   <g class="terminal">
+<path d="M60 61h12"></path>
+<path d="M108 61h12"></path>
+<rect height="22" rx="10" ry="10" width="36" x="72" y="50"></rect>
+<text x="90" y="65">\t</text>
+   </g>
+<path d="M120 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path>
+<path d="M40 31a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path>
+   <g class="terminal">
+<path d="M60 91h12"></path>
+<path d="M108 91h12"></path>
+<rect height="22" rx="10" ry="10" width="36" x="72" y="80"></rect>
+<text x="90" y="95">\r</text>
+   </g>
+<path d="M120 91a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path>
+<path d="M40 31a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path>
+   <g class="terminal">
+<path d="M60 121h12"></path>
+<path d="M108 121h12"></path>
+<rect height="22" rx="10" ry="10" width="36" x="72" y="110"></rect>
+<text x="90" y="125">\f</text>
+   </g>
+<path d="M120 121a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path>
+  </g>
+<path d="M 140 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path>
+ </g>
+</svg>
+
+
+<svg
+	id="_dgm-svg-comma-wsp"
+	class="railroad-diagram"
+	width="398"
+	height="128"
+	viewBox="0 0 398 128"
+>
+ <g transform="translate(.5 .5)">
+<path d="M 20 30 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path>
+  <g>
+<path d="M40 40h0"></path>
+<path d="M358 40h0"></path>
+<path d="M40 40h20"></path>
+   <g>
+<path d="M60 40h0"></path>
+<path d="M338 40h0"></path>
+    <g>
+<path d="M60 40h0"></path>
+<path d="M124 40h0"></path>
+<path d="M60 40h10"></path>
+     <g class="non-terminal">
+<path d="M70 40h0"></path>
+<path d="M114 40h0"></path>
+<rect height="22" width="44" x="70" y="29"></rect>
+<text x="92" y="44">wsp</text>
+     </g>
+<path d="M114 40h10"></path>
+<path d="M70 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+     <g>
+<path d="M70 60h44"></path>
+     </g>
+<path d="M114 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+    </g>
+<path d="M124 40h10"></path>
+    <g>
+<path d="M134 40h0"></path>
+<path d="M234 40h0"></path>
+<path d="M134 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M154 20h60"></path>
+     </g>
+<path d="M214 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M134 40h20"></path>
+     <g class="non-terminal">
+<path d="M154 40h0"></path>
+<path d="M214 40h0"></path>
+<rect height="22" width="60" x="154" y="29"></rect>
+<text x="184" y="44">comma</text>
+     </g>
+<path d="M214 40h20"></path>
+    </g>
+    <g>
+<path d="M234 40h0"></path>
+<path d="M338 40h0"></path>
+<path d="M234 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M254 20h64"></path>
+     </g>
+<path d="M318 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M234 40h20"></path>
+     <g>
+<path d="M254 40h0"></path>
+<path d="M318 40h0"></path>
+<path d="M254 40h10"></path>
+      <g class="non-terminal">
+<path d="M264 40h0"></path>
+<path d="M308 40h0"></path>
+<rect height="22" width="44" x="264" y="29"></rect>
+<text x="286" y="44">wsp</text>
+      </g>
+<path d="M308 40h10"></path>
+<path d="M264 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M264 60h44"></path>
+      </g>
+<path d="M308 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M318 40h20"></path>
+    </g>
+   </g>
+<path d="M338 40h20"></path>
+<path d="M40 40a10 10 0 0 1 10 10v28a10 10 0 0 0 10 10"></path>
+   <g>
+<path d="M60 88h52"></path>
+<path d="M286 88h52"></path>
+    <g class="non-terminal">
+<path d="M112 88h0"></path>
+<path d="M172 88h0"></path>
+<rect height="22" width="60" x="112" y="77"></rect>
+<text x="142" y="92">comma</text>
+    </g>
+<path d="M172 88h10"></path>
+    <g>
+<path d="M182 88h0"></path>
+<path d="M286 88h0"></path>
+<path d="M182 88a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M202 68h64"></path>
+     </g>
+<path d="M266 68a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M182 88h20"></path>
+     <g>
+<path d="M202 88h0"></path>
+<path d="M266 88h0"></path>
+<path d="M202 88h10"></path>
+      <g class="non-terminal">
+<path d="M212 88h0"></path>
+<path d="M256 88h0"></path>
+<rect height="22" width="44" x="212" y="77"></rect>
+<text x="234" y="92">wsp</text>
+      </g>
+<path d="M256 88h10"></path>
+<path d="M212 88a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M212 108h44"></path>
+      </g>
+<path d="M256 108a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M266 88h20"></path>
+    </g>
+   </g>
+<path d="M338 88a10 10 0 0 0 10 -10v-28a10 10 0 0 1 10 -10"></path>
+  </g>
+<path d="M 358 40 h 20 m -10 -10 v 20 m 10 -20 v 20"></path>
+ </g>
+</svg>
+
+
+
+<svg
+	id="_dgm-svg-translate"
+	class="railroad-diagram"
+	width="596"
+	height="192"
+	viewBox="0 0 596 192"
+>
+ <g transform="translate(.5 .5)">
+<path d="M 20 30 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path>
+<path d="M40 40h10"></path>
+  <g>
+<path d="M50 40h0"></path>
+<path d="M50 40h10"></path>
+   <g>
+<path d="M60 40h59"></path>
+<path d="M477 40h59"></path>
+    <g class="terminal">
+<path d="M119 40h0"></path>
+<path d="M211 40h0"></path>
+<rect height="22" rx="10" ry="10" width="92" x="119" y="29"></rect>
+<text x="165" y="44">translate</text>
+    </g>
+<path d="M211 40h10"></path>
+    <g>
+<path d="M221 40h0"></path>
+<path d="M325 40h0"></path>
+<path d="M221 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M241 20h64"></path>
+     </g>
+<path d="M305 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M221 40h20"></path>
+     <g>
+<path d="M241 40h0"></path>
+<path d="M305 40h0"></path>
+<path d="M241 40h10"></path>
+      <g class="non-terminal">
+<path d="M251 40h0"></path>
+<path d="M295 40h0"></path>
+<rect height="22" width="44" x="251" y="29"></rect>
+<text x="273" y="44">wsp</text>
+      </g>
+<path d="M295 40h10"></path>
+<path d="M251 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M251 60h44"></path>
+      </g>
+<path d="M295 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M305 40h20"></path>
+    </g>
+<path d="M325 40h10"></path>
+    <g class="terminal">
+<path d="M335 40h0"></path>
+<path d="M363 40h0"></path>
+<rect height="22" rx="10" ry="10" width="28" x="335" y="29"></rect>
+<text x="349" y="44">(</text>
+    </g>
+<path d="M363 40h10"></path>
+    <g>
+<path d="M373 40h0"></path>
+<path d="M477 40h0"></path>
+<path d="M373 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M393 20h64"></path>
+     </g>
+<path d="M457 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M373 40h20"></path>
+     <g>
+<path d="M393 40h0"></path>
+<path d="M457 40h0"></path>
+<path d="M393 40h10"></path>
+      <g class="non-terminal">
+<path d="M403 40h0"></path>
+<path d="M447 40h0"></path>
+<rect height="22" width="44" x="403" y="29"></rect>
+<text x="425" y="44">wsp</text>
+      </g>
+<path d="M447 40h10"></path>
+<path d="M403 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M403 60h44"></path>
+      </g>
+<path d="M447 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M457 40h20"></path>
+    </g>
+   </g>
+<path d="M536 40a10 10 0 0 1 10 10v8a10 10 0 0 1 -10 10h-476a10 10 0 0 0 -10 10v16a10 10 0 0 0 10 10"></path>
+   <g>
+<path d="M60 104h10"></path>
+<path d="M526 104h10"></path>
+    <g class="non-terminal">
+<path d="M70 104h0"></path>
+<path d="M202 104h0"></path>
+<rect height="22" width="132" x="70" y="93"></rect>
+<text x="136" y="108">&lt;number-token&gt;</text>
+    </g>
+<path d="M202 104h10"></path>
+    <g>
+<path d="M212 104h0"></path>
+<path d="M526 104h0"></path>
+<path d="M212 104a10 10 0 0 0 10 -10v-8a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M232 76h274"></path>
+     </g>
+<path d="M506 76a10 10 0 0 1 10 10v8a10 10 0 0 0 10 10"></path>
+<path d="M212 104h20"></path>
+     <g>
+<path d="M232 104h0"></path>
+<path d="M506 104h0"></path>
+      <g>
+<path d="M232 104h0"></path>
+<path d="M364 104h0"></path>
+<path d="M232 104a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+       <g>
+<path d="M252 84h92"></path>
+       </g>
+<path d="M344 84a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M232 104h20"></path>
+       <g class="non-terminal">
+<path d="M252 104h0"></path>
+<path d="M344 104h0"></path>
+<rect height="22" width="92" x="252" y="93"></rect>
+<text x="298" y="108">comma-wsp</text>
+       </g>
+<path d="M344 104h20"></path>
+      </g>
+<path d="M364 104h10"></path>
+      <g class="non-terminal">
+<path d="M374 104h0"></path>
+<path d="M506 104h0"></path>
+<rect height="22" width="132" x="374" y="93"></rect>
+<text x="440" y="108">&lt;number-token&gt;</text>
+      </g>
+     </g>
+<path d="M506 104h20"></path>
+    </g>
+   </g>
+<path d="M536 104a10 10 0 0 1 10 10v0a10 10 0 0 1 -10 10h-476a10 10 0 0 0 -10 10v8a10 10 0 0 0 10 10"></path>
+   <g>
+<path d="M60 152h167"></path>
+<path d="M369 152h167"></path>
+    <g>
+<path d="M227 152h0"></path>
+<path d="M331 152h0"></path>
+<path d="M227 152a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M247 132h64"></path>
+     </g>
+<path d="M311 132a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M227 152h20"></path>
+     <g>
+<path d="M247 152h0"></path>
+<path d="M311 152h0"></path>
+<path d="M247 152h10"></path>
+      <g class="non-terminal">
+<path d="M257 152h0"></path>
+<path d="M301 152h0"></path>
+<rect height="22" width="44" x="257" y="141"></rect>
+<text x="279" y="156">wsp</text>
+      </g>
+<path d="M301 152h10"></path>
+<path d="M257 152a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M257 172h44"></path>
+      </g>
+<path d="M301 172a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M311 152h20"></path>
+    </g>
+<path d="M331 152h10"></path>
+    <g class="terminal">
+<path d="M341 152h0"></path>
+<path d="M369 152h0"></path>
+<rect height="22" rx="10" ry="10" width="28" x="341" y="141"></rect>
+<text x="355" y="156">)</text>
+    </g>
+   </g>
+<path d="M536 152h10"></path>
+<path d="M546 152h0"></path>
+  </g>
+<path d="M546 152h10"></path>
+<path d="M 556 152 h 20 m -10 -10 v 20 m 10 -20 v 20"></path>
+ </g>
+</svg>
+
+
+<svg
+	id="_dgm-svg-scale"
+	class="railroad-diagram"
+	width="596"
+	height="192"
+	viewBox="0 0 596 192"
+>
+ <g transform="translate(.5 .5)">
+<path d="M 20 30 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path>
+<path d="M40 40h10"></path>
+  <g>
+<path d="M50 40h0"></path>
+<path d="M50 40h10"></path>
+   <g>
+<path d="M60 40h75"></path>
+<path d="M461 40h75"></path>
+    <g class="terminal">
+<path d="M135 40h0"></path>
+<path d="M195 40h0"></path>
+<rect height="22" rx="10" ry="10" width="60" x="135" y="29"></rect>
+<text x="165" y="44">scale</text>
+    </g>
+<path d="M195 40h10"></path>
+    <g>
+<path d="M205 40h0"></path>
+<path d="M309 40h0"></path>
+<path d="M205 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M225 20h64"></path>
+     </g>
+<path d="M289 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M205 40h20"></path>
+     <g>
+<path d="M225 40h0"></path>
+<path d="M289 40h0"></path>
+<path d="M225 40h10"></path>
+      <g class="non-terminal">
+<path d="M235 40h0"></path>
+<path d="M279 40h0"></path>
+<rect height="22" width="44" x="235" y="29"></rect>
+<text x="257" y="44">wsp</text>
+      </g>
+<path d="M279 40h10"></path>
+<path d="M235 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M235 60h44"></path>
+      </g>
+<path d="M279 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M289 40h20"></path>
+    </g>
+<path d="M309 40h10"></path>
+    <g class="terminal">
+<path d="M319 40h0"></path>
+<path d="M347 40h0"></path>
+<rect height="22" rx="10" ry="10" width="28" x="319" y="29"></rect>
+<text x="333" y="44">(</text>
+    </g>
+<path d="M347 40h10"></path>
+    <g>
+<path d="M357 40h0"></path>
+<path d="M461 40h0"></path>
+<path d="M357 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M377 20h64"></path>
+     </g>
+<path d="M441 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M357 40h20"></path>
+     <g>
+<path d="M377 40h0"></path>
+<path d="M441 40h0"></path>
+<path d="M377 40h10"></path>
+      <g class="non-terminal">
+<path d="M387 40h0"></path>
+<path d="M431 40h0"></path>
+<rect height="22" width="44" x="387" y="29"></rect>
+<text x="409" y="44">wsp</text>
+      </g>
+<path d="M431 40h10"></path>
+<path d="M387 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M387 60h44"></path>
+      </g>
+<path d="M431 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M441 40h20"></path>
+    </g>
+   </g>
+<path d="M536 40a10 10 0 0 1 10 10v8a10 10 0 0 1 -10 10h-476a10 10 0 0 0 -10 10v16a10 10 0 0 0 10 10"></path>
+   <g>
+<path d="M60 104h10"></path>
+<path d="M526 104h10"></path>
+    <g class="non-terminal">
+<path d="M70 104h0"></path>
+<path d="M202 104h0"></path>
+<rect height="22" width="132" x="70" y="93"></rect>
+<text x="136" y="108">&lt;number-token&gt;</text>
+    </g>
+<path d="M202 104h10"></path>
+    <g>
+<path d="M212 104h0"></path>
+<path d="M526 104h0"></path>
+<path d="M212 104a10 10 0 0 0 10 -10v-8a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M232 76h274"></path>
+     </g>
+<path d="M506 76a10 10 0 0 1 10 10v8a10 10 0 0 0 10 10"></path>
+<path d="M212 104h20"></path>
+     <g>
+<path d="M232 104h0"></path>
+<path d="M506 104h0"></path>
+      <g>
+<path d="M232 104h0"></path>
+<path d="M364 104h0"></path>
+<path d="M232 104a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+       <g>
+<path d="M252 84h92"></path>
+       </g>
+<path d="M344 84a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M232 104h20"></path>
+       <g class="non-terminal">
+<path d="M252 104h0"></path>
+<path d="M344 104h0"></path>
+<rect height="22" width="92" x="252" y="93"></rect>
+<text x="298" y="108">comma-wsp</text>
+       </g>
+<path d="M344 104h20"></path>
+      </g>
+<path d="M364 104h10"></path>
+      <g class="non-terminal">
+<path d="M374 104h0"></path>
+<path d="M506 104h0"></path>
+<rect height="22" width="132" x="374" y="93"></rect>
+<text x="440" y="108">&lt;number-token&gt;</text>
+      </g>
+     </g>
+<path d="M506 104h20"></path>
+    </g>
+   </g>
+<path d="M536 104a10 10 0 0 1 10 10v0a10 10 0 0 1 -10 10h-476a10 10 0 0 0 -10 10v8a10 10 0 0 0 10 10"></path>
+   <g>
+<path d="M60 152h167"></path>
+<path d="M369 152h167"></path>
+    <g>
+<path d="M227 152h0"></path>
+<path d="M331 152h0"></path>
+<path d="M227 152a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M247 132h64"></path>
+     </g>
+<path d="M311 132a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M227 152h20"></path>
+     <g>
+<path d="M247 152h0"></path>
+<path d="M311 152h0"></path>
+<path d="M247 152h10"></path>
+      <g class="non-terminal">
+<path d="M257 152h0"></path>
+<path d="M301 152h0"></path>
+<rect height="22" width="44" x="257" y="141"></rect>
+<text x="279" y="156">wsp</text>
+      </g>
+<path d="M301 152h10"></path>
+<path d="M257 152a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M257 172h44"></path>
+      </g>
+<path d="M301 172a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M311 152h20"></path>
+    </g>
+<path d="M331 152h10"></path>
+    <g class="terminal">
+<path d="M341 152h0"></path>
+<path d="M369 152h0"></path>
+<rect height="22" rx="10" ry="10" width="28" x="341" y="141"></rect>
+<text x="355" y="156">)</text>
+    </g>
+   </g>
+<path d="M536 152h10"></path>
+<path d="M546 152h0"></path>
+  </g>
+<path d="M546 152h10"></path>
+<path d="M 556 152 h 20 m -10 -10 v 20 m 10 -20 v 20"></path>
+ </g>
+</svg>
+
+
+<svg
+	id="_dgm-svg-rotate"
+	class="railroad-diagram"
+	width="616"
+	height="221"
+	viewBox="0 0 616 221"
+>
+ <g transform="translate(.5 .5)">
+<path d="M 20 30 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path>
+<path d="M40 40h10"></path>
+  <g>
+<path d="M50 40h0"></path>
+<path d="M50 40h10"></path>
+   <g>
+<path d="M60 40h81"></path>
+<path d="M475 40h81"></path>
+    <g class="terminal">
+<path d="M141 40h0"></path>
+<path d="M209 40h0"></path>
+<rect height="22" rx="10" ry="10" width="68" x="141" y="29"></rect>
+<text x="175" y="44">rotate</text>
+    </g>
+<path d="M209 40h10"></path>
+    <g>
+<path d="M219 40h0"></path>
+<path d="M323 40h0"></path>
+<path d="M219 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M239 20h64"></path>
+     </g>
+<path d="M303 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M219 40h20"></path>
+     <g>
+<path d="M239 40h0"></path>
+<path d="M303 40h0"></path>
+<path d="M239 40h10"></path>
+      <g class="non-terminal">
+<path d="M249 40h0"></path>
+<path d="M293 40h0"></path>
+<rect height="22" width="44" x="249" y="29"></rect>
+<text x="271" y="44">wsp</text>
+      </g>
+<path d="M293 40h10"></path>
+<path d="M249 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M249 60h44"></path>
+      </g>
+<path d="M293 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M303 40h20"></path>
+    </g>
+<path d="M323 40h10"></path>
+    <g class="terminal">
+<path d="M333 40h0"></path>
+<path d="M361 40h0"></path>
+<rect height="22" rx="10" ry="10" width="28" x="333" y="29"></rect>
+<text x="347" y="44">(</text>
+    </g>
+<path d="M361 40h10"></path>
+    <g>
+<path d="M371 40h0"></path>
+<path d="M475 40h0"></path>
+<path d="M371 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M391 20h64"></path>
+     </g>
+<path d="M455 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M371 40h20"></path>
+     <g>
+<path d="M391 40h0"></path>
+<path d="M455 40h0"></path>
+<path d="M391 40h10"></path>
+      <g class="non-terminal">
+<path d="M401 40h0"></path>
+<path d="M445 40h0"></path>
+<rect height="22" width="44" x="401" y="29"></rect>
+<text x="423" y="44">wsp</text>
+      </g>
+<path d="M445 40h10"></path>
+<path d="M401 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M401 60h44"></path>
+      </g>
+<path d="M445 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M455 40h20"></path>
+    </g>
+   </g>
+<path d="M556 40a10 10 0 0 1 10 10v8a10 10 0 0 1 -10 10h-496a10 10 0 0 0 -10 10v16a10 10 0 0 0 10 10"></path>
+   <g>
+<path d="M60 104h10"></path>
+<path d="M546 104h10"></path>
+    <g class="non-terminal">
+<path d="M70 104h0"></path>
+<path d="M202 104h0"></path>
+<rect height="22" width="132" x="70" y="93"></rect>
+<text x="136" y="108">&lt;number-token&gt;</text>
+    </g>
+<path d="M202 104h10"></path>
+    <g>
+<path d="M212 104h0"></path>
+<path d="M546 104h0"></path>
+<path d="M212 104a10 10 0 0 0 10 -10v-8a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M232 76h294"></path>
+     </g>
+<path d="M526 76a10 10 0 0 1 10 10v8a10 10 0 0 0 10 10"></path>
+<path d="M212 104h20"></path>
+     <g>
+<path d="M232 104h0"></path>
+<path d="M526 104h0"></path>
+<path d="M232 104h10"></path>
+      <g>
+<path d="M242 104h0"></path>
+<path d="M516 104h0"></path>
+       <g>
+<path d="M242 104h0"></path>
+<path d="M374 104h0"></path>
+<path d="M242 104a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+        <g>
+<path d="M262 84h92"></path>
+        </g>
+<path d="M354 84a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M242 104h20"></path>
+        <g class="non-terminal">
+<path d="M262 104h0"></path>
+<path d="M354 104h0"></path>
+<rect height="22" width="92" x="262" y="93"></rect>
+<text x="308" y="108">comma-wsp</text>
+        </g>
+<path d="M354 104h20"></path>
+       </g>
+<path d="M374 104h10"></path>
+       <g class="non-terminal">
+<path d="M384 104h0"></path>
+<path d="M516 104h0"></path>
+<rect height="22" width="132" x="384" y="93"></rect>
+<text x="450" y="108">&lt;number-token&gt;</text>
+       </g>
+      </g>
+<path d="M516 104h10"></path>
+<path d="M242 104a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M242 134h128"></path>
+<path d="M387 134h128"></path>
+<text class="comment" x="379" y="139">1</text>
+      </g>
+<path d="M516 134a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M526 104h20"></path>
+    </g>
+   </g>
+<path d="M556 104a10 10 0 0 1 10 10v29a10 10 0 0 1 -10 10h-496a10 10 0 0 0 -10 10v8a10 10 0 0 0 10 10"></path>
+   <g>
+<path d="M60 181h177"></path>
+<path d="M379 181h177"></path>
+    <g>
+<path d="M237 181h0"></path>
+<path d="M341 181h0"></path>
+<path d="M237 181a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M257 161h64"></path>
+     </g>
+<path d="M321 161a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M237 181h20"></path>
+     <g>
+<path d="M257 181h0"></path>
+<path d="M321 181h0"></path>
+<path d="M257 181h10"></path>
+      <g class="non-terminal">
+<path d="M267 181h0"></path>
+<path d="M311 181h0"></path>
+<rect height="22" width="44" x="267" y="170"></rect>
+<text x="289" y="185">wsp</text>
+      </g>
+<path d="M311 181h10"></path>
+<path d="M267 181a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M267 201h44"></path>
+      </g>
+<path d="M311 201a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M321 181h20"></path>
+    </g>
+<path d="M341 181h10"></path>
+    <g class="terminal">
+<path d="M351 181h0"></path>
+<path d="M379 181h0"></path>
+<rect height="22" rx="10" ry="10" width="28" x="351" y="170"></rect>
+<text x="365" y="185">)</text>
+    </g>
+   </g>
+<path d="M556 181h10"></path>
+<path d="M566 181h0"></path>
+  </g>
+<path d="M566 181h10"></path>
+<path d="M 576 181 h 20 m -10 -10 v 20 m 10 -20 v 20"></path>
+ </g>
+</svg>
+
+
+<svg
+	id="_dgm-svg-skewX"
+	class="railroad-diagram"
+	width="466"
+	height="176"
+	viewBox="0 0 466 176"
+>
+ <g transform="translate(.5 .5)">
+<path d="M 20 30 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path>
+<path d="M40 40h10"></path>
+  <g>
+<path d="M50 40h0"></path>
+<path d="M50 40h10"></path>
+   <g>
+<path d="M60 40h10"></path>
+<path d="M396 40h10"></path>
+    <g class="terminal">
+<path d="M70 40h0"></path>
+<path d="M130 40h0"></path>
+<rect height="22" rx="10" ry="10" width="60" x="70" y="29"></rect>
+<text x="100" y="44">skewX</text>
+    </g>
+<path d="M130 40h10"></path>
+    <g>
+<path d="M140 40h0"></path>
+<path d="M244 40h0"></path>
+<path d="M140 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M160 20h64"></path>
+     </g>
+<path d="M224 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M140 40h20"></path>
+     <g>
+<path d="M160 40h0"></path>
+<path d="M224 40h0"></path>
+<path d="M160 40h10"></path>
+      <g class="non-terminal">
+<path d="M170 40h0"></path>
+<path d="M214 40h0"></path>
+<rect height="22" width="44" x="170" y="29"></rect>
+<text x="192" y="44">wsp</text>
+      </g>
+<path d="M214 40h10"></path>
+<path d="M170 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M170 60h44"></path>
+      </g>
+<path d="M214 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M224 40h20"></path>
+    </g>
+<path d="M244 40h10"></path>
+    <g class="terminal">
+<path d="M254 40h0"></path>
+<path d="M282 40h0"></path>
+<rect height="22" rx="10" ry="10" width="28" x="254" y="29"></rect>
+<text x="268" y="44">(</text>
+    </g>
+<path d="M282 40h10"></path>
+    <g>
+<path d="M292 40h0"></path>
+<path d="M396 40h0"></path>
+<path d="M292 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M312 20h64"></path>
+     </g>
+<path d="M376 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M292 40h20"></path>
+     <g>
+<path d="M312 40h0"></path>
+<path d="M376 40h0"></path>
+<path d="M312 40h10"></path>
+      <g class="non-terminal">
+<path d="M322 40h0"></path>
+<path d="M366 40h0"></path>
+<rect height="22" width="44" x="322" y="29"></rect>
+<text x="344" y="44">wsp</text>
+      </g>
+<path d="M366 40h10"></path>
+<path d="M322 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M322 60h44"></path>
+      </g>
+<path d="M366 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M376 40h20"></path>
+    </g>
+   </g>
+<path d="M406 40a10 10 0 0 1 10 10v8a10 10 0 0 1 -10 10h-346a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+   <g>
+<path d="M60 88h107"></path>
+<path d="M299 88h107"></path>
+    <g class="non-terminal">
+<path d="M167 88h0"></path>
+<path d="M299 88h0"></path>
+<rect height="22" width="132" x="167" y="77"></rect>
+<text x="233" y="92">&lt;number-token&gt;</text>
+    </g>
+   </g>
+<path d="M406 88a10 10 0 0 1 10 10v0a10 10 0 0 1 -10 10h-346a10 10 0 0 0 -10 10v8a10 10 0 0 0 10 10"></path>
+   <g>
+<path d="M60 136h102"></path>
+<path d="M304 136h102"></path>
+    <g>
+<path d="M162 136h0"></path>
+<path d="M266 136h0"></path>
+<path d="M162 136a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M182 116h64"></path>
+     </g>
+<path d="M246 116a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M162 136h20"></path>
+     <g>
+<path d="M182 136h0"></path>
+<path d="M246 136h0"></path>
+<path d="M182 136h10"></path>
+      <g class="non-terminal">
+<path d="M192 136h0"></path>
+<path d="M236 136h0"></path>
+<rect height="22" width="44" x="192" y="125"></rect>
+<text x="214" y="140">wsp</text>
+      </g>
+<path d="M236 136h10"></path>
+<path d="M192 136a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M192 156h44"></path>
+      </g>
+<path d="M236 156a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M246 136h20"></path>
+    </g>
+<path d="M266 136h10"></path>
+    <g class="terminal">
+<path d="M276 136h0"></path>
+<path d="M304 136h0"></path>
+<rect height="22" rx="10" ry="10" width="28" x="276" y="125"></rect>
+<text x="290" y="140">)</text>
+    </g>
+   </g>
+<path d="M406 136h10"></path>
+<path d="M416 136h0"></path>
+  </g>
+<path d="M416 136h10"></path>
+<path d="M 426 136 h 20 m -10 -10 v 20 m 10 -20 v 20"></path>
+ </g>
+</svg>
+
+
+<svg
+	id="_dgm-svg-skewY"
+	class="railroad-diagram"
+	width="466"
+	height="176"
+	viewBox="0 0 466 176"
+>
+ <g transform="translate(.5 .5)">
+<path d="M 20 30 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path>
+<path d="M40 40h10"></path>
+  <g>
+<path d="M50 40h0"></path>
+<path d="M50 40h10"></path>
+   <g>
+<path d="M60 40h10"></path>
+<path d="M396 40h10"></path>
+    <g class="terminal">
+<path d="M70 40h0"></path>
+<path d="M130 40h0"></path>
+<rect height="22" rx="10" ry="10" width="60" x="70" y="29"></rect>
+<text x="100" y="44">skewY</text>
+    </g>
+<path d="M130 40h10"></path>
+    <g>
+<path d="M140 40h0"></path>
+<path d="M244 40h0"></path>
+<path d="M140 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M160 20h64"></path>
+     </g>
+<path d="M224 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M140 40h20"></path>
+     <g>
+<path d="M160 40h0"></path>
+<path d="M224 40h0"></path>
+<path d="M160 40h10"></path>
+      <g class="non-terminal">
+<path d="M170 40h0"></path>
+<path d="M214 40h0"></path>
+<rect height="22" width="44" x="170" y="29"></rect>
+<text x="192" y="44">wsp</text>
+      </g>
+<path d="M214 40h10"></path>
+<path d="M170 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M170 60h44"></path>
+      </g>
+<path d="M214 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M224 40h20"></path>
+    </g>
+<path d="M244 40h10"></path>
+    <g class="terminal">
+<path d="M254 40h0"></path>
+<path d="M282 40h0"></path>
+<rect height="22" rx="10" ry="10" width="28" x="254" y="29"></rect>
+<text x="268" y="44">(</text>
+    </g>
+<path d="M282 40h10"></path>
+    <g>
+<path d="M292 40h0"></path>
+<path d="M396 40h0"></path>
+<path d="M292 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M312 20h64"></path>
+     </g>
+<path d="M376 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M292 40h20"></path>
+     <g>
+<path d="M312 40h0"></path>
+<path d="M376 40h0"></path>
+<path d="M312 40h10"></path>
+      <g class="non-terminal">
+<path d="M322 40h0"></path>
+<path d="M366 40h0"></path>
+<rect height="22" width="44" x="322" y="29"></rect>
+<text x="344" y="44">wsp</text>
+      </g>
+<path d="M366 40h10"></path>
+<path d="M322 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M322 60h44"></path>
+      </g>
+<path d="M366 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M376 40h20"></path>
+    </g>
+   </g>
+<path d="M406 40a10 10 0 0 1 10 10v8a10 10 0 0 1 -10 10h-346a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+   <g>
+<path d="M60 88h107"></path>
+<path d="M299 88h107"></path>
+    <g class="non-terminal">
+<path d="M167 88h0"></path>
+<path d="M299 88h0"></path>
+<rect height="22" width="132" x="167" y="77"></rect>
+<text x="233" y="92">&lt;number-token&gt;</text>
+    </g>
+   </g>
+<path d="M406 88a10 10 0 0 1 10 10v0a10 10 0 0 1 -10 10h-346a10 10 0 0 0 -10 10v8a10 10 0 0 0 10 10"></path>
+   <g>
+<path d="M60 136h102"></path>
+<path d="M304 136h102"></path>
+    <g>
+<path d="M162 136h0"></path>
+<path d="M266 136h0"></path>
+<path d="M162 136a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M182 116h64"></path>
+     </g>
+<path d="M246 116a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M162 136h20"></path>
+     <g>
+<path d="M182 136h0"></path>
+<path d="M246 136h0"></path>
+<path d="M182 136h10"></path>
+      <g class="non-terminal">
+<path d="M192 136h0"></path>
+<path d="M236 136h0"></path>
+<rect height="22" width="44" x="192" y="125"></rect>
+<text x="214" y="140">wsp</text>
+      </g>
+<path d="M236 136h10"></path>
+<path d="M192 136a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M192 156h44"></path>
+      </g>
+<path d="M236 156a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M246 136h20"></path>
+    </g>
+<path d="M266 136h10"></path>
+    <g class="terminal">
+<path d="M276 136h0"></path>
+<path d="M304 136h0"></path>
+<rect height="22" rx="10" ry="10" width="28" x="276" y="125"></rect>
+<text x="290" y="140">)</text>
+    </g>
+   </g>
+<path d="M406 136h10"></path>
+<path d="M416 136h0"></path>
+  </g>
+<path d="M416 136h10"></path>
+<path d="M 426 136 h 20 m -10 -10 v 20 m 10 -20 v 20"></path>
+ </g>
+</svg>
+
+
+<svg
+	id="_dgm-svg-matrix"
+	class="railroad-diagram"
+	width="616"
+	height="221"
+	viewBox="0 0 616 221"
+>
+ <g transform="translate(.5 .5)">
+<path d="M 20 30 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path>
+<path d="M40 40h10"></path>
+  <g>
+<path d="M50 40h0"></path>
+<path d="M50 40h10"></path>
+   <g>
+<path d="M60 40h81"></path>
+<path d="M475 40h81"></path>
+    <g class="terminal">
+<path d="M141 40h0"></path>
+<path d="M209 40h0"></path>
+<rect height="22" rx="10" ry="10" width="68" x="141" y="29"></rect>
+<text x="175" y="44">matrix</text>
+    </g>
+<path d="M209 40h10"></path>
+    <g>
+<path d="M219 40h0"></path>
+<path d="M323 40h0"></path>
+<path d="M219 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M239 20h64"></path>
+     </g>
+<path d="M303 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M219 40h20"></path>
+     <g>
+<path d="M239 40h0"></path>
+<path d="M303 40h0"></path>
+<path d="M239 40h10"></path>
+      <g class="non-terminal">
+<path d="M249 40h0"></path>
+<path d="M293 40h0"></path>
+<rect height="22" width="44" x="249" y="29"></rect>
+<text x="271" y="44">wsp</text>
+      </g>
+<path d="M293 40h10"></path>
+<path d="M249 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M249 60h44"></path>
+      </g>
+<path d="M293 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M303 40h20"></path>
+    </g>
+<path d="M323 40h10"></path>
+    <g class="terminal">
+<path d="M333 40h0"></path>
+<path d="M361 40h0"></path>
+<rect height="22" rx="10" ry="10" width="28" x="333" y="29"></rect>
+<text x="347" y="44">(</text>
+    </g>
+<path d="M361 40h10"></path>
+    <g>
+<path d="M371 40h0"></path>
+<path d="M475 40h0"></path>
+<path d="M371 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M391 20h64"></path>
+     </g>
+<path d="M455 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M371 40h20"></path>
+     <g>
+<path d="M391 40h0"></path>
+<path d="M455 40h0"></path>
+<path d="M391 40h10"></path>
+      <g class="non-terminal">
+<path d="M401 40h0"></path>
+<path d="M445 40h0"></path>
+<rect height="22" width="44" x="401" y="29"></rect>
+<text x="423" y="44">wsp</text>
+      </g>
+<path d="M445 40h10"></path>
+<path d="M401 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M401 60h44"></path>
+      </g>
+<path d="M445 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M455 40h20"></path>
+    </g>
+   </g>
+<path d="M556 40a10 10 0 0 1 10 10v8a10 10 0 0 1 -10 10h-496a10 10 0 0 0 -10 10v16a10 10 0 0 0 10 10"></path>
+   <g>
+<path d="M60 104h10"></path>
+<path d="M546 104h10"></path>
+    <g class="non-terminal">
+<path d="M70 104h0"></path>
+<path d="M202 104h0"></path>
+<rect height="22" width="132" x="70" y="93"></rect>
+<text x="136" y="108">&lt;number-token&gt;</text>
+    </g>
+<path d="M202 104h10"></path>
+    <g>
+<path d="M212 104h0"></path>
+<path d="M546 104h0"></path>
+<path d="M212 104a10 10 0 0 0 10 -10v-8a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M232 76h294"></path>
+     </g>
+<path d="M526 76a10 10 0 0 1 10 10v8a10 10 0 0 0 10 10"></path>
+<path d="M212 104h20"></path>
+     <g>
+<path d="M232 104h0"></path>
+<path d="M526 104h0"></path>
+<path d="M232 104h10"></path>
+      <g>
+<path d="M242 104h0"></path>
+<path d="M516 104h0"></path>
+       <g>
+<path d="M242 104h0"></path>
+<path d="M374 104h0"></path>
+<path d="M242 104a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+        <g>
+<path d="M262 84h92"></path>
+        </g>
+<path d="M354 84a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M242 104h20"></path>
+        <g class="non-terminal">
+<path d="M262 104h0"></path>
+<path d="M354 104h0"></path>
+<rect height="22" width="92" x="262" y="93"></rect>
+<text x="308" y="108">comma-wsp</text>
+        </g>
+<path d="M354 104h20"></path>
+       </g>
+<path d="M374 104h10"></path>
+       <g class="non-terminal">
+<path d="M384 104h0"></path>
+<path d="M516 104h0"></path>
+<rect height="22" width="132" x="384" y="93"></rect>
+<text x="450" y="108">&lt;number-token&gt;</text>
+       </g>
+      </g>
+<path d="M516 104h10"></path>
+<path d="M242 104a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M242 134h128"></path>
+<path d="M387 134h128"></path>
+<text class="comment" x="379" y="139">4</text>
+      </g>
+<path d="M516 134a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M526 104h20"></path>
+    </g>
+   </g>
+<path d="M556 104a10 10 0 0 1 10 10v29a10 10 0 0 1 -10 10h-496a10 10 0 0 0 -10 10v8a10 10 0 0 0 10 10"></path>
+   <g>
+<path d="M60 181h177"></path>
+<path d="M379 181h177"></path>
+    <g>
+<path d="M237 181h0"></path>
+<path d="M341 181h0"></path>
+<path d="M237 181a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M257 161h64"></path>
+     </g>
+<path d="M321 161a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M237 181h20"></path>
+     <g>
+<path d="M257 181h0"></path>
+<path d="M321 181h0"></path>
+<path d="M257 181h10"></path>
+      <g class="non-terminal">
+<path d="M267 181h0"></path>
+<path d="M311 181h0"></path>
+<rect height="22" width="44" x="267" y="170"></rect>
+<text x="289" y="185">wsp</text>
+      </g>
+<path d="M311 181h10"></path>
+<path d="M267 181a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+      <g>
+<path d="M267 201h44"></path>
+      </g>
+<path d="M311 201a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+     </g>
+<path d="M321 181h20"></path>
+    </g>
+<path d="M341 181h10"></path>
+    <g class="terminal">
+<path d="M351 181h0"></path>
+<path d="M379 181h0"></path>
+<rect height="22" rx="10" ry="10" width="28" x="351" y="170"></rect>
+<text x="365" y="185">)</text>
+    </g>
+   </g>
+<path d="M556 181h10"></path>
+<path d="M566 181h0"></path>
+  </g>
+<path d="M566 181h10"></path>
+<path d="M 576 181 h 20 m -10 -10 v 20 m 10 -20 v 20"></path>
+ </g>
+</svg>
+
+
+<svg
+	id="_dgm-svg-transform-function"
+	class="railroad-diagram"
+	width="212"
+	height="212"
+	viewBox="0 0 212 212"
+>
+ <g transform="translate(.5 .5)">
+<path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path>
+  <g>
+<path d="M40 31h0"></path>
+<path d="M172 31h0"></path>
+<path d="M40 31h20"></path>
+   <g class="non-terminal">
+<path d="M60 31h0"></path>
+<path d="M152 31h0"></path>
+<rect height="22" width="92" x="60" y="20"></rect>
+<text x="106" y="35">translate</text>
+   </g>
+<path d="M152 31h20"></path>
+<path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path>
+   <g class="non-terminal">
+<path d="M60 61h16"></path>
+<path d="M136 61h16"></path>
+<rect height="22" width="60" x="76" y="50"></rect>
+<text x="106" y="65">scale</text>
+   </g>
+<path d="M152 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path>
+<path d="M40 31a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path>
+   <g class="non-terminal">
+<path d="M60 91h12"></path>
+<path d="M140 91h12"></path>
+<rect height="22" width="68" x="72" y="80"></rect>
+<text x="106" y="95">rotate</text>
+   </g>
+<path d="M152 91a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path>
+<path d="M40 31a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path>
+   <g class="non-terminal">
+<path d="M60 121h16"></path>
+<path d="M136 121h16"></path>
+<rect height="22" width="60" x="76" y="110"></rect>
+<text x="106" y="125">skewX</text>
+   </g>
+<path d="M152 121a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path>
+<path d="M40 31a10 10 0 0 1 10 10v100a10 10 0 0 0 10 10"></path>
+   <g class="non-terminal">
+<path d="M60 151h16"></path>
+<path d="M136 151h16"></path>
+<rect height="22" width="60" x="76" y="140"></rect>
+<text x="106" y="155">skewY</text>
+   </g>
+<path d="M152 151a10 10 0 0 0 10 -10v-100a10 10 0 0 1 10 -10"></path>
+<path d="M40 31a10 10 0 0 1 10 10v130a10 10 0 0 0 10 10"></path>
+   <g class="non-terminal">
+<path d="M60 181h12"></path>
+<path d="M140 181h12"></path>
+<rect height="22" width="68" x="72" y="170"></rect>
+<text x="106" y="185">matrix</text>
+   </g>
+<path d="M152 181a10 10 0 0 0 10 -10v-130a10 10 0 0 1 10 -10"></path>
+  </g>
+<path d="M 172 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path>
+ </g>
+</svg>
+
+
+<svg
+	id="_dgm-svg-transforms"
+	class="railroad-diagram"
+	width="464"
+	height="101"
+	viewBox="0 0 464 101"
+>
+ <g transform="translate(.5 .5)">
+<path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path>
+  <g>
+<path d="M40 31h0"></path>
+<path d="M424 31h0"></path>
+<path d="M40 31h20"></path>
+   <g class="non-terminal">
+<path d="M60 31h126"></path>
+<path d="M278 31h126"></path>
+<rect height="22" width="92" x="186" y="20"></rect>
+<text x="232" y="35">transform</text>
+   </g>
+<path d="M404 31h20"></path>
+<path d="M40 31a10 10 0 0 1 10 10v19a10 10 0 0 0 10 10"></path>
+   <g>
+<path d="M60 70h0"></path>
+<path d="M404 70h0"></path>
+    <g class="non-terminal">
+<path d="M60 70h0"></path>
+<path d="M152 70h0"></path>
+<rect height="22" width="92" x="60" y="59"></rect>
+<text x="106" y="74">transform</text>
+    </g>
+<path d="M152 70h10"></path>
+    <g>
+<path d="M162 70h0"></path>
+<path d="M294 70h0"></path>
+<path d="M162 70a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+     <g>
+<path d="M182 50h92"></path>
+     </g>
+<path d="M274 50a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M162 70h20"></path>
+     <g class="non-terminal">
+<path d="M182 70h0"></path>
+<path d="M274 70h0"></path>
+<rect height="22" width="92" x="182" y="59"></rect>
+<text x="228" y="74">comma-wsp</text>
+     </g>
+<path d="M274 70h20"></path>
+    </g>
+<path d="M294 70h10"></path>
+    <g class="non-terminal">
+<path d="M304 70h0"></path>
+<path d="M404 70h0"></path>
+<rect height="22" width="100" x="304" y="59"></rect>
+<text x="354" y="74">transforms</text>
+    </g>
+   </g>
+<path d="M404 70a10 10 0 0 0 10 -10v-19a10 10 0 0 1 10 -10"></path>
+  </g>
+<path d="M 424 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path>
+ </g>
+</svg>
+
+
+<svg
+	id="_dgm-svg-transform-list"
+	class="railroad-diagram"
+	width="428"
+	height="80"
+	viewBox="0 0 428 80"
+>
+ <g transform="translate(.5 .5)">
+<path d="M 20 30 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path>
+  <g>
+<path d="M40 40h0"></path>
+<path d="M144 40h0"></path>
+<path d="M40 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+   <g>
+<path d="M60 20h64"></path>
+   </g>
+<path d="M124 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M40 40h20"></path>
+   <g>
+<path d="M60 40h0"></path>
+<path d="M124 40h0"></path>
+<path d="M60 40h10"></path>
+    <g class="non-terminal">
+<path d="M70 40h0"></path>
+<path d="M114 40h0"></path>
+<rect height="22" width="44" x="70" y="29"></rect>
+<text x="92" y="44">wsp</text>
+    </g>
+<path d="M114 40h10"></path>
+<path d="M70 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+    <g>
+<path d="M70 60h44"></path>
+    </g>
+<path d="M114 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+   </g>
+<path d="M124 40h20"></path>
+  </g>
+  <g>
+<path d="M144 40h0"></path>
+<path d="M284 40h0"></path>
+<path d="M144 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+   <g>
+<path d="M164 20h100"></path>
+   </g>
+<path d="M264 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M144 40h20"></path>
+   <g class="non-terminal">
+<path d="M164 40h0"></path>
+<path d="M264 40h0"></path>
+<rect height="22" width="100" x="164" y="29"></rect>
+<text x="214" y="44">transforms</text>
+   </g>
+<path d="M264 40h20"></path>
+  </g>
+  <g>
+<path d="M284 40h0"></path>
+<path d="M388 40h0"></path>
+<path d="M284 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+   <g>
+<path d="M304 20h64"></path>
+   </g>
+<path d="M368 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M284 40h20"></path>
+   <g>
+<path d="M304 40h0"></path>
+<path d="M368 40h0"></path>
+<path d="M304 40h10"></path>
+    <g class="non-terminal">
+<path d="M314 40h0"></path>
+<path d="M358 40h0"></path>
+<rect height="22" width="44" x="314" y="29"></rect>
+<text x="336" y="44">wsp</text>
+    </g>
+<path d="M358 40h10"></path>
+<path d="M314 40a10 10 0 0 0 -10 10v0a10 10 0 0 0 10 10"></path>
+    <g>
+<path d="M314 60h44"></path>
+    </g>
+<path d="M358 60a10 10 0 0 0 10 -10v0a10 10 0 0 0 -10 -10"></path>
+   </g>
+<path d="M368 40h20"></path>
+  </g>
+<path d="M 388 40 h 20 m -10 -10 v 20 m 10 -20 v 20"></path>
+ </g>
+</svg>
+
+</div>
+
+<header>
+	<hgroup>
+<h1 id="title">CSS による変形 — CSS Transforms Module Level 1</h1>
+	</hgroup>
+
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+<p>
+CSS Transform （変形, 座標系変換）は、要素が~2D（二次元）空間~内で変形されるように，~CSSで~styleできるようにする。
+この仕様は、
+<a href="~TR/2009/WD-css3-2d-transforms-20090320/">CSS 2D Transforms</a>,
+<a href="~TR/2009/WD-SVG-Transforms-20090320/">SVG transforms</a>
+仕様の収束である。
+◎
+CSS transforms allows elements styled with CSS to be transformed in two-dimensional space. This specification is the convergence of the CSS 2D Transforms and SVG transforms specifications.
+</p>
+
+<p class="trans-note">【
+以下、
+“二次元（ `two-dimensional^en ）” ／ “2D”
+を一律に “~2D” と~~表記する。
+】</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公の複製です…
+【！ この節では、発行時点における… 】
+【以下，この節の他の内容は <a href="css-common-ja.html#status">CSS 日本語訳 共通ページ</a>に委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+~CSSの`視覚-整形~model$は、各 要素が位置される座標系について述べている。
+この座標~空間における位置と~sizeは、原点から右方／下方に向かって増大する画素~数による正な値で表出されるものと捉えれる。
+◎
+The CSS visual formatting model describes a coordinate system within each element is positioned. Positions and sizes in this coordinate space can be thought of as being expressed in pixels, starting in the origin of point with positive values proceeding to the right and down.
+</p>
+
+<p>
+この座標~空間は， `transform$p ~propにより改変できる。
+この変形により，要素を並進させ, 回転させ, 拡縮させられる。
+◎
+This coordinate space can be modified with the transform property. Using transform, elements can be translated, rotated and scaled.
+</p>
+
+		<section id="module-interactions">
+<h3 title="Module Interactions">1.1 ~module間の相互作用</h3>
+
+<p>
+この~moduleは、適用-対象の要素の視覚的な描画に影響する，一連の~CSS~propを定義する —
+これらの効果は、 `CSS2$r の`視覚-整形~model$に則って，要素の~sizeと位置が~~決定された後に適用される。
+これらの~propの一部の値に対しては、新たな`包含塊$が設置されたり, `積層~文脈$が確立される。
+◎
+This module defines a set of CSS properties that affect the visual rendering of elements to which those properties are applied; these effects are applied after elements have been sized and positioned according to the visual formatting model from [CSS2]. Some values of these properties result in the creation of a containing block, and/or the creation of a stacking context.
+</p>
+
+<p>
+変形は、 `CSS3BG$r にて指定される［
+`background-attachment$p ~propに値 `fixed$v を伴う要素
+］上の背景~描画にも影響する。
+◎
+Transforms affect the rendering of backgrounds on elements with a value of fixed for the background-attachment property, which is specified in [CSS3BG].
+</p>
+
+<p>
+変形は、 `CSSOM-VIEW$r による `Element^I ~interface拡張：
+`getClientRects()$m,
+`getBoundingClientRect()$m
+が返す~client矩形にも影響する。
+◎
+Transforms affect the client rectangles returned by the Element Interface Extensions getClientRects() and getBoundingClientRect(), which are specified in [CSSOM-VIEW].
+</p>
+
+<p>
+変形は、`~scroll可能な~overflow区画$ `CSS-OVERFLOW-3$r の算出にも影響する。
+◎
+Transforms affect the computation of the scrollable overflow region as described by [CSS-OVERFLOW-3].
+</p>
+
+		</section>
+		<section id="css-values">
+<h3 title="CSS Values">1.2. ~CSS値</h3>
+
+<p class="trans-note">【
+この節の内容は
+<a href="css-common-ja.html#values" >~CSS日本語訳 共通~page</a>
+に委譲
+】</p>
+		</section>
+	</section>
+	<section id="terminology">
+<h2 title="Terminology">2. 各種用語</h2>
+
+<p>
+この節では、この仕様にて利用される用語を定義する：
+◎
+When used in this specification, terms have the meanings assigned in this section.
+</p>
+
+<dl>
+	<dt>
+`変形-可能@
+◎
+transformable element
+</dt>
+	<dd>
+<p>
+次に挙げる要素が，変形-可能とされる：
+◎
+A transformable element is an element in one of these categories:
+</p>
+
+		<ul>
+			<li>
+~CSS~box~modelにより~layoutが統制されるもの `CSS2$r
+— ただし，次に該当するものは除く
+⇒＃
+`置換され$ない行内~box,
+`table-column^v ~box,
+`table-column-group^v ~box
+◎
+all elements whose layout is governed by the CSS box model except for non-replaced inline boxes, table-column boxes, and table-column-group boxes [CSS2],
+</li>
+			<li>
+すべての~SVG［
+`塗り~server要素$ ／
+`clipPath$e 要素 ／
+`描画-可能な要素$
+］のうち，`~text内容~要素$の子孫でないもの。
+`SVG2$r
+◎
+all SVG paint server elements, the clipPath element and SVG renderable elements with the exception of any descendant element of text content elements [SVG2].
+</li>
+		</ul>
+	</dd>
+
+	<dt>
+`変形d要素@
+◎
+transformed element
+</dt>
+	<dd>
+`transform$p ~propの算出d値に `none^v 以外の値を伴う要素。
+◎
+An element with a computed value other than none for the transform property.
+</dd>
+
+	<dt>
+`利用元~座標系@
+◎
+user coordinate system
+</dt>
+	<dt>
+`局所~座標系@
+◎
+local coordinate system
+</dt>
+	<dd>
+一般に，現在の~canvas上の所在と距離を定義する座標系を指す。
+現在の局所~座標系（利用元~座標系とも呼ばれる）とは、現在の~canvas上の座標や長さを算出する方法を定義するために利用される，現在~作動中の座標系である。
+◎
+In general, a coordinate system defines locations and distances on the current canvas. The current local coordinate system (also user coordinate system) is the coordinate system that is currently active and which is used to define how coordinates and lengths are located and computed, respectively, on the current canvas.＼
+</dd>
+	<dd>
+現在の利用元~座標系の原点は、 `transform-box$p ~propにより指定される`基準~box$の左上隅に~~位置する。
+百分率~値は、この基準~boxの寸法に相対的になる。
+1 単位は 1 ~CSS画素に等しい。
+◎
+The current user coordinate system has its origin at the top-left of a reference box specified by the transform-box property. Percentage values are relative to the dimension of this reference box. One unit equals one CSS pixel.
+</dd>
+
+	<dt>
+`変形n行列@
+◎
+transformation matrix
+</dt>
+	<dd>
+ある座標系から別の座標系への数学的な写像を定義する行列。
+`transform$p, `transform-origin$p ~propの値から，
+<a href="#transformation-matrix-computation">後述の様に</a>
+算出される。
+◎
+A matrix that defines the mathematical mapping from one coordinate system into another. It is computed from the values of the transform and transform-origin properties as described below.
+</dd>
+
+	<dt>
+`現在の変形n行列@（ CTM ）
+◎
+CTM — current transformation matrix）
+</dt>
+	<dd>
+当の要素の`局所~座標系$から`表示域~座標系$への写像を定義する行列。
+◎
+A matrix that defines the mapping from the local coordinate system into the viewport coordinate system.
+</dd>
+
+	<dt>
+`~2D行列@
+◎
+2D matrix
+</dt>
+	<dd>
+~3x2変形n行列であるか、または
+~4x4変形n行列であって，項［
+`31^M, `32^M, `13^M, `23^M, `43^M, `14^M, `24^M, `34^M
+］が 0 に等しく, 項［
+`33^M, `44^M
+］が 1 に等しいもの。
+◎
+A 3x2 transformation matrix, or a 4x4 matrix where the items m31, m32, m13, m23, m43, m14, m24, m34 are equal to 0 and m33, m44 are equal to 1.
+</dd>
+	<dd class="trans-note">【
+実質的には 3×3 の行列であり，各元が 3 成分~vectorで表現される
+`<a href="https://ja.wikipedia.org/wiki/%E5%B0%84%E5%BD%B1%E5%B9%B3%E9%9D%A2">射影平面</a>^_
+（すなわち，~2D
+`<a href="https://ja.wikipedia.org/wiki/%E5%B0%84%E5%BD%B1%E7%A9%BA%E9%96%93">射影空間</a>^_
+）に作用する。
+~4x4の行列は、~3D射影空間に埋め込まれた，同じ射影平面に作用する。
+】</dd>
+
+	<dt>
+`恒等~変形-関数@
+◎
+identity transform function
+</dt>
+	<dd>
+~4x4の単位i行列に等価な`変形-関数$（`変形-関数の数学的~記述$を見よ）。
+恒等~変形-関数の例には次が挙げられる
+⇒＃
+`translate(0)^v,
+`translateX(0)^v,
+`translateY(0)^v,
+`scale(1)^v,
+`scaleX(1)^v,
+`scaleY(1)^v,
+`rotate(0)^v,
+`skew(0, 0)^v,
+`skewX(0)^v,
+`skewY(0)^v,
+`matrix(1, 0, 0, 1, 0, 0)^v
+◎
+A transform function that is equivalent to a identity 4x4 matrix (see Mathematical Description of Transform Functions). Examples for identity transform functions are translate(0), translateX(0), translateY(0), scale(1), scaleX(1), scaleY(1), rotate(0), skew(0, 0), skewX(0), skewY(0) and matrix(1, 0, 0, 1, 0, 0).
+</dd>
+
+	<dt>`右から乗算-@（ `post-multiply^en ／ `post-multiplied by^en ）</dt>
+	<dd>
+項 %A に項 %B を右から乗算するときは、
+%A を %A × %B の結果に改変する。
+◎
+Term A post-multiplied by term B is equal to A · B.
+</dd>
+	<dd class="trans-note">【
+この × は行列の乗算を表す（以下でも利用される）。
+】【
+%A や %B は正方~行列に限られない。
+】【
+原文には， “改変する” とは記されていないが、改変する／しないの区別は 文脈によっては重要になるので，ここでは明示的に記す。
+改変しない必要がある場合、下の`乗算-$を用いて述べることにする。
+】</dd>
+	<dd class="trans-note">【
+ここに述べる乗算の用法は `DOMMatrix$I のそれに一致する。
+】</dd>
+
+	<dt>`左から乗算-@（ `pre-multiply^en ／ `pre-multiplied by^en ）</dt>
+	<dd>
+項 %A に項 %B を左から乗算するときは、
+%A を %B × %A の結果に改変する。
+◎
+Term A pre-multiplied by term B is equal to B · A.
+</dd>
+	<dd class="trans-note">【
+点 %A に行列 %B を左から乗算する場合、
+%A を縦~vector（各~成分を縦に並べた行列）と見なすことになる。
+】</dd>
+
+	<dt>`乗算-@（ `multiply^en ）</dt>
+	<dd>
+項 %A, %B を乗算するときは、
+%A × %B の結果を返す（ %A, %B は改変されない）。
+◎
+Multiply term A by term B is equal to A · B.
+</dd>
+	<dd class="trans-note">【
+可換でないので、 %A, %B の順序は有意になる。
+結合律は満たすので、 3 個~以上の行列を乗算するときの~~結合~順序は有意にならない。
+】</dd>
+
+</dl>
+
+	</section>
+	<section id="transform-rendering">
+<h2 title="The Transform Rendering Model">3. 変形の描画~model</h2>
+
+<p>
+`transform$p ~propに `none^v 以外の値を指定した場合、適用-対象の要素に，新たな`局所~座標系$を確立させる。
+この~propにより指定される`変形n行列$は、要素の`局所~座標系$から描画-先への写像を与える†。
+◎
+This section is normative.
+◎
+Specifying a value other than none for the transform property establishes a new local coordinate system at the element that it is applied to. The mapping from where the element would have rendered into that local coordinate system is given by the element’s transformation matrix.
+</p>
+
+<p class="trans-note">【†
+原文は，逆に写像するように読めるが、以下の記述に反するので直している（例えば `scale(0)^v は、要素の局所~座標系のすべての座標を描画-先の一点に写像する — その逆~写像は定義できない）。
+】</p>
+
+<p id="transformation-matrix-computation">
+`変形n行列$は、要素~上の［
+`transform$p, `transform-origin$p
+］~propから，次に従って得られる結果の行列 %TM になる：
+◎
+The transformation matrix is computed from the transform and transform-origin properties as follows:
+</p>
+
+<ol>
+	<li>
+%T ~LET `transform-origin$p の算出d値が与える移動量による`~2D並進$
+◎
+Start with the identity matrix.
+◎
+Translate by the computed X and Y of transform-origin
+</li>
+	<li>
+%TM ~SET %T の複製
+◎
+↑</li>
+	<li>
+`transform$p ~propで与えられる変形-関数~listを成す
+~EACH( 変形-関数 %F )
+に対し，順に
+⇒
+%TM に %F が<a href="#two-d-transform-functions">表現する行列</a>を`右から乗算-$する
+◎
+Multiply by each of the transform functions in transform property from left to right
+</li>
+	<li>
+%TM に %T の逆行列を`右から乗算-$する
+◎
+Translate by the negated computed X and Y values of transform-origin
+</li>
+</ol>
+
+<div class="example">
+
+<p>
+要素の `transform$p ~propは `none^v でない：
+◎
+An element has a transform property that is not none.
+</p>
+
+<pre class="lang-css">
+div {
+  transform-origin: 0 0;
+  transform: translate(-10px, -20px) scale(2) rotate(45deg);
+}
+</pre>
+
+<p>
+`0 0^v に設定された `transform-origin$p ~propは、省略できる。
+`変形n行列$ %TM は、変形-関数［
+`translate$ft, `scale$ft, `rotate$ft
+］が表現する各 変形n行列をこの順に`乗算-$して算出される：
+◎
+The transform-origin property is set to 0 0 and can be omitted. The transformation matrix TM gets computed by post-multying the &lt;translate()&gt;, &lt;scale()&gt; and &lt;rotate()&gt; &lt;transform-function&gt;s.
+</p>
+
+<figure class="_math-formula">
+%TM ~EQ `tm-1^dgm ~MUL `tm-2^dgm ~MUL `tm-3^dgm
+</figure>
+
+【！ ⋅ 】
+
+</div>
+
+<p>
+変形は、`変形-可能$な要素に適用される。
+◎
+Transforms apply to transformable elements.
+</p>
+
+<p>
+この座標~空間は、 X 軸は右方に, Y 軸は下方に増大する座標系である。
+◎
+The coordinate space is a coordinate system with two axes: the X axis increases horizontally to the right; the Y axis increases vertically downwards.
+</p>
+
+<p>
+変形nは累積的である。
+すなわち、要素はその親の座標系の中で局所~座標系を確立する。
+◎
+Transformations are cumulative. That is, elements establish their local coordinate system within the coordinate system of their parent.
+</p>
+
+<p>
+要素の`局所~座標系$の点 %P を親の`局所~座標系$の中へ写像した結果 %Q は、［
+要素の`変形n行列$ %TM, 縦~vector %P
+］をこの順に`乗算-$して得られる
+【`~2D行列$にて述べたように、演算は~3D射影空間の中で遂行される】
+：
+◎
+To map a point plocal with the coordinate pair xlocal and ylocal from the local coordinate system of an element into the parent’s coordinate system, post-multiply the transformation matrix TM of the element by plocal. The result is the mapped point pparent with the coordinate pair xparent and yparent in the parent’s local coordinate system.
+</p>
+
+<figure class="_math-formula">
+`tm-map-1^dgm ~EQ %TM ~MUL `tm-map-2^dgm
+</figure>
+
+<p>
+利用者からは、要素は，実質的に
+それに適用される局所~変形に加えて，そのすべての先祖の `transform$p ~propが累積されたように見える。
+要素~用の`現在の変形n行列$は、これらの変形の累積により定義される。
+◎
+From the perspective of the user, an element effectively accumulates all the transform properties of its ancestors as well as any local transform applied to it. The accumulation of these transforms defines a current transformation matrix (CTM) for the element.
+</p>
+
+<p id="current-transformation-matrix-computation">
+要素の`現在の変形n行列$は、`表示域~座標系$から要素の`変形n行列$までのすべての変形n行列を，先祖から順に`乗算-$して算出される。
+◎
+The current transformation matrix is computed by post-multiplying all transformation matrices starting from the viewport coordinate system and ending with the transformation matrix of an element.
+</p>
+
+<div class="example">
+
+<p>
+次の例には、~SVG文書~内に入子にされた複数の要素があり，~SVG `rect$e 要素が`変形n行列$により変形される。
+◎
+This example has multiple, nested elements in an SVG document. Some elements get transformed by a transformation matrix.
+</p>
+
+<pre class="lang-xml">
+&lt;svg xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;g transform="translate(-10, 20)"&gt;
+    &lt;g transform="scale(2)"&gt;
+      &lt;rect width="200" height="200" transform="rotate(45)"/&gt;
+    &lt;/g&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;
+</pre>
+
+<p>
+`rect^e 要素~用の`現在の変形n行列$ %CTM は、［
+`translate(-10, 20)^v,
+`scale(2)^v,
+`rotate(45)^v
+］が表現する各 変形n行列をこの順に`乗算-$した結果になる：
+◎
+translate(-10, 20) computes to the transformation matrix T1
+◎
+scale(2) computes to the transformation matrix T2
+◎
+rotate(45) computes to the transformation matrix T3
+◎
+The CTM for the SVG rect element is the result of multiplying T1, T2 and T3 in order.
+</p>
+
+<figure class="_math-formula">
+%CTM ~EQ `ctm-1^dgm ~MUL `ctm-2^dgm ~MUL `ctm-3^dgm
+</figure>
+
+<p>
+`rect^e 要素の`局所~座標系$の点 %P を`表示域~座標系$の中へ写像した結果 %Q は、［
+%CTM, %P
+］をこの順に`乗算-$して得られる：
+◎
+To map a point plocal with the coordinate pair xlocal and ylocal from the local coordinate system of the SVG rect element into the viewport coordinate system, post-multiply the current transformation matrix CTM of the element by plocal. The result is the mapped point pviewport with the coordinate pair xviewport and yviewport in the viewport coordinate system.
+</p>
+
+<figure class="_math-formula">
+`ctm-map-1^dgm ~EQ %CTM ~MUL `ctm-map-2^dgm
+</figure>
+
+</div>
+
+<p class="note">注記：
+変形nは、~canvas上の描画には影響するが、~CSS~layout自体には，~overflowを除いて影響しない。
+変形は、 `CSSOM-VIEW$r にて指定される［
+`Element^I ~interface拡張により公開される
+`getClientRects()$m,
+`getBoundingClientRect()$m
+］による~client矩形の算出にも織り込まれる。
+◎
+Note: Transformations do affect the visual rendering, but have no affect on the CSS layout other than affecting overflow. Transforms are also taken into account when computing client rectangles exposed via the Element Interface Extensions, namely getClientRects() and getBoundingClientRect(), which are specified in [CSSOM-VIEW].
+</p>
+
+<div class="example">
+<pre class="lang-css">
+div {
+  transform: translate(100px, 100px);
+}
+</pre>
+
+<p>
+この変形は、要素を X, Y 両方向に 100 画素 移動する（図左が変形-前, 図右が変形-後）。
+◎
+This transform moves the element by 100 pixels in both the X and Y directions.
+</p>
+
+<figure>`translate1^dgm</figure>
+
+</div>
+
+<div class="example">
+<pre class="lang-css">
+div {
+  height: 100px; width: 100px;
+  transform-origin: 50px 50px;
+  transform: rotate(45deg);
+}
+</pre>
+
+<p>
+`transform-origin$p ~propにより，原点を X, Y 両方向に 50 画素ずつずらす。
+`transform^p は，原点を中心に要素を時計回りに 45° 回転させる。
+すべての変形-関数が適用された後、原点は， X, Y 両方向に -50 画素だけ並進されて引き戻される。
+◎
+The transform-origin property moves the point of origin by 50 pixels in both the X and Y directions. The transform rotates the element clockwise by 45° about the point of origin. After all transform functions were applied, the translation of the origin gets translated back by -50 pixels in both the X and Y directions.
+</p>
+
+<figure>`origin1^dgm</figure>
+
+	<div class="trans-note">
+<p>【
+上の例による効果は、次と等価になる：
+】</p>
+
+<pre class="lang-css">
+div {
+  height: 100px; width: 100px;
+  transform-origin: 0px 0px;
+  transform: translate(50px, 50px) rotate(45deg) translate(-50px, -50px);
+}
+</pre>
+
+	</div>
+
+</div>
+
+<div class="example" id="_example-on-accumulation">
+
+<pre class="lang-css">
+div {
+  height: 100px; width: 100px;
+  transform: translate(80px, 80px) scale(1.5, 1.5) rotate(45deg);
+}
+</pre>
+
+<p>
+視覚的な外観は、
+`div$e 要素が右下へ ( 80px, 80px ) 並進され,【！ ＊原文 bottom left は誤】
+150% に拡大され,
+45° 回転されたかのようになる。
+◎
+The visual appareance is as if the div element gets translated by 80px to the bottom left direction, then scaled up by 150% and finally rotated by 45°.
+</p>
+
+<p>
+各 `transform-function$t は、対応する~4x4行列により表現できる。
+これらの変形は、ある点を `div^e ~boxの座標~空間から親~要素の座標~空間へ写像するときには，逆~順に`左から乗算-$される
+⇒
+写像した結果の点 ~EQ ( 並進~行列 × 拡縮-行列 × 回転~行列 ) × ~~元の点
+◎
+Each &lt;transform-function&gt; can get represented by a corresponding 4x4 matrix. To map a point from the coordinate space of the div box to the coordinate space of the parent element, these transforms get multiplied in the reverse order:
+
+• The rotation matrix gets post-multiplied by the scale matrix.
+• The result of the previous multiplication is then post-multiplied by the translation matrix to create the accumulated transformation matrix.
+• Finally, the point to map gets pre-multiplied with the accumulated transformation matrix.
+</p>
+
+<p>
+【すなわち、要素は、回転され, 拡縮され, 並進される。】
+詳細は
+<a href="#transform-function-lists">変形-関数の~list</a>
+節を見よ。
+◎
+For more details see The Transform Function Lists.
+</p>
+
+<figure>`compound_transform^dgm</figure>
+
+<p class="note">注記：
+要素を入子にした上で，等価な変形を与えても、一致する描画~結果を得せることに注意：
+◎
+Note: The identical rendering can be obtained by nesting elements with the equivalent transforms:
+</p>
+
+<pre class="lang-html">
+&lt;div style="transform: translate(80px, 80px)"&gt;
+  &lt;div style="transform: scale(1.5, 1.5)"&gt;
+      &lt;div style="transform: rotate(45deg)"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+<div class="trans-note">
+
+<p>【
+何故 “逆順の構文” にされているかは、上の例から明らかであろう（
+<small>
+仮に HTML の構文が要素の属性を~~終了タグに記すものであったなら、逆順にしない方が自然になるであろう</small>
+）。
+】</p>
+
+<p>【
+各~変形をそのままの順に適用するときは、次のように解釈するとよい：
+要素に，自身の局所~座標系を表す X, Y 軸が（この例では要素の中心を原点にとる）描かれていると考えたとき、それぞれの変形-関数は，この描かれている（すなわち，要素に固着している）座標軸を基準にする。
+上の例では，順序による効果が露わにならないので、次の例を考える：
+</p>
+
+<pre class="lang-css">
+transform: rotate(45deg) translate(80px, 80px);
+</pre>
+
+<p>
+これは、要素を 45° 回転してから, その<em >45° 回転された座標軸</em> を基準に ( 80px, 80px ) 移動する
+— すなわち、見かけ上は，真下へ移動する（右下ではなく）。
+言い換えれば、 “45° 回転~眼鏡” を通して眺めている <em>向こう側の世界</em> では， ( 80px, 80px ) （右下へ）移動している。
+同様に：
+</p>
+
+<pre class="lang-css">
+transform: scale(2) translate(80px, 80px);
+</pre>
+
+<p>
+では、倍に拡大された座標軸を基準に並進が適用されるので，見かけ上の移動量は (160px, 160px) になる。
+また：
+</p>
+
+<pre class="lang-css">
+transform: skewX(30deg) rotate(90deg);
+</pre>
+
+<p>
+では、 Y 軸だけが 30° 傾いた座標軸を基準に 90° の回転が適用されるので，見かけ上は X 軸が 60°, Y 軸が 120° 回転される。
+】</p>
+
+</div>
+
+</div>
+
+<p>
+~layoutが~CSS~box~modelにより統制される要素においては、変形~propは，`変形d要素$の周囲の内容の~flowには影響しない。
+しかしながら、~overflow区画【！ の~extent 】には，`変形d要素$も織り込まれる。
+この挙動は、要素が相対的な位置決め（
+<span class="css">`position$p: `relative^v</span>
+）を通してずらされるときに類似する。
+したがって， `overflow$p ~propの値が
+`scroll^v ／ `auto^v
+の下では、可視~区画の外側に変形された内容も見れるようにするための~scrollbarが，必要に応じて現れることになる。
+特定的には、変形は~overflow区画の~sizeを拡幅し得る（が縮短しない）
+— それは、変形を適用する前, 後の要素たちの限界域の和集合として算出される。
+◎
+For elements whose layout is governed by the CSS box model, the transform property does not affect the flow of the content surrounding the transformed element. However, the extent of the overflow area takes into account transformed elements. This behavior is similar to what happens when elements are offset via relative positioning. Therefore, if the value of the overflow property is scroll or auto, scrollbars will appear as needed to see content that is transformed outside the visible area. Specifically, transforms can extend (but do not shrink) the size of the overflow area, which is computed as the union of the bounds of the elements before and after the application of transforms.
+</p>
+
+<p>
+~layoutが~CSS~box~modelにより統制される要素においては、`transform$p ~prop用の `none^v 以外のどの値も：
+◎
+For elements whose layout is governed by the CSS box model, any value other than none for the transform property＼
+</p>
+
+<ul>
+	<li>
+要素に`積層~文脈$を作成させることになる。
+実装は、［
+この作成した層を塗る際の，親の`積層~文脈$の中での積層~順序
+］を，［
+要素が，`z-index$p が `0^v にされた有位置な要素であった
+］とするときのそれと同じにするモノトスル。
+変形を伴う有位置な要素に対しては、 `z-index^p ~propは，
+`CSS2$r に述べられるように適用される
+— ただし、新たな積層~文脈を常に作成するので， `auto^v は `0^v に扱うとする。
+◎
+results in the creation of a stacking context. Implementations must paint the layer it creates, within its parent stacking context, at the same stacking order that would be used if it were a positioned element with z-index: 0. If an element with a transform is positioned, the z-index property applies as described in [CSS2], except that auto is treated as 0 since a new stacking context is always created.
+</li>
+	<li>
+要素に その
+`すべての子孫~用の包含塊@
+を確立させる。
+その~padding~boxは、［
+絶対的に／固定的に位置された（ `position$p に対する `absolute^v ／ `fixed^v ）
+］すべての子孫~用の~layoutにも利用され，子孫にて`固定された背景$にも利用されることになる。
+◎
+For elements whose layout is governed by the CSS box model, any value other than none for the transform property also causes the element to establish a containing block for all descendants. Its padding box will be used to layout for all of its absolute-position descendants, fixed-position descendants, and descendant fixed background attachments.
+</li>
+</ul>
+
+<div class="example">
+<p>
+固定的に位置された`すべての子孫~用の包含塊$による効果を，次に例示する。
+次の~code片は：
+◎
+To demostrate the effect of containing block for all descendants on fixed-position descendants, the following code snippets should behave identically:
+</p>
+
+<pre class="lang-html">
+&lt;style&gt;
+#container {
+  width: 300px;
+  height: 200px;
+  border: 5px dashed black;
+  padding: 5px;
+  overflow: scroll;
+}
+
+#bloat {
+  height: 1000px;
+}
+
+#child {
+  right: 0;
+  bottom: 0;
+  width: 10%;
+  height: 10%;
+  background: green;
+}
+&lt;/style&gt;
+
+&lt;div id="container" style="transform:translateX(5px);"&gt;
+  &lt;div id="bloat"&gt;&lt;/div&gt;
+  &lt;div id="child" style="position:fixed;"&gt;&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+<p>
+次の~code片と同じに挙動する：
+</p>
+
+<pre class="lang-html">
+&lt;div id="container" style="position:relative; z-index:0; left:5px;"&gt;
+  &lt;div id="bloat"&gt;&lt;/div&gt;
+  &lt;div id="child" style="position:absolute;"&gt;&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+</div>
+
+<p>
+根~要素~上に`固定された背景$は、その要素に指定されたどの変形からも影響される。
+変形から影響される（すなわち，自身または先祖の要素に変形が適用されている）他のすべての要素に対しては、 `background-attachment$p ~propに対する値 `fixed$v は，値 `scroll$v を持つかのように扱われる。
+`background-attachment$p の算出d値は影響されない。
+◎
+Fixed backgrounds on the root element are affected by any transform specified for that element. For all other elements that are effected by a transform (i.e. have a transform applied to them, or to any of their ancestor elements), a value of fixed for the background-attachment property is treated as if it had a value of scroll. The computed value of background-attachment is not affected.
+</p>
+
+<p class="note">注記：
+根~要素が変形された場合、変形nは，根~要素に指定されている背景も含めて，~canvas全体に適用される。
+`根~要素~用の背景~塗ng区画$は ~canvas全体であり無限なので、変形nにより，元々は~screen外に在った背景の一部分が現れるようになり得る。
+例えば，根~要素の背景が~dotの繰り~~返し模様であって，
+根~要素~上に変形n
+`scale(0.5)^v
+が指定されていたなら、~dotの大きさは半分になるが，その個数は 2 × 2 倍になり，依然として表示域の全面を覆うことになる。
+◎
+Note: If the root element is transformed, the transformation applies to the entire canvas, including any background specified for the root element. Since the background painting area for the root element is the entire canvas, which is infinite, the transformation might cause parts of the background that were originally off-screen to appear. For example, if the root element’s background were repeating dots, and a transformation of scale(0.5) were specified on the root element, the dots would shrink to half their size, but there will be twice as many, so they still cover the whole viewport.
+</p>
+
+	</section>
+	<section id="transform-property">
+<h2 title="The transform Property">4. `transform^p ~prop</h2>
+
+<p>
+変形nは、 `transform$p ~propを通して要素が描画される座標系に適用される。
+この~propは`変形-関数$の~listを包含する。
+座標系に対する最終的な変形nの結果は、`変形-関数の数学的~記述$にて定義されるように，~listの中の各~関数を対応する行列に換算した上で，それらの行列を乗算することにより得される。
+◎
+A transformation is applied to the coordinate system an element renders into through the transform property. This property contains a list of transform functions. The final transformation value for a coordinate system is obtained by converting each function in the list to its corresponding matrix like defined in Mathematical Description of Transform Functions, then multiplying the matrices.
+</p>
+
+◎名 `transform@p
+◎値
+`none^v | `transform-list$t
+◎初 `none^v
+◎適 `変形-可能$な要素
+◎継 されない
+◎百
+`基準~box$の~sizeに相対的
+◎
+refer to the size of reference box
+◎算
+指定d値。ただし，長さは絶対~化される。
+◎
+as specified, but with lengths made absolute
+◎順 文法に従う
+◎ア 変形~list
+— <a href="#interpolation-of-transforms">補間~規則</a>を見よ
+◎
+transform list, see interpolation rules 
+◎表終
+
+<p>
+`transform^p 用の `none^v 以外のどの算出d値も，
+<a href="#transform-rendering">変形の描画~model</a>
+に述べたように `包含塊$と`積層~文脈$に影響する。
+◎
+Any computed value other than none for the transform affects containing block and stacking context, as described in § 3 The Transform Rendering Model.
+</p>
+
+<pre class="prod">
+`transform-list@t = `transform-function$t+
+</pre>
+
+		<section id="serialization-of-transform-functions">
+<h3 title="Serialization of &lt;transform-function&gt;s">4.1. `transform-function^t の直列化</h3>
+
+<p>
+`transform-function$t を直列化するためには、文法に記された順序どおりに，それぞれの文法に従って直列化する
+— その際には
+⇒＃
+アリな所では， `calc$f 式を避ける／
+アリな所では， `calc$f による変形は避ける／
+アリな所では，意味を変えずに成分を省略する／
+~space区切りの~tokenは， 1 個の~spaceで区切る／
+直列化される各~commaごとに， 1 個の~spaceを後続させる。
+◎
+To serialize the &lt;transform-function&gt;s, serialize as per their individual grammars, in the order the grammars are written in, avoiding &lt;calc()&gt; expressions where possible, avoiding &lt;calc()&gt; transformations, omitting components when possible without changing the meaning, joining space-separated tokens with a single space, and following each serialized comma with a single space.
+</p>
+
+		</section>
+		<section id="serialization-of-the-computed-value">
+<h3 title="Serialization of the computed value of &lt;transform-list&gt;">4.2. `transform-list^t の算出d値の直列化</h3>
+
+<p>
+`transform-list$t の`算出d値$を直列化するときは、その中のすべての `transform-function$t を~4x4行列に換算して順に乗算した結果を `matrix$ft として直列化した結果を返す。
+◎
+A &lt;transform-list&gt; for the computed value is serialized to one &lt;matrix()&gt; function by the following algorithm:
+• Let transform be a 4x4 matrix initialized to the identity matrix. The elements m11, m22, m33 and m44 of transform must be set to 1 all other elements of transform must be set to 0.
+• Post-multiply all &lt;transform-function&gt;s in &lt;transform-list&gt; to transform.
+• Serialize transform to a &lt;matrix()&gt; function.
+</p>
+
+		</section>
+	</section>
+	<section id="transform-origin-property">
+<h2 title="The transform-origin Property">5. `transform-origin^p ~prop</h2>
+
+◎名 `transform-origin@p
+◎値
+[ `left$vo | `center$vo | `right$vo | `top$vo | `bottom$vo | `length-percentage$t ]
+<br>|<br>
+[ `left$vo | `center$vo | `right$vo | `length-percentage$t ]<br>
+[ `top$vo | `center$vo | `bottom$vo | `length-percentage$t ] `length$t?
+<br>|<br>
+[ [ `center$vo | `left$vo | `right$vo ] &amp;&amp; [ `center$vo | `top$vo | `bottom$vo ] ] `length$t?
+◎初 `50% 50%^v
+◎適 `変形-可能$な要素
+◎継 されない
+◎百
+`基準~box$の~sizeに相対的
+◎
+refer to the size of reference box
+◎算 `background-position$p を見よ
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+`transform$p, `transform-origin$p
+~propの値は、上述に従って`変形n行列$を算出するために利用される。
+◎
+The values of the transform and transform-origin properties are used to compute the transformation matrix, as described above.
+</p>
+
+<p>
+指定された（成分）値が 1 個だけの場合、 2 個目の値は `center$vo と見做される。
+指定された値が 2 個~以下の場合、 3 個目の値は `0px^v と見做される。
+◎
+If only one value is specified, the second value is assumed to be center. If one or two values are specified, the third value is assumed to be 0px.
+</p>
+
+<p>
+この補完により得られた 3 個の値のうち，最初の 2 個の値のいずれにも
+`center$vo 以外の~keywordが利用されていない場合、
+1 個目の値は 横~位置（または~offset）を表現し，
+2 個目の値は 縦~位置（または~offset）を表現する。
+<!-- 
+他の場合、~keywordが対応する［横／縦］位置（または~offset）を表現し，もう片方の値が他方の次元の位置（または~offset）を表現する。
+ -->
+3 個目の値は常に Z 位置（または~offset）を表現し， `length$t 型でなければナラナイ。
+【 3 個目の値は~3D変形~用の拡張なので、この仕様（~level 1 ）の文脈では~~意味を成さない。】
+◎
+If two or more values are defined and either no value is a keyword, or the only used keyword is center, then the first value represents the horizontal position (or offset) and the second represents the vertical position (or offset). A third value always represents the Z position (or offset) and must be of type &lt;length&gt;.
+</p>
+
+<dl data-dfn-for="transform-origin">
+	<dt>`length-percentage$t</dt>
+	<dd>
+［
+横／縦
+］~offset用の百分率は、`基準~box$の［
+横幅／縦幅
+］に相対的になる。
+［
+横／縦
+］~offset値は、`基準~box$の左上~隅からの［
+横／縦
+］~offsetを表現する。
+◎
+A percentage for the horizontal offset is relative to the width of the reference box. A percentage for the vertical offset is relative to the height of the reference box. The value for the horizontal and vertical offset represent an offset from the top left corner of the reference box.
+</dd>
+
+	<dt>`length$t</dt>
+	<dd>
+長さ値は、固定長による`基準~box$の左上~隅からの［
+横／縦 【 および Z 方向の】
+］~offsetを表現する。
+◎
+A length value gives a fixed length as the offset. The value for the horizontal and vertical offset represent an offset from the top left corner of the reference box.
+</dd>
+
+	<dt>`top@vo</dt>
+	<dd>
+縦~位置~用の `0%^v に算出される。
+◎
+Computes to 0% for the vertical position.
+</dd>
+
+	<dt>`right@vo</dt>
+	<dd>
+横~位置~用の `100%^v に算出される。
+◎
+Computes to 100% for the horizontal position.
+</dd>
+
+	<dt>`bottom@vo</dt>
+	<dd>
+縦~位置~用の `100%^v に算出される。
+◎
+Computes to 100% for the vertical position.
+</dd>
+
+	<dt>`left@vo</dt>
+	<dd>
+横~位置~用の `0%^v に算出される。
+◎
+Computes to 0% for the horizontal position.
+</dd>
+
+	<dt>`center@vo</dt>
+	<dd>
+横~位置が指定されていない場合、横~位置~用の 50% （したがって［
+<code class="value">50% `&lt;縦~位置の指定&gt;^V …</code>
+］†）に算出される。
+他の場合、縦~位置~用の 50% （したがって［
+<code class="value">`&lt;横~位置の指定&gt;^V 50% …</code>
+］†）に算出される。
+【 † 原文の記述は変だったので修正】
+◎
+Computes to 50% (left 50%) for the horizontal position if the horizontal position is not otherwise specified, or 50% (top 50%) for the vertical position if it is.
+</dd>
+</dl>
+
+<p>
+~CSS~layout~boxが結付けられていない~SVG要素~用の初期`使用~値$は、
+~UAが次の~stylesheetを包含していたかのように，  `0 0^v になるとする：
+◎
+For SVG elements without associated CSS layout box the initial used value is 0 0 as if the user agent style sheet contained:
+</p>
+
+<pre class="lang-css">
+*:not(svg), *:not(foreignObject) &gt; svg {
+    transform-origin: 0 0;
+}
+</pre>
+
+<p>
+`transform-origin$p の`解決d値$は、
+<a href="~CSSOM1#resolved-value-special-case-property-like-height">`height^p の様に特別</a>
+とする。
+`CSSOM$r
+【！ CSSOM1#resolved-value-special-case-property 】
+◎
+The transform-origin property is a resolved value special case property like height. [CSSOM]
+</p>
+
+	</section>
+	<section id="transform-box">
+
+<h2 title="Transform reference box: the transform-box ~prop">6. 変形~基準~box： `transform-box^p ~prop</h2>
+
+◎名 `transform-box@p
+◎値
+`content-box$vb | `border-box$vb | `fill-box$vb | `stroke-box$vb | `view-box$vb
+◎初 `view-box^v
+◎適 `変形-可能$な要素
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+`transform$p, `transform-origin$p 
+~propにより定義される変形nの位置と寸法は、次のいずれかとして指定される
+`基準~box@
+に相対的になる：
+◎
+All transformations defined by the transform and transform-origin property are relative to the position and dimensions of the reference box of the element. The reference box is specified by one of the following:
+</p>
+
+<dl>
+	<dt>`content-box@vb</dt>
+	<dd>
+`内容~box$を基準~boxに利用する。
+~tableの基準~boxは、その~table~boxではなく，その`~table包装~box$の~border~boxになる。
+◎
+Uses the content box as reference box. The reference box of a table is the border box of its table wrapper box, not its table box.
+</dd>
+
+	<dt>`border-box@vb</dt>
+	<dd>
+`~border~box$を基準~boxに利用する。
+~tableの基準~boxは、その~table~boxではなく，その`~table包装~box$の~border~boxになる。
+◎
+Uses the border box as reference box. The reference box of a table is the border box of its table wrapper box, not its table box.
+</dd>
+
+	<dt>`fill-box@vb</dt>
+	<dd>
+`~obj限界~box$を基準~boxに利用する。
+◎
+Uses the object bounding box as reference box. 
+</dd>
+
+	<dt>`stroke-box@vb</dt>
+	<dd>
+`~stroke限界~box$を基準~boxに利用する。
+◎
+Uses the stroke bounding box as reference box.
+</dd>
+
+	<dt>`view-box@vb</dt>
+	<dd>
+最も近い`~SVG表示域$（ `SVG viewport^en ）を基準~boxに利用する。
+◎
+Uses the nearest SVG viewport as reference box.
+</dd>
+	<dd class="trans-note">【
+“最も近い~SVG表示域” —
+<a href="~SVGcoords#EstablishingANewSVGViewport">~SVG表示域を確立する要素</a>のうち，当の要素に最も近い［
+先祖（または要素~自身？）
+］が確立したそれ。
+】</dd>
+
+	<dd>
+<p>
+`~SVG表示域$を作成している【確立している】要素に
+`viewBox$a 属性が指定されている場合：
+◎
+If a viewBox attribute is specified for the SVG viewport creating element:
+</p>
+
+      <ul>
+			<li>
+基準~boxは
+`viewBox$a 属性により確立される座標系の原点に位置される。
+◎
+The reference box is positioned at the origin of the coordinate system established by the viewBox attribute.
+</li>
+			<li>
+基準~boxの寸法は
+`viewBox$a 属性の <em>width</em>, <em>height</em> 成分~値に設定される。
+◎
+The dimension of the reference box is set to the width and height values of the viewBox attribute.
+</li>
+		</ul>
+	</dd>
+</dl>
+
+<p>
+~SVG `pattern$e 要素に対しては、
+基準~boxは `patternUnits$a 属性により定義される。
+`SVG2$r
+◎
+For the SVG pattern element, the reference box gets defined by the patternUnits attribute [SVG2].
+</p>
+
+<p>
+~SVG［
+`linearGradient$e ／ `radialGradient$e
+］要素に対しては、
+基準~boxは `gradientUnits$a 属性により定義される。
+`SVG2$r
+◎
+For the SVG linearGradient and radialGradient elements, the reference box gets defined by the gradientUnits attribute [SVG2].
+</p>
+
+<p>
+~SVG `clipPath$e 要素に対しては、
+基準~boxは `clipPathUnits$a 属性により定義される。
+`CSS-MASKING$r
+◎
+For the SVG clipPath element, the reference box gets defined by the clipPathUnits attribute [CSS-MASKING].
+</p>
+
+<p>
+基準~boxは、
+`transform-origin$p ~propにより指定される原点に対し，追加的な~offsetを加える
+◎
+A reference box adds an additional offset to the origin specified by the transform-origin property.
+</p>
+
+<p>
+~CSS~layout~boxが結付けられていない~SVG要素に対しては、
+`content-box$vb 用の`使用~値$は `fill-box$vb になる。
+◎
+For SVG elements without associated CSS layout box, the used value for content-box is fill-box and for border-box is stroke-box.
+</p>
+
+<p>
+~CSS~layout~boxが結付けられている要素に対しては、
+`fill-box$vb 用の`使用~値$は `content-box$vb  になり，［
+`stroke-box$vb ／ `view-box$vb
+］用の`使用~値$は `border-box$vb になる。
+◎
+For elements with associated CSS layout box, the used value for fill-box is content-box and for stroke-box and view-box is border-box.
+</p>
+
+	</section>
+	<section id="svg-transform">
+<h2 title="The SVG transform Attribute">7. ~SVG `transform^a 属性</h2>
+
+		<section id="transform-attribute-specificity">
+<h3 title="SVG presentation attributes">7.1. ~SVGの呈示~属性</h3>
+
+<p>
+`transform-origin$p ~CSS~propは、`呈示~属性$でもあり，
+`SVG2$r による既存の`呈示~属性$の~listを拡張する。
+◎
+The transform-origin CSS property is also a presentation attribute and extends the list of existing presentation attributes [SVG2].
+</p>
+
+<p>
+~SVG-2は、［
+`transform$a ／ `patternTransform$a ／ `gradientTransform$a
+］属性を`呈示~属性$として定義する
+— それらは、~CSS `transform$p ~propにより表現される。
+`SVG2$r
+◎
+SVG 2 defines the transform, patternTransform, gradientTransform attributes as presentation attributes, represented by the CSS transform property [SVG2].
+</p>
+
+<p>
+~CSS~cascadeにおける これらの関与は、~SVG仕様における`呈示~属性$の詳細度により決定される。
+~SVGに則って，~UAは、呈示~属性~用に，
+<a href="~SVGstyling#PresentationAttributes">新たな作者~stylesheet</a>を
+— 一連の`作者~stylesheet$のうち最初のものになるように —
+概念的に挿入する。
+`SVG2$r
+◎
+The participation in the CSS cascade is determined by the specificity of presentation attributes in the SVG specification. According to SVG, user agents conceptually insert a new author style sheet for presentation attributes, which is the first in the author style sheet collection [SVG2].
+</p>
+
+<div class="example">
+<p>
+`transform$p ~style~propと
+`transform$a 属性の組合nを示す例：
+◎
+This example shows the combination of the transform style property and the transform attribute.
+</p>
+
+<pre class="lang-xml">
+&lt;svg xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;style&gt;
+  .container {
+    transform: translate(100px, 100px);
+  }
+  &lt;/style&gt;
+
+  &lt;g class="container" transform="translate(200 200)"&gt;
+    &lt;rect width="100" height="100" fill="blue" /&gt;
+  &lt;/g&gt;
+&lt;/svg&gt;
+</pre>
+
+<figure>`svg-translate1^dgm</figure>
+
+<p>
+~CSS~cascadeに関与することから、 `transform$p ~style~propは， `transform$a 呈示~属性を上書きする。
+従って，容器は横と縦いずれの方向にも `200px^v ではなく `100px^v 並進される。
+◎
+Because of the participation to the CSS cascade, the transform style property overrides the transform attribute. Therefore the container gets translated by 100px in both the horizontal and the vertical directions, instead of 200px.
+</p>
+
+</div>
+
+		</section>
+		<section id="svg-syntax">
+<h3 title="Syntax of the SVG transform attribute">7.2. ~SVG `transform$a 属性の構文</h3>
+
+<p>
+後方-互換性の理由から、［
+`transform$a ／ `patternTransform$a ／ `gradientTransform$a
+］属性の構文は，
+`transform$p ~CSS~propの構文から相違する。
+これらの属性には、~CSS `transform$p ~prop用に定義される追加的な `transform-function$t 用の~supportは無い
+— 特定的には、これらの属性は［
+`translateX$ft,
+`translateY$ft,
+`scaleX$ft,
+`scaleY$ft,
+`skew$ft
+］を~supportしない。
+◎
+For backwards compatibility reasons, the syntax of the transform, patternTransform, gradientTransform attributes differ from the syntax of the transform CSS property. For the attributes, there is no support for additional &lt;transform-function&gt;s defined for the CSS transform property. Specifically, &lt;translateX()&gt;, &lt;translateY()&gt;, &lt;scaleX()&gt;, &lt;scaleY()&gt; and &lt;skew()&gt; are not supported by the transform, patternTransform, gradientTransform attributes.
+</p>
+
+<p>
+［
+`transform$a ／ `patternTransform$a ／ `gradientTransform$a
+］属性~用の値は、次の~listにて，~BNF（ `Backus-Naur Form^en ）を利用して定義される。
+各項には、規範的でない線路図式も与えられる。
+~BNFでは、次の記法が利用される：
+◎
+The following list uses the Backus-Naur Form (BNF) to define values for the transform, patternTransform and gradientTransform attributes followed by an informative rail road diagram. The following notation is used:
+</p>
+
+<ul>
+	<li>
+`*^c： 0 個~以上
+◎
+*: 0 or more
+</li>
+	<li>
+`+^c： 1 個~以上
+◎
++: 1 or more
+</li>
+	<li>
+`?^c： 0 個か 1 個
+◎
+?: 0 or 1
+</li>
+	<li>
+`()^c：
+~group分け
+◎
+(): grouping
+</li>
+	<li>
+`|^c： ~~選択肢どうしを分離する
+◎
+|: separates alternatives
+</li>
+	<li>
+二重引用符は~literalを括る。
+~literalは、［
+`英字$, 左~丸括弧, 右~丸括弧
+］からなる。
+`CSS-SYNTAX-3$r
+◎
+double quotes surround literals. Literals consists of letters [CSS-SYNTAX-3], left parenthesis and right parenthesis.
+</li>
+	<li>
+`number-token$t は `CSS-SYNTAX-3$r により定義される。
+◎
+&lt;number-token&gt; defined by the CSS Syntax module [CSS-SYNTAX-3].
+</li>
+</ul>
+
+<p class="note">注記：
+この構文は、各~UAにて実装された挙動を反映する
+— それは、~SVG-11に定義される構文から相違する。
+◎
+Note: The syntax reflects implemented behavior in user agents and differs from the syntax defined by SVG 1.1.
+</p>
+
+<dl>
+	<dt>左~丸括弧 `(^c
+◎
+left parenthesis (
+</dt>
+	<dd>
+`0028^U `LEFT PARENTHESIS^cn
+</dd>
+
+	<dt>右~丸括弧 `)^c
+◎
+right parenthesis )
+</dt>
+	<dd>
+`0029^U `RIGHT PARENTHESIS^cn
+</dd>
+
+	<dt>`comma@sf</dt>
+	<dd>
+`002C^U `COMMA^cn
+</dd>
+
+	<dt>`wsp@sf</dt>
+	<dd>
+次のいずれか
+⇒＃
+`000A^U `LINE FEED^cn,
+`000D^U `CARRIAGE RETURN^cn,
+`0009^U `CHARACTER TABULATION^cn,
+`0020^U `SPACE^cn
+◎
+Either a U+000A LINE FEED, U+000D CARRIAGE RETURN, U+0009 CHARACTER TABULATION, or U+0020 SPACE.
+</dd>
+	<dd>`svg-wsp^dgm</dd>
+
+	<dt>`comma-wsp@sf</dt>
+	<dd><pre class="prod">
+(wsp+ comma? wsp*) | (comma wsp*)
+</pre></dd>
+	<dd>`svg-comma-wsp^dgm</dd>
+
+	<dt>`translate@sf</dt>
+	<dd><pre class="prod">
+"translate" wsp* "(" wsp* number ( comma-wsp? number )? wsp* ")"
+</pre></dd>
+	<dd>`svg-translate^dgm</dd>
+
+	<dt>`scale@sf</dt>
+	<dd><pre class="prod">
+"scale" wsp* "(" wsp* number ( comma-wsp? number )? wsp* ")"
+</pre></dd>
+	<dd>`svg-scale^dgm</dd>
+
+	<dt>`rotate@sf</dt>
+	<dd><pre class="prod">
+"rotate" wsp* "(" wsp* number ( comma-wsp? number comma-wsp? number )? wsp* ")"
+</pre></dd>
+	<dd>`svg-rotate^dgm</dd>
+
+	<dt>`skewX@sf</dt>
+	<dd><pre class="prod">
+"skewX" wsp* "(" wsp* number wsp* ")"
+</pre></dd>
+	<dd>`svg-skewX^dgm</dd>
+
+	<dt>`skewY@sf</dt>
+	<dd><pre class="prod">
+"skewY" wsp* "(" wsp* number wsp* ")"
+</pre></dd>
+	<dd>`svg-skewY^dgm</dd>
+
+	<dt>`matrix@sf</dt>
+	<dd><pre class="prod">
+"matrix" wsp* "(" wsp*
+    number comma-wsp?
+    number comma-wsp?
+    number comma-wsp?
+    number comma-wsp?
+    number comma-wsp?
+    number wsp* ")"
+</pre></dd>
+	<dd>`svg-matrix^dgm</dd>
+
+	<dt>`transform@sf</dt>
+	<dd><pre class="prod">
+matrix
+| translate
+| scale
+| rotate
+| skewX
+| skewY
+</pre></dd>
+	<dd>`svg-transform-function^dgm</dd>
+
+	<dt>`transforms@sf</dt>
+	<dd><pre class="prod">
+transform
+| transform comma-wsp? transforms
+</pre></dd>
+	<dd>`svg-transforms^dgm</dd>
+
+	<dt>`transform-list@sf</dt>
+	<dd><pre class="prod">
+wsp* transforms? wsp*
+</pre></dd>
+	<dd>`svg-transform-list^dgm</dd>
+</dl>
+
+		</section>
+		<section id="svg-transform-functions">
+<h3 title="SVG transform functions">7.3. ~SVG変形-関数</h3>
+
+<p>
+上の構文で定義される［
+`transform$a ／ `patternTransform$a ／ `gradientTransform$a
+］属性の~SVG変形-関数は、次に従って~CSS `transform-function$t に対応付けられる：
+◎
+SVG transform functions of the transform, patternTransform, gradientTransform attributes defined by the syntax above are mapped to CSS &lt;transform-function&gt;s as follows:
+</p>
+
+<table class="data" id="term-matching">
+<thead><tr><th>~SVG変形-関数
+◎
+SVG transform function
+</th><th>~CSS `transform-function$t
+</th><th>
+追加的な注記
+◎
+Additional notes
+</th></tr></thead><tbody>
+
+<tr><th>`translate$sf
+</th><td>`translate$ft
+</td><td>
+数値は、 `px$u 単位を伴う~CSS `length$t 型として解釈される。
+◎
+Number values interpreted as CSS &lt;length&gt; types with px units.
+</td></tr>
+
+<tr><th>`scale$sf
+</th><td>`scale$ft
+</td><td>
+</td></tr>
+
+<tr><th>`rotate$sf
+</th><td>`rotate$ft
+</td><td>
+引数を 1 個だけとるものに限られる。
+数値は、 `deg$u 単位を伴う~CSS `angle$t 型として解釈される。
+◎
+Only single value version. Number value interpreted as CSS &lt;angle&gt; type with deg unit.
+</td></tr>
+
+<tr><th>`skewX$sf
+</th><td>`skewX$ft
+</td><td>
+数値は、 `deg$u 単位を伴う~CSS `angle$t 型として解釈される。
+◎
+Number value interpreted as CSS &lt;angle&gt; type with deg unit.
+</td></tr>
+
+<tr><th>`skewY$sf
+</th><td>`skewY$ft
+</td><td>
+数値は、 `deg$u 単位を伴う~CSS `angle$t 型として解釈される。
+◎
+Number value interpreted as CSS &lt;angle&gt; type with deg unit.
+</td></tr>
+
+<tr><th>`matrix$sf
+</th><td>`matrix$ft
+</td><td>
+</td></tr></tbody></table>
+
+<p>
+~SVG変形-関数のうち， 3 個の値を伴う `rotate$sf は、対応する~CSS `transform-function$t には対応付けれない。
+1 個目の数値 %a は `deg$u 単位を伴う~CSS `angle$t 型として解釈され，回転を定義する。
+2 個目, 3 個目の数値 ( %cx, %cy ) は、省略可であり，順に［
+横, 縦
+］の並進~値を表現する
+— 両~数値とも `px$u 単位を伴う~CSS `length$t 型として解釈され，回転~用の原点を定義する。
+この関数の挙動は、次を順に適用した結果と等価になる
+⇒＃
+( %cx, %cy ) による並進,
+%a による回転,
+( −%cx, −%cy ) による並進
+◎
+The SVG transform function rotate with 3 values can not be mapped to a corresponding CSS &lt;transform-function&gt;. The 2 optional number values represent a horizontal translation value cx followed by a vertical translation value cy. Both number values get interpreted as CSS &lt;length&gt; types with px units and define the origin for rotation. The behavior is equivalent to an initial translation by cx, cy, a rotation defined by the first number value interpreted as &lt;angle&gt; type with deg unit followed by a translation by -cx, -cy.
+</p>
+
+<p>
+~SVG `transform$a 属性は、 CSS Transition の［
+`開始~値$ ／ `終止~値$
+］をとり得る。
+`transform$a 属性の値が それらの値を与える場合、その `transform-list$sf 内に 3 個の値を伴う `rotate$sf 変形-関数が 1 つでも在るならば，［
+属性の値を成す各~SVG変形-関数を表現する行列を，同順に`乗算-$した結果の行列
+］を［
+`matrix$ft ~CSS `transform-function$t に対応付けた結果
+］を［
+`開始~値$ ／ `終止~値$
+］として利用するモノトスル。
+◎
+A transform attribute can be the start or end value of a CSS Transition. If the value of a transform attribute is the start or end value of a CSS Transition and the SVG transform list contains at least one rotate transform function with 3 values, the individual SVG transform functions must get post-multiplied and the resulting matrix must get mapped to a &lt;matrix()&gt; CSS &lt;transform-function&gt; and used as start/end value of the CSS Transition.
+</p>
+
+		</section>
+		<section id="svg-user-coordinate-space">
+<h3 title="User coordinate space">7.4. 利用元~空間</h3>
+
+<p>
+`pattern$e 要素に対しては、［
+`patternTransform$a 属性, `transform$p ~prop
+］が~pattern座標系における追加的な変形nを定義する。
+詳細は `patternUnits$a 属性を見よ。
+`SVG2$r
+◎
+For the pattern element, the patternTransform attribute and transform property define an additional transformation in the pattern coordinate system. See patternUnits attribute for details [SVG2].
+</p>
+
+<p>
+［
+`linearGradient$e ／ `radialGradient$e
+］要素に対しては、［
+`gradientTransform$a 属性, `transform$p ~prop
+］が，~gradient座標系における追加的な変形nを定義する。
+詳細は `gradientUnits$a 属性を見よ。
+`SVG2$r
+◎
+For the linearGradient and radialGradient elements, the gradientTransform attribute and transform property define an additional transformation in the gradient coordinate system. See gradientUnits attribute for details [SVG2].
+</p>
+
+<p>
+`clipPath$e 要素に対しては、［
+`transform$a 属性, `transform$p ~prop
+］が，切抜き~path座標~空間における追加的な変形nを定義する。
+詳細は `clipPathUnits$a 属性を見よ。
+`CSS-MASKING$r
+◎
+For the clipPath element, the transform attribute and transform property define an additional transformation in the clipping path coordinate space. See clipPathUnits attribute for details [CSS-MASKING].
+</p>
+
+<p>
+他のすべての`変形-可能$な要素に対しては、［
+`transform$a 属性, `transform$p ~prop
+］が親の現在の`利用元~座標系$における変形nを定義する。
+`transform$a 属性のすべての百分率~値は、要素の`基準~box$に相対的になる。
+◎
+For all other transformable elements the transform attribute and transform property define a transformation in the current user coordinate system of the parent. All percentage values of the transform attribute are relative to the element’s reference box.
+</p>
+
+<div class="example">
+
+<p>
+次の例の `pattern^e 上の `transform-origin$p ~propは、原点の［
+横, 縦
+］次元に `50%^v の並進を指定する。
+`transform$p ~propも並進を指定するが，絶対~長さである。
+◎
+The transform-origin property on the pattern in the following example specifies a 50% translation of the origin in the horizontal and vertical dimension. The transform property specifies a translation as well, but in absolute lengths.
+</p>
+
+<pre class="lang-xml">
+&lt;svg xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;style&gt;
+  pattern {
+    transform: rotate(45deg);
+    transform-origin: 50% 50%;
+  }
+  &lt;/style&gt;
+
+  &lt;defs&gt;
+  &lt;pattern id="pattern-1"&gt;
+    &lt;rect id="rect1" width="100" height="100" fill="blue" /&gt;
+  &lt;/pattern&gt;
+  &lt;/defs&gt;
+
+  &lt;rect width="200" height="200" fill="url(#pattern-1)" /&gt;
+&lt;/svg&gt;
+</pre>
+
+<p>
+~SVG `pattern$e 要素は限界~boxを持たないので、 `transform-origin$p ~propを相対的な値に解く際に，参照元の `rect$e 要素の`基準~box$が代わりに利用される。
+したがって原点は，`pattern$e 要素~内容の利用元~空間を回転させる前に，一時的に 100 画素だけ並進されることになる。
+◎
+An SVG pattern element doesn’t have a bounding box. The reference box of the referencing rect element is used instead to solve the relative values of the transform-origin property. Therefore the point of origin will get translated by 100 pixels temporarily to rotate the user space of the pattern elements content.
+</p>
+
+</div>
+
+		</section>
+		<section id="transform-attribute-dom">
+<h3 title="SVG DOM interface for the transform attribute">7.5. `transform^a 属性~用の~SVG~DOM~interface</h3>
+
+<p>
+~SVG仕様では，~SVG~DOMにて~SVG［
+`transform$a ／ `patternTransform$a ／ `patternTransform$a
+］属性を`反映する$値【！animated and the base value】への~accessを供するための
+`SVGAnimatedTransformList$I ~interfaceが定義されている。
+後方-互換性を確保するため、~UAは，依然としてこの API を~supportするモノトスル。
+◎
+The SVG specification defines the "SVGAnimatedTransformList" interface in the SVG DOM to provide access to the animated and the base value of the SVG transform, gradientTransform and patternTransform attributes. To ensure backwards compatibility, this API must still be supported by user agents.
+</p>
+
+<p>
+`baseVal^m により、作者は~SVG［
+`transform$a ／ `patternTransform$a ／ `gradientTransform$a
+］属性の値に~accessしたり改変することが可能になる。
+~SVG~DOMに必要な後方-互換性を供するため、
+`baseVal^m は、この作者~stylesheetの値を反映するモノトスル。
+~SVG~DOM~obj `baseVal^m に加えられるすべての改変は、即時にこの作者~stylesheetに反映するモノトスル。
+◎
+baseVal gives the author the possibility to access and modify the values of the SVG transform, patternTransform, gradientTransform attributes. To provide the necessary backwards compatibility to the SVG DOM, baseVal must reflect the values of this author style sheet. All modifications to SVG DOM objects of baseVal must affect this author style sheet immediately.
+</p>
+
+<p>
+`animVal^m は、
+`transform$p ~propに算出される~styleを表現する。
+したがって それには、適用されている［
+<a href="~TRANSITION">CSS3 Transitions</a>,
+<a href="~CSSANIM">CSS3 Animations</a>,
+~SVG~animation
+］による効果もすべて含められる。
+算出された~style, および~SVG~DOM~objの `animVal^m は、改変できない。
+◎
+animVal represents the computed style of the transform property. Therefore it includes all applied CSS3 Transitions, CSS3 Animations or SVG Animations if any of those are underway. The computed style and SVG DOM objects of animVal can not be modified.
+</p>
+
+		</section>
+	</section>
+	<section id="transform-functions">
+<h2 title="The Transform Functions">8. 変形-関数</h2>
+
+<p>
+`transform$p ~propの値は
+`transform-function@t
+の~listである。
+許容される変形-関数の集合は以下に与えられる。
+以下の各種~関数における `zero$t は `0deg^v と同じに挙動する（“単位無し 0” 角度は 旧来との互換性の理由から保全される）。 
+並進~用の［
+横／縦
+］の `percentage$t 値は，`基準~box$の［
+横幅／縦幅
+］に相対的になる。
+◎
+The value of the transform property is a list of &lt;transform-function&gt;. The set of allowed transform functions is given below. In the following functions, a &lt;zero&gt; behaves the same as 0deg ("unitless 0" angles are preserved for legacy compat). A percentage for horizontal translations is relative to the width of the reference box. A percentage for vertical translations is relative to the height of the reference box.
+</p>
+
+		<section id="two-d-transform-functions">
+<h3 title="2D Transform Functions">8.1. ~2D変形-関数</h3>
+
+<dl class="valdef">
+	<dt>`matrix@f = matrix( `number$t#{6} )</dt>
+	<dd>
+所与の 6 個の成分値による`~2D~3x2行列$の`変形n行列$で表現される，~2D変形nを指定する。
+◎
+specifies a 2D transformation in the form of a transformation matrix of the six values a, b, c, d, e, f.
+</dd>
+
+	<dt>`translate@f = translate( `length-percentage$t, `length-percentage$t? )</dt>
+	<dd>
+%tx, %ty を所与の順による `length-percentage^t 値とするとき、移動量~vector
+[ %tx, %ty ]
+による，`~2D並進$を指定する。
+%ty は省略可であり、供されていない場合は 0 と~~見なされる。
+【！ ＊旧 translation-value】
+◎
+specifies a 2D translation by the vector [tx, ty], where tx is the first translation-value parameter and ty is the optional second translation-value parameter. If &lt;ty&gt; is not provided, ty has zero as a value.
+</dd>
+
+	<dt>`translateX@f = translateX( `length-percentage$t )</dt>
+	<dd>
+所与の `length-percentage^t 値による， X 方向の`~2D並進$を指定する。
+◎
+specifies a translation by the given amount in the X direction.
+</dd>
+
+	<dt>`translateY@f = translateY( `length-percentage$t )</dt>
+	<dd>
+所与の `length-percentage^t 値による， Y 方向の`~2D並進$を指定する。
+◎
+specifies a translation by the given amount in the Y direction.
+</dd>
+
+	<dt>`scale@f = scale( `number$t, `number$t? )</dt>
+	<dd>
+%sx, %sy をそれぞれ，所与の順による `number^t 値とするとき、拡縮率~vector
+[ %sx, %sy ]
+による，`~2D拡縮$を指定する。
+%sy は省略可であり、供されていない場合は %sy と同じ値と~~見なされる。
+例えば `scale(1, 1)^v は 要素を変形しないが， `scale(2, 2)^v は X, Y 両~軸に 2 倍の~~長さに（すなわち 面積を 4 倍に）する。
+◎
+specifies a 2D scale operation by the [sx,sy] scaling vector described by the 2 parameters. If the second parameter is not provided, it takes a value equal to the first. For example, scale(1, 1) would leave an element unchanged, while scale(2, 2) would cause it to appear twice as long in both the X and Y axes, or four times its typical geometric size.
+</dd>
+
+	<dt>`scaleX@f = scaleX( `number$t )</dt>
+	<dd>
+%sx を所与の `number^t 値とするとき、拡縮率~vector
+[ %sx, 1 ]
+による，`~2D拡縮$を指定する。
+◎
+specifies a 2D scale operation using the [sx,1] scaling vector, where sx is given as the parameter.
+</dd>
+
+	<dt>`scaleY@f = scaleY( `number$t )</dt>
+	<dd>
+%sy を所与の `number^t 値とするとき、拡縮率~vector
+[ 1, %sx ]
+による，`~2D拡縮$を指定する。
+◎
+specifies a 2D scale operation using the [1,sy] scaling vector, where sy is given as the parameter.
+</dd>
+
+	<dt>`rotate@f = rotate( [ `angle$t | `zero$t ] )</dt>
+	<dd>
+`transform-origin$p ~propにより定義される［
+要素の原点
+］を中心とする, 回転角 `angle^t による，`~2D回転$を指定する。
+例えば `rotate(90deg)^v は、要素は，時計回りに 90° 回転されて現れることになる。
+◎
+specifies a 2D rotation by the angle specified in the parameter about the origin of the element, as defined by the transform-origin property. For example, rotate(90deg) would cause elements to appear rotated one-quarter of a turn in the clockwise direction.
+</dd>
+
+	<dt>`skew@f = skew( [ `angle$t | `zero$t ], [ `angle$t | `zero$t ]? )</dt>
+	<dd>
+%ax, %ay を所与の順による `angle^t 値とするとき、
+[ %ax, %ay ]
+による， X 軸, Y 軸~用の`~2D斜傾$を指定する。
+%ay は省略可であり、供されていない場合は 0 と~~見なされる。
+◎
+specifies a 2D skew by [ax,ay] for X and Y. If the second parameter is not provided, it has a zero value.
+</dd>
+	<dd class="advisement">
+<strong>
+`skew$f は、互換性の理由から存在し，新たな内容には利用されるべきでない。
+代わりに `skewX$f ／ `skewY$f を利用するように。
+`skew^f の挙動は、 `skewX^f と `skewY^f の積とは異なることに注意。
+</strong>
+◎
+skew() exists for compatibility reasons, and should not be used in new content. Use skewX() or skewY() instead, noting that the behavior of skew() is different from multiplying skewX() with skewY().
+</dd>
+
+	<dt>`skewX@f = skewX( [ `angle$t | `zero$t ] )</dt>
+	<dd>
+所与の角度による， `X 軸~不変の~2D斜傾$を指定する。
+【 所与の角度だけ Y 軸が傾くように， X 座標を Y 座標に比例する量だけずらす（ “skew” する）。 】
+◎
+specifies a 2D skew transformation along the X axis by the given angle.
+</dd>
+
+	<dt>`skewY@f = skewY( [ `angle$t | `zero$t ] )</dt>
+	<dd>
+所与の角度による， `Y 軸~不変の~2D斜傾$を指定する。
+【 所与の角度だけ Y 軸が傾くように， Y 座標を X 座標に比例する量だけずらす（ “skew” する）。】
+◎
+specifies a 2D skew transformation along the Y axis by the given angle.
+</dd>
+</dl>
+
+		</section>
+		<section id="transform-primitives">
+<h3 title="Transform function primitives and derivatives">8.2. 原始関数とその派生</h3>
+
+<p>
+一部の変形-関数は、より汎用な変形-関数の特殊な場合として表現できる。
+後者は
+<dfn >~~原始関数</dfn>（ `primitive transform functions^en, または単に `primitive^en ），前者はその
+<dfn >~~派生関数</dfn>（ `derived transform function^en ）と呼ばれる。
+~2Dにおける原始関数と, その派生関数は：
+◎
+Some transform functions can be represented by more generic transform functions. These transform functions are called derived transform functions, and the generic transform functions are called primitive transform functions. Two-dimensional primitives and their derived transform functions are:
+</p>
+
+<table>
+<thead><tr><th>原始関数
+<th>派生関数
+</thead><tbody>
+
+<tr><td id="translate-primitive">`translate$f
+<td>
+`translateX$f, `translateY$f, `translate$f
+◎
+for &lt;translateX()&gt;, &lt;translateY()&gt; and &lt;translate()&gt;.
+
+<tr><td id="scale-primitive">`scale$f
+<td>
+`scaleX$f, `scaleY$f, `scale$f
+◎
+for &lt;scaleX()&gt;, &lt;scaleY()&gt; and &lt;scale()&gt;.
+
+</tbody></table>
+
+		</section>
+	</section>
+	<section id="transform-function-lists">
+<h2 title="The Transform Function Lists">9. 変形-関数の~list</h2>
+
+<p>
+`transform-function$t の~listが供された場合、その正味の効果は，各~変形-関数が供された順序により別々に指定されていたかのようになる。
+◎
+If a list of &lt;transform-function&gt;s is provided, then the net effect is as if each transform function had been specified separately in the order provided.
+If a list of &lt;transform-function&gt; 
+</p>
+
+<p>
+すなわち，他の［
+位置や寸法に影響する~style付け
+］が無い下では、一連の入子にされた変形は，［
+先祖の座標系から要素の局所~座標系に適用される変形-関数【？】
+］からなる，単独の~listに等価になる。
+結果の変形は、変形の~listにより与えられる各~行列の積になる。
+◎
+That is, in the absence of other styling that affects position and dimensions, a nested set of transforms is equivalent to a single list of transform functions, applied from the coordinate system of the ancestor to the local coordinate system of a given element. The resulting transform is the matrix multiplication of the list of transforms.
+</p>
+
+<div class="example">
+
+<p>
+例えば：
+◎
+For example,
+</p>
+
+<pre class="lang-html">
+&lt;div style="transform: translate(-10px, -20px) scale(2) rotate(45deg)"/&gt;
+</pre>
+
+<p>
+は、機能的に次に等価になる：
+◎
+is functionally equivalent to:
+</p>
+
+<pre class="lang-html">
+&lt;div style="transform: translate(-10px, -20px)" id="root"&gt;
+  &lt;div style="transform: scale(2)"&gt;
+    &lt;div style="transform: rotate(45deg)"&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+</div>
+
+<p>
+変形-関数が表現する ~objに対する`現在の変形n行列$が，不可逆である場合、その~objやその内容は表示されなくなる。
+◎
+If a transform function causes the current transformation matrix of an object to be non-invertible, the object and its content do not get displayed.
+</p>
+
+<div class="example">
+
+<p>
+次の例における~objは， 0 倍に拡縮される：
+◎
+The object in the following example gets scaled by 0.
+</p>
+
+<pre class="lang-html">
+&lt;style&gt;
+.box {
+transform: scale(0);
+}
+&lt;/style&gt;
+
+&lt;div class="box"&gt;
+Not visible
+&lt;/div&gt;
+</pre>
+
+<p>
+この拡縮-法は、`div^e ~boxの座標~空間~用の`現在の変形n行列$を不可逆にする。
+したがって、 `div^e ~boxもその中の~textも表示されない。
+◎
+The scaling causes a non-invertible CTM for the coordinate space of the div box. Therefore neither the div box, nor the text in it get displayed.
+</p>
+</div>
+
+	</section>
+	<section id="interpolation-of-transforms">
+<h2 title="Interpolation of Transforms">10. 変形どうしの補間</h2>
+
+<p>
+2 つの変形-関数~list
+値a, 値b
+の`補間$は、次に従って遂行される：
+◎
+Interpolation of transform function lists is performed as follows:
+</p>
+
+<ol>
+	<li id="none-none-interpolation">
+~IF［
+値a ~EQ `none^v
+］~AND［
+値b ~EQ `none^v
+］
+⇒
+~RET `none^v
+◎
+If both Va and Vb are none:
+• Vresult is none.
+</li>
+	<li>
+~IF［
+値a ~EQ `none^v
+］
+⇒
+値a ~SET 空~list
+◎
+↓</li>
+	<li>
+~IF［
+値b ~EQ `none^v
+］
+⇒
+値b ~SET 空~list
+◎
+Treating none as a list of zero length,
+</li>
+	<li id="transform-interpolation-length-fixup">
+<p>
+~IF［
+値a の長さ ~NEQ 値b の長さ
+］
+⇒
+両~listの長さが同じになるまで，短い方の~listに［
+長い方の~listと同じ~indexに位置する変形-関数と同じ名前の`恒等~変形-関数$
+］を付加する
+◎
+if Va or Vb differ in length:
+• extend the shorter list to the length of the longer list, setting the function at each additional position to the identity transform function matching the function at the corresponding position in the longer list. Both transform function lists are then interpolated following the next rule.
+</p>
+
+<p class="example">
+例えば，［
+値a ~EQ `scale(2)^v,
+値b ~EQ `none^v
+］ならば、［
+値b 用に値 `scale(1)^v を利用する
+］下で，以降の補間を続行することになる。
+同様に，［
+値a ~EQ `scale(1)^v,
+値b ~EQ `scale(2) rotate(50deg)^v
+］ならば、補間は［
+値a ~EQ `scale(1) rotate(0)^v
+］であったかのように遂行されることになる。
+◎
+For example, if Va is scale(2) and Vb is none then the value scale(1) will be used for Vb and interpolation will proceed using the next rule. Similarly, if Va is scale(1) and Vb is scale(2) rotate(50deg) then the interpolation will be performed as if Va were scale(1) rotate(0).
+</p>
+	</li>
+	<li>
+%結果 ~LET 空~list
+◎
+Let Vresult be an empty list.＼
+</li>
+	<li>
+%N ~LET 次を満たす最~大な整数
+⇒
+［
+%N ~IN { 0 〜 値a の長さ }
+］~AND［
+どの整数 %i ~IN { 0 〜 %N ~MINUS 1 } に対しても，次が満たされる
+］
+⇒
+値a[ %i ], 値b[ %i ]
+は、同じ名前の関数であるか同じ`原始関数$からの派生である†
+◎
+Beginning at the start of Va and Vb, compare the corresponding functions at each position:
+</li>
+	<li>
+~EACH( 整数 %i ~IN { 0 〜 %N ~MINUS 1 } ) に対し
+⇒
+%結果 に［
+( 値a[ %i ], 値b[ %i ] )
+を`原始関数と派生関数の補間$に則って補間した結果
+］を付加する
+◎
+While the functions have either the same name, or are derivatives of the same primitive transform function, interpolate the corresponding pair of functions as described in § 11 Interpolation of primitives and derived transform functions and append the result to Vresult.
+</li>
+	<li>
+<p>
+~IF［
+%N ~LT 値a の長さ ~MINUS 1
+］
+⇒
+%結果 に［
+( 次に与える 2 つの~4x4行列 )
+を`行列の補間$に則って補間した結果
+］を付加する：
+</p>
+		<ol>
+			<li>
+単位i行列に［
+値a を成す %N 番~以降の変形-関数を表現する各~行列
+］を~list順に`右から乗算-$した結果
+</li>
+			<li>
+単位i行列に［
+値b を成す %N 番~以降の変形-関数を表現する各~行列
+］を~list順に`右から乗算-$した結果
+</li>
+		</ol>
+◎
+If the pair do not have a common name or primitive transform function, post-multiply the remaining transform functions in each of Va and Vb respectively to produce two 4x4 matrices. Interpolate these two matrices as described in § 12 Interpolation of Matrices, append the result to Vresult, and cease iterating over Va and Vb.
+</li>
+	<li>
+~RET %結果
+◎
+↑</li>
+</ol>
+
+<div class="example">
+
+<p>
+例えば［
+値a ~EQ `rotate(0deg) scale(1) translate(20px)^v,
+値b ~EQ `rotate(360deg) translate(10px) scale(2)^v 【！ 270deg 誤記】
+］であった場合：
+</p>
+		<ul>
+			<li>(A)
+両~listの最初の関数［
+`rotate(0deg)^v,
+`rotate(360deg)^v
+］は、`原始関数と派生関数の補間$に則って補間される。
+</li>
+			<li>(B)
+一方で，両~listの残り
+— `scale(1) translate(20px)^v, `translate(10px) scale(2)^v —
+は、先ず等価な~4x4行列に換算されてから，`行列の補間$に則って補間される。
+</li>
+		</ul>
+
+<p>
+この仕様の以前の~versionでは、~list内に上の %N を定義する~~条件（†）を満たさない変形-関数が一つでもある場合（すなわち %N ~LT ~listの長さ）には， (A) による補間を試みていなかった。
+その結果、この例の両~listは (B) のみを利用して補間され，後者の~listを成す `rotate(360deg)^v 成分は失われていた。
+</p>
+
+◎
+For example, if Va is rotate(0deg) scale(1) translate(20px) and Vb is rotate(270deg) translate(10px) scale(2), the rotate(0deg) and rotate(360deg) functions will be interpolated according to § 11 Interpolation of primitives and derived transform functions while the remainder of each list—scale(1) translate(20px) and translate(10px) scale(2)—will first be converted to equivalent 4x4 matrices and then interpolated as described in § 12 Interpolation of Matrices.
+◎
+A previous version of this specification did not attempt to interpolate matching pairs of transform functions unless all functions in the list matched. As a result, the two lists in this example would be interpolated using matrix interpolation only and the rotate(360deg) component of the second list would be lost.
+</div>
+
+<p>
+一部の~animationにおいては，変形n行列が特異的
+— 言い換えれば不可逆になる。
+例えば，拡縮率が 1 から −1 へ変動する~animationなど。
+行列がその種の状態に陥った時点では、`変形d要素$は描画されないとする。
+◎
+In some cases, an animation might cause a transformation matrix to be singular or non-invertible. For example, an animation in which scale moves from 1 to -1. At the time when the matrix is in such a state, the transformed element is not rendered.
+</p>
+
+	</section>
+	<section id="interpolation-of-transform-functions">
+<h2 title="Interpolation of primitives and derived transform functions">11. 原始関数と派生関数の補間</h2>
+
+<p>
+同じ名前の 同じ個数の引数を伴う ２つの変形-関数は、前節による換算を要することなく，数量的に補間できる。
+その計算結果の値は、同じ個数の引数を伴う同じ型の変形-関数になる。
+`matrix$ft については、特別な規則が適用される：
+◎
+Two transform functions with the same name and the same number of arguments are interpolated numerically without a former conversion. The calculated value will be of the same transform function type with the same number of arguments. Special rules apply to &lt;matrix()&gt;.
+</p>
+
+<div class="example">
+
+<p>
+2 つの変形-関数
+`translate(0)^v,
+`translate(100px)^v
+は、同じ型であり, 引数の個数も同じなので，数量的に補間できる。
+`translateX(100px)^v や `translate(100px, 0)^v は，それらとは 型が異なる／引数の個数が異なるので、それらの変形-関数と補間するためには，その前に前節による換算を要する。
+◎
+The two transform functions translate(0) and translate(100px) are of the same type, have the same number of arguments and therefore can get interpolated numerically. translateX(100px) is not of the same type and translate(100px, 0) does not have the same number of arguments, therefore these transform functions can not get interpolated without a former conversion step.
+</p>
+</div>
+
+<p>
+2 つの変形-関数は、型が異っていても，同じ原始関数から派生しているならば、補間できる。
+あるいは、引数の個数が異なっていても，型が同じならば、補間できる。
+いずれにせよ，両 ~変形-関数は、まず前節による共通な原始関数への換算を要する
+— しかる後，数量的に補間される。
+算出d値は、補間した結果の引数を伴う原始関数になる。
+◎
+Two different types of transform functions that share the same primitive, or transform functions of the same type with different number of arguments can be interpolated. Both transform functions need a former conversion to the common primitive first and get interpolated numerically afterwards. The computed value will be the primitive with the resulting interpolated arguments.
+</p>
+
+<div class="example">
+
+<p>
+次の例は、`div^e ~box上で~hoverされている間， 3 秒間かけて
+`translateX(100px)^v から `translateY(100px)^v
+へ遷移させる。
+いずれの変形-関数も，同じ原始関数 `translate$f から派生するので、補間が可能になる。
+◎
+The following example describes a transition from translateX(100px) to translateY(100px) in 3 seconds on hovering over the div box. Both transform functions derive from the same primitive translate() and therefore can be interpolated.
+</p>
+
+<pre class="lang-css">
+div {
+  transform: translateX(100px);
+}
+
+div:hover {
+  transform: translateY(100px);
+  transition: transform 3s;
+}
+</pre>
+
+<p>
+遷移が生じたとき、両~変形-関数は，共通な原始関数に変形される。
+`translateX(100px)^v は `translate(100px, 0)^v に換算され、
+`translateY(100px)^v は `translate(0, 100px)^v に換算される。
+しかる後、両~変形-関数は，数量的に補間できるようになる。
+◎
+For the time of the transition both transform functions get transformed to the common primitive. translateX(100px) gets converted to translate(100px, 0) and translateY(100px) gets converted to translate(0, 100px). Both transform functions can then get interpolated numerically.
+</p>
+</div>
+
+<p>
+両~変形-関数が，~2D原始関数を共有する場合、それらは~2D原始関数に換算される。
+いずれかが~3D変形-関数である場合、共通な~3D原始関数が利用される。
+◎
+If both transform functions share a primitive in the two-dimensional space, both transform functions get converted to the two-dimensional primitive. If one or both transform functions are three-dimensional transform functions, the common three-dimensional primitive is used.
+</p>
+
+<div class="example">
+
+<p>
+この例では、~2D~変形-関数が~3D~変形-関数にされた上で，~animateされる。
+共通な原始関数は `translate3d$f になる。
+◎
+In this example a two-dimensional transform function gets animated to a three-dimensional transform function. The common primitive is translate3d().
+</p>
+
+<pre class="lang-css">
+div {
+  transform: translateX(100px);
+}
+
+div:hover {
+  transform: translateZ(100px);
+  transition: transform 3s;
+}
+</pre>
+
+<p>
+最初の
+`translateX(100px)^v
+は
+`translate3d(100px, 0, 0)^v
+に換算され、
+`translateZ(100px)^v
+は
+`translate3d(0, 0, 100px)^v
+に換算される。
+換算された両~変形-関数は，数量的に補間される。
+◎
+First translateX(100px) gets converted to translate3d(100px, 0, 0) and translateZ(100px) to translate3d(0, 0, 100px) respectively. Then both converted transform functions get interpolated numerically.
+</p>
+</div>
+
+	</section>
+	<section id="matrix-interpolation">
+<h2 title="Interpolation of Matrices">12. 行列どうしの補間</h2>
+
+<div class="p">
+<p>
+2 つの行列の合間を補間するためには：
+</p>
+
+<ol><li>まず、それぞれの行列を［
+並進, 回転, 拡縮, 斜傾
+］に分解する。
+</li><li>次に、この 2 つの分解形を成している対応する行列どうしを，数量的に補間する。
+</li><li>最後に、結果の一連の行列を， 1 つの行列に再構成する。
+</li></ol>
+
+◎
+When interpolating between two matrices, each matrix is decomposed into the corresponding translation, rotation, scale, skew. Each corresponding component of the decomposed matrices gets interpolated numerically and recomposed back to a matrix in a final step.
+</div>
+
+<div class="example">
+
+<p>
+次の例では、~hoverされている間に，要素を
+X, Y 両方向に 100 画素~並進させた上で, 1170° 回転させる。
+初期~時の変形nは 45° 回転にされていて，遷移を利用して~animateされる。
+作者は、時計回りに, 3 ＋四半周（ 1170° ）回転するものと期待するかもしれないが…
+◎
+In the following example the element gets translated by 100 pixel in both the X and Y directions and rotated by 1170° on hovering. The initial transformation is 45°. With the usage of transition, an author might expect a animated, clockwise rotation by three and a quarter turns (1170°).
+</p>
+
+<pre class="lang-html">
+&lt;style&gt;
+div {
+  transform: rotate(45deg);
+}
+div:hover {
+  transform: translate(100px, 100px) rotate(1215deg);
+  transition: transform 3s;
+}
+&lt;/style&gt;
+
+&lt;div&gt;&lt;/div&gt;
+</pre>
+
+<p>
+［
+値a を成す変形- `rotate(45deg)^v
+］に含まれる関数の個数は，［
+値b を成す変形- `translate(100px, 100px) rotate(1125deg)^v
+］に含まれる関数の個数と異なるので、`変形の補間$の最後の規則に従って，両~変形とも 行列~補間により補間されるモノトスル。
+その結果、変形n関数から行列への換算の際に， 3 周分（ 1080° ）についての情報は失われ、要素は四半周（ 90° ）だけ回転される。
+◎
+The number of transform functions on the source transform rotate(45deg) differs from the number of transform functions on the destination transform translate(100px, 100px) rotate(1125deg). According to the last rule of Interpolation of Transforms, both transforms must be interpolated by matrix interpolation. With converting the transformation functions to matrices, the information about the three turns gets lost and the element gets rotated by just a quarter turn (90°).
+</p>
+
+<p>
+上の例で 3 ＋四半周を得るためには、［
+値a を成す変形と 値b を成す変形-
+］が［
+`変形の補間$の 3 個目の規則
+］を満たすように、 値a を成す変形を，次の様な形にする必要がある
+⇒
+`translate(0, 0) rotate(45deg)^v
+◎
+To achieve the three and a quarter turns for the example above, source and destination transforms must fulfill the third rule of Interpolation of Transforms. Source transform could look like translate(0, 0) rotate(45deg) for a linear interpolation of the transform functions.
+</p>
+</div>
+
+<p>
+以下では、
+<a href="#interpolation-of-2d-matrices">2 つの~2D行列の補間</a>
+と，どちらかは`~2D行列$でない 2 つの行列の補間を別々に~~扱う【！ ＊】。
+◎
+In the following we differ between the interpolation of two 2D matrices and the interpolation of two matrices where at least one matrix is not a 2D matrix.
+</p>
+
+<p>
+補間~対象のいずれかの行列が不可逆である場合、利用される~animation関数は、当該の~animation仕様の規則に則って，離散的~animationに~fall-backするモノトスル。
+◎
+If one of the matrices for interpolation is non-invertible, the used animation function must fall-back to a discrete animation according to the rules of the respective animation specification.
+</p>
+
+		<section id="supporting-functions">
+<h3 title="Supporting functions">12.1. 補助関数</h3>
+
+<p>
+以下の節における疑似codeでは、次の補助関数が利用される：
+◎
+The pseudo code in the next subsections make use of the following supporting functions:
+</p>
+
+<div>
+
+<p>
+値~型［
+double, point, matrix, vector
+］は，順に［
+~scalar,
+3 成分~vector,
+~4x4行列,
+4 成分~vector
+］を表す。
+◎
+Supporting functions (point is a 3 component vector, matrix is a 4x4 matrix, vector is a 4 component vector):
+</p>
+
+<table><tbody id="supporting-functions-table">
+
+<tr><td>double determinant(matrix)
+<td>行列式
+
+<tr><td>matrix inverse(matrix)
+<td>逆行列
+
+<tr><td>matrix transpose(matrix)
+<td>転置行列
+
+<tr><td>matrix multiply(matrix, matrix)
+<td>行列の乗算
+
+<tr><td>point multVecMatrix(point, matrix)
+<td>~vectorを行列で乗算する（写像する）。
+
+<tr><td>double length(point)
+<td>~vectorの~~長さ
+
+<tr><td>point normalize(point)
+<td>~vectorを~~長さ 1 に正規化する
+
+<tr><td>double dot(point, point)
+<td>2 個の~vectorの点乗積
+
+<tr><td>double sqrt(double)
+<td>~scalarの二乗根
+
+<tr><td>double max(double, double)
+<td>2 個の~scalarの最大値
+
+<tr><td>double dot(vector, vector)
+<td>2 個の~vectorの点乗積
+
+<tr><td>vector multVector(vector, vector)
+<td>2 個の~vectorの積【利用されていない】
+
+<tr><td>double cos(double)
+<td>余弦
+
+<tr><td>double sin(double)
+<td>正弦
+
+<tr><td>double acos(double)
+<td>逆余弦
+
+<tr><td>double abs(double)
+<td>絶対~値
+
+<tr><td>double rad2deg(double)
+<td>~radianを度数に換算する
+
+<tr><td>double deg2rad(double)
+<td>度数を~radianに換算する
+
+<tr><td>point combine(point, point, double, double)
+<td>下を見よ（ ~3D行列~分解にて利用される）
+
+</tbody></table>
+
+<pre class="lang-other">
+point combine(point %a, point %b, double %ascl, double %bscl)
+   %result[0] = (%ascl * %a[0]) + (%bscl * %b[0])
+   %result[1] = (%ascl * %a[1]) + (%bscl * %b[1])
+   %result[2] = (%ascl * %a[2]) + (%bscl * %b[2])
+   return %result
+</pre>
+
+<pre lang="en">
+Supporting functions (point is a 3 component vector, matrix is a 4x4 matrix, vector is a 4 component vector):
+  double  determinant(matrix)          returns the 4x4 determinant of the matrix
+  matrix  inverse(matrix)              returns the inverse of the passed matrix
+  matrix  transpose(matrix)            returns the transpose of the passed matrix
+  point   multVecMatrix(point, matrix) multiplies the passed point by the passed matrix
+                                       and returns the transformed point
+  double  length(point)                returns the length of the passed vector
+  point   normalize(point)             normalizes the length of the passed point to 1
+  double  dot(point, point)            returns the dot product of the passed points
+  double  sqrt(double)                 returns the root square of passed value
+  double  max(double y, double x)      returns the bigger value of the two passed values
+  double  dot(vector, vector)         returns the dot product of the passed vectors
+  vector  multVector(vector, vector)  multiplies the passed vectors
+  double  sqrt(double)                returns the root square of passed value
+  double  max(double y, double x)     returns the bigger value of the two passed values
+  double  min(double y, double x)     returns the smaller value of the two passed values
+  double  cos(double)                 returns the cosines of passed value
+  double  sin(double)                 returns the sine of passed value  
+  double  acos(double)                returns the inverse cosine of passed value
+  double  abs(double)                  returns the absolute value of the passed value
+  double  rad2deg(double)              transforms a value in radian to degree and returns it
+  double  deg2rad(double)              transforms a value in degree to radian and returns it
+
+Decomposition also makes use of the following function:
+  point combine(point a, point b, double ascl, double bscl)
+      result[0] = (ascl * a[0]) + (bscl * b[0])
+      result[1] = (ascl * a[1]) + (bscl * b[1])
+      result[2] = (ascl * a[2]) + (bscl * b[2])
+      return result
+</pre>
+
+</div>
+
+		</section>
+		<section id="interpolation-of-2d-matrices">
+<h3 title="Interpolation of 2D matrices">12.2. ~2D行列どうしの補間</h3>
+
+			<section id="decomposing-a-2d-matrix">
+<h4 title="Decomposing a 2D matrix">12.2.1. ~2D行列の分解-法</h4>
+
+<p>
+以下の疑似codeは
+“Graphics Gems II, edited by Jim Arvo”
+による “unmatrix” 手法に基づく：
+◎
+The pseudo code below is based upon the "unmatrix" method in "Graphics Gems II, edited by Jim Arvo".
+</p>
+
+<p>
+疑似codeにおける行列は、列主導順を利用する。
+すなわち，行列~~成分の 1, 2 個目の~indexは、順に
+~column, ~row
+のそれを表現する。
+◎
+Matrices in the pseudo code use the column-major order. The first index on a matrix entry represents the column and the second index represents the row.
+</p>
+
+<pre class="lang-other">
+入力:
+   %matrix      ; ~4x4行列
+出力:
+   %translate ; 2 成分~vector
+   %scale       ; 2 成分~vector
+   %angle       ; 回転
+   %m11, %m12, %m21, %m22   ; 2x2 行列の各~成分
+
+`行列の分解が［ 可能なら true ／ 不能なら false ］を返す。^cmt
+
+double %row0x = %matrix[0][0]
+double %row0y = %matrix[0][1]
+double %row1x = %matrix[1][0]
+double %row1y = %matrix[1][1]
+
+%translate[0] = %matrix[3][0]
+%translate[1] = %matrix[3][1]
+
+%scale[0] = sqrt(%row0x * %row0x + %row0y * %row0y)
+%scale[1] = sqrt(%row1x * %row1x + %row1y * %row1y)
+
+`行列式が負である場合は，一方の軸を反転する^cmt
+double %determinant = %row0x * %row1y - %row0y * %row1x
+if (%determinant &lt; 0) {
+    `小さい方の単位~vector点乗積により，軸を反転する^cmt
+    if (%row0x &lt; %row1y) {
+        %scale[0] = -%scale[0]
+    } else {
+        %scale[1] = -%scale[1]
+    }
+}
+`行列から拡縮~分を除去して正規化する^cmt
+if (%scale[0]) {
+    %row0x *= 1 / %scale[0]
+    %row0y *= 1 / %scale[0]
+}
+if (%scale[1]) {
+    %row1x *= 1 / %scale[1]
+    %row1y *= 1 / %scale[1]
+}
+`回転を算出して行列を再度~正規化する^cmt
+%angle = atan2(%row0y, %row0x); 
+
+if (%angle) {
+    // -%angle 回転    = [cos(%angle), sin(%angle), -sin(%angle), cos(%angle)]
+    //                = [%row0x, -%row0y, %row0y, %row0x]
+    // Thanks to the normalization above.
+    double %sn = -%row0y
+    double %cs = %row0x
+    double %m11 = %row0x
+    double %m12 = %row0y
+    double %m21 = %row1x
+    double %m22 = %row1y
+    %row0x = %cs * %m11 + %sn * %m21
+    %row0y = %cs * %m12 + %sn * %m22
+    %row1x = -%sn * %m11 + %cs * %m21
+    %row1y = -%sn * %m12 + %cs * %m22
+}
+<!-- 
+ c s 11 12
+-s d 21 22
+ -->
+%m11 = %row0x
+%m12 = %row0y
+%m21 = %row1x
+%m22 = %row1y
+
+`回転~関数~用に度数に換算する^cmt
+%angle = rad2deg(%angle)
+
+return true
+</pre>
+<!-- 
+Input:  matrix      ; a 4x4 matrix
+Output: translation ; a 2 component vector
+        scale       ; a 2 component vector
+        angle       ; rotation
+        m11         ; 1,1 coordinate of 2x2 matrix
+        m12         ; 1,2 coordinate of 2x2 matrix
+        m21         ; 2,1 coordinate of 2x2 matrix
+        m22         ; 2,2 coordinate of 2x2 matrix
+Returns false if the matrix cannot be decomposed, true if it can
+
+double row0x = matrix[0][0]
+double row0y = matrix[0][1]
+double row1x = matrix[1][0]
+double row1y = matrix[1][1]
+
+translate[0] = matrix[3][0]
+translate[1] = matrix[3][1]
+
+scale[0] = sqrt(row0x * row0x + row0y * row0y)
+scale[1] = sqrt(row1x * row1x + row1y * row1y)
+
+// If determinant is negative, one axis was flipped.
+double determinant = row0x * row1y - row0y * row1x
+if (determinant &lt; 0)
+    // Flip axis with minimum unit vector dot product.
+    if (row0x &lt; row1y)
+        scale[0] = -scale[0]
+    else
+        scale[1] = -scale[1]
+
+// Renormalize matrix to remove scale. 
+if (scale[0])
+    row0x *= 1 / scale[0]
+    row0y *= 1 / scale[0]
+if (scale[1]) 
+    row1x *= 1 / scale[1]
+    row1y *= 1 / scale[1]
+
+// Compute rotation and renormalize matrix. 
+angle = atan2(row0y, row0x); 
+
+if (angle)
+    // Rotate(-angle) = [cos(angle), sin(angle), -sin(angle), cos(angle)]
+    //                = [row0x, -row0y, row0y, row0x]
+    // Thanks to the normalization above.
+    double sn = -row0y
+    double cs = row0x
+    double m11 = row0x
+    double m12 = row0y
+    double m21 = row1x
+    double m22 = row1y
+    row0x = cs * m11 + sn * m21
+    row0y = cs * m12 + sn * m22
+    row1x = -sn * m11 + cs * m21
+    row1y = -sn * m12 + cs * m22
+
+m11 = row0x
+m12 = row0y
+m21 = row1x
+m22 = row1y
+
+// Convert into degrees because our rotation functions expect it.
+angle = rad2deg(angle)
+
+return true
+ -->
+
+			</section>
+			<section id="interpolation-of-decomposed-2d-matrix-values">
+<h4 title="Interpolation of decomposed 2D matrix values">12.2.2. 分解形~2D行列~値どうしの補間</h4>
+
+<p>
+2 個の分解形~2D行列~値を補間する前に，次を行う：
+◎
+Before two decomposed 2D matrix values can be interpolated, the following
+</p>
+
+<pre class="lang-other">
+入力:
+   %translationA ; 2 成分~vector
+   %scaleA       ; 2 成分~vector
+   %angleA       ; 回転
+   %mA11, %mA12, %mA21, %mA22   ; 2x2 行列の各~成分
+
+   %translationB ; 2 成分~vector
+   %scaleB       ; 2 成分~vector
+   %angleB       ; 回転
+   %mB11, %mB12, %mB21, %mB22   ; 2x2 行列の各~成分
+
+`一方の x-軸と他方の y-軸が反転されている場合、回転を反転されていない形に戻す。^cmt
+
+if ((%scaleA[0] &lt; 0 &amp;&amp; %scaleB[1] &lt; 0) || (%scaleA[1] &lt; 0 &amp;&amp; %scaleB[0] &lt; 0))
+    %scaleA[0] = -%scaleA[0]
+    %scaleA[1] = -%scaleA[1]
+    %angleA += %angleA &lt; 0 ? 180 : -180
+
+`回転は弧が短い方を選ぶ^cmt
+if (!%angleA)
+    %angleA = 360
+if (!%angleB)
+    %angleB = 360
+
+if (abs(%angleA - %angleB) &gt; 180)
+    if (%angleA &gt; %angleB)
+        %angleA -= 360
+    else 
+        %angleB -= 360
+</pre>
+<!-- 
+Input: translationA ; a 2 component vector
+       scaleA       ; a 2 component vector
+       angleA       ; rotation
+       m11A         ; 1,1 coordinate of 2x2 matrix
+       m12A         ; 1,2 coordinate of 2x2 matrix
+       m21A         ; 2,1 coordinate of 2x2 matrix
+       m22A         ; 2,2 coordinate of 2x2 matrix
+       translationB ; a 2 component vector
+       scaleB       ; a 2 component vector
+       angleB       ; rotation
+       m11B         ; 1,1 coordinate of 2x2 matrix
+       m12B         ; 1,2 coordinate of 2x2 matrix
+       m21B         ; 2,1 coordinate of 2x2 matrix
+       m22B         ; 2,2 coordinate of 2x2 matrix
+
+// If x-axis of one is flipped, and y-axis of the other,
+// convert to an unflipped rotation.
+if ((scaleA[0] &lt; 0 &amp;&amp; scaleB[1] &lt; 0) || (scaleA[1] &lt; 0 &amp;&amp; scaleB[0] &lt; 0))
+    scaleA[0] = -scaleA[0]
+    scaleA[1] = -scaleA[1]
+    angleA += angleA &lt; 0 ? 180 : -180
+
+// Don’t rotate the long way around.
+if (!angleA)
+    angleA = 360
+if (!angleB)
+    angleB = 360
+
+if (abs(angleA - angleB) &gt; 180)
+    if (angleA &gt; angleB)
+        angleA -= 360
+    else 
+        angleB -= 360
+-->
+
+<p>
+以下、 値a を成す行列を分解して得られた各~成分~値［
+並進, 拡縮, 角度, [ `11^M 〜 `22^M ]
+］は、対応する 値b を成す行列の各~成分との間で，線型に補間される。
+◎
+Afterwards, each component of the decomposed values translation, scale, angle, m11 to m22 of the source matrix get linearly interpolated with each corresponding component of the destination matrix.
+</p>
+
+			</section>
+			<section id="recomposing-to-a-2d-matrix">
+<h4 title="Recomposing to a 2D matrix">12.2.3. ~2D行列への再構成-法</h4>
+
+<p>
+補間~後の結果の値が，要素の利用元~空間を変形するときに利用される。
+これらの値は~4x4行列に再構成するために利用される。
+これは、次の疑似codeにより行える：
+◎
+After interpolation, the resulting values are used to transform the elements user space. One way to use these values is to recompose them into a 4x4 matrix. This can be done following the pseudo code below:
+</p>
+
+<pre class="lang-other">
+入力:
+   %translate ; 2 成分~vector
+   %scale       ; 2 成分~vector
+   %angle       ; 回転
+   %m11, %m12, %m21, %m22   ; 2x2 行列の各~成分
+出力:
+   %matrix      ; 単位i行列に初期化された~4x4行列
+
+%matrix[0][0] = %m11
+%matrix[0][1] = %m12
+%matrix[1][0] = %m21
+%matrix[1][1] = %m22
+
+`並進~行列^cmt
+%matrix[3][0] = %translate[0] * %m11 + %translate[1] * %m21
+%matrix[3][1] = %translate[0] * %m12 + %translate[1] * %m22
+
+`回転~行列^cmt
+%angle = deg2rad(%angle);
+double %cosAngle = cos(%angle);
+double %sinAngle = sin(%angle);
+
+`単位i行列に初期化された，~4x4行列による新たな一時変数 rotateMatrix^cmt
+%rotateMatrix[0][0] = %cosAngle
+%rotateMatrix[0][1] = %sinAngle
+%rotateMatrix[1][0] = -%sinAngle
+%rotateMatrix[1][1] = %cosAngle
+
+%matrix = post-multiply(%rotateMatrix, %matrix)
+
+`matrix を拡縮^cmt
+%matrix[0][0] *= %scale[0]
+%matrix[0][1] *= %scale[0]
+%matrix[1][0] *= %scale[1]
+%matrix[1][1] *= %scale[1]
+</pre>
+
+<!-- 
+Input:  translation ; a 2 component vector
+        scale       ; a 2 component vector
+        angle       ; rotation
+        m11         ; 1,1 coordinate of 2x2 matrix
+        m12         ; 1,2 coordinate of 2x2 matrix
+        m21         ; 2,1 coordinate of 2x2 matrix
+        m22         ; 2,2 coordinate of 2x2 matrix
+Output: matrix      ; a 4x4 matrix initialized to identity matrix
+
+matrix[0][0] = m11
+matrix[0][1] = m12
+matrix[1][0] = m21
+matrix[1][1] = m22
+
+// Translate matrix.
+matrix[3][0] = translate[0] * m11 + translate[1] * m21
+matrix[3][1] = translate[0] * m12 + translate[1] * m22
+
+// Rotate matrix.
+angle = deg2rad(angle);
+double cosAngle = cos(angle);
+double sinAngle = sin(angle);
+
+// New temporary, identity initialized, 4x4 matrix rotateMatrix
+rotateMatrix[0][0] = cosAngle
+rotateMatrix[0][1] = sinAngle
+rotateMatrix[1][0] = -sinAngle
+rotateMatrix[1][1] = cosAngle
+
+matrix = post-multiply(rotateMatrix, matrix)
+
+// Scale matrix.
+matrix[0][0] *= scale[0]
+matrix[0][1] *= scale[0]
+matrix[1][0] *= scale[1]
+matrix[1][1] *= scale[1]
+
+ -->
+
+			</section>
+		</section>
+	</section>
+	<section id="mathematical-description">
+<h2 title="Mathematical Description of Transform Functions">13. 変形-関数の数学的~記述</h2>
+
+<!-- 
+function make_matrix(data){
+	return (
+		'<math xmlns="http://www.w3.org/1998/Math/MathML">'
+		+ '<mfenced open="[" close="]"><mtable>'
+		+ data.split('／').map(func(row){
+			return '<mtr><mtd>' + row.replace(/｜/g, '</mtd><mtd>') + '</mtd></mtr>'
+		}).join('')
+		+ '</mtable></mfenced></math>'
+	);
+}
+
+<math xmlns="http://www.w3.org/1998/Math/MathML"
+><mfenced open="[" close="]"><mtable>
+<mtr><mtd>x</mtd><mtd>y</mtd></mtr>
+<mtr><mtd>x</mtd><mtd>y</mtd></mtr>
+</mtable></mfenced></math>
+
+ -->
+
+<p>
+すべての変形-関数は、次のような形の~4x4変形n行列として数学的に表現できる：
+◎
+Mathematically, all transform functions can be represented as 4x4 transformation matrices of the following form:
+</p>
+
+<figure>`4x4matrix^dgm
+◎
+\begin{bmatrix} m11 &amp; m21 &amp; m31 &amp; m41 \\ m12 &amp; m22 &amp; m32 &amp; m42 \\ m13 &amp; m23 &amp; m33 &amp; m43 \\ m14 &amp; m24 &amp; m34 &amp; m44 \end{bmatrix}
+</figure>
+
+<p class="trans-note">【
+この仕様における行列は、座標を~~縦~vectorと見なして左から作用し、子の局所~座標系から親の局所~座標系への変形を与える。
+】【
+~3D空間の点
+( %x, %y, %z )
+（ ~2D空間の場合は %z ~EQ 0 ）は、~~縦~vector
+( %x, %y, %z, 1 )
+と同一視される。
+】</p>
+
+<p>
+行列~上の並進の 1 単位は、要素の局所~座標系の 1 画素に等価になる。
+◎
+One translation unit on a matrix is equivalent to 1 pixel in the local coordinate system of the element.
+</p>
+
+<ul>
+	<li>
+<p>
+6 成分
+%a, %b, %c, %d, %e, %f
+からなる
+`~2D~3x2行列@
+は、次の行列に等価になる：
+◎
+A 2D 3x2 matrix with six parameters a, b, c, d, e and f is equivalent to the matrix:
+</p>
+
+<figure>`matrix^dgm
+◎
+\begin{bmatrix} a &amp; c &amp; 0 &amp; e \\ b &amp; d &amp; 0 &amp; f \\ 0 &amp; 0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}
+</figure>
+	</li>
+	<li>
+<p>
+移動量
+[ %tx, %ty ]
+による
+`~2D並進@
+は、移動量
+[ %tx, %ty, 0 ]
+による`~3D並進$（すなわち，次の行列）に等価になる：
+◎
+A 2D translation with the parameters tx and ty is equivalent to a 3D translation where tz has zero as a value.
+</p>
+
+<figure>`translate2D^dgm
+◎
+\begin{bmatrix} 1 &amp; 0 &amp; 0 &amp; tx \\ 0 &amp; 1 &amp; 0 &amp; ty \\ 0 &amp; 0 &amp; 1 &amp; tz \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}
+</figure>
+	</li>
+	<li>
+<p>
+拡縮率
+[ %sx, %sy ]
+による
+`~2D拡縮@
+は、拡縮率
+[ %sx, %sy, 1 ]
+による`~3D拡縮$（すなわち，次の行列）に等価になる：
+◎
+A 2D scaling with the parameters sx and sy is equivalent to a 3D scale where sz has one as a value.
+</p>
+
+<figure>`scale2D^dgm
+◎
+\begin{bmatrix} sx &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; sy &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; sz &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}
+</figure>
+	</li>
+	<li>
+<p>
+回転角 %α による
+`~2D回転@
+は、軸~vector
+[ 0, 0, 1 ]
+と回転角 %α による`~3D回転$（すなわち，次の行列）に等価になる：
+◎
+A 2D rotation with the parameter alpha is equivalent to a 3D rotation with the vector [x,y,z] where x has zero as a value, y has zero as a value, z has one as a value, and the parameter alpha.
+</p>
+
+<figure>`rot2D^dgm
+◎
+\begin{bmatrix} 1 - 2 \cdot (y^2 + z^2) \cdot sq & 2 \cdot (x \cdot y \cdot sq - z \cdot sc) & 2 \cdot (x \cdot z \cdot sq + y \cdot sc) & 0 \\ 2 \cdot (x \cdot y \cdot sq + z \cdot sc) & 1 - 2 \cdot (x^2 + z^2) \cdot sq & 2 \cdot (y \cdot z \cdot sq - x \cdot sc) & 0 \\ 2 \cdot (x \cdot z \cdot sq - y \cdot sc) & 2 \cdot (y \cdot z \cdot sq + x \cdot sc) & 1 - 2 \cdot (x^2 + y^2) \cdot sq & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
+◎
+where:
+◎
+\newline sc = \sin (\alpha/2) \cdot \cos (\alpha/2) \newline sq = \sin^2 (\alpha/2)
+</figure>
+	</li>
+
+	<li id="SkewDefined">
+<p>
+~parameter
+%α, %β による
+~2D斜傾~的な変形nは、次の行列に等価になる：
+◎
+A 2D skew like transformation with the parameters alpha and beta is equivalent to the matrix:
+</p>
+
+<figure>`skew^dgm
+◎
+\begin{bmatrix} 1 &amp; \tan(\alpha) &amp; 0 &amp; 0 \\ \tan(\beta) &amp; 1 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}
+</figure>
+	</li>
+	<li>
+<p>
+角度 %α による
+`X 軸~不変の~2D斜傾@
+は、次の行列に等価になる：
+◎
+A 2D skew transformation along the X axis with the parameter alpha is equivalent to the matrix:
+</p>
+
+<figure>`skewX^dgm
+◎
+\begin{bmatrix} 1 &amp; \tan(\alpha) &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}
+</figure>
+	</li>
+	<li>
+<p>
+角度 %β による
+`Y 軸~不変の~2D斜傾@
+は、次の行列に等価になる：
+◎
+A 2D skew transformation along the Y axis with the parameter beta is equivalent to the matrix:
+</p>
+
+<figure>`skewY^dgm
+◎
+\begin{bmatrix} 1 &amp; 0 &amp; 0 &amp; 0 \\ \tan(\beta) &amp; 1 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}
+</figure>
+	</li>
+</ul>
+
+	</section>
+	<section id="priv-sec">
+<h2 title="Privacy and Security Considerations">14. ~privacyと~security上の考慮点</h2>
+
+<p>
+~UAは、［
+攻撃者が、情報を推定して 計時~攻撃を仕掛ける
+］ことができない仕方で，変形-演算を実装するモノトスル。
+◎
+UAs must implement transform operations in a way attackers can not infer information and mount a timing attack.
+</p>
+
+<p>
+計時~攻撃は、［
+演算にかかる時間を学習する
+］ことに基づいて，［
+さもなければ保護されるような，内容についての情報
+］を得する手法である。
+◎
+A timing attack is a method of obtaining information about content that is otherwise protected, based on studying the amount of time it takes for an operation to occur.
+</p>
+
+<p>
+現時点では、［
+この仕様に特有な，~privacyや~securityの懸念
+］についての情報は無い。
+◎
+At this point there are no information about potential privacy or security concerns specific to this specification.
+</p>
+
+	</section>
+	<section id="changes">
+<h2 title="Changes">変更点</h2>
+
+<dl>
+	<dt id="CR20190214">
+<a href="~TR/2019/CR-css-transforms-1-20190214/">2019 年 2 月 14 日 勧告候補</a>
+からの変更点は：
+◎
+Since the 14 February 2019 Candidate Recommendation
+</dt>
+	<dd>
+`transform$a 属性の構文を，
+`transform-list$t を成す各~itemの合間に~commaを要求しないよう緩めた。
+◎
+Relax syntax of transform attribute: Do not require commas between &lt;transform-list&gt; items.
+</dd>
+	<dd>
+一部の変形-関数の文法を単純~化した（規範的な影響iは無い）。
+◎
+Simplified grammar of transform functions. (No normative impact.)
+</dd>
+	<dd>
+`animate$e, `set$e 要素による変形~animation【すなわち SMIL】の~supportを除去した。
+◎
+Remove animation support of transform from animate and set elements.
+</dd>
+	<dd>
+編集上の変更。
+◎
+Editorial changes.
+</dd>
+
+	<dt id="WD20181130">
+<a href="~TR/2018/WD-css-transforms-1-20181130/">2018 年 11 月 30 日 作業草案</a>
+からの変更点は：
+◎
+Since the 30 November 2018 Working Draft
+</dt>
+	<dd>
+~~実質的な変更は無い。
+◎
+No substantive changes
+◎
+Boilerplate, styling updates for CR
+</dd>
+
+	<dt id="WD20171130">
+<a href="~TR/2017/WD-css-transforms-1-20171130/">2017 年 11 月 30 日 作業草案</a>
+からの変更点は：
+◎
+Since the 30 November 2017 Working Draft
+</dt>
+	<dd>
+呈示~属性［
+`patternTransform$a,
+`gradientTransform$a
+］は `transform$p ~propを表現するものと指定していた~textを除去した。
+それは、 `SVG2$r にて指定されることになる。
+◎
+Remove specification text that makes patternTransform, gradientTransform presentation attributes representing the transform property. That is going to get specified by SVG 2 [SVG2].
+</dd>
+	<dd>
+<a href="#priv-sec">~privacyと~security</a> 節を追加した。
+◎
+Added privacy and security section.
+</dd>
+	<dd>
+`変形-可能$な要素~用に `SVG2$r の定義を利用するようにした。
+◎
+Use [SVG2] definitions for transformable elements.
+</dd>
+	<dd>
+［
+`transform$a ／ `patternTransform$a ／ `gradientTransform$a
+］属性~用に特別な構文を追加した。
+◎
+Added special syntax for transform, gradientTransform and patternTransform attributes.
+</dd>
+	<dd>
+［
+`右から乗算-$／`左から乗算-$
+］を用いて乗算~順序を明確化した。
+◎
+Clarify multiplication order by using terms post-multiply and pre-multiply.
+</dd>
+	<dd>
+疑似codeにおける行列~~成分の~index順序を明確化した。
+◎
+Clarify index order of matrix entries in pseudo-code.
+</dd>
+	<dd>
+行列を組成し直す疑似codeにおける乗算~順序を明確化した。
+◎
+Clarify multiplication order in recomposition pseudo-code.
+</dd>
+	<dd>
+~overflow区画~上での `transform$p の挙動を明確化した。
+◎
+Clarify behavior of transform on overflow area.
+</dd>
+	<dd>
+単位元の~listから［
+`translateX(0)^v, `translateY(0)^v, `scaleX(0)^v, `scaleY(0)^v
+］を除去した。
+◎
+Remove translateX(0), translateY(0), scaleX(0), scaleY(0) from the list of neutral elements.
+</dd>
+	<dd>
+変形-関数~定義から~3D変形nへの参照を除去した。
+◎
+Remove any reference of 3D transformations of transform function definitions.
+</dd>
+	<dd>
+`transform-list$t どうしの補間は、両~listの長さを揃えた上で，両~listの頭部が共通なときには行列の補間を避けるように指定した。
+◎
+Specify interpolation between &lt;transform-list&gt;s to match lengths and avoid matrix interpolation for the common prefix of the two lists.
+</dd>
+	<dd>
+［
+`置換され$ない行内~box,
+`table-column^v ~box,
+`table-column-group^v ~box
+］は`変形-可能$でないものとした。
+◎
+No transform on non-replaced inline boxes, table-column boxes, and table-column-group boxes.
+</dd>
+	<dd>
+［
+`pattern$e ／ `linearGradient$e ／ `radialGradient$e ／ `clipPath$e 
+］要素~上の~target座標~空間を定義した。
+◎
+Define target coordinate space for transformations on pattern, linearGradient, radialGradient and clipPath elements.
+</dd>
+	<dd>
+変形-関数~primitiveから 3 個の引数をとる `rotate$f を除去した。
+◎
+Remove 3-value &lt;rotate()&gt; from transform function primitives.
+</dd>
+	<dd>
+`変形n行列$と`現在の変形n行列$の算出について，より特定に与えた。
+◎
+Be more specific about computation of transformation matrix and current transformation matrix.
+</dd>
+	<dd>
+`塗り~server要素$ ／ `clipPath$e 要素
+］用の基準~boxを定義した。
+◎
+Define reference box for paint servers and clipPath element.
+</dd>
+	<dd>
+`transform$a 呈示~属性が遷移の［
+`開始~値$ ／ `終止~値$
+］として 3 個の引数をとる `rotate$f を伴う場合の挙動を指定した。
+◎
+Specify behavior of transform presentation attribute with 3-value-rotate as start or end value of a transition.
+</dd>
+	<dd>
+`transform-box$p に
+`stroke-box^v, `content-box^v
+を追加した。
+~boxを対応付ける挙動が，すべての仕様にわたり揃うようにした。
+◎
+Add stroke-box and content-box to transform-box. Align box mapping behavior across all specifications.
+</dd>
+	<dd>
+編集上の変更。
+◎
+Editorial changes.
+</dd>
+</dl>
+
+	</section>
+	<section>
+<h2 id=acknowledgments title="Acknowledgments">謝辞</h2>
+
+<p>
+注意深い考査, ~comment, 訂正を寄せられた次の方々に。
+</p>
+
+<p lang="en-x-a0">
+The editors would like to thank Robert O’Callahan, Cameron McCormack, Tab Atkins, Gérard Talbot, L. David Baron, Rik Cabanier, Brian Birtles, Benoit Jacob, Ken Shoemake, Alan Gresley, Maciej Stochowiak, Sylvain Galineau, Rafal Pietrak, Shane Stephens, Matt Rakow, XiangHongAi, Fabio M. Costa, Nivesh Rajbhandari, Rebecca Hauck, Gregg Tavares, Graham Clift, Erik Dahlström, Alexander Zolotov, Amelia Bellamy-Royds and Boris Zbarsky for their careful reviews, comments, and corrections.
+</p>
+
+	</section>
+</main></div>
+

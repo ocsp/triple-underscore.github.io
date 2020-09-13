@@ -1,0 +1,1974 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Exclusions Module Level 1 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+
+<style>
+._diagram-list {
+	display: flex;
+	flex-wrap: wrap;
+}
+._diagram-list > li {
+	display: flex;
+	flex-flow: column;
+	margin: 0;
+	padding: 0.5em;
+}
+._diagram-list > li > img {
+	width: 18em;
+	height: 18em;
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r': // ref
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 't': // typedef
+	text = `&lt;${key}&gt;`;
+	break;
+case 'en': // english words
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Exclusions Module Level 1
+spec_date:2020-01-16
+trans_update:2019-03-22
+source_checked:180630
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-exclusions/
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:layout,css
+conformance:css
+copyright:2018,permissive
+trans_1st_pub:2015-04-13
+
+
+●●class_map
+p:property
+g:production
+css:css
+e:element
+v:value
+
+●●tag_map
+p:code
+t:var
+css:code
+c:code
+e:code
+v:code
+V:var
+
+●●original_id_map
+
+●●mdn_urls
+	propdef-wrap-flow:CSS/wrap-flow
+	propdef-wrap-through:CSS/wrap-through
+
+●●link_map
+
+p.wrap-flow:#propdef-wrap-flow
+p.wrap-through:#propdef-wrap-through
+p.position:~CSSPOS#propdef-position
+p.z-index:~CSS2VISUREN#propdef-z-index
+p.float:~CSS2VISUREN#propdef-float
+
+v.auto:#valdef-wrap-flow-auto
+v.both:#valdef-wrap-flow-both
+v.start:#valdef-wrap-flow-start
+v.end:#valdef-wrap-flow-end
+v.minimum:#valdef-wrap-flow-minimum
+v.maximum:#valdef-wrap-flow-maximum
+v.clear:#valdef-wrap-flow-clear
+v.wrap:#valdef-wrap-through-wrap
+v.none:#valdef-wrap-through-none
+
+排他~box:#exclusion-box
+排他~区画:#exclusion-area
+排他~要素:#exclusion-element
+排他:#exclusion-element
+排他体:#exclusion-element
+回込み文脈:#wrapping-context
+内容~区画:#content-area
+回込み区画:#wrapping-area
+内側:#inside
+外側:#outside
+
+有位置:~CSSPOS#positioned-box
+書字mode:~CSSWM#text-flow
+~border~box:~CSSBOX#border-box
+	内容~区画:~CSSBOX#content-area
+浮動体:~CSS2VISUREN#floats
+描画~tree:~CSS2VISUREN#z-index
+	？
+	包含塊:~CSS2VISUDET#containing-block-details
+
+
+	●補完
+V.e1:#_e1
+V.e2:#_e2
+V.d1:#_d1
+V.d2:#_d2
+V.解決-済み回込み文脈 1:#_rwc-1
+V.解決-済み回込み文脈 2:#_rwc-2
+V.回込み文脈 1:#_wc-1
+V.回込み文脈 2:#_wc-2
+
+格子~layout:~CSSGRID#grid-layout
+格子~升:~CSSGRID#grid-cell
+格子~item:~CSSGRID#grid-item
+格子~線:~CSSGRID#grid-line
+格子:~CSSGRID#grid
+	格子~区画:~CSSGRID#grid-area
+	格子~容器:~CSSGRID#grid-container
+	格子~整形~文脈:~CSSGRID#grid-formatting-context
+
+~flex~layout:~CSSFLEX#flex-layout
+
+p.grid:~CSSGRID#propdef-grid
+p.grid-area:~CSSGRID#propdef-grid-area
+
+塊~整形~文脈:~CSSDISP#block-formatting-context
+塊~level:~CSSDISP#block-level
+塊~box:~CSSDISP#block-box
+塊:~CSSDISP#block
+包含塊:~CSSDISP#containing-block
+初期~包含塊:~CSSDISP#initial-containing-block
+
+行内~box:~CSSDISP#inline-box
+不可分な行内:~CSSDISP#atomic-inline
+行内~level:~CSSDISP#inline-level
+	行内:~CSSDISP#inline
+	行内~内容:~CSSDISP#inline
+	行内~flow内容
+
+塊~進行~方向:~CSSWM#block-flow-direction
+行内~基底~方向:~CSSWM#inline-base-direction
+始端:#_start-end
+終端:#_start-end
+
+
+●●words_table1
+
+
+
+●●words_table
+
+
+	●layout
+右向き:left-to-right::~
+回込ませ:wrap aroundさせ::回り込ませ
+回込まな:wrap aroundしな::回り込まな
+回込み:wrapping::回り込み
+回込む:wrap aroundする::回り込む
+回込める:wrap aroundできる::回り込める
+回込んで:wrap aroundして::回り込んで
+衝突回避:collision avoidance::~
+	衝突回避:collision-avoidance::~
+	周り:around／next to
+
+進行:progression::~
+書字mode:writing mode::書字 mode:書字モード
+排他-:exclude::~
+排他:exclusion::~
+排他体:exclusion::~
+	排他域／排他体
+	statically
+包含:containment::~
+供与-:contribute::~
+格子:grid::~::グリッド
+升:cell::~::セル
+空いた:emptyな:~
+	leave 空いたまま
+線:line:~
+最外縁の:outermost::~
+逆順:in reverse:~
+上層:top:~
+最上層:top-most:~
+不可分:atomic::~
+浮動体:float::~
+
+	●CSS
+flex:
+	~flex~layout:flexible box
+scrolling:
+descend:
+塗ng:painting::塗り
+背景:background::~
+	解決-済み:resolved
+
+	●仕様
+十分:enough:~
+提起-:raise:~
+類似性:similarities:~
+循環依存:circular dependency:~
+関心:concerns:~
+	~~実施-:carry out
+説明0:description:説明
+修正s:fixes:修正
+分割-:split:~
+有害:harmful:~
+止める:stopする:~
+
+	●未分類
+側:side:~
+先行-:precede:~
+後続-:follow:~
+選択肢:options:~
+
+	得る:yield
+	組合n:combining
+	狭い:smallest
+	広い:largest
+	段階／段:phase／step／sub-step
+	留意:reminder
+	除いた~~区域:subtract／subtraction
+	大きな:very significant
+	断ち切る／分け:break
+	暗い:darker／dark
+	明るい:lighter／light
+	順々に:in turn
+	~~最後に:finally
+	指す:refer
+	それの:its
+	以前:previous
+	特に:specificに
+
+	#1:applying
+	#1:again
+	#1:causing
+	#1:descend
+	#1:during
+	#1:go
+	#1:happen
+	#1:HTML
+	#1:i
+	#1:made
+	#1:marking
+	#1:meant
+	#1:paper
+	#1:possible
+	#1:screen
+	#1:shade
+	#1:Shape
+	#1:three
+	#1:we
+	#1:XML
+	#2:become
+	#2:making
+	#2:point
+	#2:starting
+	#3:next
+	#3:two
+	#5:leave
+	DOM:
+
+
+●●ref_normative
+
+[CSS-LISTS-3]
+    Elika Etemad; Tab Atkins Jr.. CSS Lists Module Level 3. 17 August 2019. WD. URL: https://www.w3.org/TR/css-lists-3/ 
+[CSS-PAGE-FLOATS-3]
+    Johannes Wilm. CSS Page Floats. 15 September 2015. WD. URL: https://www.w3.org/TR/css-page-floats-3/ 
+[CSS-POSITION-3]
+    Rossen Atanassov; Arron Eicholz. CSS Positioned Layout Module Level 3. 17 May 2016. WD. URL: https://www.w3.org/TR/css-position-3/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS21]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[CSS3-WRITING-MODES]
+    Elika Etemad; Koji Ishii. CSS Writing Modes Level 3. 10 December 2019. REC. URL: https://www.w3.org/TR/css-writing-modes-3/ 
+[CSS3BOX]
+    Elika Etemad. CSS Box Model Module Level 3. 18 December 2018. WD. URL: https://www.w3.org/TR/css-box-3/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+
+●●ref_informative
+
+[CSS3-FLEXBOX]
+    Tab Atkins Jr.; et al. CSS Flexible Box Layout Module Level 1. 19 November 2018. CR. URL: https://www.w3.org/TR/css-flexbox-1/ 
+[CSS3-GRID-LAYOUT]
+    Tab Atkins Jr.; Elika Etemad; Rossen Atanassov. CSS Grid Layout Module Level 1. 14 December 2017. CR. URL: https://www.w3.org/TR/css-grid-1/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Exlusion Module Level 1</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/css3-exclusions/
+
+以前のバージョン
+	https://www.w3.org/TR/2015/WD-css3-exclusions-20150115/
+	https://www.w3.org/TR/2013/WD-css3-exclusions-20130528/
+
+テスト一式
+	http://test.csswg.org/suites/css-exclusions-1_dev/nightly-unstable/
+	http://test.csswg.org/suites/css3-exclusions/nightly-unstable/
+
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-exclusions-1">GitHub Issues</a>
+
+編集
+	<a href="mailto:ratan@microsoft.com">Rossen Atanassov</a> (Microsoft)
+	<a href="mailto:vhardy@adobe.com">Vincent Hardy</a> (Adobe)
+	<a href="mailto:astearns@adobe.com">Alan Stearns</a> (Adobe)
+
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-exclusions-1/Overview.bs">GitHub Editor</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-exclusions-1
+
+課題一覧
+	<a href="https://www.w3.org/Bugs/Public/buglist.cgi?query_format=advanced&product=CSS&component=Exclusions&resolution=---&cmdtype=doit">in Bugzilla</a>
+
+</script>
+
+
+</head>
+<body>
+
+<header>
+	<hgroup>
+<h1 id="title">CSS Exclusions Module Level 1</h1>
+<!--real: 160624 ED -->
+	</hgroup>
+
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+CSS Exclusions は、周りに行内~内容 `CSS21$r を~flowさせられるような，任意な区画を定義する。
+CSS Exclusions は、どの CSS `塊~level$の要素~上にも定義できる。
+CSS Exclusions は、以前までは，浮動体に制限されていた，内容の回込みの観念を拡張する。
+◎
+CSS Exclusions define arbitrary areas around which inline content ([CSS21]) can flow. CSS Exclusions can be defined on any CSS block-level elements. CSS Exclusions extend the notion of content wrapping previously limited to floats.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公の複製です…
+【以下，この節の他の内容は <a href="css-common-ja.html#status">~CSS日本語訳 共通~page</a>に委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+この仕様は、行内~flow内容が［
+要素の`排他~区画$の外側に回込める
+］ようにする特能を，定義する。
+◎
+This specification defines features that allow inline flow content to wrap around outside the exclusion area of elements.
+</p>
+
+		<section id="values">
+<h3 title="Values Definitions">1.1. 値~定義</h3>
+
+<p class="trans-note">【
+この節の内容は
+<a href="css-common-ja.html#values">~CSS日本語訳 共通~page</a>
+に委譲。
+】</p>
+
+		</section>
+	</section>
+	<section id="terms">
+<h2 title="Terminology">2. 各種用語</h2>
+
+<dl>
+
+	<dt>`排他~box@ （ `exclusion box^en ）, または 単に “排他体（ `exclusion^en ）”</dt>
+	<dd>
+他の~boxに対する`排他~区画$を定義するような
+<a href="https://www.w3.org/TR/css3-box/">~box</a>
+（ `CSS3BOX$r ）。
+排他~boxは、自身による`排他~区画$を，自身の`包含塊$の `回込み文脈$に供与する。
+要素が生成する~boxを排他~boxにするためには、 `wrap-flow$p ~propを利用する
+— ただし、 `float^p の算出d値が `none^v 以外になる要素は，排他体にはならない。
+◎
+A box ([CSS3BOX]) that defines an exclusion area for other boxes. The wrap-flow property is used to make an element’s generated box an exclusion box. An exclusion box contributes its exclusion area to its containing block’s wrapping context. An element with a float computed value other than none does not become an exclusion.
+</dd>
+	<dd class="trans-note">【
+語 “排他体” は、排他~box, または排他~boxを生成する要素のいずれかを指す（同時に両方の意味を兼ねることもある）。
+】</dd>
+
+	<dt>`排他~区画@ （ `exclusion area^en ）</dt>
+	<dd>
+<p>
+行内~flow内容を，`排他~box$の周りに排他するときに利用される区画。
+`排他~区画$は、`排他~box$に対する`~border~box$に等価である。
+◎
+The area used for excluding inline flow content around an exclusion box. The exclusion area is equivalent to the border box for an exclusion box.
+</p>
+
+<p class="note">
+CSS Shapes も実装する~UAにおいては、
+~border~boxに代わって， `shape-outside^p ~propが，`排他~区画$を定義する。
+◎
+If a user agent implements both CSS Exclusions and CSS Shapes, the shape-outside property defines the exclusion area instead of the border box.
+</p></dd>
+
+	<dt>`排他~要素@ （ `exclusion element^en ）, または 単に “排他体（ `exclusion^en ）”</dt>
+	<dd>
+`排他~要素$は、浮動体でない, かつ
+`排他~box$生成するような，`塊~level$の要素である。
+要素は、その `wrap-flow$p ~propの算出d値が `auto$v でないとき，`排他~box$を生成する。
+◎
+An exclusion element is a block-level element which is not a float and generates an exclusion box. An element generates an exclusion box when its wrap-flow property’s computed value is not auto.
+</dd>
+	<dd class="trans-note">【
+論理的には、
+“`排他~box$生成する要素”
+と定義しても，同じ。
+浮動体（ `float^p が非 `none^v ）でもあるような排他~要素や，塊~levelでない排他~要素は存在し得ないので（ `wrap-flow$p ~propを見よ）。
+】</dd>
+
+	<dt>`回込み文脈@ （ `wrapping context^en ）</dt>
+	<dd>
+~boxの`回込み文脈$は、それに結付けられている`排他~box$たちから供与された`排他~区画$たちが成す~collectionである。
+~layoutにおいては、~boxの行内~flow内容は，~boxの`回込み区画$
+— すなわち，~boxの`内容~区画$から，それらの`排他~区画$を除いた~~区域 —
+内に包装される†。
+◎
+The wrapping context of a box is a collection of exclusion areas contributed by its associated exclusion boxes. During layout, a box wraps its inline flow content in the wrapping area that corresponds to the subtraction of its wrapping context from its own content area.
+</dd>
+	<dd class="trans-note">【†
+より厳密には， `wrap-flow$p ~propの値に依存して，より制約された区域~内に収められる場合もある。
+】</dd>
+	<dd>
+~boxは、自身の`包含塊$の`回込み文脈$を継承する
+— `wrap-through$p ~propを利用して，特にそれを設定し直していない限り。
+◎
+A box inherits its containing block’s wrapping context unless it specifically resets it using the wrap-through property.
+</dd>
+
+	<dt>`内容~区画@ （ `content area^en ）</dt>
+	<dd>
+~boxの行内~flow内容の~layoutには、通常は
+<a href="~CSSBOX#content-area">内容~区画</a>
+が利用される。
+◎
+The content area is normally used for layout of the inline flow content of a box.
+</dd>
+
+	<dt>`回込み区画@ （ `wrapping area^en ）</dt>
+	<dd>
+`回込み文脈$に影響される~boxにおいて，その行内~flow内容の~layoutに利用される区画
+— ~boxの`内容~区画$から，`回込み文脈$
+【を成す排他~区画たち】
+を除いた~~区域として定義される。
+◎
+The area used for layout of inline flow content of a box affected by a wrapping context, defined by subtracting the wrapping context from its content area.
+</dd>
+
+	<dt>要素の`内側@ （ `inside^en ）</dt>
+	<dt>要素の`外側@ （ `outside^en ）</dt>
+	<dd>
+この仕様においては、要素の`内側$は、要素の子孫の DOM 内容を指し，`外側$は，それ以外の DOM 内容を指す。
+◎
+In this specification, outside refers to DOM content that is not a descendant of an element while inside refers to the element’s descendants.
+</dd>
+
+	<dt id="_start-end">始端／終端 （ `start^en／`end^en ）【この項目は訳者による補完】</dt>
+	<dd>
+この仕様における，“始端”／“終端” は、特に断らない限り，`行内~基底~方向$の始端／終端を指す。
+</dd>
+
+	<dt id="_inline">行内 （ `inline^en ） 【この項目は訳者による推定】</dt>
+	<dd>
+この仕様における，
+“行内~内容” ／ “行内~flow内容”
+の “行内” は、`行内~level$を~~意味する（`不可分な行内$も含まれる）と見受けられる。
+</dd>
+
+</dl>
+
+	</section>
+	<section id="exclusions">
+<h2 title="Exclusions">3. 排他体（排他~box）</h2>
+
+<p>
+`排他~要素$（排他体）は、［
+自身の`包含塊$の`回込み文脈$に供与する，`排他~区画$
+］を定義する。
+その帰結として、排他体は，包含塊の子孫の~layoutに影響iする。
+◎
+Exclusion elements define exclusion areas that contribute to their containing block’s wrapping context. As a consequence, exclusions impact the layout of their containing block’s descendants.
+</p>
+
+<p>
+要素の行内~内容は、要素の`内容~区画$ 内に~lay-outされつつ，［
+要素に結付けられている`回込み文脈$に属する`排他~区画$
+］を回込む
+— 要素~自身も排他体である場合の，それによる`排他~区画$は除いて。
+また、排他体どうしの互いの影響iは、
+<a href="#exclusions-order">排他体たちの順序</a>
+節にて説明されるように `z-index$p ~propにより制御される。
+◎
+Elements lay out their inline content in their content area and wrap around the exclusion areas in their associated wrapping context. If the element is itself an exclusion, it does not wrap around its own exclusion area and the impact of other exclusions on other exclusions is controlled by the z-index property as explained in the 'exclusions order' section.
+</p>
+
+		<section id="declaring-exclusions">
+<h3 title="Declaring exclusions">3.1. 排他体の宣言-法</h3>
+
+<p>
+要素は、その `wrap-flow$p ~propの算出d値が `auto$v 以外であるとき，排他体になる。
+◎
+An element becomes an exclusion when its wrap-flow property has a computed value other than auto.
+</p>
+
+			<section id="wrap-flow-property">
+<h4 title="The wrap-flow property">3.1.1. `wrap-flow^p ~prop</h4>
+
+◎名 `wrap-flow@p
+◎値 
+`auto$v | `both$v | `start$v | `end$v | `minimum$v | `maximum$v | `clear$v
+◎初 `auto$v
+◎適 `塊~level$の要素
+◎継 されない
+◎百 受容しない
+◎算 
+指定d値
+— ただし、 `float$p の算出d値が `none^v でない要素に対しては `auto$v
+◎
+as specified except for element’s whose float computed value is not none, in which case the computed value is auto.
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+この~propに対する各種 値の意味は：
+◎
+The values of this property have the following meanings:
+</p>
+
+	<dl>
+
+	<dt>`auto@v</dt>
+	<dd>
+排他体は作成されない。
+行内~flow内容は、通例通り要素と相互作用する。
+特に，要素が`浮動体$ `CSS21$r である場合、
+【他の値が指定されたとしても，】
+挙動は変化しない。
+<!-- ＊？ -->
+◎
+No exclusion is created. Inline flow content interacts with the element as usual. In particular, if the element is a float (see [CSS21]), the behavior is unchanged.
+</dd>
+
+	<dt>`both@v</dt>
+	<dd>
+行内~flow内容は、排他体の［
+始端~辺, 終端~辺
+］いずれの周りにも~flowできる。
+◎
+Inline flow content can flow on all sides of the exclusion.
+</dd>
+
+	<dt>`start@v</dt>
+	<dd>
+行内~flow内容は，`排他~区画$の始端~辺の周りに~flowできる一方で、終端~辺の周りの区画は，空いたままになるモノトスル。
+◎
+Inline flow content can flow around the start edge of the exclusion area but must leave the area next to the end edge of the exclusion empty.
+</dd>
+
+	<dt>`end@v</dt>
+	<dd>
+行内~flow内容は，`排他~区画$の終端~辺の周りに~flowできる一方で、始端~辺の周りの区画は，空いたままになるモノトスル。
+◎
+Inline flow content can flow around the end edge of the exclusion area but must leave the area next to the start edge of the exclusion empty.
+</dd>
+
+	<dt>`minimum@v</dt>
+	<dd>
+行内~flow内容は，`排他~区画$の［
+~flow内容の包含塊の中で、始端, 終端のうち，可用な空間が狭い側の辺†
+］の周りに~flowできる一方で、他方の辺の周りは，空いたままになるモノトスル。
+◎
+Inline flow content can flow around the edge of the exclusion with the smallest available space within the flow content’s containing block, and must leave the other edge of the exclusion empty.
+</dd>
+	<dd class="trans-note">【
+†両~側の空間が等しくなる場合の挙動は規定されていない（~UAに依存することになる）。
+次項も同様。
+】</dd>
+
+	<dt>`maximum@v</dt>
+	<dd>
+行内~flow内容は，`排他~区画$の［
+~flow内容の包含塊の中で、始端, 終端のうち，可用な空間が広い側の辺
+］の周りに~flowできる一方で、他方の辺の周りは空いたままになるモノトスル。
+◎
+Inline flow content can flow around the edge of the exclusion with the largest available space within the flow content’s containing block, and must leave the other edge of the exclusion empty.
+</dd>
+
+	<dt>`clear@v</dt>
+	<dd>
+行内~flow内容は、~flow内容の`塊~進行~方向$において，排他体の
+前／後
+にしか~flowできない。
+排他体の［
+始端／終端
+］辺の周りの区画は，空いたままになるモノトスル。
+◎
+Inline flow content can only flow before and after the exclusion in the flow content’s block direction and must leave the areas next to the start and end edges of the exclusion empty.
+</dd>
+
+</dl>
+
+<p>
+要素~上の~propの算出d値が `auto$v になる場合、要素は`排他体$にならない。
+◎
+If the property’s computed value is auto, the element does not become an exclusion.
+</p>
+
+<p>
+算出d値が `auto$v 以外になる場合、要素は`排他体$になる。
+その`排他~区画$は，要素の包含塊の`回込み文脈$に供与され、包含塊の子孫たちは，`排他~区画$を回込むようになる。
+◎
+Otherwise, a computed wrap-flow property value of both, start, end, minimum, maximum or clear on an element makes that element an exclusion element. It’s exclusion area is contributed to its containing block’s wrapping context, causing the containing block’s descendants to wrap around its exclusion area.
+</p>
+
+<figure><img
+	alt="LTR text wrapping on left edge, RTL text wrapping on right edge, and vertical text wrapping on top edge."
+	src="css-exclusions/exclusion-writing-modes.png"
+	style="width: 70%; min-width: 20em;"
+><figcaption><b>図 1.</b>
+種々の書字modeと相互作用する，
+`wrap-flow$p: `start$v による排他体
+◎
+Exclusion with wrap-flow: start interacting with various writing modes.
+</figcaption></figure>
+
+<p>
+排他体に関連な辺の決定-法は、
+“排他~区画”
+を回込んでいる内容の，`書字mode$
+`CSS3-WRITING-MODES$r
+に依存する。
+◎
+Determining the relevant edges of the exclusion depends on the writing mode [CSS3-WRITING-MODES] of the content wrapping around the 'exclusion area'.
+</p>
+
+<p>
+`排他~要素$は、自身の内容に対し，新たな`塊~整形~文脈$
+`CSS21$r
+を確立する。
+◎
+An exclusion element establishes a new block formatting context (see [CSS21]) for its content.
+</p>
+
+<figure><img
+	alt="General illustration showing how exclusions combine"
+	src="css-exclusions/exclusions-illustration.svg"
+	style="width: 70%; min-width: 20em;"
+><figcaption><b>図 2.</b>
+各種 排他体の組合n
+◎
+Combining exclusions
+</figcaption></figure>
+
+<p>
+上の図は、排他体たちが どう組合されるかを示している。
+最外縁の~boxは、要素の内容~boxを表現する。
+暗い灰色の~box［
+`A^V, `B^V, `C^V, `D^V
+］は、要素の`回込み文脈$に属する排他体たちを表現する。
+これらに対する `wrap-flow$p の算出d値は、順に［
+`both$v, `start$v, `end$v, `clear$v
+］になる。
+明るい灰色の区画は、［
+`wrap-flow$p 値の結果として，行内~layoutにおいて排他される
+］ような，追加的な区画を示す。
+例えば， `B^V の右の区画は、右向き書字mode内容の行内~layoutには，利用できない
+— `B^V の `wrap-flow$p は `start$v なので。
+◎
+The above figure illustrates how exclusions are combined. The outermost box represents an element’s content box. The A, B, C and D darker gray boxes represent exclusions in the element’s wrapping context. A, B, C and D have their respective wrap-flow computed to both, start, end and clear respectively. The lighter gray areas show the additional areas that are excluded for inline layout as a result of the 'wrap-flow’value. For example, the area to the right of B cannot be used for inline layout of left-to-right writing mode content because the wrap-flow for B is start.
+</p>
+
+<p>
+背景が薄青色の区画は、［
+右向き書字modeである要素の行内~内容
+］の~layoutに，どの区画が可用になるかを示す。
+明るい／暗い
+灰色で表現される，すべての区画は、（右向き書字modeの）行内~内容の~layoutには可用でない。
+◎
+The background blue area shows what areas are available for a left-to-right writing mode element’s inline content layout. All areas represented with a light or dark shade of gray are not available for (left-to-right writing mode) inline content layout.
+</p>
+
+<div class="example">
+<p>
+`wrap-flow$p ~prop値が適用される，排他体である`格子~item$：
+◎
+The wrap-flow property values applied to exclusions as grid items.
+</p>
+
+<pre class="lang-html">
+&lt;div id="~~格子"&gt;
+    &lt;div id="~~右上" class="~~排他"&gt;&lt;/div&gt;
+    &lt;div id="~~左下" class="~~排他"&gt;&lt;/div&gt;
+    &lt;div id="~~内容"&gt;Lorem ipsum…&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;style type="text/css"&gt;
+#~~格子 {
+    width: 30em;
+    height: 30em;
+
+    /* <span class="comment">各 升の~sizeが均一な 4 × 4 の格子</span> */
+    display: grid;
+    `grid$p: 1fr 1fr 1fr 1fr / 1fr 1fr 1fr 1fr;
+
+#~~右上 {
+    /* <span class="comment">左から 3 列目, 上から 2 段目， 1 × 1 の升を占める格子~item</span> */
+    `grid-area$p: 3/2;
+}
+
+#~~左下 {
+    /* <span class="comment">左から 2 列目, 上から 3 段目， 1 × 1 の升を占める格子~item</span> */
+    `grid-area$p: 2/3;
+}
+
+.~~排他 {
+    `wrap-flow$p: <span class="comment">&lt;下を見よ&gt;</span>
+}
+
+#~~内容 {
+    /* <span class="comment">格子~全体を占める格子~item</span> */
+    `grid-area$p: 1/1/span 4/span 4;
+}
+&lt;/style&gt;
+</pre>
+
+<p class="trans-note">【
+この例の原文 CSS は `CSS3-GRID-LAYOUT$r の古い仕様に基づくと見られるので、修正を加えている。
+】</p>
+
+<!-- 
+#grid {
+    width: 30em;
+    height: 30em;
+    display: grid;
+    grid-columns: 25% 25% 25% 25%;
+    grid-rows: 25% 25% 25% 25%;
+
+#top-right {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+#bottom-left {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.exclusion {
+    `wrap-flow$p: <span class="comment">&lt;下を見よ&gt;</span>
+}
+
+#content {
+    grid-row: 1;
+    grid-row-span: 4;
+    grid-column: 1;
+    grid-column-span: 4;
+}
+-->
+
+<p>
+次の図に，`wrap-flow$p ~propに対する各種 値による視覚的な描画を示す。
+灰色の`格子~線$（罫）が，`格子~升$を作り、薄青色の区画は（`格子$により位置された）`排他~box$を表す：
+◎
+The following figures illustrate the visual rendering for different values of the wrap-flow property. The gray grid lines are marking the grid cells and the blue area is the exclusion box (positioned by the grid).
+</p>
+
+<ul class="_diagram-list">
+	<li>
+<code class="css">.~~排他{ `wrap-flow^p: `auto$v; }</code>
+<img
+	alt="wrap-side: auto による描画~例"
+	src="css-exclusions/exclusion_wrap_side_auto.png"
+>
+</li>
+	<li>
+<code class="css">.~~排他{ `wrap-flow^p: `both$v; }</code>
+<img
+	alt="wrap-side: both による描画~例"
+	src="css-exclusions/exclusion_wrap_side_both.png"
+>
+</li>
+	<li>
+<code class="css">.~~排他{ `wrap-flow^p: `start$v; }</code>
+<img
+	alt="wrap-side: start による描画~例"
+	src="css-exclusions/exclusion_wrap_side_left.png"
+>
+</li>
+	<li>
+<code class="css">.~~排他{ `wrap-flow^p: `end$v; }</code>
+<img
+	alt="wrap-side: end による描画~例"
+	src="css-exclusions/exclusion_wrap_side_right.png"
+>
+</li>
+	<li>
+<code class="css">.~~排他{ `wrap-flow^p: `minimum$v; }</code>
+<img
+	alt="wrap-side: minimum による描画~例"
+	src="css-exclusions/exclusion_wrap_side_minimum.png"
+>
+</li>
+	<li>
+<code class="css">.~~排他{ `wrap-flow^p: `maximum$v; }</code>
+<img
+	alt="wrap-side: maximum による描画~例"
+	src="css-exclusions/exclusion_wrap_side_maximum.png"
+>
+</li>
+	<li>
+<code class="css">.~~排他{ `wrap-flow^p: `clear$v; }</code>
+<img
+	alt="wrap-side: clear による描画~例"
+	src="css-exclusions/exclusion_wrap_side_clear.png"
+>
+</li>
+</ul>
+
+</div>
+
+			</section>
+		</section>
+		<section id="scope-and-effect-of-exclusions">
+<h3 title="Scope and effect of exclusions">3.2. 排他体の視野と効果</h3>
+
+<p>
+排他体が影響するのは：
+［［
+排他体の`包含塊$
+］から~descendする【子~boxである？】行内~flow内容, および
+同じ包含塊のすべての子孫~要素の行内~flow内容
+］である。
+排他体の包含塊の内側にある，すべての行内~flow内容が影響される。
+`wrap-through$p ~propを利用すれば、要素の`外側$で定義される排他体による
+【要素の内側の内容の~layoutに対する】
+効果を止めることができる（
+<a href="#propagation-of-exclusions">排他体の伝播</a>
+節を見よ）。
+◎
+An exclusion affects the inline flow content descended from the exclusion’s containing block (defined in CSS 2.1 10.1) and that of all descendant elements of the same containing block. All inline flow content inside the containing block of the exclusions is affected. To stop the effect of exclusions defined outside an element, the wrap-through property can be used (see the propagation of exclusions section below).
+</p>
+
+<p>
+`position$p : `fixed^v にされた排他体に対する包含塊は、根~要素により確立されることに留意。
+◎
+As a reminder, for exclusions with position:fixed, the containing block is established by the root element.
+</p>
+
+		</section>
+		<section id="propagation-of-exclusions">
+<h3 title="Propagation of Exclusions">3.3. 排他体の伝播</h3>
+
+<p>
+既定では、要素は，自身の親の`回込み文脈$を継承する。
+言い換えれば、それ【要素~内容の~layout】は，要素の`外側$で定義される排他体の~subjectになる【要素の行内~内容は，それらの排他体を回込む】。
+◎
+By default, an element inherits its parent wrapping context. In other words it is subject to the exclusions defined outside the element.
+</p>
+
+<p>
+`wrap-through$p ~propを `none$v に設定すると、要素は自身の親の`回込み文脈$を継承しなくなる。
+言い換えれば、要素の`外側$で定義された排他体による~layoutの効果は、要素の子たちには及ばなくなる。
+◎
+Setting the wrap-through property to none prevents an element from inheriting its parent wrapping context. In other words, exclusions defined outside the element, have not effect on the element’s children layout.
+</p>
+
+<p class="note">
+要素の子孫により定義される排他体は、依然として
+子孫の包含塊の`回込み文脈$に、【子孫による排他~区画を】供与する。
+その包含塊が［［
+要素の子であって， `wrap-through$p の算出d値が `none$v になるもの
+］, または
+要素~自身
+］【が生成するもの】である場合、排他体は，依然として，［
+その包含塊【を生成する】要素
+］の子たちに効果が及ぶ。
+◎
+Exclusions defined by an element’s descendants still contribute to their containing block’s wrapping context. If that containing block is a child of an element with wrap-through computes to none, or the element itself, then exclusion still have an effect on the children of that containing block element.
+</p>
+
+			<section id="wrap-through-property">
+<h4 title="The wrap-through Property">3.3.1. `wrap-through^p ~prop</h4>
+
+◎名 `wrap-through@p
+◎値 `wrap$v | `none$v
+◎初 `wrap$v
+◎適 `塊~level$の要素
+◎継 されない
+◎百 受容しない
+◎算 指定d値
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+この~propに対する各種 値の意味は：
+◎
+The values of this property have the following meanings:
+</p>
+
+<dl>
+
+	<dt>`wrap@v</dt>
+	<dd>
+要素は、自身の親~nodeの`回込み文脈$を継承する。
+要素の子孫である行内~内容は、要素の`外側$†にて定義される排他体たちを回込む。
+【† “継承-” なので、次項により継承が途切れる所までの “外側”。】
+◎
+The element inherits its parent node’s wrapping context. Its descendant inline content wraps around exclusions defined outside the element.
+</dd>
+
+	<dt>`none@v</dt>
+	<dd>
+要素は、自身の親~nodeの`回込み文脈$を継承しない。
+要素の子孫である行内~内容が回込むのは、要素の`内側$にて定義される`排他~区画$に限られる。
+<!-- 
+要素の子孫は、要素の`内側$にて定義される`排他~区画$のみの~subjectになる。
+ -->
+◎
+The element does not inherit its parent node’s wrapping context. Its descendants are only subject to exclusion areas defined inside the element.
+</dd>
+</dl>
+
+<div class="example">
+<p>
+`wrap-through$p ~propを利用して，排他体の効果を制御する例：
+◎
+Using the wrap-through property to control the effect of exclusions.
+</p>
+
+<pre class="lang-html">
+&lt;style type="text/css"&gt;
+#~~格子 {
+    /* <span class="comment">4 × 4 の格子</span> */
+    display: grid;
+    `grid$p: 9fr 8fr 8fr 9fr / 1fr 1fr 1fr 1fr;
+}
+
+#~~真中 {
+    `grid-area$p: 2/2/span 2/span 2;
+    `wrap-flow$p: both;
+    background-color: rgba(220, 230, 242, 0.5);
+}
+
+#~~上半分 {
+    `grid-area$p: 1/1/span 4/span 2;
+    `wrap-through$p: wrap;
+}
+
+#~~下半分 {
+    `grid-area$p: 1/3/span 4/span 2;
+    `wrap-through$p: none;
+}
+&lt;/style&gt;
+
+&lt;div id="~~格子"&gt;
+    &lt;div id="~~真中"&gt;&lt;/div&gt;
+    &lt;div id="~~上半分"&gt;
+         Lorem ipsum dolor sit amet...
+    &lt;/div&gt;
+    &lt;div id="~~下半分"&gt;
+         Lorem ipsum dolor sit amet...
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+<p class="trans-note">【
+この例の原文 CSS は `CSS3-GRID-LAYOUT$r の古い仕様に基づくと見られるので、修正を加えている。
+】</p>
+
+<!-- 
+    #grid {
+        display: grid;
+        grid-columns: 25% 50% 25%;
+        grid-rows: 25% 25% 25% 25%;
+    }
+
+    #exclusion {
+        grid-row: 2;
+        grid-row-span: 2;
+        grid-column: 2;
+        wrap-flow: <see below>
+    }
+
+    #rowA, #rowB {
+        grid-row-span: 2;
+        grid-column: 1;
+        grid-column-span: 3;
+    }
+
+    #rowA {
+        grid-row: 1;
+    }
+
+    #rowB {
+        grid-row: 3;
+    }
+-->
+
+<figure><img
+	alt="Example rendering of wrap-through: wrap | none"
+	src="css-exclusions/exclusion_wrap_through.png"
+></figure>
+
+</div>
+
+			</section>
+		</section>
+		<section id="exclusions-order">
+<h3 title="Exclusions order">3.4. 排他体たちの順序</h3>
+
+<p>
+排他体たちは、塗ng順序に従う（ `CSS21$r 付録 E を見よ）。
+排他体は，文書における順序の逆順に適用される。
+最後の排他体は，他のすべての排他体の手前に表れ【るように見え】、したがって［
+先行する他のすべての排他体や，同じ包含塊の子孫である要素
+］の行内~flow内容に影響する。
+`有位置$な`排他~box$に対しては、 `z-index$p ~propを利用して順序付けを変更できる。
+静的に位置された（ `position$p: `static^v ）排他体は、
+`z-index$p ~propに影響されないので，塗ng順序に従う。
+◎
+Exclusions follow the painting order (See [CSS21] Appendix E). Exclusions are applied in reverse to the document order in which they are defined. The last exclusion appears on top of all other exclusion, thus it affects the inline flow content of all other preceding exclusions or elements descendant of the same containing block. The z-index property can be used to change the ordering of positioned exclusion boxes (see [CSS21]). Statically positioned exclusions are not affected by the z-index property and thus follow the painting order.
+</p>
+
+<div class="example">
+<p>
+排他体たちの順序付け。
+◎
+Ordering of exclusions.
+</p>
+
+<pre class="lang-html">
+&lt;style type="text/css"&gt;
+.exclusion  {
+  `wrap-flow^p: both;
+  position: absolute;
+  width: 200px;
+}
+.~~左上 {
+  top: 10px;
+  left: 10px;
+  background-color: lightblue;
+}
+.~~真中 {
+  top: 90px;
+  left: 90px;
+  background-color: lightgreen;
+}
+.~~右下 {
+  top: 170px;
+  left: 170px;
+  background-color: pink;
+}
+&lt;/style&gt;
+
+&lt;div class="exclusion ~~左上"&gt;
+    The top left div...
+&lt;/div&gt;
+&lt;div class="exclusion ~~真中"&gt;
+    The middle div...
+&lt;/div&gt;
+&lt;div class="exclusion ~~右下"&gt;
+    The bottom right div...
+&lt;/div&gt;
+</pre>
+
+<ul class="_diagram-list">
+	<li>
+<code class="css">.~~真中 { `z-index^p: `auto^v; }</code>
+<img
+	alt="Example rendering of default exclusion ordering."
+	src="css-exclusions/exclusion_ordering.png"
+>
+</li>
+	<li>
+<code class="css">.~~真中 { `z-index^p: `1^v; }</code>
+<img
+	alt="Example rendering of default exclusion ordering."
+	src="css-exclusions/exclusion_ordering_z_order.png"
+>
+</li>
+</ul>
+
+</div>
+
+<p class="issue">
+CSS 排他体の処理~modelは不正？
+（<a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=15183">Issue-15183</a>）
+◎
+Is the CSS exclusions processing model incorrect?
+</p>
+
+<div class="issue">
+<p>
+現在の草案は、衝突回避~modelを伴わないような，排他体の~modelを供する。
+CSS における既存の排他~modelは、浮動体を利用している
+— それは［
+排他体, 衝突回避
+］の両~挙動を備える。
+衝突回避を伴わない排他体を許容することは有害になり得る懸念が提起されている
+— 特に、絶対的に位置された要素に対し。
+考えるべき選択肢には、次の三種がある：
+◎
+The current draft provides a model for exclusions without a collision-avoidance model. The existing exclusion model in CSS uses floats, which have both exclusion and collision-avoidance behavior. Concerns have been raised that allowing exclusions without collision avoidance could be harmful, particularly with absolutely-positioned elements. Three options should be considered:</p>
+
+<ol>
+	<li>
+衝突回避を伴わない位置決め~schemeでも、排他体たちを許容する。
+◎
+Allow exclusions in positioning schemes with no collision avoidance.
+</li>
+	<li>
+衝突回避を伴わない位置決め~schemeでは、排他体たちを許容しない。
+◎
+Disallow exclusions in positioning schemes with no collision avoidance.
+</li>
+	<li>
+衝突回避の挙動を伴わない位置決め~schemeに対し，それを定義した上で，この挙動を排他体に対し既定で利用する。
+◎
+Define collision-avoidance behavior for positioning schemes without it, and use this behavior by default with exclusions.
+</li></ol>
+
+</div>
+
+		</section>
+		<section id="exclusions-processing-model">
+<h3 title="Processing model">3.5. 処理~model</h3>
+
+			<section id="exclusions-processing-model-description">
+<h4 title="Description">3.5.1. 説明0</h4>
+
+<p>
+排他は、 2 段階の処理nで適用される：
+◎
+Applying exclusions is a two-step process:</p>
+
+<ul>
+
+	<li>
+<strong>段 1</strong>：
+各 `回込み文脈$に対し，どの`排他~box$が属するか
+【どの排他~区画が供与されるか】
+を解決する。
+◎
+Step 1: resolve exclusion boxes belonging to each wrapping context
+</li>
+	<li>
+<p>
+<strong>段 2</strong>：
+各 `回込み文脈$に対し，順々に†、それを解決して，包含塊を~lay-outする
+— すなわち：
+◎
+Step 2: resolve each wrapping context and lay out each containing block in turn:</p>
+
+		<ul>
+			<li>
+<strong>段 2-A</strong>：
+回込み文脈に属する`排他~box$たちの位置と~sizeを解決する。
+◎
+Step 2-A: resolve the position and size of exclusion boxes
+</li>
+			<li>
+<strong>段 2-B</strong>：
+`排他~区画$たちを回込むように，包含塊の内容を~lay-outする。
+◎
+Step 2-B: lay out containing block, wrapping around each exclusion area
+</li>
+		</ul>
+<p class="trans-note">【†
+“各〜に対し，順々に（ each 〜 in turn ）”：
+<a href="#example-step-2">後述の例</a>に見られるように、これは実際には，
+段 2-B が再帰的に，描画~treeの各~子に対し段 2 を呼び出すことを~~意味する。
+】</p>
+
+	</li>
+</ul>
+
+			</section>
+			<section id="step-1">
+<h4 title="Step 1: resolve exclusion boxes belonging to each wrapping context">3.5.2. 段 1： 各 回込み文脈に属する排他~boxたちを解決する</h4>
+
+<p>
+この段では、~UAは，各 `排他~区画$がどの`包含塊$に属するかを決定する。
+これは、包含塊の定義, および
+`wrap-flow$p の算出d値が `auto$v でない要素に基づく，単純な段である。
+◎
+In this step, the user agent determines which containing block each exclusion area belongs to. This is a simple step, based on the definition of containing blocks and elements with a computed value for wrap-flow that is not auto.
+</p>
+
+			</section>
+			<section id="step-2">
+<h4 title="Step 2: resolve wrapping contexts and lay out containing blocks">3.5.3. 段 2： 回込み文脈を解決して各 包含塊を~lay-outする</h4>
+
+<p>
+この段では、~UAは、`描画~tree$ `CSS21$r の上層から順に，各 包含塊を 2 段に分けて処理する。
+◎
+In this step, starting from the top of the rendering tree (see [CSS21]), the the agent processes each containing block in two sub-steps.
+</p>
+
+			</section>
+			<section id="step-2-A">
+<h4 title="Step 2-A: resolve the position and size of exclusion boxes">3.5.4. 段 2-A： 各 排他~boxの位置と~sizeを解決する</h4>
+
+<p>
+`回込み文脈$における`排他~box$の位置と~sizeを解決するとき、~layoutが要求されることもあれば，そうでないこともある。
+例えば，`排他~box$が絶対的に位置され, ~sizeされている場合には必要ないが、他の状況では，包含塊の内容を~lay-outすることが要求される。
+◎
+Resolving the position and size of exclusion boxes in the wrapping context may or may not require a layout. For example, if an exclusion box is absolutely positioned and sized, a layout may not be needed to resolve its position and size. In other situations, laying out the containing block’s content is required.
+</p>
+
+<p>
+この~layoutが要求されるときは、どの`排他~区画$も適用することなく，~~実施される。
+言い換えれば、包含塊は，`回込み文脈$を伴わずに~lay-outされる。
+◎
+When a layout is required, it is carried out without applying any exclusion area. In other words, the containing block is laid out without a wrapping context.
+</p>
+
+<p>
+この段は、与えられた`回込み文脈$に属する すべての`排他~box$に対し，それぞれの位置と~sizeを得る。
+各 `排他~box$は，最上層から順々に処理され、算出された各 `排他~区画$が，`包含塊$の`回込み文脈$に供与される。
+◎
+Step 2-A yields a position and size for all exclusion boxes in the wrapping context. Each exclusion box is processed in turn, starting from the top-most, and each exclusion area is computed and contributed to the containing block’s wrapping context.
+</p>
+
+<p>
+この段においては、
+`position$p : `fixed^v
+にされた `排他~box$の位置と~sizeを解決するときは，~scrollingは無視される。
+◎
+Scrolling is ignored in this step when resolving the position and size of position: fixed exclusion boxes.
+</p>
+
+<p>
+`包含塊$の`回込み文脈$が算出されたなら、その`回込み文脈$に属する すべての`排他~box$は、通常の~flowから除去される。
+◎
+Once the containing block’s wrapping context is computed, all exclusion boxes in that wrapping context are removed from the normal flow.
+</p>
+
+			</section>
+			<section id="step-2-B">
+<h4 title="Step 2-B: lay out containing block applying wrapping">3.5.5. 段 2-B： 回込みが適用される包含塊を~lay-outする</h4>
+
+<p>
+~~最後に、包含塊の内容が，その行内~内容を［
+`回込み文脈$の`排他~区画$
+］を回込むように、~lay-outされる。
+◎
+Finally, the content of the containing block is laid out, with the inline content wrapping around the wrapping context’s exclusion area.
+</p>
+
+<p>
+包含塊~自身が`排他~box$であるときは、
+<a href="#exclusions-order">排他体たちの順序</a>
+による規則が，［
+どの排他体が，~boxの行内／子孫の内容に影響するか
+］を定義する。
+◎
+When the containing block itself is an exclusion box, then rules on exclusions order define which exclusions affect the inline and descendant content of the box.
+</p>
+
+			</section>
+			<section id="processing-model-example">
+<h4 title="Processing Model Example">3.5.6. 処理~modelの例</h4>
+
+<p>
+この節では、排他体たちの処理~modelを，単純かつ［
+~layoutの依存関係と再~layoutの課題に取組むに十分な複階性
+］を含むような例を用いて示す。
+◎
+This section illustrates the exclusions processing model with an example. It is meant to be simple. Yet, it contains enough complexity to address the issues of layout dependencies and re-layout.
+</p>
+
+<p>
+次の例における~code片には、文書の行内~内容に影響する 2 個の排他体がある：
+◎
+The code snippet in the following example has two exclusions affecting the document’s inline content.
+</p>
+
+<div class="example">
+
+<pre class="lang-html">
+&lt;html&gt;
+&lt;style&gt;
+#`d1@V {
+    position:relative;
+    height: auto;
+    color: #46A4E9;
+    border: 1px solid gray;
+}
+
+#`e1@V {
+    `wrap-flow^p: both;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 40%;
+    height: 40%;
+    border: 1px solid red;
+    margin-left: -20%;
+    margin-top: -20%;
+}
+
+#`d2@V {
+    position: static;
+    width: 100%;
+    height: auto;
+    color: #808080;
+}
+
+#`e2@V {
+    `wrap-flow^p: both;
+    position: absolute;
+    right: 5ex;
+    top: 1em;
+    width: 12ex;
+    height: 10em;
+    border: 1px solid lime;
+}
+&lt;/style&gt;
+&lt;body&gt;
+    &lt;div id="d1"&gt;
+        Lorem ipsusm ...
+        &lt;p id="e1"&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div id="d2"&gt;
+        Lorem ipsusm ...
+        &lt;p id="e2" &gt;&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+</div>
+
+<p>
+以下の図に、上の例による［
+文書の DOM ~tree
+］, および［
+生成される`塊~box$たちからなる~layout~tree
+］を順に示す：
+◎
+The following figures illustrate:
+◎
+the document’s DOM tree
+◎
+the layout tree of generated block boxes
+</p>
+
+<figure style="display:inline-block"><img
+	alt="DOM tree nodes"
+	src="css-exclusions/processing-model-example-dom.svg"
+	width="180"
+><figcaption><b>図 3.</b>
+DOM ~tree
+◎
+DOM tree
+</figcaption></figure>
+
+<figure style="display:inline-block"><img
+	alt="Layout tree boxes"
+	src="css-exclusions/processing-model-example-layout-tree.svg"
+	width="300"
+><figcaption><b>図 4.</b>
+~layout~tree
+◎
+Layout tree of generated block boxes
+</figcaption></figure>
+
+				<section id="example-step-1">
+<h5 title="Step 1: resolve exclusion boxes belonging to each wrapping context">3.5.6.1. 段 1： 各 回込み文脈に属する排他~boxたちを解決する</h5>
+
+<p>
+図には、各 要素に対応する~boxの ~layout~treeにおける包含~階層が，
+DOM ~treeから異なる様子が示されている。
+例えば、［
+`e1$V は 絶対的に位置されていて，
+`d1$V は 相対的に位置されている
+］ので、
+`e1$V から生成される~boxは、その包含塊である `d1$V ~box内で位置される。
+一方で、 `e2$V も絶対的に位置にされているが，その包含塊は`初期~包含塊$である。
+詳細は `CSS21$r, 10.1 節を見よ。
+◎
+The figures illustrate how the boxes corresponding to the element sometimes have a different containment hierarchy in the layout tree than in the DOM tree. For example, the box generated by e1 is positioned in its containing block’s box, which is the d1-box, because e1 is absolutely positioned and d1 is relatively positioned. However, while e2 is also absolutely positioned, its containing block is the initial containing block (ICB). See the section 10.1 of the CSS 2.1 specification ([CSS21]) for details.
+</p>
+
+<p>
+~treeに対する包含塊を算出した結果として、すべての要素について，その`回込み文脈$に属している~boxたちを決定できる：
+◎
+As a result of the computation of containing blocks for the tree, the boxes belonging to the wrapping contexts of all the elements can be determined:</p>
+
+<ul>
+	<li>
+`html^e 要素に対する`回込み文脈$は、
+~box `e2$V を包含する：
+以下，
+`回込み文脈 1@V
+と記す。
+◎
+The wrapping context for the html element contains the e2 box: WC-1 (Wrapping Context 1)
+</li>
+	<li>
+`body^e 要素に対する`回込み文脈$は、 `回込み文脈 1$V を継承する。
+◎
+The wrapping context for the body element inherits the html element’s wrapping context: WC-1
+</li>
+	<li>
+`d1$V に対する`回込み文脈$は、
+`body^e 要素の`回込み文脈$ ＝ `回込み文脈 1$V を継承した上で，それに
+`e1$V ~box
+を追加する。
+したがって，その回込み文脈は、［
+`e1$V ~box, `e2$V ~box
+］の 2 つからなる：
+以下、
+`回込み文脈 2@V
+と記す。
+◎
+The wrapping context for d1 inherits the body element’s wrapping context and adds the e1-box to it. So the wrapping context is made of both the e1-box and the e2-box: WC-2
+</li>
+	<li>
+`d2$V に対する`回込み文脈$は、 `回込み文脈 1$V を継承する。
+◎
+The wrapping context for d2 inherits the body element’s wrapping context: WC-1
+</li>
+</ul>
+
+				</section>
+				<section id="example-step-2">
+<h5 title="Step 2: resolve wrapping contexts and lay out containing blocks">3.5.6.2. 段 2： 回込み文脈を解決して 包含塊を~lay-outする</h5>
+
+<p>
+この段では、
+各~包含塊が順々に処理される。
+各~包含塊に対し,
+（概念的に） 2 つの段階を経る：
+◎
+In this step, each containing block is processed in turn. For each containing block, we (conceptually) go through two phases:</p>
+
+<ol>
+
+	<li>
+`回込み文脈$を解決する：
+すなわち、それに属する各 排他体【排他~区画】の位置と~sizeを解決する。
+◎
+resolve the wrapping context: resolve the position and size of its exclusions</li>
+	<li>
+包含塊を~lay-outする。
+◎
+lay out the containing block
+</li>
+</ol>
+
+<p>
+上の例では、次の各~段に分けられる：
+◎
+In our example, this breaks down to:
+</p>
+
+<ol>
+	<li>
+【初期~包含塊の回込み文脈】
+`回込み文脈 1$V に属している排他体たちの 位置と~sizeを解決する：
+その結果を以下、
+`解決-済み回込み文脈 1^V
+と記す。
+◎
+resolve the position and size of the exclusions belonging to WC-1: RWC-1 (Resolved Wrapping Context 1).
+</li>
+	<li>
+<p>
+`初期~包含塊$（の内容）を~lay-outする：
+◎
+lay out the initial containing block (i.e., lay out its content):
+</p>
+		<ol>
+			<li>
+`html^e 要素の`回込み文脈$を解決する：
+（継承により） `解決-済み回込み文脈 1^V になる。
+◎
+resolve the html element’s wrapping context: RWC-1
+</li>
+			<li>
+
+<p>
+`html^e 要素を~lay-outする：
+◎
+lay out the html element:</p>
+
+				<ol>
+					<li>
+`body^e 要素の`回込み文脈$を解決する：
+（継承により） `解決-済み回込み文脈 1^V になる。
+◎
+resolve the body element’s wrapping context: RWC-1
+</li>
+					<li>
+<p>
+`body^e 要素を~lay-outする：
+◎
+lay out the body element:
+</p>
+
+						<ol>
+							<li>
+`d1$V 要素の`回込み文脈$（ ＝ `回込み文脈 2$V ）を解決する：
+◎
+resolve the d1 element’s wrapping context: RWC-2
+</li>
+							<li>
+`d1$V 要素を~lay-outする。
+◎
+lay out the d1 element
+</li>
+							<li>
+`d2$V 要素の`回込み文脈$を解決する：
+（継承により） `解決-済み回込み文脈 1^V になる。
+◎
+resolve the d2 element’s wrapping context: RWC-1
+</li>
+							<li>
+`d2$V 要素を~lay-outする。
+◎
+lay out the d2 element
+</li>
+						</ol>
+					</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+</ol>
+
+					<section id="example-resolving-rwc-1">
+<h6 title="Resolving RWC-1">3.5.6.2.1. `回込み文脈 1^V の解決-法</h6>
+
+<p>
+~layout~treeにおける最上層の`回込み文脈$は，排他体 `e2$V を包含しており、その位置と~sizeは，解決される必要がある。
+一般的に、排他体の位置と~sizeを算出するためには，他の内容を~lay-outすることが要求されることもあれば，されないこともある。
+この例では、排他体 `e2$V を~lay-outする必要はない
+— それは絶対的に位置されていて、その~sizeも~layoutせずに解決できるので。
+この時点で、
+`回込み文脈 1$V
+は解決され，行内~内容を~lay-outするときに利用できる。
+◎
+The top-most wrapping context in the layout tree contains the e2 exclusion. Its position and size needs to be resolved. In general, computing an exclusion’s position and size may or may not require laying out other content. In this example, no content needs to be laid out to resolve the e2 exclusion’s position because it is absolutely positioned and its size can be resolved without layout either. At this point, RWC-1 is resolved and can be used when laying inline content out.
+</p>
+
+					</section>
+					<section id="example-resolving-rwc-2">
+<h6 title="Resolving RWC-2">3.5.6.2.2. `回込み文脈 2^V の解決-法</h6>
+
+<p>
+処理nは類似する：
+排他体 `e1$V の位置を解決する必要があり、ここでも，
+`e1$V の包含塊（ `d1$V ）の~layoutが要求され得る
+— この事例では、~~実際に該当する：
+`e1$V の位置と~sizeは、 `d1$V ~boxの~sizeに相対的な百分率~長さであり，その解決-に依存するので。
+そのため，まず
+`d1$V の~layoutが，`回込み文脈$を伴わずに（すなわち，排他を適用せずに）行われ、それにより `e1$V の~boxの位置と~sizeが得られる。
+◎
+The process is similar: the position of the e1 exclusion needs to be resolved. Again, resolving the exclusion’s position and size may require processing the containing block (d1 here). It is the case here because the size and position of e1 depend on resolving the percentage lengths. The percentages are relative to the size of d1’s box. As a result, in order to resolve a size for d1’s box, a first layout of d1 is done without any wrapping context (i.e., no exclusions applied). The layout yields a position and size for e1’s box.
+</p>
+
+<p>
+この時点で，
+`e1$V, `e2$V のいずれも，その位置と~sizeは解決されたので、
+`回込み文脈 2$V は解決されたことになる。
+◎
+At this point, RWC-2 is resolved because the position and size of both e1 and e2 are resolved.
+</p>
+
+<p class="note">
+上の処理~例における要点の一つは、いったん要素の`回込み文脈$（に属する排他体たちの位置と~size）が解決されたなら，それらの位置と~sizeが，それ以上 処理されることはないことである
+— 要素の~sizeが，［
+（ `回込み文脈 2$V に対するときのように）`回込み文脈$を考慮することなく行われる~layout
+］と［
+解決された`回込み文脈$の下で行われる~layout
+］との間で変化するとしても。
+これが、［
+`回込み文脈$の解決
+］と［
+包含塊の~layout
+］との間の循環依存を，断ち切るものである。
+◎
+The important aspect of the above processing example is that once an element’s wrapping context is resolved (by resolving its exclusions' position and size), the position and size of the exclusions are not re-processed if the element’s size changes between the layout that may be done without considering any wrapping context (as for RWC-2) and the layout done with the resolved wrapping context. This is what breaks the possible circular dependency between the resolution of wrapping contexts and the layout of containing blocks.
+</p>
+
+					</section>
+				</section>
+			</section>
+		</section>
+		<section id="floats-and-exclusions">
+<h3 title="Floats and exclusions">3.6. 浮動体と排他体</h3>
+
+			<section id="floats-and-exclusions-similarities">
+<h4 title="Similarities">3.6.1. 類似性</h4>
+
+<p>
+浮動体と排他体は、行内~内容が そのいずれをも回込む点で，類似性がある。
+しかしながら、この 2 つには大きな相違点がある。
+◎
+There are similarities between floats and exclusions in that inline content wraps around floats and also wraps around exclusion areas. However, there are very significant differences.
+</p>
+
+			</section>
+			<section id="floats-and-exclusions-differences">
+<h4 title="Differences">3.6.2. 相違点</h4>
+
+<dl>
+	<dt>視野：</dt>
+	<dd>
+浮動体は文書~内でそれに後続する内容に適用される一方で、排他体は，自身の包含塊~内の内容に適用される。
+◎
+scope. While floats apply to content that follows in the document, exclusions apply to content in their containing block.
+</dd>
+
+	<dt>位置決め：</dt>
+	<dd>
+浮動体は
+行内~flowの一部であり、行l~box上に `float$p する。
+作者は、浮動体が 行l~box上で どのように
+右／左
+へ移動するかを制御できる。
+対照的に，排他体は、
+`格子~layout$ `CSS3-GRID-LAYOUT$r
+`~flex~layout$ `CSS3-FLEXBOX$r
+その他の どの位置決め~schemeを利用して位置させることもできる。
+◎
+positioning. Floats are part of the inline flow and float on the line box. Authors can control how the floats move on the line box, to the right or to the left. By contrast, exclusions can be positioned using any positioning scheme such as grid layout ([CSS3-GRID-LAYOUT]), flexible box ([CSS3-FLEXBOX]) or any other CSS positioning scheme.
+</dd>
+
+	<dt>関心の分離：</dt>
+	<dd>
+要素を浮動体にすることは、［
+要素の位置決め~schemeと,
+行内~内容に対する効果
+］の両者を決定する。
+要素を排他体にすることは、行内~内容に対する影響iのみを決定し，位置決め手法に対しては拘束を課さない。
+◎
+separation of concerns. Making an element a float determines both its positioning scheme and its effect on inline content. Making an element an exclusion only determines its impact on inline content and does not impose constraints on its positioning method.
+</dd>
+</dl>
+
+			</section>
+			<section id="floats-interop">
+<h4 title="Interoperability">3.6.3. 相互運用能</h4>
+
+				<section id="effect-of-floats-on-exclusions">
+<h5 title="Effect of floats on exclusions">3.6.3.1. 排他体に対する浮動体の効果</h5>
+
+<p>
+浮動体の効果は、排他体の位置決めにも，排他体の行内~内容の~layoutにも及ぶ。
+例えば、排他体が`行内~box$であって，浮動体と同じ行l上にあるならば、その排他体の位置は、
+<a href="#step-2-A">段 2-A</a>
+にて算出されるように，他の行内~内容と同様に，浮動体から影響iされる。
+◎
+Floats have an effect on the positioning of exclusions and the layout of their inline content. For example, if an exclusion is an inline-box which happens to be on the same line as a float, its position, as computed in Step 2-A will be impacted by the float, as is any other inline content.
+</p>
+
+				</section>
+				<section id="effect-of-exclusions-on-floats">
+<h5 title="Effect of exclusions on floats">3.6.3.2. 浮動体に対する排他体の効果</h5>
+
+<p>
+排他体の効果は、行内~内容に及ぶのと同様に，浮動体の位置決めにも及ぶ。
+したがって、
+<a href="#step-2-B">段 2-B</a>
+において，浮動体は、`排他~区画$を避けることになる。
+◎
+Exclusions have an effect on the positioning of floats as they have an effect on inline content. Therefore, in Step 2-B, floats will avoid exclusion areas.
+</p>
+
+				</section>
+			</section>
+		</section>
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p>
+この仕様に貢献された、次の方々に：
+</p>
+
+<p lang="en-x-a0">
+This specification is made possible by input from
+Andrei Bucur,
+Alexandru Chiculita,
+Arron Eicholz,
+Daniel Glazman,
+Arno Gourdol,
+Chris Jones,
+Bem Jones-Bey,
+Marcus Mielke,
+Alex Mogilevsky,
+Hans Muller,
+Mihnea Ovidenie,
+Virgil Palanciuc,
+Florian Rivoal,
+Peter Sorotokin,
+Bear Travis,
+Eugene Veselov,
+Stephen Zilles
+and the CSS Working Group members.
+</p>
+
+	</section>
+	<section id="changes">
+<h2 title="Changes">変更点</h2>
+
+<dl>
+	<dt id="recent-changes">
+<a href="~TR/2015/WD-css3-exclusions-20150115/">2015年 1月 15日 作業草案</a>
+からの変更点
+◎
+Changes from the 15 January 2015 Working Draft
+</dt>
+	<dt id="changes-2013">
+<a href="~TR/2013/WD-css3-exclusions-20130528/">2013年 5月 28日 作業草案</a>
+からの変更点
+◎
+Changes from the 28 May 2013 Working Draft
+</dt>
+	<dd>
+編集上の修正s。
+◎
+Editorial fixes.
+</dd>
+
+	<dt id="changes-2012">
+<a href="~TR/2012/WD-css3-exclusions-20120503/">2012年 5月 3日 作業草案</a>
+からの変更点
+◎
+Changes from the 3 May 2012 Working Draft
+</dt>
+	<dd>
+CSS Shapes からこの仕様を分割した。
+◎
+Split Exclusions from Shapes.
+</dd>
+	<dd>
+排他体の順序の例を改善した。
+◎
+Improved exclusion order example.
+</dd>
+	<dd>
+編集上の／~markupの修正s。
+◎
+Editorial and markup fixes.
+</dd>
+	<dd>
+CSS Shapes の
+<a href="~CSSSHAPES#20120503">§ 変更点</a>
+も見よ。
+◎
+See also the Changes section of CSS Shapes.
+</dd>
+</dl>
+
+	</section>
+
+</main></div>
+
+<!-- 
+
+become:#2
+collection:#1
+during:#1
+subtraction:#1
+wrap:#1
+specific:#1
+normally:#1
+subtract:#1
+refer:#2
+:#5
+interact:#1
+usual:#1
+particular:#1
+next:#3
+leave:#5
+smallest:#1
+largest:#1
+causing:#1
+interacting:#1
+combining:#1
+illustrate:#5
+darker:#1
+A:#2
+B:#4
+C:#2
+D:#2
+lighter:#1
+light:#1
+dark:#1
+shade:#1
+marking:#1
+descend:#1
+reminder:#1
+follow:#3
+See:#1
+E:#1
+reverse:#1
+top:#2
+preceding:#1
+static:#1
+raised:#1
+harmful:#1
+particularly:#1
+three:#1
+option:#1
+consider:#2
+description:#1
+two-step:#1
+turn:#3
+step:#10
+based:#1
+starting:#2
+two:#3
+sub-step:#1
+carry:#1
+yield:#2
+top-most:#2
+scrolling:#1
+normal:#1
+b:#1
+finally:#1
+meant:#1
+issue:#1
+iCB:#1
+wC-1:#4
+Wrapping:#2
+Context:#2
+add:#1
+made:#1
+wC-2:#1
+we:#1
+go:#1
+phase:#1
+break:#2
+RWC-1:#2
+Resolved:#1
+i:#1
+point:#2
+again:#1
+d1:#1
+RWC-2:#1
+e1:#1
+e2:#1
+resolution:#1
+possible:#1
+circular:#1
+very:#1
+part:#1
+left:#1
+move:#1
+flexible:#1
+making:#2
+method:#1
+interoperability:#1
+happen:#1
+
+分離~separation
+-->

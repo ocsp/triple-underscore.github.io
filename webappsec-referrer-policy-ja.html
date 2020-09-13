@@ -1,0 +1,2266 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>Referrer Policy（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-w3c.css" type="text/css" />
+
+<style>
+samp {
+	white-space: nowrap;
+	background: #F0F0F0;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+}
+
+i {
+	text-decoration: underline;
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN0',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${key}</code>"`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-07-13
+trans_update:2020-07-16
+source_checked:191204
+page_state_key:WEBAPPSEC
+original_url:https://w3c.github.io/webappsec-referrer-policy/
+	abbr_url:REFERRER-POLICY
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+conformance:w3c
+copyright:2020,use
+trans_1st_pub:2016-06-09
+
+
+●●class_map
+P:production
+h:header
+e:element
+a:attr
+et:event-type
+v:value
+sc:scheme
+
+●●tag_map
+p:var
+P:code
+h:code
+e:code
+a:code
+et:code
+I:code
+m:code
+sc:code
+v:code
+c:code
+s:samp
+i:i
+
+●●words_table1
+CAPABILITY-URLS:capability-urls-ja.html
+
+●●words_table
+
+
+
+	●仕様
+討論:discussion:~
+採用-:adopt:~
+締付けら:tightenさ:締めつけら
+出自に:originate:~
+
+	時点現在のそれ:captured at the time
+	存続中:during its lifetime
+	ためにある:purpose
+	責を負う:responsible
+	基準になる:baseline
+	高~level:higher-level
+	にもかかわらず:nevertheless
+	please
+	potential
+	preferably
+	好みの:favorite
+	綴りが誤って:share 〜 misspelling
+	指して:point
+	一助になる:can help
+	できるようにする-:enable
+	として~~働く:serve
+	その名が示すとおり:doesn’t lie
+	suppose
+	note
+	refer
+	causing
+	defaulting
+	~~目的において:in the interests of
+
+	●保安／network
+SNS:social networking site:SNS
+TLS:
+Fetch:
+band::::バンド
+prefetch:::事前 fetch::prefetch
+main:
+profile::::プロファイル
+trackback::::トラックバック
+password::::パスワード
+username::::ユーザ名
+
+昇格-:upgrade:~
+降格-:downgrade:~
+降格:downgrading:~
+
+識別情報:identity:~
+為す:makeする:~
+為され:makeされ:~
+暗号化-:encrypt:~
+	unencrypted
+露呈-:reveal:露わに
+被保護:protected:~
+抗力:friction:~
+読込元:load 元::読み込み元::ロード元
+
+	~secureでない:insecure
+	生成元のみ:origin-only
+
+	●構文
+comma::::カンマ
+削っ:stripし:削っ
+削る:stripする:削る
+削られ:stripさ:削られ
+部位:portion:~
+
+	●未分類（動詞
+埋込元:embedder::埋め込み元
+	加えて:followed by
+	残して:leaving
+	下げる:lower
+	followed
+	making
+
+	●未分類
+iframe:
+iframe-srcdoc:iframe srcdoc
+blog::::ブログ
+呈示用:presentational:呈示
+一定の:certain:~
+作成時の:creation::~
+作成元:creator::~
+	running
+
+	status
+	:blob
+	大きい:large
+	public
+	HTML5
+	W3C
+	Document
+	abstract
+	across
+	alternatively
+	e-mail
+	hand
+	made
+	mailing
+	strip
+	put
+	we
+	%~referrer生成元:referrerOrigin
+	%~referrer~URL:referrerURL
+	%~referrer~source:referrerSource
+	%実~応答:actualResponse
+
+
+	●指示語
+	古い:older
+	新しい:newer
+	直前に:immediately before
+	種々の:various
+	少なく:less
+	またがる:across
+	別として:besides
+	他所へ:away from
+	外:out
+	最後の:latest
+	かなりの部分は large part
+	も:additionally
+	away
+	during
+	five
+	latest
+	neither
+	nothing
+	outgoing
+	任意の二つの:possible pairs
+	part
+
+
+●●original_id_map
+
+
+	■section link → id in titles
+	referrer-policies:referrer-policy-states
+	referrer-policy-no-referrer:referrer-policy-state-no-referrer
+	referrer-policy-no-referrer-when-downgrade:referrer-policy-state-no-referrer-when-downgrade
+	referrer-policy-origin:referrer-policy-state-origin
+	referrer-policy-origin-when-cross-origin:referrer-policy-state-origin-when-cross-origin
+	referrer-policy-unsafe-url:referrer-policy-state-unsafe-url
+	referrer-policy-delivery-nested:referrer-policy-delivery-implicit
+
+
+
+●●mdn_urls
+referrer-policy-header-dfn:HTTP/Headers/Referrer-Policy
+	enumdef-referrerpolicy:API/ReferrerPolicy
+
+●●link_map
+
+
+	●I
+I.Document:~HTMLdom#document
+I.Request:~FETCH#request
+I.Response:~FETCH#response
+I.Window:~WINDOW#window
+I.WorkerGlobalScope:~WORKERS#workerglobalscope
+I.ReferrerPolicy:#enumdef-referrerpolicy
+
+	TODO enum
+	l.:#dom-referrerpolicy
+	l.no-referrer:#dom-referrerpolicy-no-referrer
+	l.no-referrer-when-downgrade:#dom-referrerpolicy-no-referrer-when-downgrade
+	l.same-origin:#dom-referrerpolicy-same-origin
+	l.origin:#dom-referrerpolicy-origin
+	l.strict-origin:#dom-referrerpolicy-strict-origin
+	l.origin-when-cross-origin:#dom-referrerpolicy-origin-when-cross-origin
+	l.strict-origin-when-cross-origin:#dom-referrerpolicy-strict-origin-when-cross-origin
+	l.unsafe-url:#dom-referrerpolicy-unsafe-url
+
+	●h
+h.Referer:~HTTPrq#field.referer
+	h.Referer:~RFC7231#section-5.5.2
+h.Referrer-Policy:#referrer-policy-header-dfn
+
+	●e
+e.a:~HEtextlevel#the-a-element
+e.area:~HEimages#the-area-element
+e.iframe:~HEembed#the-iframe-element
+e.img:~HEimages#the-img-element
+e.link:~HEmetadata#the-link-element
+e.meta:~HEmetadata#the-meta-element
+e.script:~HEscripting#the-script-element
+
+	●a
+a.name:~HEmetadata#attr-meta-name
+a.referrerpolicy:#_attr-referrerpolicy
+	~HTMLlinks#attr-hyperlink-referrerpolicy
+	~HEmetadata#attr-link-referrerpolicy
+
+a.srcdoc:~HEembed#attr-iframe-srcdoc
+a.style:~HTMLdom#the-style-attribute
+
+	●l
+l.no-referrer:#referrer-policy-no-referrer
+l.no-referrer-when-downgrade:#referrer-policy-no-referrer-when-downgrade
+l.origin:#referrer-policy-origin
+l.origin-when-cross-origin:#referrer-policy-origin-when-cross-origin
+l.same-origin:#referrer-policy-same-origin
+l.unsafe-url:#referrer-policy-unsafe-url
+l.strict-origin:#referrer-policy-strict-origin
+l.strict-origin-when-cross-origin:#referrer-policy-strict-origin-when-cross-origin
+
+	●
+v.noreferrer:~HTMLlinks#link-type-noreferrer
+v.referrer:~HEmetadata#meta-referrer
+
+P.policy-token:#grammardef-policy-token
+P.extension-token:#grammardef-extension-token
+P.ALPHA:~RFCx/rfc5234#appendix-B.1
+
+生成元のみ~flag:#origin-only-flag
+
+	●用語
+~referrer~URL:#referrerurl
+~referrer用に~URLを削る:#strip-url
+同一-生成元~referrer要請:#same-origin-referrer-request
+非同一-生成元~referrer要請:#cross-origin-referrer-request
+
+要請の~referrerを決定-:#determine-requests-referrer
+~referrer施策を構文解析-:#parse-referrer-policy-from-header
+~redirect上で要請の~referrer施策を設定する:#set-requests-referrer-policy-on-redirect
+~referrerを決定する:#determine-requests-referrer
+~tokenの施策を決定-:#determine-policy-for-token
+
+	§:#unknown-policy-values
+	§:#referrer-policy-header
+	§:#integration-with-fetch
+	§:#integration-with-html
+	§:#algorithms
+
+	●用語（外部
+~referrer施策~属性:~HTMLurl#referrer-policy-attribute
+~referrer施策:#referrer-policy
+doc.~referrer施策:~HTMLdom#concept-document-referrer-policy
+wk.~referrer施策:~WORKERS#concept-workerglobalscope-referrer-policy
+ss.~referrer施策:#cssstylesheet-referrer-policy
+rq.~referrer施策:~FETCH#concept-request-referrer-policy
+
+局所~scheme:~FETCH#local-scheme
+~fetch:~FETCH#concept-fetch
+~fetching~algo:~FETCH#concept-fetch
+~HTTP~redirect~fetch:~FETCH#http-redirect-fetch
+~main~fetch:~FETCH#main-fetch
+要請:~FETCH#concept-request
+応答:~FETCH#concept-response
+rq.生成元:~FETCH#concept-request-origin
+rq.現在の~URL:~FETCH#concept-request-current-url
+rq.~client:~FETCH#concept-request-client
+rq.要請~client:~FETCH#concept-request-client
+rq.~client:~FETCH#concept-request-client
+rq.~referrer:~FETCH#concept-request-referrer
+
+rs.~header~list:~FETCH#concept-response-header-list
+~header~listから値を抽出する:~FETCH#extract-header-list-values
+
+~URL直列化する:~URL1#concept-url-serializer
+~URL:~URL1#concept-url
+url.素片:~URL1#concept-url-fragment
+	~HTMLLS/infrastructure.html#concept-url-fragment
+url.~password:~URL1#concept-url-password
+url.~path:~URL1#concept-url-path
+url.~query:~URL1#concept-url-query
+url.~scheme:~URL1#concept-url-scheme
+url.~username:~URL1#concept-url-username
+url.~host:~URL1#concept-url-host
+url.~port:~URL1#concept-url-port
+url.生成元:~URL1#concept-url-origin
+
+doc.~URL:~DOM4#concept-document-url
+
+信用に価し得る~URL:~SECURE-CONTEXT#potentially-trustworthy-url
+
+環境~設定群~obj:~WAPI#environment-settings-object
+大域~obj:~WAPI#concept-settings-object-global
+作成時の~URL:~WAPI#concept-environment-creation-url
+
+属する閲覧文脈:~BROWSERS#concept-document-bc
+閲覧文脈~容器:~BROWSERS#browsing-context-container
+閲覧文脈:~BROWSERS#browsing-context
+~navi:~NAVI#navigate
+
+結付けられている文書:~WINDOW#concept-document-window
+
+生成元:~ORIGIN#concept-origin
+同一-生成元:~ORIGIN#same-origin
+不透明な生成元:~ORIGIN#concept-origin-opaque
+o.直列化-:~ORIGIN#ascii-serialisation-of-an-origin
+
+doc.生成元:~DOM4#concept-document-origin
+
+~iframe-srcdoc文書:~HEembed#an-iframe-srcdoc-document
+呈示用~hint:~HTMLrendering#presentational-hints
+
+
+~node文書:~DOM4#concept-node-document
+~workerを走らせて:~WORKERS#run-a-worker
+
+~CSS宣言~block:~CSSOM1#css-declaration-block
+所有者~node:~CSSOM1#cssstyledeclaration-owner-node
+ss.所有者~node:~CSSOM1#concept-css-style-sheet-owner-node
+~CSS~stylesheet:~CSSOM1#css-style-sheet
+ss.所在:~CSSOM1#concept-css-style-sheet-location
+
+能力~URL:~CAPABILITY-URLS#dfn-capability-urls
+
+●●ref_data
+CAPABILITYURLS=副   ~/capability-urls-ja.html
+
+●●ref_normative
+
+[CSSOM-1]
+    Simon Pieters; Glenn Adams. CSS Object Model (CSSOM). 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-1/ 
+[DOM]
+    Anne van Kesteren. DOM Standard. Living Standard. URL: https://dom.spec.whatwg.org/ 
+[FETCH]
+    Anne van Kesteren. Fetch. Living Standard. URL: http://fetch.spec.whatwg.org/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[INFRA]
+    Anne van Kesteren; Domenic Denicola. Infra Standard. Living Standard. URL: https://infra.spec.whatwg.org/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[RFC5234]
+    D. Crocker, Ed.; P. Overell. Augmented BNF for Syntax Specifications: ABNF. January 2008. Internet Standard. URL: https://tools.ietf.org/html/rfc5234 
+[RFC7230]
+    R. Fielding, Ed.; J. Reschke, Ed.. Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing. June 2014. Proposed Standard. URL: https://httpwg.org/specs/rfc7230.html 
+[RFC7231]
+    Roy T. Fielding; Julian F. Reschke. HTTP/1.1 Semantics and Content. RFC. URL: https://www.ietf.org/rfc/rfc7231.txt 
+[SECURE-CONTEXTS]
+    Mike West. Secure Contexts. 15 September 2016. CR. URL: https://www.w3.org/TR/secure-contexts/ 
+[URL]
+    Anne van Kesteren. URL Standard. Living Standard. URL: https://url.spec.whatwg.org/ 
+
+●●ref_informative
+
+[CAPABILITY-URLS]
+    Jenni Tennison. Capability URLs. WD. URL: http://www.w3.org/TR/capability-urls/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">Referrer Policy</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/referrer-policy/
+編集者草案
+	https://w3c.github.io/webappsec-referrer-policy/
+バージョン履歴
+	https://github.com/w3c/webappsec-referrer-policy/commits/master/index.src.html
+
+フィードバック
+	<a href="mailto:public-webappsec@w3.org?subject=%5Breferrer-policy%5D%20YOUR%20TOPIC%20HERE">public-webappsec@w3.org</a> with subject line “<kbd>[referrer-policy] <i>… message topic …</i></kbd>” (<a href="https://lists.w3.org/Archives/Public/public-webappsec/" rel="discussion">archives</a>)
+最新の課題
+	<a href="https://github.com/w3c/webappsec-referrer-policy/issues/">GitHub</a>
+
+編集
+	<a href="domfarolino@gmail.com">Dominic Farolino</a> (Google Inc.)
+	<a href="mailto:eisinger@google.com">Jochen Eisinger</a> (Google Inc.)
+	<a href="mailto:estark@google.com">Emily Stark</a> (Google Inc.)
+
+Tests:
+	<a href="https://github.com/web-platform-tests/wpt/tree/master/referrer-policy">web-platform-tests referrer-policy/</a> (<a href="https://github.com/web-platform-tests/wpt/labels/referrer-policy">ongoing work</a>)
+
+</script>
+
+<body>
+
+<header>
+	<hgroup>
+<h1 id="title">リファラ施策 — Referrer Policy</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この文書は、［
+作者が，自身が作成した文書に~referrer施策を設定する方法
+］, および［
+そのような施策による［［
+外向けの要請／~navi
+］に伴われる `Referer$h ~HTTP~header
+］への影響i
+］について述べる。
+◎
+This document describes how an author can set a referrer policy for documents they create, and the impact of such a policy on the Referer HTTP header for outgoing requests and navigations.
+</p>
+
+	</section>
+	<section id="status">
+
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公な複製です…
+【以下、この節の内容は <a href="w3c-common-ja.html#status">W3C 日本語訳 共通~page</a>／冒頭の仕様~metadataに委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+文書から為された要請や, 文書から他所への~naviには、
+`Referer$h ~headerが結付けられる。
+`Referer^h ~headerは，［
+~linkに~link型 `noreferrer$v を伴わせる
+］ことで抑止できるが、作者は，いくつかの理由で この~headerをもっと直に制御したいと望むこともあろう：
+◎
+Requests made from a document, and for navigations away from that document are associated with a Referer header. While the header can be suppressed for links with the noreferrer link type, authors might wish to control the Referer header more directly for a number of reasons:
+</p>
+
+		<section id="intro-privacy">
+<h3 title="Privacy">1.1. ~privacy</h3>
+
+<p>
+ある~SNSが，各~利用者に~profile~pageを供していて、利用者は，自身の~profile~pageに，好みの~bandへの~hyperlinkを追加するとする。
+~SNSは、他の利用者がそれらの~hyperlinkを追ったときに，利用者の~profile~URLを~bandの~web~siteには漏洩させたくないと望むこともあろう（ ~profile~URLは、~profileの所有者の識別情報を露呈するかもしれないので）。
+◎
+A social networking site has a profile page for each of its users, and users add hyperlinks from their profile page to their favorite bands. The social networking site might not wish to leak the user’s profile URL to the band web sites when other users follow those hyperlinks (because the profile URLs might reveal the identity of the owner of the profile).
+</p>
+
+<p>
+しかしながら，その種の~linkが~SNSを出自にしていることを
+— ~linkに包含されている特定の利用者の~profileは露呈することなく —
+~bandの~web~siteに伝えたいと望む~SNSもあるかもしれない。
+◎
+Some social networking sites, however, might wish to inform the band web sites that the links originated from the social networking site but not reveal which specific user’s profile contained the links.
+</p>
+
+		</section>
+		<section id="intro-security">
+<h3 title="Security">1.2. ~security</h3>
+
+<p>
+~HTTPSと［
+~URLに基づく~session識別子
+］を利用する~web~appは、［
+~URL内の，利用者の~session識別子
+］を漏洩させることなく，他の~web~site上の~HTTPS資源へ~linkしたいと望むこともあろう。
+◎
+A web application uses HTTPS and a URL-based session identifier. The web application might wish to link to HTTPS resources on other web sites without leaking the user’s session identifier in the URL.
+</p>
+
+<p>
+~URL自体を，何らかの能力を是認する仕組みとして利用する~web~appもある。
+~referrerを制御できれば、この種の~URL（`能力~URL$）が
+`Referer$h ~headerを介して漏洩されるのを防止する一助になる。
+`CAPABILITY-URLS$r
+◎
+Alternatively, a web application may use URLs which themselves grant some capability. Controlling the referrer can help prevent these capability URLs from leaking via referrer headers. [CAPABILITY-URLS]
+</p>
+
+<p>
+`能力~URL$は，他の仕方でも漏洩され得るので、~referrerを制御するだけでは，漏洩の~~可能性すべてを制御するには十分でないことに注意。
+◎
+Note that there are other ways for capability URLs to leak, and controlling the referrer is not enough to control all those potential leaks.
+</p>
+
+		</section>
+		<section id="intro-trackback">
+<h3 title="Trackback">1.3. ~trackback</h3>
+
+<p>
+~HTTPS越しに~hostされている~blogは、~HTTP越しに~hostされている~blogへ~linkして，~trackback~linkを受信したいと望むこともあろう。
+◎
+A blog hosted over HTTPS might wish to link to a blog hosted over HTTP and receive trackback links.
+</p>
+
+		</section>
+	</section>
+	<section id="terms">
+<h2 title="Key Concepts and Terminology">2. ~~主要な概念と各種用語</h2>
+
+<dl class="def-list">
+	<dt>
+`~referrer施策$
+◎
+referrer policy
+</dt>
+	<dd>
+`~referrer施策$は、［
+下位資源の`~fetch$, ~prefetch, ~naviの遂行-
+］時に `Referer$h ~headerを拡充するときに利用される~algoを改変する。
+この文書は、`~referrer施策$用の種々の挙動を定義する。
+◎
+A referrer policy modifies the algorithm used to populate the Referer header when fetching subresources, prefetching, or performing navigations. This document defines the various behaviors for each referrer policy.
+</dd>
+	<dd>
+どの`環境~設定群~obj$も，［［
+その~objを`~client$rqとするような，`要請$
+］すべてに対し，既定で利用される`~referrer施策$
+］を得するための~algoを持つ。
+◎
+Every environment settings object has an algorithm for obtaining a referrer policy, which is used by default for all requests with that environment settings object as their client.
+</dd>
+
+	<dt>
+`同一-生成元~referrer要請@
+◎
+same-origin-referrer request
+</dt>
+	<dd>
+次を満たす`要請$
+⇒
+その［
+`~referrer~URL$, `現在の~URL$rq
+］の`生成元$urlは`同一-生成元$である
+◎
+A Request request is a same-origin-referrer request if the origin of request’s referrerURL and the origin of request’s current URL are the same.
+</dd>
+
+	<dt>
+`非同一-生成元~referrer要請@
+◎
+cross-origin-referrer request
+</dt>
+	<dd>
+`同一-生成元~referrer要請$でない`要請$。
+◎
+A Request is a cross-origin-referrer request if it is not a same-origin-referrer request.
+</dd>
+</dl>
+
+	</section>
+	<section id="referrer-policies">
+<h2 title="Referrer Policies">3. ~referrer施策</h2>
+
+<p>
+`~referrer施策@
+は、 `ReferrerPolicy$I に挙げられるいずれかの文字列である。
+◎
+A referrer policy is the empty string, "no-referrer", "no-referrer-when-downgrade", "same-origin", "origin", "strict-origin", "origin-when-cross-origin", "strict-origin-when-cross-origin", or "unsafe-url".
+</p>
+
+<pre class="idl">
+enum `ReferrerPolicy@I {
+  "",
+  "no-referrer",
+  "no-referrer-when-downgrade",
+  "same-origin",
+  "origin",
+  "strict-origin",
+  "origin-when-cross-origin",
+  "strict-origin-when-cross-origin",
+  "unsafe-url"
+};
+</pre>
+
+<p>
+以下の各 下位~節にて、各種`~referrer施策$（空~文字列も含む）を説明する。
+それらの効果を評価するための詳細な~algoは、
+<a href="#integration-with-fetch">§ ~Fetchとの統合</a>,
+<a href="#algorithms">§ 各種~algo</a>
+に与えられる。
+◎
+Each possible referrer policy is explained below. A detailed algorithm for evaluating their effect is given in the §5 Integration with Fetch and §8 Algorithms sections.
+</p>
+
+<p class="note">注記：
+`環境~設定群~obj$が与える~referrer施策は、その`環境~設定群~obj$が`要請~client$rqとして利用されるときに，要請に対する既定の基準~施策を供する。
+この施策は、特定の要請に対しては， `noreferrer$v ~link型の様な仕組みを介して，締付けられることもある。
+◎
+Note: The referrer policy for an environment settings object provides a default baseline policy for requests when that environment settings object is used as a request client. This policy may be tightened for specific requests via mechanisms like the noreferrer link type.
+</p>
+
+		<section id="referrer-policy-no-referrer">
+<h3 title="&quot;no-referrer&quot;">3.1. `no-referrer^l</h3>
+
+<p>
+最も単純な施策は `no-referrer$l であり、どの`生成元$へ送信される要請にも，~referrer情報は伴われないことを指定する。
+`Referer$h ~headerは、まるごと省略されることになる。
+◎
+The simplest policy is "no-referrer", which specifies that no referrer information is to be sent along with requests to any origin. The header Referer will be omitted entirely.
+</p>
+
+<div class="example">
+<p>
+`https://example.com/page.html^s
+に在る文書に `no-referrer$l 施策が設定されている場合、
+`https://example.com/^s
+への~naviに際しては（あるいは他のどの~URLであれ），
+`Referer$h ~headerは送信されないことになる。
+◎
+If a document at https://example.com/page.html sets a policy of "no-referrer", then navigations to https://example.com/ (or any other URL) would send no Referer header.
+</p>
+</div>
+
+		</section>
+		<section id="referrer-policy-no-referrer-when-downgrade">
+<h3 title="&quot;no-referrer-when-downgrade&quot;">3.2. `no-referrer-when-downgrade^l</h3>
+
+<p>
+`no-referrer-when-downgrade$l 施策は、次のいずれかを満たす要請に対しては，その全部的な`~referrer~URL$【！を`~referrer用に~URLを削る$】を~referrer情報として送信するよう指定する：
+◎
+The "no-referrer-when-downgrade" policy sends a request’s full referrerURL stripped for use as a referrer for requests:
+</p>
+<ul>
+	<li>
+その［
+`~referrer~URL$, `現在の~URL$rq
+］は、どちらも`信用に価し得る~URL$である
+◎
+whose referrerURL and current URL are both potentially trustworthy URLs, or
+</li>
+	<li>
+その`~referrer~URL$は、`信用に価し得る~URL$でない
+◎
+whose referrerURL is a non-potentially trustworthy URL.
+</li>
+</ul>
+
+<p>
+他方，次を満たす【すなわち，上を満たさない】要請は、~referrer情報を包含せず，
+`Referer$h ~headerは送信されないことになる。
+⇒
+［
+`~referrer~URL$は`信用に価し得る~URL$である
+］~AND［
+`現在の~URL$rqは`信用に価し得る~URL$でない
+］
+◎
+Requests whose referrerURL is a potentially trustworthy URL and whose current URL is a non-potentially trustworthy URL on the other hand, will contain no referrer information. A Referer HTTP header will not be sent.
+</p>
+
+<div class="example">
+<p>
+`https://example.com/page.html^s
+に在る文書に `no-referrer-when-downgrade$l 施策が設定されている場合、
+`https://not.example.com/^s
+への~naviに際しては，
+`https://example.com/page.html^s
+を値に伴う `Referer$h ~headerが送信されることになる
+— 両~資源とも，その生成元は`信用に価し得る~URL$なので。
+◎
+If a document at https://example.com/page.html sets a policy of "no-referrer-when-downgrade", then navigations to https://not.example.com/ would send a Referer HTTP header with a value of https://example.com/page.html, as neither resource’s origin is a non-potentially trustworthy URL.
+</p>
+
+<p>
+その同じ~pageから
+`<mark>http</mark>://not.example.com/^s
+への~naviに際しては，
+`Referer$h ~headerは送信されないことになる。
+◎
+Navigations from that same page to http://not.example.com/ would send no Referer header.
+</p>
+
+</div>
+
+<p>
+これは、他のどの施策も指定されていない場合における，~UAの既定の挙動である。
+◎
+This is a user agent’s default behavior, if no policy is otherwise specified.
+</p>
+
+		</section>
+		<section id="referrer-policy-same-origin">
+<h3 title="&quot;same-origin&quot;">3.3. `same-origin^l</h3>
+
+<p>
+`same-origin$l 施策は、`同一-生成元~referrer要請$を為すときには，全部的な`~referrer~URL$を~referrer情報として送信するよう指定する。
+◎
+The "same-origin" policy specifies that a request’s full referrerURL is sent as referrer information when making same-origin-referrer requests.
+</p>
+
+<p>
+他方，`非同一-生成元~referrer要請$は、~referrer情報を包含せず，
+`Referer$h ~headerは送信されないことになる。
+◎
+Cross-origin-referrer requests, on the other hand, will contain no referrer information. A Referer HTTP header will not be sent.
+</p>
+
+<div class="example">
+<p>
+`https://example.com/page.html^s
+に在る文書に `same-origin$l 施策が設定されている場合、
+`https://example.com/not-page.html^s
+への~naviに際しては，
+`https://example.com/page.html^s
+を値に伴う `Referer$h ~headerが送信されることになる。
+◎
+If a document at https://example.com/page.html sets a policy of "same-origin", then navigations to https://example.com/not-page.html would send a Referer header with a value of https://example.com/page.html.
+</p>
+
+<p>
+その同じ~pageから
+`https://<mark>not.</mark>example.com/^s
+への~naviに際しては，
+`Referer$h ~headerは送信されないことになる。
+◎
+Navigations from that same page to https://not.example.com/ would send no Referer header.
+</p>
+</div>
+
+<div class="example">
+<p>
+`https://example.com/page.html^s
+に在る文書に
+`same-origin$l 施策が設定されていて，それは
+`https://script.example.com^s
+に在る~module~scriptを~fetchし，それは
+`https://example.com/descendant.js^s
+に在る子孫~scriptを~fetchする場合、この子孫~scriptへの要請には，
+`Referer$h ~headerは送信されないことになる。
+◎
+If a document at https://example.com/page.html sets a policy of "same-origin", and fetches a module script at https://script.example.com, which then fetches a descendant script at https://example.com/descendant.js, the request for the descendant script would send no Referer header.
+</p>
+
+<p>
+そのわけは、子孫~scriptへの要請の`現在の~URL$rqは
+`https://example.com/descendant.js^s
+になる一方，その`~referrer~URL$は
+`https://script.example.com^s
+になり、`非同一-生成元~referrer要請$を為すからである。
+◎
+This is because the descendant script request’s current URL is https://example.com/descendant.js, while its referrerURL is https://script.example.com, making the request cross-origin-referrer.
+</p>
+</div>
+
+		</section>
+		<section id="referrer-policy-origin">
+<h3 title="&quot;origin&quot;">3.4. `origin^l</h3>
+
+<p>
+`origin$l 施策は、［
+`同一-生成元~referrer要請$ ／ `非同一-生成元~referrer要請$
+］を為すときに，［
+要請の`~referrer~URL$を`直列化-$oした結果
+］を~referrer情報として送信するよう指定する。
+◎
+The "origin" policy specifies that only the ASCII serialization of the request’s referrerURL is sent as referrer information when making both same-origin-referrer requests and cross-origin-referrer requests.
+</p>
+
+<p class="note">注記：
+生成元に対する この直列化は，
+`https://example.com^s
+の様になる。
+`Referer$h ~header内に妥当な~URLが送信されることを確保するため、~UAは，生成元に
+文字 <span class="code-point">U+002F</span>（ `/^l ）を付加することになる（
+`https://example.com/^s
+の様に）。
+◎
+Note: The serialization of an origin looks like https://example.com. To ensure that a valid URL is sent in the `Referer` header, user agents will append a U+002F SOLIDUS ("/") character to the origin (e.g. https://example.com/).
+</p>
+
+<p class="note">注記：
+`origin$l 施策の下では、~HTTPS~referrerの生成元を，暗号化されていない~HTTP要請の一部として~network越しに送信することが許容される。
+この懸念には、 `strict-origin$l 施策が取組む。
+◎
+Note: The "origin" policy allows the origin of HTTPS referrers to be sent over the network as part of unencrypted HTTP requests. The "strict-origin" policy addresses this concern.
+</p>
+
+<div class="example">
+<p>
+`https://example.com/page.html^s
+に在る文書に `origin$l 施策が設定されている場合、
+どの`生成元$であれ，そこへの~naviは、`信用に価し得る~URL$でない場合でも
+`https://example.com/^s
+を値に伴う `Referer$h ~headerが送信されることになる。
+◎
+If a document at https://example.com/page.html sets a policy of "origin", then navigations to any origin would send a Referer header with a value of https://example.com/, even to URLs that are not potentially trustworthy URL.
+</p>
+</div>
+
+<div class="example">
+<p>
+`https://example.com/page.html^s
+に在る文書に
+`origin$l 施策が設定されていて，それは
+`https://script.example.com^s
+に在る~module~scriptを~fetchし，それは
+`https://descendant.example.com^s
+に在る子孫~scriptを~fetchする場合、この子孫~scriptへの要請には，
+`https://script.example.com/^s
+を値に伴う `Referer$h ~headerが送信されることになる。
+◎
+If a document at https://example.com/page.html sets a policy of "origin", and fetches a module script at https://script.example.com, which fetches a descendant script at https://descendant.example.com, the request for the descendant script will send a Referer header with a value of https://script.example.com/.
+</p>
+</div>
+
+		</section>
+		<section id="referrer-policy-strict-origin">
+<h3 title="&quot;strict-origin&quot;">3.5. `strict-origin^l</h3>
+
+<p>
+`strict-origin$l 施策は、要請が次のいずれかを満たすならば，`~referrer~URL$の`生成元$url【！`生成元$】を`直列化-$oした結果を送信する：
+◎
+The "strict-origin" policy sends the ASCII serialization of the origin of the referrerURL for requests:
+</p>
+
+<ul>
+	<li>
+その［
+`~referrer~URL$, `現在の~URL$rq
+］は、どちらも`信用に価し得る~URL$である
+◎
+whose referrerURL and current URL are both potentially trustworthy URLs, or
+</li>
+	<li>
+その`~referrer~URL$は、`信用に価し得る~URL$でない
+◎
+whose referrerURL is a non-potentially trustworthy URL.
+</li>
+</ul>
+
+<p>
+他方，次を満たす【すなわち，上を満たさない】要請は、~referrer情報を包含せず，
+`Referer$h ~headerは送信されないことになる。
+⇒
+［
+`~referrer~URL$は`信用に価し得る~URL$である
+］~AND［
+`現在の~URL$rqは`信用に価し得る~URL$でない
+］
+◎
+Requests whose referrerURL is a potentially trustworthy URL and whose current URL is a non-potentially trustworthy URL on the other hand, will contain no referrer information. A Referer HTTP header will not be sent.
+</p>
+
+<div class="example">
+<p>
+`https://example.com/page.html^s
+に在る文書に `strict-origin$l 施策が設定されている場合、
+`https://<mark>not.</mark>example.com^s
+への~naviに際しては，
+`https://example.com/^s
+を値に伴う `Referer$h ~headerが送信されることになる。
+◎
+If a document at https://example.com/page.html sets a policy of "strict-origin", then navigations to https://not.example.com would send a Referer header with a value of https://example.com/.
+</p>
+
+<p>
+同じ~pageから
+`<mark>http</mark>://not.example.com^s
+への~naviに際しては，
+`Referer$h ~headerを送信しないことになる。
+◎
+Navigations from that same page to http://not.example.com would send no Referer header.
+</p>
+
+</div>
+
+<div class="example">
+<p>
+`http://example.com/page.html^s
+に在る文書に `strict-origin$l 施策が設定されている場合、
+`http://<mark>not.</mark>example.com^s ／
+`<mark>https</mark>://example.com^s
+への~naviに際しては，
+`http://example.com/^s
+を値に伴う `Referer$h ~headerが送信されることになる。
+◎
+If a document at http://example.com/page.html sets a policy of "strict-origin", then navigations to http://not.example.com or https://example.com would send a Referer header with a value of http://example.com/.
+</p>
+</div>
+
+<div class="example">
+<p>
+`http://example.com/page.html^s
+に在る文書に
+`strict-origin$l 施策が設定されていて，それは
+`<mark>https</mark>://script.example.com^s
+に在る~module~scriptを~fetchし，それは
+`<mark>http</mark>://descendant.example.com^s
+に在る子孫~scriptを~fetchする場合、この子孫~scriptへの要請には
+`Referer$h【！`referrer$v】 ~headerは送信されないことになる。
+◎
+If a document at http://example.com/page.html sets a policy of "strict-origin", and fetches a module script at https://script.example.com, which then fetches a descendant script at http://descendant.example.com, the request to the descendant script would not send a Referrer header.
+</p>
+</div>
+
+		</section>
+		<section id="referrer-policy-origin-when-cross-origin">
+<h3 title="&quot;origin-when-cross-origin&quot;">3.6. `origin-when-cross-origin^l</h3>
+
+<p>
+`origin-when-cross-origin$l 施策は、次を~referrer情報として送信するよう指定する：
+◎
+The "origin-when-cross-origin" policy specifies that＼
+</p>
+<ul>
+	<li>
+`同一-生成元~referrer要請$を為すときには、要請の全部的な`~referrer~URL$
+◎
+a request’s full referrerURL is sent as referrer information when making same-origin-referrer requests, and＼
+</li>
+	<li>
+`非同一-生成元~referrer要請$を為すときには、要請の`~referrer~URL$の`生成元$url【！`生成元$】のみを`直列化-$oした結果
+◎
+only the ASCII serialization of the origin of the request’s referrerURL is sent as referrer information when making cross-origin-referrer requests.
+</li>
+</ul>
+
+<p class="note">注記：
+`origin-when-cross-origin$l 施策に対しては、~protocol昇格も考慮される
+— 例えば，
+`http://example.com/^s
+から
+`https://example.com/^s
+への要請は、`非同一-生成元~referrer要請$になる。
+◎
+Note: For the "origin-when-cross-origin" policy, we also consider protocol upgrades, e.g. requests from http://example.com/ to https://example.com/, to be cross-origin-referrer requests.
+</p>
+
+<p class="note">注記：
+`origin-when-cross-origin$l 施策の下では、~HTTPS~referrerの生成元を，暗号化されていない~HTTP要請の一部として~network越しに送信することが許容される。
+この懸念には、 `strict-origin-when-cross-origin$l 施策が取組む。
+◎
+Note: The "origin-when-cross-origin" policy allows the origin of HTTPS referrers to be sent over the network as part of unencrypted HTTP requests. The "strict-origin-when-cross-origin" policy addresses this concern.
+</p>
+
+<div class="example">
+<p>
+`https://example.com/page.html^s
+に在る文書に `origin-when-cross-origin$l 施策が設定されている場合、
+`https://example.com/not-page.html^s
+への~naviに際しては，
+`https://example.com/page.html^s
+を値に伴う `Referer$h ~headerが送信されることになる。
+◎
+If a document at https://example.com/page.html sets a policy of "origin-when-cross-origin", then navigations to https://example.com/not-page.html would send a Referer header with a value of https://example.com/page.html.
+</p>
+
+<p>
+その同じ~pageから
+`https://not.example.com/^s
+への~naviに際しては，
+`https://example.com/^s
+を値に伴う `Referer$h ~headerが送信されることになる
+— `信用に価し得る~URL$でない場合でも同様になる。
+◎
+Navigations from that same page to https://not.example.com/ would send a Referer header with a value of https://example.com/, even to URLs that are not potentially trustworthy URLs.
+</p>
+</div>
+
+<div class="example">
+<p>
+`https://example-1.com^s
+に在る文書に
+`origin-when-cross-origin$l 施策が設定されていて，それは
+`https://example-2.com/module.js^s
+に在る~module~scriptを~fetchし，それは
+`https://example-1.com/descendant.js^s
+に在る子孫~scriptを~fetchする場合、この子孫~scriptへの要請には，
+`https://example-2.com/^s
+を値に伴う `Referer$h ~headerが送信されることになる。
+◎
+If a document at https://example-1.com sets a policy of "origin-when-cross-origin", and fetches a module script at https://example-2.com/module.js, which then fetches a descendant script at https://example-1.com/descendant.js, the request to the descendant script would send a Referer header with a value of https://example-2.com/.
+</p>
+</div>
+
+<div class="example">
+<p>
+`https://example-1.com^s
+に在る文書に
+`origin-when-cross-origin$l 施策が設定されていて，それは
+`https://example-2.com/module.js^s
+に在る~module~scriptを~fetchし，それは
+`https://example-2.com/descendant.js^s
+に在る子孫~scriptを~fetchする場合、この子孫~scriptへの要請には，
+`https://example-2.com/module.js^s
+を値に伴う `Referer$h ~headerが送信されることになる。
+◎
+If a document at https://example-1.com sets a policy of "origin-when-cross-origin", and fetches a module script at https://example-2.com/module.js, which then fetches a descendant script at https://example-2.com/descendant.js, the request to the descendant script would send a Referer header with a value of https://example-2.com/module.js.
+</p>
+</div>
+
+		</section>
+		<section id="referrer-policy-strict-origin-when-cross-origin">
+<h3 title="&quot;strict-origin-when-cross-origin&quot;">3.7. `strict-origin-when-cross-origin^l</h3>
+
+<p>
+`strict-origin-when-cross-origin$l 施策は：
+◎
+The "strict-origin-when-cross-origin" policy specifies that＼
+</p>
+<ul>
+	<li>
+`同一-生成元~referrer要請$を為すときには、要請の全部的な`~referrer~URL$
+◎
+a request’s full referrerURL is sent as referrer information when making same-origin-referrer requests, and＼
+</li>
+	<li>
+`非同一-生成元~referrer要請$を為すときには、要請の`~referrer~URL$の`生成元$url【！`生成元$】のみを`直列化-$oした結果
+◎
+only the ASCII serialization of the origin of the request’s referrerURL when making cross-origin-referrer requests:＼
+</li>
+</ul>
+
+<p>
+を、要請が次を満たすならば，~referrer情報として送信するよう指定する：
+◎
+↓</p>
+
+<ul>
+	<li>
+その［
+`~referrer~URL$, `現在の~URL$rq
+］は、どちらも`信用に価し得る~URL$である
+◎
+whose referrerURL and current URL are both potentially trustworthy URLs, or
+</li>
+	<li>
+その`~referrer~URL$は、`信用に価し得る~URL$でない
+◎
+whose referrerURL is a non-potentially trustworthy URL.
+</li>
+</ul>
+
+<p>
+他方，次を満たす【すなわち，上を満たさない】要請は、~referrer情報を包含せず，
+`Referer$h ~headerは送信されないことになる。
+⇒
+［
+`~referrer~URL$は`信用に価し得る~URL$である
+］~AND［
+`現在の~URL$rqは`信用に価し得る~URL$でない
+］
+◎
+Requests whose referrerURL is a potentially trustworthy URL and whose current URL is a non-potentially trustworthy URL on the other hand, will contain no referrer information. A Referer HTTP header will not be sent.
+</p>
+
+<div class="example">
+<p>
+`https://example.com/page.html^s
+に在る文書に `strict-origin-when-cross-origin$l 施策が設定されている場合、
+`https://example.com/not-page.html^s
+への~naviに際しては，
+`https://example.com/page.html^s
+を値に伴う `Referer$h ~headerが送信されることになる。
+◎
+If a document at https://example.com/page.html sets a policy of "strict-origin-when-cross-origin", then navigations to https://example.com/not-page.html would send a Referer header with a value of https://example.com/page.html.
+</p>
+
+<p>
+同じ~pageから
+`https://not.example.com/^s
+への~naviに際しては，
+`https://example.com/^s
+を値に伴う `Referer$h ~headerが送信されることになる。
+◎
+Navigations from that same page to https://not.example.com/ would send a Referer header with a value of https://example.com/.
+</p>
+
+<p>
+同じ~pageから
+`<mark>http</mark>://not.example.com/^s
+への~naviに際しては，
+`Referer$h ~headerは送信されないことになる。
+◎
+Navigations from that same page to http://not.example.com/ would send no Referer header.
+</p>
+</div>
+
+<div class="example">
+<p>
+`https://example.com/page.html^s
+に在る文書に
+`strict-origin-when-cross-origin$l 施策が設定されていて，それは
+`https://script.example.com^s
+に在る~module~scriptを~fetchし，それは
+`<mark>http</mark>://descendant.example.com^s
+に在る子孫~scriptを~fetchする場合、この子孫~scriptへの要請には，
+`Referer$h ~headerは送信されないことになる。
+◎
+If a document at https://example.com/page.html sets a policy of "strict-origin-when-cross-origin", and fetches a module script at https://script.example.com which then fetches a descendant script at http://descendant.example.com, the request to the descendant script would send no Referer header.
+</p>
+</div>
+
+		</section>
+		<section id="referrer-policy-unsafe-url">
+<h3 title="&quot;unsafe-url&quot;">3.8. `unsafe-url^l</h3>
+
+<p>
+`unsafe-url$l 施策は、［
+`非同一-生成元~referrer要請$ ／ `同一-生成元~referrer要請$
+］どちらにも，全部的な`~referrer~URL$を伴わせて送信するよう指定する。
+◎
+The "unsafe-url" policy specifies that a request’s full referrerURL is sent along for both same-origin-referrer requests and cross-origin-referrer requests.
+</p>
+
+<div class="example">
+<p>
+`https://example.com/sekrit.html^s
+に在る文書に `unsafe-url$l 施策が設定されている場合、
+`http://not.example.com/^s
+への~naviに際しては（あるいは他のどの生成元であれ），
+`https://example.com/sekrit.html^s
+を値に伴う `Referer$h ~headerが送信されることになる。
+◎
+If a document at https://example.com/sekrit.html sets a policy of "unsafe-url", then navigations to http://not.example.com/ (and every other origin) would send a Referer HTTP header with a value of https://example.com/sekrit.html.
+</p>
+
+</div>
+
+<p class="note">注記：
+この施策は、その名が示すとおり安全でない。
+この施策は、~secureな資源であっても，~secureでない生成元へ向けて，生成元と~pathを漏洩することになる。
+そのような施策を敏感になり得る文書に設定するときは、その影響iを注意深く考慮すること。
+◎
+Note: The policy’s name doesn’t lie; it is unsafe. This policy will leak origins and paths from secure resources to insecure origins. Carefully consider the impact of setting such a policy for potentially sensitive documents.
+</p>
+
+		</section>
+		<section id="referrer-policy-empty-string">
+<h3 title="The empty string">3.9. 空~文字列</h3>
+
+<p>
+空~文字列は、`~referrer施策$がないことに対応する：
+◎
+The empty string "" corresponds to no referrer policy,＼
+</p>
+
+<ul>
+	<li>
+他所で定義される`~referrer施策$があれば、それに~fallbackする。
+◎
+causing a fallback to a referrer policy defined elsewhere, or＼
+</li>
+	<li>
+そのような より高~levelの施策が可用でない場合は、既定の `no-referrer-when-downgrade$l になる。
+この既定は、要請の`~referrerを決定する$~algoにて起こる。
+◎
+in the case where no such higher-level policy is available, defaulting to "no-referrer-when-downgrade". This defaulting happens in the §8.3 Determine request’s Referrer algorithm.
+</li>
+</ul>
+
+<div class="example">
+<p>
+`referrerpolicy$a 属性を有さない，~HTML `a$e 要素に対しては、その~referrer施策は 空~文字列になる。
+したがって， `a$e 要素に対する~clickにより起動される~navi要請は、［
+`a$e 要素の`~node文書$の`~referrer施策$doc
+］の下で送信されることになる。
+その~referrer施策もまた空~文字列であった場合、要請の`~referrerを決定する$~algoは，それを `no-referrer-when-downgrade$l と同じに扱うことになる。
+◎
+Given a HTML a element without any declared referrerpolicy attribute, its referrer policy is the empty string. Thus, navigation requests initiated by clicking on that a element will be sent with the referrer policy of the a element’s node document. If that Document has the empty string as its referrer policy, the §8.3 Determine request’s Referrer algorithm will treat the empty string the same as "no-referrer-when-downgrade".
+</p>
+
+</div>
+
+		</section>
+	</section>
+	<section id="referrer-policy-delivery">
+<h2 title="Referrer Policy Delivery">4. ~referrer施策の送達</h2>
+
+<p>
+`要請$の`~referrer施策$rqは、次のいずれかの仕方で送達される：
+◎
+A request’s referrer policy is delivered in one of five ways:
+</p>
+
+<ul>
+	<li>
+`Referrer-Policy$h ~headerを介して。
+◎
+Via the Referrer-Policy HTTP header (defined in §4.1 Delivery via Referrer-Policy header).
+</li>
+	<li>
+［
+値 `referrer$v をとる `name$a 内容~属性
+］を有する `meta$e 要素を介して。
+◎
+Via a meta element with a name of referrer.
+</li>
+	<li>
+<p>
+次に挙げる要素の
+`referrerpolicy@a
+内容~属性を介して：
+</p>
+		<ul>
+			<li>
+［
+`a$e ／ `area$e
+］要素の
+<a href="~HTMLlinks#attr-hyperlink-referrerpolicy">`referrerpolicy^a</a>
+属性
+</li>
+			<li>
+`img$e 要素の
+<a href="~HEimages#attr-img-referrerpolicy">`referrerpolicy^a</a>
+属性
+</li>
+			<li>
+`iframe$e 要素の
+<a href="~HEembed#attr-iframe-referrerpolicy">`referrerpolicy^a</a>
+属性
+</li>
+			<li>
+`link$e 要素の
+<a href="~HEmetadata#attr-link-referrerpolicy">`referrerpolicy^a</a>
+属性
+</li>
+			<li>
+`script$e 要素の
+<a href="~HEscripting#attr-script-referrerpolicy">`referrerpolicy^a</a>
+属性
+</li>
+		</ul>
+◎
+Via a referrerpolicy content attribute on an a, area, img, iframe, link, or script element.
+</li>
+	<li>
+［
+`a$e ／ `area$e
+］要素~上の `noreferrer$v ~link関係を介して。
+◎
+Via the noreferrer link relation on an a, or area element.
+</li>
+	<li>
+暗黙的に，継承を介して。
+◎
+Implicitly, via inheritance.
+</li>
+</ul>
+
+		<section id="referrer-policy-header">
+<h3 title="Delivery via Referrer-Policy header">4.1. `Referrer-Policy^h ~headerを介する送達</h3>
+
+<p>
+`Referrer-Policy@h
+~HTTP~headerは、当の被保護~資源の文脈~下で［
+為される要請 ／ 作成される`閲覧文脈$
+］において，［
+~UAが その~referrer情報に何を含めるべきか
+］を決定する際に適用する~referrer施策を指定する。
+◎
+The Referrer-Policy HTTP header specifies the referrer policy that the user agent applies when determining what referrer information should be included with requests made, and with browsing contexts created from the context of the protected resource.
+</p>
+
+<p>
+この~headerの名前と値の構文は、次の~ABNF文法に述べる
+— この~ABNFは、 `RFC5234$r に定義され，
+`RFC7230$r に定義される
+<a href="~HTTPsem#abnf.extension">~ABNF~list拡張</a>（ #%規則 ）
+【！<a href="~RFC7230#section-7">#%規則</a>~ABNF拡張】
+も利用される：
+◎
+The syntax for the name and value of the header are described by the following ABNF grammar. ABNF is defined in [RFC5234], and the #rule ABNF extension used below is defined in Section 7 of [RFC7230].
+</p>
+
+<pre class="bnf">
+"Referrer-Policy:" 1#(`policy-token$P / `extension-token$P)
+
+`policy-token@P
+    = "no-referrer"
+    / "no-referrer-when-downgrade"
+    / "strict-origin"
+    / "strict-origin-when-cross-origin"
+    / "same-origin"
+    / "origin"
+    / "origin-when-cross-origin"
+    / "unsafe-url"
+`extension-token@P = 1*( `ALPHA$P / "-" )
+</pre>
+
+<p class="note">注記：
+`Referer^h ~headerは英語として綴りが誤っているが、この~header名は，そうでない。
+◎
+Note: The header name does not share the HTTP Referer header’s misspelling.
+</p>
+
+<p class="note">注記：
+`extension-token$P は、この~headerに未知な施策~値が含まれていても，~browserが~header全体の構文解析-に失敗しないようにするためにある。
+新たな施策~値をどうすれば配備できるかの詳細は、
+<a href="#unknown-policy-values">§ 未知な施策~値</a>
+に述べる。
+◎
+Note: The purpose of extension-token is so that browsers do not fail to parse the entire header field if it includes an unknown policy value. §11.1 Unknown Policy Values describes in greater detail how new policy values can be deployed.
+</p>
+
+<p class="note">注記：
+上の~ABNF内に利用される引用符は，~literal文字列を指示するものであり、
+`Referrer-Policy^h ~header値は，引用符で括るべきでない。
+◎
+Note: The quotes in the ABNF above are used to indicate literal strings. Referrer-Policy header values should not be quoted.
+</p>
+
+<p>
+<a href="#integration-with-fetch">§ ~Fetchとの統合</a>,
+<a href="#integration-with-html">§ ~HTMLとの統合</a>
+にて，
+`Referrer-Policy^h ~headerを処理する方法を述べる。
+◎
+§5 Integration with Fetch and §6 Integration with HTML describe how the Referrer-Policy header is processed.
+</p>
+			<section id="referrer-usage">
+<h4 title="Usage">4.1.1. 用法</h4>
+
+~INFORMATIVE
+
+<p>
+被保護~資源は、
+`Referrer-Policy^h ~headerの値として
+`no-referrer^c を指定することにより，~referrer漏洩eを防止できる：
+◎
+A protected resource can prevent referrer leakage by specifying no-referrer as the value of its Referrer-Policy header:
+</p>
+
+<pre class="lang-http">
+Referrer-Policy: no-referrer
+</pre>
+
+<p>
+これは、被保護~資源の文脈から為されるすべての要請の
+`Referer$h ~headerを空にすることになる。
+【空にすることと, `Referer^h を送信しないことは同義なのか、はっきりしない。】
+◎
+This will cause all requests made from the protected resource’s context to have an empty Referer [sic] header.
+</p>
+
+			</section>
+		</section>
+		<section id="referrer-policy-delivery-meta">
+<h3 title="Delivery via meta">4.2. `meta^e 要素を介する送達</h3>
+
+~INFORMATIVE
+
+<p>
+~HTML標準は、~markupを介して`~referrer施策$を設定できるようにするため、
+`meta$e 要素~用の `referrer$v ~keywordを定義している。
+◎
+The HTML Standard defines the referrer keyword for the meta element, which allows setting the referrer policy via markup.
+</p>
+
+		</section>
+		<section id="referrer-policy-delivery-referrer-attribute">
+<h3 title="Delivery via a referrerpolicy content attribute">4.3. `referrerpolicy^a 内容~属性を介する送達</h3>
+
+~INFORMATIVE
+
+<p>
+~HTML標準は、［
+その一部の要素に対し適用される，`~referrer施策~属性$の概念
+］を定義している。
+例えば：
+◎
+The HTML Standard defines the concept of referrer policy attributes which applies to several of its elements, for example:
+</p>
+
+<pre class="example lang-html">
+&lt;a href="http://example.com" referrerpolicy="origin"&gt;
+</pre>
+
+		</section>
+		<section id="referrer-policy-delivery-nested">
+<h3 title="Nested browsing contexts">4.4. 入子の閲覧文脈</h3>
+
+~INFORMATIVE
+
+<p>
+~HTML標準と~Fetch標準は、［
+`srcdoc$a 属性を有する `iframe$e 要素などの，`応答$から作成されたものでない
+］／［
+`blob:^sc ~URLから作成された
+］入子の閲覧文脈に対し，その`~referrer施策$を［
+作成元~閲覧文脈／ `blob:^sc ~URL
+］から継承する方法を定義している。
+◎
+The HTML Standard and Fetch Standard define how nested browsing contexts that are not created from responses, such as iframe elements with their srcdoc attribute set, or created from a blob URL, inherit their referrer policy from the creator browsing context or blob URL.
+</p>
+
+		</section>
+	</section>
+	<section id="integration-with-fetch">
+<h2 title="Integration with Fetch">5. ~Fetchとの統合</h2>
+
+~INFORMATIVE
+
+<p>
+~Fetch仕様は、~redirectに追従する前に，要請の~referrer施策を更新できるよう，`~HTTP~redirect~fetch$の最後の手前の段にて［
+`~redirect上で要請の~referrer施策を設定する$
+］を~callする。
+◎
+The Fetch specification calls out to §8.2 Set request’s referrer policy on redirect before Step 13 of the HTTP-redirect fetch, so that a request’s referrer policy can be updated before following a redirect.
+</p>
+
+<p>
+~Fetch仕様は、`~main~fetch$の段 8 にて［
+`要請の~referrerを決定-$する
+］を~callし、その結果を， %要請 の`~referrer$rqを設定するときに利用する。
+~fetchが、供された~URLの直列化して， %要請 の `Referer$h ~headerを設定する責を負う。
+◎
+The Fetch specification calls out to §8.3 Determine request’s Referrer as Step 8 of the Main fetch algorithm, and uses the result to set the request’s referrer property. Fetch is responsible for serializing the URL provided, and setting the `Referer` header on request.
+</p>
+
+	</section>
+	<section id="integration-with-html">
+<h2 title="Integration with HTML">6. ~HTMLとの統合</h2>
+
+~INFORMATIVE
+
+<p>
+~HTML標準は、［
+(1) `~navi$の間 ／ (2) `~workerを走らせて$いる間
+］に，［
+受信された応答の `Referrer-Policy$h ~headerから`~referrer施策$を決定した結果
+］を利用して，［
+(1) による結果の `Document$I の`~referrer施策$doc ／
+(2) による結果の `WorkerGlobalScope$I の`~referrer施策$wk
+］を設定する。
+これは、後で，対応する`環境~設定群~obj$により利用される。
+この設定群は、自身から起動される`~fetch$の`要請~client$rqとして~~働く。
+◎
+The HTML Standard determines the referrer policy of any response received during navigation or while running a worker, and uses the result to set the resulting Document or WorkerGlobalScope's referrer policy. This is later used by the corresponding environment settings object, which serves as a request client for fetches it initiates.
+</p>
+
+	</section>
+	<section id="integration-with-css">
+<h2 title="Integration with CSS">7. ~CSSとの統合</h2>
+
+<p>
+~CSS標準は、~stylesheetから参照される資源を~fetchする方法を指定していない。
+しかしながら，実装は、所与の~stylesheetにより起動される`要請$ %要請 の~referrerに関係する各種~propを，次に従って設定するべきである：
+◎
+The CSS Standard does not specify how it fetches resources referenced from stylesheets. However, implementations should be sure to set the referrer-related properties of any requests initiated by stylesheets as follows:
+</p>
+
+<ol>
+	<li>
+<p>
+~IF［
+%要請 は`~CSS~stylesheet$ %S から起動された
+］：
+◎
+↓</p>
+		<ol>
+			<li>
+<p>
+~IF［
+%S の`所在$ss ~NEQ ~NULL
+【すなわち，外部~stylesheet】
+］
+⇒
+%要請 の ( `~referrer$rq, `~referrer施策$rq ) ~SET 
+%S の ( `所在$ss, `~referrer施策$ss )
+◎
+If a CSS style sheet is responsible for the request, and its location is non-null, set the referrer to its location, and the referrer policy to its referrer policy.
+</p>
+
+<p class="issue">
+この段は、~CSS~stylesheetが `Referrer-Policy$h ~headerを処理して，それを
+— 文書の`~referrer施策$docに対するときと同じ仕方で —
+当の~stylesheetの
+`~referrer施策@ss
+として格納することを要求する。
+◎
+This requires that CSS style sheets process `Referrer-Policy` headers, and store a referrer policy in the same way that Documents do.
+</p>
+			</li>
+			<li>
+~ELSE
+【すなわち，~inline~stylesheet】
+⇒
+%要請 の ( `~referrer$rq, `~referrer施策$rq ) ~SET 
+%S の`所有者~node$ssの`~node文書$の
+( `~URL$doc, `~referrer施策$doc )
+◎
+If a CSS style sheet with a null location is responsible for the request, set the referrer to its owner node’s node document’s URL, and the referrer policy to its owner node’s node document’s referrer policy.
+</li>
+		</ol>
+	</li>
+	<li>
+~ELSE（
+`~CSS宣言~block$は、 %要請 を起動した埋込元が，ある要素 %要素 に対し［
+%要素 の `style$a を構文解析するか，
+%要素 用に`呈示用~hint$を実装する
+］ことにより作成された）
+— この事例では、この宣言~blockの`所有者~node$は， %要素 を指しているものと見做す
+⇒
+%要請 の ( `~referrer$rq, `~referrer施策$rq ) ~SET 
+%要素 の`~node文書$の ( `~URL$doc, `~referrer施策$doc )
+◎
+Otherwise, a CSS declaration block that was created by the embedder is responsible for the request - either from parsing of an element’s style attribute, or to implement an presentational hint for an element. We assume that in this case the CSS declaration block’s owner node points to that element, and set the referrer to the block’s owner node’s node document’s URL, and the referrer policy to the block’s owner node’s node document’s referrer policy.
+</li>
+</ol>
+
+<p class="note">注記：
+`要請$の［
+`~referrer$rq, `~referrer施策$rq
+］両~値とも，その`要請$の作成-時の各種~値に基づいて設定される。
+文書の~referrer施策が その存続中に変化した場合、文書~内の~inline~stylesheetによる要請に結付けられている施策も変化することになる。
+◎
+Note: Both the value of the request’s referrer and referrer policy are set based on the values at the time a given request is created. If a document’s referrer policy changes during its lifetime, the policy associated with inline stylesheet requests will also change.
+</p>
+
+	</section>
+	<section id="algorithms">
+<h2 title="Algorithms">8. 各種~algo</h2>
+
+		<section id="parse-referrer-policy-from-header">
+<h3 title="Parse a referrer policy from a Referrer-Policy header">8.1. `Referrer-Policy^h ~headerから~referrer施策を構文解析する</h3>
+
+<p>
+次の手続きは、所与の`応答$ %応答 に対し，その `Referrer-Policy$h ~headerから得られる`~referrer施策$を返す：
+◎
+Given a response response, the following steps return a referrer policy according to response’s `Referrer-Policy` header:
+</p>
+
+<ol>
+	<li>
+%施策~token~list ~LET `~header~listから値を抽出する$( %応答 の`~header~list$rs, `Referrer-Policy$h )
+◎
+Let policy-tokens be the result of extracting header list values given `Referrer-Policy` and response’s header list.
+</li>
+	<li>
+%施策 ~LET 空~文字列
+◎
+Let policy be the empty string.
+</li>
+	<li>
+<p>
+%施策~token~list 内の~EACH( %~token ) に対し
+⇒
+~IF［
+%~token は`~referrer施策$である
+］~AND［
+%~token ~NEQ 空~文字列
+］
+⇒
+%施策 ~SET %~token
+◎
+For each token in policy-tokens, if token is a referrer policy and token is not the empty string, then set policy to token.
+</p>
+
+<p class="note">注記：
+この~algoは、新たな施策~値を，旧~UA用の~fallbackも伴わせて配備できるようにするため（
+<a href="#unknown-policy-values">§ 未知な施策~値</a>
+に述べるように），複数の施策~値にわたって~loopする。
+◎
+Note: This algorithm loops over multiple policy values to allow deployment of new policy values with fallbacks for older user agents, as described in §11.1 Unknown Policy Values.
+</p>
+	</li>
+	<li>
+~RET %施策
+◎
+Return policy.
+</li>
+</ol>
+
+		</section>
+		<section id="set-requests-referrer-policy-on-redirect">
+<h3 title="Set request’s referrer policy on redirect">8.2. ~redirect上で %要請 の~referrer施策を設定する</h3>
+
+<p>
+この~algoは、所与の
+( `要請$ %要請, `応答$ %実~応答 )
+に対し，
+%実~応答 内に `Referrer-Policy$h ~headerがあれば，それに則って
+%要請 の`~referrer施策$rqを更新する。
+◎
+Given a request request and a response actualResponse, this algorithm updates request’s associated referrer policy according to the Referrer-Policy header (if any) in actualResponse.
+</p>
+
+<ol>
+	<li>
+%施策 ~LET %実~応答 の `Referrer-Policy^h ~headerから`~referrer施策を構文解析-$した結果
+◎
+Let policy be the result of executing §8.1 Parse a referrer policy from a Referrer-Policy header on actualResponse.
+</li>
+	<li>
+~IF［
+%施策 ~NEQ 空~文字列
+］
+⇒
+%要請 の`~referrer施策$rq ~SET %施策
+◎
+If policy is not the empty string, then set request’s associated referrer policy to policy.
+</li>
+</ol>
+
+		</section>
+		<section id="determine-requests-referrer">
+<h3 title="Determine request’s Referrer">8.3. %要請 の~referrerを決定する</h3>
+
+<p>
+所与の`要請$ %要請 に対し，送信する正しい~referrer情報は、次の手続きに詳細に示すように，
+%要請 の`~referrer施策$rqを精査することにより決定できる。
+この手続きは、 `~referrerなし^i, `~URL$のいずれかを返す：
+◎
+Given a request request, we can determine the correct referrer information to send by examining the referrer policy associated with it, as detailed in the following steps, which return either no referrer or a URL:
+</p>
+
+<ol>
+	<li>
+%施策 ~LET %要請 の`~referrer施策$rq
+◎
+Let policy be request’s associated referrer policy.
+</li>
+	<li>
+%環境 ~LET %要請 の`~client$rq
+◎
+Let environment be request’s client.
+</li>
+	<li>
+%~referrer~source ~LET ~NULL
+◎
+↓</li>
+	<li>
+<p>
+%要請 の`~referrer$rqに応じて：
+◎
+Switch on request’s referrer:
+</p>
+		<dl class="switch">
+			<dt>`client^l</dt>
+			<dd>
+				<ol>
+					<li>
+<p>
+~IF［
+%環境 の`大域~obj$は `Window$I ~objである
+］：
+◎
+If environment’s global object is a Window object, then
+</p>
+
+						<ol>
+							<li>
+%文書 ~LET %環境 の`大域~obj$に`結付けられている文書$
+◎
+Let document be the associated Document of environment’s global object.
+</li>
+							<li>
+~IF［
+%文書 の`生成元$docは`不透明な生成元$である
+］
+⇒
+~RET `~referrerなし^i
+◎
+If document’s origin is an opaque origin, return no referrer.
+</li>
+							<li>
+~WHILE［
+%文書 は`~iframe-srcdoc文書$である
+］
+⇒
+%文書 ~SET ［［
+%文書 が`属する閲覧文脈$
+］を入子にしている`閲覧文脈~容器$
+］の`~node文書$
+◎
+While document is an iframe srcdoc document, let document be document’s browsing context’s browsing context container’s node document.
+</li>
+							<li>
+%~referrer~source ~SET %文書 の`~URL$doc
+◎
+Let referrerSource be document’s URL.
+</li>
+						</ol>
+					</li>
+					<li>
+~ELSE
+⇒
+%~referrer~source ~SET %環境 の`作成時の~URL$
+◎
+Otherwise, let referrerSource be environment’s creation URL.
+</li>
+				</ol>
+			</dd>
+
+			<dt>`~URL$</dt>
+			<dd>
+%~referrer~source ~SET %要請 の`~referrer$rq
+◎
+Let referrerSource be request’s referrer.
+</dd>
+ 		</dl>
+
+<p class="note">注記：
+［
+%要請 の`~referrer$rq ~EQ `no-referrer^l
+］の場合、この~algoが~Fetchから~callされることはない。
+◎
+Note: If request’s referrer is "no-referrer", Fetch will not call into this algorithm.
+</p>
+	</li>
+	<li>
+%~referrer~URL ~LET `~referrer用に~URLを削る$( %~referrer~source )
+◎
+Let request’s referrerURL be the result of stripping referrerSource for use as a referrer.
+</li>
+	<li>
+%~referrer生成元 ~LET `~referrer用に~URLを削る$( %~referrer~source, `生成元のみ^i )
+◎
+Let referrerOrigin be the result of stripping referrerSource for use as a referrer, with the origin-only flag set to true.
+</li>
+	<li>
+~IF［
+`~URL直列化する$( %~referrer~URL )
+の結果の文字列の長さ ~GT 4096
+］
+⇒
+%~referrer~URL ~SET %~referrer生成元
+◎
+If the result of serializing referrerURL is a string whose length is greater than 4096, set referrerURL to referrerOrigin.
+</li>
+	<li>
+この時点で，~UAは、［
+~data漏洩eを最小限にする~~目的において，任意な施策~上の考慮点を施行する
+］ためとして，［
+%~referrer~URL ／ %~referrer生成元
+］を改めてもヨイ。
+例えば，~UAは、~URLを生成元に削ったり，その~hostを［
+改変する／空~文字列に置換する
+］, 等々を行うこともできる。
+◎
+The user agent MAY alter referrerURL or referrerOrigin at this point to enforce arbitrary policy considerations in the interests of minimizing data leakage. For example, the user agent could strip the URL down to an origin, modify its host, replace it with an empty string, etc.
+</li>
+	<li>
+%要請 の
+`~referrer~URL@
+は、この時点における %~referrer~URL として~~確定される。
+◎
+↑</li>
+	<li>
+%現在の~URL ~LET %要請 の`現在の~URL$rq
+◎
+↓</li>
+	<li>
+<div>
+<p>
+この段の記述では、次の条件 `同一-生成元^i, `降格^i を利用する：
+</p>
+		<dl>
+			<dt>`同一-生成元^i</dt>
+			<dd>
+［
+%~referrer~URL の`生成元$url, %現在の~URL の`生成元$url
+］は`同一-生成元$である（すなわち、
+%要請 は`同一-生成元~referrer要請$である）
+</dd>
+
+			<dt>`降格^i</dt>
+			<dd>
+［
+%~referrer~URL は`信用に価し得る~URL$である
+］~AND［
+%現在の~URL は`信用に価し得る~URL$でない
+］
+</dd>
+		</dl>
+◎
+↓</div>
+
+<p>
+~RET %施策 の値に応じて、次のうち対応する段に与える値：
+◎
+Execute the statements corresponding to the value of policy:
+</p>
+
+<p class="note">注記：
+［
+%要請 の`~referrer$rq ~EQ 空~文字列
+］の場合、この~algoが~Fetchから~callされることはない。
+◎
+Note: If request’s referrer policy is the empty string, Fetch will not call into this algorithm.
+</p>
+
+		<ul class="switch">
+			<li>
+`no-referrer$l
+⇒
+`~referrerなし^i
+◎
+"no-referrer"
+• Return no referrer
+</li>
+			<li>
+`origin$l
+⇒
+%~referrer生成元
+◎
+"origin"
+• Return referrerOrigin
+</li>
+			<li>
+`unsafe-url$l
+⇒
+%~referrer~URL
+◎
+"unsafe-url"
+• Return referrerURL.
+</li>
+			<li>
+`strict-origin$l
+⇒＃
+`降格^i ならば `~referrerなし^i ／
+~ELSE_ %~referrer生成元
+◎
+"strict-origin"
+• If referrerURL is a potentially trustworthy URL and request’s current URL is not a potentially trustworthy URL, then return no referrer.
+• Return referrerOrigin.
+</li>
+			<li>
+`strict-origin-when-cross-origin$l
+⇒＃
+`同一-生成元^i ならば %~referrer~URL ／
+~ELSE_ `降格^i ならば `~referrerなし^i ／
+~ELSE_ %~referrer生成元
+◎
+"strict-origin-when-cross-origin"
+• If the origin of referrerURL and the origin of request’s current URL are the same, then return referrerURL.
+• If referrerURL is a potentially trustworthy URL and request’s current URL is not a potentially trustworthy URL, then return no referrer.
+• Return referrerOrigin.
+</li>
+			<li>
+`same-origin$l
+⇒＃
+`同一-生成元^i ならば %~referrer~URL ／
+~ELSE_ `~referrerなし^i
+◎
+"same-origin"
+• If the origin of referrerURL and the origin of request’s current URL are the same, then return referrerURL.
+• Note: This same-origin check determines whether or not the request is same-origin-referrer.
+• Return no referrer.
+</li>
+			<li>
+`origin-when-cross-origin$l
+⇒＃
+`同一-生成元^i ならば %~referrer~URL ／
+~ELSE_ %~referrer生成元
+◎
+"origin-when-cross-origin"
+• If the origin of referrerURL and the origin of request’s current URL are the same, then return referrerURL.
+• Return referrerOrigin.
+</li>
+			<li>
+`no-referrer-when-downgrade$l
+⇒＃
+`降格^i ならば `~referrerなし^i ／
+~ELSE_ %~referrer~URL
+◎
+"no-referrer-when-downgrade"
+• If referrerURL is a potentially trustworthy URL and request’s current URL is not a potentially trustworthy URL, then return no referrer.
+• Return referrerURL.
+</li>
+		</ul>
+	</li>
+</ol>
+
+		</section>
+		<section id="strip-url">
+<h3 title="Strip url for use as a referrer">8.4. ~referrerとして利用するために~URLを削る</h3>
+
+<div>
+<p>
+`Referer$h ~headerの値として~URLを外へ送信するときには、以下の~algoに従って，~URLの一定の部位を含めないモノトスル。
+この~algoは、~URLの［
+`素片$url, `~username$url, `~password$url
+］成分を削ることに加え，［
+%生成元のみ~flag に `生成元のみ^i が与えられた場合
+］には［
+`~path$url, `~query$url
+］成分も削る（［
+`~scheme$url, `~host$url, `~port$url
+］成分のみが残される）ことになる。
+</p>
+
+<p>
+~algoは、所与の
+( `~URL$ %~url,
+<dfn id="#origin-only-flag">%生成元のみ~flag</dfn> ~IN { `生成元のみ^i, ε } （省略時は ε ）
+)
+に対し，次を走らす：
+</p>
+◎
+Certain portions of URLs must not be included when sending a URL as the value of a `Referer` header: a URLs fragment, username, and password components must be stripped from the URL before it’s sent out. This algorithm accepts a origin-only flag, which defaults to false. If set to true, the algorithm will additionally remove the URL’s path and query components, leaving only the scheme, host, and port.
+</div>
+
+<ol>
+	<li>
+~IF［
+%~url ~EQ ~NULL
+］
+⇒
+~RET `~referrerなし^i
+◎
+If url is null, return no referrer.
+</li>
+	<li>
+~IF［
+%~url の`~scheme$urlは`局所~scheme$である
+］
+⇒
+~RET `~referrerなし^i
+◎
+If url’s scheme is a local scheme, then return no referrer.
+</li>
+	<li>
+%~url ~SET %~url の複製
+【この段は、訳者による補完】
+</li>
+	<li>
+%~url の
+⇒＃
+`~username$url ~SET 空~文字列,
+`~password$url ~SET ~NULL,
+`素片$url ~SET ~NULL
+◎
+Set url’s username to the empty string.
+◎
+Set url’s password to null.
+◎
+Set url’s fragment to null.
+</li>
+	<li>
+<p>
+~IF［
+%生成元のみ~flag ~EQ `生成元のみ^i
+］
+⇒
+%~url の
+⇒＃
+`~path$url ~SET ~NULL,
+`~query$url ~SET ~NULL
+◎
+If the origin-only flag is true, then:
+• Set url’s path to null.
+• Set url’s query to null.
+</li>
+	<li>
+~RET %~url
+◎
+Return url.
+</li>
+</ol>
+
+		</section>
+	</section>
+	<section id="privacy">
+<h2 title="Privacy Considerations">9. ~privacyの考慮点</h2>
+
+		<section id="user-controls">
+<h3 title="User Controls">9.1. 利用者による制御</h3>
+
+<p>
+この仕様のすべては、［［
+`Referer$h ~headerを介して外へ送信される情報
+］を変更するような~option
+］を，~UAが利用者に提供することを防止するものと解釈されるべきでない。
+一例として、~UAは，~page上で作動中の`~referrer施策$にかかわらず，
+`Referer^h ~headerをまるごと抑止することを利用者に許容してもヨイ。
+◎
+Nothing in this specification should be interpreted as preventing user agents from offering options to users which would change the information sent out via a `Referer` header. For instance, user agents MAY allow users to suppress the referrer header entirely, regardless of the active referrer policy on a page.
+</p>
+
+		</section>
+	</section>
+	<section id="security">
+<h2 title="Security Considerations">10. ~securityの考慮点</h2>
+
+		<section id="information-leakage">
+<h3 title="Information Leakage">10.1. 情報~漏洩e</h3>
+
+<p>
+次に挙げる`~referrer施策$は、~secureでない~transportを介して，~secureな~siteの［
+生成元／~URL
+］を漏洩するかもしれない
+⇒＃
+`origin$l,
+`origin-when-cross-origin$l,
+`unsafe-url$l
+◎
+The referrer policies "origin", "origin-when-cross-origin" and "unsafe-url" might leak the origin and the URL of a secure site respectively via insecure transport.
+</p>
+
+<p>
+これらの施策は、~secureな~transportを採用している~siteの抗力を下げるにもかかわらず，仕様に含められている。
+◎
+Those three policies are included in the spec nevertheless to lower the friction of sites adopting secure transport.
+</p>
+
+<p>
+作者は、既定の施策を超える情報は漏洩されないことを確保したい場合は、代わりに次に挙げる いずれかを言明する施策を利用するべきである
+⇒＃
+`same-origin$l,
+`strict-origin$l,
+`strict-origin-when-cross-origin$l,
+`no-referrer$l
+◎
+Authors wanting to ensure that they do not leak any more information than the default policy should instead use the policy states "same-origin", "strict-origin", "strict-origin-when-cross-origin" or "no-referrer".
+</p>
+
+		</section>
+		<section id="downgrade">
+<h3 title="Downgrade to less strict policies">10.2. より厳密でない施策に降格する</h3>
+
+<p>
+この仕様は、より厳密でない施策への降格を禁止しない
+— 例えば `no-referrer$l から `unsafe-url$l へなど。
+◎
+The spec does not forbid downgrading to less strict policies, e.g., from "no-referrer" to "unsafe-url".
+</p>
+
+<p>
+任意の二つの施策に対し，どちらがより厳密かは、明瞭でない。
+例えば，~secureでない~transport越しの下では、［
+`no-referrer-when-downgrade$l は情報を漏洩しない一方で，
+`origin$l は漏洩する
+］ことになるが、後者の方が，非同一-生成元~naviにわたって露呈する情報は少ない。
+◎
+On the one hand, it is not clear which policy is more strict for all possible pairs of policies: While "no-referrer-when-downgrade" will not leak any information over insecure transport, and "origin" will, the latter reveals less information across cross-origin navigations.
+</p>
+
+<p>
+他方，より厳密でない施策の設定が許容されれば、作者は，
+<a href="#unknown-policy-values">§ 未知な施策~値</a>
+にて述べた安全な~fallbackを定義できるようになる。
+◎
+On the other hand, allowing for setting less strict policies enables authors to define safe fallbacks as described in §11.1 Unknown Policy Values.
+</p>
+
+		</section>
+	</section>
+	<section id="authoring">
+<h2 title="Authoring Considerations">11. 著作-時の考慮点</h2>
+
+		<section id="unknown-policy-values">
+<h3 title="Unknown Policy Values">11.1. 未知な施策~値</h3>
+
+<p>
+`Referrer-Policy$h ~headerから`~referrer施策を構文解析-$する~algo, および
+`meta$e `referrer$v ~algoに述べられるように、未知な~referrer施策~値は無視されることになる。
+また、複数の~sourceから~referrer施策が指定されている場合には，最後のもの†が利用されることになる。
+これにより、新たな施策~値を配備できるようになる。
+◎
+As described in §8.1 Parse a referrer policy from a Referrer-Policy header and in the meta referrer algorithm, unknown policy values will be ignored, and when multiple sources specify a referrer policy, the value of the latest one will be used. This makes it possible to deploy new policy values.
+</p>
+
+<p class="trans-note">【
+複数の~source
+— <a href="#referrer-policy-delivery">§ ~referrer施策の送達</a>。
+】【†
+どの~sourceが最後のものとされるかは，この仕様には述べられていないが、~HTML仕様の`~referrer施策~属性$に関する注記にそれらしき記述がある。
+】</p>
+
+<div class="example">
+<p>
+古い~UAが `unsafe-url$l 施策を解さないとしても、~siteは， `origin$l 施策に後続して， `unsafe-url$l 施策を指定できる。
+古い~UAは，自身にとって未知な値 `unsafe-url$l は無視して `origin$l を利用することになる一方、新しい~UAは，最後に処理される `unsafe-url$l を利用することになる。
+◎
+Suppose older user agents don’t understand the "unsafe-url" policy. A site can specify an "origin" policy followed by an "unsafe-url" policy: older user agents will ignore the unknown "unsafe-url" value and use "origin", while newer user agents will use "unsafe-url" because it is the last to be processed.
+</p>
+
+</div>
+
+<div class="example">
+
+<p>
+`Referrer-Policy$h ~headerで複数の施策~値を指定したければ、~siteは，複数個の `Referrer-Policy^h ~headerを送信できる：
+◎
+To specify multiple policy values in the Referrer-Policy header, a site can send multiple Referrer-Policy headers:
+</p>
+
+<pre class="lang-http">
+Referrer-Policy: no-referrer
+Referrer-Policy: unsafe-url
+</pre>
+
+<p>
+あるいは、~comma区切りで複数個の~header値を与えても等価になる：
+◎
+or, equivalently, multiple comma-separated header values:
+</p>
+
+<pre class="lang-http">
+Referrer-Policy: no-referrer,unsafe-url
+</pre>
+
+</div>
+
+<p>
+しかしながら，この挙動は、 `referrerpolicy$a 属性には適用されない。
+作者は `referrerpolicy$a 属性を動的に設定して取得することにより，特定0の施策~値が~supportされているかどうか検出できる。
+◎
+This behavior does not, however, apply to the referrerpolicy attribute. Authors may dynamically set and get the referrerpolicy attribute to detect whether a particular policy value is supported.
+</p>
+
+		</section>
+	</section>
+	<section id="acknowledgements">
+<h2 title="Acknowledgements">12. 謝辞</h2>
+
+<p>
+この仕様のかなりの部分は
+`Adam Barth^en,
+`Jochen Eisinger^en
+両氏による
+<a href="http://wiki.whatwg.org/wiki/Meta_referrer">Meta referrer</a>
+文書に基づく。
+◎
+This specification is based in large part on Adam Barth and Jochen Eisinger’s Meta referrer document.
+</p>
+
+<p>
+次に挙げる施策に
+<a href="https://lists.w3.org/Archives/Public/public-webappsec/2016Mar/0085.html">貢献された</a>
+`Francois Marier^en 氏に
+⇒
+`same-origin$l, `strict-origin$l, `strict-origin-when-cross-origin$l
+◎
+Francois Marier contributed the same-origin, strict-origin, and strict-origin-when-cross-origin policies.
+</p>
+
+	</section>
+</main></div>

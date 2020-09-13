@@ -1,0 +1,3220 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Overflow Module Level 3 （日本語訳）</title>
+
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+<style>
+x-text-overflow {
+	display: block;
+width:3.1em; border:solid .1em black; padding:.2em; font-family:Helvetica,sans-serif; line-height:1.1; overflow:hidden;
+}
+
+#_overflow-ellipsis-sample div,
+#_overflow-ellipsis-sample pre {
+	margin:0;
+	vertical-align: top;
+	padding: 0.5em;
+}
+#_overflow-ellipsis-sample td {
+	vertical-align: top;
+}
+
+svg {
+	vertical-align: top;
+}
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		collectParts: Util.collectParts,
+		generate: expand,
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	let context_prop = '';
+
+	return this.html.replace(
+		/%[\w~一-鿆]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r': // ref
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'p0': // 
+	context_prop = `#valdef-${key}-`;
+	return '';
+case 'p': // property
+	if( indicator === '@') {
+		context_prop = `#valdef-${key}-`;
+	}
+	break;
+case 'pe': 
+	text = `::${key}`;
+	break;
+case 'ps': 
+	text = `:${key}`;
+	break;
+case 't': // typedef
+	text = `&lt;${key}&gt;`;
+	key = key.replace(/\s?\[.+/, '');
+	break;
+case 'tp': // property value type
+	text = `&lt;'<code class="property">${key}</code>'&gt;`;
+	href = link_map[`p.${key}`];
+	break;
+case 'vt': // css values
+	text = `&lt;${key}&gt;`;
+	href = context_prop + key;
+	break;
+case 'v': // css values
+	href = context_prop + key;
+	break;
+case 'en': // english words
+	return `<span lang="en-x-a0">${key}</span>`
+	break;
+case 'issue':
+	href = `~CSSissue/${key}`;
+	text = `課題 #${key}`;
+	break;
+case 'dgm':
+	return `<a id="_dgm-${key}">＊</a>`;
+default:
+}
+
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+
+if(indicator !== '^'){
+	href = link_map[klass ? (klass + '.' + key) : key] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Overflow Module Level 3
+spec_date:2020-08-27
+trans_update:2020-06-06
+source_checked:180307
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-overflow-3/
+	abbr_url:CSSOVERFLOW3
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:css-ux,css
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2016-06-14
+
+
+●●class_map
+p:property
+css:css
+pe:pseudo
+e:element
+v:value
+tp:type
+t:type
+
+●●tag_map
+p:code
+pe:code
+t:var
+tp:var
+vt:var
+css:code
+e:code
+v:code
+c:code
+V:var
+em:em
+
+●●original_id_map
+
+
+●●mdn_urls
+	propdef-block-ellipsis:CSS/block-ellipsis
+	propdef-continue:CSS/continue
+	propdef-line-clamp:CSS/line-clamp
+	propdef-max-lines:CSS/max-lines
+propdef-overflow:CSS/overflow
+propdef-overflow-x:CSS/overflow-x
+propdef-overflow-y:CSS/overflow-y
+propdef-overflow-inline:CSS/overflow-inline
+propdef-overflow-block:CSS/overflow-block
+propdef-text-overflow:CSS/text-overflow
+
+●●link_map
+
+	●p
+p.block-ellipsis:#propdef-block-ellipsis
+p.continue:#propdef-continue
+p.line-clamp:#propdef-line-clamp
+p.max-lines:#propdef-max-lines
+p.overflow:#propdef-overflow
+p.overflow-*:#overflow-properties
+p.overflow-block:#propdef-overflow-block
+p.overflow-inline:#propdef-overflow-inline
+p.overflow-x:#propdef-overflow-x
+p.overflow-y:#propdef-overflow-y
+p.overflow-clip-margin:#propdef-overflow-clip-margin
+p.text-overflow:#propdef-text-overflow
+
+p.writing-mode:~CSSWM#propdef-writing-mode
+p.-webkit-line-clamp:#propdef--webkit-line-clamp
+
+p.align-content:~CSSALIGN#propdef-align-content
+p.box-shadow:~CSSBG#propdef-box-shadow
+p.break-after:~CSSBREAK#propdef-break-after
+p.break-before:~CSSBREAK#propdef-break-before
+p.break-inside:~CSSBREAK#propdef-break-inside
+p.clip-path:~MASKING1#propdef-clip-path
+p.clip:~MASKING1#propdef-clip
+p.contain:~CSSCONTAIN#propdef-contain
+p.direction:~CSSWM#propdef-direction
+p.display:~CSSDISP#propdef-display
+p.justify-content:~CSSALIGN#propdef-justify-content
+p.orphans:~CSSBREAK#propdef-orphans
+p.overflow-wrap:~CSSTEXT#propdef-overflow-wrap
+p.place-content:~CSSALIGN#propdef-place-content
+p.text-shadow:~CSSTEXTDOECR#propdef-text-shadow
+p.transform-style:~TRANSFORM2#propdef-transform-style
+p.unicode-bidi:~CSSWM#propdef-unicode-bidi
+p.widows:~CSSBREAK#propdef-widows
+
+p.line-height:~CSS2VISUDET#propdef-line-height
+
+	●v
+t.integer:~CSSVAL#integer-value
+t.string:~CSSVAL#string-value
+t.length:~CSSVAL#length-value
+
+v.print:~MQ5#valdef-media-print
+v.normal:~CSSALIGN#valdef-justify-content-normal
+
+	v.auto:#valdef-overflow-auto
+	v.clip:#valdef-overflow-clip
+	v.hidden:#valdef-overflow-hidden
+	v.scroll:#valdef-overflow-scroll
+	v.visible:#valdef-overflow-visible
+
+	v.none:#valdef-max-lines-none
+	vt.integer:#valdef-max-lines-integer
+
+	v.ellipsis:#valdef-block-overflow-ellipsis
+	v.none:#valdef-block-ellipsis-none
+	v.auto:#valdef-block-ellipsis-auto
+	vt.string:#valdef-block-ellipsis-string
+	vt.integer:#valdef-line-clamp-integer
+	v.none:#valdef-line-clamp-none
+
+	v.clip:#valdef-text-overflow-clip
+	v.ellipsis:#valdef-text-overflow-ellipsis
+
+	v.auto:#valdef-continue-auto
+	v.discard:#valdef-continue-discard
+	v.-webkit-discard:#valdef-continue--webkit-discard
+
+
+
+pe.first-line:~CSSPSEUDO#selectordef-first-line
+pe.first-letter:~CSSPSEUDO#selectordef-first-letter
+
+e.body:~HEsections#the-body-element
+e.html:~HEmetadata#the-html-element
+
+	|:~CSSVAL#comb-one
+
+	●用語
+~ink~overflow矩形:#ink-overflow-rectangle
+~ink~overflow区画:#ink-overflow-region
+~ink~overflow:#ink-overflow
+~overflow:#overflow
+~overflow切取n辺:#overflow-clip-edge
+~scroll容器:#scroll-container
+~scroll可能な~overflow矩形:#scrollable-overflow-rectangle
+~scroll可能な~overflow区画:#scrollable-overflow-region
+~scroll可能な~overflow:#scrollable-overflow
+~scrollport:#scrollport
+最も近い~scrollport:#nearest-scrollport
+
+塊~overflow省略符:#block-overflow-ellipsis
+
+省略符:#_ellipsis-etc
+
+	●外部
+塊~box:~CSSDISP#block-box
+独立な整形~文脈を確立-:~CSSDISP#establish-an-independent-formatting-context
+独立な整形~文脈:~CSSDISP#independent-formatting-context
+塊~整形~文脈:~CSSDISP#block-formatting-context
+包含塊の連鎖:~CSSDISP#containing-block-chain
+行内~level:~CSSDISP#inline-level
+行内~内容:~CSSDISP#inline-level
+~flow内:~CSSDISP#in-flow
+
+最大-内容~size:~SIZING#max-content
+最小-内容~size:~SIZING#min-content
+
+断片化~文脈:~CSSBREAK#fragmentation-context
+断片化~分断:~CSSBREAK#fragmentation-break
+断片化~容器:~CSSBREAK#fragmentation-container
+断片化d~flow:~CSSBREAK#fragmented-flow
+断片化~方向:~CSSBREAK#fragmentation-direction
+領域~分断:#_region-break
+	~CSSBREAK#region-break
+非強制~分断:~CSSBREAK#unforced-break
+	~CSSBREAK#varying-size-boxes
+	~CSSBREAK#parallel-flows
+
+
+不可分な行内~level:~CSS2VISUREN#inline-boxes
+
+内容~辺:~CSSBOX#content-edge
+~padding辺:~CSSBOX#padding-edge
+~border辺:~CSSBOX#border-edge
+~margin辺:~CSSBOX#margin-edge
+
+	内容~box:~CSSBOX#content-box
+	~padding~box:~CSSBOX#padding-box
+	~border~box:~CSSBOX#border-box
+	~margin~box:~CSSBOX#margin-box
+内容~区画:~CSSBOX#content-area
+~padding区画:~CSSBOX#padding-area
+~border区画:~CSSBOX#border-area
+~margin区画:~CSSBOX#margin-area
+
+行l~box:~CSSINLINE#line-box
+
+有位置:~CSSPOS#positioned-box
+静的~位置:~CSSPOS#_static-position
+支柱:~CSS2VISUDET#strut
+	§leading:~CSS2VISUDET#leading
+
+内容-分布~prop:~CSSALIGN#content-distribution-properties
+
+塊-始端:~CSSWM#block-start
+行内-始端:~CSSWM#inline-start
+塊-軸:~CSSWM#block-axis
+行内-軸:~CSSWM#inline-axis
+	塊~size:~CSSWM#block-size
+	`塊-軸$における
+行内~size:~CSSWM#inline-size
+行内~次元:~CSSWM#inline-dimension
+	行内~基底~方向:~CSSWM#inline-base-direction
+首要な書字mode:~CSSWM#principal-writing-mode
+書字mode:~CSSWM#writing-mode
+
+~border画像:~CSSBG#border-images
+初期~scroll位置:#initial-scroll-position
+~box影:~CSSBG#box-shadow
+
+内容~言語:~CSSTEXT#content-language
+自動折返し機会:~CSSTEXT#soft-wrap-opportunity
+~text装飾:~CSSTEXTDECOR
+
+~3D描画~文脈:~TRANSFORM2#3d-rendering-context
+外形線:~CSSUI#outline-props
+	~CSS22#dynamic-outlines
+略式~prop:~CASCADE#shorthand-property
+
+塊~容器:~CSSDISP#block-container
+
+~flex容器:~CSSFLEX#flex-container
+~flex駒:~CSSGFLEX#flex-item
+格子~容器:~CSSGRID#grid-container
+格子~駒:~CSSGRID#grid-item
+
+
+複柱~容器:~CSSMCOL#multi-column-container
+~overflow柱:~CSSMCOL#overflow-columns
+
+根~行内~box:~CSSINLINE#root-inline-box
+
+無視され:~CSSSYN#css-ignored
+
+	~TR/css-overflow-4/#fragmentation
+
+塗り封込め:~CSSCONTAIN#paint-containment
+
+~paged媒体:~MQ5#paged-media
+
+
+~HTML~body要素:~CSSOMVIEW#the-html-body-element
+	~body要素:~HTMLdom#the-body-element-2
+
+
+●●words_table1
+
+U2026: <span class="code-point">U+2026</span> 
+
+●●words_table
+
+	●layout
+scrollport::::スクロール域
+	~scroll~~操作／~scroll用／~scroll法:scrolling
+	~scroll可能な:scrollable
+pan::::パン
+	~pan用のそれ:panner
+	 ~lay-outし直す:relayout
+	~flow内:in-flow
+
+切取n:clip::切り取り
+切取られ:clipされ::切り取られ
+切取っ:clipし::切り取っ
+切取る:clipする::切り取る
+切抜いた:clipした::切り抜いた
+切抜く:clipする::切り抜く
+切抜き:clipping::切り抜き
+	切取って:trap
+
+glyph::::グリフ
+ink::::インク
+
+flex:::
+格子:grid::~::グリッド
+駒:item:::アイテム
+影:shadow::~
+em:
+ボカシ:blur::ぼかし
+側:side::~
+横:horizontal::~
+縦:vertical::~
+柱:column::::カラム
+複柱:multi-column::複 column::複カラム
+	複柱:multicol
+	行l~box:linebox
+占めら:occupyさ:~
+占める:occupyする:~
+収まり:fitし::~
+収まる:fitする::~
+収める:fitさせる::~
+最小-:min-:~
+最大-:max-:~
+	~~最小:minimal
+内容-:content-::~
+	内容~box:content-box
+投影-:project::~
+平面:plane::~
+拡幅-:extend::~
+拡幅量:extent::~
+拡がる:expandする::~
+拡げれ:expandでき::~
+	~~拡:grow
+拡幅距離:spread distance:~
+整列-:align::~
+矩形:rectangle::~
+
+断片化-:fragment 化::~
+	断片化-法:fragmenting
+断片:fragment::~
+断片化-:fragment 化::断片化
+断片化d:fragmented::断片化
+断片化:fragmentation::~
+	断片化~容器:fragmentainer
+並行する:parallelな::~
+分断:break::~
+分断-:break::~
+	分断-不能:unbreakable
+強制d:forced::強制
+非強制:unforced::~
+
+覆う:coverする::~
+隅:corner::~
+領域:region::~
+重合する:overlapする::重なり合う
+支柱:strut::~
+分布:distribution::~
+外方:outward:~
+丸めら:roundさ:~
+	~~循環:circularities
+	~~連鎖:cycle
+	配置-:placement
+	すり替えられ:displace
+
+	●CSS
+可視域:visual viewport::~
+装飾:decoration::~
+外形線:outline::~
+首要:principal::主要
+書字mode:writing mode::書字 mode:書字モード
+発話:speech::~
+封込め:containment::封じ込め
+
+	可視でない:invisible
+	~style付け:styling
+	table:::テーブル
+	ascender:::アセンダ
+	descender:::ディセンダ
+	媒体:medium
+	~boxを生成しない:boxless
+	下位prop:longhand
+
+	●仕様
+de-facto::事実上の標準
+条項:clause:~
+理論的:theoretical:~
+安定的:stable:~
+安定:stable:~
+	安定~化:stabilize
+可能性:possibility:~
+風変わり:quirky:~
+堅牢:robust:~
+	堅牢とは言えない:less robust
+取込む:importする:取り込む
+放棄-:abandon:~
+著作時の:authoring:~
+究明:investigation:~
+究明-:investigate:~
+収束-:converge:~
+提起-:raise:~
+決着-:settle:~
+学んで:learnして:~
+過ち:mistake:~
+文書化-:document:~
+尊重-:respect:~
+規定-:dictate:~
+誤記:typo:~
+修正-:fix:~
+注力-:focus:~
+問い:question:~
+log::::ログ
+不整合:inconsistency:~
+
+	依存-:is dependent on
+	依存するもの:dependency
+	制限-法:limiting
+	Level
+	compat
+	~web互換:web-compatible
+	特能:fun things
+	脳内:mental:
+	こっそり:surreptitious
+	常に可能とは限らない:not always the case
+	されているが:despite
+	およそ:likely
+	必要-:need
+	不要な:not 〜 necessary
+	足る:sufficient
+	長い間:long-standing
+	食い違って:disagreement
+	整合しない:inconsistent
+	weird
+	thereby
+	-:in favor of
+	図示する:illustration
+	足るものに:sufficiently
+	今の所、For the time being
+	語:word
+	するためには:in order to
+
+	持ち出す必要:bringing over
+	転化する:turn〜into
+	分類:classifier／classify
+	第三の類:category3
+	かのように:similar
+	確か:sure
+	-:Make sure
+	-:we
+	それまでは:meanwhile
+	足る:sufficiently
+	きちんと:well-
+	影響されない:unaffected
+	:indication
+	挙動:behave
+	-:provided
+	実験-:experimentation
+	可能になる:allow
+	できなくする:forbid 〜 entirely
+	し続ける:continues to
+	分類:classifier／classify
+	~CSSに起因する:css-induced
+	余地を残しておく:facilitate
+	調製:tweaking
+	課され:impose
+	つけ込んで:exploit
+	他にない:became 〜 merely as a consequence of applying the
+	され得る:potential 〜
+	working
+	seem
+	cause
+	会合:meeting
+	見れる:can be seen
+	為して:made
+	標準~化前の:pre-standard
+	作業草案:working draft
+	~web互換性:web-compat
+	込み入って:tricky
+	-:predating
+	変更されていない:unchanged
+	欠いて:lack
+	まだ新しく:rather new
+	まだ残って:remain open
+
+	●未分類
+塗ng:painting:塗り
+塗り:paint:~
+塗る:paintする:~
+変形:transform::~
+限界域:bounds:~
+減算-:subtract:~
+	Add back
+測定-:measure:~
+	skipped over
+超過-:exceed:~
+	超過した:excess
+	-:excessive
+3D:
+body:
+touch::::タッチ
+drag::::ドラッグ
+wheel::::ホイール
+reader::::リーダ
+blog-post:blog post::ブログ投稿
+探索:search::検索
+和集合:union:~
+	同時に:simultaneous
+電子本:e-book:~
+
+	~access可能:accessible
+	一致-:coincide
+	happen
+	having
+	張り出して:overhanging
+	picked up
+	切取って:trap
+	~~占める:take-up
+	plus
+	対応-:correspond／:corresponding
+	差し引かれる:take out of
+	現れ:appear
+	見受けられ:appear
+	ただし:except
+	隠し:hide
+	消え:disappear
+	捉える:capture
+	数える:count
+	数えられ:count
+	~~保つ:remain
+	出くわすことはなく:will have had no occasion yet to run into
+
+	WebKit
+	Chrome
+	Firefox
+	IE
+	apparent
+	back
+	most
+	negative side bearings, or with ascenders/descenders
+	onto
+
+	quite
+	視覚系~browser:visual reader
+	reference
+	~~相対的な~with respect to
+
+	どこまで／拡幅量:extent
+	でも:still
+	least
+	モノの集合:set of things
+	囲む:bound する
+	長い:long
+
+	●block-ellipsis
+自動折返し:soft wrap::自動折り返し
+機会:opportunity::~
+両端揃え:justification::~
+押出され:pushされ:押し出され
+切落され:truncateされ:切り落とされ
+切落して:truncateして:切り落として
+継続性:continuity:~
+整列:alignment::~
+
+書記体系:writing system::~
+typographic::::タイポグラフィック
+	~typographic的に:typographically
+捕捉-:capture:~
+記事:article:~
+選択-:select::~
+選択:selection::~
+無条件:unconditional:~
+
+	無為に長い:absurdly long
+	次~pageへ続く:continued on next page
+	挙げられ:listed
+	~across
+	短くされ:shorten
+	ため〜:thus
+	直前に:immediately preceding
+	-:place
+	たかのように:exactly as if
+	同じように:as it does
+	も:as well
+	どの〜も:whatever
+	減らして:reducing
+	一様でない:Varying-
+	後続の:subsequent
+	奥:underneath
+	頭部にある:lead
+	先に来る:earlier
+	次の:next
+	複数:more than one
+
+	●eliipsis
+	~UI:interface
+	~scroll用の仕組み:scrolling mechanism
+swipe-scroll::::スワイプスクロール
+touch::::タッチ
+dot::::ドット
+
+省略化-:ellipse::~
+省略化:ellipsing::~
+省略符:ellipsis::~
+不可分:atomic::~
+中立的:neutral::~
+代用-:substitute:~
+単語:word:~
+双向:bidi::~
+双向性:bidi::~
+右横書き:right-to-left::~
+基底線:baseline::~::ベースライン
+変形n:transformation::変形
+折返ng:wrapping::折り返し
+書記素:grapheme::~
+用字系:script::~
+禁則-:prevent:~
+編集-:edit:~
+部屋:room::~
+隠され:hideされ::~
+隠した:hideした::~
+隠れる:hideする::~
+	配送-法:dispatching
+	委ねられる:up to
+	高さ（塊~size）:height
+
+	足りない:insufficient
+	~~負の~~側面:downside
+	上／下へ普通以上に突き出る:unusually tall / deep
+
+
+	●指示語
+	~~目的の:target
+	もっと:further
+	更には:furthermore
+	一部:part of
+	~~除外:-
+	場合によって:sometimes
+	themselves
+	いくぶん:somewhat
+	とは限らない:not all
+	全体:wholly
+	外へ:away
+	残り:the rest
+	どちら:whether
+	後続する:subsequent 
+	0 以下の:zero or negative
+	先立って:prior
+	先に来る方:which ever comes sooner
+	前:previous
+	も:as well
+	と同じく:just as
+	後の:later
+	不一致:discrepancies
+	最終的に:eventually
+	早期の:early
+
+
+●●ref_normative
+
+[CSS-ALIGN-3]
+    Elika Etemad; Tab Atkins Jr.. CSS Box Alignment Module Level 3. 21 April 2020. WD. URL: https://www.w3.org/TR/css-align-3/ 
+[CSS-BACKGROUNDS-3]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. 17 October 2017. CR. URL: https://www.w3.org/TR/css-backgrounds-3/ 
+[CSS-BOX-4]
+    Elika Etemad. CSS Box Model Module Level 4. 21 April 2020. WD. URL: https://www.w3.org/TR/css-box-4/ 
+[CSS-BREAK-3]
+    Rossen Atanassov; Elika Etemad. CSS Fragmentation Module Level 3. 4 December 2018. CR. URL: https://www.w3.org/TR/css-break-3/ 
+[CSS-BREAK-4]
+    Rossen Atanassov; Elika Etemad. CSS Fragmentation Module Level 4. 18 December 2018. WD. URL: https://www.w3.org/TR/css-break-4/ 
+[CSS-CASCADE-4]
+    Elika Etemad; Tab Atkins Jr.. CSS Cascading and Inheritance Level 4. 18 August 2020. WD. URL: https://www.w3.org/TR/css-cascade-4/ 
+[CSS-CONTAIN-2]
+    Tab Atkins Jr.; Florian Rivoal; Vladimir Levin. CSS Containment Module Level 2. 3 June 2020. WD. URL: https://www.w3.org/TR/css-contain-2/ 
+[CSS-DISPLAY-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Display Module Level 3. 19 May 2020. CR. URL: https://www.w3.org/TR/css-display-3/ 
+[CSS-GRID-2]
+    Tab Atkins Jr.; Elika Etemad; Rossen Atanassov. CSS Grid Layout Module Level 2. 18 August 2020. CR. URL: https://www.w3.org/TR/css-grid-2/ 
+[CSS-INLINE-3]
+    Dave Cramer; Elika Etemad; Steve Zilles. CSS Inline Layout Module Level 3. 27 August 2020. WD. URL: https://www.w3.org/TR/css-inline-3/ 
+[CSS-MASKING-1]
+    Dirk Schulze; Brian Birtles; Tab Atkins Jr.. CSS Masking Module Level 1. 26 August 2014. CR. URL: https://www.w3.org/TR/css-masking-1/ 
+[CSS-MULTICOL-1]
+    Håkon Wium Lie; Florian Rivoal; Rachel Andrew. CSS Multi-column Layout Module Level 1. 15 October 2019. WD. URL: https://www.w3.org/TR/css-multicol-1/ 
+[CSS-PSEUDO-4]
+    Daniel Glazman; Elika Etemad; Alan Stearns. CSS Pseudo-Elements Module Level 4. 25 February 2019. WD. URL: https://www.w3.org/TR/css-pseudo-4/ 
+[CSS-SIZING-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Intrinsic & Extrinsic Sizing Module Level 3. 22 May 2019. WD. URL: https://www.w3.org/TR/css-sizing-3/ 
+[CSS-SYNTAX-3]
+    Tab Atkins Jr.; Simon Sapin. CSS Syntax Module Level 3. 16 July 2019. CR. URL: https://www.w3.org/TR/css-syntax-3/ 
+[CSS-TEXT-3]
+    Elika Etemad; Koji Ishii; Florian Rivoal. CSS Text Module Level 3. 29 April 2020. WD. URL: https://www.w3.org/TR/css-text-3/ 
+[CSS-TEXT-DECOR-4]
+    Elika Etemad; Koji Ishii. CSS Text Decoration Module Level 4. 6 May 2020. WD. URL: https://www.w3.org/TR/css-text-decor-4/ 
+[CSS-TRANSFORMS-2]
+    Tab Atkins Jr.; et al. CSS Transforms Module Level 2. 3 March 2020. WD. URL: https://www.w3.org/TR/css-transforms-2/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS-WRITING-MODES-3]
+    Elika Etemad; Koji Ishii. CSS Writing Modes Level 3. 10 December 2019. REC. URL: https://www.w3.org/TR/css-writing-modes-3/ 
+[CSS-WRITING-MODES-4]
+    Elika Etemad; Koji Ishii. CSS Writing Modes Level 4. 30 July 2019. CR. URL: https://www.w3.org/TR/css-writing-modes-4/ 
+[CSS2]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[CSS3-FLEXBOX]
+    Tab Atkins Jr.; et al. CSS Flexible Box Layout Module Level 1. 19 November 2018. CR. URL: https://www.w3.org/TR/css-flexbox-1/ 
+[CSS3-GRID-LAYOUT]
+    Tab Atkins Jr.; et al. CSS Grid Layout Module Level 1. 18 August 2020. CR. URL: https://www.w3.org/TR/css-grid-1/ 
+[CSS3-TRANSFORMS]
+    Simon Fraser; et al. CSS Transforms Module Level 1. 14 February 2019. CR. URL: https://www.w3.org/TR/css-transforms-1/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[UAX29]
+    Mark Davis; Christopher Chapman. Unicode Text Segmentation. 19 February 2020. Unicode Standard Annex #29. URL: https://www.unicode.org/reports/tr29/tr29-37.html 
+
+●●ref_informative
+
+[CSS-CONTAIN-1]
+    Tab Atkins Jr.; Florian Rivoal. CSS Containment Module Level 1. 21 November 2019. REC. URL: https://www.w3.org/TR/css-contain-1/ 
+[CSS-PAGE-3]
+    Elika Etemad; Simon Sapin. CSS Paged Media Module Level 3. 18 October 2018. WD. URL: https://www.w3.org/TR/css-page-3/ 
+[CSS-REGIONS-1]
+    Rossen Atanassov; Alan Stearns. CSS Regions Module Level 1. 9 October 2014. WD. URL: https://www.w3.org/TR/css-regions-1/ 
+[CSS-UI-3]
+    Tantek Çelik; Florian Rivoal. CSS Basic User Interface Module Level 3 (CSS3 UI). 21 June 2018. REC. URL: https://www.w3.org/TR/css-ui-3/ 
+[CSS1]
+    Håkon Wium Lie; Bert Bos. Cascading Style Sheets, level 1. 13 September 2018. REC. URL: https://www.w3.org/TR/CSS1/ 
+[CSS3-BOX]
+    Elika Etemad. CSS Box Model Module Level 3. 21 April 2020. WD. URL: https://www.w3.org/TR/css-box-3/ 
+[CSSOM-VIEW]
+    Simon Pieters. CSSOM View Module. 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-view-1/ 
+[MEDIAQUERIES-5]
+    Dean Jackson; Florian Rivoal; Tab Atkins Jr.. Media Queries Level 5. 31 July 2020. WD. URL: https://www.w3.org/TR/mediaqueries-5/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Overflow Module Level 3</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/css-overflow-3/
+
+編集者草案
+	https://drafts.csswg.org/css-overflow-3/
+
+以前のバージョン
+	https://www.w3.org/TR/2020/WD-css-overflow-3-20200603/
+	https://www.w3.org/TR/2018/WD-css-overflow-3-20180731/
+	https://www.w3.org/TR/2016/WD-css-overflow-3-20160531/
+	https://www.w3.org/TR/2013/WD-css-overflow-3-20130418/
+
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-overflow-3">GitHub Issues</a>
+
+編集
+	<a href="https://dbaron.org/">L. David Baron</a> (Mozilla)
+	<a href="http://florian.rivoal.net/">Florian Rivoal</a> (On behalf of Bloomberg)
+	<a href="http://fantasai.inkedblade.net/contact">Elika J. Etemad / fantasai</a> (Invited Expert)
+
+Suggest an Edit for this Spec
+	https://github.com/w3c/csswg-drafts/blob/master/css-overflow-3/Overview.bs
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-overflow-3
+</script>
+
+<body>
+
+<div id="_persisted_parts" hidden>
+
+<img
+	id="_dgm-cssisawesome"
+	src="data:image/svg+xml;base64,PHN2ZwoJdmVyc2lvbj0iMS4xIgoJeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgoJeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiCgl2aWV3Qm94PSIwIDAgMTAwIDgxIgoJd2lkdGg9IjEwMCIgaGVpZ2h0PSI4MSIKPgoKPHJlY3QgeD0iMC41IiB5PSIwLjUiIHdpZHRoPSI2MCIgaGVpZ2h0PSI4MCIgCglzdHJva2Utd2lkdGg9IjEiIHN0cm9rZT0iYmxhY2siIGZpbGw9IndoaXRlIgovPgoKPHRleHQKCXRyYW5zZm9ybT0idHJhbnNsYXRlKDUsMTgpIgoJZm9udC1zaXplPSIxNiIKCWZvbnQtZmFtaWx5PSJIZWx2ZXRpY2Esc2Fucy1zZXJpZiIKCXRleHQtYW5jaG9yPSJzdGFydCIKCWRvbWluYW50LWJhc2VsaW5lPSJhbHBoYWJldGljIgoJZmlsbD0iYmxhY2siCglzdHJva2U9Im5vbmUiCj4KPHRzcGFuIHg9IjAiIHk9IjAiPkNTUzwvdHNwYW4+Cjx0c3BhbiB4PSIwIiB5PSIxOCI+SVM8L3RzcGFuPgo8dHNwYW4geD0iMCIgeT0iMzYiPkFXRVNPTUUsPC90c3Bhbj4KPHRzcGFuIHg9IjAiIHk9IjU0Ij5ZRVM8L3RzcGFuPgo8L3RleHQ+Cgo8L3N2Zz4="
+	title="First, a box with text drawing outside of it."
+	height="81"
+>
+
+<img
+	id="_dgm-cssisaweso"
+	src="data:image/svg+xml;base64,PHN2ZwoJdmVyc2lvbj0iMS4xIgoJeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgoJeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiCgl2aWV3Qm94PSIwIDAgNjEgODEiCgl3aWR0aD0iNjEiIGhlaWdodD0iODEiCj4KCjxyZWN0IHg9IjAuNSIgeT0iMC41IiB3aWR0aD0iNjAiIGhlaWdodD0iODAiIAoJc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2U9ImJsYWNrIiBmaWxsPSJ3aGl0ZSIKLz4KCjx0ZXh0Cgl0cmFuc2Zvcm09InRyYW5zbGF0ZSg1LDE4KSIKCWZvbnQtc2l6ZT0iMTYiCglmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtc2VyaWYiCgl0ZXh0LWFuY2hvcj0ic3RhcnQiCglkb21pbmFudC1iYXNlbGluZT0iYWxwaGFiZXRpYyIKCWZpbGw9ImJsYWNrIgoJc3Ryb2tlPSJub25lIgo+Cjx0c3BhbiB4PSIwIiB5PSIwIj5DU1M8L3RzcGFuPgo8dHNwYW4geD0iMCIgeT0iMTgiPklTPC90c3Bhbj4KPHRzcGFuIHg9IjAiIHk9IjM2Ij5BV0VTT01FPC90c3Bhbj4KPHRzcGFuIHg9IjAiIHk9IjU0Ij5ZRVM8L3RzcGFuPgo8L3RleHQ+Cgo8cmVjdCB4PSI2MSIgeT0iMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI4MSIgCglzdHJva2U9Im5vbmUiIGZpbGw9InllbGxvdyIKLz4KCjwvc3ZnPg=="
+	title="Second, a similar box with the text clipped outside the box."
+	height="81"
+>
+
+<img
+	id="_dgm-cssisaw"
+	src="data:image/svg+xml;base64,PHN2ZwoJdmVyc2lvbj0iMS4xIgoJeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgoJeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiCgl2aWV3Qm94PSIwIDAgNjEgODEiCgl3aWR0aD0iNjEiIGhlaWdodD0iODEiCj4KCjxyZWN0IHg9IjAuNSIgeT0iMC41IiB3aWR0aD0iNjAiIGhlaWdodD0iODAiIAoJc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2U9ImJsYWNrIiBmaWxsPSJ3aGl0ZSIKLz4KCjx0ZXh0Cgl0cmFuc2Zvcm09InRyYW5zbGF0ZSg1LDE4KSIKCWZvbnQtc2l6ZT0iMTYiCglmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtc2VyaWYiCgl0ZXh0LWFuY2hvcj0ic3RhcnQiCglkb21pbmFudC1iYXNlbGluZT0iYWxwaGFiZXRpYyIKCWZpbGw9ImJsYWNrIgoJc3Ryb2tlPSJub25lIgo+Cjx0c3BhbiB4PSIwIiB5PSIwIj5DU1M8L3RzcGFuPgo8dHNwYW4geD0iMCIgeT0iMTgiPklTPC90c3Bhbj4KPHRzcGFuIHg9IjAiIHk9IjM2Ij5BVy4uLjwvdHNwYW4+Cjx0c3BhbiB4PSIwIiB5PSI1NCI+WUVTPC90c3Bhbj4KPC90ZXh0PgoKPHJlY3QgeD0iNjEiIHk9IjAiIHdpZHRoPSIxMDAiIGhlaWdodD0iODEiIAoJc3Ryb2tlPSJub25lIiBmaWxsPSJ5ZWxsb3ciCi8+Cgo8L3N2Zz4="
+	title="Third, a similar box with an ellipsis representing the clipped text."
+	height="81"
+>
+
+<img
+	id="_dgm-nes"
+	src="data:image/svg+xml;base64,PHN2ZwoJdmVyc2lvbj0iMS4xIgoJeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgoJeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiCgl2aWV3Qm94PSIwIDAgNjEgMTE0IgoJd2lkdGg9IjYxIiBoZWlnaHQ9IjExNCIKPgoKPHJlY3QgeD0iMC41IiB5PSIwLjUiIHdpZHRoPSI2MCIgaGVpZ2h0PSIxMTMiIAoJc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2U9ImJsYWNrIiBmaWxsPSJ3aGl0ZSIKLz4KCjx0ZXh0Cgl0cmFuc2Zvcm09InRyYW5zbGF0ZSg1LDE4KSIKCWZvbnQtc2l6ZT0iMTYiCglmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtc2VyaWYiCgl0ZXh0LWFuY2hvcj0ic3RhcnQiCglkb21pbmFudC1iYXNlbGluZT0iYWxwaGFiZXRpYyIKCWZpbGw9ImJsYWNrIgoJc3Ryb2tlPSJub25lIgo+Cjx0c3BhbiB4PSIwIiB5PSIwIj5ORVMuLi48L3RzcGFuPgo8dHNwYW4geD0iMCIgeT0iMTgiPjwvdHNwYW4+Cjx0c3BhbiB4PSIwIiB5PSIzNiI+UEFSQUdSQVBIPC90c3Bhbj4KPHRzcGFuIHg9IjAiIHk9IjU0Ij48L3RzcGFuPgo8dHNwYW4geD0iMCIgeT0iNzAiPldPLi4uPC90c3Bhbj4KPHRzcGFuIHg9IjAiIHk9Ijg4Ij5FTExJLi4uPC90c3Bhbj4KPC90ZXh0PgoKPHJlY3QgeD0iNjEiIHk9IjAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTE0IiAKCXN0cm9rZT0ibm9uZSIgZmlsbD0ieWVsbG93IgovPgoKPC9zdmc+"
+	title="Fourth, a box with a nested paragraph demonstrating anonymous block boxes equivalency and non-inheritance into a nested element."
+	height="114"
+>
+
+<svg
+	id="_dgm-continue-flow"
+	viewBox="-10 -10 98 129"
+	width="98" height="129"
+>
+<rect x="-10" y="-10" width="98" height="129" fill="white" stroke="none" />
+<image
+	x="0" y="0" width="100px" height="109px"
+	href="css-overflow/continue-flow.png"
+/>
+</svg>
+
+<svg
+	id="_dgm-continue-discard-visible"
+	viewBox="-10 -10 98 129"
+	width="98" height="129"
+>
+<rect x="-10" y="-10" width="98" height="129" fill="white" stroke="none" />
+<image
+	x="0" y="0" width="100px" height="109px"
+	href="css-overflow/continue-flow.png"
+/>
+<rect x="-10" y="78" width="98" height="50" fill="white" stroke="none" />
+<rect x="-7" y="-7" width="76" height="91" fill="none" stroke="gray" stroke-width="1" />
+
+</svg>
+
+<svg
+	id="_dgm-continue-auto-visible"
+	viewBox="-10 -10 98 129"
+	width="98" height="129"
+>
+<rect x="-10" y="-10" width="98" height="129" fill="white" stroke="none" />
+<image
+	x="0" y="0" width="100px" height="109px"
+	href="css-overflow/continue-flow.png"
+/>
+<rect x="-7" y="-7" width="76" height="91" fill="none" stroke="gray" stroke-width="1" />
+</svg>
+
+<svg
+	id="_dgm-continue-discard-hidden"
+	viewBox="-10 -10 98 129"
+	width="98" height="129"
+>
+<rect x="-10" y="-10" width="98" height="129" fill="white" stroke="none" />
+<image
+	x="0" y="0" width="100px" height="109px"
+	href="css-overflow/continue-flow.png"
+/>
+<rect x="-10" y="78" width="100" height="50" fill="white" stroke="none" />
+<rect x="70" y="0" width="50" height="109" fill="white" stroke="none" />
+<rect x="-7" y="-7" width="76" height="91" fill="none" stroke="gray" stroke-width="1" />
+
+</svg>
+
+<svg
+	id="_dgm-continue-auto-hidden"
+	viewBox="-10 -10 98 129"
+	width="98" height="129"
+>
+<rect x="-10" y="-10" width="98" height="129" fill="white" stroke="none" />
+<image
+	x="0" y="0" width="100px" height="109px"
+	href="css-overflow/continue-flow.png"
+/>
+
+<rect x="-10" y="84" width="98" height="50" fill="white" stroke="none" />
+<rect x="70" y="0" width="50" height="109" fill="white" stroke="none" />
+<rect x="-7" y="-7" width="76" height="91" fill="none" stroke="gray" stroke-width="1" />
+
+</svg>
+
+
+
+
+</div>
+
+<header>
+	<hgroup>
+<h1>CSS Overflow Module Level 3</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この~moduleは、視覚-媒体における~scroll可能な~overflowの取扱いに関係する~CSSの特能を包含する：
+◎
+This module contains the features of CSS relating to scrollable overflow handling in visual media.＼
+</p>
+<ul>
+	<li>
+この~levelは、次も含む，既存の~overflow特能~用に精確な仕様を完了することに注力している：
+⇒＃
+`overflow$p ~propと その下位prop ／
+`line-clamp$p ~prop, その下位prop, その旧来の標準~化前の構文 ／
+`text-overflow$p ~prop
+◎
+This level is focused on completing a precise specification for the existing overflow features, including the overflow property and its longhands; line-clamp, its longhands, and its legacy pre-standard syntax; and the text-overflow property.＼
+</li>
+	<li>
+`CSS-CONTAIN-1$r ／ `CSS-CONTAIN-2$r
+の~supportにおいて導入された，少数の追加的な特能も定義された
+⇒＃
+<code class="css">`overflow^p: `clip^v</code>,
+`overflow-clip-margin$p ~prop
+◎
+A few additional features introduced in support of [CSS-CONTAIN-1] and [CSS-CONTAIN-2] are also defined: overflow: clip and the overflow-clip-margin property.
+</li>
+</ul>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公な複製です…
+【以下，この節の他の内容は <a href="css-common-ja.html#status">~CSS日本語訳 共通~page</a>に委譲。】
+</p>
+
+<p>
+`overflow$p, その下位propの記述は、これまでの作業草案や `CSS2$r よりも有意に完全かつ正しいものと見なされていますが，少数の問いと課題は まだ残っています。
+<span class="css">`overflow^p: `clip^v</span>
+と
+`overflow-clip-margin$p
+は、まだ新しいので実装~経験を欠いています。
+`text-overflow$p は安定的であり，
+`CSS-UI-3$r における以前の定義から変更されていません。
+まだ，実装~経験により全部的に検証されてはいませんが、
+`line-clamp$p, その下位propの設計は，概ね完全と見なされています。
+この仕様の以前の~versionは、断片化を利用して新たな~boxを作成することにより，~overflowを取扱うための試験的な新たな案を含んでいました。
+これらの案は、放棄されたわけではなく，
+<a href="~CSSOVERFLOW4">~level 4</a> へ先送りされたに過ぎません。
+断片化d~overflowに対する作業は、この~levelの安定~化が完了したなら，再開されることになります。
+◎
+The desciption of overflow and its longhands is considered significantly more complete and correct than previous working drafs or than [CSS2], but a few questions and issues remain open. ''overflow: clip' and overflow-clip-margin are rather new, and lack implementation experience. text-overflow is stable, is unchanged form its earlier definition in [CSS-UI-3]. While not yet fully validated by implementation experience, the design of line-clamp and its longhands is considered roughly complete. Earlier versions of this specification included experimental new ideas for handling overflow by creating new boxes using fragmentation. These ideas are not abandoned; they are merely deferred until Level 4. Work will resume on fragmented overflow once this level stabilizes completed.
+</p>
+
+<p>
+次の特能は
+<a href="css-common-ja.html#at-risk">~risk下</a>
+にあり，勧告候補の期間~中に取下げられるかもしれません：
+◎
+The following features are at-risk, and may be dropped during the CR period:
+</p>
+
+<ul>
+	<li>
+`max-lines$p ~prop
+◎
+the max-lines property
+</li>
+</ul>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+`overflow^p0
+
+<p>
+`CSS1$r では、指定された~sizeを伴う要素の内側に収まり切らないほど内容を配置することは、一般に 著作時の~errorとされていた。
+そのような内容は、要素の限界域の外側まで拡幅し，およそ 他の要素と重合することになる。
+◎
+In CSS Level 1 [CSS1], placing more content than would fit inside an element with a specified size was generally an authoring error. Doing so caused the content to extend outside the bounds of the element, which would likely cause that content to overlap with other elements.
+</p>
+
+<p>
+`CSS2$r では、 `overflow$p ~propが導入された。
+作者は，~overflowに対し~scrollさせるよう指定できるようになり、最早 著作時の~errorでなくなった。
+同時に，~overflowに対し切取るよう指定できるようにもなった
+— これは、作者が~overflowした内容を示したくないときイミを成す。
+◎
+CSS Level 2 [CSS2] introduced the overflow property, which allows authors to have overflow be handled by scrolling, which means it is no longer an authoring error. It also allows authors to specify that overflow is handled by clipping, which makes sense when the author’s intent is that the content not be shown.
+</p>
+
+<p>
+この仕様は、長い間~de-factoであった
+`overflow-x$p, `overflow-y$p
+~propを導入し,
+`clip$v 値を追加し,
+~overflowの取扱いを より全部的に定義する。
+◎
+This specification introduces the long-standing de-facto overflow-x and overflow-y properties, adds a clip value, and defines overflow handling more fully.
+</p>
+
+<p lang="en-x-a0">
+[Something something `max-lines$p.]
+</p>
+
+		<section id="values">
+<h3 title="Value Definitions">1.1. 値~定義</h3>
+
+<p class="trans-note">【
+この節の内容は <a href="css-common-ja.html#values">~CSS日本語訳 共通~page</a>に委譲。
+】</p>
+
+		</section>
+	</section>
+	<section id="overflow-concepts">
+<h2 title="Types of Overflow">2. ~overflowの種別</h2>
+
+<p>
+~CSSにおける用語
+`~overflow@
+（ `overflow^en ）は、~boxの内容が~boxのいずれかの辺（すなわち，その
+`内容~辺$, `~padding辺$, `~border辺$, `~margin辺$
+）の外側へ拡幅することを指す。
+この用語は、次のいずれかとして解釈される：
+この~overflowを生じさせた要素や特能 ／
+その種の特能により占められる領域（†矩形とは限らない） ／
+その領域を囲む~~最小な矩形（この解釈が最も共通的にある）。
+~boxの~overflowは、［
+~box自身, および［
+~boxの子孫のうち，その`包含塊の連鎖$が 当の~boxを含むもの
+］すべて
+］の［
+~layout, ~style付け
+］に基づいて算出される。
+◎
+CSS uses the term overflow to describe the contents of a box that extend outside one of that box’s edges (i.e., its content edge, padding edge, border edge, or margin edge). The term might be interpreted as elements or features that cause this overflow, the non-rectangular region occupied by these features, or, more commonly, as the minimal rectangle that bounds that region. A box’s overflow is computed based on the layout and styling of the box itself and of all descendants whose containing block chain includes the box.
+</p>
+
+<p class="trans-note">【
+この仕様の “矩形” には、論の対象にされている~boxの辺に平行であることも 含意されている。
+したがって， “矩形でない” は、~boxの辺に平行でない長方形も含む。
+】</p>
+
+<p>
+ほとんどの事例では、~boxに対する`~overflow$は，［
+~box自身の限界域と各種~propに加え，~boxの各 子~boxの`~overflow$
+］から算出できるが、常に可能とは限らない。
+例えば， `transform-style$p が `preserve-3d^v にされた子孫があれば、それらも精査するモノトスル。
+`CSS3-TRANSFORMS$r
+◎
+In most cases, overflow can be computed for any box from the bounds and properties of that box itself, plus the overflow of each of its children. However, this is not always the case; for example, when transform-style: preserve-3d [CSS3-TRANSFORMS] is used on some of the children, any of their descendants with transform-style: preserve-3d must also be examined.
+</p>
+
+<p>
+~overflowには、~UAにより異なる目的で利用される，次の 2 つの種別がある：
+◎
+There are two different types of overflow, which are used for different purposes by the UA:
+</p>
+
+<ul>
+	<li>
+`~ink~overflow$
+◎
+ink overflow
+</li>
+	<li>
+`~scroll可能な~overflow$
+◎
+scrollable overflow
+</li>
+</ul>
+
+		<section id="ink">
+<h3 title="Ink Overflow">2.1. ~ink~overflow</h3>
+
+<p>
+~boxの
+`~ink~overflow@
+は、~boxの~border~boxの外側に視覚-効果を作成させるような，~boxや, ~boxの内容の一部である。
+~ink~overflowは、~layoutに影響しない
+— あるいは，影響するとしても`~scroll可能な~overflow区画$を拡幅するにとどまる —
+ように定義された塗ng効果であり、次のものが挙げられる：
+`~box影$,
+`~border画像$,
+`~text装飾$,
+<!-- 
+overhanging glyphs (with negative side bearings, or with ascenders/descenders extending outside the em box)
+-->
+~em~boxの外側まで張り出している~glyph,
+`外形線$,
+等々。
+◎
+The ink overflow of a box is the part of that box and its contents that creates a visual effect outside of the box’s border box. Ink overflow is the overflow of painting effects defined to not affect layout or otherwise extend the scrollable overflow area, such as box shadows, border images, text decoration, overhanging glyphs (with negative side bearings, or with ascenders/descenders extending outside the em box), outlines, etc.
+</p>
+
+<p>
+~CSSにおける一部の効果は，視覚的にどこまで覆うかを定義しないので（例：
+`text-shadow$p や `box-shadow$p
+によるボカシは理論的に無限になる）、`~ink~overflow$による拡幅量は，定義されない。
+◎
+Since some effects in CSS (for example, the blurs in text-shadow [CSS-TEXT-3] and box-shadow [CSS-BACKGROUNDS-3], which are theoretically infinite) do not define what visual extent they cover, the extent of the ink overflow is undefined.
+</p>
+
+<p>
+`~ink~overflow区画@
+は、~boxとその内容の`~ink~overflow$が占める区画（矩形とは限らない）である。
+`~ink~overflow矩形@
+は、［
+~boxの辺に平行かつ `~ink~overflow区画$を包含する
+］ような，~~最小な矩形である。
+それは、変形 `CSS3-TRANSFORMS$r に因り，~box以外の座標系では矩形になるとは限らないことに注意。
+◎
+The ink overflow area is the non-rectangular area occupied by the ink overflow of a box and its contents, and the ink overflow rectangle is the minimal rectangle whose axes are aligned to the box’s axes and that contains the ink overflow area. Note that the ink overflow rectangle is a rectangle in the box’s coordinate system, but might be non-rectangular in other coordinate systems due to transforms. [CSS3-TRANSFORMS]
+</p>
+
+		</section>
+		<section id="scrollable">
+<h3 title="Scrollable Overflow">2.2. ~scroll可能な~overflow</h3>
+
+<p>
+~box
+— 以下、この節を通して %B と記す —
+の
+`~scroll可能な~overflow@
+は、~scroll法の仕組みが供される必要があるような，
+%B の~padding辺の外側まで拡幅するモノの集合である。
+◎
+The scrollable overflow of a box is the set of things extending outside of that box’s padding edge for which a scrolling mechanism needs to be provided.
+</p>
+
+<p>
+%B の
+`~scroll可能な~overflow区画@
+は、`~scroll可能な~overflow$が占める領域である（矩形とは限らない）。
+`~scroll可能な~overflow矩形@
+は、［
+%B の辺に平行かつ
+`~scroll可能な~overflow区画$を包含する
+］ような，~~最小な矩形である。
+◎
+The scrollable overflow area is the non-rectangular region occupied by the scrollable overflow, and the scrollable overflow rectangle is the minimal rectangle whose axes are aligned to the box’s axes and that contains the scrollable overflow area.
+</p>
+
+<p>
+%B の`~scroll可能な~overflow区画$は、次の和集合である：
+◎
+The scrollable overflow area is the union of:
+</p>
+
+<ul>
+	<li>
+<p>
+%B の自前の［
+`内容~区画$, `~padding区画$
+］
+◎
+the box’s own content and padding areas
+</p>
+
+<div class="issue">
+<p>
+~scroll法の~modelは、~paddingに関して実装~間で食い違っている…
+◎
+There’s disagreement on the scrolling model. 2.1 apparently defined that you scrolled the *content* area; the content would overflow the content-box, and you would union that overflow with the content box to find the scrollable area. In particular, this means that the content would be offset by the start-sides padding, but if it overflowed, it would go right to the edge on the end sides. This is what Firefox and IE do.
+◎
+At least some authors (and spec authors) instead have the mental model that the padding box is what’s scrollable, so when you scroll to the end of the overflow, there’s the right/bottom padding. Chrome/WebKit do this for the block axis, at least. They’re somewhat inconsistent for the inline axis; there’s something weird about how they handle lineboxes.
+</p>
+
+
+<!-- ＊
+CSS 2.1 は、~apparentに定義していた：
+~youが
+*内容* 区画を~scrollしたときに;
+内容は内容~boxを~overflowすることになる,
+~and~you
+~scroll可能な区画を見出すときは，その~overflowと内容~boxとの和集合をとる。
+これは特に、~overflowしている内容が始端~側~paddingにより~offsetされている場合には，終端~側の辺へ~go~rightすることを意味する。
+Firefox と IE は、これをやっている。
+少なくとも一部の作者（および仕様~策定者）は、代わりに
+~scroll可能な区画かは ~padding~boxである
+~mental~modelを持つ
+ので、~overflowの終端まで~scrollしたとき，
+右端／下端
+に~paddingがある。
+Chrome ／ WebKit
+は、少なくとも，塊-軸に対してこれをしている。
+行内-軸に対しては整合しない所があり、行l~boxをどう取扱うかについて~weirdな何かがある。
+-->
+
+<div class="trans-note">
+
+<p>【
+以下、この部分の原文による論理が訳者には はっきりしないので，和訳は省略する。
+結論から言うと、次に示すような~padding付きの~scroll~boxの挙動は，［
+Firefox, IE
+］と［
+Chrome, WebKit
+］とで異なる：
+】</p>
+
+<figure>
+<div
+	style="overflow:scroll; width:7em; height: 6em; padding: 2em; background: silver; white-space:pre;"
+>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</div>
+<figcaption>
+利用中の~browserによる呈示：［
+Chrome, WebKit
+］では，［
+右端／下端
+］へ~scrollすると［
+右端／下端
+］の~paddingが現れる一方で、［
+Firefox, IE
+］ではそうでないであろう。
+</figcaption></figure>
+
+</div>
+
+<p>
+おそらく、塊-軸~paddingは，尊守するに~web互換である。
+`行内-軸$~paddingがどうなるかは不明瞭である。
+もっと実験する必要がある。
+◎
+It seems that the block-axis padding is probably web-compatible to honor. It’s unclear that the inline-axis padding will be. Further experimentation is needed.
+</p>
+
+</div>
+
+	</li>
+	<li>
+%B に直に包含されている，すべての`行l~box$。
+◎
+all line boxes directly contained by the box
+</li>
+	<li>
+<p>
+%B を包含塊とするような，すべての~boxの~border~box
+— ただし、~border~box全体が %B の［
+`塊-始端$／`行内-始端$
+］~padding辺の外側に位置するものは除く。
+ここで、変形を伴う~boxに対しては，［
+その `~3D描画~文脈$を確立した要素の平面
+］上に投影した結果を織り込むとする。
+`CSS3-TRANSFORMS$r
+◎
+the border boxes of all boxes for which it is the containing block and whose border boxes are positioned not wholly outside its block-start or inline-start padding edges, accounting for transforms by projecting each box onto the plane of the element that establishes its 3D rendering context. [CSS3-TRANSFORMS]
+</p>
+
+<p class="issue">
+変形に対するこの取扱いの記述は、正確aに足るか？
+◎
+Is this description of handling transforms sufficiently accurate?
+</p>
+
+	</li>
+	<li>
+<p>
+前項に該当する~boxのうち，［
+自身の `overflow$p が `visible$v である（すなわち，~box自身は~overflowを切取っていない）］, かつ［
+その`~scroll可能な~overflow$が（例： `clip$p ~propや `contain$p ~propにより）すでに切取られていない
+］ものすべての，`~scroll可能な~overflow区画$（上述の変形も織り込んだ上で）。
+◎
+the scrollable overflow areas of all of the above boxes (accounting for transforms as described above), provided they themselves have overflow: visible (i.e. do not themselves trap the overflow) and that scrollable overflow is not already clipped (e.g. by the clip property or the contain property).
+</p>
+
+<p class="issue">
+`overflow$p `clip^v は`~scroll可能な~overflow$も切取るべきか？
+あるいは塗り時の演算を純粋に~~保つべきか？
+— 後者は、~scroll可能な~overflowは，可視でない間でも~scroll可能になることを意味する。
+◎
+should overflow: clip also clip the scrollable overflow or should it remain a pure paint-time operation, which would mean that scrollable overflow, while invisible, would still be scrollable.
+</p>
+
+<p class="note">注記：
+各種 `mask-*^p ~prop `CSS-MASKING-1$r は、`~scroll可能な~overflow区画$には影響しない。
+◎
+Note: The mask-* properties [CSS-MASKING-1] do not affect the scrollable overflow area.
+</p>
+
+<p class="issue">
+`clip$p や `clip-path$p を［
+尊守する／無視する
+］ことの互換性について評価する必要がある。
+◎
+Need to evaluate compat of honoring or ignoring clip and clip-path.
+</p>
+
+	</li>
+	<li>
+<p>
+［
+%B の`~scroll可能な~overflow矩形$の終端~辺~側にある~padding
+］であって，［
+`~scroll容器$に適用される終端~側~paddingを表現しているもの
+］は、［
+容器の内容が， `place-content$p 整列の要件を満たすような位置へ~scrollできる
+］ように追加される。
+ただし， %B は`塊~容器$である場合、所与の軸に対し［
+その軸に対応している %B の`内容-分布~prop$（ `align-content$p ／ `justify-content$p ）は `normal$v
+］ならば、その軸においては，この~paddingを含めることは任意選択~である
+◎
+Padding on the end-edge sides of the scrollable overflow rectangle representing the end-side padding applied to the scroll container, added such that its content can be scrolled to a position that would satisfy the requirements of place-content: end alignment. Including this padding is optional for block containers in any axis whose corresponding content-distribution property (align-content/justify-content) is normal.
+</p>
+
+<p class="issue">
+終端~側~paddingを塊~容器の~scroll可能な層に含めることが~web互換なのかどうか，まだ明瞭でないので、この条項は究明-中にある。
+Chrome ／ Safari は、`塊-軸$において
+<a href="https://bug748518.bmoattachments.org/attachment.cgi?id=618078">そのような~paddingを含む</a>
+ように見受けられるが、`行内-軸$における挙動は，
+<a href="http://jsbin.com/vexahocayi/1/edit?html,css,output">明瞭</a>
+<a href="http://jsbin.com/digadoyohi/1/edit?html,css,output">でない</a>
+。
+（ `129$issue ）
+◎
+It’s not yet clear if including the end-side padding in the scrollable layer of block containers is Web-compatible, so this clause is under investigation. It appears that Chrome and Safari include such padding in the block axis; and the behavior in the inline axis is not clear. &lt;https://github.com/w3c/csswg-drafts/issues/129&gt;
+</p>
+	</li>
+	<li>
+<p>
+%B が［
+`格子~駒$／`~flex駒$
+］用の包含塊を確立している場合は、それらの駒の~margin区画。
+~UAは、
+%B が他の~box用の包含塊を確立している場合も，その`~margin区画$を`追加的に^em含めてもヨイ。
+しかしながら，どのような条件の下でこれを含ませるかは、この~levelでは定義されない。
+◎
+the margin areas of grid item and flex item boxes for which the box establishes a containing block. The UA may additionally include the margin areas of other boxes for which the box establishes a containing block; however, the conditions under which such margin areas are included is undefined in this level.
+</p>
+
+<p class="issue">
+もっと~testして究明が必要なので、この草案では先送りされている。
+◎
+This needs further testing and investigation; is therefore deferred in this draft.
+</p>
+	</li>
+</ul>
+
+<p class="note">注記：
+~boxの`~scroll可能な~overflow矩形$は，常に~boxの辺に平行になるが、変形 `CSS3-TRANSFORMS$r に因り，~box以外の座標系では矩形になるとは限らないことに注意。
+このことは、実際には不要なときでも，~scrollbarが現れ得ることを意味する。
+◎
+Note: The scrollable overflow rectangle is always a rectangle in the box’s own coordinate system, but might be non-rectangular in other coordinate systems due to transforms [CSS3-TRANSFORMS]. This means scrollbars can sometimes appear when not actually necessary.
+</p>
+
+
+
+		</section>
+	</section>
+	<section id="overflow-properties">
+<h2 title="Scrolling and Clipping Overflow: the overflow-x, overflow-y, and overflow properties">3. ~scroll可能な~overflow／切抜き~overflow： `overflow-x^p, `overflow-y^p, `overflow^p ~prop</h2>
+
+
+<div class="p">
+<p>
+これらの~propは、次を指定する：
+</p>
+
+<ul>
+	<li>
+~boxの内容が、~boxの~padding辺で（`~ink~overflow$も含めて）切取られるかどうか。
+</li>
+	<li>
+切取られた場合に、~boxは
+`~scroll容器@
+になるかどうか
+— すなわち，利用者は、~boxの`~scroll可能な~overflow区画$内の切取られた部位を，~viewの中へ~scrollできるようになるかどうか。
+</li>
+</ul>
+
+<p>
+`~scroll容器$の可視域（それを通して `~scroll可能な~overflow区画$を~viewできる~~領域）は、
+`~scrollport@
+と呼ばれ、容器の~padding~boxに一致する。
+簡便に称するため，~boxに
+`最も近い~scrollport@
+は、~boxの先祖である`~scroll容器$のうち~boxに最も近いそれを指すとする。
+</p>
+◎
+These properties specify whether a box’s content (including any ink overflow) is clipped to its padding edge, and if so, whether it is a scroll container that allows the user to scroll clipped parts of its scrollable overflow area into view. The visual viewport of the scroll container (through which the scrollable overflow area can be viewed) coincides with its padding box, and is called the scrollport. For convenience, a box’s nearest scrollport
+is the scrollport of its nearest scroll container ancestor.
+</div>
+
+
+◎名 `overflow-x@p, `overflow-y@p
+◎値 `overflow^p0 `visible$v | `hidden$v | `clip$v | `scroll$v | `auto$v
+◎初 `visible$v
+◎適 `塊~容器$, `~flex容器$, `格子~容器$
+◎
+block containers [CSS2], flex containers [CSS3-FLEXBOX], and grid containers [CSS3-GRID-LAYOUT]
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+— ただし，［
+`overflow-x$p, `overflow-y$p
+］のうち一方が `visible$v でも `clip$v でもない場合には、他方に対する［
+`visible$v ／ `clip$v
+］は［
+`auto$v ／ `hidden$v
+］に算出される。
+◎
+as specified, except with visible/clip computing to auto/hidden (respectively) if one of overflow-x or overflow-y is neither visible nor clip
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+`overflow-x$p ~propは、横~方向における`~overflow$（すなわち，~boxの［
+左端／右端
+］側を~overflowするとき）の取扱いを指定する。
+`overflow-y$p ~propは、縦~方向における`~overflow$（すなわち，~boxの［
+上端／下端
+］側を~overflowするとき）の取扱いを指定する。
+◎
+The overflow-x property specifies the handling of overflow in the horizontal direction (i.e., overflow from the left and right sides of the box), and the overflow-y property specifies the handling of overflow in the vertical direction (i.e., overflow from the top and bottom sides of the box).
+</p>
+
+◎名 `overflow@p
+◎値 [ `visible$v | `hidden$v | `clip$v | `scroll$v | `auto$v ]{1,2}
+◎初 個々の~propを見よ
+◎適 `塊~容器$, `~flex容器$, `格子~容器$
+◎
+block containers [CSS2], flex containers [CSS3-FLEXBOX], and grid containers [CSS3-GRID-LAYOUT]
+◎継 されない
+◎百 受容しない
+◎算 個々の~propを見よ
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+
+<p>
+`overflow$p ~propは、指定された 2 個の値を順に［
+`overflow-x$p, `overflow-y$p
+］の指定d値に設定する，略式~propである。
+2 個目の値が省略された場合、 1 個目の値から複製される。
+◎
+The overflow property is a shorthand property that sets the specified values of overflow-x and overflow-y in that order. If the second value is omitted, it is copied from the first.
+</p>
+
+<p>
+各種 値の意味は：
+◎
+Values have the following meanings:
+</p>
+
+<dl>
+	<dt>`visible@v</dt>
+	<dd>
+~overflowに対する特別な取扱いはない。
+すなわち、~boxの内容は，~boxの外側に位置されれば そこにも描画される。
+~boxは`~scroll容器$にはならない。
+◎
+There is no special handling of overflow, that is, the box’s content is rendered outside the box if positioned there. The box is not a scroll container.
+</dd>
+
+	<dt>`hidden@v</dt>
+	<dd>
+<p>
+次を指示する：
+</p>
+
+<ul><li>~boxの内容は、~padding~boxで切取られる。
+</li><li>~UAは、［
+切抜き領域の外側にある内容を~viewするための，~scroll用~UI
+］を供したり，［
+利用者が，~touch~screen上を~dragしたり~mouseの~scroll用~wheelを用いて直に~scrollできる
+］ようにしないモノトスル。
+</li><li>内容は，依然として~program的に
+— 例えば `CSSOM-VIEW$r にて定義される仕組みを利用して —
+~scrollできるモノトスル。
+したがって、~boxは`~scroll容器$になる。
+</li></ul>
+◎
+This value indicates that the box’s content is clipped to its padding box and that the UA must not provide any scrolling user interface to view the content outside the clipping region, nor allow scrolling by direct intervention of the user, such as dragging on a touch screen or using the scrolling wheel on a mouse. However, the content must still be scrollable programatically, for example using the mechanisms defined in [CSSOM-VIEW], and the box is therefore still a scroll container.
+</dd>
+
+	<dt>`clip@v</dt>
+	<dd>
+<p>
+次を指示する：
+</p>
+		<ul>
+			<li>
+~boxの内容は、`~overflow切取n辺$で切取られる。
+</li>
+			<li>
+~UAは、［
+切抜き領域の外側にある内容を~viewするための，~scroll用~UI
+］を供するベキでない。
+</li>
+			<li>
+どのような仕組みでも，内容は~scrollできない。
+したがって、~boxは`~scroll容器$にならない。
+</li>
+		</ul>
+◎
+This value indicates that the box’s content is clipped to its overflow clip edge and that no scrolling user interface should be provided by the UA to view the content outside the clipping region. In addition, unlike overflow: hidden which still allows programmatic scrolling, overflow: clip forbids scrolling entirely, through any mechanism, and therefore the box is not a scroll container.
+</dd>
+	<dd class="trans-note">【
+この値は、 CSS2 には無かったもの。
+】</dd>
+	<dd>
+<p>
+`hidden$v 違って，この値は、要素に新たな整形~文脈を確立させる<strong>ことはない</strong>。
+◎
+Unlike hidden, this value does not cause the element to establish a new formatting context.
+</p>
+
+<p class="note">注記：
+~boxに整形~文脈も確立させたいと求める作者は、この値に加えて `display$p を利用できる。
+◎
+Note: Authors who also want the box to establish a formatting context may use display: flow-root together with overflow: clip.
+</p>
+	</dd>
+
+	<dt>`scroll@v</dt>
+	<dd>
+<p>
+次を指示する：
+</p>
+<ul><li>~boxの内容は、~padding~boxで切取られる。
+</li><li>~boxの内容を~viewの中へ~scrollできる。
+したがって、~boxは`~scroll容器$になる。
+</li></ul>
+◎
+This value indicates that the content is clipped to the padding box, but can be scrolled into view (and therefore the box is a scroll container).＼
+</dd>
+	<dd>
+加えて，~UAは、［
+利用者~向けの~scroll法の仕組みを，~screen上に可視にする（~scrollbarや~pan用のそれなど）
+］場合，その仕組みは
+— ~overflowの~~有無にかかわらず —
+表示されるベキである。
+これにより、動的~環境において ~scrollbarが現れたり消えたりする問題を避けれる。
+◎
+Furthermore, if the user agent uses a scrolling mechanism that is visible on the screen (such as a scroll bar or a panner), that mechanism should be displayed whether or not any of its content is clipped. This avoids any problem with scrollbars appearing and disappearing in a dynamic environment.
+</dd>
+	<dd>
+~~目的の媒体が `print$v であるときは、~overflowしている内容は印刷されてもヨイ
+— どこに印刷するかは定義されていない。
+◎
+When the target medium is print, overflowing content may be printed; it is not defined where it may be printed.
+</dd>
+
+	<dt>`auto@v</dt>
+	<dd>
+~boxに`~scroll可能な~overflow$があるときは， `scroll$v の様にふるまい、他のときは `hidden$v の様にふるまう。
+したがって，~UAが利用している~scroll法の仕組みが~screen上で可視ならば（~scrollbarや~pan用のそれなど）、その仕組みは~overflowがある場合に限り，表示される。
+◎
+Like scroll when the box has scrollable overflow; like hidden otherwise. Thus, if the user agent uses a scrolling mechanism that is visible on the screen (such as a scroll bar or a panner), that mechanism will only be displayed if there is overflow.
+</dd>
+</dl>
+
+<p>
+`塊~box$は、その［
+`overflow-x$p, `overflow-y$p
+］の両者とも算出d値は `visible$v でも `clip$v でもない場合には，を自身の内容~用に`独立な整形~文脈を確立-$する。
+◎
+If the computed value of overflow on a block box is neither visible nor clip nor a combination thereof, it establishes an independent formatting context for its contents.
+</p>
+
+		<section id="static-media">
+<h3 title="Overflow in Print and Other Static Media">3.1. 印刷その他の静的~媒体における~overflow</h3>
+
+<p class="advisement">
+静的~媒体（印刷など）では~scrollはアリでないので、作者は，［
+そのような媒体でも内容を~access可能にする
+］よう注意深くなるベキである。
+例えば，
+<code class="css">@media print, (update: none) { … }</code>
+を用いて~layoutを調整して、関連な内容はすべて同時に可視になるようにするなど。
+◎
+Since scrolling is not possible in static media (such as print) authors should be careful to make content accessible in such media, for example by using @media print, (update: none) { … } to adjust layout such that all relevant content is simultaneously visible.
+</p>
+
+<p>
+対話的でない媒体における`~scroll容器$に対しては，その `overflow$p 値が［
+`auto$v ／ `scroll$v 
+］ならば（ `hidden$v は~~除外される）、~UAは，~scrollbarや省略符などを表示して ~scroll可能な~overflowを指示してもヨイ。
+◎
+On scroll containers in non-interactive media with an overflow value of auto or scroll (but not hidden) UAs may display an indication of any scrollable overflow, such as by displaying scrollbars or an ellipsis.
+</p>
+
+
+<p class="note">注記：
+`~paged媒体$であっても，対話的になるものはある
+— 例えば電子本~readerの~page内容など。
+◎
+Note: Not all paged media is non-interactive for example, e-book readers page content, but are interactive.
+</p>
+		</section>
+		<section id="scrollbar-layout">
+<h3 title="Scrollbars and Layout">3.2. ~scrollbarと~layout</h3>
+
+<p>
+~scrollbarが要素の~boxの辺に配置される事例においては、それは
+内縁~border辺と外縁~padding辺の合間に挿入されるベキである。
+~scrollbarが~~占める空間は，~scrollbarを伴う要素が形成する包含塊から差し引かれる（寸法から減算される）ベキである。
+◎
+In the case of a scrollbar being placed on an edge of the element’s box, it should be inserted between the inner border edge and the outer padding edge. Any space taken up by the scrollbars should be taken out of (subtracted from the dimensions of) the containing block formed by the element with the scrollbars.
+</p>
+
+<p class="issue">
+`CSS3-BOX$r から例を取込む。
+◎
+import examples from [CSS3-BOX].
+</p>
+
+		</section>
+		<section id="scrolling-direction">
+<h3 title="Scrolling Origin, Direction, and Restriction">3.3. ~scroll法の原点, 方向, 制約</h3>
+
+<p>
+`初期~scroll位置@
+とは、初期~時における
+— すなわち，利用者や~programによる~scroll~~操作に先立つ —
+~boxの~border~boxに~~相対的な，~boxの`~scroll可能な~overflow区画$の位置であり、既定では，~boxの`書字mode$に依存して，~boxの`~padding辺$の［
+`塊-始端$ ／ `行内-始端$
+］辺になる。
+この既定は、
+`CSS-ALIGN-3$r の［
+`align-content$p, `justify-content$p
+］~propを利用して変更することもできる
+— その仕様の
+<a href="~CSSALIGN#overflow-scroll-position">~overflowと~scroll位置</a>
+節を見よ。
+◎
+The initial scroll position, that is, the initial position of the box’s scrollable overflow area with respect to its border box, prior to any user or programmatic scrolling that changes it, is dependent on the box’s writing mode, and is by default the block-start/inline-start edge of the box’s padding edge. However, the align-content and justify-content properties [CSS-ALIGN-3] can be used to change this, see CSS Box Alignment 3 §5.3 Overflow and Scroll Positions.
+</p>
+
+<p>
+~web互換性をとるための拘束に因り（これは、旧来の~bugにつけ込んで，視覚系~browserに対しては こっそり内容を隠しながら, 探索~engineや発話~出力に対してはそうしなかった，作者たちに~~起因するものである）、~UAは，`~scroll容器$の`~scroll可能な~overflow区画$を，その~boxの［
+`塊-始端$, `行内-始端$
+］側で切取ることが要求される（したがって，それらの側には`~scroll可能な~overflow$はなかったかのように挙動することになる）。
+◎
+Due to Web-compatibility constraints (caused by authors exploiting legacy bugs to surreptitiously hide content from visual readers but not search engines and/or speech output), UAs must clip the scrollable overflow area of scroll containers on the block-start and inline-start sides of the box (thereby behaving as if they had no scrollable overflow on that side).
+</p>
+
+<p>
+表示域は、これらの計算に`首要な書字mode$を利用する。
+◎
+The viewport uses the principal writing mode for these calculations.
+</p>
+
+		</section>
+		<section id="overflow-clip-margin">
+<h3 title="Expanding overflow:clip Bounds: the overflow-clip-margin property">3.4. <code class="css">`overflow^p: `clip^v</code> の限界域を拡げる： `overflow-clip-margin^p ~prop</h3>
+
+◎名 `overflow-clip-margin@p
+◎値 `length [0,∞]$t
+◎初 `0px^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 算出された `length$t
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+`overflow$p 用の `clip^v 値による効果は、他の値と違って，もっぱら要素の限界域の外側に何かを塗るのを防止する（他の値には、要素に対し様々な追加的な効果
+— ~scroll容器にして~scroll可能にするなど —
+がある）。
+`overflow-clip-margin$p ~propは、要素には［
+切取られる前に，限界域から`どこまで^em外側に塗ることが許容されるか
+］を精確に決定する。
+◎
+Unlike the scrollable overflow values, which have various additional effects on an element to make it a scroll container, overflow: clip solely has the effect of preventing an element from painting outside its bounds. The overflow-clip-margin property determines precisely how far outside its bounds the element is allowed to paint before being clipped.
+</p>
+
+<p>
+`~overflow切取n辺@
+は、初期~時には`~padding辺$に一致するが
+— 以下に定義されるように —
+`overflow-clip-margin$p により外方へ拡げれる。
+◎
+The overflow clip edge initially coincides with the padding edge, but can be expanded outwards by overflow-clip-margin, as defined below.
+</p>
+
+<p>
+値は、次に従って定義される：
+◎
+Values are defined as follows:
+</p>
+
+<dl class="valdef">
+	<dt id="valdef-overflow-clip-margin-length-0">`length [0,∞]$t</dt>
+	<dd>
+要素の `overflow$p は `clip^v でない場合（または、この~propを尊重するものと定義された別の~propは無い場合†）、この~propによる効果は無い。
+【† 特定的には、 `contain$p による`塗り封込め$は無い場合。】
+◎
+If the element does not have overflow: clip (or another property defined to respect this property), this property has no effect.
+</dd>
+	<dd>
+他の場合、指定された長さは［
+`~overflow切取n辺$が`~padding辺$から どこまで拡がるか
+］を規定する
+— `box-shadow$p が正な拡幅距離に因り~~拡がるのと正確に同じ仕方で（丸められた隅に対する効果も含め）。
+◎
+Otherwise, the specified length dictates how much the overflow clip edge is expanded from the padding edge, in exactly the same way as a box-shadow grows due to a positive spread distance (including the effect on rounded corners).＼
+</dd>
+	<dd>
+負な値は無効とする。
+◎
+Negative values are invalid.
+</dd>
+</dl>
+
+		</section>
+		<section id="overflow-propagation">
+<h3 title="Overflow Viewport Propagation">3.5. `overflow^p 値の表示域への伝播</h3>
+
+<p>
+~UAは、根~要素~上に設定されている `overflow-*$p 値を，表示域に適用するモノトスル。
+ただし，［
+根~要素は  `HTML$r `html$e 要素である（
+<a href="~HTMLLS/introduction.html#html-vs-xhtml">~HTML用の~XML構文</a>
+も含む）
+］~AND［
+根~要素~上の `overflow-*$p 値は両~軸とも `visible$v
+］~AND［
+`~HTML~body要素$ %body は在る
+］ならば、代わりに %body 上の `overflow-*^p 値を表示域に適用するモノトスル。
+この場合の %body 上の `overflow$p の使用~値は， `visible$v になるモノトスル。
+◎
+UAs must apply the overflow-* values set on the root element to the viewport. However, when the root element is an [HTML] html element (including XML syntax for HTML) whose overflow value is visible (in both axes), and that element has a body element as a child, user agents must instead apply the overflow-* values of the first such child element to the viewport. The element from which the value is propagated must then have a used overflow value of visible.
+</p>
+
+<p>
+ただし、要素の `overflow-*^p 値が表示域へ伝播するのは，要素が~boxを生成する場合に限られ、他の場合（例えば、根~要素の `display$p が `none^v の場合）は伝播しないとする。
+◎
+The overflow values are not propagated to the viewport if no boxes are generated for the element whose overflow values would be used for the viewport (for example, if the root element has display: none).
+</p>
+
+<p>
+値［
+`visible$v ／ `clip$v
+］は、表示域に適用される場合には［
+`auto$v ／ `hidden$v
+］として解釈するモノトスル。
+◎
+If visible is applied to the viewport, it must be interpreted as auto. If clip is applied to the viewport, it must be interpreted as hidden.
+</p>
+
+		</section>
+		<section id="logical">
+<h3 title="Flow Relative Properties: the overflow-block and overflow-inline properties">3.6. ~flowに相対的な~prop： `overflow-block^p, `overflow-inline^p</h3>
+
+<p>
+次に挙げる~propは、
+<a href="~CSSLOGICAL#box">~flowに相対的な~box~model~prop</a>
+に定義されるものと同じ処理~modelに則って処理される：
+◎
+The following properties are processed according to the same processing model as the Flow-Relative box model properties defined in CSS Logical Properties 1 §3 Flow-Relative Box Model Properties.
+</p>
+
+◎名 `overflow-inline@p, `overflow-block@p
+◎値 `overflow$tp
+◎初 `visible^v
+◎適 `overflow-x$p ／ `overflow-y$p と同じ
+◎
+Same as overflow-x and overflow-y
+◎継 されない
+◎百 受容しない
+◎算 `overflow-x$p ／ `overflow-y$p と同じ
+◎
+Same as overflow-x and overflow-y
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+これらの~propは、［
+`overflow-x$p ／ `overflow-y$p 
+］~propに対応する。
+その対応付けは、要素の `writing-mode$p に依存する。
+◎
+These properties correspond to the overflow-x and overflow-y properties. The mapping depends on the element’s writing-mode.
+</p>
+
+		</section>
+	</section>
+	<section id="auto-ellipsis">
+<h2 title="Automatic Ellipses">4. 自動的な省略符</h2>
+
+	<section id="text-overflow">
+<h3 title="Overflow Ellipsis: the text-overflow property">4.1. ~overflow時の省略符： `text-overflow^p ~prop</h3>
+
+<p class="trans-note">【
+省略符 — ellipsis （印刷用語でいう三点リーダなど）。
+】</p>
+
+◎名 `text-overflow@p
+◎値 `clip$v | `ellipsis$v
+◎初 `clip^v
+◎適 `塊~容器$
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+この~propは、［
+`行内~内容$が［
+その`塊~容器$要素の`行l~box$の終端~辺を，`行内~次元$において~overflowする
+］, かつ
+その塊の `overflow$p は `visible$v でない
+］ときの描画を指定する。
+◎
+This property specifies rendering when inline content overflows its end line box edge in the inline progression direction of its block container element ("the block") that has overflow other than visible.
+</p>
+
+<p>
+~textは、例えば折返ngが禁則されるとき（例えば， `white-space^p に対する `nowrap^v や, 一行分を超える長さの 単独の単語に因り），~overflowし得る。
+各種 値の意味は：
+◎
+Text can overflow for example when it is prevented from wrapping (e.g. due to white-space: nowrap or a single word is too long to fit). Values have the following meanings:
+</p>
+
+<dl class="valuedef">
+	<dt>`clip@v （単に切取る）</dt>
+	<dd>
+`行内~内容$がその`塊~容器$要素を~overflowする部分は、切取る。
+文字~並びは、部分的に描画されてもヨイ。
+◎
+Clip inline content that overflows its block container element. Characters may be only partially rendered.
+</dd>
+
+	<dt>`ellipsis@v （~UA の既定の省略符）</dt>
+	<dd>
+ellipsis 文字（ ~U2026 ）を描画して，`行内~内容$が切取られたことを表現する。
+実装は、［［
+言語／用字系／書字mode
+］に より適切な省略符
+］, あるいは［
+ellipsis 文字を可用にできないときは 3 個の~dot "..."
+］で代用してもヨイ。
+◎
+Render an ellipsis character (U+2026) to represent clipped inline content. Implementations may substitute a more language, script, or writing-mode appropriate ellipsis character, or three dots "..." if the ellipsis character is unavailable.
+</dd>
+	<dd class="trans-note">【
+以下に現れる語
+`省略符@
+（ ellipsis ）は、~UAがこの値に対し実際に描画する文字（たち）を指す（ ~U2026 に限られない）。
+】</dd>
+</dl>
+
+<p>
+読み易くするため、この~prop定義においては，用語 “文字” が利用される
+— 実装の目的においては、 “書記素~cluster” `UAX29$r を意味する。
+◎
+The term "character" is used in this property definition for better readability and means "grapheme cluster" [UAX29] for implementation purposes.
+</p>
+
+<p>
+`ellipsis$v 値に対しては、実装は，行lの終端~辺の所の［
+文字／`不可分な行内~level$の要素
+］を，`省略符$を収めるに必要な分だけ隠した上で、隠されずに残った行内~内容の終端~辺に，`省略符$を配置するモノトスル。
+ただし、行l上の最初の［
+文字／`不可分な行内~level$の要素
+］まで隠れることになる場合は、省略化せず `clip$v と同じにふるまうモノトスル。
+◎
+For the ellipsis value implementations must hide characters and atomic inline-level elements at the end edge of the line as necessary to fit the ellipsis, and place the ellipsis immediately adjacent to the end edge of the remaining inline content. The first character or atomic inline-level element on a line must be clipped rather than ellipsed.
+</p>
+
+
+			<section id="bidi-ellipsis">
+<h4 title="Bidi ellipsis examples">双向~省略符の例</h4>
+
+<div class="example">
+
+<p>
+双向~状況において，省略符~用の部屋を作るとき どの文字が隠されるかを、次にデモる
+— それらは、視覚的に行lの終端~辺に来る：
+◎
+These examples demonstrate which characters get hidden to make room for the ellipsis in a bidi situation: those visually at the end edge of the line.
+</p>
+
+<p>
+見本~CSS：
+◎
+Sample CSS:
+</p>
+
+<pre class="lang-css">
+div {
+  font-family: monospace;
+  white-space: pre;
+  overflow: hidden;
+  width: 9ch;
+  text-overflow: ellipsis;
+}
+</pre>
+
+<p>
+見本~HTML片と，基準~描画, 現~browserによる描画：
+◎
+Sample HTML fragments, renderings, and your browser:
+◎
+HTML｜Reference rendering｜Your Browser 
+</p>
+
+<table><thead>
+<tr><th>~HTML
+</th><th>基準~描画
+</th><th>現~browser
+</th></tr></thead><tbody>
+
+<tr><td>`&lt;div&gt;שלום 123456&lt;/div&gt;^c
+</td><td>
+
+<div style="font-family:monospace">123456 ם…</div>
+</td><td>
+
+<div style="font-family: monospace; white-space: pre; overflow: hidden; width: 9ch; text-overflow: ellipsis">שלום 123456</div>
+</td></tr>
+
+<tr><td>`&lt;div dir=rtl&gt;שלום 123456&lt;/div&gt;^c
+</td><td>
+
+<div style="font-family:monospace">…456 שלום</div>
+</td><td>
+<div dir="rtl" style="font-family: monospace; white-space: pre; overflow: hidden; width: 9ch; text-overflow: ellipsis">שלום 123456</div>
+</td></tr></tbody></table>
+
+</div>
+
+			</section>
+			<section id="ellipsing-details">
+<h4 title="ellipsing details">省略化の詳細</h4>
+
+<ul>
+	<li>
+省略化が影響するのは、描画のみであり，~layoutにも~pointer~eventの配送-法にも影響しないモノトスル。
+~UAは、省略符~上の~pointer~eventも
+— `text-overflow$p が `none^v であったときと同じく —
+~textが省かれた要素へ向けて配送するベキである。
+◎
+Ellipsing only affects rendering and must not affect layout nor dispatching of pointer events: The UA should dispatch any pointer event on the ellipsis to the elided element, as if text-overflow had been none.
+</li>
+	<li>
+省略符は、塊に則って~styleされ，基底線に整列される。
+◎
+The ellipsis is styled and baseline-aligned according to the block.
+</li>
+	<li>
+省略化が生じるのは、相対的~位置決めや 他の~graphicな変形nの後とする。
+◎
+Ellipsing occurs after relative positioning and other graphical transformations.
+</li>
+	<li>
+省略符~用の空間が足りない場合、省略符~自身の描画を切取る（ `clip$v 値が指定されていたときに，行l上の中立的~文字†が切取られる所と同じ側で）。
+【†中立的（ neutral ）：ハイフンなど，双向性に関して中立的な文字（ Unicode 仕様に定義される）。】
+◎
+If there is insufficient space for the ellipsis, then clip the rendering of the ellipsis itself (on the same side that neutral characters on the line would have otherwise been clipped with the text-overflow:clip value).
+</li>
+</ul>
+
+			</section>
+			<section id="ellipsis-interaction">
+<h4 title="user interaction with ellipsis">利用者による省略符とのヤリトリ</h4>
+
+<ul>
+	<li>
+利用者が内容とヤリトリする所（例： 編集-／選択-／~scrollするような所）では、~UAは
+`text-overflow$p に対する `ellipsis$v を `clip$v として扱ってもヨイ。
+◎
+When the user is interacting with content (e.g. editing, selecting, scrolling), the user agent may treat text-overflow: ellipsis as text-overflow: clip.
+</li>
+	<li>
+`省略符$を選択する際には、省略化された~textが選択されるベキである。
+省略化された~textすべてが選択された場合、~UAは，省略符の選択を示すベキである。
+省略化された~textが部分的に選択された場合の挙動は、~UAに委ねられる。
+◎
+Selecting the ellipsis should select the ellipsed text. If all of the ellipsed text is selected, UAs should show selection of the ellipsis. Behavior of partially-selected ellipsed text is up to the UA.
+</li>
+</ul>
+
+
+<div class="example" id="text-overflow-examples">
+
+<p>
+以下の各~例に、［
+内容~textが~overflowするような，`塊~容器$要素
+］に対する `text-overflow$p の設定をデモる。
+◎
+text-overflow examples
+◎
+These examples demonstrate setting the text-overflow of a block container element that has text which overflows its dimensions:
+</p>
+
+<p>
+`div^e 用の見本~CSS：
+◎
+sample CSS for a div:
+</p>
+
+<pre class="lang-css">
+div {
+  font-family: Helvetica, sans-serif;
+  line-height: 1.1;
+  width: 3.1em;
+  padding: 0.2em;
+  border: solid .1em black;
+  margin:1em 0;
+  overflow: hidden;<!-- ＊追加 -->
+}
+</pre>
+
+<p>
+◎
+sample HTML fragments, renderings, and your browser:
+</p>
+
+<table id="_overflow-ellipsis-sample">
+
+<thead><tr><th>見本~HTML素片
+<th>
+描画~見本
+◎
+sample rendering
+<th>
+利用中の~browserによる呈示
+◎
+your browser
+</thead><tbody>
+
+<tr><td><pre class="lang-html">
+&lt;div style="<mark>overflow:visible;</mark>"&gt;
+CSS IS AWESOME, YES
+&lt;/div&gt;
+</pre>
+<td>`cssisawesome^dgm
+
+<td>
+<x-text-overflow style="overflow:visible"
+>CSS IS AWESOME, YES</x-text-overflow>
+
+<tr><td><pre class="lang-html">
+&lt;div style="<mark>text-overflow:clip;</mark>"&gt;
+CSS IS AWESOME, YES
+&lt;/div&gt;
+</pre>
+<td>`cssisaweso^dgm
+<td>
+<x-text-overflow style="text-overflow:clip"
+>CSS IS AWESOME, YES</x-text-overflow>
+
+<tr><td><pre class="lang-html">
+&lt;div style="<mark>text-overflow:ellipsis;</mark>"&gt;
+CSS IS AWESOME, YES
+&lt;/div&gt;
+</pre>
+<td>`cssisaw^dgm
+<td>
+<x-text-overflow style="text-overflow:ellipsis"
+>CSS IS AWESOME, YES</x-text-overflow>
+
+<tr><td><pre class="lang-html">
+&lt;div style="<mark>text-overflow:ellipsis;</mark>"&gt;
+NESTED
+&lt;p style="margin:1em 0;"&gt;PARAGRAPH&lt;/p&gt;
+WON’T ELLIPSE.
+&lt;/div&gt;
+</pre>
+<td>`nes^dgm
+<td>
+<x-text-overflow style="text-overflow:ellipsis"
+>NESTED <p style="margin:1em 0;">PARAGRAPH</p> WON’T ELLIPSE.</x-text-overflow>
+
+</tbody></table>
+
+</div>
+
+<p class="note">注記：
+省略符が行lのどちら側に配置されるかは、塊の `direction$p に依存する。
+例えば、塊の `overflow$p が `hidden^v にされていて, 右横書き ( `direction$p は `rtl^v ）の場合、行内~内容を `左端^em 側で切取るので、
+`text-overflow$p による省略符を `左端^em上に配置して，切取られた内容を表現することになる。
+◎
+Note: the side of the line that the ellipsis is placed depends on the direction of the block. E.g. an overflow hidden right-to-left (direction: rtl) block clips inline content on the left side, thus would place a text-overflow ellipsis on the left to represent that clipped content.
+</p>
+
+			</section>
+			<section id="ellipsis-scrolling">
+<h4 title="ellipsis interaction with scrolling interfaces">省略符と~scroll用~UIとの相互作用</h4>
+
+<p>
+この節は、
+`text-overflow$p は `clip$v 以外に指定され, かつ
+`overflow$p は `scroll^v にされた要素に適用される。
+◎
+This section applies to elements with text-overflow other than text-overflow:clip (non-clip text-overflow) and overflow:scroll.
+</p>
+
+<p>
+要素~上の `text-overflow$p が `clip^v でない, かつ
+`overflow$p は`行内~次元$において `scroll^v にされていて，~browserが~scroll用の仕組みを供するとき（例： 要素~上の~scrollbarや, ~swipe-scroll用の~touch~UI, 等々）、実装において より良い利用者~体験を供する追加的な詳細がある：
+◎
+When an element with non-clip text-overflow has overflow of scroll in the inline progression dimension of the text, and the browser provides a mechanism for scrolling (e.g. a scrollbar on the element, or a touch interface to swipe-scroll, etc.), there are additional implementation details that provide a better user experience:
+</p>
+
+<p>
+要素が~scrollされるとき（例： 利用者により, または~DOM操作により），要素の更なる内容が示される。
+`text-overflow$p の値は、そのふるまいに影響するベキでない：
+`text-overflow$p が `clip^v 以外に設定された場合、実装は，~viewの中に更なる内容が~scrollされるに伴い、追加的な内容が何であれ，それを収めるように示すベキである
+— ［
+`clip^v であったなら切取られるような内容, および `省略符$に必要な分
+］のみ切落して、また，内容の~~終端まで表示できる程 十分に要素が~scrollされたときは，`省略符$を表示する代わりに その部分の内容を表示するベキである。
+◎
+When an element is scrolled (e.g. by the user, DOM manipulation), more of the element’s content is shown. The value of text-overflow should not affect whether more of the element’s content is shown or not. If a non-clip text-overflow is set, then as more content is scrolled into view, implementations should show whatever additional content fits, only truncating content which would otherwise be clipped (or is necessary to make room for the ellipsis/string), until the element is scrolled far enough to display the edge of the content at which point that content should be displayed rather than an ellipsis/string.
+</p>
+
+<div class="example">
+
+<p>
+次の例は、上述の挙動をデモるために，
+`overflow$p が `scroll^v にされた要素~上で `text-overflow$p を利用する。
+◎
+This example uses text-overflow on an element with overflow scroll to demonstrate the above described behavior.
+</p>
+
+
+<p>
+見本~CSS：
+◎
+sample CSS:
+</p>
+
+
+<pre class="lang-css">
+div.crawlbar {
+  text-overflow: ellipsis;
+  height: 2.5em;<!-- 2em; -->
+  overflow: scroll;
+  white-space: nowrap;
+  width: 15em;
+  border:1em solid black;
+}
+</pre>
+
+
+<p>
+見本~HTML素片：
+◎
+sample HTML fragment:
+</p>
+
+<pre class="lang-html">
+&lt;div class="crawlbar"&gt;
+CSS is awesome, especially when you can scroll
+to see extra text instead of just
+having it overlap other text by default.
+&lt;/div&gt;
+</pre>
+
+
+<p>
+見本~CSS／~HTMLのデモ：
+◎
+demonstration of sample CSS and HTML:
+</p>
+
+<div style="text-overflow: ellipsis; height: 2.5em; overflow: scroll; white-space: nowrap; width: 15em; border:1em solid black;">
+CSS is awesome, especially when you can scroll
+to see extra text instead of just
+having it overlap other text by default.
+</div>
+</div>
+
+<p>
+内容が~scrollされている間、実装は，`省略符$の描画を調整してもヨイ（例：行lの辺ではなく，~boxの辺に整列するなど）。
+◎
+While the content is being scrolled, implementations may adjust their rendering of ellipses (e.g. align to the box edge rather than line edge).
+</p>
+
+			</section>
+		</section>
+		<section id="block-ellipsis">
+<h3 title="Indicating Block-Axis Overflow: the block-ellipsis property">4.2. 塊-軸~overflowの指示-法： `block-ellipsis^p ~prop</h3>
+
+◎名 `block-ellipsis@p
+◎値 `none$v | `auto$v | `string$t
+◎初 `none$v
+◎適 `塊~容器$
+◎継 される
+◎百 受容しない
+◎算 指定d値
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+この~propは、（強制dか非強制かを問わず）`領域~分断$より前にある最後の`行l~box$の中へ
+— ［
+切落された／中断された
+］内容の継続性を指示するため —
+内容を挿入できるようにする。
+影響するのは，`塊~容器$自身に直に包含されている行l~boxに限られるが、継承されるので，上書きされない限り 子孫の行l~boxにも効果がある。
+当の~boxが`領域~分断$の直前に行l~boxを包含しない場合、この~propによる効果は無い。
+◎
+This property allows inserting content into the last line box before a (forced or unforced) region break to indicate the continuity of truncated/interrupted content. It only affects line boxes contained directly by the block container itself, but as it inherits, will have an effect on descendants’ line boxes unless overridden. If the box contains no line box immediately preceding a region break, then this property has no effect.
+</p>
+
+<p class="note">注記：
+そのような`領域~分断$で~boxを生成する仕方については、
+<a href="#fragmentation">§ ~overflowの断片化-法</a>
+を見よ。
+◎
+Note: See §5 Fragmenting Overflow for a way to generate boxes with such a region break.
+</p>
+
+<p class="issue">
+これは、他の型の断片化~分断（例：~page ／ 柱）にも適用されるべきか？
+◎
+Should this apply to other types of fragmentation breaks (e.g. pages, columns)?
+</p>
+
+<p>
+挿入される内容は、
+`塊~overflow省略符@
+と呼ばれる。
+各種 値の意味は：
+◎
+The inserted content is called the block overflow ellipsis. Values have the following meanings:
+</p>
+
+<dl>
+	<dt>`none@v</dt>
+	<dd>
+描画は影響されない。
+◎
+The rendering is unaffected.
+</dd>
+
+	<dt>`auto@v</dt>
+	<dd>
+［
+~U2026 （ `ellipsis^en, “~~省略符” ）, または
+~typographic的により適切な等価なもの
+］を，影響される`行l~box$の終端に`塊~overflow省略符$として描画する。
+~UAは、［
+`内容~言語$／書記体系／`書字mode$
+］の規約を利用して，省略符を表す最も適切な文字列を決定するベキである。
+◎
+Render an ellipsis character (U+2026)—or a more typographically-appropriate equivalent—as the block overflow ellipsis at the end of the affected line box. UAs should use the conventions of the content language, writing system, and writing mode to determine the most appropriate ellipsis string.
+</dd>
+
+	<dt id="valdef-block-ellipsis-string">`string$t</dt>
+	<dd>
+`塊~overflow省略符$として指定された文字列を，影響される`行l~box$の終端に描画する。
+~UAは、この文字列が無為に長い場合には，切落してもヨイ。
+◎
+Render the specified string as the block overflow ellipsis at the end of the affected line box. The UA may truncate this string if it is absurdly long.
+</dd>
+</dl>
+
+<p>
+`block-ellipsis$p は `none$v でないときには、`塊~overflow省略符$
+— 以下，この節を通して単に %省略符 と記す —
+は，［
+匿名~行内~box %~box に包装された上で，`行l~box$の終端に［
+当の`塊~容器$の`根~行内~box$の直な子
+］として配置される
+］
+— 行l~box内の他の内容に可用な空間は減らした上で。
+%~box は、その［
+`unicode-bidi$p に `plaintext^v,
+`line-height$p に `0^v
+］がアテガわれた上で，行l~box内の`自動折返し機会$（ `CSS-TEXT-3$r を見よ）のうち［
+%省略符 全体が当の行lに収まることになる
+］ような最後のものの直後に配置される。
+この目的においては、 `overflow-wrap$p により追加される`自動折返し機会$は無視される。
+その結果，当の行l~boxの内容~全体が %省略符 にすり替えられた場合、行l~boxは［
+`CSS2$r に定義される`支柱$【！§10.8.1 Leading and half-leading】
+］を包含するものと見なされる。
+配置した後には、~textの<a href="~CSSTEXT#justification">整列と両端揃え</a>が生じ，挿入された %省略符 と 行lの残りの内容とを一緒に測定する。
+◎
+When block-ellipsis is not none, the block overflow ellipsis string is wrapped in an anonymous inline and placed at the end of the line box as a direct child of the block container’s root inline box, reducing the space in the line box available to the other contents of the line. This inline is assigned unicode-bidi: plaintext and line-height: 0 and is placed in the line box after the last soft wrap opportunity (see [CSS-TEXT-3]) that would still allow the entire block overflow ellipsis to fit on the line. For this purpose, soft wrap opportunities added by overflow-wrap are ignored. If this results in the entire contents of the line box being displaced, the line box is considered to contain a strut, as defined in CSS 2.2 §10.8.1 Leading and half-leading. Text alignment and justification occurs after placement, and measures the inserted block overflow ellipsis together with the rest of the line’s content.
+</p>
+
+<p class="note">注記：
+%省略符 の `line-height$p を `0^v に設定するのは、挿入されても，行l高さ（塊~size）は~~拡がらなくするためである
+— さもなければ、~lay-outし直す~~連鎖が生じ得る。
+これは、 %省略符 を塗り時の演算として挿入することに，ほぼ等価になる
+— 依然として，整列と両端揃えには関与することを除いて。
+~~負の~~側面として、［
+%省略符 内の，行lの上／下へ普通以上に突き出る~glyph
+］は，~overflowし得るが。
+◎
+Note: Setting the block overflow ellipsis's line-height to 0 makes sure that inserting it cannot cause the line’s height to grow, which could cause further relayouts and potentially cycles. This is almost equivalent to inserting the block overflow ellipsis as a paint-time operation, except that it still participates in alignment and justification. The downside is that unusually tall / deep glyphs in the block overflow ellipsis may overflow.
+</p>
+
+<p>
+%省略符 は［
+`first-letter$pe ／ `first-line$pe
+］疑似要素には含まれないモノトスル。
+◎
+The block overflow ellipsis must not be included in either the ::first-letter nor the ::first-line pseudo-elements.
+</p>
+
+<p>
+当の`断片化~文脈$内に，後続の内容を受取るような後続の`断片化~容器$がある場合、
+%省略符 にすり替えられた内容は，その`断片化~容器$へ押出されるモノトスル。
+◎
+If there is a subsequent fragmentation container in the fragmentation context that would receive subsequent content, then the content displaced by the block overflow ellipsis must be pushed to that fragmentation container.
+</p>
+
+<p>
+~UAは %省略符 を分断-不能な文字列として扱うモノトスル。
+%省略符 は、~overflowの一部を成す場合には`~scroll可能な~overflow$として扱われ，その描画は `text-overflow$p ~propにより影響される。
+◎
+The UA must treat the block overflow ellipsis as an unbreakable string, If any part of the block overflow ellipsis overflows, it is treated as scrollable overflow, and its rendering is affected by the text-overflow property.
+</p>
+
+<p>
+%省略符 は、~eventを捕捉しない
+— どの~pointer~eventも，その奥にあるものへ配送される。
+◎
+The block overflow ellipsis does not capture events: pointer events are dispatched to whatever is underneath it.
+</p>
+
+<p>
+%省略符 による~boxの内在的~sizeに対する効果は無い
+— ~boxの［
+`最小-内容~size$,
+`最大-内容~size$
+］は、 `block-ellipsis$p は `none$v であったかのように計算される。
+◎
+It also has no effect on the intrinsic size of the box: its min-content and max-content sizes are calculated exactly as if block-ellipsis were none.
+</p>
+
+
+<p class="note">注記：
+将来の仕様は、この特能を拡張し得る。
+例えば， `ellipsis^pe 疑似要素を供して，当の~textを~styleできるようにしたり、塊の子~要素の選択を許容する［
+行内~level／塊~level
+］指示子として利用するために（その事例では、~eventを捕捉できる）。
+◎
+Note: Future specifications may extend this feature, for example by providing an ::ellipsis pseudo-element to style the text, or by allowing the selection of a child element of the block to use as either an inline-level or block-level indicator (in which case, it can capture events).
+</p>
+
+		</section>
+	</section>
+	<section id="fragmentation">
+<h2 title="Fragmenting Overflow">5. ~overflowの断片化-法</h2>
+		<section id="line-clamp">
+<h3 title="Limiting Visible Lines: the line-clamp shorthand property">5.1. 可視になる行l数の制限-法： `line-clamp^p 略式~prop</h3>
+
+◎名 `line-clamp@p
+◎値 `none^v | `integer$t `block-ellipsis$tp?
+◎初 `none^v
+◎適 個々の~propを見よ
+◎継 個々の~propを見よ
+◎百 受容しない
+◎算 個々の~propを見よ
+◎順 文法に従う
+◎ア 個々の~propを見よ
+◎表終
+
+<p>
+`line-clamp$p ~propは、［
+`max-lines$p,
+`block-ellipsis$p,
+`continue$p
+］~prop用の`略式~prop$である。
+◎
+The line-clamp property is a shorthand for the max-lines, block-ellipsis, and continue properties.
+</p>
+
+<p class="issue">
+試験的な実装には，この略式とその下位propにより定義される全部的な挙動に従うことが奨励されるが、今の所，作者には略式~propのみが公開される。
+これは、もっと調製の余地を残しておくためである
+— 特に、下位propやその値は改称され得る。
+◎
+For the time being, experiemental implementations are encouraged to follow the full behavior defined by this shorthand and its longhands, but to only expose the shorthand to authors. This is in order to facilitate further tweaking, and in particular potential renaming, of the longhand properties and their values.
+</p>
+
+<p>
+この~propは、塊~容器の内容を指定された行l数に制限できるようにする。
+残りの内容は外へ断片化され、描画されなくなる／測定されなくなる。
+また，任意選択で、最後の`行l~box$の中へ内容を挿入して，［
+切落された／中断された
+］内容の継続性を指示できるようにする。
+◎
+It allows limiting the contents of a block container to the specified number of lines; remaining content is fragmented away and neither rendered nor measured. Optionally, it also allows inserting content into the last line box to indicate the continuity of truncated/interrupted content.
+</p>
+
+<p>
+各種~下位propは、指定された値に応じて次の表に与える値に設定される：
+◎
+The values have the following meaning:
+</p>
+
+<div>
+<table><thead><tr><th scope="row">指定された値
+<th>`none@v
+<th>`integer$t
+</thead><tbody>
+
+<tr><th>`max-lines$p
+<td>`none^v
+<td>指定された `integer$t
+
+<tr><th>`continue$p
+<td>`auto^v
+<td>`discard^v
+
+<tr><th>`block-ellipsis$p
+<td>`none^v
+<td>指定された値を成す 2 個目の成分が在れば それ ／ 無ければ `auto^v
+
+</tbody></table>
+
+◎
+none
+• Sets max-lines to none, continue to auto, and block-ellipsis to none.
+&lt;integer&gt;
+• Sets max-lines to the specified &lt;integer&gt;, continue to discard, and the block-ellipsis property to second component of the value or to auto if omitted.
+</div>
+
+<p>
+この仕組みがどう演算するかの詳細は、対応する各種~下位propを見よ。
+◎
+See the corresponding longhand properties for details about how this mechanism operates.
+</p>
+
+<div class="example">
+
+<p>
+次の例では、各~記事の頭部にある段落は、短くされた~menu内に挙げられ，
+“… （続きを読む）”
+で終端する 5 行lの中に収まるよう切落される：
+◎
+In this example, the lead paragraph of each article is listed in a shortened menu, truncated to fit within 10 lines that end with “… (continued on next page)”:
+</p>
+
+<pre class="lang-css">
+li {
+  line-clamp: 5 "…（続きを読む）";
+}
+strong {
+  display: block;
+  text-transform: uppercase;
+}
+</pre>
+
+
+<pre class="lang-css">
+&lt;li&gt;&lt;a href="arch-effect"&gt;アンチアーティキュレーテッドバイラテラルスペキュレイティブクラスタスレッディンググリッドコンピューティングボッタクリアーキテクチャには、リレーショナルディストリビューテッドシンジケーションフィードバックシナジーコテンパンエフェクトがあります。&lt;/a&gt;&lt;/li&gt;
+</pre>
+
+<p>
+見本~描画：
+◎
+Sample rendering:
+</p>
+
+<figure>
+<div style="display: inline-block; white-space: pre; border: solid black 1px;"
+>アンチアーティキュレーテッドバイラテラル
+スペキュレイティブクラスタスレッディング
+グリッドコンピューティングボッタクリアー
+キテクチャには、リレーショナルディストリ
+ビューテッドシンジケーシ…（続きを読む）
+</div></figure>
+
+</div>
+
+			<section id="webkit-line-clamp">
+<h4 title="Legacy compatibility">5.1.1. 旧来のものとの互換性</h4>
+
+<p>
+旧来の内容との互換性を得るため、
+`line-clamp$p を~supportする~UAは，
+`-webkit-line-clamp@p
+~propも~supportするモノトスル。
+それは， `line-clamp^p と同様に［
+`max-lines$p,
+`continue$p,
+`block-ellipsis$p
+］用の略式である
+— ただし：
+◎
+For compatibility with legacy content, UAs that support line-clamp must also support the -webkit-line-clamp property. Like line-clamp, it is a shorthand of max-lines, continue, and block-ellipsis, except that:
+</p>
+
+
+<ul>
+	<li>
+その構文は
+`line-clamp^p0
+⇒
+<code class="prod">`none$v | `integer$t</code>
+◎
+its syntax is none | &lt;integer&gt;
+</li>
+	<li>
+`continue^p0
+`continue$p に対する `discard$v は，代わりに `-webkit-discard$v に設定される。
+◎
+it sets continue to -webkit-discard instead of discard
+</li>
+	<li>
+`block-ellipsis^p0
+`block-ellipsis$p は、無条件に `auto$v に設定される。
+◎
+it unconditionally sets block-ellipsis to auto
+</li>
+</ul>
+
+<p>
+加えて，~boxの子（匿名な子も含む）のうち， `display$p ~propは［
+`-webkit-box^v ／ `-webkit-inline-box^v
+］に算出されるものは、その［
+`max-lines$p ／ `continue$p ／ `block-ellipsis$p
+］~propの使用~値は親~boxの算出d値からとられ，~box自身のこれらの~propの算出d値は無視される。
+◎
+Additionally, for children (including anonymous children) of boxes whose display property computes to -webkit-box or -webkit-inline-box, the used values of the max-lines, continue, and block-ellipsis properties are taken from the computed values of the parent box; the computed values of these properties on the box itself are ignored.
+</p>
+
+<p>
+`continue^p0
+値
+`-webkit-discard@v
+による挙動は、
+`discard$v に一致する
+— ただし，効果があるのは、親~上の `display$p ~propの算出d値は［
+`-webkit-box^v ／ `-webkit-inline-box^v
+］かつ［
+親~上の `-webkit-box-orient^p ~propの算出d値は `vertical^v
+］のときに限られる。
+◎
+The -webkit-discard value behaves identically to discard, except that it only takes effect if the computed value of the display property on the parent is -webkit-box or -webkit-inline-box and the computed value of the -webkit-box-orient property on the parent is vertical.
+</p>
+
+
+<p class="note">注記：
+旧来の `-webkit-line-clamp$p ~propの各~実装は、ここに指定された挙動と一致していなかった。
+歴史的な挙動は、例えば
+<a href="https://medium.com/mofed/css-line-clamp-the-good-the-bad-and-the-straight-up-broken-865413f16e5">この~blog-post</a>
+に文書化されているように，風変わりで堅牢とは言えない。
+現在の設計は、その早期の実験による過ちから学んで，既存の内容と互換に足るものと意図されている
+— 最終的に、各~実装が ここに指定された挙動に従うよう変更され得るような。
+更なる調整が必要とされることが見出された場合、この仕様に組入れられることになる。
+作者は、それまでは，不一致があり得ることに自覚するベキである。
+◎
+Note: Implementations of the legacy -webkit-line-clamp property have not behaved identically to what is specified here. The historical behavior is quirky and less robust, as documented for example in this blog post. The current design learns from the mistakes of that early experiment, and is intended to be sufficiently compatible with existing content that implementations can eventually be changed to follow to the specified behavior. If further adjustments are found to be necessary, they will be incorporated to this specification. In the meanwhile, authors should be aware that there may be discrepancies.
+</p>
+
+			</section>
+		</section>
+		<section id="max-lines">
+<h3 title="Forcing a Break After a Set Number of Lines: the max-lines property: the max-lines property">5.2. 設定した行l数~後に分断を強制する： `max-lines^p ~prop</h3>
+
+◎名 `max-lines@p
+◎値 `none$v | `integer$t
+◎初 `none$v
+◎適 `塊~容器$のうち，`領域~分断$を捉える`断片化~容器$であるもの
+◎
+block containers which are also fragmentation containers that capture region breaks
+◎継 されない
+◎百 受容しない
+◎算 ~keyword `none$v あるいは整数
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+この~propによる効果は、［
+`領域~分断$を捉える`断片化~容器$
+］でないものに対しては，無い。
+◎
+This property has no effect on boxes that are not fragmentation containers that capture region breaks.
+</p>
+
+<p>
+他の塊~容器に対しては，
+`max-lines$p の指定d値 %N が
+`none@v
+でないならば、`~flow内$にある`行l~box$のうち %N 個目の子孫の後に，`領域~分断$が強制される。
+ここでは、同じ`塊~整形~文脈$内にある行l~boxのみが数えられる
+— `独立な整形~文脈を確立-$するものを成す内容は、数えることなく飛ばされる。
+◎
+Otherwise, if the value of max-lines is not none, a region break is forced after its Nth descendant in-flow line box, where N is the specified value of max-lines. Only lines boxes in the same Block Formatting Context are counted: the contents of descendants that establish independent formatting contexts are skipped over while counting line boxes.
+</p>
+
+<p>
+存在する`行l~box$の個数 ~LT %N の場合、 `max-lines$p による`領域~分断$は導入されない。
+◎
+If fewer than N line boxes exist, then max-lines introduces no region break.
+</p>
+
+<div class="example">
+
+<p>
+`continue$p は要素に`独立な整形~文脈を確立-$させることはないので、入子にされた［
+`line-clamp$p を伴う要素
+］内の行lたちは数えられる
+— 下の例に見れるように：
+◎
+As continue: discard does not cause the element to establish an independent formatting context, lines in a nested element with line-clamp are counted, as can be seen in the examples below.
+</p>
+
+
+<pre class="lang-html">
+&lt;div id=a&gt;
+  a: line 1&lt;br&gt;
+  a: line 2&lt;br&gt;
+  &lt;div id=b&gt;
+    b: line 1&lt;br&gt;
+    b: line 2&lt;br&gt;
+    b: line 3&lt;br&gt;
+    b: line 4&lt;br&gt;
+  &lt;/div&gt;
+  a: line 3&lt;br&gt;
+  a: line 4&lt;br&gt;
+&lt;/div&gt;
+</pre>
+
+<p>
+`#a { line-clamp: 5; } #b { line-clamp: 2; }^css
+が与えられたときの見本~描画
+◎
+Sample rendering given #a { line-clamp: 5; } #b { line-clamp: 2; }:
+</p>
+
+<pre class="presentation">
+a: line 1
+a: line 2
+b: line 1
+b: line 2…
+a: line 3…
+</pre>
+
+<p>
+`#a { line-clamp: 3; } #b { line-clamp: 2; }^css
+が与えられたときの見本~描画：
+◎
+Sample rendering given #a { line-clamp: 3; } #b { line-clamp: 2; }:
+</p>
+
+
+<pre class="presentation">
+a: line 1
+a: line 2
+b: line 1…
+</pre>
+
+<p>
+2 個目の事例では、要素 `#b^css 上に設定された最大~行l数 2 は，効果を発揮しないことに注意
+— この要素の 2 行l目の前に強制d分断が導入されるので。
+◎
+Note that in the second case, the maximum of 2 lines set on element #b does not take effect, since a forced break is introduced before the second line of this element.
+</p>
+
+</div>
+
+<p class="note">注記：
+このことは、 `max-lines$p は，`複柱~容器$に適用されるときには効果が無いことを含意する
+— それが包含する`行l~box$は，どれも`独立な整形~文脈$の中に入子にされるので。
+◎
+Note: This implies that max-lines has no effect when applied to multi-column containers, since any line box they contain are nested into independent formatting contexts.
+</p>
+
+<p>
+受容するのは正な整数に限られる。
+0 以下の整数は無効になり、当の宣言は`無視され$るモノトスル。
+◎
+Only positive integers are accepted. Zero or negative integers are invalid and must cause the declaration to be ignored.
+</p>
+
+<p class="note">注記：
+［
+`widows$p ／ `orphans$p ／ `break-inside$p
+］~propは、［
+`max-lines$p ~propにより導入される，強制d`領域~分断$
+］の位置には影響しない。
+◎
+Note: The widows, orphans, and break-inside properties do not affect the position of the forced region break introduced by the max-lines property.
+</p>
+
+<div class="note">
+
+<p>注記：
+“領域~分断（
+<a href="~CSSBREAK#region-break">`region break^en</a>
+）”
+と命名されているが、これは `CSS-REGIONS-1$r に依存するものではない。
+この “領域” は、強制d分断を次の 3 種に分類するために限り利用される
+⇒＃
+“~page分断” （何~pageかに分断する `css-page-3$r ）,
+“柱~分断”（複柱~layoutにて何~柱かに分断する `css-multicol-1$r ）,
+“`領域~分断@” （~CSSに起因する他の種類の`断片化~容器$を分断する）
+◎
+Note: Despite the “region break” name, this is not a dependency on [CSS-REGIONS-1]. The word “region” is only used as a classifier for forced breaks: they can be “page breaks” (breaks across pages [css-page-3]), “column breaks” (breaks across multi-column layout columns [css-multicol-1]), or “region breaks” (breaks across any other kind of CSS-induced fragmentation containers).
+</p>
+
+<p>
+`CSS-REGIONS-1$r も `CSS-OVERFLOW-4^r の
+<a href="~TR/css-overflow-4/#fragmentation">§ ~overflowの断片化</a>
+も~supportしない実装にとっては、その種類の分断に出くわすことはなく，これは追加になる。
+しかしながら，この追加が `CSS-REGIONS-1^r の機能性を持ち出す必要を孕むことはない。
+必要になるのは、次ですべてになる：
+◎
+If an implementation supports neither [CSS-REGIONS-1] nor CSS Overflow 4 §5 Fragmentation of overflow, then it will have had no occasion yet to run into that kind of breaks, and this will be an addition. However the addition does not involve bringing over any of the [CSS-REGIONS-1] functionality. All that is needed is:
+</p>
+
+<ul>
+	<li>
+断片化-可能である。
+◎
+be able to fragment
+</li>
+	<li>
+強制d分断の目的において、これらの断片化~容器を “第三の類” （すなわち、~pageでも複柱でもない）に分類する。
+◎
+classify these fragmentation containers as "category 3" (i.e. not pages nor multicol) for the purpose of forced breaks.
+</li>
+</ul>
+
+</div>
+
+		</section>
+		<section id="continue">
+<h3 title="Fragmentation of Overflow: the continue property">5.3. ~overflowの断片化： `continue^p ~prop</h3>
+
+◎名 `continue@p
+◎値 `auto$v | `discard$v
+◎初 `auto$v
+◎適 `塊~容器$, `複柱~容器$
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+
+<p>
+`continue$p ~propは、~boxを`断片化~容器$に転化して（ `CSS-BREAK-3$r を見よ），`断片化~分断$の後にある内容は破棄するモノトスルよう指定する能を，作者に与える。
+◎
+The continue property gives authors the ability to turn a box into a fragmentation container (see [CSS-BREAK-3]) and to specify that content after the fragmentation break must be discarded.
+</p>
+
+<p class="issue">
+この~propは、 `CSS-REGIONS-1$r の `region-fragment^p ~propを一般~化して，それを置換することが意味されている。
+この仕様において安定的に足るものになったときは、
+`region-fragment^p は `CSS-REGIONS-1^r 仕様から除去されるべきである。
+◎
+This property is meant to generalize and replace the region-fragment property from [CSS-REGIONS-1]. Once it is sufficiently stable in this specification, region-fragment should be removed from the regions specification in favor of this.
+</p>
+
+<dl>
+	<dt>`auto@v</dt>
+	<dd>
+~boxに収まり切らずに超過した内容は、通例の規則に則って取扱われる。
+◎
+If the box has more content than can fit, the excess content is handled according to the usual rules.
+</dd>
+
+	<dt>`discard@v</dt>
+	<dd>
+~boxは、`領域~分断$を捉える`断片化~容器$になる。
+`CSS-BREAK-3$r
+◎
+The box becomes a fragmentation container that captures region breaks, if it is not already. [CSS-BREAK-3]
+</dd>
+	<dd>
+<p>
+［
+最初の強制d`領域~分断$†, 最初の`非強制~分断$
+］の位置のうち，先に来る方は、`断片化~容器$の終端として扱われる（†
+`max-lines$p のみならず，［
+`break-before$p ／ `break-after$p 
+］~propなどの別の仕組みにより課されたものも含む）。
+この`断片化~分断$より後にある残りの`断片化d~flow$は、
+`display$p が `none^v にされたかのように破棄される
+— すなわち：
+◎
+The position of the first forced region break (whether imposed by max-lines or by another mechanism, such as the break-before/break-after properties) or the position of the first unforced break, which ever comes sooner, is treated as the end of the fragmentation container, and the remaining content after the fragmentation break is discarded, similar to if it were display: none:
+</p>
+		<ul>
+			<li>
+描画されない。
+◎
+It is not rendered
+</li>
+			<li>
+内容が視覚的に隠されるのと同じく，発話にも可用にされない。
+◎
+Just as the content is visually hidden, it is not made available for speech rendering
+</li>
+			<li>
+利用者とのヤリトリは許容されない。
+◎
+It does not allow user interaction
+</li>
+			<li class="issue">
+OM 【 `object model^en 】に対する効果を，きちんと定義する。
+（ `2970$issue ）
+◎
+Make sure effects on OM are well defined &lt;https://github.com/w3c/csswg-drafts/issues/2970&gt;
+</li>
+			<li>
+<p>
+`有位置$な要素のうち，その`静的~位置$が破棄された内容~内にあるものは、描画されない。
+◎
+Positioned elements whose static position is in the discarded content are not rendered.
+</p>
+
+<p class="issue">
+それで確かにいいのか？
+<a href="https://lists.w3.org/Archives/Public/www-style/2018Jul/0030.html">Syndey F2F 会合</a>
+における論点からは、一般に これに収束するように見受けられるが，他の可能性も提起されている。
+（ `2971$issue ）
+◎
+Are we sure about that? Discussions in the Syndey F2F meeting seemed to generally converge on this, but other possibilities were raised. &lt;https://github.com/w3c/csswg-drafts/issues/2971&gt;
+</p>
+			</li>
+		</ul>
+
+<p>
+しかしながら，内在的~sizeは `断片化~容器$たちにわたって計算されるので、この内容は［
+~boxの`行内-軸$における［
+`最小-内容~size$ ／ `最大-内容~size$
+］を見出す目的
+］においては，織り込まれる（
+<a href="~CSSBREAK#varying-size-boxes">~sizeが一様でない断片化~容器への分断-法</a>
+`CSS-BREAK-3$r
+を見よ）。
+◎
+However, since intrinsic sizes are calculated across fragmentation containers, this content is taken into account for the purpose of finding the box’s min-content and max-content inline sizes (see CSS Fragmentation 3 §5.1 Breaking into Varying-size Fragmentainers).＼
+</p>
+
+<p>
+`塊-軸$における［
+`最小-内容~size$ ／ `最大-内容~size$
+］は、`断片化d~flow$の始端から，強制d分断が［
+在れば最初のそれまで／
+無ければ`断片化d~flow$の終端まで
+］の内容に基づいて計算される。
+◎
+Min-content and max-content block sizes are calculated based on the content from the start of the fragmented flow to the first forced break if any, or to the end of the fragmented flow if there is no forced break.
+</p>
+
+<p class="note">注記：
+内在的~塊~sizeを最初の［
+強制d分断または非強制~分断
+］まで計算することにした場合、内在的~sizeを~layoutに依存させ，~~循環を生じさせる。
+◎
+Note: Calculating intrinsic block sizes to the first forced or unforced break would cause intrinsic sizes to depend on layout, which would cause circularities.
+</p>
+
+	</dd>
+	<dd>
+`複柱~容器$に対しては、`~overflow柱$を破棄する効果になる。
+◎
+The effect on multi-column containers is to discard any overflow column.
+</dd>
+	<dd class="note">注記：
+<a href="~CSSBREAK#parallel-flows">並行する断片化~flow</a>の事例では、［
+~box~treeにおいて`断片化~分断$より後に生じる内容
+］も依然として描画され得る
+— それが、この`断片化~容器$の終端を表現している位置より上に~lay-outされるならば。
+◎
+Note: In the case of parallel fragmentation flows, content occuring after the fragmentation break in the box tree could still be rendered, if it is laid out above the position representing the end of this fragmentation container.
+</dd>
+</dl>
+
+<p class="note">注記：
+この~propは、~boxに`独立な整形~文脈を確立-$させる`ことはない^em。
+◎
+Note: This property does not cause the box to establish an independent formatting context.
+</p>
+
+<div class="example">
+
+<p>
+ある記事に
+— 下に図示するように —
+行内~方向に~overflowしている長い行lがあり，末尾には`断片化~方向$に収まり切らない行lたち（図の赤色）があるとする：
+</p>
+
+<figure>`continue-flow^dgm
+</figure>
+
+<p>
+［
+`continue$p, `overflow$p
+］~propの組合nに基づいて，異なる描画がアリになる：
+</p>
+
+<table><thead><tr><th>`continue$p
+<th>`discard$v
+<th>`auto$v
+<th>`discard$v
+<th>`auto$v
+
+<tr><th>`overflow$p
+<th>`visible^v
+<th>`visible^v
+<th>`hidden^v
+<th>`hidden^v
+
+</thead><tbody><tr><th>描画
+<td>`continue-discard-visible^dgm
+<td>`continue-auto-visible^dgm
+<td>`continue-discard-hidden^dgm
+<td>`continue-auto-hidden^dgm
+</tbody></table>
+
+◎
+Given an article with one excessively long overflowing line, and four more lines than can fit in the fragmentation direction as in the illustration bellow, different renderings are possible based on the combination of the overflow and continue property.
+• article with one excessively long line and four more that can fit in the block direction 
+◎
+................. ｜ continue: discard ｜ continue: auto
+overflow: visible ｜ rendering with continue:discard and overflow:visible ｜ rendering with continue:auto and overflow:visible
+overflow: hidden ｜ rendering with continue:discard and overflow:hidden ｜ rendering with continue:auto and overflow:hidden
+</div>
+
+		</section>
+	</section>
+	<section id="priv-sec">
+<h2 title="Privacy and Security Considerations">~privacyと~security上の考慮点</h2>
+
+<p>
+この仕様は、新たな~privacyや~security上の懸念を導入するものではない。
+◎
+This specification introduces no new privacy or security concerns.
+</p>
+
+	</section>
+	<section id="changes">
+<h2 title="Appendix B. Changes">変更点</h2>
+
+~INFORMATIVE
+
+<dl>
+	<dt id="changes-since-2018-07-31">
+<a href="~TR/2018/WD-css-overflow-3-20180731/">2018-07-31 作業草案</a>
+からの変更点
+◎
+Changes from the 2018-07-31 Working Draft
+</dt>
+	<dd>
+~markup~errorと誤記を修正した。
+◎
+Fixed markup errors and typos
+</dd>
+	<dd>
+様々な編集上の明確化を為して，不整合を修正した。
+◎
+Made various editorial clarifications and fixed inconsistencies
+</dd>
+	<dd>
+`block-overflow^p を `block-ellipsis$p に改称した。
+◎
+Renamed block-overflow to block-ellipsis
+</dd>
+	<dd>
+`text-overflow$p は、~overflowしている`塊~overflow省略符$に影響するものと定義した。
+◎
+Define text-overflow to affect an overflowing block overflow ellipsis
+</dd>
+	<dd>
+行lより長い`塊~overflow省略符$の挙動を定義した。
+◎
+Define the behavior of a block overflow ellipsis that is longer than the line
+</dd>
+	<dd>
+`block-ellipsis$p と［
+`first-line$pe ／ `first-letter$pe
+］との相互作用を定義した。
+◎
+Define interaction of block-ellipsis and ::first-line / ::first-letter
+</dd>
+	<dd>
+<code class="css">`continue$p: `discard^v</code>
+を伴う要素の内在的~sizeを調整した。
+◎
+Adjust the intrinsic size of elements with continue: discard
+</dd>
+	<dd>
+`塊~overflow省略符$を~lay-outする方法を定義した。
+◎
+Define how to layout the block overflow ellipsis
+</dd>
+	<dd>
+既存の内容との互換性を得るため，
+`-webkit-line-clamp$p の旧来の挙動を定義した。
+◎
+Define the legacy behavior of -webkit-line-clamp for compatibility with existing content
+</dd>
+	<dd>
+終端~paddingは、~scroll可能な~overflow区画~内に含まれるものと定義した
+— 塊~容器~用は除いて（~web互換性の課題に因り、それを取扱うのは，もっと込み入っている）。
+◎
+Define that end padding is included in the scrollable overflow area except for block containers (which are more tricky to handle, due to web-compat issues)
+</dd>
+	<dd>
+［
+~flex駒／格子~駒
+］の~marginは、~scroll可能な~overflow内に含まれるものと定義した。
+◎
+Define that Margins of flex and grid items are included in scrollable overflow
+</dd>
+	<dd>
+`overflow-*^p 値は、~boxを生成しない要素からは伝播しないものとした。
+◎
+Do not propagate overflow from boxless elements
+</dd>
+	<dd>
+“~scroll可能な~overflow領域”
+を
+“~scroll可能な~overflow区画”
+に改称した。
+◎
+Rename 'scrollable overflow region' to 'scrollable overflow area'
+</dd>
+	<dd>
+`overflow-clip-margin$p ~propを導入した。
+◎
+Introduce the overflow-clip-margin property
+</dd>
+
+	<dt id="old-changes">
+<a href="~TR/2018/WD-css-overflow-3-20180731/">2018-07-31 作業草案</a>
+より以前の変更点
+◎
+Changes Prior to the 2018-07-31 Working Draft
+</dt>
+	<dd>
+<p>
+次に挙げる変更~logから見出せる：
+◎
+Changes predating the publication of the 2018-07-31 Working Draft can be found in the following change logs:
+</p>
+		<ul>
+			<li>
+<a href="https://github.com/w3c/csswg-drafts/commits/master?path=css-overflow-3&amp;until=2018-07-31">2017-08-02 〜 2018-07-31</a>
+◎
+from 2017-08-02 to 2018-07-31
+</li>
+			<li>
+<a href="https://hg.csswg.org/drafts/log/tip/css-overflow/Overview.bs">2015-01-27 〜 2017-08-01</a>
+◎
+from 2015-01-27 to 2017-08-01
+</li>
+			<li>
+<a href="https://hg.csswg.org/drafts/log/tip/css-overflow/Overview.src.html">2013-03-28 〜 2015-01-27</a>
+◎
+from 2013-03-28 to 2015-01-27
+</li>
+			<li>
+<a href="https://hg.csswg.org/drafts/log/tip/css3-overflow/Overview.src.html">2012-07-31 〜 2013-03-27</a>
+◎
+from 2012-07-31 to 2013-03-27
+</li>
+		</ul>
+	</dd>
+</dl>
+
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p>
+とりわけ、次の方々からの~feedbackに：
+</p>
+
+<p lang="en-x-a0">
+Thanks especially to the feedback from
+Rossen Atanassov,
+Bert Bos,
+Tantek Çelik,
+John Daggett,
+Daniel Glazman,
+Vincent Hardy,
+Håkon Wium Lie,
+Peter Linss,
+Robert O’Callahan,
+Florian Rivoal,
+Alan Stearns,
+Steve Zilles,
+and all the rest of the <a href="https://lists.w3.org/Archives/Public/www-style/">www-style</a> community.
+</p>
+
+	</section>
+</main></div>
+

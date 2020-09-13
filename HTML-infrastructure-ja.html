@@ -1,0 +1,2310 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Common infrastructure（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'infrastructure',
+		generate: expand,
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'I':
+	break;
+case 'U':
+	text = `U+${key}`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-09-09
+trans_update:2020-09-10
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/infrastructure.html
+	abbr_url:HTMLINFRA
+nav_next:HTMLcms
+trans_1st_pub:2016-01-28
+
+●●class_map
+e:element
+a:attr
+p:property
+v:value
+P:production
+E:error
+jv:js-value
+U:code-point
+cn:cp-name
+css:css
+
+●●tag_map
+I:code
+m:code
+E:code
+c:code
+e:code
+a:code
+p:code
+v:code
+jv:code
+P:code
+dfn:dfn
+i:i
+U:span
+cn:span
+css:code
+em:em
+cite:cite
+
+●●original_urls
+
+●●original_id_map
+
+
+●●link_map
+
+		●idl
+E.TypeError:~TC39#sec-native-error-types-used-in-this-standard-typeerror
+
+I.Node:~DOM4#node
+I.Text:~DOM4#text
+I.HTMLScriptElement:~HEscripting#htmlscriptelement
+I.Document:~HTMLdom#document
+文書:~HTMLdom#the-document-object
+I.Screen:~CSSOMVIEW#the-screen-interface
+
+m.elements:~HEforms#dom-form-elements
+
+		●element
+e.article:~HEsections#the-article-element
+e.body:~HEsections#the-body-element
+e.button:~HEforms#the-button-element
+e.iframe:~HEembed#the-iframe-element
+e.script:~HEscripting#the-script-element
+e.blockquote:~HEgrouping#the-blockquote-element
+e.address:~HEsections#the-address-element
+e.div:~HEgrouping#the-div-element
+e.b:~HEtextlevel#the-b-element
+e.i:~HEtextlevel#the-i-element
+e.span:~HEtextlevel#the-span-element
+
+		●attr
+a.sandbox:~HEembed#attr-iframe-sandbox
+a.style:~HTMLdom#the-style-attribute
+
+	●keywords, etc.
+l.autoplay:#autoplay-feature
+l.document-domain:#document-domain-feature
+l.cross-origin-isolated:#cross-origin-isolated-feature
+
+c.text/plain:~RFCx/rfc2046#section-4.1.3
+c.application/octet-stream:~RFCx/rfc2046#section-4.5.1
+
+P.Name:~TR/xml/#NT-Name
+P.QName:~TR/REC-xml-names#NT-QName
+P.expanded-name:~TR/1999/REC-xpath-19991116/#dt-expanded-name
+
+
+	●
+
+内容~属性:#_content-attribute
+~IDL属性:#_idl-attribute
+
+資源:#_resource
+
+並列的:#in-parallel
+即時:#immediately
+並列~queue:#parallel-queue
+新たな並列~queueを開始-:#starting-a-new-parallel-queue
+手続きを~enqueueする:#enqueue-the-following-steps
+~algo~queue:#algorithm-queue
+非同期に完了する:#_asynchronously-complete
+
+
+必須な下位資源:#critical-subresources
+~HTML要素:#html-elements
+要素~型:#element-type
+~XML互換:#xml-compatible
+無視される:#ignore
+文書の中へ挿入された:#insert-an-element-into-a-document
+文書から除去された:#remove-an-element-from-a-document
+
+node.挿入された:#nodes-are-inserted
+node.除去された:#nodes-are-removed
+~liveである:#live
+接続された:#becomes-connected
+切断された:#becomes-disconnected
+閲覧文脈に接続されて:#browsing-context-connected
+閲覧文脈に接続された:#becomes-browsing-context-connected
+閲覧文脈から切断された:#becomes-browsing-context-disconnected
+
+
+
+~plugin:#plugin
+~secure化でき:#concept-plugin-secure
+	
+文字~符号化法:#encoding
+符号化法:#encoding
+符号化法~名:#encoding-name
+符号化法~label:#encoding-label
+
+適用-可能な仕様:#other-applicable-specifications
+	:#non-interactive
+	:#renderingUA
+	:#non-scripted
+	:#conformance-checkers
+	:#data-mining
+	:#editors
+	:#hardwareLimitations
+
+故意的な違反:~INFRA#willful-violation
+	故意的な違反:#willful-violation
+	~HTMLLS/introduction.html#willful-violation
+
+~flow内容:~HTMLdom#flow-content-2
+
+~scripting~flag:~HTMLparsing#scripting-flag
+文書の~outline:~HEsections#outline
+適合~文書:#conforming-documents
+~custom形式:~HTMLwriting#writing
+~HTML構文解析器:~HTMLparsing#html-parser
+~open要素~stack:~HTMLparsing#stack-of-open-elements
+構文解析を停止-:~HTMLparsing#stop-parsing
+文書の現在の準備度:~HTMLdom#current-document-readiness
+~navi:~NAVI#navigate
+
+	●DOM
+挿入-時の手続き:~DOM4#concept-node-insert-ext
+除去-時の手続き:~DOM4#concept-node-remove-ext
+~HTML文書:~DOM4#html-document
+~XML文書:~DOM4#xml-document
+文書~tree内:~DOM4#in-a-document-tree
+接続されて:~DOM4#connected
+~shadowも含む根:~DOM4#concept-shadow-including-root
+
+
+	●文字列
+制御~文字:~INFRA#control
+~ASCII小文字~化する:~INFRA#ascii-lowercase
+長さ:~INFRA#string-length
+
+	●HTML
+子~閲覧文脈:~BROWSERS#child-browsing-context
+閲覧文脈:~BROWSERS#browsing-context
+属する閲覧文脈:~BROWSERS#concept-document-bc
+~HTML構文:~HTMLwriting#syntax
+~XML構文:~HTMLxml#the-xhtml-syntax
+~event~loop:~WAPI#event-loop
+
+	●他
+~list:~INFRA#list
+付加する:~INFRA#list-append
+~queue:~INFRA#queue
+~dequeue:~INFRA#queue-dequeue
+~enqueue:~INFRA#queue-enqueue
+
+~HTML名前空間:~INFRA#html-namespace
+
+~XML~MIME型:~MIMESNIFF#xml-mime-type
+~HTML~MIME型:~MIMESNIFF#html-mime-type
+
+実装定義:~INFRA#implementation-defined
+
+施策により制御される特能:~PERMISSIONS-POLICY#policy-controlled-feature
+既定の許容list:~PERMISSIONS-POLICY#default-allowlist
+
+~CSS~stylesheet:~CSSOM1#css-style-sheet
+
+●●words_table1
+
+
+●●words_table
+
+
+	●IDL／データ／構造
+open:
+shadow:
+切断-:disconnect::~
+	渡-:pass
+
+	●処理
+snapshot::::スナップショット
+並列:parallel::~
+並列処理:parallelism::~
+競争:race condition::~
+	競争:the race
+立上げる:launchする:立ち上げる
+準備度:readiness::~
+協力的:cooperative:~
+
+	~~同時並行的:, at the same time
+	error含みの:erroneous
+	instance化:instantiate
+	同時に:simultaneous
+	^en:multitasking, fibers, threads, processes
+	^en:hyperthread, core, CPU, machine
+
+	●構文／形式
+展開-:expand::~
+展開:expansion::~
+式:expression::~
+	MARK
+	UTF-16
+	UTF-8
+圧縮:compression::~
+形式変換-:transform::~
+形式変換:transformation::~
+変換器:converter::~
+文字大小比較:case sensitivity::文字大小の区別
+	符号:sign
+
+	●UI／呈示／資源／媒体／CSS
+PDF:
+XPath:
+DTD:
+SGML:
+XSLT:
+WYSIWYG:
+PNG:
+MPEG-4:
+色:color:~
+multimedia::::マルチメディア
+popup::::ポップアップ
+	動画:movie
+viewer::::ビューア
+contrast::::コントラスト
+色:color:~
+印刷機:printer:~:::プリンタ
+italic:
+
+部品:component:~
+本格的な:fully-fledged:~
+小論:essay:~
+報告書:report:~
+	ranging from short static documents to long essays or reports with rich multimedia, as well as to fully-fledged interactive applications
+頭上display:overhead display:頭上 display::頭上ディスプレイ
+
+遠隔操作の:remote::~::リモート
+背景:background:~
+取込まれ:importされ::取り込まれ
+取込む:importする::取り込む
+
+
+	●仕様／適合
+proprietary::::プロプライエタリ
+data-mining:data mining:::データマイニング
+junk::::ジャンク
+主体:party:~
+危険:dangerous:~
+機会:chance:~
+特権:privilege::~
+必須:critical:~
+不可欠:integral:~
+皆:everyone:~
+正当:legitimate:~
+	正当でないわけではない:legitimate
+区別:distinguish:~
+類別:class:~
+選択肢:option::~::オプション
+不足:insufficient:~
+	~~不足:cannot constitute
+中立的:neutral:~
+	-compatible
+問題m:matter:問題
+多彩:rich:~
+措置:measure:~
+本当に:realに:~
+機械的に:machineで:~
+活動:activity:~
+素材:material:~
+緊急の:emergency:~
+自由:free:~
+範囲t:extent:範囲
+極端:extreme:~
+	能力を有する:capable of
+解消-:solve:~
+理想的:ideal:~
+
+	適合するかどうか:conformity
+	特段の注意を払う:take extreme care:
+	その限りにおいて:As far as conformance goes
+	別の仕方で記すなら、:To put it another way
+	好きに:please
+	例えば:say
+	:retrieve
+	-:accurate
+	に関して言えば:In terms of
+	つつ:still
+	に~~識別され:label
+	様々な:wide variety
+	ことになる:ends up
+	〜易く:easy
+	重きを置く:great for
+	したとする:imagine
+	策定:solution
+	難が生じる:suffers from
+	とりあえずは:tentatively
+	-:on that front
+
+	●仕様／適合（動詞
+移行:migration:~
+合意-:agree:~
+伝達-:convey:~
+矛盾-:contradict:~
+句され:phraseされ:記され
+免除-:exempt:~
+往来-:round-trip:~
+指名-:designate:~
+	behavior
+推定-:infer:~
+準拠-:comply:~
+
+自動化-:automate:~
+	motivated
+証明-:prove:~
+
+誤用-:misuse:~
+欠く:lackする:~
+収まる:fitする:~
+判定:judgement:~
+
+	に依存しない:-independent
+	適合しない:non-conforming／non-conformant
+	適合しなくなる:causes the non-conformance
+	既定~法:defaulting
+	知れない:unbeknownst
+	称され:refer
+	前述の:aforementioned
+	opt to
+	選ぶ際の判断材料:make informed choices 
+	最大限に活用する:making liberal use of
+	活用-:leverage
+	~~悪化-:reduce
+	利用者~層の細分化を招くfragments the user base
+	互いに重なり合う:overlapping
+	~~分類される:category／fall into
+	種類に分けられる:fall into 〜 categories
+	大別され:come in two broad varieties
+	:left off
+	:opt to
+	-:meant
+	できなく:prevent
+	:said
+	:say
+	~~扱い方:Dealing with
+	外す:omit
+
+	●privacy／保安
+DOS:denial-of-service:DOS
+memory::::メモリ
+	~secure化-:secured
+防護-:guard:~
+枯渇:running out:~
+対処-:work around:~
+許容list:allowlist::許容 list:許容リスト
+
+	●未分類（動詞
+
+増やす:increaseする:~
+出現-:appear:~
+引用-:quote:~
+引用:quote:~
+編集-:edit:~
+編集:editing:~
+選択-:select:~
+
+	登録-済み:registered
+	-:past
+	-:informed
+	追い:follow
+	書-:write
+	置く:put
+	:having
+	指す:refer する
+	数え:count
+	置いた:put
+	-:track
+
+	●未分類
+	-:basis
+editor::::エディタ
+outline::::アウトライン
+template::::テンプレート
+battery-life:battery life:::バッテリ寿命
+増分的:incremental:~
+無作為な:random:~
+連絡先:contact::~
+
+	part
+	time
+	:place
+	時間を共有する:time-sharing
+	きちんと構造~化された:well-structured
+
+	●指示語
+一定の:certain:~
+現在:currently:~
+一時的:transient:~
+	-:second
+	-:themselves
+	2 回:twice
+	:respectively
+	もある:sometimes
+	:using
+	oldParent
+	qualified
+	~~選択的に組み込む:opt
+	およそ:likely
+	何ら:whatsoever
+	まったく:quite／at all
+	以前の:previous
+	~~元の:new
+	旧:old
+	短い:short
+	片:fragment
+	一員:a member
+	逆に:as opposed to
+	順々に:in series
+	何も〜ない:nothing
+	最も近い:nearest
+	さらに:furthermore
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる HTML 仕様の
+<a href="~SPEC_URL">§ Common infrastructure</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+</head>
+<body>
+
+<header id="head">
+	<hgroup>
+<h1>共通基盤 — Common infrastructure</h1>
+
+	</hgroup>
+</header>
+
+<main id="MAIN" hidden>
+
+	<section id="infrastructure">
+<h1 title="Common infrastructure">2. 共通~基盤</h1>
+
+<p>
+この仕様は
+`Infra^cite `INFRA$r
+に依存する。
+◎
+This specification depends on Infra. [INFRA]
+</p>
+
+		<section id="terminology">
+<h2 title="Terminology">2.1. 各種用語</h2>
+
+<p>
+この仕様は、同じ文脈~内で［
+~HTML／~XML
+］属性, および~IDL属性（ ~IDL~interfaceに定義される属性）の両者を指すことが多い。
+どちらを指すか明瞭でない所では、［
+~HTML／~XML
+］属性を指すときは
+`内容~属性@
+と記され、~IDL属性を指すときは
+`~IDL属性@
+と記される。
+同様に、用語 “~prop” も［
+~JS~obj~prop, ~CSS~prop
+］の両者に利用される。
+多義的になる所では、順に
+`~obj~prop^dfn,
+`~CSS~prop^dfn
+と記される。
+◎
+This specification refers to both HTML and XML attributes and IDL attributes, often in the same context. When it is not clear which is being referred to, they are referred to as content attributes for HTML and XML attributes, and IDL attributes for those defined on IDL interfaces. Similarly, the term "properties" is used for both JavaScript object properties and CSS properties. When these are ambiguous they are qualified as object properties and CSS properties respectively.
+</p>
+
+<p>
+仕様にて，ある特能を［
+`~HTML構文$, `~XML構文$
+］のいずれかに適用するよう言明される所では、一般に，他方も含まれる。
+特能を，この 2 つの言語の片方にのみ特定的に適用する所では、次のように，他方の形式には適用されないものと言明される
+⇒
+“~HTML に対しては、 ... （これは~XMLには適用されない）”。
+◎
+Generally, when the specification states that a feature applies to the HTML syntax or the XML syntax, it also includes the other. When a feature specifically only applies to one of the two languages, it is called out by explicitly stating that it does not apply to the other format, as in "for HTML, ... (this does not apply to XML)".
+</p>
+
+<p>
+この仕様においては、~HTMLのどの利用を指すときも，用語
+`文書^dfn
+を利用する
+— 短い静的な文書から，多彩な~multimediaを伴う長い小論や報告書，更には本格的な対話的~appに至るまで。
+この用語は、文脈に依存して［
+`Document$I ~objと その子孫~DOM~tree
+］, ［
+`~HTML構文$ ／ `~XML構文$ を利用して直列化された~byte~stream
+］のいずれかを指す：
+◎
+This specification uses the term document to refer to any use of HTML, ranging from short static documents to long essays or reports with rich multimedia, as well as to fully-fledged interactive applications. The term is used to refer both to Document objects and their descendant DOM trees, and to serialized byte streams using the HTML syntax or the XML syntax, depending on context.
+</p>
+
+<ul>
+	<li>
+~DOM構造の文脈における用語
+`~HTML文書$ ／ `~XML文書$
+は、
+`DOM^cite `DOM$r
+にて定義される， 2 つの異なる~modeを特定的に指す。
+`文書$は、このいずれかの~mode下に属する。
+（そのような利用は、常にその定義に~hyperlinkされる。）
+◎
+In the context of the DOM structures, the terms HTML document and XML document are used as defined in DOM, and refer specifically to two different modes that Document objects can find themselves in. [DOM] (Such uses are always hyperlinked to their definition.)
+</li>
+	<li>
+~byte~streamの文脈における用語［
+~HTML文書 ／ ~XML文書
+］は、［
+`~HTML~MIME型$ ／ `~XML~MIME型$
+］の資源を指す。
+◎
+In the context of byte streams, the term HTML document refers to resources labeled as text/html, and the term XML document refers to resources labeled with an XML MIME type.
+</li>
+</ul>
+
+<hr>
+
+<p>
+~~記述を単純にするため、利用者~向けに文書を具現化する仕方を指す際に［
+“示される（ `shown^en ）” ／ “表示される（ `displayed^en ）” ／ “可視（ `visible^en ）”
+］などの語が利用されることもある。
+これらの用語は、視覚-媒体のみを含意するものではなく、他の媒体にも，等価な仕方で適用されると見なすモノトスル。
+◎
+For simplicity, terms such as shown, displayed, and visible might sometimes be used when referring to the way a document is rendered to the user. These terms are not meant to imply a visual medium; they must be considered to apply to other media in equivalent ways.
+</p>
+
+			<section id="parallelism">
+<h4 title="Parallelism">2.1.1 並列処理</h4>
+
+<p>
+所与の手続きを
+`並列的@
+（ `parallel^en ）に走らすとは、その手続きを，この標準~内の他の~logicと~~同時並行的に走らすことを意味する（例えば `~event~loop$と~~同時並行的に）。
+この標準は、これが達成される精確な仕組みは定義しない
+— 例えば、時間を協力的に共有する［
+`multitasking, fibers, threads, processes^en
+］, あるいは異なる［
+`hyperthread, core, CPU, machine^en
+］の利用, 等々。
+対照的に，
+`即時@
+（ `immediate^en ）に走らすような演算は、現在~走っている~taskを中断して,
+その演算を走らせ終えてから, 中断した~taskを再開するモノトスル。
+◎
+To run steps in parallel means those steps are to be run, one after another, at the same time as other logic in the standard (e.g., at the same time as the event loop). This standard does not define the precise mechanism by which this is achieved, be it time-sharing cooperative multitasking, fibers, threads, processes, using different hyperthreads, cores, CPUs, machines, etc. By contrast, an operation that is to run immediately must interrupt the currently running task, run itself, and then resume the previously running task.
+</p>
+
+<p class="note">注記：
+並列処理を活用して仕様を書く指導については、
+<a href="~WAPI#event-loop-for-spec-authors">他の仕様における~event~loopの~~扱い方</a>
+を見よ。
+◎
+For guidance on writing specifications that leverage parallelism, see Dealing with the event loop from other specifications.
+</p>
+
+<p>
+`並列的$に走る複数の~algoが同じ~data上で演算するときの競争を避けるためには、`並列~queue$を利用できる。
+◎
+To avoid race conditions between different in parallel algorithms that operate on the same data, a parallel queue can be used.
+</p>
+
+<p>
+`並列~queue@
+は、［
+順々に走らすモノトスル，何個かの~algo手続き
+］からなる~queueを表現する。
+◎
+A parallel queue represents a queue of algorithm steps that must be run in series.
+</p>
+
+<p>
+各`並列~queue$は、
+`~algo~queue@
+を持つ
+— それは、`~queue$であり，初期~時には空とする。
+◎
+A parallel queue has an algorithm queue (a queue), initially empty.
+</p>
+
+<div class="algorithm">
+<p>
+`並列~queue$ %並列~queue に，所与の
+`手続きを~enqueueする@
+ときは
+⇒
+%並列~queue の`~algo~queue$に，その手続きを`~enqueue$する
+◎
+To enqueue steps to a parallel queue, enqueue the algorithm steps to the parallel queue's algorithm queue.
+</p>
+</div>
+
+<div class="algorithm">
+<p>
+`新たな並列~queueを開始-@
+するときは、次の手続きを走らす：
+◎
+To start a new parallel queue, run the following steps:
+</p>
+
+<ol>
+	<li>
+%並列~queue ~LET 新たな`並列~queue$
+◎
+Let parallelQueue be a new parallel queue.
+</li>
+	<li>
+<p>
+次の手続きを`並列的$に走らす：
+◎
+Run the following steps in parallel:
+</p>
+		<ol>
+			<li>
+<p>
+~WHILE 無条件：
+◎
+While true:
+</p>
+				<ol>
+					<li>
+%手続き ~LET %並列~queue の`~algo~queue$から`~dequeue$した結果
+◎
+Let steps be the result of dequeueing from parallelQueue's algorithm queue.
+</li>
+					<li>
+%手続き を走らす
+（ %手続き が空なら何もしないことになる）
+◎
+If steps is not nothing, then run steps.
+</li>
+					<li>
+~Assert：
+%手続き を走らせても例外は投出されない
+— `並列的$に走っている手続きには、投出することは許容されないので。
+◎
+Assert: running steps did not throw an exception, as steps running in parallel are not allowed to throw.
+</li>
+				</ol>
+
+<p class="note">注記：
+これは、継続的に走らす~loopとして実装することを実装に期待するものではない。
+標準における~algoには、理解し易くなるよう，~battery-lifeや処理能に重きを置くことは必要とされないので。
+◎
+Implementations are not expected to implement this as a continuously running loop. Algorithms in standards are to be easy to understand and are not necessarily great for battery life or performance.
+</p>
+			</li>
+		</ol>
+	</li>
+	<li>
+~RET %並列~queue
+◎
+Return parallelQueue.
+</li>
+</ol>
+</div>
+
+<p class="note">注記：
+`並列的$に走っている手続き自身も，他の手続きを`並列的$に走らすことができる。
+例：
+`並列~queue$の内側で、一連の段を，当の~queueにて並列的に走らすことも有用になり得る。
+◎
+Steps running in parallel can themselves run other steps in in parallel. E.g., inside a parallel queue it can be useful to run a series of steps in parallel with the queue.
+</p>
+
+<div class="example">
+
+<p>
+ある標準が［
+`~list$ %名前~list と,
+%名前 を %名前~list に追加する~method
+］を定義しようとしているとする
+— この~methodは、［
+%名前 ~IN %名前~list
+］のときは却下するとする。
+◎
+Imagine a standard defined nameList (a list), along with a method to add a name to nameList, unless nameList already contains name, in which case it rejects.
+</p>
+
+<p>
+次のように策定した場合、競争の難が生じる：
+◎
+The following solution suffers from race conditions:
+</p>
+
+<ol>
+	<li>
+%p ~LET 新たな~promise
+◎
+Let p be a new promise.
+</li>
+	<li>
+<p>
+次の手続きを`並列的$に走らす：
+◎
+Run the following steps in parallel:
+</p>
+
+		<ol>
+			<li>
+~IF［
+%名前 ~IN %名前~list
+］
+⇒＃
+`TypeError$E で %p を却下する；
+~RET
+◎
+If nameList contains name, reject p with a TypeError and abort these steps.
+</li>
+			<li>
+（何らかの長くかかり得る作業を行う）
+◎
+Do some potentially lengthy work.
+</li>
+			<li>
+%名前~list に %名前 を`付加する$
+◎
+Append name to nameList.
+</li>
+			<li>
+`undefined^jv で %p を解決する
+◎
+Resolve p with undefined.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %p
+◎
+Return p.
+</li>
+</ol>
+
+<p>
+上の手続きを 2 回~呼出した場合， 2 つが同時に走っている間、段 2.1 のときは %名前 は %名前~list 内にないが，段 2.3 が走る前に 他方により`追加されるかもしれない^em
+— その結果、 %名前~list 内に %名前 が 2 回~現れることになる。
+◎
+Two invocations of the above could run simultaneously, meaning name isn't in nameList during step 2.1, but it might be added before step 2.3 runs, meaning name ends up in nameList twice.
+</p>
+
+<p>
+並列~queueは、これを解消する。
+その標準は、`新たな並列~queueを開始-$した結果の`並列~queue$ %名前~list~queue を得ておいた上で：
+◎
+Parallel queues solve this. The standard would let nameListQueue be the result of starting a new parallel queue, then:
+</p>
+
+<ol>
+	<li>
+%p ~LET 新たな~promise
+◎
+Let p be a new promise.
+</li>
+	<li>
+<p>
+<mark>
+%名前~list~queue に，次の`手続きを~enqueueする$：
+</mark>
+◎
+Enqueue the following steps to nameListQueue:
+</p>
+
+		<ol>
+			<li>
+~IF［
+%名前 ~IN %名前~list
+］
+⇒＃
+`TypeError$E で %p を却下する；
+~RET
+
+◎
+If nameList contains name, reject p with a TypeError and abort these steps.
+</li>
+			<li>
+（何らかの長くかかり得る作業を行う）
+◎
+Do some potentially lengthy work.
+</li>
+			<li>
+%名前~list に %名前 を`付加する$
+◎
+Append name to nameList.
+</li>
+			<li>
+`undefined^jv で %p を解決する
+◎
+Resolve p with undefined.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %p
+◎
+Return p.
+</li>
+</ol>
+
+<p>
+上の手続きは，今や~queue内にあり、競争は避けられる。
+◎
+The steps would now queue and the race is avoided.
+</p>
+</div>
+
+<p>
+一部の`並列的$に走る~algoには、
+`非同期に完了する@
+（ `asynchronously complete^en ）という句が利用される。
+そのような~algoは：
+</p>
+
+<ul>
+	<li>
+“ %X を結果として，非同期に完了する”
+と記される所で、字義通り非同期にその実行を終える。
+この句は
+— 特に継続するよう指定されている場合を除き —
+暗黙的に ~RET も含み、~algoはそこで終了するものとする。
+</li>
+	<li>
+結果 %X は、それを呼出した~algoの中で
+“（〜の~algoが）非同期に完了したときは…” （あるいは，
+“非同期に完了するまで待機する”
+）という句に後続する手続きで取扱われる。
+</li>
+</ul>
+
+<p class="trans-note">【
+この “非同期に完了-” の規約は、この訳による補完。
+原文の他所に現れるこの句の意味を，和訳における表記規約として明確化するため、ここに明示的に定義している（この句は、他の少数の仕様からも利用されている）。
+】</p>
+
+			</section>
+			<section id="resources">
+<h3 title="Resources">2.1.2. 資源</h3>
+
+<p>
+資源に対する用語
+`~support^dfn
+される, 〜されている, 〜する, 等々は、~UAの実装には当の外部~資源の意味論を復号する能力があることを指す。
+実装は、外部~資源の［
+形式／型
+］を，その形式／型において必須とされる側面を無視することなく処理できるならば、~supportするという。
+特定の資源が~supportされるかどうかは、その資源の形式に備わる特能のうち どれが利用-中にあるかに依存することもある。
+◎
+The specification uses the term supported when referring to whether a user agent has an implementation capable of decoding the semantics of an external resource. A format or type is said to be supported if the implementation can process an external resource of that format or type without critical aspects of the resource being ignored. Whether a specific resource is supported can depend on what features of the resource's format are in use.
+</p>
+
+<p class="example">
+例えば，~PNG画像は、その~pixel~dataを復号して具現化できるならば
+— その画像が実装に知れない~animation~dataを包含していても —
+~supportされる形式と見なされることになろう。
+◎
+For example, a PNG image would be considered to be in a supported format if its pixel data could be decoded and rendered, even if, unbeknownst to the implementation, the image also contained animation data.
+</p>
+
+<p class="example">
+例えば，~MPEG-4動画~fileは、利用している圧縮~形式が~supportされないならば
+— 実装が その~metadataから動画の寸法を決定できたとしても —
+~supportされる形式と見なされないことになろう。
+◎
+An MPEG-4 video file would not be considered to be in a supported format if the compression format used was not supported, even if the implementation could determine the dimensions of the movie from the file's metadata.
+</p>
+
+<p>
+一部の他の仕様
+— 特に~HTTP仕様 —
+において `表現^i （ `representation^en ）と称されるもの
+【<a href="~HTTPsem#representation">参照先</a>】
+は、この仕様では
+`資源@
+と称される。
+`HTTP$r
+◎
+What some specifications, in particular the HTTP specifications, refer to as a representation is referred to in this specification as a resource. [HTTP]
+</p>
+
+<p>
+資源の
+`必須な下位資源@
+とは、その資源を正しく処理するためには，可用になる必要がある資源である。
+どの資源が必須（ `critical^en ）と見なされるかは、当の資源の形式を定義する仕様により定義される。
+◎
+A resource's critical subresources are those that the resource needs to have available to be correctly processed. Which resources are considered critical or not is defined by the specification that defines the resource's format.
+</p>
+
+<p>
+`~CSS~stylesheet$用の必須な下位資源は，とりあえずここでは、
+`@import^css 規則を介して取込まれる他の~stylesheetたち
+— それらの~stylesheetが取込む間接的なものも含む —
+として定義される。
+◎
+For CSS style sheets, we tentatively define here that their critical subresources are other style sheets imported via @import rules, including those indirectly imported by other imported style sheets.
+</p>
+
+<p class="XXX">
+この定義は、全部的に相互運用可能ではない。
+さらに，一部の~UAは、背景~画像や~web~fontの様な資源も必須な下位資源に数えるよう見受けられる。
+理想的には， `CSS Working Group^cite がこれを定義することになろう
+— それについての進捗は
+<a href="~CSSissue/1088">w3c/csswg-drafts #1088</a>
+を見よ。
+◎
+This definition is not fully interoperable; furthermore, some user agents seem to count resources like background images or web fonts as critical subresources. Ideally, the CSS Working Group would define this; see w3c/csswg-drafts issue #1088 to track progress on that front.
+</p>
+
+			</section>
+			<section id="xml">
+<h3 title="XML compatibility">2.1.3. ~XMLとの互換性</h3>
+
+<p id="html-namespace">
+~HTMLから~XMLへの移行を容易にするため、この仕様に適合している~UAは、少なくとも ~DOM／~CSSの目的においては，~HTML内の要素を`~HTML名前空間$（
+`http://www.w3.org/1999/xhtml^l
+）に属させることになる。
+用語
+`~HTML要素@
+は、その名前空間に属する~~任意の要素を指す
+— 要素が~XML文書~内にある場合でも。
+◎
+To ease migration from HTML to XML, UAs conforming to this specification will place elements in HTML in the http://www.w3.org/1999/xhtml namespace, at least for the purposes of the DOM and CSS. The term "HTML elements" refers to any element in that namespace, even in XML documents.
+</p>
+
+<div class="p">
+<p>
+他が言明されない限り、この仕様に言及される：
+</p>
+
+<ul><li>どの要素も， `~HTML名前空間$に属する。
+</li><li>どの属性も，属する名前空間はない。
+</li></ul>
+
+◎
+Except where otherwise stated, all elements defined or mentioned in this specification are in the HTML namespace ("http://www.w3.org/1999/xhtml"), and all attributes defined or mentioned in this specification have no namespace.
+</div>
+
+<p>
+用語
+`要素~型@
+とは、［
+所与の局所~名を持つ, かつ
+所与の名前空間に属する
+］ような要素からなる集合を指す。
+例えば `button$e 要素の要素~型は `button$e であり、次を意味する
+⇒
+［
+その局所~名 ~EQ `button^l
+］~AND［
+`~HTML名前空間$に属する（上で定義したように，暗黙的に）
+］
+◎
+The term element type is used to refer to the set of elements that have a given local name and namespace. For example, button elements are elements with the element type button, meaning they have the local name "button" and (implicitly as defined above) the HTML namespace.
+</p>
+
+<p>
+次を満たす属性~名は、
+`~XML互換@
+とされる
+⇒
+［
+`XML$r にて定義される `Name$P 生成規則に合致する
+］~AND［
+`003A^U `COLON^cn (:) は包含しない
+］
+◎
+Attribute names are said to be XML-compatible if they match the Name production defined in XML and they contain no U+003A COLON characters (:). [XML]
+</p>
+
+			</section>
+			<section id="dom-trees">
+<h3 title="DOM trees">2.1.4. ~DOM~tree</h3>
+
+<p>
+要素または属性
+が［
+`無視される@
+／
+何か他の値として扱われる ／
+それが他の何かであったかのように取扱われる
+］ものと言明される所は、［
+当の~nodeが~DOM内にある後における~nodeの処理
+］のみを指す。
+~UAは、そのような状況においては~DOMを変異させないモノトスル。
+◎
+When it is stated that some element or attribute is ignored, or treated as some other value, or handled as if it was something else, this refers only to the processing of the node after it is in the DOM. A user agent must not mutate the DOM in such situations.
+</p>
+
+<p>
+内容~属性が所与の値 %V に
+`変更される／変化した^dfn
+と記されるのは、
+%V が~~元の値と異なる場合に限られる
+— 属性に~~元の値と同じ値が設定されても，それは変化しない。
+◎
+A content attribute is said to change value only if its new value is different than its previous value; setting an attribute to a value it already has does not change it.
+</p>
+
+<p>
+［
+属性~値 ／
+`Text$I ~node ／
+文字列
+］に対し利用される用語
+`空^dfn
+は、~textの`長さ$が 0 であることを意味する（すなわち、 `0020^U `SPACE^cn や`制御~文字$も包含しない）。
+◎
+The term empty, when used for an attribute value, Text node, or string, means that the length of the text is zero (i.e., not even containing controls or U+0020 SPACE).
+</p>
+
+<p>
+所与の~node %N, %P に対し：
+◎
+↓</p>
+
+<ul>
+	<li>
+%N が %P の中へ
+`挿入された@node
+とは、次が生じたことをいう
+⇒
+%N を引数に`挿入-時の手続き$が呼出され，
+%N の新たな親は %P になった。
+◎
+A node A is inserted into a node B when the insertion steps are invoked with A as the argument and A's new parent is B.＼
+</li>
+	<li>
+%N が %P から
+`除去された@node
+とは、逆に，次が生じたことをいう
+⇒
+( 除去される~node %N, ~nodeの旧~親 %P )
+を引数に`除去-時の手続き$が呼出された。
+◎
+Similarly, a node A is removed from a node B when the removing steps are invoked with A as the removedNode argument and B as the oldParent argument.
+</li>
+</ul>
+
+<p>
+所与の~node %N に対し：
+◎
+↓</p>
+
+<ul>
+	<li>
+<p>
+%N が
+`文書の中へ挿入された@
+とは、次が生じたことをいう
+⇒
+`文書~tree内$に無かった %N が、
+%N を引数に`挿入-時の手続き$が呼出された結果，`文書~tree内$に在るようになった。
+◎
+A node is inserted into a document when the insertion steps are invoked with it as the argument and it is now in a document tree.＼
+</li>
+	<li>
+%N が
+`文書から除去された@
+とは、逆に，次が生じたことをいう
+⇒
+`文書~tree内$に在った %N が、
+%N を引数に`除去-時の手続き$が呼出された結果，`文書~tree内$に無いようになった。
+◎
+Analogously, a node is removed from a document when the removing steps are invoked with it as the argument and it is now no longer in a document tree.
+</li>
+</ul>
+
+<p>
+所与の~node %N に対し：
+◎
+↓</p>
+
+<ul>
+	<li>
+%N が
+`接続された@
+（ `becomes connected^en ）とは、次が生じたことをいう
+⇒
+`接続されて$いなかった %N が、
+%N を引数に`挿入-時の手続き$が呼出された結果，`接続されて$いるようになった。
+◎
+A node becomes connected when the insertion steps are invoked with it as the argument and it is now connected.＼
+</li>
+	<li>
+%N が
+`切断された@
+（ `becomes disconnected^en ）とは、逆に，次が生じたことをいう
+⇒
+`接続されて$いた %N が、
+%N を引数に`除去-時の手続き$が呼出された結果，`接続されて$いないようになった。
+◎
+Analogously, a node becomes disconnected when the removing steps are invoked with it as the argument and it is now no longer connected.
+</li>
+</ul>
+
+<p>
+所与の~node %N に対し：
+◎
+↓</p>
+
+<ul>
+	<li>
+<p>
+%N は
+`閲覧文脈に接続されて@
+いるとは、 %N が次を満たすことをいう
+⇒
+［
+%N は`接続されて$いる
+］~AND［
+%N の`~shadowも含む根$が`属する閲覧文脈$ ~NEQ ~NULL
+］
+◎
+A node is browsing-context connected when it is connected and its shadow-including root's browsing context is non-null.＼
+</li>
+	<li>
+%N が
+`閲覧文脈に接続された@
+（ `becomes browsing-context connected^en ）とは、次が生じたことをいう
+⇒
+`閲覧文脈に接続されて$いなかった %N が、
+%N を引数に`挿入-時の手続き$が呼出された結果，`閲覧文脈に接続されて$いるようになった。
+◎
+A node becomes browsing-context connected when the insertion steps are invoked with it as the argument and it is now browsing-context connected.＼
+</li>
+	<li>
+%N が
+`閲覧文脈から切断された@
+（ `becomes browsing-context disconnected^en ）とは、逆に，次が生じたことをいう
+⇒
+`閲覧文脈に接続されて$いた %N が、［
+%N を引数に`除去-時の手続き$が呼出された
+］か, または［
+%N の`~shadowも含む根$が`属する閲覧文脈$ ~EQ ~NULL になった
+］結果，`閲覧文脈に接続されて$いないようになった。
+◎
+A node becomes browsing-context disconnected either when the removing steps are invoked with it as the argument and it is now no longer browsing-context connected, or when its shadow-including root's browsing context becomes null.
+</li>
+</ul>
+
+			</section>
+			<section id="scripting-2">
+<h3 title="Scripting">2.1.5. ~scripting</h3>
+
+<p>
+所与の~interface `Foo^I に対する句
+“`Foo^I ~obj”
+は、
+“~interface `Foo^I を実装している~obj”
+の略記である。
+◎
+The construction "a Foo object", where Foo is actually an interface, is sometimes used instead of the more accurate "an object implementing the interface Foo".
+</p>
+
+<p class="trans-note">【
+`Foo^I を継承する~interfaceを実装している~objも含まれる。
+】</p>
+
+<div>
+<p>
+~IDL属性に対し，（例えば作者~scriptから）［
+その値を得る ／ それに新たな値をアテガう
+］ときの挙動を記すときは、［
+取得子（ `getter^en ）は… ／
+設定子（ `setter^en ）は…
+］のように表記される。
+</p>
+
+<p class="trans-note">【
+原文には，［
+“`On getting, …^en” ／ “`On setting, …^en”
+］の様な（旧来の）句で記される箇所も多々あるが、（~web~platform全般にわたり）特に違いはないと見受けられるので，和訳では［
+“取得子” ／ “設定子”
+］に表記を統一している。
+】【
+加えて，~IDL属性に限らず、当の~IDL~memberの挙動が~algoとして定義されている ほとんどの箇所では、
+<a href="index.html#webidl-steps">Web IDL により推奨される表記法</a>を利用している。
+】</p>
+
+◎
+An IDL attribute is said to be getting when its value is being retrieved (e.g. by author script), and is said to be setting when a new value is assigned to it.
+</div>
+
+<p>
+`~liveである@
+とされた~DOM~objに対しては、その~obj上の［
+属性, ~method
+］は、~dataの~snapshotではなく，実際の
+【すなわち，現在の】
+下層の~dataに対し演算するモノトスル。
+◎
+If a DOM object is said to be live, then the attributes and methods on that object must operate on the actual underlying data, not a snapshot of the data.
+</p>
+
+			</section>
+			<section id="plugins">
+<h3 title="Plugins">2.1.6. ~plugin</h3>
+
+<p>
+用語
+`~plugin@
+は、~UAが利用する`実装定義$な内容~handlerであって、~UAによる`文書$の具現化の一部を成し得るが，［
+`文書$の`子~閲覧文脈$として動作する
+］ことも［
+`文書$の~DOMに `Node$I ~objを導入する
+］こともないものを指す。
+◎
+The term plugin refers to an implementation-defined set of content handlers used by the user agent that can take part in the user agent's rendering of a Document object, but that neither act as child browsing contexts of the Document nor introduce any Node objects to the Document's DOM.
+</p>
+
+<p>
+そのような内容~handlerは、概して
+第三者主体から供される
+— ~UAも，自身に組込みの内容~handlerを`~plugin$として指名できるが。
+◎
+Typically such content handlers are provided by third parties, though a user agent can also designate built-in content handlers as plugins.
+</p>
+
+<p>
+~UAは、~MIME型［
+`text/plain$c ／ `application/octet-stream$c
+］に対しては、登録-済みの`~plugin$は常に無いと見なすモノトスル。
+◎
+A user agent must not consider the types text/plain and application/octet-stream as having a registered plugin.
+</p> 
+
+<p class="example">
+~pluginの一例として、利用者が~PDF~fileへ~navigateしたときに`閲覧文脈$内で~instance化される~PDF~viewerが挙げられる。
+これは、~UA自身が~PDF~viewer部品を実装した主体であるかどうかに関わらず，~pluginに数えられることになる。
+一方で、~UAが（自身の~UIは利用せずに，）別々の~PDF~viewer~appを立上げる場合、その~appは，この定義においては~pluginではない。
+◎
+One example of a plugin would be a PDF viewer that is instantiated in a browsing context when the user navigates to a PDF file. This would count as a plugin regardless of whether the party that implemented the PDF viewer component was the same as that which implemented the user agent itself. However, a PDF viewer application that launches separate from the user agent (as opposed to using the same interface) is not a plugin by this definition.
+</p>
+
+<p class="note">注記：
+この仕様は、~pluginとヤリトリする仕組みは定義しない
+— それは［
+~UA／~platform
+］に特有と期待されているので。
+~UAには、
+Netscape Plugin ~API などの~pluginを~~選択的に組み込む仕組みを~supportするものもあれば、遠隔操作の内容~変換器を利用するものや, 一定の内容~型に対しては組込みの~pluginで~supportするものもある。
+~~実際、この仕様では，~UAによる~pluginの~supportは まったく要求されない。
+`NPAPI$r
+◎
+This specification does not define a mechanism for interacting with plugins, as it is expected to be user-agent- and platform-specific. Some UAs might opt to support a plugin mechanism such as the Netscape Plugin API; others might use remote content converters or have built-in support for certain types. Indeed, this specification doesn't require user agents to support plugins at all. [NPAPI]
+</p>
+
+<p>
+~pluginは、 `sandbox$a 属性の意味論を尊守するならば，
+`~secure化でき@
+るとされる。
+◎
+A plugin can be secured if it honors the semantics of the sandbox attribute.
+</p>
+
+<p class="example">
+例えば，~secure化された~pluginは、~sandbox化された `iframe$e の内側で~instance化されたときには，その内容が~popup~UIwindowを作成するのを防止することになる。
+◎
+For example, a secured plugin would prevent its contents from creating popup windows when the plugin is instantiated inside a sandboxed iframe.
+</p>
+
+<p class="warning">
+~browserは、`~plugin$用に意図される外部~内容とヤリトリするときには，特段の注意を払うベキである。
+第三者主体の手による~softwareを~UA自身と同じ特権で走らせた場合、その~software内の脆弱性は，~UA内のそれと同等に危険になる。
+◎
+Browsers should take extreme care when interacting with external content intended for plugins. When third-party software is run with the same privileges as the user agent itself, vulnerabilities in the third-party software become as dangerous as those in the user agent.
+</p>
+
+<p>
+~FINGERPRINTING
+利用者が有する`~plugin$の集合は利用者ごとに異なり、利用者が一意に識別されるような機会を増やすような追跡~行路を供するので、~UAには，どの利用者に対しても 正確に同じ`~plugin$の集合を~supportすることが奨励される。
+◎
+(This is a tracking vector.)
+Since different users having different sets of plugins provides a tracking vector that increases the chances of users being uniquely identified, user agents are encouraged to support the exact same set of plugins for each user.
+</p>
+
+			</section>
+			<section id="encoding-terminology">
+<h3 title="Character encodings">2.1.7. 文字~符号化法</h3>
+
+<p>
+`文字~符号化法@（
+<a href="~ENCODING#encoding">参照先</a>
+）は、~byte~streamと~Unicode文字列との間で相互に変換する仕方であり，
+`Encoding^cite `ENCODING$r
+にて定義される。
+多義的にならない所では、単に “符号化法” とも称される。
+各 `符号化法$には、［
+`符号化法~名@
+（<a href="~ENCODING#name">参照先</a>）と 1 個以上の
+`符号化法~label@
+（<a href="~ENCODING#label">参照先</a>）
+］が~~定義されている。
+◎
+A character encoding, or just encoding where that is not ambiguous, is a defined way to convert between byte streams and Unicode strings, as defined in Encoding. An encoding has an encoding name and one or more encoding labels, referred to as the encoding's name and labels in the Encoding standard. [ENCODING]
+</p>
+
+			</section>
+			<section id="conformance-classes">
+<h3 title="Conformance classes">2.1.8. 各種 適合性の類別</h3>
+
+<p>
+この仕様は、次の 2 つに対する適合性~判定基準を述べる：
+◎
+This specification describes the conformance criteria for＼
+</p>
+
+<ul>
+	<li>
+~UA（実装者に関連な）
+◎
+user agents (relevant to implementers) and＼
+</li>
+	<li>
+文書（作者／著作~tool実装者に関連な）
+◎
+documents (relevant to authors and authoring tool implementers).
+</li>
+</ul>
+
+<p>
+`適合~文書@
+は、文書に課されるすべての適合性~判定基準に準拠するものである。
+可読性のため、これらの適合性~要件のうち一部は，作者に対する適合性~要件として句される。
+そのような要件は、暗黙的に文書に課されるものとされる。
+定義により、すべての文書には，その作者があるものと見做される。
+（一部の事例では、~UA自身がその作者になることもある
+— そのような~UAは、下に説明されるように，追加的な規則の~subjectになる。）
+◎
+Conforming documents are those that comply with all the conformance criteria for documents. For readability, some of these conformance requirements are phrased as conformance requirements on authors; such requirements are implicitly requirements on documents: by definition, all documents are assumed to have had an author. (In some cases, that author may itself be a user agent — such user agents are subject to additional rules, as explained below.)
+</p>
+
+<p class="example">
+例えば、要件にて
+“作者は `foobar^e 要素を利用してはナラナイ”
+と言明されている場合、それは，［
+文書が名前 `foobar^e の要素を包含することは、許容されない
+］ことを含意することになる。
+◎
+For example, if a requirement states that "authors must not use the foobar element", it would imply that documents are not allowed to contain elements named foobar.
+</p>
+
+<p class="note impl">
+文書, 実装
+に課される適合性~要件の間には、含意される関係性はない。
+~UAは、適合しない文書を好きに取扱う自由はない
+— この仕様にて述べる処理~modelは、入力~文書が適合するかどうかに関わらず，実装に適用される。
+◎
+There is no implied relationship between document conformance requirements and implementation conformance requirements. User agents are not free to handle non-conformant documents as they please; the processing model described in this specification applies to implementations regardless of the conformity of the input documents.
+</p>
+
+<p class="trans-note">【
+しかしながら，適合しないあらゆる事例に対し処理~modelが指定されているわけではないので（おそらく，そうするのは現実的でない）、文書が適合しない場合の各 実装~間の挙動の一貫性は，原則的に仕様からは保証されないと考えるべきであろう。
+】</p>
+
+<p>
+~UAは、適合性~要件が互いに異なるような，いくつかの（互いに重なり合う）種類に分けられる：
+◎
+User agents fall into several (overlapping) categories with different conformance requirements.
+</p>
+
+<dl>
+	<dt id="interactive">
+~web~browserその他の，対話的~UA
+◎
+Web browsers and other interactive user agents
+</dt>
+	<dd>
+`~XML構文$を~supportする~web~browserは、~XML文書~内に見出された［
+要素, 属性
+］のうち，`~HTML名前空間$に属するものを
+— 他の仕様により，それらの要素の意味論が上書きされていない限り —
+この仕様にて述べるように処理して，利用者がそれらと対話できるようにするモノトスル。
+◎
+Web browsers that support the XML syntax must process elements and attributes from the HTML namespace found in XML documents as described in this specification, so that users can interact with them, unless the semantics of those elements have been overridden by other specifications.
+</dd>
+
+	<dd class="example">
+適合~web~browserは、~XML文書~内に `script$e 要素を見出した際には，要素が包含している~scriptを実行することになる。
+しかしながら，要素が~XSLT内で表出される形式変換の中で見出された場合には（~UAは，~XSLTも~supportするとする）、代わりに~XML処理器は，当の `script$e 要素を形式変換-の一部を形成する不透明な要素として扱うことになる。
+◎
+A conforming web browser would, upon finding a script element in an XML document, execute the script contained in that element. However, if the element is found within a transformation expressed in XSLT (assuming the user agent also supports XSLT), then the processor would instead treat the script element as an opaque element that forms part of the transform.
+</dd>
+	<dd>
+`~HTML構文$における~scriptingを~supportする~web~browserは、`~HTML~MIME型$に~~識別される文書を この仕様にて述べるように処理して，利用者が文書と対話できるようにするモノトスル。
+◎
+Web browsers that support the HTML syntax must process documents labeled with an HTML MIME type as described in this specification, so that users can interact with them.
+</dd>
+	<dd>
+~scriptingを~supportする~UAは、この仕様における~IDL片に対しても，
+`Web IDL^cite `WEBIDL$r
+に述べられる適合~実装になるモノトスル。
+◎
+User agents that support scripting must also be conforming implementations of the IDL fragments in this specification, as described in Web IDL. [WEBIDL]
+</dd>
+	<dd class="note">注記：
+明示的に言明されない限り、~HTML要素の意味論を上書きする仕様であっても，その要素を表現している~DOM~objに課される要件は上書きしないとする。
+例えば，上の例の `script$e 要素は、依然として，
+`HTMLScriptElement$I ~interfaceを実装することになる。
+◎
+Unless explicitly stated, specifications that override the semantics of HTML elements do not override the requirements on DOM objects representing those elements. For example, the script element in the example above would still implement the HTMLScriptElement interface.
+</dd>
+	<dt id="non-interactive">
+対話的でない呈示のみの~UA
+◎
+Non-interactive presentation user agents
+</dt>
+	<dd>
+純粋に，
+~HTML／~XML
+文書の対話的でない~versionを具現化するために処理する~UAは、利用者~対話に関する要件については免除されることを除き，~web~browserと同じ適合性~判定基準に準拠するモノトスル。
+◎
+User agents that process HTML and XML documents purely to render non-interactive versions of them must comply to the same conformance criteria as web browsers, except that they are exempt from requirements regarding user interaction.
+</dd>
+	<dd class="note">注記：
+対話的でない呈示~UAの代表的な例として、印刷機（静的~UA）や頭上display（動的~UA）が挙げられる。
+静的であって対話的でない呈示~UAのほとんどは、
+<a href="#non-scripted">~scripting~supportも欠く</a>
+ことが予期される。
+◎
+Typical examples of non-interactive presentation user agents are printers (static UAs) and overhead displays (dynamic UAs). It is expected that most static non-interactive presentation user agents will also opt to lack scripting support.
+</dd>
+	<dd class="example">
+対話的でないが，動的な呈示~UAは、依然として［
+~scriptを実行する, ~formを動的に提出する, 等々
+］を許容する。
+しかしながら、利用者が文書と対話できない下では， “~focus” の概念は関連しないので、~UAは，~focusに関係するどの~DOM~APIも~supportする必要はないことになる。
+◎
+A non-interactive but dynamic presentation UA would still execute scripts, allowing forms to be dynamically submitted, and so forth. However, since the concept of "focus" is irrelevant when the user cannot interact with the document, the UA would not need to support any of the focus-related DOM APIs.
+</dd>
+
+	<dt id="renderingUA">
+示唆される既定の具現化を~supportする視覚的な~UA
+◎
+Visual user agents that support the suggested default rendering
+</dt>
+	<dd>
+対話的かどうかにかかわらず、~UAは、この仕様に定義され, 示唆される（ `suggested^en ），既定の具現化（ `rendering^en ）を~supportするものとして指名され得る（場合によっては 利用者の選択肢として）。
+◎
+User agents, whether interactive or not, may be designated (possibly as a user option) as supporting the suggested default rendering defined by this specification.
+</dd>
+	<dd>
+このことは要求されてはいない。
+特に，~UAには、示唆される既定の具現化を実装するとしても，利用者~体験を改善するためとして，既定の具現化を上書きするような設定群を提供することが奨励される。
+例えば、色の~contrastを変更する,
+~focusに異なる~styleを利用する,
+その他、利用者がより~access可能かつ利用-可能になるものなど。
+◎
+This is not required. In particular, even user agents that do implement the suggested default rendering are encouraged to offer settings that override this default to improve the experience for the user, e.g. changing the color contrast, using different focus styles, or otherwise making the experience more accessible and usable to the user.
+</dd>
+	<dd>
+示唆される既定の具現化を~supportするものと指名された~UAは、そう指名されている間は，
+<a href="~HTMLrendering#rendering">§ 具現化</a>
+にて［
+~UAに実装することが`期待される^em（ `expected^en ）挙動
+］として定義されている規則を実装するモノトスル。
+◎
+User agents that are designated as supporting the suggested default rendering must, while so designated, implement the rules the rendering section defines as the behavior that user agents are expected to implement.
+</dd>
+
+	<dt id="non-scripted">
+~scriptingを~supportしない~UA
+◎
+User agents with no scripting support
+</dt>
+	<dd>
+~scriptingを~supportしない（または，まるごと不能化されている）実装は、この仕様に言及される［
+~event／~DOM
+］~interfaceを~supportすることは，免除される。
+そのような~UAであっても、この仕様における［
+~event~model／~DOM
+］の用語で定義される各部に対しては，［
+~event／~DOM
+］を~supportしていたかのように動作するモノトスル。
+◎
+Implementations that do not support scripting (or which have their scripting features disabled entirely) are exempt from supporting the events and DOM interfaces mentioned in this specification. For the parts of this specification that are defined in terms of an events model or in terms of the DOM, such user agents must still act as if events and the DOM were supported.
+</dd>
+	<dd class="note">注記：
+~scriptingが、~appの不可欠な部分を形成することもある。
+~scriptingを~supportしない（または不能化されている）~web~browserは、作者の意図を全部的に伝達できないかもしれない。
+◎
+Scripting can form an integral part of an application. Web browsers that do not support scripting, or that have scripting disabled, might be unable to fully convey the author's intent.
+</dd>
+
+	<dt>
+適合性~検査器
+◎
+Conformance checkers
+</dt>
+	<dd id="conformance-checkers">
+適合性~検査器は、この仕様にて述べる適合性~判定基準のうち 適用-可能なものについて，文書が適合するかどうかを検証yするモノトスル。
+自動化された適合性~検査器には、作者の意図の解釈を要求するような~errorを検出することは免除される（例えば、［
+内容が引用でない `blockquote$e 要素
+］を含むような文書は，適合しないが、ヒトによる判定の下で走らせてない適合性~検査器には， `blockquote$e 要素が引用された素材のみを包含していることを検査する必要はない）。
+◎
+Conformance checkers must verify that a document conforms to the applicable conformance criteria described in this specification. Automated conformance checkers are exempt from detecting errors that require interpretation of the author's intent (for example, while a document is non-conforming if the content of a blockquote element is not a quote, conformance checkers running without the input of human judgement do not have to check that blockquote elements only contain quoted material).
+</dd>
+	<dd>
+<p>
+適合性~検査器は、入力~文書に対し：
+</p>
+		<ul>
+			<li>
+`属する閲覧文脈$がない下で（~scriptを走らすことなく, かつ構文解析器の`~scripting~flag$は `不能化^i にすることを意味する）構文解析して、適合するかどうかを検査するモノトスル。
+</li>
+			<li>
+また，`属する閲覧文脈$がある下で構文解析して、適合するかどうかを
+— その中で~scriptを実行して，~scriptが適合しない状態を（~script実行の間に一時的にそうなるときを除いて）決して生じさせないかどうかを —
+検査するベキである（この要件は “するベキ” までに限られ， “するモノトスル” ではない
+— それは不可能なことが証明されているので `COMPUTABLE$r ）
+</li>
+		</ul>
+◎
+Conformance checkers must check that the input document conforms when parsed without a browsing context (meaning that no scripts are run, and that the parser's scripting flag is disabled), and should also check that the input document conforms when parsed with a browsing context in which scripts execute, and that the scripts never cause non-conforming states to occur other than transiently during script execution itself. (This is only a "SHOULD" and not a "MUST" requirement because it has been proven to be impossible. [COMPUTABLE])
+</dd>
+	<dd>
+適合性~検査器は、この仕様による要件のうち適用-可能なものすべてに適合するならば，
+“~HTML検証器” と称することができる。
+◎
+The term "HTML validator" can be used to refer to a conformance checker that itself conforms to the applicable requirements of this specification.
+</dd>
+
+	<dd class="note">
+<p>注記：
+~XML~DTDは、この仕様の適合性~要件すべてを表出することはできない。
+したがって、~XML処理器と~DTDだけでは，適合性~検査器として~~不足になる。
+また、この仕様にて定義される
+<a href="#_authoring-formats">2 つの著作~形式</a>
+は，どちらも~SGMLの応用ではないので、それらを検証する~SGML~systemも，適合性~検査器としては~~不足になる。
+◎
+XML DTDs cannot express all the conformance requirements of this specification. Therefore, a validating XML processor and a DTD cannot constitute a conformance checker. Also, since neither of the two authoring formats defined in this specification are applications of SGML, a validating SGML system cannot constitute a conformance checker either.
+</p>
+
+<p>
+別の仕方で記すなら、適合性~判定基準には，次の 3 種がある：
+◎
+To put it another way, there are three types of conformance criteria:
+</p>
+
+		<ol>
+			<li>
+~DTDで表出できるもの。
+◎
+Criteria that can be expressed in a DTD.
+</li>
+			<li>
+~DTDでは表出できないが、機械的に検査できるもの。
+◎
+Criteria that cannot be expressed by a DTD, but can still be checked by a machine.
+</li>
+			<li>
+ヒトでしか検査できないもの。
+◎
+Criteria that can only be checked by a human.
+</li>
+		</ol>
+
+<p>
+適合性~検査器は、最初の 2 項目に対しては検査するモノトスル。
+~DTDのみに基づく単純な検証器は、最初の類別の~errorしか検査しないので、この仕様に則る適合性~検査器には適合しない。
+◎
+A conformance checker must check for the first two. A simple DTD-based validator only checks for the first class of errors and is therefore not a conforming conformance checker according to this specification.
+</p>
+	</dd>
+
+	<dt>
+~data-mining~tool
+◎
+Data mining tools
+</dt>
+	<dd id="data-mining">
+［
+文書を具現化する, 適合性を検査する
+］以外の理由で［
+~HTML／~XML
+］文書を処理する~appや~toolは、自身が処理する文書の意味論に則って動作するベキである。
+◎
+Applications and tools that process HTML and XML documents for reasons other than to either render the documents or check them for conformance should act in accordance with the semantics of the documents that they process.
+</dd>
+	<dd class="example">
+`文書の~outline$を生成する~toolであって、入子ng~levelを 各~段落に対しては増やしつつ，各~節に対しては増やさないものは、適合しない。
+◎
+A tool that generates document outlines but increases the nesting level for each paragraph and does not increase the nesting level for each section would not be conforming.
+</dd>
+
+	<dt id="editors">
+著作~tool／~markup生成器
+◎
+Authoring tools and markup generators
+</dt>
+	<dd>
+著作~tool／~markup生成器
+は、`適合~文書$を生成しなければナラナイ。
+作者に適用される適合性~判定基準は、適切になる所では，著作~toolにも適用される。
+◎
+Authoring tools and markup generators must generate conforming documents. Conformance criteria that apply to authors also apply to authoring tools, where appropriate.
+</dd>
+	<dd>
+著作~toolは，［
+要素をそれに指定された目的に限って利用するとする，厳密な要件
+］は免除されるが、それは，~tool自身が作者の意図を決定-不能な範囲tまでに限られる。
+しかしながら，著作~toolは、要素を自動的に誤用したり，利用者にそうするよう奨励してはナラナイ。
+◎
+Authoring tools are exempt from the strict requirements of using elements only for their specified purpose, but only to the extent that authoring tools are not yet able to determine author intent. However, authoring tools must not automatically misuse elements or encourage their users to do so.
+</dd>
+	<dd class="example">
+例えば、 `address$e 要素を任意な連絡先~情報に利用することは適合でない
+— その要素は、最も近い先祖の［
+`article$e ／ `body$e
+］要素~用の連絡先~情報を~markupするために限り，利用できるので。
+しかしながら，著作~toolは、およそ その相違は決定できないであろうから，その要件は免除される。
+そうであっても，これは、［
+著作~toolは、（一例として）~italic体の~textからなる どの~blockにも `address$e 要素を利用できる
+］ことを意味するわけではない
+— それは単に、［
+著作~toolは、［
+利用者が~toolを利用して `article$e 要素~用の連絡先~情報を挿入するときに、利用者が本当にそれを行っていて，何か別のものを挿入していない
+］ことを検証yする必要はない
+］ことを意味する。
+◎
+For example, it is not conforming to use an address element for arbitrary contact information; that element can only be used for marking up contact information for its nearest article or body element ancestor. However, since an authoring tool is likely unable to determine the difference, an authoring tool is exempt from that requirement. This does not mean, though, that authoring tools can use address elements for any block of italics text (for instance); it just means that the authoring tool doesn't have to verify that when the user uses a tool for inserting contact information for an article element, that the user really is doing that and not inserting something else instead.
+</dd>
+	<dd class="note">注記：
+~editorが出力する文書は，適合性の検査-法に関して言えば、適合性~検査器が検証yするときと同じ範囲tまでは，適合する必要がある。
+◎
+In terms of conformance checking, an editor has to output documents that conform to the same extent that a conformance checker will verify.
+</dd>
+	<dd>
+著作~toolが適合しない文書を編集するために利用されるときは、編集~sessionの間に，文書~内の未~編集-部分における適合性~errorを保全してもヨイ（すなわち、編集~toolには、~error含みの内容を往来することは許容される）。
+しかしながら，著作~toolは、そのように~errorが保全された出力を，適合するものと主張してはナラナイ。
+◎
+When an authoring tool is used to edit a non-conforming document, it may preserve the conformance errors in sections of the document that were not edited during the editing session (i.e. an editing tool is allowed to round-trip erroneous content). However, an authoring tool must not claim that the output is conformant if errors have been so preserved.
+</dd>
+	<dd>
+<p>
+著作~toolは、次の 2 つに大別されることが予期される：
+◎
+Authoring tools are expected to come in two broad varieties:＼
+</p>
+
+		<ul>
+			<li>
+構造上のまたは意味論上の~dataに対し働くもの。
+◎
+tools that work from structure or semantic data, and＼
+</li>
+			<li>
+媒体に特有な~WYSIWYG（ `What-You-See-Is-What-You-Get^en ）編集に基づいて働くもの。
+◎
+tools that work on a What-You-See-Is-What-You-Get media-specific editing basis (WYSIWYG).
+</li>
+		</ul>
+
+<p >
+前者は、~HTMLを著作する~toolに選好される仕組みである
+— 最も適切な~HTML要素／属性を選ぶ際の判断材料に，~source情報~内の構造を利用できるので。
+◎
+The former is the preferred mechanism for tools that author HTML, since the structure in the source information can be used to make informed choices regarding which HTML elements and attributes are most appropriate.
+</p>
+
+<p>
+しかしながら，~WYSIWYG~toolが正当でないわけではない。
+~WYSIWYG~toolは、適切であると知る要素のみを利用するベキであり，そうでない要素は利用するベキでない。
+これは，ある種の極端な事例では、`~flow内容$の利用を ごく少数の要素~型
+— `div$e, `b$e, `i$e, `span$e など —
+に制限した上で， `style$a 属性を最大限に活用することを意味するかもしれない。
+◎
+However, WYSIWYG tools are legitimate. WYSIWYG tools should use elements they know are appropriate, and should not use elements that they do not know to be appropriate. This might in certain extreme cases mean limiting the use of flow elements to just a few elements, like div, b, i, and span and making liberal use of the style attribute.
+</p>
+	</dd>
+	<dd>
+~WYSIWYGかどうかにかかわらず，すべての著作~toolは、最善な労をもって，利用者が［
+きちんと構造~化され, 意味論的に多彩な，媒体に依存しない内容
+］を作成できるようにするベキである。
+◎
+All authoring tools, whether WYSIWYG or not, should make a best effort attempt at enabling users to create well-structured, semantically rich, media-independent content.
+</dd>
+
+</dl>
+
+<p id="hardwareLimitations">
+~FINGERPRINTING
+~UAは、他からは拘束されない入力に，実装に特有な制限sを課してもヨイ。
+例えば［
+~DOS攻撃を防止する ／
+~memoryの枯渇に抗して防護する ／
+~platformに特有な制限に対処する
+］など。
+◎
+(This is a tracking vector.)
+User agents may impose implementation-specific limits on otherwise unconstrained inputs, e.g., to prevent denial of service attacks, to guard against running out of memory, or to work around platform-specific limitations.
+</p>
+
+<p id="_authoring-formats">
+［
+既存の内容や, 先立つ仕様
+］との互換性を得るため、この仕様は，次の 2 つの著作~形式を述べる：
+◎
+For compatibility with existing content and prior specifications, this specification describes two authoring formats:＼
+</p>
+
+<ul>
+	<li>
+`~XML構文$に基づくもの。
+◎
+one based on XML, and＼
+</li>
+	<li>
+~SGMLに~~由来する`~custom形式$を利用するもの（`~HTML構文$とも称される）。
+◎
+one using a custom format inspired by SGML (referred to as the HTML syntax).＼
+</li>
+</ul>
+
+<p>
+実装は、これら 2 つの形式のうち，どちらかは~supportするモノトスル
+— 両方とも~supportすることが奨励されるが。
+◎
+Implementations must support at least one of these two formats, although supporting both is encouraged.
+</p>
+
+<p>
+適合性~要件のうち一部は、［
+要素 ／ 属性 ／ ~method ／ ~obj
+］に課される要件として句される。
+そのような要件は、次の 2 つに~~分類される：
+◎
+Some conformance requirements are phrased as requirements on elements, attributes, methods or objects. Such requirements fall into two categories: those describing content model restrictions, and those describing implementation behavior.＼
+</p>
+
+<ul>
+	<li>
+内容~modelに対する制約について述べるもの。
+これは、［
+文書／著作~tool
+］に課される要件になる。
+◎
+Those in the former category are requirements on documents and authoring tools.＼
+</li>
+	<li>
+実装の挙動について述べるもの。
+これは、~UAに課される要件になる。
+◎
+Those in the second category are requirements on user agents.＼
+</li>
+</ul>
+
+<p>
+同様に，適合性~要件のうち一部は、作者に課される要件として句される。
+そのような要件は、作者が生産する文書に課される適合性~要件として解釈されることになる（言い換えれば、この仕様は，作者に課される適合性~判定基準と, 文書に課されるそれとを区別しない）。
+◎
+Similarly, some conformance requirements are phrased as requirements on authors; such requirements are to be interpreted as conformance requirements on the documents that authors produce. (In other words, this specification does not distinguish between conformance criteria on authors and conformance criteria on documents.)
+</p>
+
+			</section>
+			<section id="dependencies">
+<h3 title="Dependencies">2.1.9. 依存関係</h3>
+
+<p class="trans-note">【
+この節の和訳は
+<a href="~HTMLdep#dependencies">別ページにて</a>
+】</p>
+
+			</section>
+			<section id="extensibility-2">
+<h3 title="Extensibility">2.1.10. 拡張能</h3>
+
+<p>
+この仕様に対する~vendorに特有な~proprietaryな~UA拡張は、強く忌避される。
+文書は、そのような拡張を利用してはナラナイ。
+そのような行為は、当の内容への~accessが特定の~UAの利用者に限られてしまい，相互運用能の~~悪化と利用者~層の細分化を招くことになるので。
+◎
+Vendor-specific proprietary user agent extensions to this specification are strongly discouraged. Documents must not use such extensions, as doing so reduces interoperability and fragments the user base, allowing only users of specific user agents to access the content in question.
+</p>
+
+<p>
+すべての拡張は、その利用が，この仕様にて定義される機能性に矛盾したり適合しなくなるように定義されてはナラナイ。
+◎
+All extensions must be defined so that the use of extensions neither contradicts nor causes the non-conformance of functionality defined in the specification.
+</p>
+
+<p class="example">
+例えば，そうすることは強く忌避されてはいるが、実装は，ある~controlに［
+利用者が その~controlの現在の値を選択するときにかかった時間
+］を返すような，新たな~IDL属性 `typeTime^m を追加することもできる。
+他方、~formの `elements$m 配列に出現するような，新たな~controlを定義することは、上の要件に対する違反になる
+— それは、この仕様が与える `elements$m の定義に違反するので。
+◎
+For example, while strongly discouraged from doing so, an implementation could add a new IDL attribute "typeTime" to a control that returned the time it took the user to select the current value of a control (say). On the other hand, defining a new control that appears in a form's elements array would be in violation of the above requirement, as it would violate the definition of elements given in this specification.
+</p>
+
+<hr>
+
+<p>
+この仕様に対し ~vendorに中立的な拡張が必要されるときは、それに則って，この仕様が更新されるか，この仕様の要件を上書きするような拡張~仕様が記され得る。
+自身の活動にこの仕様を適用している誰かが、そのような拡張~仕様の要件を認めるものと裁定したとき、それは，この仕様に対する適合性~要件の目的において
+`適用-可能な仕様@
+になる。
+◎
+When vendor-neutral extensions to this specification are needed, either this specification can be updated accordingly, or an extension specification can be written that overrides the requirements in this specification. When someone applying this specification to their activities decides that they will recognize the requirements of such an extension specification, it becomes an applicable specification for the purposes of conformance requirements in this specification.
+</p>
+
+<p class="note">注記：
+誰かが，［
+任意な~byte~streamは適合である
+］と定義するような仕様を書いた上で，そのような無作為な~junkを適合であると主張することもできる。
+しかしながらそれは、その無作為な~junkが皆の目的に適合であることを実際に意味するものではない。
+他の誰かが，その仕様を自身の作業に適用しないものと裁定したなら、その誰かは，まったく正当に［
+前述の~junkは，単に~junkであり まったく適合でない
+］と言える。
+特定0の~communityにおいて何が問題mとされるかは，その~communityが何に`合意するか^emであり、適合性が適用-可能なのは，その限りにおいてである。
+◎
+Someone could write a specification that defines any arbitrary byte stream as conforming, and then claim that their random junk is conforming. However, that does not mean that their random junk actually is conforming for everyone's purposes: if someone else decides that that specification does not apply to their work, then they can quite legitimately say that the aforementioned random junk is just that, junk, and not conforming at all. As far as conformance goes, what matters in a particular community is what that community agrees is applicable.
+</p>
+
+<hr>
+
+<p>
+~UAは、自身が解さない要素や属性を，次のように意味論的に中立的であるものと扱うモノトスル：
+◎
+User agents must treat elements and attributes that they do not understand as semantically neutral;＼
+</p>
+
+<ul >
+	<li>
+~DOM処理器においては、それらを~DOM内に残すこと。
+◎
+leaving them in the DOM (for DOM processors), and＼
+</li>
+	<li>
+~CSS処理器においては、~CSSに則ってそれらに~styleをあてがうこと。
+◎
+ styling them according to CSS (for CSS processors), but＼
+ </li>
+	<li>
+それらから いかなる意味も推定しないこと。
+◎
+not inferring any meaning from them.
+</li>
+</ul>
+
+<p>
+~UAは、特能の~supportを不能化するときは（例：
+~security問題を軽減するための緊急の措置として ／
+開発を援助するため ／
+処理能~上の理由から），［
+その特能を何ら~supportしていなかった ／
+その特能は，この仕様に言及されていなかった
+］かのように動作するモノトスル。
+例えば、特定0の特能が ~Web~IDL~interface内の属性を介して~accessされる場合、属性~自体を，その~interfaceを実装する~objから外すことになる
+— ~obj上にその属性を残した上で，~NULL を返したり, 例外を投出させるのでは、不足である。
+◎
+When support for a feature is disabled (e.g. as an emergency measure to mitigate a security problem, or to aid in development, or for performance reasons), user agents must act as if they had no support for the feature whatsoever, and as if the feature was not mentioned in this specification. For example, if a particular feature is accessed via an attribute in a Web IDL interface, the attribute itself would be omitted from the objects that implement that interface — leaving the attribute on the object but making it return null or throw an exception is insufficient.
+</p>
+
+			</section>
+			<section id="interactions-with-xpath-and-xslt">
+<h3 title="Interactions with XPath and XSLT">2.1.11. ~XPath／~XSLTとの相互作用</h3>
+
+<p id="xpath-1.0-processors">
+この仕様に述べる方式で［
+構文解析される／作成される `~HTML文書$
+］上で演算する XPath 1.0 実装（例：
+`document.evaluate()^c ~APIの一部で）は、
+XPath 1.0 仕様に，次の編集-が適用されたかのように動作するモノトスル：
+◎
+Implementations of XPath 1.0 that operate on HTML documents parsed or created in the manners described in this specification (e.g. as part of the document.evaluate() API) must act as if the following edit was applied to the XPath 1.0 specification.
+</p>
+
+
+<p>
+先ず，次の段落を除去した上で：
+◎
+First, remove this paragraph:
+</p>
+
+<blockquote
+	lang="en-x-a0"
+	cite="https://www.w3.org/TR/1999/REC-xpath-19991116/#node-tests"
+>
+<p>
+A QName in the node test is expanded into an expanded-name using the namespace declarations from the expression context. This is the same way expansion is done for element type names in start and end-tags except that the default namespace declared with xmlns is not used: if the QName does not have a prefix, then the namespace URI is null (this is the same way attribute names are expanded). It is an error if the QName has a prefix for which there is no namespace declaration in the expression context.
+</p>
+</blockquote>
+
+<div class="trans-note">
+<p>
+~node~testにおける `QName^P は、~XPath式~文脈（ `the expression context^en ）からの名前空間~宣言を利用して， `expanded-name$P に展開される。
+これは、［
+`xmlns^a により宣言される，既定の名前空間
+］は利用されないことは除いて，
+開始~tag／終了~tag
+における要素~型~名に対する展開と同じ仕方で行われる：
+</p>
+
+<ul>
+	<li>
+`QName$P に接頭辞（ `prefix^en ）がない場合、名前空間 URI （ `namespace URI^en ）は ~NULL とする（これは、属性~名（ `attribute name^en ）が展開されるときと同じ仕方になる）。
+</li>
+	<li>
+`QName$P に接頭辞がある場合、対する~XPath式~文脈に名前空間~宣言がないならば，~errorとする。
+</li>
+</ul>
+
+</div>
+
+<p>
+その場所に次を挿入する：
+◎
+Then, insert in its place the following:
+</p>
+
+<blockquote
+	lang="en-x-a0"
+	cite="https://www.w3.org/Bugs/Public/show_bug.cgi?id=7059#c37"
+>
+<p>
+A QName in the node test is expanded into an expanded-name using the namespace declarations from the expression context. If the QName has a prefix, then there must be a namespace declaration for this prefix in the expression context, and the corresponding namespace URI is the one that is associated with this prefix. It is an error if the QName has a prefix for which there is no namespace declaration in the expression context.
+</p>
+
+<p>
+If the QName has no prefix and the principal node type of the axis is element, then the default element namespace is used. Otherwise if the QName has no prefix, the namespace URI is null. The default element namespace is a member of the context for the XPath expression. The value of the default element namespace when executing an XPath expression through the DOM3 XPath API is determined in the following way:
+</p>
+
+<ol ><li>If the context node is from an HTML DOM, the default element namespace is "http://www.w3.org/1999/xhtml".
+</li><li>Otherwise, the default element namespace URI is null.
+</li></ol>
+
+</blockquote>
+
+<div class="trans-note">
+<p>
+~node~testにおける `QName^P は、~XPath式~文脈からの名前空間~宣言を利用して
+`expanded-name$P に展開される。
+</p>
+
+<ul>
+	<li>
+`QName^P に接頭辞がある場合、~XPath式~文脈に，この接頭辞に対する名前空間~宣言が~~存在しなければナラナイ
+— 存在しない場合は~errorとする。
+この接頭辞には、その宣言により宣言される名前空間 URI が結付けられる。
+</li>
+	<li>
+<p >
+`QName^P に接頭辞がない場合の名前空間 URI は：
+</p>
+		<ul>
+			<li>
+`the axis^en の `the principal^en ~node型は要素である場合、要素に対する既定の名前空間が利用される。
+</li>
+			<li>
+他の場合、~NULL とする。
+</li>
+		</ul>
+	</li>
+</ul>
+
+<p>
+要素に対する既定の名前空間は、~XPath式が属する文脈の一員である。
+DOM3 XPath API を通して~XPath式を実行するときの，要素に対する既定の名前空間の値は、次に従って決定される：
+</p>
+
+<ol>
+	<li>
+文脈~nodeが~HTML~DOMに属するならば：
+`http://www.w3.org/1999/xhtml^l
+</li>
+	<li>
+他の場合：
+~NULL
+</li>
+</ol>
+</div>
+
+<div class="note">
+<p>注記：
+これは、 XPath 2.0 の特能である［
+要素に対する既定の名前空間（ `the default element namespace^en ）
+］を XPath 1.0 に追加した上で、~HTML文書においては，~HTML名前空間を［
+要素に対する既定の名前空間
+］として利用することに等価である。
+それは、次が欲されることが動機にある：
+◎
+This is equivalent to adding the default element namespace feature of XPath 2.0 to XPath 1.0, and using the HTML namespace as the default element namespace for HTML documents. It is motivated by the desire to＼
+</p>
+
+<ul>
+	<li>
+実装が旧来の~HTML内容と互換であり続けること。
+◎
+have implementations be compatible with legacy HTML content＼
+</li>
+	<li>
+ただし、この仕様により~HTMLに導入される，~HTML要素に利用される名前空間に関する変更点は~supportすること。
+◎
+while still supporting the changes that this specification introduces to HTML regarding the namespace used for HTML elements, and＼
+</li>
+	<li>
+XPath 2.0 ではなく XPath 1.0 を利用すること。
+◎
+by the desire to use XPath 1.0 rather than XPath 2.0.
+</li>
+</ul>
+
+</div>
+
+<p class="note">注記：
+この変更は、上述の最初の 2 項目を動機とする，
+`XPATH10$r 仕様に対する`故意的な違反$である。
+◎
+This change is a willful violation of the XPath 1.0 specification, motivated by desire to have implementations be compatible with legacy content while still supporting the changes that this specification introduces to HTML regarding which namespace is used for HTML elements. [XPATH10]
+</p>
+
+<hr>
+
+<p id="dom-based-xslt-1.0-processors">
+~XSLT 1.0 処理器が，（ 明示的に, または XSLT 1.0 の規則による既定~法を介して）出力~method `html^l の下で~DOMを出力するときは、次のように影響される：
+◎
+XSLT 1.0 processors outputting to a DOM when the output method is "html" (either explicitly or via the defaulting rule in XSLT 1.0) are affected as follows:
+</p>
+
+<p>
+形式変換~programが 名前空間に属さない要素を出力する場合、処理器は，対応する~DOM要素~nodeを構築するに先立って，次を行わなければナラナイ：
+◎
+If the transformation program outputs an element in no namespace, the processor must, prior to constructing the corresponding DOM element node,＼</p>
+
+<ul>
+	<li>
+要素の名前空間を`~HTML名前空間$に変更する
+◎
+change the namespace of the element to the HTML namespace,＼
+</li>
+	<li>
+要素の局所~名を`~ASCII小文字~化する$
+◎
+ASCII-lowercase the element's local name, and＼
+</li>
+	<li>
+要素が有する各~属性 %A に対し、
+%A は どの名前空間にも属さないならば，
+%A の名前を`~ASCII小文字~化する$
+◎
+ASCII-lowercase the names of any non-namespaced attributes on the element.
+</li>
+</ul>
+
+<p class="note">注記：
+この要件は、 `XSLT10$r に対する`故意的な違反$である
+— これが要求されるのは、そうしなければ，この仕様による~HTMLにおける名前空間と文字大小比較に関する変更が，~DOMに基づく~XSLT形式変換と互換でなくなるためである。
+（出力を直列化する処理器は影響されない。）
+◎
+This requirement is a willful violation of the XSLT 1.0 specification, required because this specification changes the namespaces and case-sensitivity rules of HTML in a manner that would otherwise be incompatible with DOM-based XSLT transformations. (Processors that serialize the output are unaffected.) [XSLT10]
+</p>
+
+<hr>
+
+<p>
+この仕様は、~XSLT処理と`~HTML構文解析器$ 基盤とがどう相互作用するかについては、精確に指定しない（例えば、~XSLT処理器は，要素を`~open要素~stack$の中へ置いたかのように動作するのかどうか）。
+しかしながら，~XSLT処理器は：
+◎
+This specification does not specify precisely how XSLT processing interacts with the HTML parser infrastructure (for example, whether an XSLT processor acts as if it puts any elements into a stack of open elements). However, XSLT processors＼
+</p>
+
+<ul>
+	<li>
+成功裡に完了したときには、`構文解析を停止-$するモノトスル。
+◎
+must stop parsing if they successfully complete, and＼
+</li>
+	<li>
+加えて，`文書の現在の準備度$は、先ず `interactive^l に設定した上で，中止された場合は `complete^l に設定するモノトスル。
+◎
+must set the current document readiness first to "interactive" and then to "complete" if they are aborted.
+</li>
+</ul>
+
+<hr>
+
+<p>
+この仕様は、次については指定しない：
+◎
+This specification does not specify＼
+</p>
+
+<ul>
+	<li>
+~XSLTと`~navi$~algoとが，どう相互作用するか。
+◎
+how XSLT interacts with the navigation algorithm,＼
+</li>
+	<li>
+~XSLTが`~event~loop$内にどう収まるか。
+◎
+how it fits in with the event loop, nor＼
+</li>
+	<li>
+~error~pageがどう取扱われることになるか（例：~XSLT~errorは，~XSLTによる増分的~出力を置換するのか, ~inlineに具現化されるのか, 等々）。
+◎
+how error pages are to be handled (e.g. whether XSLT errors are to replace an incremental XSLT output, or are rendered inline, etc).
+</li>
+</ul>
+
+<p>注記：
+~HTMLとの相互作用に関する，追加的な規範的でない~commentもある：
+◎
+There are also additional non-normative comments regarding＼
+</p>
+
+<ul>
+	<li>
+~XSLTに対するそれは
+<a href="~HEscripting#scriptTagXSLT">§ ~script要素</a>
+にある。
+◎
+the interaction of XSLT and HTML in the script element section, and＼
+</li>
+	<li>
+［
+~XSLT, ~XPath, ~HTML
+］に対するそれは
+<a href="~HEscripting#template-XSLT-XPath">§ ~template要素</a>
+にある。
+◎
+of XSLT, XPath, and HTML in the template element section.
+</li>
+</ul>
+
+			</section>
+		</section>
+		<section id="case-sensitivity-and-string-comparison">
+<h2 title="String comparison">2.2. 文字列の比較</h2>
+
+<p class="trans-note">【
+この節の和訳は省略する。
+ここで定義される用語
+<dfn id="prefix-match" lang="en-x-a0">prefix match</dfn>
+（ “先頭一致” ）は、未訳な<a href="~NAVI#_for-app-cache">~app~cache用</a>の要件~以外の どこからも利用されていないので。
+】
+◎
+A string pattern is a prefix match for a string s when pattern is not longer than s and truncating s to pattern's length leaves the two strings as matches of each other.
+</p>
+
+		</section>
+		<section id="policy-controlled-features">
+<h2 title="Policy-controlled features">2.3. 施策により制御される特能</h2>
+
+<div>
+<p>
+この文書は、`施策により制御される特能$として，次の表の 1 列目に挙げるものを定義する
+— 表の 2 列目が，それぞれの`既定の許容list$を与える：
+</p>
+
+<table><tbody>
+<tr><td>`autoplay@l
+<td>`'self'^l
+
+<tr><td>`cross-origin-isolated@l
+<td>`'self'^l
+
+<tr><td>`document-domain@l
+<td>`*^l （全~生成元）
+</tbody></table>
+
+◎
+This document defines the following policy-controlled features:
+• "autoplay", which has a default allowlist of 'self'.
+• "cross-origin-isolated", which has a default allowlist of 'self'.
+• "document-domain", which has a default allowlist of *.
+</div>
+
+		</section>
+	</section>
+</main>
+

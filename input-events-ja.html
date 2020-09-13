@@ -1,0 +1,2027 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+
+<title>Input Events Level 2 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-w3c.css" type="text/css" />
+
+<style>
+
+tr {
+	border-top: thin solid silver;
+}
+
+#_inputType-overview > tr > td:nth-child(-n+3),
+#_data-attr-values > tr > td:first-child {
+	white-space: pre-line;
+}
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN0',
+		generate: expand
+	}
+
+	Util.switchWordsInit(source_data);
+}
+
+function expand(mapping1){
+
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+	const unicode_map = this.unicode_map;
+
+	return this.html.replace(
+		/%[\w~一-鿆]+|`(.*?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r': // ref
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'a': // DOM attr name
+	break;
+case 'l': // literal
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'et': // event type
+	href = `#${key.toLowerCase()}`;
+	//href = `#event-type-${key}`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+default:
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-01-10
+trans_update:2019-07-04
+source_checked:190115
+page_state_key:UIEVENTS
+original_url:https://w3c.github.io/input-events/index.html
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+copyright:2020,permissive
+	conformance:w3c
+site_nav:uievents
+trans_1st_pub:2016-05-25
+
+●●navs
+イベント:.eventdef
+
+●●class_map
+et:event-type
+e:element
+a:attr
+p:css
+
+●●tag_map
+c:code
+I:code
+m:code
+mI:code
+et:code
+e:code
+a:code
+p:code
+i:i
+v:var
+
+●●original_id_map
+
+normative:normative-references
+informative:informative-references
+
+
+●●mdn_urls
+event-type-input:API/HTMLElement/input_event
+event-type-beforeinput:API/HTMLElement/beforeinput_event
+
+●●link_map
+
+I.Element:~DOM4#element
+I.Range:~DOM4#range
+I.Event:~DOM4#event
+I.InputEvent:~UIEVENTS#inputevent
+I.UIEvent:~UIEVENTS#uievent
+I.InputEventInit:~UIEVENTS#dictdef-inputeventinit
+I.DataTransfer:~HTMLdnd#the-datatransfer-interface
+
+I.Window:~UIEVENTS#window
+I.StaticRange:~DOM4#interface-staticrange
+
+m.inputType:#dom-inputevent-inputtype
+m.dataTransfer:#dom-inputevent-datatransfer
+m.getTargetRanges():#dom-inputevent-gettargetranges
+
+mI.inputType:~UIEVENTS#dom-inputeventinit-inputtype
+mI.dataTransfer:#dom-inputeventinit-datatransfer
+mI.targetRanges:#dom-inputeventinit-targetranges
+
+
+m.getData():~HTMLdnd#dom-datatransfer-getdata
+
+m.cancelable:~DOM4#dom-event-cancelable
+	#widl-InputEvent-cancelable
+m.data:~UIEVENTS#dom-inputevent-data
+m.InputEvent.isComposing:~UIEVENTS#dom-inputevent-iscomposing
+
+m.UIEvent.detail:~UIEVENTS#dom-uievent-detail
+m.UIEvent.view:~UIEVENTS#dom-uievent-view
+
+m.contentEditable:~HTMLinteraction#dom-contenteditable
+
+et.beforeinput:#event-type-beforeinput
+et.input:#event-type-input
+
+e.textarea:~HEforms#the-textarea-element
+e.input:~HEinput#the-input-element
+e.br:~HEtextlevel#the-br-element
+
+a.contenteditable:~HTMLinteraction#attr-contenteditable
+
+
+編集可能:#_contenteditable
+~kill-buffer:#dfn-kill-buffer
+引き出す:#dfn-yank
+意向を表出する:#dfn-express-intention
+表出した意向:#dfn-express-intention
+文字:#dfn-character
+
+
+文書片:~DOM4#interface-documentfragment
+
+組成~event:~UIEVENTS#events-compositionevents
+	~dead-key:~UIEVENTS#keys-dead
+空~文字列:~UIEVENTS#empty-string
+~event標的:~UIEVENTS#event-target
+~IME:~UIEVENTS#ime
+	~UA:~UIEVENTS#user-agent
+配送-:~UIEVENTS#dispatch
+	同期c:~UIEVENTS#sync-async
+
+~drag~data~store:~HTMLdnd#drag-data-store
+読専~mode:~HTMLdnd#concept-dnd-ro
+dnd.~item~list:~HTMLdnd#drag-data-store-item-list
+dnd.種類:~HTMLdnd#the-drag-data-item-kind
+dnd.型~文字列:~HTMLdnd#the-drag-data-item-type-string
+dnd.実~data:~HTMLdnd#_the-drag-data-item-actual-data
+
+編集中の~host:~HTMLinteraction#editing-host
+	廃）編集中の~host:~EXEC-COMMAND#editing-host
+拡張された書記素~cluster:http://www.unicode.org/reports/tr29/#Grapheme_Cluster_Boundaries
+書記素~cluster:http://www.unicode.org/reports/tr29/#Grapheme_Cluster_Boundaries
+符号位置:~INFRA#code-points
+
+~CSS成分~値を直列化する:~CSSOM1#serialize-a-css-component-value
+
+●●words_table1
+
+
+●●words_table
+
+
+
+	●仕様
+意向:intention:~
+協調-:coordinate:~
+必要性:needs:~
+拡げて:expandして:~
+衰退:decline:~
+	buggy
+	関係する:related
+	協調-:in coordination with
+	要約-:summary
+	~~軽減しようと~~試みる:seeks to alleviate
+	相当量:considerable amount
+	上層:on top of
+	一部に限り:subset
+	様々な:different
+	共同作業:collaborative
+	画策:laid out
+	~~解決-:solve
+	モノトスル:responsible for
+	-:want
+	該当:covered
+	入る:takes place
+	別として:apart from
+	~~扱う:deal with
+	導き:lead
+
+	●編集
+editor::::エディタ
+	~text~editor:texteditor
+caret::::キャレット
+	dead-key::::デッドキー
+IME:
+richtext::::リッチテキスト
+plaintext::::素なテキスト
+speech::::スピーチ
+mark::::マーク
+bold:
+italic:
+undo:
+redo:
+undone:
+copy::::コピー
+paste::::ペースト
+cut::::カット
+drag::::ドラッグ
+drop::::ドロップ
+store::::ストア
+
+起する:initiateする:開始する
+整形情報:formatting::~
+中央:center::~
+両端揃えに:full に justify:~
+寄せる:alignする:~
+subscript:::下付き文字
+superscript:::上付き文字
+underline:::下線
+stricken:::打消し線
+番号付き:numbered::~
+番号無し:bulleted::~
+水平罫線:horizontal rule::段落区切り罫線
+字下げ:indentation::~
+	字下げを増やす:indent
+	字下げを減らす:outdent
+組成:composition::~
+組成-:compose::~
+再組成-:recompose::~
+編集可能:contenteditable::~
+編集-:edit::~
+編集:editing::~
+編集中の:editing::~
+改行:line break:~
+分断:break:~
+併合-:merge:~
+単語:word:~
+	可能化:enabled
+選択:selection::~
+	始まり:beginning
+	終わり:end
+	終える:end
+畳まれ:collapseされ:~
+	畳まれてない:non-collapsed
+
+書記素:grapheme:~
+後方:backward:~
+前方:forward:~
+用字系:script:~
+
+打込んだ:typeした:打ち込んだ:::タイプした
+自動訂正:auto-correct:~
+spell-checker:spell checker:::綴り検査器
+入替える:transposeする:~
+command::::コマンド
+clipboard::::クリップボード
+kill-buffer:kill buffer
+commit::::コミット
+種類:kind::~
+提-:propose:~
+引用文:quotation:~
+
+	記憶域:in-memory
+	一時的に保持する:temporal storage
+	引き出す:yank する
+	離脱して leave 〜 outside
+	最終的な:final
+
+	●event／DOM
+標的:target:::ターゲット
+発され:emitされ:~
+	取消~可否:cancelability
+
+	-:field
+	~~反映:renderする
+
+	●未分類
+背景:background::~
+色:color::~
+	high-level
+背後:background:~
+
+	●指示語
+	直前:directly before
+	直後:directly after
+	following
+	~text~editor:texteditor
+	follow
+	through
+	different
+	main
+	part
+	Array
+	during
+	form
+	次 next
+	several
+	first
+
+	starting
+	time
+	become
+	し続け:continue
+	thereafter
+	taken
+
+
+●●ref_normative
+
+[CSSOM]
+    CSS Object Model (CSSOM). Simon Pieters; Glenn Adams. W3C. 17 March 2016. W3C Working Draft. URL: https://www.w3.org/TR/cssom-1/
+[DOM]
+    DOM Standard. Anne van Kesteren. WHATWG. Living Standard. URL: https://dom.spec.whatwg.org/
+[fingerprinting-guidance]
+    Mitigating Browser Fingerprinting in Web Specifications. Nick Doty. W3C. 28 March 2019. W3C Note. URL: https://www.w3.org/TR/fingerprinting-guidance/
+[HTML]
+    HTML Standard. Anne van Kesteren; Domenic Denicola; Ian Hickson; Philip Jägenstedt; Simon Pieters. WHATWG. Living Standard. URL: https://html.spec.whatwg.org/multipage/
+[RFC2119]
+    Key words for use in RFCs to Indicate Requirement Levels. S. Bradner. IETF. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119
+[RFC8174]
+    Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words. B. Leiba. IETF. May 2017. Best Current Practice. URL: https://tools.ietf.org/html/rfc8174
+[UAX29]
+    Unicode Text Segmentation. Mark Davis. Unicode Consortium. 15 February 2019. Unicode Standard Annex #29. URL: https://www.unicode.org/reports/tr29/tr29-35.html
+[UI-EVENTS]
+    UI Events. Gary Kacmarcik; Travis Leithead; Doug Schepers. W3C. 30 May 2019. W3C Working Draft. URL: https://www.w3.org/TR/uievents/
+[WebIDL]
+    Web IDL. Boris Zbarsky. W3C. 15 December 2016. W3C Editor's Draft. URL: https://heycam.github.io/webidl/
+
+●●ref_informative
+
+[INFRA]
+    Infra Standard. Anne van Kesteren; Domenic Denicola. WHATWG. Living Standard. URL: https://infra.spec.whatwg.org/
+[INPUT-EVENTS]
+    Input Events Level 1. Johannes Wilm; Ben Peters. W3C. 30 May 2019. W3C Working Draft. URL: https://www.w3.org/TR/input-events-1/
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">Input Events Level 2</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/input-events-2/
+編集者草案
+	https://w3c.github.io/input-events/index.html
+編集
+	<a href="johannes@fiduswriter.org">Johannes Wilm</a> (Invited Expert)
+前任編集者
+	<a href="BenjamP@microsoft.com">Ben Peters</a> (Microsoft) (until 23 February 2015)
+Participate:
+	<a href="https://github.com/w3c/input-events">GitHub w3c/input-events</a>
+	<a href="https://github.com/w3c/input-events/issues">File a bug.</a>
+	<a href="https://github.com/w3c/input-events/commits/gh-pages">Commit history.</a>
+	<a href="https://github.com/w3c/input-events/pulls/">Pull requests</a>
+最新発行バージョン（レベル 1 ）
+	https://www.w3.org/TR/input-events/
+編集者草案（レベル 1 ）
+	https://w3c.github.io/input-events/v1/index.html
+発行者
+	<a href="https://www.w3.org/2019/webapps/">Web Applications Working Group</a>
+テスト一式（作業中）
+	https://github.com/web-platform-tests/wpt/tree/master/input-events
+実装報告（作業中）
+	https://w3c.github.io/test-results/input-events/
+Mailing list
+	https://lists.w3.org/Archives/Public/public-webapps/
+	https://lists.w3.org/Archives/Public/public-editing-tf/
+</script>
+
+</head>
+<body>
+
+<header>
+
+	<hgroup>
+<h1 id="title">入力イベント — Input Events Level 2</h1>
+	</hgroup>
+
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この仕様は、~textおよび関係する入力~用の追加の~eventを定義し，~textの入力と整形について~~扱う ~text~editorその他の~appの文脈~下で，既定~browserの挙動を監視して操作できるようにする。
+この仕様は、 `UI-EVENTS$r の上に築かれている。
+◎
+This specification defines additions to events for text and related input to allow for the monitoring and manipulation of default browser behavior in the context of text editor applications and other applications that deal with text input and text formatting. This specification builds on the UI events spec [UI-EVENTS].
+</p>
+
+	</section>
+	<section id="sotd">
+~STATUSofTHIS
+
+<p>
+<em>この節では、発行時点における…</em>
+【以下、この節の他の内容は <a href="w3c-common-ja.html#status">W3C 日本語訳 共通~page</a>／冒頭の仕様~metadataに委譲。】
+</p>
+
+<p>
+Input Events Level 2 は、その最初の~version
+`INPUT-EVENTS$r を置換し，次を含む：
+◎
+Input Events Level 2 replaces the first version of Input Events [INPUT-EVENTS] and includes:
+</p>
+
+<ul>
+	<li>
+~IME組成の~~開始と~~終了に対応する，各種~型の `beforeinput$et 入力~eventにより、~IME~組成~処理-を他から隔離できるようにする。
+◎
+Inputtypes for beforeinput events for the start and end of IME compositions that allow isolation of the IME composition process.
+</li>
+	<li>
+~IME組成~処理-の中から発されたものは別として、すべての `beforeinput$et ~eventについての取消~可否の要件。
+◎
+More requirements for cancelability of beforeinput events, so that all beforeinput events apart from those being emited within an IME composition process are cancelable.
+</li>
+</ul>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="introduction">
+<h2 title="Introduction">1. 序論</h2>
+
+<p>
+この文書は、 `UI-EVENTS$r にて述べられれた 2 つの~event
+— `input$et, `beforeinput$et `UI-EVENTS$r —
+に対する，編集に関係する追加について述べる。
+これらの~eventの目標は、作者が編集-時の既定の挙動を，編集が生じる前と後の両者について，解したり上書きできるようにすることである。
+◎
+This document describes editing related additions to 2 events - input and beforeinput which are described in the UI events spec [UI-EVENTS]. The goal of these events is to allow authors to understand and/or override default edit behavior both before and after editing occurs.
+</p>
+
+	</section>
+	<section id="conformance">
+<h2 title="Conformance">2. 適合性</h2>
+
+<p class="trans-note">【
+この節の内容は
+<a href="w3c-common-ja.html#conformance">W3C 日本語訳 共通~page</a>
+に委譲。
+】</p>
+
+	</section>
+	<section id="definitions">
+<h2 title="Definitions">3. 定義</h2>
+
+<dl>
+	<dt>`意向を表出する@ （ `express an intention^en ）</dt>
+	<dd>
+利用者は、［
+~keyboard, ~IME, ~speech, などに類する~method
+］をもって，特定の~編集中の~演算を実行する`意向を表出する$ことができる。
+特定の~入力~動作は、~platformに特有な規約に従う意向に，対応付けられる。
+◎
+A user can express an intention to execute a specific editing operation by means of keyboard, IME, speech, or similar method. Specific input actions are mapped to intentions following platform-specific conventions.
+</dd>
+
+	<dt>`~kill-buffer@ （ `kill buffer^en ）</dt>
+	<dd>
+この定義は規範的ではない。
+◎
+This definition is not normative.
+</dd>
+	<dd>
+`~kill-buffer$は、~clipboardとは別々の記憶域に格納された~richtext内容であり、特定の削除~commandを利用して削除された内容を，一時的に保持できるようにする。
+利用者は、~kill-bufferを
+`引き出す@
+（ `yank^en する）意向を指示することにより、現在の選択を~kill-bufferの内容で置換できる。
+◎
+A kill buffer is a in-memory store of richtext content that is separate from the clipboard which allows for the temporal storage of content that was deleted using specific deletion commands. The user can replace the current selection with the content held in the kill buffer by indicating an intention to yank the kill buffer.
+</dd>
+
+	<dt>`文字@</dt>
+	<dd>
+`拡張された書記素~cluster$。
+`UAX29$r
+◎
+A character is an extended grapheme cluster . [UAX29]
+</dd>
+
+	<dt>`編集可能@ な要素（ `contenteditable^en ）</dt>
+	<dd>
+`contenteditable$a 属性に基づいて，利用者が内容を編集できるとされる要素。
+</dd>
+	<dd class="trans-note">【
+この項目は，訳者による追加であり、その定義も訳者の推定による。
+原文では、単に
+“contenteditable 要素” あるいは
+“`contenteditable^c 要素”
+。
+】</dd>
+
+</dl>
+
+	</section>
+	<section id="problems-solved">
+<h2 title="Problems solved">4. ~~解決される問題</h2>
+
+~INFORMATIVE
+
+<p>
+~browser~codeの上層に ~webに基づく~text~editorを作成するためには、他にも相当量の~JSを要する
+— なぜなら：
+◎
+Creating a webbased texteditor requires a considerable amount of JavaScript on top of the browser code, among other things because:
+</p>
+
+<ol>
+	<li>
+すべての~browserが編集~演算を同じ仕方で取扱うわけではない。
+◎
+Browsers do not handle all editing operations the same way.
+</li>
+	<li>
+編集~演算によっては、~browserの取扱いに~bugが多い。
+◎
+Browsers are often buggy in the way they handle certain editing operations.
+</li>
+	<li>
+編集~演算によっては、個々の~siteごとに，その取扱いに~custom選好があり得る。
+◎
+Individual sites may have custom preferences for how they want to handle certain editing operations.
+</li>
+	<li>
+~browserにおける高~levelの~text編集 特能の開発は、
+<a href="https://extensiblewebmanifesto.org/">Extensible Web Manifesto</a>
+に画策された原則に従っていない
+— これらの特能の開発は、~web開発者~communityの必要性と常に協調しているわけではない。
+◎
+The development of high-level text editing features in browsers has not followed the principles laid out in the Extensible Web Manifesto in that development of these features has not always been in coordination with the needs of the web developer community.
+</li>
+</ol>
+
+<div class="p">
+<p>
+この仕様は、次の両者について，~web開発者にとって単純な仕方を供することにより、問題を~~軽減しようと~~試みるものである：
+</p>
+
+<ul>
+	<li>
+~text編集に関係する すべての利用者~入力に対する~browserによる取扱いを，
+`beforeinput$et ~eventを通して上書きする。
+</li>
+	<li>
+利用者~入力に因り~DOM内の何が変更されたかを，
+`input$et ~eventを通して監視する。
+</li>
+</ul>
+
+◎
+This spec seeks to alleviate the problem by providing a simple way for web developers to both override browser handling of all user input related to text editing through the beforeinput event, and to monitor what browsers have changed in the DOM due to user input through the input event.
+</div>
+	</section>
+	<section id="use-cases">
+<h2 title="Use cases">5. 利用事例</h2>
+
+~INFORMATIVE
+
+<ol>
+	<li>
+利用者が~boldと~markした~textを［
+`&lt;b&gt;^e ~tagに代えて `&lt;strong&gt;^e ~tagを利用して~markする
+］ような，~JS~text~editorを作成すること。
+~textを~boldとして~markするような，~browserに組込みの仕方【？】を利用して、および
+既存のすべての~browserに~accessする必要なく【？】。
+◎
+Creating a JavaScript text editor in which the &lt;strong&gt;-tag is used instead of the &lt;b&gt;-tag to mark text that the user marks as bold, using any browser-builtin way to mark a text as bold, without having access to all existing browsers.
+</li>
+	<li>
+背後の~data~modelに働く，~JS~text~editorを作成すること
+— ~JSが，編集により変化した~textを ~DOMに~~反映することを~careするような。
+◎
+Creating a JavaScript text editor which works with a data model in the background where JavaScript takes care of rendering changes to the edited text to the DOM.
+</li>
+	<li>
+~richtext編集を一部に限り許容するような，~JS~editorを作成すること（例えば、~boldは許容する一方で~italicは許容しない）。
+◎
+Creating a JavaScript editor which only allows a subset of richtext editing (for example: bold is allowed, but italic not).
+</li>
+	<li>
+共同作業可能な~editorを作成すること
+— ［
+特定の意向を様々な仕方で表出している，様々な~browser
+］を利用している各 利用者の意向に基づいて、~JSを利用して，変更を~DOMに~~反映するような。
+◎
+Creating a collaborative editor in which JavaScript is used to render changes to the DOM, based on user intentions with users using different browsers with different ways of expressing specific intentions.
+</li>
+	<li>
+利用者~accessに関して様々な~optionを備える，~JS~editorを作成すること
+— 例えば、ある利用者に可能なのは，~textを追加したり削除することに限られ、別の利用者に可能なのは，ある種の整形を追加したり除去することに限られる，など。
+◎
+Creating a JavaScript editor with different user access options, where some users only can add or delete text and other users only can add or remove certain types of formatting.
+</li>
+</ol>
+	</section>
+	<section id="events-inputevents">
+<h2 title="Input Event Types">6. 入力~event型</h2>
+
+<p>
+入力~eventは、利用者が~markupを編集しようと試みる前（ `beforeinput$et ~event ）と試みた後（ `input$et ~event）に送信される。
+これには、内容の挿入, 削除，あるいは整形の変更も含まれる。
+◎
+Input events are sent before (beforeinput event) and after (input event) a user attempts to edit the markup. This includes insertion and deletion of content, and formatting changes. 
+</p>
+
+<div >
+<p>
+入力~eventは、`編集中の~host$として動作する要素に向けて`配送-$される。
+`UI-EVENTS$r
+そのような要素には、次が挙げられる：
+</p>
+<ul ><li>`contenteditable$a 属性が設定されているもの
+</li><li>`textarea$e 要素
+</li><li>~text入力を許容する `input$e 要素
+</li></ul>
+
+◎
+Input events are dispatched [UI-EVENTS] on elements that act as editing hosts, including elements with the contenteditable attribute set, textarea elements, and input elements that permit text input.
+</div>
+
+		<section id="interface-InputEvent">
+<h3 title="Interface InputEvent">6.1. ~interface `InputEvent^I</h3>
+
+<pre class="idl">
+partial interface `InputEvent$I {
+    readonly attribute `DataTransfer$I? `dataTransfer$m;
+    sequence&lt;`StaticRange$I&gt; `getTargetRanges()$m;
+};
+
+partial dictionary `InputEventInit$I {
+    `DataTransfer$I? `dataTransfer$mI = null;
+    sequence&lt;`StaticRange$I&gt; `targetRanges$mI = [];
+};
+</pre>
+
+<p>
+`InputEvent$I, `InputEventInit$I
+は、
+`UI-EVENTS$r に定義される。
+◎
+The InputEvent and InputEventInit objects are defined in [UI-EVENTS].
+</p>
+
+<p>
+`InputEventInit$I の［
+`inputType$mI,
+`dataTransfer@mI,
+`targetRanges@mI
+］~memberは、
+`InputEvent$I ~objの対応する属性を初期化する。
+◎
+The attributes inputType, dataTransfer and targetRanges of InputEventInit initialize the corresponding attributes of the InputEvent object.
+</p>
+
+			<section id="overview">
+<h4 title="Overview">6.1.1. 概観</h4>
+
+~INFORMATIVE
+
+<p>
+［
+`data$m, `dataTransfer$m
+］属性が，いつ［
+内容を包含する／~NULL にされる
+］か, および
+`getTargetRanges()$m ~methodが
+`inputType$m に基づいて，いつ［
+空 ／空でない
+］ Array を返すかを，次の表に要約する。
+◎
+The following table provides a summary of when the data and dataTransfer attributes contain contents and when they are null as well as when the getTargetRanges() method returns an empty or non-empty Array, based on the inputType.
+</p>
+
+<table><thead><tr><th>`編集中の~host$
+<th>`inputType$m
+<th>`data$m
+<th>`dataTransfer$m
+<th>`getTargetRanges()$m
+</thead><tbody id="_inputType-overview">
+
+<tr><td>`編集可能$
+<td>`insertText^l,
+`insertCompositionText^l,
+`insertFromComposition^l,
+`formatSetBlockTextDirection^l,
+`formatSetInlineTextDirection^l,
+`formatBackColor^l,
+`formatFontColor^l,
+`formatFontName^l,
+`insertLink^l
+<td>非~NULL
+<td>~NULL
+<td>空でない Array
+
+<tr><td>`編集可能$
+<td>`insertFromPaste^l,
+`insertFromPasteAsQuotation^l,
+`insertFromDrop^l,
+`insertReplacementText^l,
+`insertFromYank^l
+<td>~NULL
+<td>非~NULL
+<td>空でない Array
+
+<tr><td>`&lt;textarea&gt;^e,
+`&lt;input type="text"&gt;^e
+<td>`insertText^l,
+`insertCompositionText^l,
+`insertFromComposition^l,
+`insertFromPasteAsQuotation^l,
+`insertFromPaste^l,
+`insertFromDrop^l,
+`insertReplacementText^l,
+`insertFromYank^l,
+`formatSetBlockTextDirection^l,
+`formatSetInlineTextDirection^l,
+`formatBackColor^l,
+`formatFontColor^l,
+`formatFontName^l,
+`insertLink^l
+<td>非~NULL
+<td>~NULL
+<td>空 Array
+
+<tr><td>すべて
+<td>`historyUndo^l,
+`historyRedo^l
+<td>~NULL
+<td>~NULL
+<td>空 Array
+
+<tr><td>`編集可能$
+<td>残り全て
+<td>~NULL
+<td>~NULL
+<td>空でない Array
+
+<tr><td>`&lt;textarea&gt;^e,
+`&lt;input type="text"&gt;^e
+<td>残り全て
+<td>~NULL
+<td>~NULL
+<td>空 Array
+</tbody></table>
+
+<!-- 
+Contenteditable
+<td>"insertText", "insertCompositionText", "insertFromComposition", "formatSetBlockTextDirection", "formatSetInlineTextDirection", "formatBackColor", "formatFontColor", "formatFontName", "insertLink"
+<td>Yes	null	Non-empty Array
+Contenteditable
+<td>"insertFromPaste", "insertFromDrop", "insertReplacementText", "insertFromYank"
+<td>null	Yes	Non-empty Array
+<textarea>, <input type="text">
+<td>"insertText", "insertCompositionText", "insertFromComposition", "insertFromPaste", "insertFromDrop", "insertReplacementText", "insertFromYank", "formatSetBlockTextDirection", "formatSetInlineTextDirection", "formatBackColor", "formatFontColor", "formatFontName", "insertLink"
+<td>Yes	null	Empty Array
+All	"historyUndo", "historyRedo"
+<td>null	null	Empty Array
+Contenteditable	All Remaining	null	null	Non-empty Array
+<textarea>, <input type="text">
+<td>All Remaining	null	null	Empty Array
+-->
+
+			</section>
+			<section id="interface-InputEvent-Attributes">
+<h4 title="Attributes">6.1.2. 各種 属性</h4>
+
+<p>
+~UAは、~eventの初期化-時に，一部の各種~属性を以下に従って拡充するモノトスル：
+◎
+↓</p>
+
+<dl>
+	<dt>`inputType@m</dt>
+	<dd class="trans-note">【
+この属性は `UI-EVENTS$r にて
+<a href="~UIEVENTS#dom-inputevent-inputtype">定義される</a>。
+】</dd>
+	<dd>
+`beforeinput$et ~eventの取消~可否は，下に与える `inputType$m 値に依存する。
+次に挙げるいずれかの値に初期化される場合は、取消せない（ `cancelable$m は ~F になる）
+⇒＃
+`insertCompositionText^l,
+`deleteCompositionText^l
+◎
+The cancelability of the beforeinput event depends on the inputType.
+</dd>
+	<dd>
+<p>
+この属性は、次の表の 2, 3, 4 列目に与える［
+利用者が`表出した意向$,
+~IME組成の間に編集が生じるかどうか,
+選択の状態
+］に応じて，表の 1 列目に与える値にされるモノトスル：
+◎
+The inputType to be picked depends on the user's expression of intention, whether or not the editing takes place during an IME composition and the state of the selection.
+◎
+This specification defines the inputType values as the values in the inputType column of the following table. 
+</p>
+
+<p class="trans-note">【
+原文の表には `beforeinput$et ~eventの取消~可否の列もあるが、この訳ではその列を省略して，上の記述に集約している。
+】</p>
+
+<table>
+<caption style="text-align: left;">
+
+<ul>
+	<li>
+編集？ 列の［
+“・” は ~IME組成の間に編集は生じない ／
+`編^i は ~IME組成の間に編集は生じる
+］ことを表す。
+</li>
+	<li>
+選択~状態 列の［
+空欄は 選択~状態は関わらない（無条件） ／
+`畳^i は 選択は畳まれている ／
+`非畳^i は選択は畳まれていない
+］ことを表す。
+</li>
+</ul>
+
+</caption>
+
+<thead><tr><th>`inputType$m
+<th>利用者が`表出した意向$
+◎
+User's expression of intention
+<th>編集？
+◎
+Part of IME composition
+<th>選択~状態
+◎
+State of selection
+</thead>
+
+<tbody>
+<tr><td>`insertText^l
+<td>
+打込んだ素な~textを挿入する
+◎
+insert typed plain text
+<td>・
+<td>
+
+<tr><td>`insertReplacementText^l
+<td>
+~spell-checker, 自動訂正などに類する~methodにより，既存の~textを置換する
+◎
+replace existing text by means of a spell checker, auto-correct or similar
+<td>・
+<td>
+
+<tr><td>`insertLineBreak^l
+<td>
+改行を挿入する
+◎
+insert a line break
+<td>・
+<td>
+
+<tr><td>`insertParagraph^l
+<td>
+段落~分断を挿入する
+◎
+insert a paragraph break
+<td>・
+<td>
+
+<tr><td>`insertOrderedList^l
+<td>
+番号付き~listを挿入する
+◎
+insert a numbered list
+<td>・
+<td>
+
+<tr><td>`insertUnorderedList^l
+<td>
+番号無し~listを挿入する
+◎
+insert a bulleted list
+<td>・
+<td>
+
+<tr><td>`insertHorizontalRule^l
+<td>
+水平罫線を挿入する
+◎
+insert a horizontal rule
+<td>・
+<td>
+
+<tr><td>`insertFromYank^l
+<td>
+`~kill-buffer$に格納されている内容で，現在の選択を置換する
+◎
+replace the current selection with content stored in a kill buffer
+<td>・
+<td>
+
+<tr><td>`insertFromDrop^l
+<td>
+~dropにより，~DOMの中へ内容を挿入する
+◎
+insert content into the DOM by means of drop
+<td>・
+<td>
+
+<tr><td>`insertFromPaste^l
+<td>
+~pasteする
+◎
+paste
+<td>・
+<td>
+
+<tr><td>`insertFromPasteAsQuotation^l
+<td>
+内容を引用文として~pasteする
+◎
+paste content as a quotation
+<td>・
+<td>
+
+<tr><td>`insertTranspose^l
+<td>
+手入力された最後の 2 個の`文字$を入替える
+◎
+transpose the last two characters that were entered
+<td>・
+<td>
+
+<tr><td>`insertCompositionText^l
+<td>
+現在の組成~文字列を置換する
+◎
+replace the current composition string
+<td>`編^i
+<td>
+
+<tr><td>`insertFromComposition^l
+<td>
+~DOMの中へ，次の組成~文字列の一部を成さない最終的に組成された文字列を挿入する
+◎
+insert into the DOM a finalized composed string that will not form part of the next composition string
+<td>`編^i
+<td>
+
+<tr><td>`insertLink^l
+<td>
+~linkを挿入する
+◎
+insert a link
+<td>・
+<td>
+
+<tr><td>`deleteByComposition^l
+<td>
+~IMEを利用して当の部分を再組成するために，~DOMの一部を除去する
+◎
+remove a part of the DOM in order to recompose this part using IME
+<td>`編^i
+<td>
+
+<tr><td>`deleteCompositionText^l
+<td>
+~IMEによる組成の間に，~DOMに最終的に文字列を~commitする前に，現在の組成~文字列を削除する
+◎
+delete the current composition string before commiting a finalized string to the DOM
+<td>`編^i
+<td>
+
+<tr><td>`deleteWordBackward^l
+<td>
+~caret位置の直前にある単語を削除する
+◎
+delete a word directly before the caret position
+<td>・
+<td>`畳^i
+
+<tr><td>`deleteWordForward^l
+<td>
+~caret位置の直後にある単語を削除する
+◎
+delete a word directly after the caret position
+<td>・
+<td>`畳^i
+
+<tr><td>`deleteSoftLineBackward^l
+<td>
+~caret位置からその前にある最も近い視覚的な改行までを削除する
+◎
+delete from the caret to the nearest visual line break before the caret position
+<td>・
+<td>`畳^i
+
+<tr><td>`deleteSoftLineForward^l
+<td>
+~caret位置からその後にある最も近い視覚的な改行までを削除する
+◎
+delete from the caret to the nearest visual line break after the caret position
+<td>・
+<td>`畳^i
+
+<tr><td>`deleteEntireSoftLine^l
+<td>
+［
+~caret位置の前にある最も近い視覚的な改行
+］から［
+~caret位置の後にある最も近い視覚的な改行
+］までを削除する
+◎
+delete from to the nearest visual line break before the caret position to the nearest visual line break after the caret position
+<td>・
+<td>`畳^i
+
+<tr><td>`deleteHardLineBackward^l
+<td>
+~caret位置からその前にある最も近い［
+塊~要素または `br$e 要素
+］の始まりまでを削除する
+◎
+delete from the caret to the nearest beginning of a block element or br element before the caret position
+<td>・
+<td>`畳^i
+
+<tr><td>`deleteHardLineForward^l
+<td>
+~caret位置からその後にある最も近い［
+塊~要素または `br$e 要素
+］の終わりまでを削除する
+◎
+delete from the caret to the nearest end of a block element or br element after the caret position
+<td>・
+<td>`畳^i
+
+<tr><td>`deleteByDrag^l
+<td>
+~dragにより，~DOMから内容を除去する
+◎
+remove content from the DOM by means of drag
+<td>・
+<td>
+
+<tr><td>`deleteByCut^l
+<td>
+~cutの一部として，現在の選択を除去する
+◎
+remove the current selection as part of a cut
+<td>・
+<td>
+
+<tr><td>`deleteContent^l
+<td>
+他の `inputType$m 値に該当しない意向の下で、削除の方向を指定せずに，選択を削除する
+◎
+delete the selection without specifying the direction of the deletion and this intention is not covered by another inputType
+<td>・
+<td>`非畳^i
+
+<tr><td>`deleteContentBackward^l
+<td>
+次のいずれか：
+<ul ><li>他の `inputType$m 値に該当しない意向の下で、~caret位置の直前にある内容を削除する
+</li><li>選択を，削除~後にその始端に畳まれるように削除する
+</li></ul>
+◎
+delete the content directly before the caret position and this intention is not covered by another inputType or delete the selection with the selection collapsing to its start after the deletion
+<td>・
+<td>
+
+<tr><td>`deleteContentForward^l
+<td>
+次のいずれか：
+<ul ><li>他の `inputType$m 値に該当しない意向の下で、~caret位置の直後にある内容を削除する
+</li><li>選択を，削除~後にその終端に畳まれるように削除する
+</li></ul>
+
+◎
+delete the content directly after the caret position and this intention is not covered by another inputType or delete the selection with the selection collapsing to its end after the deletion
+<td>・
+<td>
+
+<tr><td>`historyUndo^l
+<td>
+最後の編集~動作を~undoする
+◎
+undo the last editing action
+<td>・
+<td>
+
+<tr><td>`historyRedo^l
+<td>
+最後の~undone編集~動作を~redoする
+◎
+to redo the last undone editing action
+<td>・
+<td>
+
+<tr><td>`formatBold^l
+<td>
+~bold~textを起する
+◎
+initiate bold text
+<td>・
+<td>
+
+<tr><td>`formatItalic^l
+<td>
+~italic~textを起する
+◎
+initiate italic text
+<td>・
+<td>
+
+<tr><td>`formatUnderline^l
+<td>
+~underline~textを起する
+◎
+initiate underline text
+<td>・
+<td>
+
+<tr><td>`formatStrikeThrough^l
+<td>
+~stricken~textを起する
+◎
+initiate stricken through text
+<td>・
+<td>
+
+<tr><td>`formatSuperscript^l
+<td>
+~superscript~textを起する
+◎
+initiate superscript text
+<td>・
+<td>
+
+<tr><td>`formatSubscript^l
+<td>
+~subscript~textを起する
+◎
+initiate subscript text
+<td>・
+<td>
+
+<tr><td>`formatJustifyFull^l
+<td>
+現在の選択を両端揃えにする
+◎
+make the current selection fully justified
+<td>・
+<td>
+
+<tr><td>`formatJustifyCenter^l
+<td>
+現在の選択を中央に寄せる
+◎
+center align the current selection
+<td>・
+<td>
+
+<tr><td>`formatJustifyRight^l
+<td>
+現在の選択を右端に寄せる
+◎
+right align the current selection
+<td>・
+<td>
+
+<tr><td>`formatJustifyLeft^l
+<td>
+現在の選択を左端に寄せる
+◎
+left align the current selection
+<td>・
+<td>
+
+<tr><td>`formatIndent^l
+<td>
+現在の選択の字下げを増やす
+◎
+indent the current selection
+<td>・
+<td>
+
+<tr><td>`formatOutdent^l
+<td>
+現在の選択の字下げを減らす
+◎
+outdent the current selection
+<td>・
+<td>
+
+<tr><td>`formatRemove^l
+<td>
+現在の選択からすべての整形情報を除去する
+◎
+remove all formatting from the current selection
+<td>・
+<td>
+
+<tr><td>`formatSetBlockTextDirection^l
+<td>
+~text塊~方向を設定する
+◎
+set the text block direction
+<td>・
+<td>
+
+<tr><td>`formatSetInlineTextDirection^l
+<td>
+~text行内~方向を設定する
+◎
+set the text inline direction
+<td>・
+<td>
+
+<tr><td>`formatBackColor^l
+<td>
+背景~色を変更する
+◎
+change the background color
+<td>・
+<td>
+
+<tr><td>`formatFontColor^l
+<td>
+~font色を変更する
+◎
+change the font color
+<td>・
+<td>
+
+<tr><td>`formatFontName^l
+<td>
+`font-family^p を変更する
+◎
+change the font-family
+<td>・
+<td>
+</tbody></table>
+
+	</dd>
+	<dd class="note">注記：
+他の仕様は、この定義を拡げてもヨイ。
+◎
+Note
+◎
+Other specifications may expand on this definition.
+	</dd>
+	<dd class="note">注記：
+上に挙げられているからといって、実装が それらの `inputType$m 値すべてを~supportすることにはならない。
+所与の~browserが［
+~DOMを変化させ得るような，ある編集~演算
+］を~supportする場合、対応する［
+`beforeinput$et, `input$et
+］~eventを`配送-$するモノトスル。
+`UI-EVENTS$r
+◎
+Note
+◎
+The existence of the above mentioned inputTypes does not mean that any given implementation will support all of these. But if a given browser supports an editing operation which potentially leads to a change of the DOM, it MUST dispatch [UI-EVENTS] the corresponding beforeinput and input events.
+</dd>
+	<dd class="note">注記：
+選択が畳まれている場合、次のいずれにも `deleteContentBackward^l が利用される：
+利用者が［
+~text~nodeの中で~textを削除する ／
+より複階的な要素を削除する ／
+~caretが~text~nodeの始端にある場合に 段落を併合する
+］意向を示したとき。
+同じ文言は `deleteContentBackward^l にも該当する
+— その~~記述の “始端” を “終端” に読み替える下で。
+◎
+Note
+◎
+If the selection is collapsed, "deleteContentBackward" will be used both when the user asks for text deletion within a text node, and when the user shows the intention to deletion of more complex elements or merge paragraphs if the caret is at the start of a text node.
+◎
+Note
+◎
+If the selection is collapsed, "deleteContentForward" will be used both when the user asks for text deletion within a text node, and when the user shows the intention to deletion of more complex elements or merge paragraphs if the caret is at the end of a text node.
+</dd>
+	<dd class="note">注記：
+一部の~platform上では、~text~nodeの中で削除されるのが［
+単独の`符号位置$ `INFRA$r, `書記素~cluster$全体 `UAX29$r
+］のどちらになるかは，用字系により異なり得る。
+`getTargetRanges()$m ~methodを利用すれば、~text~nodeの中で削除する際に~browserが既定で除去する`符号位置$の個数を見出せる。
+◎
+Note
+◎
+This note is not normative.
+◎
+In some scripts on some platforms, backward deletion within a text node with a collapsed selection will delete a single code point [INFRA] rather than a entire grapheme cluster [UAX29]. The getTargetRanges() method can be used to find out how many code points [INFRA] the browser will remove by default if deleting within a text node.
+◎
+Note
+◎
+This note is not normative.
+◎
+In some scripts on some platforms, forward deletion within a text node with a collapsed selection will delete an entire grapheme cluster [UAX29] rather than a single code point [INFRA]. The getTargetRanges() method can be used to find out how many code points [INFRA] the browser will remove by default if deleting within a text node. 
+</dd>
+
+	<dt id="dfn-data">`data$m</dt>
+	<dd>
+<p>
+この属性は、文書に追加されるものに関係する~plaintext~data情報を保持する。
+次の表の 1, 2 列目に与える ［
+`inputType$m の値, `編集中の~host$
+］に応じて，表の 3 列目に与える値になる：
+◎
+data holds information plaintext data related to what is to be added to the document.
+</p>
+
+<table>
+<thead><tr><th>`inputType$m
+<td>`編集中の~host$
+<td>`data$m
+</thead><tbody id="_data-attr-values">
+
+<tr><td>`insertText^l,
+`insertCompositionText^l,
+`insertFromComposition^l
+<td>任意
+<td>
+挿入されようとしている~text文字列
+◎
+the plain text string to be inserted
+
+<tr><td>`insertFromPaste^l,
+`insertFromPasteAsQuotation^l,
+`insertFromDrop^l,
+`insertTranspose^l,
+`insertReplacementText^l,
+`insertFromYank^l
+<td>`input$e ／ `textarea$e
+<td>挿入されようとしている~text文字列
+◎
+the plain text string to be inserted
+
+<tr><td>`formatSetInlineTextDirection^l,
+`formatSetBlockTextDirection^l
+<td>任意
+<td>`ltr^l, `rtl^l, `auto^l, `null^l のいずれか
+
+<tr><td>`formatBackColor^l,
+`formatFontColor^l
+<td>任意
+<td>次の結果の文字列
+⇒
+`~CSS成分~値を直列化する$( 提された色 )
+`CSSOM$r
+◎
+a string containing a serialized CSS component value [CSSOM] of the proposed color
+
+<tr><td>`formatFontName^l
+<td>任意
+<td>
+`font-family^p ~prop値として提された値
+◎
+the proposed value of the font-family CSS property
+
+<tr><td>`insertLink^l
+<td>任意
+<td>
+~linkを与える~urlとして提された値
+◎
+the url of the proposed link
+
+<tr><td>その他
+◎
+All remaining
+<td>任意
+<td>~NULL
+
+</tbody></table>
+
+	</dd>
+
+	<dt>`dataTransfer@m</dt>
+	<dd>
+［
+文書から取り出される ／ 文書に追加される
+］ような，関連な［
+~richtextや~plaintext
+］の~dataがあれば、その情報を
+`DataTransfer$I ~obj `HTML$r
+内に保持する。
+◎
+dataTransfer holds information about richtext and plaintext data that is to be taken from or added to the document in a DataTransfer object if there is relevant data.
+</dd>
+	<dd>
+<p>
+［
+次がいずれも満たされるならば その下に与える値／
+~ELSE_ ~NULL
+］で拡充される：
+</p>
+		<ul>
+			<li>
+`編集中の~host$は`編集可能$である
+</li>
+			<li>
+`inputType$m ~IN {
+`insertFromPaste^l,
+`insertFromPasteAsQuotation^l,
+`insertFromDrop^l,
+`insertTranspose^l,
+`insertReplacementText^l,
+`insertFromYank^l
+}
+</li>
+		</ul>
+<p>
+拡充する値は、 `DataTransfer$I ~objであって：
+</p>
+		<ul>
+			<li>
+その`~drag~data~store$は`読専~mode$になる。
+`HTML$r
+</li>
+			<li>
+<p>
+その`~item~list$dndは，次に与える［
+%item1, %item2
+］からなる：
+</p>
+<ul ><li>%item1 の`実~data$dnd ~SET 追加される内容の~HTML~表現
+</li><li>%item2 の`実~data$dnd ~SET 追加される内容の素な~text表現
+</li><li>%item1, %item2 とも，その`型~文字列$dnd ~SET `text/html^l
+</li><li>%item1, %item2 とも，その`種類$dnd ~SET `text^i【！ “Plain Unicode string” から改称された】
+</li></ul>
+			</li>
+		</ul>
+
+<p>
+追加される内容としては、例えば 次のものが挙げられる
+⇒＃
+~clipboard内にあるもの ／
+`~kill-buffer$内にあるもの ／
+~pasteされたもの ／
+~dropされたもの
+</p>
+
+◎
+inputType ｜ Editing host ｜ dataTransfer
+"insertFromPaste",
+"insertFromDrop",
+"insertTranspose",
+"insertReplacementText"
+or "insertFromYank" ｜ contenteditable ｜ A prepopulated DataTransfer object so that:
+• The DataTransfer object's drag data store is in read-only mode. [HTML]
+• The DataTransfer object's drag data store item list contains one entry with the drag data item type string "text/html", whose kind is Plain Unicode string, and whose data is a HTML representation of the content that is in the clipboard, or in the kill buffer, to be dropped or otherwise the content that is to be added. [HTML]
+• The DataTransfer object's drag data store item list contains one entry with the drag data item type string "text/plain", whose kind is Plain Unicode string, and whose data is a plain text representation of the content that is to be pasted, dropped or otherwise added. [HTML]
+◎
+All remaining ｜ Any ｜ null 
+</dd>
+</dl>
+
+			</section>
+			<section id="interface-InputEvent-Methods">
+<h4>5.1.3. ~method</h4>
+
+<dl class="idl-def">
+	<dt>`getTargetRanges()@m</dt>
+	<dd>
+~eventが取消されなかった場合に影響されることになる `StaticRange$I からなる Array を返す。
+`DOM$r
+◎
+getTargetRanges() returns an arrays StaticRanges that will be affected by the event if it is not cancelled.
+◎
+5.1.3 Methods
+</dd>
+	<dd>
+<p>
+次のいずれかに該当する場合、返される Array は空になる：
+</p>
+
+<ul ><li>`inputType$m ~IN { `historyUndo^l, `historyRedo^l }
+</li><li>`編集中の~host$は`編集可能$でない
+</li></ul>
+
+◎
+inputType ｜ Editing host ｜ Response of getTargetRanges()
+"historyUndo" or "historyRedo" ｜ Any ｜ empty Array
+All remaining ｜ contenteditable ｜ an Array of StaticRanges [DOM] associated with event
+All remaining ｜ input or textarea ｜ an empty Array
+◎
+returns , unless the inputType is "historyUndo" or "historyRedo" or the editing host is not a contenteditable element, in which case it returns an empty Array. 
+</dd>
+</dl>
+
+			</section>
+		</section>
+		<section id="event-definitions">
+<h3 title="Event definitions">6.2 各種~eventの定義</h3>
+
+◎イ型 `beforeinput@et
+◎界面 `InputEvent$I
+◎同期 あり
+◎浮上 する
+◎標的 `編集可能$である任意の要素
+◎
+Any Element with contenteditable attribute enabled.
+◎既定動作
+
+文脈依存：
+
+<ul>
+	<li>
+`contentEditable$m が `typing^l にされた`編集中の~host$においては、
+`inputType$m ~IN { `insertCompositionText^l, `deleteCompositionText^l }
+］ならば，
+“~DOMを更新する”
+。
+</li>
+	<li>
+`contentEditable$m が `true^l にされた`編集中の~host$においては、
+`inputType$m が何であれ，
+“~DOM要素を更新する”
+</li>
+	<li>
+他の場合は、なし
+</li>
+</ul>
+
+◎
+Varies: 'Update the DOM' for contentEditable=typing editing hosts for inputTypes "insertCompositionText" and "deleteCompositionText". 'Update the DOM element' for contentEditable="true" editing hosts for all inputTypes. None otherwise.
+◎文脈
+
+<dl>
+
+	<dt>`data$m</dt>
+	<dd>
+要素に追加された~dataを包含している文字列。
+適用されない場合は ~NULL になる。
+◎
+InputEvent.data: the string containing the data that was added to the element, which MAY be null if it doesn't apply.
+</dd>
+
+	<dt>`dataTransfer$m</dt>
+	<dd>
+要素［
+に追加された／から削除された
+］~richtextを包含している文字列。
+適用されない場合は ~NULL になる。
+◎
+InputEvent.dataTransfer: richtext data added or removed from element, which MAY be null if it doesn't apply.
+</dd>
+
+	<dt>`getTargetRanges()$m</dt>
+	<dd>
+取消されなかった場合に、~DOMに対する変更により影響されることになる `StaticRange$I の配列を返す。
+◎
+InputEvent.getTargetRanges(): returns an arrays of StaticRanges which will be affected by the change to the DOM if it is not canceled.
+</dd>
+</dl>
+
+◎表終
+
+<p>
+~UAは、利用者が`編集可能$な要素にて入力を試みたときに，この~eventを`配送-$するモノトスル。
+これは、~UAが~DOMを更新することを意味するとは限らない。
+◎
+A user agent MUST dispatch [UI-EVENTS] this event when the user has attempted to input in a contenteditable element. It does not necessarily mean the user agent [UI-EVENTS] will then update the DOM.
+</p>
+
+<p>
+~UAは、~system~eventなど，利用者により試みられた入力~以外に因る~eventに対しては、この~eventを`配送-$しないモノトスル。
+◎
+A user agent MUST NOT dispatch [UI-EVENTS] this event due to events that are not caused by attempted user input, such as system events.
+</p>
+
+◎イ型 `input@et
+◎界面 `InputEvent$I
+◎同期 あり
+◎浮上 する
+◎標的 `編集可能$である任意の要素
+◎
+Any Element with contenteditable attribute enabled.
+◎既定動作 なし
+◎文脈
+
+<dl>
+
+	<dt>`data$m</dt>
+	<dd>
+要素に追加された~dataを包含している文字列。
+適用されない場合は ~NULL になる。
+◎
+InputEvent.data: the string containing the data that was added to the element, which MAY be null if it doesn't apply.
+</dd>
+
+	<dt>`dataTransfer$m</dt>
+	<dd>
+要素［
+に追加された／から削除された
+］~richtextを包含している文字列。
+適用されない場合は ~NULL になる。
+◎
+InputEvent.dataTransfer: richtext data added or removed from element, which MAY be null if it doesn't apply.
+</dd>
+
+</dl>
+
+◎表終
+
+<p>
+~UAは、［
+利用者が［
+~browserが取扱った文書~内容
+］を変更する意向を表出したことに因り，~DOMが更新された直後
+］に，この~eventを`配送-$するモノトスル。
+◎
+A user agent [UI-EVENTS] MUST dispatch [UI-EVENTS] this event immediately after the DOM has been updated due to a user expressed intention to change the document contents which the browser has handled.
+</p>
+
+		</section>
+	</section>
+	<section id="event-order-during-ime-composition">
+<h3 title="Event order during IME composition">7. ~IME 組成の間の~eventの順序</h3>
+
+<p>
+~IME~組成（ `composition^en ）は，いくつかの `beforeinput$et ~eventを生じさせるが、それらすべてを取消せるとは限らない：
+◎
+An IME composition causes several beforeinput events, not all of which can be canceled.
+</p>
+
+<ol>
+	<li>
+<p>
+~IF［
+初期~組成~文字列【組成~開始-時の選択~内容】
+は空でない（すなわち，この組成は既存の~DOM範囲を再組成するものである）
+］：
+◎
+If the composition is starting with an empty initial composition string (i.e. the composition is not recomposing an existing range of the DOM), this step is skipped.
+</p>
+
+		<ol>
+			<li>
+~DOMから初期~組成~文字列を抽出する
+◎
+The UA extracts the initial composition string from the DOM.
+</li>
+			<li>
+`beforeinput$et ~eventを次のように初期化した上で`配送-$する
+⇒
+`inputType$m ~SET `deleteByComposition^l
+◎
+A beforeinput event with the inputType "deleteByComposition" is dispatched [UI-EVENTS].
+</li>
+			<li>
+<p>
+~IF［
+前~段の~eventは取消されなかった
+］：
+</p>
+				<ol>
+					<li>
+~DOMから初期~組成~文字列を除去する
+◎
+Unless the beforeinput event has been canceled, the initial composition string is removed from the DOM.
+</li>
+					<li>
+`input$et ~eventを次のように初期化した上で`配送-$する
+⇒
+`inputType$m ~SET `deleteByComposition^l
+◎
+Unless the beforeinput event has been canceled, an input event with the inputType "deleteByComposition" is dispatched [UI-EVENTS].
+</li>
+				</ol>
+
+<p class="note">注記：
+この~event用の既定~動作は、 `targetRanges$mI （初期~組成~文字列が占めていた部位）を~DOMから除去する。
+この~eventは、取消せる
+— 取消した場合、前項の既定~動作は防止される。
+~eventを取消す／取扱うことにより，組成が終えられたり, 組成が初期~組成~文字列の内容に波及しなくなることはない。
+◎
+This note is not normative.
+◎
+The default action for this beforeinput event is the removal of the targetRanges from the DOM (i.e. the initial composition string will be removed from the DOM).
+◎
+The beforeinput event can be canceled. Canceling the event will prevent the browser from removing the initial composition string from the DOM. Canceling or handling the event will not prevent the composition from taking place or influence the contents of the initial composition string.
+</p>
+			</li>
+		</ol>
+	</li>
+	<li>
+`beforeinput$et ~eventを`配送-$する
+◎
+A compositionstart event is dispatched. [UI-EVENTS].
+</li>
+	<li>
+<p>
+~IF［
+初期~組成~文字列は空でない
+］：
+◎
+If the composition has an empty initial composition string, this step is skipped.
+</p>
+		<ol>
+			<li>
+`beforeinput$et ~eventを次のように初期化した上で`配送-$する
+⇒
+`inputType$m 属性 ~SET `insertCompositionText^l,<br>
+`data$m 属性 ~SET 初期~組成~文字列
+◎
+A beforeinput event with the inputType "insertCompositionText" is dispatched [UI-EVENTS] with the data attribute set to the initial composition string.
+</li>
+			<li>
+初期~組成~文字列を選択の始端に挿入して，~DOMを更新する
+◎
+The DOM is updated with the insertion of the initial composition string at the start of the selection.
+</li>
+			<li>
+`input$et ~eventを次のように初期化した上で`配送-$する
+⇒
+`inputType$m  属性 ~SET `insertCompositionText^l
+◎
+An input event with the inputType "insertCompositionText" is dispatched [UI-EVENTS]
+</li>
+		</ol>
+
+<p class="note">注記：
+この `beforeinput$et ~eventは取消せないことに注意。
+◎
+Note
+◎
+This note is not normative.
+◎
+Notice that the beforeinput event cannot be canceled.
+</p>
+
+	</li>
+	<li>
+<p>
+組成~文字列による各~DOM更新-に対し：
+◎
+With each DOM update of the composition string:
+</p>
+		<ol>
+			<li>
+`beforeinput$et ~eventを次のように初期化した上で`配送-$する
+⇒
+`inputType$m 属性 ~SET `insertCompositionText^l,<br>
+`data$m 属性 ~SET 更新された組成~textの内容
+◎
+A beforeinput event with the inputType "insertCompositionText" is dispatched [UI-EVENTS] with the data attribute set to the updated contents of the composition text.
+</li>
+			<li>
+`compositionupdate$et ~eventを`配送-$する
+◎
+A compositionupdate event is dispatched. [UI-EVENTS].
+</li>
+			<li>
+~DOMを更新する
+◎
+The DOM is updated.
+</li>
+			<li>
+`input$et ~eventを次のように初期化した上で`配送-$する
+⇒
+`inputType$m  属性 ~SET `insertCompositionText^l
+◎
+An input event with the inputType "insertCompositionText" is dispatched [UI-EVENTS].
+</li>
+		</ol>
+
+<p class="note">注記：
+この段は、~DOMに~commitされることになる~text（すなわち、組成により制御される範囲の外側にあって，~DOMの一部になるもの）がある限り，繰返される。
+◎
+Note
+◎
+This step is repeated as long as no text is to be committed to the DOM (i.e. is made to be part of the DOM outside the range controlled by the composition).
+</p>
+	</li>
+	<li>
+<p>
+組成~文字列の一部または全部が~DOMに~commitされるときは：
+◎
+When a part or the entire composition string is to be committed to the DOM:
+</p>
+		<ol>
+			<li>
+%文字列 ~LET ~commitされる文字列
+</li>
+			<li>
+`beforeinput$et ~eventを次のように初期化した上で`配送-$する
+⇒
+`inputType$m ~SET `deleteCompositionText^l
+◎
+A beforeinput event with the inputType "deleteCompositionText" is dispatched [UI-EVENTS].
+</li>
+			<li>
+組成~処理-により制御される範囲の内容を、~DOMから除去する
+◎
+The contents of the range controlled by the composition process is removed from the DOM.
+</li>
+			<li>
+`beforeinput$et ~eventを次のように初期化した上で`配送-$する
+⇒
+`inputType$m ~SET `insertFromComposition^l,<br>
+`data$m ~SET %文字列
+◎
+A beforeinput event with the inputType "insertFromComposition" is dispatched [UI-EVENTS] with the data attribute set to the part of the final composition string that is to be committed to the DOM.
+</li>
+			<li>
+<p>
+~IF［
+前~段の~eventは取消されなかった
+］：
+</p>
+				<ol>
+					<li>
+%文字列 を選択の始端に挿入して，~DOMを更新する
+</li>
+					<li>
+`compositionend$et ~eventを`配送-$する
+</li>
+					<li>
+`input$et ~eventを次のように初期化した上で`配送-$する
+⇒
+`inputType$m  属性 ~SET `insertFromComposition^l
+</li>
+				</ol>
+◎
+Unless the beforeinput event with the inputType "insertFromComposition" has been canceled, the DOM is updated with the part of the composition string that is to be committed to the DOM inserted at the start of the selection.
+◎
+A compositionend event is dispatched. [UI-EVENTS].
+◎
+Unless the beforeinput event with the inputType "insertFromComposition" has been canceled, a input event with the inputType "insertFromComposition" is dispatched
+</li>
+			<li>
+~ELSE
+⇒
+`compositionend$et ~eventを`配送-$する
+◎
+↑</li>
+		</ol>
+	</li>
+	<li>
+~IF［
+組成~文字列の一部のみ，~DOMに~commitされた
+］
+⇒
+組成~文字列の まだ~commitされていない部分を新たな初期~組成~文字列とする下で，段 3 へ戻る。
+◎
+If only a part of the composition string was committed to the DOM, while another part is not yet to be committed, the process starts over from step 3 with the non-committed part of the final composition string as the new initial composition string.
+</li>
+</ol>
+
+<p class="note">注記：
+`compositionstart$et ~eventは 組成ごとに 1 回だけだが、
+`compositionend$et ~eventは 複数回あり得ることに注意。
+◎
+Note
+◎
+This note is not normative.
+◎
+Note that while every composition only has one compositionstart event, it may have several compositionend events.
+</p>
+
+	</section>
+	<section id="privacy-and-security-considerations">
+<h2 title="Privacy and security considerations">~security／~privacy上の考慮点</h2>
+
+~INFORMATIVE
+
+<p>
+`keydown^et や `keypress^et `UI-EVENTS$r ~eventなどの
+既存の~eventを通してすでに可用な指紋収集 `fingerprinting-guidance$r 技法を超えるような、この特能による既知な［
+~security／~privacy
+］上の~~影響はない。
+◎
+There are no known security or privacy impacts of this feature beyond fingerprinting [fingerprinting-guidance] techniques that already are available through existing events, such as the keydown and keypress [UI-EVENTS] events.
+</p>
+
+<p>
+この特能が，既存の~eventを置換する場合、可用な指紋収集~技法における衰退へ導き得る
+— ［
+利用者の意向を表出するために利用された，利用者が利用している特定0の~hardware
+］の種別ではなく，その意向が記録されるので。
+◎
+If this feature replaces existing events, it MAY lead to a decline in available fingerprinting [fingerprinting-guidance] techniques, as users' intentions are recorded, and not the particular type of hardware they used to express this intention.
+</p>
+	</section>
+
+</main></div>
+
+	<section id="acknowledgements">
+<h2 title="Acknowledgements">謝辞</h2>
+
+<p>
+次の方々に：
+</p>
+
+<div lang="en-x-a0">
+Thanks to:
+
+Michael Aufreiter,
+Adrian Bateman,
+Oliver Buchtala,
+Robin Berjon,
+Enrica Casucci,
+Bo Cupp,
+Domenic Denicola,
+Emil Eklund,
+Olivier Forget,
+Aryeh Gregor,
+Marijn Haverbeke,
+Yoshifumi Inoue,
+Koji Ishii,
+Gary Kacmarcik,
+Ian Kilpatrick,
+Frederico Caldeira Knabben,
+Takayoshi Kochi,
+Piotrek Koszuliński,
+Travis Leithead,
+Grisha Lyukshin,
+Miles Maxfield,
+Chaals McCathie Nevile,
+Masayuki Nakano,
+Ryosuke Niwa,
+Julie Parent,
+Ben Peters,
+Florian Rivoal,
+Morgan Smith,
+Hallvord R. M. Steen,
+Johan Sörlin,
+Cristian Talau,
+Dave Tapuska,
+Ojan Vafai,
+Léonie Watson,
+Xiaoqian Wu,
+Chong Zhang,
+Joanmarie,
+
+and everyone in the Editing Taskforce for their input and feedback.
+</div>
+	</section>

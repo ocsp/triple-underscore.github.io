@@ -1,0 +1,4156 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Multi-column Layout Module Level 1 （日本語訳）</title>
+
+<style>
+/* 例示レイアウトスタイル： custom 要素, CSS2 機能のみを利用  */
+
+x-multicol {
+	display: block;
+	font: 0.8rem/1.1rem sans-serif;
+	color: purple;
+	overflow: auto;
+	white-space: nowrap;
+}
+
+x-multicol > *,
+x-row > * {
+	vertical-align: top;
+}
+
+x-row {
+	display: inline-block; /* auto 合計幅 */
+	border: solid 0.4rem pink;
+	overflow: hidden;
+	background: white;
+}
+
+/* overflow 用の継ぎ足し */
+x-row + x-row {
+	border: none;
+	position:relative;
+	top: 0.4rem; left: -0.4rem; /* border-width */
+}
+
+x-col {
+	display: inline-block;
+	white-space: pre;
+	border: none;
+	position: relative;
+	z-index: 1;
+}
+
+x-col:first-child {
+	z-index: 2;
+}
+
+x-gap {
+	display: inline-block;
+	position: relative;
+	width: 1.3rem;
+	height:0;
+}
+
+x-rule {
+	display: block;
+	position: absolute;
+	left:0;
+	top:0;
+	width: 0.3rem;
+	height: 30rem;
+	border: 0.5rem solid yellow;
+	border-style:none solid;
+	background: green;
+}
+
+x-rule.no-rule {
+	background: yellow;
+}
+
+x-spanning {
+	display: block;
+	width: 2rem;
+	height:2rem;
+	overflow: visible;
+}
+
+x-h2 {
+	display: block;
+	background: silver;
+	color: white;
+	padding: 0.4rem;
+	font-size: 1.2rem;
+	height: 1.2rem;
+}
+
+x-spanning > x-h2 {
+	width: 100rem;
+}
+
+x-image {
+	display: block;
+	width: 100%;
+	margin:0;
+	background: black;
+}
+
+x-box {
+	display: block;
+}
+
+#_dgm-initial-example-b x-row {
+	border-color: transparent;
+}
+
+#_dgm-initial-example-b x-rule {
+	border-color: white;
+	background: silver;
+}
+
+#_dgm-column-count-higher-than-used-count x-box {
+	width: 10rem;
+}
+
+#_dgm-rule-same-width-as-gap x-rule {
+	border-color: green;
+}
+
+#_dgm-nested-spanner x-col > x-box {
+	border: solid red 0.5em;
+}
+
+</style>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		collectParts: Util.collectParts,
+		generate: expand,
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	key = key.replace(/\s?\[.+/, '');
+	break;
+case 'tp': // property value type
+	text = `&lt;'<code class="property">${key}</code>'&gt;`
+	href = link_map[`p.${key}`];
+	break;
+case 'dgm':
+	return `<a id="_dgm-${key}"></a>`;
+	break;
+case 'href':
+	{
+		const n = key.indexOf('＠');
+		if(n > 0) {
+			text = key.slice(0, n);
+			href = key.slice(n + 1);
+		}
+	}
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+
+return text;
+
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+●●options
+
+spec_title:CSS Multi-column Layout Module Level 1
+spec_date:2020-03-10
+trans_update:2020-03-12
+source_checked:190617
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-multicol-1/
+	abbr_url:CSSMCOL
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:layouts,css
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2014-09-03
+
+
+●●class_map
+p:property
+v:value
+t:type
+tp:type
+e:element
+css:css
+
+●●tag_map
+p:code
+v:code
+t:var
+tp:var
+css:code
+e:code
+c:code
+i:i
+V:var
+em:em
+
+●●original_id_map
+
+	multi-column-container:multi-column-element
+
+●●mdn_urls
+propdef-column-count:CSS/column-count
+propdef-column-fill:CSS/column-fill
+propdef-column-rule:CSS/column-rule
+propdef-column-rule-color:CSS/column-rule-color
+propdef-column-rule-style:CSS/column-rule-style
+propdef-column-rule-width:CSS/column-rule-width
+propdef-column-span:CSS/column-span
+propdef-column-width:CSS/column-width
+propdef-columns:CSS/columns
+
+●●link_map
+
+
+p.column-count:#propdef-column-count
+p.column-fill:#propdef-column-fill
+p.column-rule:#propdef-column-rule
+p.column-rule-color:#propdef-column-rule-color
+p.column-rule-style:#propdef-column-rule-style
+p.column-rule-width:#propdef-column-rule-width
+p.column-span:#propdef-column-span
+p.column-width:#propdef-column-width
+p.columns:#propdef-columns
+p.column-gap:#propdef-column-gap
+	p.column-gap:~CSSALIGN#propdef-column-gap
+
+p.border:~CSSBG#propdef-border
+p.color:~CSSCOLOR#propdef-color
+p.overflow:~CSSOVERFLOW3#propdef-overflow
+p.height:~SIZING#propdef-height
+	~CSS2VISUDET#propdef-height
+p.max-height:~SIZING#propdef-max-height
+	~CSS2VISUDET#propdef-max-height
+p.min-height:~SIZING#propdef-min-height
+p.position:~CSSPOS#propdef-position
+p.width:~CSS2VISUDET#propdef-width
+p.display:~CSSDISP#propdef-display
+
+p.break-after:~CSSBREAK#propdef-break-after
+p.break-before:~CSSBREAK#propdef-break-before
+p.break-inside:~CSSBREAK#propdef-break-inside
+
+p.orphans:~CSSBREAK#propdef-orphans
+p.widows:~CSSBREAK#propdef-widows
+p.border-style:~CSSBG#propdef-border-style
+p.border-width:~CSSBG#propdef-border-width
+	v.hidden:~CSSBG#valdef-border-style-hidden
+
+t.color:~CSSWG/css-color-3/#valuea-def-color
+t.color:~CSSCOLOR#typedef-color
+t.integer:~CSSVAL#integer-value
+t.length:~CSSVAL#length-value
+t.percentage:~CSSVAL#percentage-value
+t.length-percentage:~CSSVAL#typedef-length-percentage
+t.line-style:~CSSBG#typedef-line-style
+t.line-width:~CSSBG#typedef-line-width
+
+v.~auto0:#valdef-column-width-auto
+v.~auto1:#valdef-column-count-auto
+
+v.auto:#valdef-column-fill-auto
+v.color:#valdef-column-rule-color-color
+v.none:#valdef-column-span-none
+
+v.normal:#valdef-column-gap-normal
+
+v.all:#valdef-column-span-all
+v.balance:#valdef-column-fill-balance
+v.balance-all:#valdef-column-fill-balance-all
+
+v.currentcolor:~CSSCOLOR#valdef-color-currentcolor
+
+	●用語
+
+複柱~layout:#multi-column-layout
+複柱~整形~文脈:#multi-column-formatting-context
+複柱~容器:#multi-column-container
+複柱~行l:#multi-column-line
+柱~box:#column-box
+柱幅:#column-width
+柱高:#column-height
+~gap:#column-gap
+柱~gap:#column-gap
+罫線:#column-rule
+柱~罫線:#column-rule
+
+~spanning要素:#spanning-element
+~spanner:#spanner
+~overflow柱:#overflow-columns
+
+	~CSS22/tables.html#collapsing-borders
+
+	●補完
+柱:#column-box
+	平準化:#balanced
+柱~分断:#column-breaks
+	平準化:#filling-columns
+
+角括弧付き範囲~記法:~CSSVAL#css-bracketed-range-notation
+
+強制d分断:~CSSBREAK#forced-break
+非強制d分断:~CSSBREAK#unforced-break
+~page分断:~CSSBREAK#page-break
+断片化d文脈:~CSSBREAK#fragmentation-context
+断片化~文脈:~CSSBREAK#fragmentation-context
+断片化~容器:~CSSBREAK#fragmentation-container
+断片化:~CSSBREAK#fragmentation
+断片:~CSSBREAK#fragment
+
+筋:~CSSGRID#grid-track
+格子~layout:~CSSGRID#grid-layout
+格子~容器:~CSSGRID#grid-container
+格子~駒:~CSSGRID#grid-item
+
+塊~軸:~CSSWM#block-axis
+行内~size:~CSSWM#inline-size
+塊~size:~CSSWM#block-size
+	塊~次元:~CSSWM#block-dimension
+行内~基底~方向:~CSSWM#inline-base-direction
+直交~flow:~CSSWM#establish-an-orthogonal-flow
+
+塊~levelの~box:~CSSDISP#block-level-box
+整形~文脈:~CSSDISP#formatting-context
+塊~整形~文脈:~CSSDISP#block-formatting-context
+独立な整形~文脈:~CSSDISP#independent-formatting-context
+塊~level:~CSSDISP#block-level
+塊~容器~box:~CSSDISP#block-container
+塊~容器:~CSSDISP#block-container
+	行内-塊:~CSSDISP#valdef-display-inline-block
+~flow内:~CSSDISP#in-flow
+~flow外:~CSSDISP#out-of-flow
+~BFC:~CSSDISP#bfc
+首要~box:~CSSDISP#principal-box
+匿名~box:~CSSDISP#anonymous
+匿名:~CSSDISP#anonymous
+包含塊:~CSSDISP#containing-block
+独立な整形~文脈を確立する:~CSSDISP#establish-an-independent-formatting-context
+
+絶対的に位置され:~CSSPOS#absolute-position
+
+算出d色:~CSSCOLOR#computed-color
+
+~table包装~box:~CSSTABLE#table-wrapper-box
+
+行l~box:~CSSINLINE#line-box
+
+	~table~cell
+	~table
+可用な空間:~SIZING#available
+
+		~CSSWG/css-sizing/
+	縦書
+
+算出d値:~CASCADE#computed-value
+使用~値:~CASCADE#used-value
+指定d値:~CASCADE#specified-value
+実際の値:~CASCADE#actual-value
+初期~値:~CASCADE#initial-value
+
+横組み:~CSSWM#horizontal-writing-mode
+縦組み:~CSSWM#vertical-writing-mode
+
+通常~flow:~CSS2VISUREN#normal-flow
+
+~paged媒体:~MQ4#paged-media
+
+
+●●words_table1
+
+auto0:auto
+auto1:auto
+www-style:https://lists.w3.org/Archives/Public/www-style
+
+
+●●words_table
+
+	●column layout
+平準化-:balance::~
+	平衡をとる
+平準化:balancing::~
+
+span:
+spanner:
+spanning:
+	段抜き／通し組み
+row:
+col:column
+gap:
+罫線:rule::~
+筋:track::~::トラック
+柱:column::::カラム
+柱幅:column width:column 幅:::カラム幅
+柱高:column height:column 高:::カラム高
+	column-count:
+	column-gap
+	column-rule
+複柱:multi-column::複 column::複カラム
+	複柱~容器:multicol container
+分割-:split::~
+
+	分け隔てる:push apart
+
+逐次的:sequential::~
+	sequentially
+flex:
+	~flex可能:flexible
+	融通
+	適宜:scalable
+
+	●layout
+table:
+cell:
+BFC:
+包装:wrapper::~
+	layout:designs
+	~flow内:in-flow
+駒:item:::アイテム
+格子:grid::~::グリッド
+
+相殺-:collapse::~
+相殺:collapsing::~
+縮約:collapsing::~
+強制d:forced::強制
+非強制d:unforced::非強制
+
+分断:break::~
+	分断できない:unbreakable
+	分断~用:breaking
+
+最小-:min-::~
+最大-:max-::~
+	最~大:largest
+横幅:width::幅
+縦幅:height::高さ
+太さ:thickness:~
+	~~幅／:wide
+	幅広い:wider range
+
+連続的:continuous::~
+首要:principal::主要
+
+	formatter
+真中:in the middle:~
+占有-:occupy::~
+埋めて:fillして::~
+	埋めて:ending up
+埋める:fillする::~
+埋めら:fillさ::~
+埋方:filling::埋め方
+重合する:overlapする::重なり合う
+切取られ:clipされ::切り取られ
+収まる:fitする::~
+連接-:adjoin::~
+現れる:appearする:~
+浮動体:float::~
+浮動-:float::~
+
+自動で:auto-:~
+自然:natural:自動的
+	~~元の所の:natural
+縦書き:vertical::~
+	横書き:horizontal::横書き
+横組み:horizontal writing mode:~
+縦組み:vertical writing mode:~
+直交:orthogonal:~
+部屋:room::~
+端点:endpoint::~
+断片:fragment::~
+断片化d:fragmented::断片化
+断片化:fragmentation::~
+収容-:accomodate:~
+隣接な:adjacentな:隣接する
+
+	~pageごと:per-page
+	~page割り:paginate
+	~page割り:pagination
+
+	●塗り
+色:color:~
+背景:background::~
+積層:stacking::~
+塗られ:paintされ:~
+塗ng:painting:塗り
+描かれ:drawされ:~
+
+	● CSS
+固定-:fix:~
+
+	子:direct children
+	先祖:descendent
+	直な子でなく:lower than the first level of descendants
+	可視でない:non-visible
+	視覚的に:visibly
+	置換されない:non-replaced
+	rendition
+	~scroll可能:scrollable
+
+	●仕様
+表出:expression:~
+基礎的:fundamental:~
+制限s:limits:制限
+堅牢:robust:~
+	堅牢に保ち易くなる:helps with robustness
+除算:division:~
+改正-:amend:~
+強調-:highlight:~
+正した:correctした:~
+アタられ:consultされ:あたられ
+復帰-:revert:~
+
+	~~説明:illustrational
+	§ 使用~値の計算法:pseudo-algorithm
+	できる:possible
+	できない:impossible
+	従来の:traditional
+	例:line of text plus an example
+	足る:enough
+	最適とされる:optimal
+	略して:for short
+	稀:rarely
+	方法には〜選択肢:strategies
+	織り込まれる:takes these into consideration
+	極力抑える:try to minimize
+	respectively
+	namely
+	明らか:obvious
+	様子:how
+	一文:line
+	~~文:sentence
+	~~固有の:unique な
+	外され:commented out
+	-:hatched
+	-:diagonal hatching
+	-:cross hatching
+
+	が指定する:-specified
+	明確化-:clarification
+	加えて，:addition
+	~accessibilityを損なう:pose accessibility issues.
+	ふるまう:act
+	に基づいて:with regard to
+	に~~関係なく:without regard for
+	挙げる:refer
+	~~参照する:refer
+	もたらして:causing
+	書き直した:reworded
+	読める:readable
+	将来的:future
+	深まるまで待つ:pending
+
+	●未分類
+増大-:increase:~
+減少-:decrease:~
+展開-:expand:~
+拡がる:extendする:~
+拡がり:extendし:~
+切落され:truncateされ:切り落とされ
+繰返され:repeatされ:~
+余分:extra:~
+角括弧付き:bracketed::~
+
+	rendition
+	含む:contain
+	得る:achieve
+	-:assuming
+	変わり得る:vary
+	-:return
+	setting
+	切り上げ:clamp
+	〜のまま:left 〜
+	しないように:turned off
+	あり続ける:continue to
+	-:plus
+	残したまま:leaving
+
+	web:web／Web
+	ピンク／緑色／黄色／黒色／灰色／赤色
+	一部:part
+	等しく:equivalent
+	均等に:equally
+	片:fragment
+	右:right
+	短い:short
+	高い:high
+	背の高い:tall
+	高く:tall
+	項:item
+	およそ:approximately
+	群:group
+	数:number
+
+	構造を備える:structured
+	main
+	ばらつき:variation
+	article
+	non-
+	auto
+	上端に来る:end up at the top
+	contributor
+	を基準に:by reference to／
+	基準に:refer to
+	`article^e 要素:article
+	`p^e 要素:paragraph
+	`h2^e 要素:h2／:h2 heading
+	1 未満:non-zero
+
+	●指示語
+
+	最後の:final
+	後続の:subsequent
+	個／本／枚:two／:three／:four／:five
+	-:sixth#1
+	-:opposing
+	ある:certain
+	ずっと:significantly
+	いくぶん:somewhat
+	一括して:same place
+	前の:previous
+	最短:shortest
+	最低でも
+	最も近い:nearest
+	次の:next
+	次に来る:next
+	直後に:immediately after
+	周辺:around
+	他のもの:anything else
+	後方:later
+	周囲のもの:surrounding
+	より低い:lower
+	より古い:older
+	より大きい:greater
+	より小さい:smaller
+	より短い:shorter
+	より高い:higher
+	across
+	larger
+	本数:number of 
+	下限:floor
+	箇所:occasions
+	直上層:just above 
+	節／§:section
+	ごと:per
+	途中:in the middle
+
+●●ref_normative
+
+[CSS-BACKGROUNDS-3]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. 17 October 2017. CR. URL: https://www.w3.org/TR/css-backgrounds-3/ 
+[CSS-BREAK-4]
+    Rossen Atanassov; Elika Etemad. CSS Fragmentation Module Level 4. 18 December 2018. WD. URL: https://www.w3.org/TR/css-break-4/ 
+[CSS-COLOR-3]
+    Tantek Çelik; Chris Lilley; David Baron. CSS Color Module Level 3. 19 June 2018. REC. URL: https://www.w3.org/TR/css-color-3/ 
+[CSS-DISPLAY-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Display Module Level 3. 28 August 2018. CR. URL: https://www.w3.org/TR/css-display-3/ 
+[CSS-OVERFLOW-3]
+    David Baron; Elika Etemad; Florian Rivoal. CSS Overflow Module Level 3. 31 July 2018. WD. URL: https://www.w3.org/TR/css-overflow-3/ 
+[CSS-POSITION-3]
+    Rossen Atanassov; Arron Eicholz. CSS Positioned Layout Module Level 3. 17 May 2016. WD. URL: https://www.w3.org/TR/css-position-3/ 
+[CSS-TABLES-3]
+    Greg Whitworth. CSS Table Module Level 3. 7 March 2017. WD. URL: https://www.w3.org/TR/css-tables-3/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS2]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[CSS3-BREAK]
+    Rossen Atanassov; Elika Etemad. CSS Fragmentation Module Level 3. 4 December 2018. CR. URL: https://www.w3.org/TR/css-break-3/ 
+[CSS3-SIZING]
+    Tab Atkins Jr.; Elika Etemad. CSS Intrinsic & Extrinsic Sizing Module Level 3. 22 May 2019. WD. URL: https://www.w3.org/TR/css-sizing-3/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+
+●●ref_informative
+
+[CSS3BOX]
+    Elika Etemad. CSS Box Model Module Level 3. 18 December 2018. WD. URL: https://www.w3.org/TR/css-box-3/ 
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Multi-column Layout Module</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/css-multicol-1/
+編集者草案
+	https://drafts.csswg.org/css-multicol-1/
+以前のバージョン
+	https://www.w3.org/TR/2018/WD-css-multicol-1-20180528/
+	https://www.w3.org/TR/2017/WD-css-multicol-1-20171005/
+	https://www.w3.org/TR/2011/CR-css3-multicol-20110412/
+	https://www.w3.org/TR/2009/CR-css3-multicol-20091217/
+	https://www.w3.org/TR/2009/WD-css3-multicol-20090630/
+	https://www.w3.org/TR/2007/WD-css3-multicol-20070606/
+	https://www.w3.org/TR/2005/WD-css3-multicol-20051215/
+	https://www.w3.org/TR/2001/WD-css3-multicol-20010118/
+	https://www.w3.org/1999/06/WD-css3-multicol-19990623
+
+テスト一式
+	http://test.csswg.org/suites/css-multicol-1_dev/nightly-unstable/
+最新の課題
+	<a href="https://drafts.csswg.org/css-multicol-1/issues">Disposition of Comments</a>
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-multicol-1">GitHub Issues</a>
+
+編集
+	<a href="mailto:howcome@opera.com">Håkon Wium Lie</a> (Opera Software)
+	<a href="https://florian.rivoal.net">Florian Rivoal</a> (On behalf of Bloomberg)
+	<a href="https://rachelandrew.co.uk">Rachel Andrew</a> (Fronteers)
+
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-multicol-1/Overview.bs">GitHub Editor</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-multicol-1
+
+</script>
+
+</head>
+<body>
+
+<!--% resource pool -->
+<div id="_persisted_parts" hidden>
+
+<!-- 
+いろはにほへと　ちりぬるを
+わかよたれそ　つねならむ
+うゐのおくやま　けふこえて
+あさきゆめみし　ゑひもせす
+
+色はにほへど　散りぬるを
+我が世たれぞ　常ならむ
+有為の奥山　　今日越えて
+浅き夢見じ　　酔ひもせず
+
+-->
+
+<x-multicol id="_dgm-initial-example">
+	<x-row
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+ゑひもせす。
+<x-box style="height: 0.5rem;"></x-box
+>いろはにほへとちり
+ぬるを。わかよたれ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+ゑひもせす。
+<x-box style="height: 0.5rem;"></x-box
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>て。あさきゆめみし
+ゑひもせす。
+<x-box style="height: 0.5rem;"></x-box
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+ゑひもせす。
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-initial-example-b">
+	<x-row
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+ゑひもせす。
+<x-box style="height: 0.5rem;"></x-box
+>いろはにほへとちり
+ぬるを。わかよたれ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+ゑひもせす。
+<x-box style="height: 0.5rem;"></x-box
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>て。あさきゆめみし
+ゑひもせす。
+<x-box style="height: 0.5rem;"></x-box
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+ゑひもせす。
+</x-col>
+	</x-row>
+</x-multicol>
+
+
+<x-multicol id="_dgm-simple-span-example">
+	<x-row
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+<x-spanning><x-h2>spanning 要素</x-h2></x-spanning
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+ゑひもせす。いろは
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>そつねならむ。うゐ
+のおくやまけふこえ
+<x-spanning></x-spanning
+>にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+さきゆめみしゑひも
+せす。いろはにほへ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>て。あさきゆめみし
+ゑひもせす。
+<x-spanning></x-spanning
+>とちりぬるを。わか
+よたれそつねならむ
+。うゐのおくやまけ
+ふこえて。あさきゆ
+めみしゑひもせす。
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-column-not-containing-block">
+	<x-row
+><x-col
+><x-image style="position:absolute; top:2em; left:3em; width:9rem; height:5rem;"></x-image
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+ゑひもせす。いろは
+にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>さきゆめみしゑひも
+せす。いろはにほへ
+とちりぬるを。わか
+よたれそつねならむ
+。うゐのおくやまけ
+ふこえて。あさきゆ
+めみしゑひもせす。
+いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>のおくやまけふこえ
+て。あさきゆめみし
+ゑひもせす。いろは
+にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+さきゆめみしゑひも
+せす。いろはにほへ
+とちりぬるを。わか
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-image-inside-column">
+	<x-row
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+<x-image style="height: 6.4rem;"></x-image
+>そつねならむ。うゐ
+のおくやまけふこえ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>て。あさきゆめみし
+ゑひもせす。いろは
+にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+さきゆめみしゑひも
+せす。いろはにほへ
+とちりぬるを。わか
+よたれそつねならむ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>。うゐのおくやまけ
+ふこえて。あさきゆ
+めみしゑひもせす。
+いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+ゑひもせす。
+</x-col>
+	</x-row>
+</x-multicol>
+
+
+<x-multicol id="_dgm-image-floated-in-column">
+	<x-row
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+ゑひもせす。いろは
+にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>やまけふこえて。あ
+さきゆめみしゑひも
+せす。いろはにほへ
+とちりぬるを。わか
+よたれそつねならむ
+。うゐのおくやまけ
+ふこえて。あさきゆ
+めみしゑひもせす。
+いろはにほへとちり
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>ぬるを。わかよたれ
+そつねならむ。うゐ
+<x-image><x-box style="display:inline-block; background:white; padding-right:0.2rem;"
+>のおく
+やまけ
+ふこえ
+て。あ
+さきゆ
+めみし
+</x-box></x-image>ゑひもせす。いろは
+</x-col>
+	</x-row>
+</x-multicol>
+
+
+
+<x-multicol id="_dgm-margins-do-not-collapse">
+	<x-row
+><x-col
+>
+いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>ゑひもせす。いろは
+にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+さきゆめみしゑひも
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>せす。いろはにほへ
+とちりぬるを。わか
+よたれそつねならむ
+。うゐのおくやまけ
+ふこえて。あさきゆ
+めみしゑひもせす。
+</x-col>
+	</x-row>
+</x-multicol>
+
+
+<x-multicol id="_dgm-column-count-higher-than-used-count">
+	<x-row
+><x-col
+><x-box>段落一</x-box
+></x-col><x-col
+><x-box>段落二</x-box
+></x-col></x-row
+><x-row
+><x-col
+><x-box>段落三</x-box
+></x-col>
+	</x-row>
+</x-multicol>
+
+
+
+<x-multicol id="_dgm-rule-same-width-as-gap">
+	<x-row
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>ゑひもせす。いろは
+にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>さきゆめみしゑひも
+せす。いろはにほへ
+とちりぬるを。わか
+よたれそつねならむ
+。うゐのおくやまけ
+</x-col>
+	</x-row>
+</x-multicol>
+
+
+
+<x-multicol id="_dgm-h2-spanner">
+	<x-row
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+<x-spanning><x-h2><code>h2</code> 要素</x-h2></x-spanning
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+ゑひもせす。いろは
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>そつねならむ。うゐ
+のおくやまけふこえ
+<x-spanning></x-spanning
+>にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+さきゆめみしゑひも
+せす。いろはにほへ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>て。あさきゆめみし
+ゑひもせす。
+<x-spanning></x-spanning
+>とちりぬるを。わか
+よたれそつねならむ
+。うゐのおくやまけ
+ふこえて。あさきゆ
+めみしゑひもせす。
+</x-col>
+	</x-row>
+</x-multicol>
+
+
+<x-multicol id="_dgm-nested-spanner">
+	<x-row
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+<x-spanning><x-h2><code>h2</code> 要素</x-h2></x-spanning
+><x-box style="border-style: none solid"
+>いろはにほへとち
+りぬるを。わかよ
+たれそつねならむ
+。うゐのおくやま
+けふこえて。あさ
+</x-box></x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>ゑひもせす。いろは
+にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+<x-spanning></x-spanning
+><x-box style="border-style: none solid"
+>きゆめみしゑひも
+せす。いろはに
+ほへとちりぬるを
+。わかよたれそつ
+ねならむ。うゐの
+</x-box></x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>さきゆめみしゑひも
+せす。
+
+
+
+<x-box style="position:absolute; border-bottom: none; top:4rem; width:auto;"
+>　　　　　　　　
+　　　　　　　　
+</x-box><x-spanning></x-spanning
+><x-box style="border-top-width:0"
+>おくやまけふこえ
+て。あさきゆめみ
+しゑひもせす。
+</x-box></x-col>
+	</x-row>
+</x-multicol>
+
+
+
+<x-multicol id="_dgm-h2-in-the-overflow-no-span">
+	<x-row
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>ゑひもせす。いろは
+にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>さきゆめみしゑひも
+せす。いろはにほへ
+とちりぬるを。わか
+よたれそつねならむ
+。うゐのおくやまけ
+</x-col></x-row
+><x-row
+><x-gap><x-rule></x-rule></x-gap
+><x-col
+>
+
+
+
+
+</x-col
+><x-col
+>ふこえて。あさきゆ
+めみしゑひもせす。
+<x-h2><code>h2</code> 要素</x-h2
+>いろはにほへとちり
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>ぬるを。わかよたれ
+そつねならむ。
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-h2-in-the-last-column-no-span">
+	<x-row
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>ゑひもせす。いろは
+にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>さきゆめみしゑひも
+せす。
+<x-h2><code>h2</code> 要素</x-h2
+>いろはにほへとちり
+</x-col>
+	</x-row><x-row>
+<x-gap><x-rule></x-rule></x-gap
+><x-col
+>
+
+
+
+
+</x-col
+><x-col
+>ぬるを。わかよたれ
+そつねならむ。
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-spanner-page-break1">
+	<x-row style="border-bottom: none;"
+><x-col
+>いろはにほへとちり
+ぬるを。
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>わかよたれそつねな
+らむ。うゐのおくや
+まけふこえて。あさ
+きゆめみしゑひもせ
+す。
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-spanner-page-break2">
+	<x-row style="border-top: none;"
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+<x-spanning><x-h2><code>h2</code> 要素</x-h2></x-spanning
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>そつねならむ。うゐ
+のおくやまけふこえ
+<x-spanning></x-spanning
+>ゑひもせす。いろは
+にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>て。あさきゆめみし
+ゑひもせす。
+<x-spanning></x-spanning
+>さきゆめみしゑひも
+せす。いろはにほへ
+とちりぬるを。わか
+よたれそつねならむ
+。
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-two-spanners-margin-no-collapse">
+	<x-row style="border-top: none;"
+><x-col
+><x-spanning style="height: 6rem;"
+><x-h2 style="border-bottom: solid white 0.6rem;"
+><code>h2</code> 要素</x-h2
+><x-h2 style="border-bottom: solid white 0.6rem;"
+>別の <code>h2</code> 要素</x-h2></x-spanning
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+><x-spanning style="height: 5.2rem;"></x-spanning
+>ゑひもせす。いろは
+にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+さきゆめみしゑひも
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+><x-spanning style="height: 5.2rem;"></x-spanning
+>せす。いろはにほへ
+とちりぬるを。わか
+よたれそつねならむ
+。うゐのおくやまけ
+ふこえて。あさきゆ
+めみしゑひもせす。
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-column-balancing-one-paragraph">
+	<x-row
+><x-col
+>いろはにほへとちり
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>ぬるを。わかよたれ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>そつねならむ。　　
+</x-col><x-gap><x-rule class="no-rule"></x-rule></x-gap
+><x-col
+>　　　　　　　　　
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-no-column-balancing-one-paragraph">
+	<x-row
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。　　
+　　　　　　　　　
+</x-col><x-gap><x-rule class="no-rule"></x-rule></x-gap
+><x-col
+>　　　　　　　　　
+</x-col><x-gap><x-rule class="no-rule"></x-rule></x-gap
+><x-col
+>　　　　　　　　　
+</x-col><x-gap><x-rule class="no-rule"></x-rule></x-gap
+><x-col
+>　　　　　　　　　
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-column-balancing-with-column-break">
+	<x-row
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>ゑひもせす。いろは
+にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>さきゆめみしゑひも
+せす。いろはにほへ
+とちりぬるを。わか
+よたれそつねならむ
+。うゐのおくやまけ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>ふこえて。あさきゆ
+めみしゑひもせす。
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-column-balancing-with-figure">
+	<x-row
+><x-col
+><x-image
+>　　　　　　　　　
+
+
+
+
+
+
+</x-image></x-col
+><x-gap><x-rule></x-rule></x-gap
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+ゑひもせす。いろは
+にほへとちりぬるを
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+さきゆめみしゑひも
+せす。
+</x-col><x-gap><x-rule class="no-rule"></x-rule></x-gap
+><x-col
+>　　　　　　　　　
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-image-overflow-not-clipped">
+	<x-row
+><x-col style="z-index:1"
+>いろはにほへとちり
+ぬるを。わかよたれ
+<x-box style="position:relative; height:4rem;"
+><x-image style="position:absolute; width:auto;height:4rem;"
+>　　　　　　　　　　　　
+</x-image></x-box
+>そつねならむ。うゐ
+のおくやまけふこえ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>て。あさきゆめみし
+ゑひもせす。いろは
+にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+さきゆめみしゑひも
+せす。いろはにほへ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>とちりぬるを。わか
+よたれそつねならむ
+。うゐのおくやまけ
+ふこえて。あさきゆ
+めみしゑひもせす。
+いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-height-constraint-overflow-inline">
+	<x-row
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>ゑひもせす。いろは
+にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>さきゆめみしゑひも
+せす。いろはにほへ
+とちりぬるを。わか
+よたれそつねならむ
+。うゐのおくやまけ
+</x-col>
+		</x-row
+		><x-row>
+<x-gap><x-rule></x-rule></x-gap
+><x-col>
+
+
+
+
+</x-col
+><x-col
+>ふこえて。あさきゆ
+めみしゑひもせす。
+いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。
+</x-col>
+	</x-row>
+</x-multicol>
+
+
+<x-multicol id="_dgm-overflow-column-effects-height">
+	<x-row
+><x-col
+>いろはにほへとちり
+ぬるを。
+
+
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>わかよたれそつねな
+らむ。
+
+
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>うゐのおくやまけふ
+こえて。
+
+
+</x-col>
+	</x-row><x-row>
+<x-gap><x-rule></x-rule></x-gap
+><x-col
+>
+
+
+
+</x-col
+><x-col
+>あさきゆめみしゑひ
+もせす。いろはにほ
+へとちりぬるを。わ
+かよたれ…
+</x-col>
+	</x-row>
+</x-multicol>
+
+
+<x-multicol id="_dgm-pagination-overflow-page1">
+	<x-row style="border-bottom: none"
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+そつねならむ。うゐ
+のおくやまけふこえ
+て。あさきゆめみし
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>ゑひもせす。いろは
+にほへとちりぬるを
+。わかよたれそつね
+ならむ。うゐのおく
+やまけふこえて。あ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>さきゆめみしゑひも
+せす。いろはにほへ
+とちりぬるを。わか
+よたれそつねならむ
+。うゐのおくやまけ
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-pagination-overflow-page2">
+	<x-row style="border-top: none"
+><x-col
+>ふこえて。あさきゆ
+めみしゑひもせす。
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>いろはにほへとちり
+ぬるを。わかよたれ
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>そつねならむ。　　
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-height-constraint-column-break-overflow-inline">
+	<x-row
+><x-col
+>いろはにほへとちり
+ぬるを。
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>わかよたれそつねな
+らむ。うゐのおくや
+まけふこえて。あさ
+きゆめみしゑひもせ
+す。
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>いろはにほへとちり
+ぬるを。
+</x-col></x-row
+><x-row
+><x-gap><x-rule></x-rule></x-gap
+><x-col
+>
+
+
+
+
+</x-col
+><x-col
+>わかよたれそつねな
+らむ。うゐのおくや
+まけふこえて。
+
+
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-pagination-column-break-overflow-page1">
+	<x-row style="border-bottom: none;"
+><x-col
+>いろはにほへとちり
+ぬるを。
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>わかよたれそつねな
+らむ。うゐのおくや
+まけふこえて。あさ
+きゆめみしゑひもせ
+す。
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>いろはにほへとちり
+ぬるを。
+</x-col>
+	</x-row>
+</x-multicol>
+
+<x-multicol id="_dgm-pagination-column-break-overflow-page2">
+	<x-row style="border-top: none;"
+><x-col
+>わかよたれそつねな
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>らむ。うゐのおくや
+</x-col><x-gap><x-rule></x-rule></x-gap
+><x-col
+>まけふこえて。　　
+</x-col>
+	</x-row>
+</x-multicol>
+
+</div>
+
+<header>
+	<hgroup>
+<h1>CSS による段組</h1>
+<h2>CSS Multi-column Layout Module</h2>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この仕様は、~web用の~stylesheet言語~CSSによる，複柱（段組）~layoutについて述べる。
+この仕様に述べられる機能性を利用すれば、合間に~gapや罫線を伴う 複数の柱の中へ，内容を流し込む（~flowさせる）ことが可能になる。
+◎
+This specification describes multi-column layouts in CSS, a style sheet language for the web. Using functionality described in the specification, content can be flowed into multiple columns with a gap and a rule between them.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公の複製です…
+【以下，この節の他の内容は、`~CSS日本語訳 共通ページ＠css-common-ja.html#status$hrefに委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="introduction">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+この~moduleは、~CSSによる
+`複柱~layout@†
+について述べる。
+この文書に述べる機能性を利用すれば、~stylesheetにて
+要素の内容を複数の柱に~lay-outされるように宣言できるようになる。
+◎
+This module describes multi-column layout in CSS. By using functionality described in this document, style sheets can declare that the content of an element is to be laid out in multiple columns.
+</p>
+
+<p class="trans-note">【
+日本語では一般に
+“段組”
+と呼ばれているが、段組の “~~段（横方向に伸びる柱）” は 縦組みが念頭に置かれている語であり，
+`複柱~行l$と紛らわしいので、この訳ではより直接的に，
+“複柱”
+と記す。
+原文のこの意味を表す語 “multi-column” は “multicol” とも略記されるが、訳語では区別しない。
+】</p>
+
+<p>
+~CSSにおける他の~layout手法では、親~要素に適用されたとき，その子たちの `display^ ~propは変化する。
+例えば、 3 本の~colからなる`格子~layout$が作成された場合、`格子~容器$の子は，`格子~駒$になり、~cellごとに 1 個の要素が~col筋の中に配置される
+— 必要に応じて追加的な~rowを作成して。
+◎
+Other layout methods in CSS, when applied to a parent element, change the display properties of the direct children. For example if a three column grid layout is created, the direct children of the grid container become grid items and are placed into the column tracks, one element per cell with additional rows created as needed.
+</p>
+
+<p>
+しかしながら，`複柱~容器$の子~要素は、`通常~flow$内にあり続け、その~flowは，何本かの柱の中へ配列される。
+これらの柱の行内~sizeは~flex可能なので、表示される［
+~size／柱の本数
+］が変化することにより，可用な空間に応答する。
+◎
+The child elements of a multi-column container however continue in normal flow, that flow is arranged into a number of columns. These columns have a flexible inline size, and therefore respond to available space by changing the size or number of columns displayed.
+</p>
+
+<p class="trans-note">【
+この~layoutは、各~柱を~text行lになぞらえた下での “より粒度の荒い” 行内~layoutと捉えることもできる。
+~lay-outされる内容は、~textの自動改行と同様に，~page分断（改~page）／後述の`~spanning要素$により “自動改~柱 （`平準化＠#filling-columns$href）”され、各~柱の~~幅は，~textの行高と同様に一定にされる。
+】</p>
+
+<p>
+~CSSで複柱~layoutを記述するのは容易である。
+単純な例を示す：
+◎
+Multi-column layouts are easy to describe in CSS. Here is a simple example:
+</p>
+
+<div class="example">
+<pre class="lang-css">
+body { column-width: 12em }
+</pre>
+
+<p>
+この例では、 `body^e 要素は、各 柱の~~幅が少なくとも `12em^v 以上になるように設定される。
+正確な柱~数は，`可用な空間$に依存することになる。
+◎
+In this example, the body element is set to have columns at least 12em wide. The exact number of columns will depend on the available space.
+</p>
+	</div>
+
+<p>
+~stylesheetの中で柱~数を明示的に設定することもできる：
+◎
+The number of columns can also be set explicitly in the style sheet:
+</p>
+
+<div class="example">
+<pre class="lang-css">
+body { column-count: 2 }
+</pre>
+
+<p>
+この事例では、柱~数が固定され，各~柱の横幅は，可用な横幅に依存して変わり得ることになる。
+◎
+In this case, the number of columns is fixed and the column widths will vary depending on the available width.
+</p>
+	</div>
+
+<p>
+略式~prop `columns$p を利用すれば、一つの宣言で，一方のみ† または両方の~propを設定できる：
+◎
+The shorthand columns property can be used to set either, or both, properties in one declaration.
+</p>
+
+<div class="example">
+<p>
+次の例は、順に，［
+柱~数のみ,
+各~柱の横幅のみ,
+柱~数と横幅の両者
+］を設定する：
+◎
+In these examples, the number of columns, the width of columns, and both the number and width are set, respectively:
+</p>
+
+<pre class="lang-css">
+body { columns: 2 }
+body { columns: 12em }
+body { columns: 2 12em }
+</pre>
+
+</div>
+
+<p class="trans-note">【†
+通例の略式~propとふるまいが異なるわけではなく，実際には両者とも設定する
+— 値を指定しなかった方の~propは初期~値 `auto^v にされる。
+】</p>
+
+<p>
+この~moduleは、各~柱~間の~gapと罫線について記述する，別の~prop群も導入する。
+◎
+Another group of properties introduced in this module describe gaps and rules between columns.
+</p>
+
+<div class="example">
+<pre class="lang-css">
+body {
+  column-gap: 1em;
+  column-rule: thin solid black;
+}
+</pre>
+
+<p>
+上の例の最初の宣言は、隣接な 2 本の柱の~gapを `1em^v に設定する。
+柱~gapは，~padding区画に類似する。
+~gapの真中には、 `column-rule$p ~propで記述される罫線が在ることになる。
+◎
+The first declaration in the example above sets the gap between two adjacent columns to be 1em. Column gaps are similar to padding areas. In the middle of the gap there will be a rule which is described by the column-rule property.
+</p>
+
+</div>
+
+<p>
+`column-rule$p ~propの値は、~CSS~border~propのそれに類似する。
+`border$p と同様に， `column-rule$p は、略式~propである。
+◎
+The values of the column-rule property are similar to those of the CSS border properties. Like border, column-rule is a shorthand property.
+</p>
+
+<div class="example">
+<p>
+上の例の `column-rule$p 略式~prop宣言を展開したものは次になる：
+◎
+In this example, the shorthand column-rule declaration from the above example has been expanded:
+</p>
+
+<pre class="lang-css">
+body {
+  column-gap: 1em;
+  column-rule-width: thin;
+  column-rule-style: solid;
+  column-rule-color: black;
+}
+</pre>
+
+</div>
+
+<p>
+`column-fill$p, `column-span$p ~propは、~stylesheetによる複柱~layoutに，より広範な視覚的な表出を与える
+◎
+The column-fill and column-span properties give style sheets a wider range of visual expressions in multi-column layouts.
+</p>
+
+<div class="example">
+<p>
+次の例では、各~柱の内容が平準化されるように
+— すなわち，およそ同じ長さになるように —
+設定され、
+`h2^e 要素は，すべての柱に渡って~spanするように設定される。
+◎
+In this example, columns are set to be balanced, i.e., to have approximately the same length. Also, h2 elements are set to span across all columns.
+</p>
+
+<pre class="lang-css">
+div { column-fill: balance }
+h2 { column-span: all }
+</pre>
+
+</div>
+
+<p>
+この仕様は、 10 個の新たな~propを導入する（どれも，これまでの例に~~現れている）。
+◎
+This specification introduces ten new properties, all of which are used in the examples above.
+</p>
+
+<p>
+すべての柱~propが初期~値をとる場合、要素の~layoutは，柱が 1 本だけの複柱~layoutに一致する。
+◎
+If all column properties have their initial value, the layout of an element will be identical to a multi-column layout with only one column.
+</p>
+
+
+<div class="example">
+<p>
+次の描画~見本に、~padding（図のピンク）を伴う複柱~容器における，
+`柱~gap$（図の黄色＋緑色）,
+`柱~罫線$（図の緑色）
+を示す。
+これらの色は，~~説明~目的で呈示するものであり、実際の実装では，これらの区画のうち罫線~以外には背景が~~現れることになる。
+2 個目の図に，灰色の罫線を伴う`複柱~容器$の描画を示す。
+◎
+Column gaps (diagonal hatching) and column rules are shown in this sample rendition of a multi-column container with padding (cross hatching). The hatched areas are present for illustrational purposes only. In actual implementations these areas will be determined by the background, the second image shows a rendering of a multi-column container with column-rules.
+</p>
+
+<figure>`initial-example^dgm
+【！invisible-elements.svg】
+<figcaption>
+複柱~layout。
+`複柱~容器$は、 3 本の`柱~box$からなっている。
+容器の内側にある，可視でない~gapと~padding, および可視な罫線の色は、強調されている。
+【！ column-span は gap の誤記】
+以降の例でも，この様に表示される図式が利用される。
+◎
+A multi-column layout with the non-visible column-span and padding inside the multicol container highlighted.
+</figcaption></figure>
+
+<figure>`initial-example-b^dgm
+<figcaption>
+実装により表示されることになる，前の図と同じ~layout。
+◎
+The same layout as in the first image, as it would be displayed by an implementation.
+</figcaption></figure>
+</div>
+
+		<section id="values">
+<h3 title="Value Definitions">1.1. 値~定義</h3>
+
+<p class="trans-note">【
+この節の内容は <a href="css-common-ja.html#values">~CSS日本語訳 共通~page</a>に委譲。
+】</p>
+
+		</section>
+	</section>
+	<section id="the-multi-column-model">
+<h2 title="The Multi-Column Model">2. 複柱の~model</h2>
+
+<p>
+［
+`column-width$p または `column-count$p
+］~propが `~auto0$v でない値にされた要素は、
+`複柱~容器@
+（ `multi-column^en 容器, 略して `multicol^en 容器）を確立し，複柱~layoutの容器として動作する。
+◎
+An element whose column-width or column-count property is not auto establishes a multi-column container (or multicol container for short), and therefore acts as a container for multi-column layout.
+</p>
+
+<p>
+従来の~CSS~box~modelにおいては、要素の内容は，対応する要素の内容~boxの中へ~flowされていた。
+複柱~layoutは、匿名な`断片化~容器$で形成される`断片化~文脈$
+—
+`柱~box@
+（略して `柱^i ）
+—
+を導入する。
+これらの各`柱~box$は、独立な`塊~整形~文脈$を確立する
+— 複柱~容器の内容は，その中に~flowし、それは有位置でない子たち用の`包含塊$を形成する。
+◎
+In the traditional CSS box model, the content of an element is flowed into the content box of the corresponding element. Multi-column layout introduces a fragmentation context formed of anonymous fragmentation containers called column boxes (or columns for short). These column boxes establish an independent block formatting context into which the multi-column container’s content flows, and form the containing block for its non-positioned children.
+</p>
+
+<div class="example">
+<p>
+次の例では、画像の横幅を 次の規則により設定する。
+◎
+In this example, the width of the image is set with these rules:
+</p>
+
+<pre class="lang-css">
+img { display: block; width: 100% }
+</pre>
+
+<p>
+`柱~box$は新たな`塊~整形~文脈$を作成するので、
+`width$p は`柱~box$に相対的に計算される。
+したがって画像は、柱~boxを~overflowしないことになる。
+◎
+Given that the column box creates a new block formatting context, the width is calculated relative to the column box. Therefore the image will not overflow the column box:
+</p>
+
+<figure>`image-inside-column^dgm
+<figcaption>
+画像は、それが表示される柱~boxにより拘束される。
+◎
+The image is constrained by the column box that it is displayed in.
+</figcaption></figure>
+</div>
+
+
+<div class="example">
+<p>
+柱~boxは新たな`塊~整形~文脈$を作成するので、複柱~容器の最初の子~要素に設定された上端~marginは，複柱~容器の~marginとは相殺されないことになる。
+◎
+Given that the column box creates a new block formatting context, a top margin set on the first child element of a multicol container will not collapse with the margins of the multicol container.
+</p>
+
+<figure>`margins-do-not-collapse^dgm
+<figcaption>
+最初の段落の上にある~marginは相殺されず，複柱~容器~内の最初の行lの上に残される。
+◎
+The margin above the first paragraph has not collapsed, leaving a 1em margin above the first line in the multicol container.
+</figcaption></figure>
+</div>
+
+
+<p>
+複柱~layoutの内側に現れる浮動体は、それが現れる`柱~box$に基づいて位置される。
+◎
+Floats that appear inside multi-column layouts are positioned with regard to the column box where the float appears.
+</p>
+
+<div class="example">
+<p>
+次の~CSS片は、画像の呈示を記述する：
+◎
+In this example, this CSS fragment describes the presentation of the image:
+</p>
+
+<pre class="lang-css">
+img {
+  display: block;
+  float: right;
+}
+</pre>
+
+<p>
+~HTMLにおいては、この画像は
+`現在の行l＠~CSS2VISUREN#floats$href
+の右へ浮動する。
+◎
+In the HTML, the image appears after the sentence ending, "the leg of a chicken".
+</p>
+
+<figure>`image-floated-in-column^dgm
+<figcaption>
+画像は、それが現れる柱~boxの内側で浮動する。
+◎
+The image is floated inside the column box it appears in.
+</figcaption></figure>
+
+</div>
+
+<p>
+`塊~軸$において`柱~box$内を~overflowする内容は、`断片$化され，次に来る`柱~box$内に継続される。
+◎
+Content overflowing a column box in the block axis fragments and continues in the next column box.
+</p>
+
+<p class="note" id="_changes-1738">注記：
+`匿名$である柱~boxは、`絶対的に位置され$た~box用の`包含塊$にはならない。
+そのような~box用の包含塊を確立する `position$p ~propは、`首要~box$である`複柱~容器$に適用される。
+◎
+Note: Column boxes, which are anonymous boxes, do not become the containing block for absolutely-positioned boxes. The position property, which establishes a containing block for such boxes, applies to the multicol container, it being the principal box.
+</p>
+
+<div class="example">
+
+<p>
+次の例の`複柱~容器$は、
+`position$p が `relative^v にされているため，その子である画像の包含塊になる。
+画像の `position$p は `absolute^v にされている
+— その位置決めは、`柱~box$ではなく，複柱~容器を基準にする：
+◎
+In this example, the multi-column container has position: relative thus becoming the containing block. The image is a direct child of the multi-column container and has position: absolute. It takes positioning from the multi-column container and not from the column box.
+</p>
+
+<pre class="lang-css">
+.container {
+  position: relative;
+  column-count: 3;
+}
+img { 
+  position: absolute;
+  top: 2em;
+  left: 3em;
+}
+</pre>
+<!-- 
+  top: 20px;
+  left: 40px;
+-->
+
+<figure>`column-not-containing-block^dgm
+<figcaption>
+`絶対的に位置され$た画像は、柱~boxではなく，複柱~容器を基準に位置される様子をデモる図（この仕様を通して、見本~画像は黒色~boxで示される）。
+◎
+The figure demonstrates that the absolutely positioned image is positioned by reference to the multicol container and not the column box.
+</figcaption></figure>
+
+</div>
+
+<p>
+各~柱~boxは，`複柱~容器$の`行内~基底~方向$に順序付けられ，
+1 個以上の
+`複柱~行l@
+の中に配列される。
+［
+`柱幅@
+／
+`柱高@
+］†とは、柱~boxの［
+`行内~size$／`塊~size$
+］である。
+同じ`複柱~行l$内に並ぶ すべての柱~boxの 柱幅, 柱高は，同じに揃う††。
+◎
+The column boxes are ordered in the inline base direction of the multicol container and arranged into multicol lines. The column width is the length of the column box in the inline direction. The column height is the length of the column box in the block direction. All column boxes in a line have the same column width, and all column boxes in a line have the same column height.
+</p>
+
+<p class="trans-note">【†
+この仕様の［
+横幅／縦幅
+］は、`横組み$を念頭に記されている。
+`縦組み$の下では、［
+横幅／縦幅
+］を［
+縦方向の~~幅／横方向の~~幅
+］に読み替えて解釈することになる。
+】【††
+柱幅については、たいていは各 `複柱~行l$で一定になるが，可用な~~幅が`複柱~行l$ごとに変わる場合は変わり得る
+— `断片化~文脈$のうち，各~断片の~~幅が一定でないもの（ CSS Region ）の下では、それが普通になるであろう。
+】</p>
+
+<p>
+複柱~容器~内の同じ`複柱~行l$内で隣接な柱~boxは、
+`柱~gap@
+（ `column gap^en ）
+で分離され，各 柱~gapは
+`柱~罫線@
+（ `column rule^en ）を包含し得る†。
+同じ複柱~容器~内の すべての柱~gapは，等しい。
+同じ複柱~容器~内の すべての柱~罫線もまた，現れるならば等しく現れる
+— ただし、柱~罫線が現れるのは，その両側の柱とも内容を持つときに限られる。
+◎
+Within each multicol line in the multi-column container, adjacent column boxes are separated by a column gap, which may contain a column rule. All column gaps in the same multi-column container are equal. All column rules in the same multi-column container are also equal, if they appear; column rules only appear between columns that both have content.
+</p>
+
+<p class="trans-note">【†
+すなわち、~gapは，~layoutに占める空間を指示し、罫線は，その空間に描画されるものになる。詳細は
+`§ 柱の~gapと罫線＠#column-gaps-and-rules$href
+に。
+】</p>
+
+<p>
+最も単純な場合、 1 個の`複柱~容器$には，何個かの柱からなる 1 個の`複柱~行l$のみが含まれ、各~柱の縦幅は，複柱~容器の内容~boxの使用~縦幅に等しくなる。
+しかしながら，［
+`断片化$／`~spanner$
+］は、`複柱~容器$の内容を複数個の`複柱~行l$に分割し得る
+◎
+In the simplest case a multicol container will contain only one line of columns, and the height of each column will be equivalent to the used height of the multi-column container’s content box. However, fragmentation or spanners can split the content of the multi-column container into multiple multicol lines.
+</p>
+
+<p>
+複柱~容器が~page割りされる場合、各 柱の縦幅は ~pageに拘束され，内容は 次の~page上の新たな`複柱~行l$に継続する
+— 柱~boxが複数~pageに分割されることは、決してない。
+◎
+If the multi-column container is paginated, the height of each column is constrained by the page and the content continues in a new line of column boxes on the next page; a column box never splits across pages.
+</p>
+
+<p>
+同じ効果は、`~spanning要素$が複柱~容器を【上下の`複柱~行l$に】分け隔てるときにも生じる：
+`~spanning要素$に先行する内容は、`複柱~行l$内の各~柱に収まるように平準化され，~boxの~~高さは~~最小限に縮短される。
+`~spanning要素$に後続する内容は、後続の新たな`複柱~行l$内の`柱~box$の中へ~flowする。
+◎
+The same effect occurs when a spanning element divides the multi-column container: the columns before the spanning element are balanced and shortened to fit their content. Content after the spanning element then flows into a new, subsequent line of column boxes.
+</p>
+<div class="example">
+
+<figure>`simple-span-example^dgm
+<figcaption>
+~spanning要素が複柱~容器を分割する様子のデモ。
+◎
+A demonstration of how the spanning element divides the multicol container.
+</figcaption></figure>
+</div>
+
+<p>
+したがって`複柱~容器$は、新たな`独立な整形~文脈$を確立する定例の`塊~容器$になり、その内容は一連の`複柱~行l$と複柱~spannerからなる。
+各 `複柱~行l$は、`塊~levelの~box$として動作し，その`柱~box$用の
+`複柱~整形~文脈@
+を確立する。
+各`~spanner$は、`独立な整形~文脈$を確立する`塊~levelの~box$として動作し、その表示~型は，通例通り自身の `display$p 値に依存する。
+◎
+A multi-column container therefore is a regular block container that establishes a new independent formatting context whose contents consist of a series of multicol lines and multicol spanners. Each multi-column line acts as a block-level box that establishes a multi-column formatting context for its column boxes; and each spanner acts as a block-level box that establishes an independent formatting context with its type depending on its display value as usual.
+</p>
+
+<p>
+入子の複柱~容器も許容されるが、実装に特有な制限sがあり得る。
+◎
+Nested multi-column containers are allowed, but there may be implementation-specific limits.
+</p>
+
+<p class="note" id="note1">注記：
+`柱~box$には、~propや値は設定することはアリでない。
+例えば、背景を ある`柱~box$にだけ設定することはできない。
+`柱~box$には、［
+~padding／~margin／~border
+］の概念は無い。
+将来の仕様は，追加的な機能性を追加し得る
+— 例えば、柱ごとに横幅や背景を異ならせる機能性が~supportされるかもしれない。
+◎
+Note: It is not possible to set properties/values on column boxes. For example, the background of a certain column box cannot be set and a column box has no concept of padding, margin or borders. Future specifications may add additional functionality. For example, columns of different widths and different backgrounds may be supported.
+</p>
+
+<p class="note">注記：
+柱高が表示域の縦幅より大きくなる複柱~容器は、~accessibilityを損なうおそれがある。
+【例えば 連続的~文脈に，長大な内容が 明示的な分断なしに~lay-outされた場合、柱から次の柱へ閲覧するときに~pageの端から端までスクロールを要し得る。】
+◎
+Note: Multicol containers with column heights larger than the viewport may pose accessibility issues.
+</p>
+
+	</section>
+	<section id="the-number-and-width-of-columns">
+<h2 title="The Number and Width of Columns">3. 柱の本数と横幅</h2>
+
+<p>
+複柱~内容を~lay-outするにあたっては，柱の本数と横幅を見出すことが基礎的になる。
+次の~propが、柱の本数と横幅を設定するために利用される：
+◎
+Finding the number and width of columns is fundamental when laying out multi-column content. These properties are used to set the number and width of columns:
+</p>
+
+<ul>
+	<li>`column-count$p</li>
+	<li>`column-width$p</li>
+</ul>
+
+<p>
+加えて、この両者を設定する略式~propとして， `columns$p ~propが用意されている。
+◎
+A third property, columns, is a shorthand property which sets both column-width and column-count.
+</p>
+
+<p>
+柱~数と`柱幅$の`実際の値$には、［
+明示的な`柱~分断$,
+内容, ［
+縦幅に対する拘束
+］］などの他の要因も波及し得る。
+◎
+Other factors, such as explicit column breaks, content, and height constraints, may influence the actual number and width of columns.
+</p>
+
+		<section id="cw">
+<h3 title="The Inline Size of Columns: the column-width property">3.1. 柱の行内~size： `column-width^p ~prop</h3>
+
+◎名 `column-width@p
+◎値
+`~auto0$v | `length [0,∞]$t
+◎初 `auto^v
+◎適
+`塊~容器$
+— ただし，`~table包装~box$は除く
+◎
+block containers except table wrapper boxes
+◎継 されない
+◎百 受容しない
+◎算 ~keyword `auto^v ／絶対~長さ
+◎
+the keyword auto or an absolute length
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+この~propは、複柱~容器における`柱幅$を記述する。
+◎
+This property describes the width of columns in multicol containers.
+</p>
+
+<dl>
+	<dt>`~auto0@v</dt>
+	<dd>
+柱幅は、他の~prop（例： `auto^v でない値が指定された `column-count$p ）から決定されることを意味する。
+◎
+means that the column width will be determined by other properties (e.g., column-count, if it has a non-auto value).
+</dd>
+
+	<dt id="valdef-column-width-length">`length [0,∞]$t</dt>
+	<dd>
+最適とされる柱幅を記述する。
+柱幅の`実際の値$は、（`可用な空間$を埋めるために）より幅広にされたり,
+（可用な空間が指定された柱幅より小さい場合に限り）より狭小にされ得る。
+負な値は許容されない。
+使用~値は `1px^v 以上に切り上げられる。
+◎
+describes the optimal column width. The actual column width may be wider (to fill the available space), or narrower (only if the available space is smaller than the specified column width). Negative values are not allowed. Used values will be clamped to a minimum of 1px.
+</dd>
+</dl>
+
+<div class="example">
+<p>
+例えば、次の~stylesheetを考える：
+◎
+For example, consider this style sheet:
+</p>
+
+<pre class="lang-css">
+div {
+  width: 100px;
+  column-width: 45px;
+  column-gap: 0;
+  column-rule: none;
+}
+</pre>
+
+<p>
+`100px^v ~~幅にされた要素の内側には、 `45px^v ~~幅の柱  2 本分の部屋がある。
+`可用な空間$を埋めるため、柱幅の`実際の値$は， `50px^v まで増大されることになる。
+【 “部屋（ `room^en ）” — ~layoutにおいて排他的に占める空間 】
+◎
+There is room for two 45px wide columns inside the 100px wide element. In order to fill the available space the actual column width will be increased to 50px.
+</p>
+</div>
+
+<div class="example">
+<p>
+次の~stylesheetの場合は：
+◎
+Also, consider this style sheet:
+</p>
+
+<pre class="lang-css">
+div {
+  width: 40px;
+  column-width: 45px;
+  column-gap: 0;
+  column-rule: none;
+}
+</pre>
+
+<p>
+`可用な空間$は，指定された柱幅より小さいので、柱幅の`実際の値$は，減少されることになる。
+◎
+The available space is smaller than the specified column width and the actual column width will therefore be decreased.
+</p>
+</div>
+
+<p>
+縦書き~textの下での`柱幅$は，柱の内側の`行l~box$の長さを意味し、その指定に `column-width$p をそのまま利用できる。
+◎
+To ensure that column-width can be used with vertical text, column width means the length of the line boxes inside the columns.
+</p>
+
+<p class="note">注記：
+`column-width$p をいくぶん~flex可能にしている理由は、多様な~screen~sizeに適宜 収まるような設計を得るためである。
+柱幅を正確に設定するためには、複柱~容器に［
+柱~gap, および横幅（縦書き~textでは縦幅）
+］も指定されなければならない。
+◎
+Note: The reason for making column-width somewhat flexible is to achieve scalable designs that can fit many screen sizes. To set an exact column width, the column gap and the width of the multicol container (assuming horizontal text) must also be specified.
+</p>
+
+		</section>
+		<section id="cc">
+<h3 title="The Number of Columns: the column-count property">3.2. 柱の本数: `column-count^p ~prop</h3>
+
+◎名 `column-count@p
+◎値
+`~auto1$v | `integer [1,∞]$t
+◎初 `auto^v
+◎適
+`塊~容器$
+— ただし，`~table包装~box$は除く
+◎
+block containers except table wrapper boxes
+◎継 されない
+◎百 受容しない
+◎算 指定d値
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+この~propは、`複柱~容器$の柱~数を記述する。
+◎
+This property describes the number of columns of a multicol container.
+</p>
+
+<dl>
+	<dt>`~auto1@v</dt>
+	<dd>
+柱~数は、他の~prop（例： `~auto0$v 以外の値が指定された `column-width$p ）から決定されることを意味する。
+◎
+means that the number of columns will be determined by other properties (e.g., column-width, if it has a non-auto value).
+</dd>
+
+	<dt id="valdef-column-count-integer">`integer [1,∞]$t</dt>
+	<dd>
+要素の内容が~flowされることになる，最適とされる柱~数を記述する。
+値は正でなければナラナイ。
+`column-width$p,
+`column-count$p
+のいずれも `auto^v でない場合、この整数~値は，最大な柱~数を記述する†。
+◎
+describes the optimal number of columns into which the content of the element will be flowed. Values must be greater than 0. If both column-width and column-count have non-auto values, the integer value describes the maximum number of columns.
+</dd>
+	<dd class="trans-note">【†
+この “最大” は、 `column-count$p の`使用~値$の上限を意味する（`柱幅$は、`その結果に基づいて計算される＠#pseudo-algorithm$href）
+— `複柱~行l$内に~lay-outされる`実際の柱~数^em（`実際の値$）ではなく。
+連続的~文脈の下では、複柱~容器に指定された縦幅の上限や`柱~分断$などに因り，指定した柱~数を~overflowする内容は、（他が指定されない限り）同じ`複柱~行l$に柱を追加しながら継続されることになる（断片化~文脈の下では，自動的に新たな`複柱~行l$に折り~~返されるが）
+— 詳細は
+`§ ~overflow＠#pagination-and-overflow-outside-multicol$href
+に。
+~overflowする内容を新たな`複柱~行l$に折り~~返すためには、別個の複柱~容器に振り分けるか, （縦幅の上限を指定せずに）後述の`~spanning要素$を利用することになる。
+】</dd>
+</dl>
+
+<div class="example">
+<p>
+◎
+Example:
+</p>
+
+<pre class="lang-css">
+body { column-count: 3 }
+</pre>
+
+</div>
+
+		</section>
+		<section id="columns">
+<h3 title="The column-width and column-count Shorthand: The columns Property">3.3. `column-width^p, `column-count^p 用の略式： `columns^p ~prop</h3>
+
+◎名 `columns@p
+◎値 `column-width$tp || `column-count$tp
+◎初 個々の~propを見よ
+◎適 個々の~propを見よ
+◎継 個々の~propを見よ
+◎百 個々の~propを見よ
+◎算 個々の~propを見よ
+◎順 文法に従う
+◎ア 個々の~propを見よ
+◎表終
+
+<p>
+`column-width$p, `column-count$p を設定するための略式~propである。
+省略された~~成分~値は、その`初期~値$に設定される。
+◎
+This is a shorthand property for setting column-width and column-count. Omitted values are set to their initial values.
+</p>
+
+<div class="example">
+<p>
+`columns$p ~propを利用する妥当な宣言の例：
+◎
+Here are some valid declarations using the columns property:
+</p>
+
+<pre class="lang-css">
+columns: 12em;      /* column-width: 12em; column-count: auto */
+columns: auto 12em; /* column-width: 12em; column-count: auto */
+columns: 2;         /* column-width: auto; column-count: 2 */
+columns: 2 auto;    /* column-width: auto; column-count: 2 */
+columns: auto;      /* column-width: auto; column-count: auto */
+columns: auto auto; /* column-width: auto; column-count: auto */
+</pre>
+
+</div>
+
+		</section>
+		<section id="pseudo-algorithm">
+<h3 title="The Pseudo-algorithm">3.4. 柱~数と柱幅の使用~値の計算法</h3>
+
+<p>
+`column-count$p, `column-width$p の`使用~値$は、それらの`算出d値$, `column-gap$p の算出d値, 複柱~容器の使用~横幅から、以下に従って決定される。
+◎
+The pseudo-algorithm below determines the used values for column-count (N) and column-width (W). There is one other variable in the pseudo-algorithm: U is the used width of the multi-column container.
+</p>
+
+<p class="note">注記：
+複柱~容器の使用~横幅は、要素の内容に依存することもある†。
+その場合、それは
+`column-count$p,
+`column-width$p
+~propの`算出d値$にも依存する。
+この仕様は，その計算法については定義しない。
+別の~module（おそらく
+Basic Box Model `CSS3BOX$r
+または
+Box Sizing Module `CSS3-SIZING$r
+）が，これを定義するものと期待されている。
+◎
+Note: The used width U of the multi-column container can depend on the element’s contents, in which case it also depends on the computed values of the column-count and column-width properties. This specification does not define how U is calculated. Another module (probably the Basic Box Model [CSS3BOX] or the Intrinsic &amp; Extrinsic Sizing Module [CSS3-SIZING]) is expected to define this.
+</p>
+
+<p class="trans-note" id="note-on-used-size">【†
+例えば、`直交~flow$の下では、同じ`複柱~行l$の中へ
+`内容に必要なだけ，柱が追加され得る＠~CSSWM#auto-multicol$href。
+これらは`~overflow柱$ではないので，要素の使用~横幅（`行内~size$）に寄与する。
+】</p>
+
+<ul>
+	<li>
+<p>
+まず  `column-count$p の`使用~値$ %C を計算する：
+</p>
+		<ol>
+			<li>
+%count ~LET `column-count$p の算出d値
+</li>
+			<li>
+%width ~LET `column-width$p の算出d値
+</li>
+			<li>
+%gap ~LET `column-gap$p の算出d値
+</li>
+			<li>
+%U ~LET 複柱~容器の使用~横幅
+</li>
+			<li>
+~IF［
+%width ~EQ `~auto0$v
+］~AND［
+%count ~EQ `~auto1$v
+］
+⇒
+複柱~容器ではないので、使用~値は計算されない
+【この場合でも，`直交~flow$の下では、`複柱~容器として扱われ得る＠~CSSWM#auto-multicol$href。】
+</li>
+			<li>
+~IF［
+%gap ~EQ `normal$v
+］
+⇒
+%gap ~SET `1em^v
+</li>
+			<li>
+%C ~LET %count
+</li>
+			<li>
+<p>
+~IF［
+%width ~NEQ `~auto0$v
+］：
+</p>
+				<ol>
+					<li>
+%C ~SET 次を超えない最~大な整数を 1 以上に切り上げた結果
+⇒
+( %U ~PLUS %gap ) ~DIV ( %width ~PLUS %gap )
+</li>
+					<li>
+~IF［
+%count ~NEQ `~auto1$v
+］~AND［
+%C ~GT %count
+］
+⇒
+%C ~SET %count
+</li>
+				</ol>
+			</li>
+			<li>
+~RET %C
+</li>
+		</ol>
+
+◎
+The floor(X) function returns the largest integer Y ≤ X.
+
+(01)  if ((column-width = auto) and (column-count = auto)) then
+(02)      exit; /* not a multicol container */
+(03)  if column-width = auto then
+(04)      N := column-count
+(05)  else if column-count = auto then
+(06)      N := max(1,
+(07)        floor((U + column-gap)/(column-width + column-gap)))
+(08)  else
+(09)      N := min(column-count, max(1,
+(10)        floor((U + column-gap)/(column-width + column-gap))))
+</li>
+	<li>
+`column-width$p の`使用~値$は、次に与える値を 0 以上に切り上げた結果になる
+⇒
+( ( %U ~PLUS %gap ) ~DIV %C ) ~MINUS %gap
+◎
+And:
+(11)  W := max(0, ((U + column-gap)/N - column-gap))
+</li>
+</ul>
+
+<p>
+自動で繰返される`柱$の本数を見出す目的においては、~UAは， 0 による除算を避けるため，自身が指定する正な値を柱~sizeの下限にするモノトスル。
+この下限は `1px^v 以下にすることが示唆される。
+◎
+For the purpose of finding the number of auto-repeated columns, the UA must floor the column size to a UA-specified value to avoid division by zero. It is suggested that this floor be 1px or less.
+</p>
+
+<p>
+`~paged媒体$などの`断片化d文脈$においては、~UAは，この計算を断片ごとに遂行してもヨイ。
+◎
+In fragmented contexts such as in paged media, user agents may perform this calculation on a per-fragment basis.
+</p>
+
+<p>
+`column-count$p の`使用~値$は，［
+明示的な`柱~分断$や, `柱高$に対する拘束
+］に~~関係なく計算される一方、`実際の値$にはそれらが織り込まれる。
+◎
+The used value for column-count is calculated without regard for explicit column breaks or constrained column heights, while the actual value takes these into consideration.
+</p>
+
+<p class="trans-note">【
+すなわち， `column-count^p は、実質的には柱幅を確定させるためにあり，`複柱~行l$内に~lay-outされる実際の柱~数を制限するものではない。
+】</p>
+
+<div class="example">
+<p>
+次の例では、明示的な柱~分断に因り，
+`column-count^p の`実際の値$が その`使用~値$より高くなる：
+◎
+In this example, the actual column-count is higher than the used column-count due to explicit column breaks:
+</p>
+
+<pre class="lang-css">
+div { 
+  width: 20em;
+  columns: 10em;
+  column-gap: 0;
+}
+
+p { 
+  break-after: column;
+}
+</pre>
+
+<pre class="lang-html">
+&lt;div&gt;
+  &lt;p&gt;段落一
+  &lt;p&gt;段落二
+  &lt;p&gt;段落三
+&lt;/div&gt;
+</pre>
+
+<figure>`column-count-higher-than-used-count^dgm
+<figcaption>
+`column-count^p の［
+`算出d値$は `~auto1$v,
+`使用~値$は `2^v,
+`実際の値$は `3^v
+］になる。
+◎
+The computed column-count is auto, the used column-count is 2 and the actual column-count is 3.
+</figcaption></figure>
+
+</div>
+
+<div class="example">
+<p>
+`column-count^p の`実際の値$は，その`使用~値$より低くなることもある。
+次の例を考える：
+◎
+The actual column-count may be lower than the used column-count. Consider this example:
+</p>
+
+<pre class="lang-css">
+div {
+  width: 80em;
+  height: 10em;
+  columns: 20em;
+  column-gap: 0;
+  column-fill: auto;
+}
+</pre>
+
+<pre class="lang-html">
+&lt;div&gt;foo&lt;/div&gt;
+</pre>
+
+<p>
+この場合、 `column-count$p の［
+`算出d値$は `~auto1$v,
+`使用~値$は `4^v,
+`実際の値$は `1^v
+］になる。
+◎
+The computed column-count is auto, the used column-count is 4, and the actual column-count is 1.
+</p>
+
+</div>
+
+		</section>
+		<section id="stacking-context">
+<h3 title="Stacking Context">3.5. 積層~文脈</h3>
+
+<p>
+複柱~容器~内のすべての`柱~box$は
+同じ積層~文脈に属する。
+それらの内容が描かれる順序は、CSS 2.1 により指定される。
+`柱~box$は，新たな積層~文脈を確立しない。
+◎
+All column boxes in a multi-column container are in the same stacking context and the drawing order of their contents is as specified in CSS 2.1. Column boxes do not establish new stacking contexts.
+</p>
+
+		</section>
+	</section>
+	<section id="column-gaps-and-rules">
+<h2 title="Column Gaps and Rules">4. 柱の~gapと罫線</h2>
+
+<p>
+柱の`~gap$と`罫線$は、同じ複柱~容器~内の各~柱の合間に置かれる。
+柱~gapと柱~罫線の縦幅【！長さ】は、`柱高$に等しくされる。
+柱~gapは【~layoutにおいて】空間を占める。
+すなわち、柱~gapは，（同じ複柱~容器の中で）内容を両側の柱に分け隔てることになる【描かれるものではない】。
+◎
+Column gaps and rules are placed between columns in the same multicol container. The length of the column gaps and column rules is equal to the column height. Column gaps take up space. That is, column gaps will push apart content in adjacent columns (within the same multicol container).
+</p>
+
+<p>
+`複柱~容器$ %容器 の`罫線$は：
+◎
+↓</p>
+
+<ul>
+	<li>
+%容器 の 上下の内容~辺を端点として，柱~gapの真中に描かれる。
+◎
+A column rule is drawn in the middle of the column gap with the endpoints at opposing content edges of the multicol container.＼
+</li>
+	<li>
+空間を占めない。
+すなわち、柱~罫線の有無や太さから 他のものの配置が改められることはない。
+◎
+Column rules do not take up space. That is, the presence or thickness of a column rule will not alter the placement of anything else.＼
+</li>
+	<li>
+柱~gapより幅広にされた場合、隣接な`柱~box$は罫線と重合することになり，場合によっては %容器 の~boxの外側まで拡がる。
+◎
+If a column rule is wider than its gap, the adjacent column boxes will overlap the rule, and the rule may possibly extend outside the box of the multicol container.＼
+</li>
+	<li id="_changes-1739">
+%容器 の~borderの直上層に塗られる。
+%容器 が~scroll可能な場合、 %容器 の~borderと背景は~scrollされないのは明らかだが，罫線は柱とともに~scrollする必要があることに注意。
+◎
+Column rules are painted just above the border of the multicol container. For scrollable multicol containers, note that while the border and background of the multicol container obviously aren’t scrolled, the rules need to scroll along with the columns.＼
+</li>
+	<li>
+その両側の柱とも内容を持つ場合に限り，描かれる。
+◎
+Column rules are only drawn between two columns that both have content.
+</li>
+</ul>
+
+		<section id="cg">
+<h3 title="Gutters Between Columns: the column-gap property">4.1. 柱~間の側溝： `column-gap^p ~prop</h3>
+
+◎名 `column-gap@p
+◎値 `length-percentage [0,∞]$t | `normal$v
+◎初 `normal^v
+◎適 `複柱~容器$
+◎継 されない
+◎百
+複柱~容器の内容~横幅を基準にする
+◎
+refer to the content width of the multi-column container
+◎算
+~keyword `normal^v ／ 算出された `length-percentage$t 値
+◎
+the keyword normal or a computed &lt;length-percentage&gt; value
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+`column-gap$p ~propは
+`CSS3-ALIGN$r にて<a href="~CSSALIGN#propdef-column-gap">定義される</a>。
+◎
+The column-gap property is defined in [CSS3-ALIGN].
+</p>
+
+<p>
+`複柱~整形~文脈$においては、 `column-gap$p ~prop用の `normal$v の使用~値は `1em^v になる。
+これは、初期~値が利用されても，各~柱は読めることを確保する。
+柱の合間の罫線は、あるならば~gapの途中に現れることになる。
+◎
+In a multi-column formatting context the used value of normal for the column-gap property is 1em. This ensures columns are readable when the initial values are used. If there is a column rule between columns, it will appear in the middle of the gap.
+</p>
+
+<p>
+`length-percentage [0,∞]$t を受容する `column-gap$p は~risk下にあり、
+`length [0,∞]$t に復帰され得る
+◎
+column-gap accepting &lt;length-percentage [0,∞]&gt; is at risk, and may be reverted to &lt;length [0,∞]&gt;.
+</p>
+
+<dl>
+	<dt id="valdef-column-gap-length-percentage-0">`length-percentage [0,∞]$t</dt>
+	<dd>
+柱~間の~gapを指定する。
+柱~間に`罫線$がある場合、~gapの真中に現れることになる。
+◎
+Specifies the gap between columns. If there is a column rule between columns, it will appear in the middle of the gap.
+</dd>
+	<dd>
+負な値は許容されない。
+◎
+Negative values are not allowed.
+</dd>
+
+	<dt>`normal@v</dt>
+	<dd>
+`length-percentage$t と【挙動は】一致するが、使用~値が `1em^v になる。
+◎
+Identical to &lt;length-percentage&gt;, but with a used value of 1em.
+</dd>
+</dl>
+
+		</section>
+		<section id="crc">
+<h3 title="The Color of Column Rules: the column-rule-color property">4.2. 柱~罫線の色： `column-rule-color^p ~prop</h3>
+
+◎名 `column-rule-color@p
+◎値 `color$t
+◎初 `currentcolor$v
+◎適 `複柱~容器$
+◎継 されない
+◎百 受容しない
+◎算 `算出d色$
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<dl>
+	<dt id="valuedef-color">`color$t</dt>
+	<dd>
+`柱~罫線$の色を指定する。
+◎
+Specifies the color of the column rule.
+</dd>
+</dl>
+
+		</section>
+		<section id="crs">
+<h3 title="The Style Of Column Rules: the column-rule-style property">4.3.柱~罫線の~style： `column-rule-style^p ~prop</h3>
+
+◎名 `column-rule-style@p
+◎値 `line-style$t
+◎初 `none^v
+◎適 `複柱~容器$
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+`column-rule-style$p
+~propは、柱~間に描かれる罫線の~styleを設定する。
+`line-style$t 値は
+`~borderの縮約~model＠~CSS22/tables.html#collapsing-borders$href
+に従って解釈される†。
+◎
+The column-rule-style property sets the style of the rule between columns of an element. The &lt;line-style&gt; values are interpreted as in the collapsing border model.
+</p>
+
+<p class="trans-note">【†
+意図不明 — 現時点では、各~柱ごとに罫線の~styleを変えられるわけでもないので，競合も生じない筈（将来を見据えての記述？）
+】</p>
+
+<p>
+値 `none^v は、 `column-rule-width$p の`算出d値$を `0^v に強制する。
+◎
+The none value forces the computed value of column-rule-width to be 0.
+</p>
+
+		</section>
+		<section id="crw">
+<h3 title="The Width Of Column Rules: the column-rule-width property">4.4. 柱~罫線の横幅： `column-rule-width^p ~prop</h3>
+
+◎名 `column-rule-width@p
+◎値 `line-width$t
+◎初 `medium^v
+◎適 `複柱~容器$
+◎継 されない
+◎百 受容しない
+◎算 
+絶対~長さ
+— 柱~罫線の~styleが `none^v または `hidden^v のときは `0^v になる。
+◎
+absolute length; 0 if the column rule style is none or hidden
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+この~propは、柱~間の罫線の横幅を設定する。
+負な値は許容されない。
+◎
+This property sets the width of the rule between columns. Negative values are not allowed.
+</p>
+
+		</section>
+		<section id="cr">
+<h3 title="Column Rule Shorthand: the column-rule property">4.5. 柱~罫線~用の略式： `column-rule^p ~prop</h3>
+
+◎名 `column-rule@p
+◎値 `column-rule-width$tp || `column-rule-style$tp || `column-rule-color$tp
+◎初 個々の~propを見よ
+◎適 個々の~propを見よ
+◎継 個々の~propを見よ
+◎百 個々の~propを見よ
+◎算 個々の~propを見よ
+◎順 文法に従う
+◎ア 個々の~propを見よ
+◎表終
+
+<p>
+この~propは
+`column-rule-width$p,
+`column-rule-style$p,
+`column-rule-color$p
+を一括して設定するための略式~propである。
+省略された値は，それぞれの`初期~値$に設定される。
+◎
+This property is a shorthand for setting column-rule-width, column-rule-style, and column-rule-color at the same place in the style sheet. Omitted values are set to their initial values.
+</p>
+
+<div class="example">
+<p>
+次の例では、`柱~罫線$と`柱~gap$の横幅を同じにする。
+したがって，それらは正確に同じ空間を占有することになる。
+◎
+In this example, the column rule and the column gap have the same width. Therefore, they will occupy exactly the same space.
+</p>
+
+<pre class="lang-css">
+body {
+  column-gap: 1.3rem;
+  column-rule-width: 1.3rem;
+  column-rule-style: solid;
+  column-rule-color: green;
+}
+</pre>
+
+<figure>`rule-same-width-as-gap^dgm
+<figcaption>
+柱~罫線と柱~gapは同じ空間を占有している。
+◎
+The column rule and column gap occupy the same space.
+</figcaption></figure>
+
+</div>
+
+		</section>
+	</section>
+	<section id="column-breaks">
+<h2 title="Column Breaks">5. 柱の分断</h2>
+
+<p>
+~UAは、複柱~容器の内容を複数の`柱$に~lay-outする際に，柱をどこで分断するかを決定するモノトスル。
+内容を各~柱へ分断する問題は、
+CSS 2.1, §13.3.3 に述べられている，各~pageへ分断する問題に類似する。
+`CSS2$r
+◎
+When content is laid out in multiple columns, the user agent must determine where column breaks are placed. The problem of breaking content into columns is similar to breaking content into pages, which is described in CSS 2.1, section 13.3.3 [CSS21].
+</p>
+
+<p>
+柱~分断を許容するため，`~page分断$の~propと同様に述べられる 3 個の~prop［
+`break-before$p,
+`break-after$p,
+`break-inside$p
+］が新たに導入される。
+◎
+Three new properties are introduced to allow column breaks to be described in the same properties as page breaks: break-before, break-after, and break-inside.
+</p>
+
+		<section id="break-before-break-after-break-inside">
+<h3 title="Controlling Fragmentation: the break-before, break-after, break-inside properties">5.1. 断片化の制御-法： `break-before^p, `break-after^p, `break-inside^p ~prop</h3>
+
+<p>
+`break-before$p, `break-after$p, `break-inside$p
+は、 `CSS3-BREAK$r にて定義される。
+◎
+break-before, break-after, and break-inside are defined in [CSS3-BREAK].
+</p>
+
+		</section>
+	</section>
+	<section id="spanning-columns">
+<h2 title="Spanning Columns">6. ~spanning柱</h2>
+
+<p>
+`column-span$p ~propは、要素が何~柱かに渡って~spanすることもアリにする。
+【 “段抜き” ／ “通し組み” 】
+◎
+The column-span property makes it possible for an element to span across several columns.
+</p>
+
+		<section id="column-span">
+<h3 title="Spanning An Element Across Columns: the column-span property">6.1. 何~柱かに~spanする要素： `column-span^p ~prop</h3>
+
+◎名 `column-span@p
+◎値
+`none$v | `all$v
+◎初 `none^v
+◎適 
+`~flow内$にある`塊~level$の要素【！in-flow block-level elements】
+◎百 受容しない
+◎継 されない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+この~propは、要素が`複柱~行l$全体に~spanし得るかどうか†を記述する。
+各種 値の意味は：
+◎
+This property describes how many columns an element spans across. Values are:
+</p>
+
+<p class="trans-note">【†
+原文には明示的に “`how many^en（~spanし得る柱~数）” と記されているが、実際の定義に従って訳を変えている。
+将来的には、具体的な柱~数を指定する拡張が想定されているようだ。
+】</p>
+
+<dl>
+	<dt>`none@v</dt>
+	<dd>
+要素は、複数の柱に~spanしない。
+◎
+The element does not span multiple columns.
+</dd>
+
+	<dt>`all@v</dt>
+	<dd>
+要素は、`~flow外$にされ，［
+同じ`塊~整形~文脈$の中の，最も近い先祖の`複柱~容器$
+］内の すべての柱に渡って~spanする。
+要素に先行する `通常~flow$内の内容は、要素が現れる直前の`複柱~行l$内の すべての柱に，自動的に平準化される。
+要素は、`独立な整形~文脈$を確立する。
+◎
+The element is taken out-of-flow and spans across all columns of the nearest multicol ancestor in the same block formatting context. Content in the normal flow that appears before the element is automatically balanced across all columns in the immediately preceding multi-column line before the element appears. The element establishes an independent formatting context.
+</dd>
+	<dd class="note">注記：
+要素が`整形~文脈$を確立するかどうかは、要素の先祖に複柱~容器があるかどうかに依存しない。
+`column-span$p が `all$v のときは、常にそうなる。
+これにより、複柱~容器を除去するような後の改訂や，媒体~queryにより状況に応じて複柱でなくなる場合に際しても、~layoutを堅牢に保ち易くなる。
+◎
+Note: Whether the element establishes a new formatting context does not depend on whether the element is a descendent of a multicol or not. When column-span is all, it always does. This helps with robustness of designs to later revisions that remove the multicol, or when media queries turn the multicol off in some situations.
+</dd>
+
+</dl>
+
+<p>
+複数の柱に~spanする要素は
+`~spanning要素@
+と呼ばれ、それが作成する~boxは，
+`~spanner@
+と呼ばれる。
+◎
+An element that spans more than one column is called a spanning element and the box it creates is called a spanner.
+</p>
+
+<p>
+~spanning要素は、強制d分断は残したまま，`~flow外$にされる。
+これは、~spanning要素の<a href="~CSS22/zindex.html#elaborate-stacking-contexts">塗ng順序</a>には影響しない。
+`CSS2$r
+◎
+A spanning element is taken out-of-flow, leaving a forced break. This does not affect the painting order [CSS21] of the spanning element.
+</p>
+
+
+<div class="example">
+<p>
+次の例では、 `h2^e 要素が，見本~文書の 4 個目の~~文（ "…<samp>ゑひもせす。</samp>" ）の後に追加されているとする。
+次の~style付けが適用されたとき：
+◎
+In this example, an h2 element has been added to the sample document after the sixth sentence (i.e., after the words "the leg of a"). This styling applies:
+</p>
+
+<pre class="lang-css">
+h2 { column-span: all; background: silver }
+</pre>
+
+<p>
+`column-span$p を `all$v に設定することにより、 `h2^e 要素の前に現れるすべての内容は， `h2^e 要素の上側に示されるようになる：
+◎
+By setting column-span to all, all content that appears before the h2 element is shown before the h2 element.
+</p>
+
+<figure>`h2-spanner^dgm
+<figcaption>
+`h2^e 要素の `column-span^p は `all^v に設定されている。
+◎
+The h2 element is set to column-span: all
+</figcaption></figure>
+
+</div>
+
+<p>
+`~spanning要素$は、同じ`整形~文脈$の一部を成す限り，直な子でなくともよい。
+その場合、~spannerより前にある断片が空な場合でも，特別なことは何も起こらず、【包含している要素の】上端［
+~margin／~border／~padding
+］は，空な`断片$として~spanning要素の上に現れる。
+◎
+A spanning element may be lower than the first level of descendants as long as they are part of the same formatting context. If the fragment before the spanner is empty, nothing special happens; the top margin/border/padding is above the spanning element, as an empty fragment.
+</p>
+
+<div class="example">
+
+<p>
+次の例では、 `article^e 要素が複柱~容器とする。
+この親の内側には、順に `p^e, `section^e 要素がある。
+この `section^e が包含している `h2^e は、
+`column-span^p は `all$v に設定されており，すべての柱に~spanするが、
+`section^e は柱~boxたちの内側にあり続ける。
+◎
+In this example the multicol container is the article element. Inside this parent is a paragraph and then a section element. The section contains an h2 heading set to all this spans all three columns while the containing section remains inside the column boxes.
+</p>
+
+<p>
+`h2^e は `section^e の最初の子を成す。
+その結果、この `section^e 上の［
+~margin, ~border（図の赤線）, ~padding
+］は空な断片として~spanning要素 `h2^e より前に現れる。
+◎
+The h2 is the first child of the section. This means that the margin, border (shown in red in the diagram) and padding on this section appear before the spanning h2 as an empty fragment.
+</p>
+
+<pre class="lang-html">
+&lt;article&gt;
+  &lt;p&gt;...&lt;/p&gt;
+  &lt;section&gt;
+    &lt;h2&gt;An h2 element&lt;/h2&gt;
+    &lt;p&gt;...&lt;/p&gt;
+  &lt;/section&gt;
+&lt;/article&gt;
+</pre>
+
+<pre class="lang-css">
+section {
+  border: 0.5em solid red;
+  margin-top: 2em;
+  padding-top: 1em;
+}
+
+h2 {
+  column-span: all;
+  background: silver;
+}
+</pre>
+
+<figure>`nested-spanner^dgm
+<figcaption>
+`h2^e 要素の `column-span$p は `all^v に設定されている。
+`section^e は、~borderは赤色で, 上端には［
+~padding, ~margin
+］がある。
+◎
+The h2 element is set to column-span: all, the section has a red border and top padding and margin
+</figcaption></figure>
+
+</div>
+
+<p>
+要素を`~spanning要素$にすると，それが占める空間も増える。
+空間が制限された下では、`~spanning要素$が占める部屋を見出せないこともある。
+その場合、 ~UAは，要素~上のこの~propに `none$v が指定されているかのように扱ってもヨイ。
+◎
+A spanning element takes up more space than the element would take up otherwise. When space is limited, it may be impossible to find room for the spanning element. In these cases, user agents may treat the element as if none had been specified on this property.
+</p>
+
+<div class="example">
+<p>
+次の例では、複柱~容器の縦幅が拘束されているため、内容の後方に現れる `h2^e 要素が，~spanするための部屋が足りずに~overflowするとする。
+その結果、 `h2^e 要素は `column-span^p に `none$v が指定されていたかのように現れる。
+◎
+In this example, the h2 element appears later in the content, and the height of the multicol container is constrained. Therefore, the h2 element appears in the overflow and there is not room to make the element spanning. As a result, the element appears as if column-span: none was specified.
+</p>
+
+<figure>`h2-in-the-overflow-no-span^dgm
+<figcaption>
+`h2^e 要素は~overflow柱~内にあるため、
+`column-span^p に `none^v が指定されていたかのように現れる。
+◎
+The h2 element is in an overflow column and appears as if column-span none is specified
+</figcaption></figure>
+
+</div>
+
+<div class="example">
+<p>
+次の例は、 `h2^e 要素が最後の柱に自然に現れることを除いて，先の例に類似する。
+依然として、要素を~spanさせるに足る部屋がないので。
+◎
+This example is similar to the previous example, except that the H2 element appears naturally in the last column. Still, there is not enough room to make the element spanning.
+</p>
+
+<figure>`h2-in-the-last-column-no-span^dgm
+<figcaption>
+`h2^e 要素は最後の柱~内にあるため、
+`column-span^p に `none^v が指定されていたかのように現れる。
+◎
+The h2 element is in the final column and appears as if column-span none is specified
+</figcaption></figure>
+
+</div>
+
+<div class="example">
+<p>
+`断片化d文脈$においては、`~spanning要素$は、すべての断片にて尊守される。
+次の例では、`~paged媒体$において，最初の 3 段落については それぞれの後に`柱~分断$が設定されていて， 4 個目の段落の後に `~spanning要素$として `h2^e 要素が現れるとする：
+◎
+In fragmented contexts spanning elements are honored in all fragments. In this example, we are in paged media, and the first three paragraphs have column breaks after them. A spanning H2 element appears after the fourth paragraph.
+</p>
+
+<figure>`spanner-page-break1^dgm
+<figcaption>
+1 ~page目に現れることになるもの。
+</figcaption></figure>
+
+<figure>`spanner-page-break2^dgm
+<figcaption>
+2 ~page目に現れることになるもの。
+</figcaption></figure>
+
+</div>
+
+<p>
+~spannerは、塊leve~boxなので、隣接な 2 本の~spannerの~marginは互いに相殺されることになる。
+柱~boxは，新たな`塊~整形~文脈$を確立するので、柱~boxの内側にある要素の~marginと~spannerの~marginとは相殺されない。
+◎
+Spanners are block-level boxes therefore the margins of two adjacent spanners will collapse with each other. As column boxes establish a new block formatting context, margins on elements inside a column box will not collapse with the margin of a spanner.
+</p>
+
+<div class="example">
+<p>
+`~spanner$は，新たな`整形~文脈$を確立するが、~marginは，周囲のものに応じて変更され得る。
+次の例では、 2 本の~spannerが自然に~page上端に来ているとする。
+1 本目の~spannerの上端~marginは、`非強制d分断$に連接するため，切落される。
+2 本の~spannerの合間の~marginは互いに相殺する。
+しかしながら、 2 本目の~spannerの下端~marginは，後続する要素の上端~marginとは相殺しない：
+◎
+Spanners establish new formatting contexts, but their margins can be changed by their surroundings. In this example, two spanners naturally end up at the top of a page. The top margin of the first spanner is truncated due to adjoining an unforced break. The margins between the two spanners collapse with each other. However, the bottom margin of the second spanner does not collapse with the top margin of the subsequent element.
+</p>
+
+<pre class="lang-css">
+h2 {
+  margin: 0.5em 0;
+  column-span: all;
+  background: silver
+}
+p { margin-top: 1em }
+</pre>
+
+<figure>`two-spanners-margin-no-collapse^dgm
+<figcaption>
+2 つの~spanning要素の合間の~marginは相殺されるが、~spannerの下端~marginと その次の要素の上端~marginとは相殺されない。
+◎
+Margins collapse between two spanning elements, but not the bottom margin of a spanner and top margin of next element.
+</figcaption></figure>
+
+</div>
+
+		</section>
+	</section>
+	<section id="filling-columns">
+<h2 title="Filling Columns">7. 柱の埋方</h2>
+
+<p>
+各~柱を内容で埋めていく方法には、各~柱~間の内容を平準化するか, しないかの二つの~~選択肢がある。
+柱が平準化される下では、~UAは，［
+`強制d分断$, `widows$p, `orphans$p, `柱高$【！長さ】に影響し得る他の~prop
+］を尊守しつつ，柱高のばらつきを極力抑えるべきである。
+柱が平準化されない下では、それらは逐次的に埋められ，一部の柱は 部分的に埋められたり, 内容が空になり得る。
+◎
+There are two strategies for filling columns: columns can either be balanced, or not. If columns are balanced, user agents should try to minimize variations in column height, while honoring forced breaks, widows and orphans, and other properties that may affect column heights. If columns are not balanced, they are filled sequentially; some columns may end up partially filled, or with no content at all.
+</p>
+
+		<section id="cf">
+<h3 title="Column Balancing: the column-fill property">7.1. 柱の平準化： `column-fill^p ~prop</h3>
+
+◎名 `column-fill@p
+◎値
+`auto$v | `balance$v | `balance-all$v
+◎初 `balance$v
+◎適 `複柱~容器$
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+各種 値の意味は：
+◎
+The values are:
+</p>
+
+<dl>
+	<dt>`balance@v</dt>
+	<dd>
+各~柱~間の内容を，アリな限り平準化する。
+`断片化d文脈$においては、最後の断片だけ平準化する。
+◎
+Balance content equally between columns, as far as possible. In fragmented contexts, only the last fragment is balanced.
+</dd>
+
+	<dt>`balance-all@v</dt>
+	<dd>
+各~柱~間の内容を，アリな限り平準化する。
+`断片化d文脈$においては、すべての断片に渡って平準化する。
+◎
+Balance content equally between columns, as far as possible. In fragmented contexts, all fragments are balanced.
+</dd>
+
+	<dt>`auto@v</dt>
+	<dd>
+各~柱を逐次的に埋めていく。
+◎
+fill columns sequentially
+</dd>
+</dl>
+
+<p class="issue">
+連続的~文脈における `column-fill$p の挙動を定義する必要がある。
+以前の解決（
+`issue #3224＠~CSSissue/3224#issuecomment-468089503$href
+）では、この~propは，`柱高$が拘束されている場合に限りアタられるベキであるものと定義していた。
+これは復帰され（
+`issue #4036＠~CSSissue/4036#issuecomment-531646703$href
+）、もっと論が深まるまで待つことになった。
+◎
+We need to define the behavior of column-fill in continuous contexts. A previous resolution (3224) defined that the property should only be consulted if the length of columns was constrained in the block dimension. This was reverted in (4036) pending further discussion.
+</p>
+
+<p>
+連続的~文脈においては、この~propは，`~overflow柱$が在るときには効果はない。
+◎
+In continuous contexts, this property does not have any effect when there are overflow columns.
+</p>
+
+<div class="example">
+
+<p>
+次の例では、 `article^e には 3 行lに収まる短い段落が 1 個だけあるとする。
+以下、この節の例を通して，次の~styleが設定されているとする：
+◎
+In this example, an article only has one short paragraph which fits on three lines.＼
+</p>
+
+<pre class="lang-css">
+article {
+  width: 40em;
+  height: auto;
+  columns: 4;
+  column-fill: balance; /* 初期~値 */
+}
+</pre>
+
+<p>
+上述の 3 行lは，柱~平準化に因り 3 本の柱に分けて表示される：
+◎
+The three lines are displayed in three different columns due to column balancing.
+</p>
+
+<!-- 
+article { width: 60em; height: auto; columns: 4; column-fill: balance }
+-->
+
+<figure>`column-balancing-one-paragraph^dgm
+<figcaption>
+平準化に因り、 3 本の柱に分けて 3 行lが表示される。
+◎
+Three lines displayed in three columns due to column balancing.
+</figcaption></figure>
+
+<p class="trans-note">【
+図のピンクの線（~padding）に示されている様に、このような場合でも，複柱~容器は指定された柱~数を占めることになる。
+】【
+原文の例では，内容が片側の柱にしかない~gapにも罫線が描かれていたので（
+<a href="#column-gaps-and-rules" >§4 の記述</a>
+に反する）、図を修正している（以下同様）。
+】</p>
+
+</div>
+
+<div class="example">
+
+<p>
+`article^e に縦幅を与えた上で，柱を平準化しないよう `column-fill^p も~~上書きした場合：
+◎
+In this example, column balancing is turned off, and the article has a height:
+</p>
+
+<pre class="lang-css">
+article {
+  height: 4lh; /* 4 行l分 */
+  column-fill: auto;
+}
+</pre>
+<!-- 
+article {
+  width: 60em;
+  height: 4em;
+  columns: 4;
+  column-fill: auto;
+}
+-->
+
+<p>
+その結果、すべての内容は，最初の柱~内に埋められる：
+◎
+As a result, the first column is filled with all content:
+</p>
+
+<figure>`no-column-balancing-one-paragraph^dgm
+<figcaption>
+平準化はないので、~textは 1 本の柱に示される。
+◎
+No balancing so the whole text is shown in one paragraph.
+</figcaption></figure>
+
+</div>
+
+<div class="example">
+<p>
+次の例では、 `article^e には段落が 2 個あり，後のものは少し短くされている。
+次の~styleを追加したとする：
+◎
+In this example, an article has two paragraphs: first a long one, then a shorter one. This code is applied:
+</p>
+
+<pre class="lang-css">
+p { break-after: column }
+</pre>
+
+<!-- 
+article { width: 60em; height: auto; columns: 4; column-fill: balance }
+p { break-after: column }
+-->
+
+<p>
+柱は最短でも 5 行l分の~textは包含できるとする。
+各~柱は、柱高が確立されてから，逐次的に埋められる†結果、 3 柱~目までは，内容が占める高さが 最初の柱に揃う一方，最後の柱では ずっと短くなる。
+◎
+The shortest column height possible contains five lines of text. After the column height has been established, columns are filled sequentially. As a result, the third column is as high as the first two columns, while the last column ends up being significantly shorter.
+</p>
+
+<figure>`column-balancing-with-column-break^dgm
+<figcaption>
+柱高が確立されたなら，各~柱は逐次的に埋められる。
+◎
+Once column height is established, columns are filled sequentially.
+</figcaption></figure>
+
+<p class="trans-note">【†
+すなわち、平準化の設定が関わるのは，柱高の計算までであり、以降の~layoutには関わらないと~~考えられる。
+故に，~layoutに 4 行l要する~textが 3 柱に平準化される場合、最初の 2 柱に 2 行lずつ描かれ，最後の柱は空になるであろう。
+】</p>
+
+</div>
+
+<div class="example">
+
+<!-- 
+article { width: 60em; height: auto; columns: 4; column-fill: balance }
+-->
+<p>
+次の例では、 `article^e は 分断できない絵図から開始されているとする。
+それが柱高を設定し、後続の内容は，残りの柱の中へ逐次的に埋められる
+:
+◎
+In this example, an article starts with an unbreakable figure which sets the column height. Subsequent content is filled sequentially into the remaining columns:
+</p>
+
+<figure>`column-balancing-with-figure^dgm
+<figcaption>
+柱高は絵図により確立される。
+◎
+Column height is established by the figure.
+</figcaption></figure>
+
+</div>
+
+		</section>
+	</section>
+	<section id="overflow">
+<h2 title="Overflow">8. ~overflow</h2>
+
+		<section id="overflow-inside-multicol-elements">
+<h3 title="Overflow Inside Multicol Containers">8.1. 複柱~容器の内側における~overflow</h3>
+
+<p>
+`柱~box$の外側に拡がる内容は、それにより柱が分断される事例を除き，視覚的に~overflowし，`柱~box$で切取られない。
+◎
+Except for cases where this would cause a column break, content that extends outside column boxes visibly overflows and is not clipped to the column box.
+</p>
+
+<p class="note">注記：
+柱~分断については、§ `柱~分断$を見よ。
+複柱~容器の内容~boxで切取られるかどうかについては，
+`§ ~page割りと複柱~容器の外側への~overflow＠#pagination-and-overflow-outside-multicol$href
+を見よ。
+◎
+Note: See § 5 Column Breaks for column breaks and § 8.2 Pagination and Overflow Outside Multicol Containers for whether it is clipped to the multi-column container’s content box.
+</p>
+
+<div class="example">
+<p>
+次の例では、画像が柱より幅広い：
+◎
+In this example, the image is wider than the column:
+</p>
+
+<figure>`image-overflow-not-clipped^dgm
+<figcaption>
+内容は可視に~overflowし，柱~boxで切取られない。
+◎
+Content visibly overflows and is not clipped to the column box.
+</figcaption></figure>
+
+</div>
+
+		</section>
+		<section id="pagination-and-overflow-outside-multicol">
+<h3 title="Pagination and Overflow Outside Multicol Containers">8.2. ~page割りと複柱~容器の外側への~overflow</h3>
+
+<p>
+複柱~容器の辺を超えて `柱~box$の外側まで拡がるような，内容や柱~罫線は、 `overflow$p ~propに則って切取られる。
+◎
+Content and column rules that extend outside column boxes at the edges of the multi-column container are clipped according to the overflow property.
+</p>
+
+<p>
+複柱~容器は、次に挙げるものに因り，割り当てられた部屋より多くの柱を持ち得る：
+◎
+A multicol container can have more columns than it has room for due to:
+</p>
+
+<ul>
+	<li>
+`柱高$を拘束する宣言があるとき（例： `height$p や `max-height$p ）。
+この場合、行内~方向に`柱~box$が追加される。
+◎
+a declaration that constrains the column height (e.g., using height or max-height). In this case, additional column boxes are created in the inline direction
+</li>
+	<li>
+~pageの~size。
+この場合、追加的な`柱~box$は，次の~page以降に移動される。
+◎
+the size of the page. In this case, additional column boxes are moved to the next page(s).
+</li>
+	<li>
+明示的な`柱~分断$。
+この場合、追加的な`柱~box$は
+⇒＃
+連続的~文脈に対しては，行内~方向に追加される ／
+`断片化d文脈$に対しては， 次の断片~以降に移動される
+◎
+explicit column breaks. In this case, additional column boxes are created in the inline direction for continuous contexts and additional column boxes are moved to the next fragment(s) for fragmented media.
+</li>
+</ul>
+
+<p>
+連続的~文脈において複柱~容器の外側に現れる柱は、
+`~overflow柱@
+と呼ばれる。
+~overflow柱は、複柱~容器の縦幅に影響し得る。
+◎
+Columns that appear outside the multicol container in continuous contexts are called overflow columns. Overflow columns can affect the height of the multicol container.
+</p>
+
+<div class="example">
+<p>
+次の~stylesheetでは、複柱~容器が占め得る最大な縦幅が拘束され，~overflowする内容は，可視になるように指定されている：
+◎
+In this example, the height of the multi-column container has been constrained to a maximum height. Also, the style sheet specifies that overflowing content should be visible:
+</p>
+
+<pre class="lang-css">
+div {
+  max-height: 5em;
+  overflow: visible;
+}
+</pre>
+
+<p>
+その結果、連続的~文脈においては，柱~数
+【すなわち `column-count$p の`実際の値$】
+が増大される：
+◎
+As a result, the number of columns is increased.
+</p>
+
+<figure>`height-constraint-overflow-inline^dgm
+<figcaption>
+~overflowする柱は、行内~方向に作成される。
+◎
+An overflow column is created in the inline direction.
+</figcaption></figure>
+
+</div>
+
+<div class="example">
+
+<p>
+連続的~文脈においては、~overflow柱は，複柱~容器の縦幅に影響し得る。
+この例では 4 行lの~textからなる柱が~overflow内に現れる。
+複柱~容器は、この柱を収容するに足るまで高くされる。
+◎
+In continuous contexts overflow columns can affect the height of the multicol container. In this example a column appears in the overflow which has four lines of text. The multicol container is made tall enough to accomodate this column.
+</p>
+
+<figure>`overflow-column-effects-height^dgm
+<figcaption>
+最後の柱~overflowしていて，他より高いため、容器は，この柱~用に足るまで高くされる。
+◎
+The final column is an overflow column yet is taller than the others. The container is tall enough for this column.
+</figcaption></figure>
+
+</div>
+
+<div class="example">
+<p>
+`断片化d文脈$においては、~overflowした内容は，後続の断片たち内の柱へ移される。
+2 つ前の例と同じ内容が与えられた下で、~page~boxに，~textが整形される際に 5 行l分の部屋しか残されていない場合、まず， 1 ~page目には次が現れる：
+◎
+In fragmented contexts, the overflow content goes into columns in subsequent fragments. Given the same content as in example 31 and a page box that only has room for five lines of formatted text, this would appear on the first page:
+</p>
+
+<figure>`pagination-overflow-page1^dgm
+<figcaption>
+最初の 3 段落は 1 ~page目に現れる。
+◎
+The first three paragraphs appear on page one.
+</figcaption></figure>
+
+<p>
+2 ~page目には次が現れることになる（柱は平準化されているとする）：
+◎
+Assuming column balancing, this would appear on the second page:
+</p>
+
+<figure>`pagination-overflow-page2^dgm
+<figcaption>
+~overflowした柱は 2 ~page目に移動される。
+◎
+The overflow column is moved onto page two.
+</figcaption></figure>
+
+</div>
+
+<div class="example">
+<p>
+次の例では、各~段落の後に，明示的な柱~分断が生成される：
+◎
+In this example, explicit column breaks are generated after paragraphs:
+</p>
+
+<pre class="lang-css">
+p {
+  break-after: column;
+}
+</pre>
+
+<p>
+その結果、連続的~文脈の下では，柱~数が増大し，行内~方向に余分な柱が追加される：
+◎
+As a result, the number of columns increases and the extra columns are added in the inline direction:
+</p>
+
+<figure>`height-constraint-column-break-overflow-inline^dgm
+<figcaption>
+~overflowする柱は、行内~方向に作成される。
+◎
+An overflow column is created in the inline direction.
+</figcaption></figure>
+
+</div>
+
+<div class="example">
+<p>
+~paged媒体【断片化d文脈】においては、余分な柱は，次の~page上に示される。
+上の例と同じ~codeの下では、最後の段落は 2 ~page目に現れる。
+まず， 1 ~page目には次が現れる：
+◎
+In paged media, extra columns are shown on the next page. Given the same code as the previous example, the last paragraph appears on the second page. This would appear on the first page:
+</p>
+
+<figure>`pagination-column-break-overflow-page1^dgm
+<figcaption>
+最初の 3 段落は 1 ~page目に現れる。
+◎
+The first three paragraphs appear on page one.
+</figcaption></figure>
+
+<p>
+2 ~page目には、次が現れることになる：
+◎
+This would appear on the second page:
+</p>
+
+<figure>`pagination-column-break-overflow-page2^dgm
+<figcaption>
+~overflowした柱は 2 ~page目に移動される。
+◎
+The overflow column is moved onto page two.
+</figcaption></figure>
+
+<p>
+柱~平準化に因り、最後の段落は 3 本の柱に分割される。
+◎
+Due to column balancing, the last paragraph is split across three columns.
+</p>
+
+</div>
+
+		</section>
+	</section>
+	<section id="changes">
+<h2 title="Appendix B. Changes">変更点</h2>
+
+~INFORMATIVE
+
+<p id="changes-from-20180528">
+`2018年 5月 28日 作業草案＠~TR/2018/WD-css-multicol-1-20180528/$href
+からの変更点は：
+◎
+Changes from the Working Draft (WD) of 28 May 2018
+</p>
+
+<ul>
+	<li>
+規範的でない次の~textを除去した：
+“しかしながら、下に述べるように，柱幅と柱~数の両者とも設定することがイミを成すのは稀である。”
+（
+`編集上のもの： 2019年 9月 16日, issue#4291＠https://github.com/w3c/csswg-drafts/issues/4291$href
+）
+◎
+Removed the non-normative text "However, as described below, setting both the width and number of columns rarely makes sense." Editorial 16 Sep 2019, issue 4291.
+</li>
+	<li>
+次の段落を追加した：
+“~spannerは、塊leve~boxなので、隣接な 2 本の~spannerの~marginは互いに相殺されることになる。
+柱~boxは，新たな塊~整形~文脈を確立するので、柱~boxの内側にある要素の~marginと~spannerの~marginとは相殺されない。”
+（ `2018 年 10月 22日に解決した＠~CSSissue/2203#issuecomment-431783027$href／
+`issue#2582＠~CSSissue/2582$href の解決も見よ）
+◎
+Added the paragraph, "Spanners are block-level boxes therefore the margins of two adjacent spanners will collapse with each other. As column boxes establish a new block formatting context, margins on elements inside a column box will not collapse with the margin of a spanner." Resolved 22 Oct 2018, see also the resolution for issue 2582.
+</li>
+	<li>
+次の段落を追加して仕様を明確化した：
+“~spanning要素は、強制d分断は残したまま，`~flow外$にされる。
+これは、~spanning要素の塗ng順序には影響しない。”
+（`2019 年 2月 28日 に解決した＠~CSSissue/1072#issuecomment-468087733$href）
+◎
+Clarified the spec to explain that a spanning element is taken out-of-flow, leaving a forced break. Added the paragraph, "A spanning element is taken out-of-flow, leaving a forced break. This does not affect the painting order of the spanning element." Resolved 28 Feb 2019.
+</li>
+	<li>
+`column-gap$p ~propの定義を `CSS3-ALIGN$r へ移動し、複柱に特有な `column-gap^p の詳細を与える段落を追加した（`§ 柱~間の側溝＠#cg$href）。
+（`2019 年 6 月 4日＠~CSSissue/3641$href に解決した）
+◎
+Moved the definition of the column-gap property to [CSS3-ALIGN] and added a paragraph detailing the specifics of column-gap in multicol: "In a multi-column formatting context the used value of normal for the column-gap property is 1em. This ensures columns are readable when the initial values are used. If there is a column rule between columns, it will appear in the middle of the gap." Resolved 4 June 2019.
+</li>
+	<li>
+`Morten Stenshorne^en 氏からの
+`入力＠~CSSissue/2203$href
+に基づいて
+<a href="#the-multi-column-model">§ 複柱の~model</a>
+を書き直した。
+◎
+Reworded the section The multi-column model, based on input from Morten Stenshorne in issue 2203.
+</li>
+	<li>
+`column-gap$p 用の `length-percentage$t 値を、~risk下から外した。
+（`2019 年 6 月 4日＠~CSSissue/3988$href に解決した）
+◎
+Removed the at-risk marker from the length-percentage value for column-gap. Resolved 4 June 2019.
+</li>
+	<li>
+§ 序論を更新した。
+~table~layoutより複柱~layoutを利用する便益についての言及は除去し、代わりに複柱に~~固有の特徴を挙げるようにした。
+（`編集上の変更＠~CSSissue/3654$href）
+◎
+Updated the introduction to remove mention of the benefits of multicol over using tables for layout and instead refer to the unique characteristics of multicol. Editorial change referenced in issue 3654.
+</li>
+	<li>
+2016年 1月 7日 解決の後に
+`§ 使用~値の計算法＠#pseudo-algorithm$href
+に追加された~~文を，
+`筋^em（ `track^en ）ではなく`柱^emを~~参照するように変更した
+— `筋$は、この仕様には定義されていないので。
+（`2019年 3月 13日に解決した＠~CSSissue/3649#issuecomment-472505520$href）
+◎
+Changed the sentence added in the pseudo-algorithm section after the 7 Jan 2016 resolution, to refer to columns and not tracks as tracks are not defined in this specification. Resolved 13 March 2019.
+</li>
+	<li>
+仕様に利用される各~画像を~SVGに変更して明確化した。
+【この訳では、依然として HTML + CSS 。】
+◎
+Changes and clarifications to the SVG images used in the specification.
+</li>
+	<li>
+注釈文による［
+負な値／ 1 未満の値
+］に対する制約を反映するよう，構文を`角括弧付き範囲~記法$を利用するよう変更した。
+◎
+Changed syntax to use bracketed range notation to reflect the prose restrictions on negative/non-zero values.
+</li>
+
+</ul>
+
+<p id="changes-from-20171005">
+`2017年 10月 5日 作業草案＠~TR/2017/WD-css-multicol-1-20171005/$href
+からの変更点は：
+◎
+Changes from the Working Draft (WD) of 5 October 2017
+</p>
+
+<ul>
+	<li>
+~paged媒体への参照を`断片化d文脈$を指すように変更した。
+（`2018年 4月 12日に解決した＠~CSSissue/2549$href）
+◎
+Changed references to paged media to refer to fragmented contexts. Resolved 12 Apr 2018.
+</li>
+	<li>
+`column-fill$p ~propに関する一文を次のように変更した
+（`2018年 4月 12日に解決した＠~CSSissue/2549$href）
+⇒＃
+“連続的~媒体においては、この~propは，~overflow柱に対する効果はない。”
+→
+“連続的~文脈においては、この~propは，~overflow柱が在るときには効果はない。”
+◎
+Changed a line regarding the column-fill property:
+"In continuous media, this property does not have any effect in overflow columns."
+To:
+"In continuous media, this property does not have any effect when there are overflow columns. Resolved: 12 Apr 2018"
+</li>
+	<li>
+~overflow柱は複柱~容器~縦幅に影響し得ることを示すため、例を追加した。
+（`2018年 4月 12日に解決した＠~CSSissue/1745$href）
+◎
+Add a line of text plus an example to show that overflow columns can affect the multicol container height. Resolved: 12 Apr 2018
+</li>
+	<li>
+~HTMLによるモックアップで与えていた例は、【~source~textの順序が】明瞭でなかったので，~SVG版に置換した。
+（`Issue 1087＠~CSSissue/1087$href）
+【この訳では、依然として HTML + CSS（ ~source~textを “いろは歌” に置き換えて順序を明瞭にしたので）。】
+◎
+Replaced the HTML mock-up examples with SVG versions, as the examples were unclear. Issue 1087.
+</li>
+	<li>
+`column-gap$p 用の `normal^v 値の使用~長さは、~UAが指定するものとされていたが，それに示唆されていた `1em^v になるものとするよう変更した。
+（`2018年 4月 4日に解決した＠~CSSissue/2145#issuecomment-378781507$href）
+◎
+Changed the value of normal for column-gap to be 1em, rather than a UA-specified length with a suggestion of 1em. Resolved: 4 Apr 2018
+</li>
+	<li>
+`column-width$p 用には、負な値は許容されないこと, および
+0 は指定できるが 使用~値は `1px^v 以上に切り上げられることを明確化した。
+（`2018年 3月 14日に解決した＠~CSSissue/1741#issuecomment-373091628$href）
+◎
+Clarified that negative values are not allowed for column-width, and that while 0 may be specified, used values will be clamped to a minimum of 1px. Resolved: 14 Mar 2018 
+</li>
+	<li>
+~spanning要素があるときには、内容は要素が現れる直前の`複柱~行l$に属する全~柱に，自動的に平準化されることを明確化した。
+（`2017年 11月 9日に解決した＠~CSSissue/1739#issuecomment-342659978$href）
+◎
+Clarified that where there is a spanning element content is automatically balanced across all columns in the immediately preceding column row before the element appears. Resolved: 9 Nov 2017 
+</li>
+	<li>
+`~spanning要素$は，直な子でなくともよく、その場合には~spanning要素を包含している要素~上の［
+~margin, ~border, ~padding
+］は，~spannerより上に描かれることについて明確化するとともに例も追加した。
+（`2017年 11月 8日に解決した＠~CSSissue/1072#issuecomment-342668025$href）
+◎
+Added clarification plus an additional example that spanning elements may be lower the the first level of descendents, and that in the case of margins, borders and padding on the element containing the spanning, this would be drawn above the spanner. Resolved: 8 Nov 2017
+</li>
+	<li>
+次の~~文は、`参照先の記述＠#_changes-1739$hrefに変更した
+（`2017年 11月 7日に解決した＠~CSSissue/1739#issuecomment-342659978$href）
+⇒
+<q>
+`柱~罫線$は、行内~内容の層~内に, かつ
+複柱の内側にあるどの行内~内容よりも下に塗られる
+</q>
+◎
+Changed the sentence "Column rules are painted in the inline content layer, but below all inline content inside the multicol element." to "Column rules are painted just above the border of the multicol element. For scrollable multicol elements, note that while the border and background of the multicol element obviously aren’t scrolled, the rules need to scroll along with the columns." Resolved: 7 Nov 2017
+</li>
+	<li>
+次の~~文は、明確化するため［
+`参照先＠#_changes-1738$hrefとそれに伴う新たな例
+］に置換された
+（`2017年 11月 7日に解決した＠~CSSissue/1738#issuecomment-342661881$href）
+⇒
+<q>
+柱~boxは，塊~容器~boxである。
+すなわち、柱~boxは，
+`CSS 2.1, §10.1＠~CSS2VISUDET#containing-block-details$href
+の第 2 項による［
+塊~level ／ ~table~cell ／ 行内-塊
+］~boxの様に挙動する。
+しかしながら，柱~boxは、
+`position^p が［
+`fixed^v ／ `absolute^v
+］にされた要素に対しては，塊~容器~boxを確立しない。
+</q>
+◎
+Under section The Multi-column Model, removed two sentences "That is, column boxes behave like block-level, table cell, and inline-block boxes as per CSS 2.1, section 10.1, item 2 CSS21. However, column boxes do not establish block container boxes for elements with position: fixed or position: absolute.". THese were replaced with a clarification about the principal box and a new example showing how abspos elements refer to the multicol container. Resolved: 7 Nov 2017
+</li>
+	<li>
+<p>
+次の~~文（および後続する例）を除去した
+（`編集上の＠~CSSissue/1966$href）
+⇒
+<q>
+柱が分断されるべき（または べきでない）所を指示するため、新たな~keyword値も導入される。
+</q>
+</p>
+<p>
+その~keywordを用いる~propは、今は他の仕様が導入するようになったので。
+</p>
+◎
+Removed the sentence "To indicate where column breaks should (or should not) appear, new keyword values are introduced." and following example (Example 7 in the WD published 5 Oct 2017) as the multicol specification no longer introduces these properties. Editorial
+</li>
+	<li>
+複柱の適用-対象を指す語を，
+“複柱~要素”
+から
+“複柱~容器”
+に変更した。
+（`2017年 11月 22日に解決した＠~CSSissue/1965$href）
+◎
+Changed how we reference the element we have applied multicol to from multi-column or multicol "element" to multi-column or multicol "container". Resolved: 22 November 2017
+</li>
+	<li>
+次のように記した例を除去した
+（`2017年 9月 7日に解決した＠~CSSissue/1740$href）
+⇒
+<q>
+背の高い画像が，それ用の部屋を見出すために次の~page上の柱へ移動された場合、~~元の所の柱は空なままにもなり得る
+— その場合でも、柱~罫線の有無を裁定する目的においては，~~元の所の柱は内容を持つものと見なされる。
+</q>
+◎
+Removed the example which stated "If a tall image is moved to a column on the next page to find room for it, its natural column may be left empty. If so, the column is still considered to have content for the purpose of deciding if the column rule should be drawn." Resolved: 7 September 2017
+</li>
+</ul>
+
+<p id="changes-from-20110412">
+`2011年 4月 12日 勧告候補＠~TR/2011/CR-css3-multicol-20110412/$href
+からの変更点は：
+◎
+Changes from the Candidate Recommendation (CR) of 12 April 2011.
+</p>
+
+<ul>
+	<li>
+CSS Grid 仕様と整合させるため，［
+~UAは、`筋$~sizeを，自身が指定する値を下限にするよう変更する
+］ことが要求されるものとした。
+（`2016年 1月 7日に解決した＠~www-style/2016Jan/0031.html$href）
+◎
+Added July 2016 resolution to change the the track size floor to a required UA-specified value, consistent with the CSS Grid spec. Resolved: 7 Jan 2016
+</li>
+	<li>
+［
+~overflow柱には `column-fill$p の効果はない
+］とする言明における［
+~overflowする柱は，連続的~媒体に限られる
+］とする制約を除去した。
+（`2013年 9月に解決した＠~www-style/2013Sep/0471.html$href）
+◎
+Remove the restriction about overflow columns only being in continuous media in the statement that column-fill has no effect on overflow columns. Resolved: September 2013.
+</li>
+	<li>
+`balance-all$v ~keyword, および
+これがどう働くべきかをデモる例を追加した。
+（`2013年 9月に解決した＠~www-style/2013Sep/0471.html$href）
+◎
+Added keyword balance-all and examples to demonstrate how this should work. Resolved: September 2013.
+</li>
+	<li>
+`§ 使用~値の計算法＠#pseudo-algorithm$href
+のいくつかの箇所は、改訂された。
+（`Latest change 2013年 2月＠~www-style/2013Feb/0471.html$href）
+◎
+The pseudo-algorithm has been revised on a number of occasions. Latest change Feb 2013.
+</li>
+	<li>
+`columns$p,
+`column-width$p,
+`column-count$p
+~propは、塊~容器に適用されることを明確化した。
+（`Ref: 2013年 2月＠~www-style/2013Feb/0536.html$href）
+◎
+Clarified that properties columns, column-width, column-count "apply to block containers". Ref: Feb 2013.
+</li>
+	<li>
+各種 分断~用~propは、この仕様から
+（`CSS Fragmentation Module＠~CSSBREAK$href）
+へ移動された。
+◎
+Breaking properties have beeen moved from this specification to the CSS Fragmentation Module.
+</li>
+	<li>
+`column-fill$p は，~page分断の前に尊守されることが明確化されるよう、
+`column-fill$p の言い回しを変更した。
+（`Ref: 2012年 1月＠~www-style/2012Jan/0393.html$href）
+◎
+Change to column-fill wording to clarify that column-fill is honored before page breaks. Ref: Jan 2012.
+</li>
+	<li>
+~margin相殺を伴う~spanning要素に何が起こるか明確化するため、例と~textを改正した。
+（`Ref: 2013年 10月＠~www-style/2013Oct/0247.html$href）
+◎
+Amended example and text to clarify what happens with margin collapsing and spanning elements. Ref: Oct 2013.
+</li>
+	<li>
+`column-rule-width$p は、柱の~sizeや配置を改めないことを明確化した。
+（`Ref: 2013年 9月＠~www-style/2013Sep/0550.html$href）
+◎
+Clarification that column-rule-width does not alter the size or placement of columns. Ref: Sep 2013.
+</li>
+	<li>
+各~柱~spanning要素は、［
+それらの合間を相殺する，別々の`~BFC$~margin
+］を確立するものとした。
+（`Ref: 2011年 12月＠~www-style/2011Dec/0262.html$href）
+◎
+Added that each column spanning element establishes a separate BFC margins between them collapse. Ref: Dec 2011.
+</li>
+	<li>
+`柱~罫線$は、行内~内容の層~内に, かつ
+複柱の内側にあるどの行内~内容よりも下に塗られるとした。
+（`Ref: 2013年 2月＠~www-style/2013Feb/0363.html$href）
+◎
+Column rules are painted in the inline content layer, but below all inline content inside the multicol. Ref: Feb 2013.
+</li>
+	<li>
+`column-span$p は、複柱~内にない要素に対しても，整形~文脈を確立させることを明確化した。
+◎
+Clarify that column-span causes the element to establish a formatting context even if it is not in a multicol.
+</li>
+	<li>
+柱~spannerは、常に`塊^em整形~文脈を確立するとは限らないようにした。
+◎
+Column spanners do not always establish a block formatting context. 
+</li>
+	<li>
+`column-gap$p は、 `length$t に代えて `length-percentage$t を受容するようにした。
+◎
+Allow column-gap to accept &lt;length-percentage&gt; instead of just &lt;length&gt;
+</li>
+	<li>
+`column-width$p ／ `column-count$p
+は、`~table包装~box$を除く`塊~容器$に適用されるようにした。
+◎
+column-width and column-count applies to block containers except table wrapper boxes.
+</li>
+	<li>
+柱を~overflowする内容は、切取られないようにした。
+◎
+Content that overflows columns is not clipped.
+</li>
+</ul>
+
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p>
+この文書は、いくつかの より古い提案とそれらに寄せられた，次の方々からのコメントに基づいている：
+◎
+This document is based on several older proposals and comments on older proposals. Contributors include:
+</p>
+
+<p lang="en-x-a0">
+Alex Mogilevsky,
+Andy Clarke,
+Anton Prowse,
+Bert Bos,
+Björn Höhrmann,
+Cédric Savarese,
+Chris Lilley,
+Chris Wilson,
+Daniel Glazman and
+Dave Raggett,
+David Hyatt,
+David Singer,
+David Woolley,
+Elika Etemad,
+Giovanni Campagna,
+Ian Hickson.
+Joost de Valk,
+Kevin Lawver,
+L. David Baron,
+Markus Mielke,
+Melinda Grant,
+Michael Day,
+Morten Stenshorne,
+Øyvind Stenhaug,
+Peter Linss,
+Peter-Paul Koch,
+Robert O’Callahan,
+Robert Stevahn,
+Sergey Genkin,
+Shelby Moore,
+Steve Zilles,
+Sylvain Galineau,
+Tantek Çelik,
+Till Halbach,
+</p>
+
+	</section>
+</main></div>

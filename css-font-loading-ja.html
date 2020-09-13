@@ -1,0 +1,2975 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Font Loading Module Level 3 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+Util.ready = function(){
+	const source_data = {
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+	let idl_ifc = '';
+
+	return this.html.replace(
+		/%[\w~一-鿆あ-ん？]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'I':
+	if(indicator === '@'){
+		idl_ifc = key;
+	}
+	href = `#${key.toLowerCase()}`;
+	break;
+	
+case 'mb': // IDL dictionary member
+case 'dm': // IDL dictionary member
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'mc':
+	klass = 'm';
+	key = `new ${key}`
+	text = 'constructor';
+	break;
+case 'sl':
+	text = `[[${text}]]`;
+	break;
+case 'at':
+	text = `@${text}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+return text;
+
+	}
+}
+
+</script>
+
+
+<!-- 
+	good tutorial material introducing Promises:http://www.html5rocks.com/en/tutorials/es6/promises/
+	§2.3 Interaction with CSS’s @font-face Rule:#font-face-css-connection
+	§3.4 The ready attribute:#font-face-set-ready
+	§4.2 Interaction with CSS’s @font-face Rule:#document-font-face-set
+	CSS:http://www.w3.org/TR/CSS/
+	ECMAScript 6:http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts
+	May 2014 CSS Font Loading Last Call Working Draft:https://www.w3.org/TR/2014/WD-css-font-loading-3-20140522/
+
+ -->
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Font Loading Module Level 3
+spec_date:2020-08-18
+trans_update:2020-08-19
+source_checked:190211
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-font-loading-3/
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:typeset,css,network
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2016-04-13
+
+
+●●class_map
+E:error
+e:element
+a:attr
+at:at-rule
+p:property
+d:descriptor
+et:event-type
+sl:js-slot
+p:property
+css:css
+v:value
+
+●●tag_map
+I:code
+E:code
+m:code
+dm:code
+et:code
+e:code
+a:code
+p:code
+d:code
+i:i
+at:code
+sl:span
+p:code
+css:code
+c:code
+v:code
+em:em
+
+●●original_id_map
+
+●●mdn_urls
+
+fontface:API/FontFace
+fontfaceset:API/FontFaceSet
+fontfacesetloadevent:API/FontFaceSetLoadEvent
+	dictdef-fontfacedescriptors:API/FontFaceDescriptors
+	dictdef-fontfacesetloadeventinit:API/FontFaceSetLoadEventInit
+	enumdef-fontfaceloadstatus:API/FontFaceLoadStatus
+	enumdef-fontfacesetloadstatus:API/FontFaceSetLoadStatus
+	typedefdef-binarydata:API/BinaryData
+	fontfacesource:API/FontFaceSource
+	callbackdef-foreachcallback:API/ForEachCallback
+
+●●link_map
+
+
+	●IDL
+Exposed:~WEBIDLjs#Exposed
+SameObject:~WEBIDLjs#SameObject
+
+undefined:~WEBIDL#idl-undefined
+boolean:~WEBIDL#idl-boolean
+long:~WEBIDL#idl-long
+CSSOMString:~CSSOM1#cssomstring
+
+I.ArrayBuffer:~WEBIDL#idl-ArrayBuffer
+I.ArrayBufferView:~WEBIDL#ArrayBufferView
+I.CSSOMString:~CSSOM1#cssomstring
+I.BinaryData:#typedefdef-binarydata
+I.Document:~DOM4#document
+	I.Document:~HTMLdom#document
+I.Event:~DOM4#event
+I.EventHandler:~WAPI#eventhandler
+I.EventInit:~DOM4#dictdef-eventinit
+I.EventTarget:~DOM4#eventtarget
+I.FontFace:#fontface
+I.FontFaceDescriptors:#dictdef-fontfacedescriptors
+I.FontFaceLoadStatus:#enumdef-fontfaceloadstatus
+I.FontFaceSet:#fontfaceset
+I.FontFaceSetLoadEvent:#fontfacesetloadevent
+I.FontFaceSetLoadEventInit:#dictdef-fontfacesetloadeventinit
+I.FontFaceSetLoadStatus:#enumdef-fontfacesetloadstatus
+I.FontFaceSource:#fontfacesource
+I.ForEachCallback:#callbackdef-foreachcallback
+I.Promise:~WEBIDL#idl-promise
+~promise:#promise
+	I.Promises:promise
+I.WorkerGlobalScope:~WORKERS#workerglobalscope
+I.OffscreenCanvas:~HEcanvas#offscreencanvas
+
+	●Error
+E.InvalidModificationError:~WEBIDL#invalidmodificationerror
+
+	●member
+dm.style:#dom-fontfacedescriptors-style
+dm.weight:#dom-fontfacedescriptors-weight
+dm.stretch:#dom-fontfacedescriptors-stretch
+dm.unicodeRange:#dom-fontfacedescriptors-unicoderange
+dm.variant:#dom-fontfacedescriptors-variant
+dm.featureSettings:#dom-fontfacedescriptors-featuresettings
+dm.variationSettings:#dom-fontfacedescriptors-variationsettings
+dm.display:#dom-fontfacedescriptors-display
+
+dm.fontfaces:#dom-fontfacesetloadeventinit-fontfaces
+
+m.add:#dom-fontfaceset-add
+m.check:#dom-fontfaceset-check
+m.clear:#dom-fontfaceset-clear
+m.delete:#dom-fontfaceset-delete
+m.family:#dom-fontface-family
+m.featureSettings:#dom-fontface-featuresettings
+m.variationSettings:#dom-fontface-variationsettings
+m.display:#dom-fontface-display
+
+m.font:#dom-foreachcallback-font
+m.fontfaces:#dom-fontfacesetloadevent-fontfaces
+m.fonts:#dom-fontfacesource-fonts
+m.index:#dom-foreachcallback-index
+m.load:#dom-fontface-load
+m.~load1:#dom-fontfaceset-load
+m.loaded:#dom-fontface-loaded
+m.onloading:#dom-fontfaceset-onloading
+m.onloadingdone:#dom-fontfaceset-onloadingdone
+m.onloadingerror:#dom-fontfaceset-onloadingerror
+m.ready:#dom-fontfaceset-ready
+m.self:#dom-foreachcallback-self
+m.fontfaces@
+m.status:#dom-fontface-status
+m.~status1:#dom-fontfaceset-status
+m.stretch:#dom-fontface-stretch
+m.style:#dom-fontface-style
+m.unicodeRange:#dom-fontface-unicoderange
+m.variant:#dom-fontface-variant
+m.weight:#dom-fontface-weight
+
+	●constructor
+m.new FontFace:#dom-fontface-fontface
+m.new FontFaceSetLoadEvent:#dom-fontfacesetloadevent-fontfacesetloadevent
+m.new FontFaceSet:#dom-fontfaceset-fontfaceset
+
+
+	●vars
+	descriptors:#dom-fontface-constructor-family-source-descriptors-descriptors
+	eventInitDict:#dom-fontfacesetloadevent-fontfacesetloadevent-type-
+	family:#dom-fontface-constructor-family-source-descriptors-family
+	font:#dom-fontfaceset-add-font-font
+	font:#dom-fontfaceset-check-font-text-font
+	font:#dom-fontfaceset-delete-font-font
+	font:#dom-fontfaceset-load-font-text-font
+	initialFaces:#dom-fontfaceset-constructor-initialfaces
+	source:#dom-fontface-constructor-family-source-descriptors-source
+	text:#dom-fontfaceset-check-font-text-text
+	text:#dom-fontfaceset-load-font-text-text
+	type:#dom-fontfacesetloadevent-constructor-type-eventinitdict-type
+
+	●enum
+l.unloaded:#dom-fontfaceloadstatus-unloaded
+l.loading:#dom-fontfaceloadstatus-loading
+l.loaded:#dom-fontfaceloadstatus-loaded
+l.error:#dom-fontfaceloadstatus-error
+l.~loading1:#dom-fontfacesetloadstatus-loading
+l.~loaded1:#dom-fontfacesetloadstatus-loaded
+
+	●slot
+sl.Data:#dom-fontface-data-slot
+sl.FailedFonts:#dom-fontfaceset-failedfonts-slot
+sl.FontStatusPromise:#dom-fontface-fontstatuspromise-slot
+sl.LoadedFonts:#dom-fontfaceset-loadedfonts-slot
+sl.LoadingFonts:#dom-fontfaceset-loadingfonts-slot
+sl.ReadyPromise:#dom-fontfaceset-readypromise-slot
+sl.Urls:#dom-fontface-urls-slot
+
+	~CSSFONT4=~CSSWG/css-fonts-4/
+at.font-face:~CSSFONT#at-font-face-rule
+	~CSSFONT4#at-font-face-rule
+p.font:~CSSFONT#propdef-font
+
+d.src:~CSSFONT#descdef-src
+	~CSSFONT4/#descdef-font-face-src
+d.unicode-range:~CSSFONT#descdef-unicode-range
+	~CSSFONT4#descdef-font-face-unicode-range
+
+	v.bolder:~CSSFONT#bolder
+	~CSSFONT4#valdef-font-weight-bolder
+	v.normal:~CSSFONT#valdef-font-weight-normal
+	~CSSFONT4#valdef-font-weight-normal
+
+css.url():~CSSVAL#funcdef-url
+
+	●？
+	eventinitdict-eventinitdict
+	set entries:#fontfaceset-set-entries
+
+
+	●event
+et.loading:#eventdef-fontfaceset-loading
+et.loadingdone:#eventdef-fontfaceset-loadingdone
+et.loadingerror:#eventdef-fontfaceset-loadingerror
+
+
+	●terms
+
+~font~load~eventを発火する:#fire-a-font-load-event
+~loadingに切替える:#switch-the-fontfaceset-to-loading
+~load済みに切替える:#switch-the-fontfaceset-to-loaded
+
+~sourceから合致する~font~facesを見出す:#find-the-matching-font-faces
+~font~source:#font-source
+可用な~font~face:#available-font-faces
+
+反復~順序:#fontfaceset-iteration-order
+~set~entries:#fontfaceset-set-entries
+含んで:#fontfaceset-set-entries
+
+環境渋滞中~flag:#fontfaceset-stuck-on-the-environment
+環境待ち:#fontfaceset-pending-on-the-environment
+
+~CSSに接続されて:#css-connected
+~CSSに接続され:#css-connected
+接続-先:#css-connected
+
+~CSS全域~keyword:~CSSVAL#css-wide-keywords
+文法に則って構文解析する:~CSSSYN#css-parse-something-according-to-a-css-grammar
+
+~eventを発火する:~DOM4#concept-event-fire
+	単純~eventを発火する:~TR/html5/webappapis.html#firing-a-simple-event-named-e
+
+	~font:~CSSFONT#propdef-font
+~font照合:~CSSFONT#font-matching-algorithm
+有効~文字~map:~CSSFONT#effective-character-map
+
+x.~set~entries:~WEBIDL#dfn-set-entries
+x.~set-like:~WEBIDL#dfn-setlike
+
+	●promise
+新たな~promise:~WEBIDLjs#a-new-promise
+却下される~promise:~WEBIDLjs#a-promise-rejected-with
+解決される~promise:~WEBIDLjs#a-promise-resolved-with
+却下する:~WEBIDLjs#reject
+却下され:~WEBIDLjs#reject
+解決する:~WEBIDLjs#resolve
+解決され:~WEBIDLjs#resolve
+すべての~promiseを待機する:~WEBIDLjs#wait-for-all
+
+~taskを~queueする:~WAPI#queue-a-task
+~task源:~WAPI#task-source
+~event~handler~IDL属性:~WAPI#event-handler-idl-attributes
+	~event~handler:~WAPI#event-handlers
+~event~handler~event型:~WAPI#event-handler-event-type
+
+
+●●words_table1
+
+
+fontfaces1:fontfaces
+loading1:loading
+loaded1:loaded
+load1:load
+status1:status
+
+
+
+●●words_table
+
+	●CSS
+描く:drawする:~
+描こう:drawしよう:~
+
+serif:
+weight:
+face:::
+faces:::face たち
+fonts:::font たち
+	フォント
+family:
+italic:
+glyph::::グリフ
+測定-:measure:~
+測定:measurement:~
+計量:metric:~
+
+
+	●資源
+	~download可能:downloadable
+load::::ロード
+loading::::ロード処理
+unload::::アンロード
+preload:::事前 load:プリロード
+	~load済み:loaded
+
+	●JS／IDL／抽象データ型
+prototype-chain:prototype chain
+entries::::エントリたち
+set-like:::set-類
+	コールバック
+set:
+	実数:number
+内包-:include:~
+
+	●非同期処理
+ready:::
+listen:::
+	mark:::
+	no-op:
+
+環境渋滞中:stuck-on-the-environment:~
+環境待ち:pending on the environment:~
+解決待ち:pending:~
+	〜待ち:pending
+応答待ち:pending:~
+完了待ち:pending:~
+並列的:asynchronous:~
+	immediately
+	なくなる:no longer
+	絶たれる:stop being
+	準備ができた:ready
+
+	●処理一般
+	scripting
+	行われ:operation
+	占めている:take place
+	-:skip
+	-:unmark
+
+	●priv-sec
+install::::インストール
+	-:appreciable
+
+	●仕様
+不便さ:inconvenience:~
+可用性:availability:~
+方法:how:~
+正した:correctした:~
+自明:obvious:~
+誤記:typo:~
+本来の:pristine:~
+
+改正-:amend:~
+被る:incurする:~
+
+	:unused
+	無為なvacuous
+	きちんと定義する:well-defined
+	:align
+	およそ:almost-certainly
+	paper
+	good
+	格好の 〜 入門的な紹介:good tutorial material introducing
+	stuff
+	team
+	-:usage
+	notice
+	-:believe
+	mention
+	helpful
+	はじかれる:rule-out
+
+	●未分類（動詞
+編集:editing:~
+切替える:switchする:切り替える
+入替わる:swapする:~
+
+	追跡し続ける:keep track
+	絶対~化:absolutize
+	終えた:done
+	ordering
+	ある文字を含んで:cover
+	現れ:appear
+	start
+	~~遭遇:hit:
+	get
+	refer
+	having
+	置かれ:place され
+	made
+	adding
+	back
+	goes
+	meet
+	including system fonts
+	plus
+	taking-place
+	~~回復でき:restorable
+	可能化-／不能化-:turn on or off
+	pointing to
+
+
+	●未分類
+有効:effective:~
+rich-text:rich text:::リッチテキスト
+日本語:Japanese:~
+space:
+裸の:naked:~
+
+	-:filter
+	趣旨:idea:::
+	optional
+	HTML
+	Media API
+	long
+	組み合わせ:combo:
+	片:piece
+	そのもの:literally
+	~font~list:fontlist
+	~font~loading:font-loading
+
+	●指示語
+近過去:recent:~
+現在:currently:~
+	新たな:fresh
+	brand new
+	~~参照:refer
+	further
+	anything
+	結局は:finally
+	several
+	thing
+	その逆も:vice versa
+	sometime
+	もっと:greater
+	against
+	nothing
+	old
+	two
+	previous
+	point
+
+●●ref_normative
+
+[CSS-FONTS-3]
+    John Daggett; Myles Maxfield; Chris Lilley. CSS Fonts Module Level 3. 20 September 2018. REC. URL: https://www.w3.org/TR/css-fonts-3/ 
+[CSS-FONTS-4]
+    John Daggett; Myles Maxfield; Chris Lilley. CSS Fonts Module Level 4. 13 November 2019. WD. URL: https://www.w3.org/TR/css-fonts-4/ 
+[CSS-SYNTAX-3]
+    Tab Atkins Jr.; Simon Sapin. CSS Syntax Module Level 3. 16 July 2019. CR. URL: https://www.w3.org/TR/css-syntax-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSSOM-1]
+    Simon Pieters; Glenn Adams. CSS Object Model (CSSOM). 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-1/ 
+[DOM]
+    Anne van Kesteren. DOM Standard. Living Standard. URL: https://dom.spec.whatwg.org/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[WebIDL]
+    Boris Zbarsky. Web IDL. 15 December 2016. ED. URL: https://heycam.github.io/webidl/ 
+
+
+●●trans_metadata
+
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Font Loading Module Level 3</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/css-font-loading/
+編集者草案
+	https://drafts.csswg.org/css-font-loading/
+以前のバージョン
+	https://www.w3.org/TR/2014/WD-css-font-loading-3-20140522/
+
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-font-loading-3">GitHub Issues</a>
+編集
+	<a href="http://xanthir.com/contact/">Tab Atkins Jr.</a> (Google)
+前任編集者
+	<a href="mailto:jdaggett@mozilla.com">John Daggett</a> (Mozilla)
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-font-loading-3/Overview.bs">GitHub Editor</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-font-loading-3
+
+</script>
+
+
+</head>
+
+<body >
+
+<header>
+	<hgroup>
+<h1 id="title">CSS Font Loading Module Level 3</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この~CSS~moduleは、~font資源を動的に~loadするために利用される~event, および~interfaceについて述べる。
+◎
+This CSS module describes events and interfaces used for dynamically loading font resources.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公の複製です…
+【以下，この節の他の内容は <a href="css-common-ja.html#status">CSS 日本語訳 共通ページ</a>に委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="introduction">
+<h2 title="Introduction">1. 序論</h2>
+
+<p>
+~CSSでは、作者は `font-face$at 規則を介して，~custom~fontを~webから~loadする（ “読み込む” ）ことが許容される。
+これの利用は，~stylesheetを著作するときは容易であるが、~scriptを介して動的に利用するときはずっと困難になる。
+◎
+CSS allows authors to load custom fonts from the web via the @font-face rule. While this is easy to use when authoring a stylesheet, it’s much more difficult to use dynamically via scripting.
+</p>
+
+<p>
+更には、~CSSでは，~UAが ~fontを実際にいつ~loadするか選べるようにされているので、ある~font~face（ “書体” ）が~page上のどこからも`現在^em利用されていない場合、ほとんどの~UAは，それに結付けられている~fileを~downloadしない。
+このことは、当の~font~faceを後で利用する場合，遅延を被ることを意味する
+— ~UAは，それが結局は利用されると気付いたとき初めて、~font~fileを~download／構文解析し始めるので。
+◎
+Further, CSS allows the user agent to choose when to actually load a font; if a font face isn’t currently used by anything on a page, most user agents will not download its associated file. This means that later use of the font face will incur a delay as the user agent finally notices a usage and begins downloading and parsing the font file.
+</p>
+
+<p>
+この仕様は、~CSS内の~font~faceに対する~interfaceを定義して，~font~faceを~scriptから容易に作成する／~loadすることを可能にする。
+それはまた、~pageに利用されている［
+個々の~font／ すべての~font
+］の~loading状態s（ “status” ）を追跡するための~methodも供する。
+◎
+This specification defines a scripting interface to font faces in CSS, allowing font faces to be easily created and loaded from script. It also provides methods to track the loading status of an individual font, or of all the fonts on an entire page.
+</p>
+
+<p class="issue">
+この仕様を成す一部のものの挙動は、通常の ECMAScript ~objを利用して定義されている
+— 種々のものは`~promise$を内部的に利用しており†、
+`FontFaceSet$I は `Set^I を内部的に利用している。
+編集者は、これらの~obj（およびそれらの~prototype-chain）が本来のそれであり，いかなる作者~codeからも影響されていないものと~~見なして記している。
+【！Promise-Using 仕様では、このことを表す用語として，（当の~objの ECMAScript ~propの）初期~値が定義されている。】
+この記し方でよいのか？
+そうであれば，そのことを仕様~内にどう指示すべきか？
+◎
+Several things in this spec use normal ES objects to define behavior, such as various things using Promises internally, and FontFaceSet using a Set internally. I believe the intention here is that these objects (and their prototype chains) are pristine, unaffected by anything the author has done. Is this a good intention? If so, how should I indicate this in the spec?
+</p>
+
+<p class="trans-note">【†
+この訳では、~promise用語については， Web IDL 仕様に
+<a href="~WEBIDLjs#es-promise-manipulation">定義される用語</a>
+を参照するようリンク（和訳）をあてがっている。
+それに伴い，対訳も一部違えている（ “fulfill（充足する）” →  “resolve（`解決する$）” ）。
+】</p>
+
+		<section id="_conventions">
+<h3>【この訳に特有な表記規約】</h3>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, コレ, ~IF, ~THROW, 等々）の意味や定義の詳細は，~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+<p>
+語
+`~promise@
+は、 `Promise$I ~obj（次~節）の略記である。
+</p>
+
+<p>
+“~obj %O に対する
+%O . `someSlot^sl
+という表記は、
+“%O の `someSlot^sl 内部~slot”
+の略記である。
+</p>
+
+<p>
+原文に利用されている~HTML用語は W3C 版 ~HTMLを~~参照しているが、ここでは
+WHATWG ~HTMLを~~参照するように置換している。
+</p>
+
+		</section>
+		<section id="values">
+<h3 title="Values">1.1. 値</h3>
+
+<p>
+この仕様は、
+<a href="http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts">ECMAScript 6</a>
+に定義される `Promise$I を利用する。
+HTML5Rocks にて，格好の
+<a href="http://www.html5rocks.com/en/tutorials/es6/promises/">`Promise^I の入門的な紹介</a>
+（
+<a href="http://www.html5rocks.com/ja/tutorials/es6/promises/">日本語訳</a>
+）を読める。
+◎
+This specification uses Promises, which are defined in ECMAScript 6. HTML5Rocks has some good tutorial material introducing Promises.
+</p>
+
+		</section>
+		<section id="task-source">
+<h3 title="Task Sources">1.2. ~task源</h3>
+
+<p>
+この仕様において，`~taskを~queueする$ときに利用する`~task源$は、 "font loading" ~task源である。
+◎
+Whenever this specification queues a task, it queues it onto the "font loading" task source.
+</p>
+
+		</section>
+	</section>
+	<section id="fontface-interface">
+<h2 title="The FontFace Interface">2. `FontFace^I ~interface</h2>
+
+<p>
+`FontFace$I ~interfaceは、利用-可能な単独の~font~faceを表現する。
+`FontFace^I ~objは、~CSS `font-face$at 規則により，暗黙的に定義され、また
+~urlや~binary~dataから手動で構築することもできる。
+◎
+The FontFace interface represents a single usable font face. CSS @font-face rules implicitly define FontFace objects, or they can be constructed manually from a url or binary data.
+</p>
+
+<pre class="idl">
+typedef (`ArrayBuffer$I or `ArrayBufferView$I) `BinaryData@I;
+
+dictionary `FontFaceDescriptors@I {
+  `CSSOMString$ `style@dm = "normal";
+  `CSSOMString$ `weight@dm = "normal";
+  `CSSOMString$ `stretch@dm = "normal";
+  `CSSOMString$ `unicodeRange@dm = "U+0-10FFFF";
+  `CSSOMString$ `variant@dm = "normal";
+  `CSSOMString$ `featureSettings@dm = "normal";
+  `CSSOMString$ `variationSettings@dm = "normal";
+  `CSSOMString$ `display@dm = "auto";
+};
+
+enum `FontFaceLoadStatus@I {
+    `unloaded@l, `loading@l, `loaded@l, `error@l
+};
+
+[`Exposed$=(Window,Worker)]
+interface `FontFace@I {
+  `FontFace$mc(
+      `CSSOMString$ %family,
+      (`CSSOMString$ or `BinaryData$I) %source,
+      optional `FontFaceDescriptors$I %descriptors = {}
+  );
+  attribute `CSSOMString$ `family$m;
+  attribute `CSSOMString$ `style$m;
+  attribute `CSSOMString$ `weight$m;
+  attribute `CSSOMString$ `stretch$m;
+  attribute `CSSOMString$ `unicodeRange$m;
+  attribute `CSSOMString$ `variant$m;
+  attribute `CSSOMString$ `featureSettings$m;
+  attribute `CSSOMString$ `variationSettings$m;
+  attribute `CSSOMString$ `display$m;
+
+  readonly attribute `FontFaceLoadStatus$I `status$m;
+
+  Promise&lt;`FontFace$I&gt; `load$m();
+  readonly attribute Promise&lt;`FontFace$I&gt; `loaded$m;
+};
+</pre>
+
+<p class="issue">
+すべての語 “文書” について、どの文書が参照されているか明らかになるよう明確化する
+— ~objは文書~間を移動し得るので。
+◎
+Clarify all mentions of "the document" to be clear about which document is being referenced, since objects can move between documents.
+</p>
+
+<dl class="idl-def">
+	<dt>`family@m</dt>
+	<dt>`style@m</dt>
+	<dt>`weight@m</dt>
+	<dt>`stretch@m</dt>
+	<dt>`unicodeRange@m</dt>
+	<dd>
+これらの属性はいずれも、［
+コレが表現する~font~face
+］の，［
+`font-face$at 規則にて定義される，対応する名前の記述子
+］により定義されるある側面を表現する。
+これらは、その対応する記述子と同じに構文解析される。
+これらは、`~font照合$~algoにより利用されるが，それ以外の効果はない。
+◎
+family, of type CSSOMString
+◎
+style, of type CSSOMString
+◎
+weight, of type CSSOMString
+◎
+stretch, of type CSSOMString
+◎
+unicodeRange, of type CSSOMString
+◎
+These attributes all represent the corresponding aspects of a font face, as defined by the descriptors defined in the CSS @font-face rule. They are parsed the same as the corresponding @font-face descriptors. They are used by the font matching algorithm, but otherwise have no effect.
+</dd>
+	<dd>
+例えば，［
+`style$m が `italic^l にされた `FontFace$I
+］は、~italic~font~faceを `表現する^em
+— 当の~font~faceを~italicにする<strong>ものではない</strong>。
+◎
+For example, a FontFace with a style of "italic" represents an italic font face; it does not make the font face italic.
+</dd>
+	<dd>
+取得子は、属性に結付けられている文字列を返す。
+◎
+On getting, return the string associated with this attribute.
+</dd>
+	<dd>
+設定子は、まず，所与の文字列を対応する `font-face$at 記述子の`文法に則って構文解析する$。
+文法に合致しない場合は `SyntaxError^E を投出し、他の場合は［［
+構文解析した結果の値
+］を直列化した結果
+］に設定する。
+◎
+On setting, parse the string according to the grammar for the corresponding @font-face descriptor. If it does not match the grammar, throw a SyntaxError; otherwise, set the attribute to the serialization of the parsed value.
+</dd>
+
+	<dt>`variant@m</dt>
+	<dt>`featureSettings@m</dt>
+	<dt>`variationSettings@m</dt>
+	<dt>`display@m</dt>
+	<dd>
+これらの属性はいずれも、各種［
+`font-face$at 規則にて定義される，対応する名前の記述子
+］と同じ意味を持ち，同じように構文解析される。
+◎
+variant, of type CSSOMString
+◎
+featureSettings, of type CSSOMString
+◎
+variationSettings, of type CSSOMString
+◎
+display, of type CSSOMString
+◎
+These attributes have the same meaning, and are parsed the same as, the corresponding descriptors in the CSS @font-face rules.
+</dd>
+	<dd>
+これらは、~fontが~supportする特定の特能を
+可能化-／不能化-
+する。
+前述の属性と違って、これらの属性は，実際に，コレが表現する~font~faceに影響する。
+それ以外の点では、取得子／設定子の挙動は，前述の属性（ `family$m 他）と同じである。
+◎
+They turn on or off specific features in fonts that support them. Unlike the previous attributes, these attributes actually affect the font face.
+◎
+On getting, return the string associated with this attribute.
+◎
+On setting, parse the string according to the grammar for the corresponding @font-face descriptor. If it does not match the grammar, throw a SyntaxError; otherwise, set the attribute to the serialization of the parsed value.
+</dd>
+
+	<dt>`FontFaceLoadStatus$I `status@m</dt>
+	<dd>
+この属性は、コレが表現する~font~faceの現在の状態sを反映する。
+`FontFace$I が新たに作成された時点では `unloaded^l になるモノトスル。
+◎
+status, of type FontFaceLoadStatus, readonly
+◎
+This attribute reflects the current status of the font face. It must be "unloaded" for a newly-created FontFace.
+</dd>
+	<dd>
+<p>
+次のいずれかの場合に変化し得る：
+</p>
+
+<ul ><li>作者は、 `FontFace$I 上の `load()$m ~methodを通して，当の~font~faceを~loadするよう要請することに因り，明示的に変更できる。
+</li><li>~UAにおいて，~screen上に何らかの~textを描くため 当の~font~faceが必要になることが検出されることに因り、暗黙的に変更され得る。
+</li></ul>
+◎
+It can change due to an author explicitly requesting a font face to load, such as through the load() method on FontFace, or implicitly by the user agent, due to it detecting that the font face is needed to draw some text on the screen.
+</dd>
+
+	<dt><code >Promise&lt;`FontFace$I&gt; `loaded@m</code></dt>
+	<dd>
+この属性は、コレが表現する~font~faceの `FontStatusPromise$sl を反映する。
+◎
+loaded, of type Promise&lt;FontFace&gt;, readonly
+◎
+This attribute reflects the [[FontStatusPromise]] of the font face.
+</dd>
+</dl>
+
+<p>
+各 `FontFace$I ~objは、次に挙げる内部~slotを包含する：
+◎
+↓</p>
+
+<dl>
+	<dt>`FontStatusPromise@sl</dt>
+	<dd>
+この~slotは、~fontの状態sを追跡するためにある。
+状態sは、 解決待ちの状態から開始され，［
+~fontが成功裡に~loadされ構文解析されたか ／ ~errorに~~遭遇した
+］ときに，それに応じて［
+`解決され$る／`却下され$る
+］。
+◎
+All FontFace objects contain an internal [[FontStatusPromise]] slot, which tracks the status of the font. It starts out pending, and fulfills or rejects when the font is successfully loaded and parsed, or hits an error.
+</dd>
+
+	<dt>`Urls@sl</dt>
+	<dt>`Data@sl</dt>
+	<dd>
+いずれか片方は ~NULL, もう片方は 非 ~NULL になる（非 ~NULL の方は、渡されたか~dataに基づいて，構築子により設定される）。
+◎
+All FontFace objects also contain internal [[Urls]] and [[Data]] slots, of which one is null and the other is not null (the non-null one is set by the constructor, based on which data is passed in).
+</dd>
+
+</dl>
+
+		<section id="font-face-constructor">
+<h3 title="The Constructor">2.1. 構築子</h3>
+
+<div>
+<p>
+`FontFace$I は、次のいずれかから構築できる：
+</p>
+
+<ul>
+	<li>
+~font~face~fileを指している URL
+</li>
+	<li>
+~font~faceの~binary表現を包含している
+`ArrayBuffer$I （または `ArrayBufferView$I ）
+</li>
+</ul>
+◎
+A FontFace can be constructed either from a URL pointing to a font face file, or from an ArrayBuffer (or ArrayBufferView) containing the binary representation of a font face.
+</div>
+
+<div class="algo">
+<p>
+`new FontFace(family, source, descriptors)@m
+構築子~手続きは：
+◎
+When the FontFace(family, source, descriptors) method is called, execute these steps:
+• Let font face be a fresh FontFace object.＼
+</p>
+<ol>
+	<li>
+コレの `status$m 属性 ~SET `unloaded^l
+◎
+Set font face’s status attribute to "unloaded",＼
+</li>
+	<li>
+%状態s~promise ~LET `新たな~promise$
+◎
+↓</li>
+	<li>
+コレ . `FontStatusPromise$sl ~SET %状態s~promise
+◎
+Set its internal [[FontStatusPromise]] slot to a fresh pending Promise object.
+</li>
+	<li>
+<p>
+各~引数を`文法に則って構文解析する$：
+</p>
+		<ol>
+			<li>
+<ul ><li>
+%family を構文解析する【！＊】
+</li><li>
+%descriptors の各 `FontFaceDescriptors$I ~memberは，
+`font-face$at 規則の対応する記述子の文法に則って構文解析する。
+</li><li>
+%source 引数は，それが `CSSOMString$I ならば，
+`font-face$at 規則の `src^d 記述子の文法に則って構文解析する。
+</li></ul>
+◎
+Parse the family argument, and the members of the descriptors argument, according to the grammars of the corresponding descriptors of the CSS @font-face rule. If the source argument is a CSSOMString, parse it according to the grammar of the CSS src descriptor of the @font-face rule.＼
+</li>
+			<li>
+<p>
+~IF［
+前~段のいずれかの構文解析-に失敗した
+］：
+</p>
+				<ol>
+					<li>
+`SyntaxError^E 例外で %状態s~promise を`却下する$
+</li>
+					<li>
+コレの対応している各種~属性 ~SET 空~文字列
+</li>
+					<li>
+コレの `status$m 属性 ~SET `error^l
+</li>
+				</ol>
+◎
+If any of them fail to parse correctly, reject font face’s [[FontStatusPromise]] with a DOMException named "SyntaxError", set font face’s corresponding attributes to the empty string, and set font face’s status attribute to "error".＼
+</li>
+			<li>
+~ELSE
+⇒
+コレの対応する各種~属性 ~SET 構文解析された結果の各~値を直列化した結果
+◎
+Otherwise, set font face’s corresponding attributes to the serialization of the parsed values.
+</li>
+		</ol>
+
+<div class="note">
+<p >
+注記：
+%source 引数に
+`http://example.com/myFont.woff^l
+の様な裸の~urlを渡しても働かないことになる
+— 少なくとも，
+`url(http://example.com/myFont.woff)^l の様に `url()$css 関数で包装する必要がある。
+この不便さの引き換えに，次が可能になる：
+</p>
+
+<ul ><li>複数の~fallback~fontを指定する。
+</li><li>各~fallback~fontに対し，その型を指定する。
+</li><li>局所~fontを容易に~~参照する。
+</li></ul>
+
+◎
+Note: Note that this means that passing a naked url as the source argument, like "http://example.com/myFont.woff", won’t work - it needs to be at least wrapped in a url() function, like "url(http://example.com/myFont.woff)". In return for this inconvenience, you get to specify multiple fallbacks, specify the type of font each fallback is, and refer to local fonts easily.
+</div>
+
+<p class="issue">
+基底~urlを定義して、相対~urlを解決できるようにする必要がある。
+文書の~urlにするべきか？
+~workerについてもそうするのが正しいのか？
+あるいは~worker~urlを利用すべきか？
+それは常に定義されているのか？
+◎
+Need to define the base url, so relative urls can resolve. Should it be the url of the document? Is that correct for workers too, or should they use their worker url? Is that always defined?
+</p>
+
+	</li>
+	<li>
+~RET
+— ただし，以降の手続きも並列的に続行する：
+◎
+Return font face.＼
+</li>
+	<li>
+~IF［
+コレの `status$m ~EQ `error^l
+］
+⇒
+~RET
+◎
+If font face’s status is "error", terminate this algorithm; otherwise, complete the rest of these steps asynchronously.
+</li>
+	<li>
+~IF［
+%source は `CSSOMString$I である
+］
+⇒
+コレ . `Urls$sl ~SET %source
+◎
+If the source argument was a CSSOMString, set font face’s internal [[Urls]] slot to the string.
+</li>
+	<li>
+~ELSE（ %source は `BinaryData$I である）
+⇒
+コレ . `Data$sl ~SET %source
+◎
+If the source argument was a BinaryData, set font face’s internal [[Data]] slot to the passed argument.
+</li>
+	<li>
+%~data ~LET コレ . `Data$sl
+◎
+↓</li>
+	<li>
+~IF［
+%~data ~EQ ~NULL
+］
+⇒
+~RET
+◎
+If font face’s [[Data]] slot is not null,＼
+</li>
+	<li>
+<p >
+次を【！同期的に】走らす`~taskを~queueする$：
+◎
+queue a task to run the following steps synchronously:
+</p>
+		<ol>
+			<li>
+コレ の `status$m 属性 ~SET `loading^l
+◎
+Set font face’s status attribute to "loading".
+</li>
+			<li>
+<p>
+コレを`含んで$いる
+~EACH( `FontFaceSet$I ~obj %~face~set )
+に対し：
+◎
+For each FontFaceSet font face is in:
+</p>
+				<ol>
+					<li>
+~IF［
+%~face~set . `LoadingFonts$sl は空である
+］
+⇒
+`~loadingに切替える$( %~face~set )
+◎
+If the FontFaceSet’s [[LoadingFonts]] list is empty, switch the FontFaceSet to loading.
+</li>
+					<li>
+%~face~set . `LoadingFonts$sl にコレを付加する
+◎
+Append font face to the FontFaceSet’s [[LoadingFonts]] list.
+</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+	<li>
+<p>
+%~data を~fontとして構文解析するよう試みる
+— 完了した時点で，次を【！同期的に】走らす`~taskを~queueする$：
+◎
+Asynchronously, attempt to parse the data in it as a font. When this is completed, successfully or not, queue a task to run the following steps synchronously:
+</p>
+		<ol>
+			<li>
+<p>
+~IF［
+構文解析に成功した（コレは今や構文解析された~fontを表現する ）
+］：
+◎
+If the load was successful, font face now represents the parsed font;＼
+</p>
+				<ol>
+					<li>
+コレで %状態s~promise を`解決する$
+【この段は次の段より後にするべき？（下の “却下-” も同様）】
+◎
+fulfill font face’s [[FontStatusPromise]] with font face,＼
+</li>
+					<li>
+コレの `status$m 属性 ~SET `loaded^l
+◎
+and set its status attribute to "loaded".
+</li>
+					<li>
+<p>
+コレを`含んで$いる
+~EACH( `FontFaceSet$I ~obj %~face~set )
+に対し：
+◎
+For each FontFaceSet font face is in:
+</p>
+						<ol>
+							<li>
+%~face~set . `LoadedFonts$sl にコレを追加する
+◎
+Add font face to the FontFaceSet’s [[LoadedFonts]] list.
+</li>
+							<li>
+%~face~set . `LoadingFonts$sl からコレを除去する
+◎
+Remove font face from the FontFaceSet’s [[LoadingFonts]] list.＼
+</li>
+							<li>
+~IF［
+%~face~set . `LoadingFonts$sl は空である
+］
+⇒
+`~load済みに切替える$( %~face~set )
+◎
+If font was the last item in that list (and so the list is now empty), switch the FontFaceSet to loaded.
+</li>
+						</ol>
+					</li>
+				</ol>
+			</li>
+			<li>
+<p>
+~ELSE（構文解析に失敗した）：
+◎
+Otherwise,＼
+</p>
+				<ol>
+					<li>
+`SyntaxError^E 例外で %状態s~promise を`却下する$
+◎
+reject font face’s [[FontStatusPromise]] with a DOMException named "SyntaxError" and＼
+</li>
+					<li>
+コレの `status$m 属性 ~SET `error^l
+◎
+set font face’s status attribute to "error".
+</li>
+					<li>
+
+<p>
+コレを`含んで$いる
+~EACH( `FontFaceSet$I ~obj %~face~set )
+に対し：
+◎
+For each FontFaceSet font face is in:
+</p>
+
+						<ol>
+							<li>
+%~face~set . `FailedFonts$sl にコレを追加する
+◎
+Add font face to the FontFaceSet’s [[FailedFonts]] list.
+</li>
+							<li>
+%~face~set . `LoadingFonts$sl からコレを除去する
+◎
+Remove font face from the FontFaceSet’s [[LoadingFonts]] list.＼
+</li>
+							<li>
+~IF［
+%~face~set . `LoadingFonts$sl は空である
+］
+⇒
+`~load済みに切替える$( %~face~set )
+◎
+If font was the last item in that list (and so the list is now empty), switch the FontFaceSet to loaded.
+</li>
+						</ol>
+					</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<p class="note">注記：
+新たに構築された `FontFace^I ~objは、当の［
+文書 ／ ~worker~thread
+］に対する文脈に結付けられている `FontFaceSet^I 
+【`~font~source$】
+に自動的に追加されることはない。
+このことは、新たに構築された~fontは~preloadされ得るが、それを実際に利用できるのは， `FontFaceSet^I に明示的に追加された後になることを意味する。
+`FontFaceSet^I についてのより完全な記述は、以降の節を見よ。
+◎
+Note: Newly constructed FontFace objects are not automatically added to the FontFaceSet associated with a document or a context for a worker thread. This means that while newly constructed fonts can be preloaded, they cannot actually be used until they are explicitly added to a FontFaceSet. See the following section for a more complete description of FontFaceSet.
+</p>
+
+		</section>
+		<section id="font-face-load">
+<h3 title="The load() method">2.2.  `load()^m ~method</h3>
+
+<p>
+`FontFace$I の `load()$m ~methodは、~urlに基づく~font~faceに対し，その~font~dataを要請して~loadするよう強制する。
+~binary~dataから構築された~fontや［
+~load中にある／~load済みの
+］~fontに対しては何もしない。
+◎
+The load() method of FontFace forces a url-based font face to request its font data and load. For fonts constructed from binary data, or fonts that are already loading or loaded, it does nothing.
+</p>
+
+<div class="algo">
+<p>
+`load()@m
+~method~手続きは：
+◎
+When the load() method is called, execute these steps:
+</p>
+<ol>
+	<li>
+%状態s~promise ~LET コレ . `FontStatusPromise$sl
+◎
+↓</li>
+	<li>
+~IF［
+コレ . `Urls$sl ~EQ ~NULL
+］~OR［
+コレの `status$m 属性 ~NEQ `unloaded^l
+］
+⇒
+~RET %状態s~promise
+◎
+Let font face be the FontFace object on which this method was called.
+◎
+If font face’s [[Urls]] slot is null, or its status attribute is anything other than "unloaded", return font face’s [[FontStatusPromise]] and abort these steps.
+</li>
+	<li>
+コレの `status$m 属性 ~SET `loading^l
+◎
+Otherwise, set font face’s status attribute to "loading",＼
+</li>
+	<li>
+~RET %状態s~promise
+— ただし，以降の手続きも並列的に続行する：
+◎
+return font face’s [[FontStatusPromise]], and continue executing the rest of this algorithm asynchronously.
+</li>
+	<li>
+コレの `Urls$sl ~slotの値を利用して、［
+それが `font-face$at 規則の `src$d 記述子の値であった
+］かのように，［
+`CSS-FONTS-3$r による定義に従って~fontを~loadする
+］ことを試みる
+◎
+Using the value of font face’s [[Urls]] slot, attempt to load a font as defined in [CSS-FONTS-3], as if it was the value of a @font-face rule’s src descriptor.
+</li>
+	<li>
+<p>
+~load演算の完了-時には、次を【！同期的に】走らす`~taskを~queueする$：
+◎
+When the load operation completes, successfully or not, queue a task to run the following steps synchronously:
+</p>
+		<ol>
+			<li>
+<p>
+~IF［
+~loadする試みは失敗した
+］：
+◎
+If the attempt to load fails,＼
+</p>
+				<ol>
+					<li>
+`NetworkError^E 例外で %状態s~promise を`却下する$
+【この段は次の段より後にするべき？（下の “解決-” も同様）】
+◎
+reject font face’s [[FontStatusPromise]] with a DOMException whose name is "NetworkError" and＼
+</li>
+					<li>
+コレの `status$m 属性 ~SET `error^l
+◎
+set font face’s status attribute to "error".
+</li>
+					<li>
+<p>
+コレを`含んで$いる
+~EACH( `FontFaceSet$I ~obj %~face~set )
+に対し：
+◎
+For each FontFaceSet font face is in:
+</p>
+						<ol>
+							<li>
+%~face~set . `FailedFonts$sl にコレを追加する
+◎
+Add font face to the FontFaceSet’s [[FailedFonts]] list.
+</li>
+							<li>
+%~face~set . `LoadingFonts$sl からコレを除去する
+◎
+Remove font face from the FontFaceSet’s [[LoadingFonts]] list.＼
+</li>
+									<li>
+~IF［
+%~face~set . `LoadingFonts$sl は空である
+］
+⇒
+`~load済みに切替える$( %~face~set )
+◎
+If font was the last item in that list (and so the list is now empty), switch the FontFaceSet to loaded.
+</li>
+						</ol>
+					</li>
+				</ol>
+			</li>
+			<li>
+<p>
+~ELSE（~loadは成功した — コレは今や~load済みの~fontを表現する）：
+◎
+Otherwise, font face now represents the loaded font;＼
+</p>
+
+				<ol>
+					<li>
+コレで %状態s~promise を`解決する$
+◎
+fulfill font face’s [[FontStatusPromise]] with font face and＼
+</li>
+					<li>
+コレの `status$m 属性 ~SET `loaded^l
+◎
+set font face’s status attribute to "loaded".
+</li>
+					<li>
+<p>
+コレを`含んで$いる
+~EACH( `FontFaceSet$I ~obj %~face~set )
+に対し：
+◎
+For each FontFaceSet font face is in:
+</p>
+						<ol>
+							<li>
+%~face~set . `LoadedFonts$sl にコレを追加する
+◎
+Add font face to the FontFaceSet’s [[LoadedFonts]] list.
+</li>
+							<li>
+%~face~set . `LoadingFonts$sl からコレを除去する
+◎
+Remove font face from the FontFaceSet’s [[LoadingFonts]] list.＼
+</li>
+							<li>
+~IF［
+%~face~set . `LoadingFonts$sl は空である
+］
+⇒
+`~load済みに切替える$( %~face~set )
+◎
+If font was the last item in that list (and so the list is now empty), switch the FontFaceSet to loaded.
+</li>
+						</ol>
+					</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<p>
+~UAは、所与の~font~faceが ~page上の何かを描画するために必要とされることを決定したときに自前で~font~loadを起動できる。
+これが起きたときは、ここに述べた対応する `FontFace$I の `load()$m ~methodが~callされたかのように動作するモノトスル。
+◎
+User agents can initiate font loads on their own, whenever they determine that a given font face is necessary to render something on the page. When this happens, they must act as if they had called the corresponding FontFace’s load() method described here.
+</p>
+
+<p class="note">注記：
+~UAには、同じ生成元に属する~page上にて，同じ~fontを重ねて~downloadするのを避けるため、 “~font~cache” を用立てるものもある。
+複数の `FontFace$I ~objが、その~font~cache内の同じ~entryに対応付けられ得る。
+このことは、 `FontFace$I ~objを~loadし始める時機は，それが `FontFaceSet$I 内にない場合でも予期できないことを意味する
+— 同じ~font~dataを指している他の `FontFace$I ~objが，（おそらく，別の~page上で）すでに~load済みかもしれないので。
+◎
+Note: Some UAs utilize a "font cache" which avoids having to download the same font multiple times on a page or on multiple pages within the same origin. Multiple FontFace objects can be mapped to the same entry in the font cache, which means that a FontFace object might start loading unexpectedly, even if it’s not in a FontFaceSet, because some other FontFace object pointing to the same font data (perhaps on a different page entirely!) has been loaded.
+</p>
+
+		</section>
+		<section id="font-face-css-connection">
+<h3 title="Interaction with CSS’s @font-face Rule">2.3. `font-face^at 規則との相互作用</h3>
+
+<p>
+`font-face$at 規則は、対応する `FontFace$I ~objを自動的に定義する
+— それは、その規則が構文解析されたとき，自動的に，文書の`~font~source$内に置かれる。
+そのような `FontFace$I ~objは
+`~CSSに接続されて@
+いるといい、その規則を指して，~objの`接続-先$という。
+◎
+A CSS @font-face rule automatically defines a corresponding FontFace object, which is automatically placed in the document’s font source when the rule is parsed. This FontFace object is CSS-connected.
+</p>
+
+<p>
+`~CSSに接続されて$いる `FontFace$I ~objの［
+`family$m, `style$m, `weight$m, `stretch$m, `unicodeRange$m, `variant$m, `featureSettings$m
+］属性は、その`接続-先$規則~内の対応する記述子と同じ値に設定される。
+この［
+`font-face$at 規則, `FontFace$I ~obj
+］の間には二方向の接続がある：
+規則~内の各種~記述子に対する どのような変更も，~objの対応する属性に即時に反映され、その逆も同様になる。
+◎
+The FontFace object corresponding to a @font-face rule has its family, style, weight, stretch, unicodeRange, variant, and featureSettings attributes set to the same value as the corresponding descriptors in the @font-face rule. There is a two-way connection between the two: any change made to a @font-face descriptor is immediately reflected in the corresponding FontFace attribute, and vice versa.
+</p>
+
+<p class="issue">
+`FontFace^I ~objが 文書~間で転送されたときには、`~CSSに接続され$なくなる。
+◎
+When a FontFace is transferred between documents, it’s no longer CSS-connected.
+</p>
+
+<p>
+`FontFace$I ~objの `Urls$sl 内部~slotは、 `font-face$at 規則の `src$d 記述子の値に設定され， `src$d 記述子に加えられる変更を反映する。
+◎
+The internal [[Urls]] slot of the FontFace object is set to the value of the @font-face rule’s src descriptor, and reflects any changes made to the src descriptor.
+</p>
+
+<p>
+他の場合、 `font-face$at 規則により作成される `FontFace$I ~objは、手動で作成されたものと一致する。
+【 “他の場合”とは？ この文は何を意味する？】
+◎
+Otherwise, a FontFace object created by a CSS @font-face rule is identical to one created manually.
+</p>
+
+<p>
+`~CSSに接続されて$いる `FontFace$I ~objは、次が生じたときには，その`接続-先$ %規則 への接続を絶って`~CSSに接続され$なくするモノトスル：
+◎
+↓</p>
+
+<ul>
+	<li>
+%規則 が文書から除去されたとき。
+この接続は、どのような手段をもってしても~~回復できない（同じ `font-face$at 規則を再度~stylesheetに追加した場合、それを`接続-先$とする新たな `FontFace$I ~objが作成されることになる）。
+◎
+If a @font-face rule is removed from the document, its corresponding FontFace object is no longer CSS-connected. The connection is not restorable by any means (but adding the @font-face back to the stylesheet will create a brand new FontFace object which is CSS-connected).
+</li>
+	<li>
+%規則 の `src^d 記述子が新たな値に変更されたとき。
+この場合、新たな `src^d を反映するような 新たな `FontFace$I ~objを作成した上で，その`接続-先$を %規則 にするモノトスル。（また、`~font~source$においても，古い~objは除去して，新たな `FontFace$I ~objを追加することになる）。
+◎
+If a @font-face rule has its src descriptor changed to a new value, the original connected FontFace object must stop being CSS-connected. A new FontFace reflecting its new src must be created and CSS-connected to the @font-face. (This will also remove the old and add the new FontFace objects from any font sources they appear in.)
+</li>
+</ul>
+
+		</section>
+	</section>
+	<section id="FontFaceSet-interface">
+<h2 title="The FontFaceSet Interface">3. `FontFaceSet^I ~interface</h2>
+
+<pre class="idl">
+dictionary `FontFaceSetLoadEventInit@I : `EventInit$I {
+  sequence&lt;`FontFace$I&gt; `fontfaces@dm = [];
+};
+
+[`Exposed$=(Window,Worker)]
+interface `FontFaceSetLoadEvent@I : `Event$I {
+  `FontFaceSetLoadEvent@mc(
+      `CSSOMString$ %type,
+      optional `FontFaceSetLoadEventInit$I %eventInitDict = {}
+  );
+  [`SameObject$] readonly attribute FrozenArray&lt;`FontFace$I&gt; `fontfaces@m;
+};
+
+enum `FontFaceSetLoadStatus@I { `~loading1@l, `~loaded1@l };
+
+callback `ForEachCallback@I = `undefined$ (
+    `FontFace$I %font,
+    `long$ %index,
+    `FontFaceSet$I %self
+);
+
+[`Exposed$=(Window,Worker)]
+interface `FontFaceSet@I : `EventTarget$I {
+  `FontFaceSet$mc(sequence&lt;`FontFace$I&gt; %initialFaces);
+
+  /* <span class="comment">
+`FontFaceSet^I は`~set-like$x。
+◎
+FontFaceSet is Set-like!
+</span> */
+  setlike&lt;`FontFace$I&gt;;
+  `FontFaceSet$I `add$m(`FontFace$I %font);
+  `boolean$ `delete$m(`FontFace$I %font);
+  `undefined$ `clear$m();
+
+  /* <span class="comment">
+~loading状態の変化に対する各種~event
+◎
+events for when loading state changes
+</span> */
+  attribute `EventHandler$I `onloading@m;
+  attribute `EventHandler$I `onloadingdone@m;
+  attribute `EventHandler$I `onloadingerror@m;
+
+  /* <span class="comment">
+適切になるなら，各~loadを検査し始め、すべての~loadが完了した時点で，~promiseを解決する。
+◎
+check and start loads if appropriate and fulfill promise when all loads complete
+</span> */
+  Promise&lt;sequence&lt;`FontFace$I&gt;&gt; `~load1$m(`CSSOMString$ %font, optional `CSSOMString$ %text = " ");
+
+  /* <span class="comment">
+~font~list内のすべての~fontが~loadされたかどうかを返す（可用でないものに対しては，~loadは起動されない）
+◎
+return whether all fonts in the fontlist are loaded (does not initiate load if not available)
+</span> */
+  `boolean$ `check$m(`CSSOMString$ %font, optional `CSSOMString$ %text = " ");
+
+  /* <span class="comment">
+~fontの~loadingと~layout演算を終えたときの非同期c通知
+◎
+async notification that font loading and layout operations are done
+</span> */
+  readonly attribute Promise&lt;`FontFaceSet$I&gt; `ready$m;
+
+  /* <span class="comment">
+~loading状態
+— いずれかの~fontを~load中の間は `loading^l ／
+~ELSE_ `loaded^l
+◎
+loading state, "loading" while one or more fonts loading, "loaded" otherwise
+</span> */
+  readonly attribute `FontFaceSetLoadStatus$I `~status1@m;
+};
+</pre>
+
+<p>
+`ready@m
+属性は、コレの `ReadyPromise$sl を反映する
+— この`~promise$とその利用についての詳細は
+<a href="#font-face-set-ready">§ `ready^m 属性</a>
+を見よ。
+◎
+This attribute reflects the FontFaceSet's [[ReadyPromise]] slot.
+◎
+See § 3.4 The ready attribute for more details on this Promise and its use.
+</p>
+
+<div class="algo">
+`new FontFaceSet(initialFaces)@m
+構築子~手続きは
+⇒
+%initialFaces 引数を成す
+~EACH( %値 )
+に対し
+⇒
+コレの`~set~entries$に %値 追加する
+◎
+The FontFaceSet constructor, when called, must iterate its initialFaces argument and add each value to its set entries.
+</div>
+
+<p>
+`FontFaceSet$I の
+`~set~entries@
+（ `~set~entries$x `WebIDL-1$r ）は：
+◎
+iteration order
+</p>
+<ul>
+	<li>
+<p>
+その
+`反復~順序@
+は、次に従うモノトスル：
+</p>
+		<ol>
+			<li>
+`~CSSに接続されて$いる `FontFace$I ~objたち
+— `font-face$at 規則の文書~順序で。
+◎
+When iterated over, all CSS-connected FontFace objects must come first, in document order of their connected @font-face rules,＼
+</li>
+			<li>
+`~CSSに接続されて$いない `FontFace$I ~objたち
+— 挿入~順序で。
+◎
+followed by the non-CSS-connected FontFace objects, in insertion order.
+</li>
+		</ol>
+	</li>
+	<li>
+初期~時には、この `FontFaceSet$I ~objが`~font~source$である場合は，
+<a href="#document-font-face-set">§ `font-face^at 規則との相互作用</a>
+に指定されるとおりに初期化し、他の場合は空とする。
+◎
+set entries
+• If a FontFaceSet is a font source, its set entries are initialized as specified in § 4.2 Interaction with CSS’s @font-face Rule.
+• Otherwise, its set entries are initially empty.
+</li>
+</ul>
+
+<div class="algo">
+<p>
+`add(font)@m
+~method~手続きは：
+◎
+When the add() method is called, execute the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%font ~IN コレの`~set~entries$
+］
+⇒
+~RET コレ
+【！ skip to the last step of this algorithm immediately.】
+◎
+If font is already in the FontFaceSet’s set entries, skip to the last step of this algorithm immediately.
+</li>
+	<li>
+~IF［
+%font は`~CSSに接続されて$いる
+］
+⇒
+~THROW `InvalidModificationError$E
+◎
+If font is CSS-connected, throw an InvalidModificationError exception and exit this algorithm immediately.
+</li>
+	<li>
+コレの`~set~entries$に %font を追加する
+◎
+Add the font argument to the FontFaceSet’s set entries.
+</li>
+	<li>
+<p>
+~IF［
+%font の `status$m 属性 ~EQ `loading^l
+］：
+◎
+If font’s status attribute is "loading":
+</p>
+		<ol>
+			<li>
+~IF［
+コレ . `LoadingFonts$sl は空である
+］
+⇒
+`~loadingに切替える$( コレ )
+◎
+If the FontFaceSet’s [[LoadingFonts]] list is empty, switch the FontFaceSet to loading.
+</li>
+			<li>
+コレ . `LoadingFonts$sl に %font を付加する
+◎
+Append font to the FontFaceSet’s [[LoadingFonts]] list.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET コレ
+◎
+Return the FontFaceSet.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`delete(font)@m
+~method~手続きは：
+◎
+When the delete() method is called, execute the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%font は`~CSSに接続されて$いる
+］
+⇒
+~RET ~F
+◎
+If font is CSS-connected, return false and exit this algorithm immediately.
+</li>
+	<li>
+%削除した？ ~LET ~F
+◎
+↓</li>
+	<li>
+~IF［
+%font ~IN コレの`~set~entries$
+］
+⇒＃
+コレの`~set~entries$から %font を除去する；
+%削除した？ ~SET ~T
+◎
+Let deleted be the result of removing font from the FontFaceSet’s set entries.
+</li>
+	<li>
+次に挙げる各~listから %font を（含まれていれば）除去する
+⇒＃
+コレ . `LoadedFonts$sl, 
+コレ . `FailedFonts$sl, 
+コレ . `LoadingFonts$sl
+◎
+If font is present in the FontFaceSet’s [[LoadedFonts]], or [[FailedFonts]] lists, remove it.
+◎
+↓</li>
+	<li>
+~IF［
+コレ . `LoadingFonts$sl は空である
+］
+⇒
+`~load済みに切替える$( コレ )
+◎
+If font is present in the FontFaceSet’s [[LoadingFonts]] list, remove it. If font was the last item in that list (and so the list is now empty), switch the FontFaceSet to loaded.
+</li>
+	<li>
+~RET %削除した？
+◎
+Return deleted.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`clear()@m
+~method~手続きは：
+◎
+When the clear() method is called, execute the following steps:
+</p>
+<ol>
+	<li>
+コレの`~set~entries$を空にする
+</li>
+	<li>
+コレ . `LoadedFonts$sl を空にする
+</li>
+	<li>
+コレ . `FailedFonts$sl を空にする
+◎
+Remove all items from the FontFaceSet’s set entries, its [[LoadedFonts]] list, and its [[FailedFonts]] list.
+</li>
+	<li>
+<p>
+~IF［
+コレの `LoadingFonts$sl ~listは空でない
+］：
+</p>
+		<ol>
+			<li>
+コレ . `FailedFonts$sl ~listを空にする
+</li>
+			<li>
+`~load済みに切替える$( コレ )
+</li>
+		</ol>
+◎
+If the FontFaceSet’s [[LoadingFonts]] list is non-empty, remove all items from it, then switch the FontFaceSet to loaded.
+</li>
+</ol>
+</div>
+
+<div class="p">
+<p>
+各 `FontFaceSet$I ~objは、次に挙げる内部~slotを有する：
+</p>
+
+<dl class="def-list">
+	<dt>`LoadingFonts@sl</dt>
+	<dt>`LoadedFonts@sl</dt>
+	<dt>`FailedFonts@sl</dt>
+	<dd>
+いずれも~listであり、初期~時は空とする。
+</dd>
+
+	<dt>`ReadyPromise@sl</dt>
+	<dd>
+`新たな~promise$に初期化される。
+</dd>
+</dl>
+
+◎
+FontFaceSet objects also have internal [[LoadingFonts]], [[LoadedFonts]], and [[FailedFonts]] slots, all of which are initialized to empty lists, and a [[ReadyPromise]] slot, which is initialized to a fresh pending Promise.
+</div>
+
+<p>
+~font~familyは，利用されるときにのみ~loadされるので、作者は，内容に対する~fontの~loadingがいつ生じるか解する必要もときどきある。
+ここに定義される各種~event／~methodを利用すれば、特定の~fontの可用性に依存する動作を，もっと制御できるようになる。
+◎
+Because font families are loaded only when they are used, content sometimes needs to understand when the loading of fonts occurs. Authors can use the events and methods defined here to allow greater control over actions that are dependent upon the availability of specific fonts.
+</p>
+
+<p>
+`FontFaceSet$I ~objは、次のいずれかに該当する間は
+`環境待ち@
+にあるとされる：
+◎
+A FontFaceSet is pending on the environment if any of the following are true:
+</p>
+<ul>
+	<li>
+文書は依然として~load中にある。
+◎
+the document is still loading
+</li>
+	<li>
+文書による~stylesheet要請は、応答待ちにある。
+◎
+the document has pending stylesheet requests
+</li>
+	<li>
+文書の~layout演算は、完了待ちにある
+— それは、~UAに~fontを要請させることもあれば，
+~fontが近過去に~loadされたかどうかに依存することもある。
+◎
+the document has pending layout operations which might cause the user agent to request a font, or which depend on recently-loaded fonts
+</li>
+</ul>
+
+<p class="note">注記：
+その趣旨は、
+`FontFaceSet$I が`環境待ち$でなくなった時点から
+— 文書に更に変更が加えられない限り —
+作者は，測定される~sizeや位置が “正しい” ことに依存できるようにすることである。
+上の条件が，この保証を全部的に捉えていない場合、そうなるように改正される必要がある。
+◎
+Note: The idea is that once a FontFaceSet stops being pending on the environment, as long as nothing further changes the document, an author can depend on sizes/positions of things being "correct" when measured. If the above conditions do not fully capture this guarantee, they need to be amended to do so.
+</p>
+
+		<section id="FontFaceSet-events">
+<h3 title="Events">3.1. 各種~event</h3>
+
+<div class="p">
+<p>
+~font~load~eventにより、文書~全体の~font~loadingの挙動に容易に応答でき，
+各~fontを特定的に~listenし続けずに済むようになる：
+</p>
+
+<ul>
+	<li>
+`loading@et
+~eventは、文書が~fontを~loadし始めたときに発火される。
+</li>
+	<li>
+`loadingdone@et
+~eventは、文書は~fontを~loadし終えた, かつ
+どれも成功裡に~loadされたときに発火される。
+</li>
+	<li>
+`loadingerror@et
+~eventは、文書は~fontを~loadし終えたが，~loadに失敗した~fontがあるときに発火される。
+</li>
+</ul>
+
+◎
+Font load events make it easy to respond to the font-loading behavior of the entire document, rather than having to listen to each font specifically. The loading event fires when the document begins loading fonts, while the loadingdone and loadingerror events fire when the document is done loading fonts, containing the fonts that successfully loaded or failed to load, respectively.
+</div>
+
+<p>
+`FontFaceSet^I ~objは、次に挙げる~event~handlerを（および，対応する~event~handler~event型も），~IDL属性として~supportするモノトスル：
+◎
+The following are the event handlers (and their corresponding event handler event types) that must be supported by FontFaceSet objects as IDL attributes:
+</p>
+
+<table id="eventhandlers">
+<thead><tr><th>`~event~handler~IDL属性$
+<th>`~event~handler~event型$
+</thead>
+
+<tbody><tr><th>`onloading$m
+<td>`loading$et
+
+<tr><th>`onloadingdone$m
+<td>`loadingdone$et
+
+<tr><th>`onloadingerror$m
+<td>`loadingerror$et
+
+</tbody></table>
+
+<div class="algo">
+<p>
+`~font~load~eventを発火する@
+ときは、所与の
+( `FontFaceSet$I %~target, 名前 %e, %~font~faces （省略時は ε ） )
+に対し，次を走らす：
+</p>
+
+<ol>
+	<li>
+%~face集合 ~LET %~target に含まれる `FontFace$I ~objすべてからなる集合
+</li>
+	<li>
+~IF［
+%~font~faces ~NEQ ε
+］
+⇒
+%~face集合 から［
+%~font~faces に含まれないもの
+］をすべて除去する
+</li>
+	<li>
+%~target に向けて，名前 %e の`~eventを発火する$
+— `FontFaceSetLoadEvent$I を利用し，次のように初期化して
+⇒
+`fontfaces$m 属性 ~SET %~face集合†
+</li>
+</ol>
+
+<p class="trans-note">【
+原文には， %~font~faces が省略された場合に %~face集合 が何になるか明確に述べられていないが、単に最初の段で与えられるものになると思われる。
+】</p>
+
+◎
+To fire a font load event named e at a FontFaceSet target with optional font faces means to fire a simple event named e using the FontFaceSetLoadEvent interface that also meets these conditions:
+• The fontfaces attribute is initialized to the result of filtering font faces to only contain FontFace objects contained in target.
+</div>
+
+<div class="algo">
+<p>
+`~loadingに切替える@
+ときは、所与の
+( `FontFaceSet$I ~obj %~face~set )
+に対し，次の手続きを走らすモノトスル：
+◎
+When asked to switch the FontFaceSet to loading for a given FontFaceSet, the user agent must run the following steps:
+</p>
+
+<ol>
+	<li>
+%~face~set の `~status1$m 属性 ~SET `loading^l
+◎
+Let font face set be the given FontFaceSet.
+◎
+Set the status attribute of font face set to "loading".
+</li>
+	<li>
+~IF［
+%~face~set . `ReadyPromise$sl はすでに`解決され$ている
+【！ ＊or 却下？ 】
+］
+⇒
+%~face~set . `ReadyPromise$sl ~SET `新たな~promise$
+◎
+If font face set’s [[ReadyPromise]] slot currently holds a fulfilled promise, replace it with a fresh pending promise.
+</li>
+	<li>
+次を走らす`~taskを~queueする$
+⇒
+`~font~load~eventを発火する$( %~face~set, `loading$et )
+◎
+Queue a task to fire a font load event named loading at font face set.
+</li>
+</ol>
+</div>
+
+<p>
+以下に与える手続きの目的においては、各 `FontFaceSet$I ~objには，
+`環境渋滞中~flag@
+（初期時は ~F ）が結付けられているとする。
+◎
+↓↓</p>
+
+<div class="algo">
+<p>
+`~load済みに切替える@
+ときは、所与の
+( `FontFaceSet$I ~obj %~face~set )
+に対し，次の手続きを走らすモノトスル：
+◎
+When asked to switch the FontFaceSet to loaded for a given FontFaceSet, the user agent must run the following steps:
+</p>
+
+<ol>
+	<li>
+<p>
+~IF［
+%~face~set は`環境待ち$にある
+］：
+</p>
+		<ol>
+			<li>
+%~face~set の`環境渋滞中~flag$ ~SET ~T
+</li>
+			<li>
+~RET
+</li>
+		</ol>
+
+◎
+Let font face set be the given FontFaceSet.
+◎
+If font face set is pending on the environment, mark it as stuck on the environment, and exit this algorithm.
+</li>
+	<li>
+%~face~set の `~status1$m 属性 ~SET `loaded^l
+◎
+Set font face set’s status attribute to "loaded".
+</li>
+	<li>
+%~face~set で［
+%~face~set . `ReadyPromise$sl
+］を`解決する$
+◎
+Fulfill font face set’s [[ReadyPromise]] attribute’s value with font face set.
+</li>
+	<li>
+<p>
+次を【！同期的に】走らす`~taskを~queueする$：
+◎
+Queue a task to perform the following steps synchronously:
+</p>
+		<ol>
+			<li>
+%~load済みの~fontたち ~LET
+%~face~set . `LoadedFonts$sl （空な場合もある）
+◎
+Let loaded fonts be the (possibly empty) contents of font face set’s [[LoadedFonts]] slot.
+</li>
+			<li>
+%失敗した~fontたち ~LET
+%~face~set . `FailedFonts$sl （空な場合もある）
+◎
+Let failed fonts be the (possibly empty) contents of font face set’s [[FailedFonts]] slot.
+</li>
+			<li>
+`LoadedFonts$sl ~slot ~SET 空~list
+◎
+↓</li>
+			<li>
+`FailedFonts$sl ~slot ~SET 空~list
+◎
+Reset the [[LoadedFonts]] and [[FailedFonts]] slots to empty lists.
+</li>
+			<li>
+`~font~load~eventを発火する$( %~face~set, `loadingdone$et, %~load済みの~fontたち )
+◎
+Fire a font load event named loadingdone at font face set with loaded fonts.
+</li>
+			<li>
+~IF［
+%失敗した~fontたち は空でない
+］
+⇒
+`~font~load~eventを発火する$( %~face~set, `loadingerror$et, %失敗した~fontたち )
+◎
+If font face set’s failed fonts is non-empty, fire a font load event named loadingerror at font face set with failed fonts.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+~UAは，［
+`環境待ち$にあった `FontFaceSet$I ~obj %~face~set
+］が`環境待ち$でなくなったときは、次の手続きを走らすモノトスル：
+◎
+Whenever a FontFaceSet goes from pending on the environment to not pending on the environment, the user agent must run the following steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+%~face~set の`環境渋滞中~flag$ ~EQ ~T
+］~AND［
+%~face~set . `LoadingFonts$sl は空である
+］
+⇒
+`~load済みに切替える$( %~face~set )
+◎
+If the FontFaceSet is stuck on the environment and its [[LoadingFonts]] list is empty, switch the FontFaceSet to loaded.
+</li>
+	<li>
+%~face~set の`環境渋滞中~flag$ ~SET ~F
+◎
+If the FontFaceSet is stuck on the environment, unmark it as such.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<div class="p">
+<p>
+`~sourceから合致する~font~facesを見出す@
+ときは、所与の
+( %~source, %~font, %~text, %~system~font許容~flag )
+に対し、次の手続きを走らす
+— ここで：
+</p>
+
+<ul ><li>%~source は `FontFaceSet^I ~obj
+</li><li>%~font は~font文字列
+</li><li>%~text は見本~text
+— 省略時は 1 個の U+0020 SPACE からなる文字列
+</li><li>%~system~font許容~flag ~IN { `~system~fontを許容する^i, ε }
+— 省略時は ε
+</li></ul>
+
+◎
+If asked to find the matching font faces from a FontFaceSet source, for a given font string font optionally some sample text text, and optionally an allow system fonts flag, run the following steps:
+</div>
+
+<ol>
+	<li>
+%解析結果 ~LET `font$p ~propの~CSS値~構文を利用して %~font を構文解析した結果
+◎
+Parse font using the CSS value syntax of the font property.＼
+</li>
+	<li>
+~IF［
+前段で構文~errorが生じた
+］
+⇒
+~RET ( `構文~error^i, ~F )
+◎
+If a syntax error occurs, return a syntax error.
+</li>
+	<li>
+~IF［
+%解析結果 は `~CSS全域~keyword$である
+］
+⇒
+~RET ( `構文~error^i, ~F )
+◎
+If the parsed value is a CSS-wide keyword, return a syntax error.
+</li>
+	<li>
+%解析結果 内のすべての相対~長さを，対応する~propの初期~値を基準に絶対~化する（例えば `bolder^v の様な相対~font~weightは、初期~値 `normal^v を基準に評価される。）
+◎
+Absolutize all relative lengths against the initial values of the corresponding properties. (For example, a relative font weight like bolder is evaluated against the initial value normal.)
+◎
+If text was not explicitly provided, let it be a string containing a single space character (U+0020 SPACE).
+</li>
+	<li>
+%~font~family~list ~LET
+%解析結果 内の~font~familyの~list
+◎
+Let font family list be the list of font families parsed from font,＼
+</li>
+	<li>
+%~font~style ~LET %解析結果 内の他の~font~style属性
+◎
+and font style be the other font style attributes parsed from font.
+</li>
+	<li>
+%可用な~font~faces ~LET %~source 内の`可用な~font~face$たち
+◎
+Let available font faces be the available font faces within source.＼
+</li>
+	<li>
+~IF［
+%~system~font許容~flag ~NEQ ε
+］
+⇒
+%可用な~font~faces にすべての~system~fontを追加する
+◎
+If the allow system fonts flag is specified, add all system fonts to available font faces.
+</li>
+	<li>
+%合致した~font~faces ~LET 空~list
+◎
+Let matched font faces initially be an empty list.
+</li>
+	<li>
+<p>
+%~font~family~list 内の
+~EACH( %~family ) に対し
+⇒
+%合致した~font~faces に次を追加する
+⇒
+`~font照合$規則を利用して、 %可用な~font~faces 内の~font~faceのうち，次を満たすものを選定した結果
+⇒
+［
+%~family に属する
+］~AND［
+%~font~style に合致する
+］
+</p>
+
+<p>
+（ `unicodeRange$m 属性の利用は，複数の~font~faceが選定され得ることを意味する。）
+</p>
+◎
+For each family in font family list, use the font matching rules to select the font faces from available font faces that match the font style, and add them to matched font faces. The use of the unicodeRange attribute means that this may be more than just a single font face.
+</li>
+	<li>
+%見出された~faceあり ~SET［
+%合致した~font~faces は空ならば ~F ／
+~ELSE_ ~T
+］
+◎
+If matched font faces is empty, set the found faces flag to false. Otherwise, set it to true.
+</li>
+	<li>
+<p>
+%合致した~font~faces から，次を満たさない~font~faceをすべて除去する
+⇒
+それが定義している `unicode-range$d は、 %~text を成すある文字の符号位置を含んでいる
+◎
+For each font face in matched font faces, if its defined unicode-range does not include the codepoint of at least one character in text, remove it from the list.
+</p>
+
+<p class="note">注記：
+したがって， %~text が空~文字列の場合、すべての~font~faceが除去されることになる。
+◎
+Note: Therefore, if text is the empty string, every font will be removed.
+</p>
+
+<p class="trans-note">【†
+この条件の `unicode-range^d は、`有効~文字~map$とされるべき？
+】</p>
+
+	</li>
+	<li>
+~RET 
+( %合致した~font~faces, %見出された~faceあり )
+◎
+Return matched font faces and the found faces flag.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="font-face-set-load">
+<h3 title="The load() method">3.2. `load()^m ~method</h3>
+
+<p>
+`FontFaceSet$I の `~load1()$m ~methodは、所与の~font~list内のすべての~fontが，~loadされ可用になったかどうかを決定する。
+~font~list内に まだ~loadされていない~download可能な~fontがある場合、~UAは
+それらの各~fontに対し，~loadを起動することになる。
+この~methodは、`~promise$を返す。
+それは、
+すべての~fontが~loadされ，利用される準備ができたときに`解決され$、
+いずれかの~fontを適正に~loadするのに失敗したときは，`却下され$る。
+◎
+The load() method of FontFaceSet will determine whether all fonts in the given font list have been loaded and are available. If any fonts are downloadable fonts and have not already been loaded, the user agent will initiate the load of each of these fonts. It returns a Promise, which is fulfilled when all of the fonts are loaded and ready to be used, or rejected if any font failed to load properly.
+</p>
+
+<div class="algo">
+<p>
+`~load1(font, text)@m
+~method~手続きは：
+◎
+When the load( font, text ) method is called, execute these steps:
+</p>
+<ol>
+	<li>
+%~promise ~LET `新たな~promise$
+◎
+Let font face set be the FontFaceSet object this method was called on. Let promise be a newly-created promise object.
+</li>
+	<li>
+~RET %~promise
+— ただし、以下の手続きも並列的に続行する。
+◎
+Return promise. Complete the rest of these steps asynchronously.
+</li>
+	<li>
+( %~font~face~list, … ) ~LET `~sourceから合致する~font~facesを見出す$( コレ, %font, %text )
+【！(ignoring the found faces flag)】
+◎
+Find the matching font faces from font face set using the font and text arguments passed to the function, and let font face list be the return value (ignoring the found faces flag).
+</li>
+	<li>
+<p>
+~IF［
+%~font~face~list ~EQ `構文~error^i
+］：
+</p>
+		<ol>
+			<li>
+`SyntaxError^E 例外で %~promise を`却下する$
+</li>
+			<li>
+~RET
+</li>
+		</ol>
+◎
+If a syntax error was returned, reject promise with a SyntaxError exception and terminate these steps.
+</li>
+	<li>
+<p>
+次を【！同期的に】走らす`~taskを~queueする$：
+◎
+Queue a task to run the following steps synchronously:
+</p>
+		<ol>
+			<li>
+%~promise~list ~LET 空~list
+◎
+↓</li>
+			<li>
+<p>
+%~font~face~list 内の
+~EACH( %~font~face ) に対し：
+</p>
+				<ol>
+					<li>
+%~font~face 上の `load$m ~method手続き()
+</li>
+					<li>
+%~promise~list に %~font~face の `FontStatusPromise$sl を付加する
+</li>
+				</ol>
+◎
+For all of the font faces in the font face list, call their load() method.
+</li>
+			<li>
+`すべての~promiseを待機する$( %~promise~list, ［
+所与の~listで %~promise を`解決する$
+］手続き, ［
+所与の事由で %~promise を`却下する$
+］手続き )【！＊】
+◎
+Resolve promise with the result of waiting for all of the [[FontStatusPromise]]s of each font face in the font face list, in order.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+		</section>
+		<section id="font-face-set-check">
+<h3 title="The check() method">3.3. `check()^m ~method</h3>
+
+<p>
+`FontFaceSet$I 上の `check()$m ~methodは、［
+供された~textを，特定0の~font~listで “安全に” 描画できる（後で “~fontが入替わる” ことはない）かどうか
+］を決定する。
+この~methodは、
+( ~text, ~font )
+の組み合わせが与えられた下で，［
+~textを描画する際に［
+~unloadされた ／ 現在~load中にある
+］~fontを利用しようと試みられることはない
+］ならば ~T を返し、他の場合は ~F を返す。
+◎
+The check() method of FontFaceSet will determine whether you can "safely" render some provided text with a particular font list, such that it won’t cause a "font swap" later. If the given text/font combo will render without attempting to use any unloaded or currently-loading fonts, this method will return true; otherwise, it returns false.
+</p>
+
+<div class="note">
+<p>注記：
+この~methodの挙動においては，二つの 自明でない特殊な事例に注意されたし：
+◎
+Two special cases in this method’s behavior should be noted, as they are non-obvious:
+</p>
+
+<ul>
+	<li>
+指定された~fontは存在するが、その `unicode-range$d が供された~textを成すある文字を含んでいないことに因り，アリなすべての~faceがはじかれる場合、 ~T を返す
+— 当の~textは，~UAによる~fallback~fontで描画され、~font~loadを誘発しなくなるので。
+◎
+If the specified fonts exist, but all possible faces are ruled out due to their unicode-range not covering the provided text, the method returns true, as the text will be rendered in the UA’s fallback font instead, and won’t trigger any font loads.
+</li>
+	<li>
+指定されたどの~fontも存在しない場合、前項の事例と形上では類似するが，例外が投出される（その~font~listで描画される~textに対しては，単に~UAによる~fallback~fontが利用されることになる）。
+そのような状況は，およそ、誤記であるか，あるいは
+~download可能な~fontの名前が変更されたにもかかわらず，利用している古い名前を更新し忘れた結果によるものなので、無為に ~T を返すより ~errorにする方が有用になるので。
+◎
+If none of the specified fonts exist, even though this is technically similar to the previous case (in that text rendered with that font list would just use the UA fallback font), the method instead throws an error. This is because such a situation is almost certainly either a typo, or the result of changing the name of a downloadable font and forgetting to update all places the old name was used, and an error is more useful than a vacuous true.
+</li>
+</ul>
+</div>
+
+<div class="algo">
+<p>
+`check(font, text)@m
+~method~手続きは：
+◎
+When the check( font, text) method is called, execute these steps:
+</p>
+<ol>
+	<li>
+( %~font~face~list, %見出された~faceあり ) ~LET
+`~sourceから合致する~font~facesを見出す$( コレ, %font, %text, `~system~fontを許容する^i )
+【！ including system fonts】
+◎
+Let font face set be the FontFaceSet object this method was called on.
+◎
+Find the matching font faces from font face set using the font and text arguments passed to the function, and including system fonts, and let font face list be the returned list of font faces, and found faces be the returned found faces flag.＼
+</li>
+	<li>
+~IF［
+%~font~face~list ~EQ `構文~error^i
+］
+⇒
+~THROW `SyntaxError^E
+◎
+If a syntax error was returned, throw a SyntaxError exception and terminate these steps.
+</li>
+	<li>
+~IF［
+%見出された~faceあり ~EQ ~F
+］
+⇒
+~THROW `XXX error^E
+【~~正式な~error名は未策定の模様】
+◎
+If found faces is false, throw an XXX error and abort this algorithm.
+</li>
+	<li>
+~IF［
+%~font~face~list 内に
+~system~fontでない, かつ［
+`status$m 属性 ~NEQ `loaded^l
+］なる~fontがある
+］
+⇒
+~RET ~F
+◎
+If font face list is empty, or all fonts in the font face list either have a status attribute of "loaded" or are system fonts, return true. Otherwise, return false.
+</li>
+	<li>
+~RET ~T
+◎
+↑</li>
+</ol>
+</div>
+
+		</section>
+		<section id="font-face-set-ready">
+<h3 title="The ready attribute">3.4. `ready^m 属性</h3>
+
+<p>
+~loadされる~fontの個数は，所与の~text片に利用されている~fontの個数に依存するので、~fontを~loadする必要があるかどうかは 既知でない事例もある。
+`ready$m 属性は、［
+文書が~fontを~loadし終えたときに解決される`~promise$
+］を返す。
+これにより，作者は、~load中の~fontに影響され得る内容を精査するに先立って，どの~fontが~loadされたか追跡し続けなくとも済むようになる。
+◎
+Because the number of fonts loaded depends on the how many fonts are used for a given piece of text, in some cases whether fonts need to be loaded or not may not be known. The ready attribute contains a Promise which is resolved when the document is done loading fonts, which provides a way for authors to avoid having to keep track of which fonts have or haven’t been loaded before examining content which may be affected by loading fonts.
+</p>
+
+<div class="note">
+<p>注記：
+`ready$m 属性から返される`~promise$ %P においては：
+◎
+↓</p>
+
+<ul>
+	<li>
+%P が`解決され$るのは一度限りであるが、作者は，解決された後にも更に~fontが~loadされ得ることに留意するべきである。
+これは、 `loadingdone$et ~eventが発火されるのを~listenするのと類似するが、
+%P に渡される~callbackは，当の~fontはすでに~load済みのため，~font~loadは生じなかったときでも，<strong>常に~callされる</strong>からである。
+それは、どの~fontが必要で，精確にいつ~loadされるか追跡し続けることなく，~codeを~font~loadに同期させる単純かつ容易な仕方を与える。
+◎
+Note: Authors should note that a given ready promise is only fulfilled once, but further fonts may be loaded after it fulfills. This is similar to listening for a loadingdone event to fire, but the callbacks passed to the ready promise will always get called, even when no font loads occur because the fonts in question are already loaded. It’s a simple, easy way to synchronize code to font loads without the need to keep track of what fonts are needed and precisely when they load.
+</li>
+	<li>
+~UAは、 %P を`解決する$前に，~font~loadを複数回 反復する必要が生じ得る。
+これは、~font~list内のある~fontは~loadされたが，それが必要な~glyphを包含しておらず，~list内の他の~fontを~loadする必要がある状況（~font~fallback状況）にて生じ得る。
+%P が`解決され$るのは、~layout演算が完了して，それ以上~font~loadが必要とされなくなった後に限られる。
+◎
+Note: Note that the user agent may need to iterate over multiple font loads before the ready promise is fulfilled. This can occur with font fallback situations, where one font in the fontlist is loaded but doesn’t contain a particular glyph and other fonts in the fontlist need to be loaded. The ready promise is only fulfilled after layout operations complete and no additional font loads are necessary.
+</li>
+	<li>
+`FontFace$I `load()$m ~methodから返される`~promise$と違って、
+%P は，`解決され$るのみであり, `却下され$ることは決してない。
+◎
+Note: Note that the Promise returned by this ready attribute is only ever fulfilled, never rejected, unlike the Promise returned by the FontFace load() method.
+</li>
+</ul>
+</div>
+
+		</section>
+		<section id="font-face-set-css">
+<h3 title="Interaction with CSS Font Loading and Matching">3.5. ~CSS ~font~loading／照合との相互作用 </h3>
+
+<p>
+~UAは、［
+`~font照合$~algo `CSS-FONTS-3$r を自動的に走らせた結果の，合致する~font~faces
+］と［［
+文書に対する`~font~source$内の~font, および局所~font~face
+］からなる集合
+］とを、精確に一致させるモノトスル。
+◎
+When the font matching algorithm in [CSS-FONTS-3] is run automatically by the user-agent, the set of font faces it matches over must be precisely the set of fonts in the font source for the document, plus any local font faces.
+</p>
+
+<p>
+~UAは、~font~faceを~loadする必要が生じたときは、対応している `FontFace$I ~objの `load()$m ~methodを~callして，そうするモノトスル。
+◎
+When a user-agent needs to load a font face, it must do so by calling the load() method of the corresponding FontFace object.
+</p>
+
+<p>
+（これは、
+【その~methodに定義されている】
+同じ~algoを走らすモノトスルことを意味する
+— 当の~objの `load^m ~prop内に現在~格納されている値そのものを~callするのでなく）
+◎
+(This means it must run the same algorithm, not literally call the value currently stored in the load property of the object.)
+</p>
+
+<div class="example">
+<p>
+~fontは、 `FontFaceSet$I に追加された時点から可用になる。
+~stylesheetに新たな `font-face$at 規則を追加することは、
+`Document$I ~objの `FontFaceSet$I に新たな `FontFace$I を追加することを~~意味する。
+◎
+Fonts are available when they are added to a FontFaceSet. Adding a new @font-face rule to a stylesheet also adds a new FontFace to the FontFaceSet of the Document object.
+</p>
+
+<p>
+新たな `font-face$at 規則を追加する例：
+◎
+Adding a new @font-face rule:
+</p>
+
+<pre class="lang-js">
+document.styleSheets[0].insertRule(
+  "@font-face { font-family: newfont; src: url(newfont.woff); }", 0);
+document.body.style.fontFamily = "newfont, serif";
+</pre>
+
+<p>
+新たな `FontFace$I ~objを構築して
+`document.fonts^c に追加する例：
+◎
+Constructing a new FontFace object and adding it to document.fonts:
+</p>
+
+<pre class="lang-js">
+var %f = new FontFace("newfont", "url(newfont.woff)");
+document.fonts.add(%f);
+document.body.style.fontFamily = "newfont, serif";
+</pre>
+
+<p>
+いずれの事例に対しても、~layout~engineは，~font資源 `newfont.woff^l の~loadingを起動することになる
+— `font-face$at 規則により~fontが~loadされるのと同じように。
+◎
+In both cases, the loading of the font resource “newfont.woff” will be initiated by the layout engine, just as other @font-face rule fonts are loaded.
+</p>
+
+<p>
+`document.fonts^c への追加を省略した場合、~fontは決して~loadされず，~textは既定の~serif~fontで表示されることになる：
+◎
+Omitting the addition to document.fonts means the font would never be loaded and text would be displayed in the default serif font:
+</p>
+
+<pre class="lang-js">
+var f = new FontFace("newfont", "url(newtest.woff)", {});
+
+/* <span class="comment">
+新たな {{FontFace}} は {{FontFaceSet}} には追加されないので、
+`font-family^p ~propは、それを見れない
+— 代わりに `serif^v が利用されることになる。
+◎
+new {{FontFace}} not added to {{FontFaceSet}}, so the 'font-family' property can’t see it, and serif will be used instead
+</span> */
+document.body.style.fontFamily = "newfont, serif";
+</pre>
+
+<p>
+~fontを，利用する前に明示的に~preloadするときは、作者は
+`FontFaceSet$I への新たな `FontFace$I の追加を，その~loadが完了するまで先送りできる：
+◎
+To explicitly preload a font before using it, authors can defer the addition of a new FontFace to a FontFaceSet until the load has completed:
+</p>
+
+<pre class="lang-js">
+var %f = new FontFace("newfont", "url(newfont.woff)", {});
+%f.load().then(function (%loadedFace) {
+  document.fonts.add(%loadedFace);
+  document.body.style.fontFamily = "newfont, serif";
+});
+</pre>
+
+<p>
+この事例では、~font資源 `newfont.woff^l は，先ず~downloadされる。
+完了したなら、文書の `FontFaceSet$I に~fontが追加され，
+`body^e の~fontは変更され、~layout~engineは，その新たな~font資源を利用するようになる。
+◎
+In this case, the font resource “newfont.woff” is first downloaded. Once the download completes, the font is added to the document’s FontFaceSet, the body font is changed, and the layout engine uses the new font resource.
+</p>
+
+</div>
+
+		</section>
+	</section>
+	<section id="font-face-source">
+<h2 title="The FontFaceSource interface">4. `FontFaceSource^I ~mixin</h2>
+
+<pre class="idl">
+interface mixin `FontFaceSource@I {
+  readonly attribute `FontFaceSet$I `fonts@m;
+};
+
+`Document$I includes `FontFaceSource$I;
+`WorkerGlobalScope$I includes `FontFaceSource$I;
+</pre>
+
+<p>
+文書, ~worker, その他，何らかの方式で~fontを利用する，どの文脈も、
+`FontFaceSource$I ~mixinを内包するモノトスル。
+文脈の `fonts$m 属性の値を、その
+`~font~source@
+という
+— それは、他が定義されない限り，~fontに関係する演算にて利用される，すべての~fontを供する。
+“~font~source”
+を~~参照している演算は、［
+その演算が占めている，関連な文脈の`~font~source$
+］を~~参照しているものと解釈するモノトスル。
+◎
+Any document, workers, or other context which can use fonts in some manner must include the FontFaceSource mixin. The value of the context’s fonts attribute is its font source, which provides all of the fonts used in font-related operations, unless defined otherwise. Operations referring to “the font source” must be interpreted as referring to the font source of the relevant context in which the operation is taking place.
+</p>
+
+<p>
+［
+これらの文脈いずれかを占めている，~fontに関係する演算
+］に
+`可用な~font~face@
+は、当の文脈の`~font~source$の中の `FontFace$I ~objで与えられる。
+◎
+For any font-related operation that takes place within one of these contexts, the FontFace objects within the font source are its available font faces.
+</p>
+
+		<section id="fontfacesource-workers">
+<h3 title="Worker FontFaceSources">4.1. ~workerにおける `FontFaceSources^I</h3>
+
+<p>
+~worker文書における`~font~source$は、初期~時は空とする。
+◎
+Within a Worker document, the font source is initially empty.
+</p>
+
+<p class="note">注記：
+`FontFace$I ~objは、通常通り構築したり追加でき，~workerの中での~CSS`~font照合$に影響する（例えば `OffscreenCanvas$I の中で~textを描くときなど）。
+◎
+Note: FontFace objects can be constructed and added to it as normal, which affects CSS font-matching within the worker (such as, for example, drawing text into a OffscreenCanvas).
+</p>
+
+		</section>
+		<section id="document-font-face-set">
+<h3 title="Interaction with CSS’s @font-face Rule">4.2. `font-face^at 規則との相互作用</h3>
+
+<p>
+文書の`~font~source$の`~set~entries$は、初期~時には，［
+文書の~stylesheet内のある `font-face$at 規則を`接続-先$とする `FontFace$I ~obj
+］たちで拡充するモノトスル
+— それらの規則の文書~順序で。
+`font-face$at 規則が~stylesheet［
+に追加-／から除去-
+］されるに伴い，あるいは ［
+`font-face$at 規則を包含している~stylesheet
+］が文書［
+に追加-／から除去-
+］されるに伴い、それを`接続-先$とする どの `FontFace$I ~objも，この順序を保守するように，文書の`~font~source$［
+に追加-／から除去-
+］するモノトスル。
+◎
+The set entries for a document’s font source must be initially populated with all the CSS-connected FontFace objects from all of the CSS @font-face rules in the document’s stylesheets, in document order. As @font-face rules are added or removed from a stylesheet, or stylesheets containing @font-face rules are added or removed, the corresponding CSS-connected FontFace objects must be added or removed from the document’s font source, and maintain this ordering.
+</p>
+
+<p class="trans-note">【
+この節の以下の記述は，要件（ “モノトスル” ）として述べられているが、［
+`~set~entries$／当の~method
+］の定義に組み込まれているので，実質的には冗長な言明になる。
+】</p>
+
+<p>
+手動で追加された `FontFace$I ~objの順序は、`~CSSに接続されて$いるそれら`より後^emになるモノトスル。
+【`反復~順序$を見よ。】
+◎
+Any manually-added FontFace objects must be ordered after the CSS-connected ones.
+</p>
+
+<p>
+`FontFaceSet$I ~objの `add()$m ~methodの被~call時には、渡された `FontFace$I ~objが`~CSSに接続されて$いて，すでに~set内にある場合、演算は何もしないモノトスル。
+他の場合、 `InvalidModificationError$E を投出するモノトスル。
+◎
+When a FontFaceSet object’s add() method is called with a CSS-connected FontFace object, if the object is already in the set, the operation must be a no-op; otherwise, the operation must do nothing, and throw an InvalidModificationError.
+</p>
+
+<p>
+`FontFaceSet$I ~objの `delete()$m ~methodの被~call時には、渡された `FontFace$I ~objが`~CSSに接続されて$いる場合は，何もせず ~F を返すモノトスル。
+◎
+When a FontFaceSet object’s delete() method is called with a CSS-connected FontFace object, the operation must be a no-op, and return false.
+</p>
+
+<p class="note">注記：
+作者は、除去された `FontFace$I ~objへの参照を
+— それが`~font~source$から自動的に除去されたものであっても —
+依然として保守できる。
+<a href="#font-face-css-connection">§ `font-face^at 規則との相互作用</a>
+に指定されるように、当の~objは除去された時点で`~CSSに接続され$なくなるが。
+◎
+Note: Authors can still maintain references to a removed FontFace, even if it’s been automatically removed from a font source. As specified in § 2.3 Interaction with CSS’s @font-face Rule, though, the FontFace is no longer CSS-connected at that point.
+</p>
+
+<p class="note">注記：
+この仕様の将来~versionでは、局所~fontに対しても［
+相互作用する／~queryする
+］仕方を定義することが期待されている。
+◎
+Note: It is expected that a future version of this specification will define ways of interacting with and querying local fonts as well.
+</p>
+
+		</section>
+	</section>
+	<section id="font-load-event-examples">
+<h2 title="API Examples">5. API 例</h2>
+
+<div class="example">
+
+<p>
+すべての~fontに対する~loadが完了してから，内容を示す例：
+◎
+To show content only after all font loads complete:
+</p>
+
+<pre class="lang-js">
+document.fonts.ready.then(function() {
+  var %content = document.getElementById("content");
+  %content.style.visibility = "visible";
+});
+</pre>
+
+</div>
+
+<div class="example">
+
+<p>
+~download可能な~fontに対する~downloadを明示的に起動して、完了~時に，それらの~fontで~canvas内に~textを描く例：
+◎
+Drawing text in a canvas with a downloadable font, explicitly initiating the font download and drawing upon completion:
+</p>
+
+<pre class="lang-js">
+function drawStuff() {
+  var %ctx = document.getElementById("c").getContext("2d");
+
+  %ctx.fillStyle = "red";
+  %ctx.font = "50px MyDownloadableFont";
+  %ctx.fillText("Hello!", 100, 100);
+}
+
+document.fonts.load("50px MyDownloadableFont")
+              .then(drawStuff, handleError);
+</pre>
+
+</div>
+
+<div class="example">
+
+<p>
+~rich-text編集~appは、編集が行われたとき，対象の~text要素を測定し直す必要があり得る。
+~textの~styleが変更された場合、追加的な~font~downloadを要するかもしれないし，当の~fontは すでに~downloadされているかもしれない
+— いずれにせよ、その測定は，~font~loadが完了した後に行う必要がある：
+◎
+A rich text editing application may need to measure text elements after editing operations have taken place. Since style changes may or may not require additional fonts to be downloaded, or the fonts may already have been downloaded, the measurement procedures need to occur after those font loads complete:
+</p>
+
+<pre class="lang-js">
+function measureTextElements() {
+  /* <span class="comment">
+この中では、~download可能な~fontの計量を利用して，内容を測定できる
+◎
+contents can now be measured using the metrics of the downloadable font(s)
+</span> */
+}
+
+function doEditing() {
+  /* <span class="comment">
+内容や~layoutに対する，追加的な~font~loadを生じさせ得るような演算
+◎
+content/layout operations that may cause additional font loads
+</span> */
+  document.fonts.ready.then(measureTextElements);
+}
+</pre>
+
+</div>
+
+<div class="example">
+
+<p>
+`loadingdone$et ~eventが発火されるのは、~fontに関係するすべての~loadが完了して，<strong>なおかつ</strong> ~textは 追加的な~font~loadを生じさせることなく~lay-outされた後に限られる：
+◎
+The loadingdone event only fires after all font related loads have completed and text has been laid out without causing additional font loads:
+</p>
+
+<pre class="lang-html">
+&lt;style&gt;
+@font-face {
+  font-family: latin-serif;
+  src: url(latinserif.woff) format("woff"); /* <span class="comment">
+漢字／カナは含まれていない
+◎
+contains no kanji/kana
+</span> */
+}
+@font-face {
+  font-family: jpn-mincho;
+  src: url(mincho.woff) format("woff");
+}
+@font-face {
+  font-family: unused;
+  src: url(unused.woff);
+}
+
+body { font-family: latin-serif, jpn-mincho; }
+&lt;/style&gt;
+&lt;p&gt;納豆はいかがでしょうか
+</pre>
+
+<p>
+この状況では、~UAは先ず
+<samp >latinserif.woff</samp>
+~fontを~downloadしてから、それを利用して日本語~textを描こうと試行する。
+その~font内には日本語~glyphがないので、~fallbackが生じ，
+<samp >mincho.woff</samp>
+~fontが~downloadされる。
+`loadingdone$et ~eventが発火されるのは、この 2 番目の~fontが~downloadされ，日本語~textが~lay-outされた後になる。
+◎
+In this situation, the user agent first downloads “latinserif.woff” and then tries to use this to draw the Japanese text. But because no Japanese glyphs are present in that font, fallback occurs and the font “mincho.woff” is downloaded. Only after the second font is downloaded and the Japanese text laid out does the loadingdone event fire.
+</p>
+
+<p>
+<samp>unused</samp> ~fontは~loadされない
+— それは、~textからも利用されないので、~UAはそれを~loadしようと`試行すらしない^em。
+その結果、 `loadingdone$et ~eventにも干渉しない。
+◎
+The "unused" font isn’t loaded, but no text is using it, so the UA isn’t even trying to load it. It doesn’t interfere with the loadingdone event.
+</p>
+</div>
+
+	</section>
+	<section id="changes">
+<h2 title="Changes">変更点</h2>
+
+<dl>
+	<dt>
+<a href="~TR/2014/WD-css-font-loading-3-20140522/">2014年 5月 22日 作業草案</a>
+からの変更点は：
+◎
+Changes from the May 2014 CSS Font Loading Last Call Working Draft:
+</dt>
+	<dd>
+副作用の時機をきちんと定義するため、非同期c~algoにて，~~用語
+“`~taskを~queueする$”
+を利用するように正した。
+◎
+Corrected the async algorithms to use "queue a task" language, to ensure that side-effect timing is well-defined.
+</dd>
+	<dd>
+~IDLを適正に実施するため、
+`fontfaces$m 属性の型を `FrozenArray^I に切り替えた。
+◎
+Switched fontfaces to be a FrozenArray, to match with proper IDL practice.
+</dd>
+	<dd>
+`font-face$at に揃えるため、
+`variationSettings$m, `display$m
+を追加した。
+◎
+Added variationSettings and display, to sync with @font-face.
+</dd>
+</dl>
+
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p lang="en-x-a0">
+Several members of the Google Fonts team provided helpful feedback on font load events, as did Boris Zbarsky, Jonas Sicking and ms2ger.
+</p>
+	</section>
+	<section id="priv-sec">
+<h2 title="Privacy &amp; Security Considerations">~privacyと~securityの考慮点</h2>
+
+<p>
+`FontFaceSet$I ~objは、利用者が~installしている~font情報を漏洩するが、既存の `font-face$at 規則と正確に同じ仕方でそうするので，新たな情報を漏洩したり, それを容易にすることはない。
+◎
+The FontFaceSet object leaks information about the user’s installed fonts, but in the exact same way as the existing @font-face rule; no new information is leaked, or in any appreciable easier manner.
+</p>
+
+<p>
+この仕様はまた、新たな~securityの考慮点を導入するものではない。
+◎
+This specification introduces no new security considerations.
+</p>
+
+	</section>
+</main></div>

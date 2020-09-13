@@ -1,0 +1,1079 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8" />
+<title title="Associating Style Sheets with XML documents 1.0 (Second Edition)">XML 文書とスタイルシートとの結び付け 1.0 （第２版）</title>
+
+<link rel="stylesheet" href="common.css" />
+<link rel="stylesheet" href="common-w3c.css" />
+
+<style>
+.grammar-def > dt::after {
+	font-family: monospace0, monospace;
+	content: ' ::= '
+}
+
+.info-item {
+	font-family: sans-serif0, sans-serif;
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN0',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#${key.toLowerCase()}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'U':
+	text = `U+${key} (&#x${key})`;
+	break;
+case 'ii':
+	text = `[${text}]`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2010-10-28
+trans_update:2018-05-01
+	source_checked:REC
+original_url:https://www.w3.org/TR/xml-stylesheet/
+spec_status:REC
+page_state_key:XML
+ref_id_lowercase:true
+site_nav:xml
+copyright:2010,use
+trans_1st_pub:2012-03-09
+
+
+●●class_map
+P:production
+pa:pseudo-attr
+e:element
+h:header
+ii:info-item
+U:code-point
+
+●●tag_map
+c:code
+P:code
+pa:code
+e:code
+h:code
+ii:span
+V:var
+U:span
+
+●●original_id_map
+
+
+●●link_map
+
+P.S:~TR/xml/#NT-S
+P.Char:~TR/xml/#NT-Char
+P.Char:~TR/xml/#NT-Char
+P.CharRef:~TR/xml/#NT-CharRef
+P.Name:~TR/xml/#NT-Name
+
+P.PseudoAtts:#NT-PseudoAtts
+P.PseudoAtt:#NT-PseudoAtt
+P.PseudoAttValue:#NT-PseudoAttValue
+P.PredefEntityRef:#NT-PredefEntityRef
+P.StyleSheetPI:#NT-StyleSheetPI
+
+pa.href:#PA-href
+pa.type:#PA-type
+pa.title:#PA-title
+pa.media:#PA-media
+pa.charset:#PA-charset
+pa.alternate:#PA-alternate
+
+応用:#dt-application
+
+~xml-stylesheet処理器:#dt-xml-stylesheet-processor
+~xml-stylesheet処理命令:#dt-xml-stylesheet
+~xml-stylesheet処理命令の候補:#dt-potential-xml-stylesheet
+
+疑似属性:#dt-pseudo-attribute
+名前:#dt-name
+値:#dt-value
+
+文字列から疑似属性を構文解析する規則:#dt-parsing
+構文解析した結果:#dt-parsing-result
+無視された:#dt-ignored
+
+~XML処理器:~TR/xml/#dt-xml-proc
+処理命令:~TR/xml/#sec-pi
+
+	#the-xml-stylesheet-processing-instruction
+	~TR/xml/#wf-Legalchar
+	~TR/xslt20/#embedded
+	http://www.w3.org/1999/06/REC-xml-stylesheet-19990629/errata
+
+
+●●words_table1
+
+
+●●words_table
+
+	●XML／構造
+XHTML:
+xml-stylesheet:
+処理命令:processing instruction::~
+prolog::::プロローグ
+subset::::サブセット
+
+疑似属性:pseudo attribute::~
+素片識別子:fragment identifier::~
+情報項目:information item::~
+実体:entity::~
+参照先:referenced::~
+開始tag:start tag::開始 tag:開始タグ
+
+
+	●検証／拘束／構文
+整形式:well-formedness::~
+非妥当性検証:non-validating::妥当性を検証しない
+合法:legal:~
+	空でない:non-empty
+現れる:appearする:~
+	現れない:not be present
+読取る:readする:読み取る
+
+	●仕様
+意向:intention:~
+目指す:aimする:~
+再構成-:restructure:~
+再構成:restructuring:~
+設置-:place:~
+依存:dependence:~
+版:edition:~
+	第 1 版:first edition
+	第 2 版:second edition
+機能-:function:~
+整合しつ:consistentでありつ:~
+発行:publication:~
+位置付け:status:~
+活用-:exploit:~
+引用-:cite:~
+	citation
+埋める:fillする:~
+消費器:consumer::~
+参照文献:reference:~
+並行する:parallelになる:~
+
+	言明されない:unstated
+	登録-済みでない:unregistered
+	登録-済みの:registered
+	現況に合うよう:brought up-to-date
+	現況に合わない:out-of-date
+	限りまで:insofar
+	記せる:written
+	-:in some versions of
+	基準に:with reference to
+	理に適う:reasonably
+	参照文献
+	概要としては十分:admirably brief
+	少し緩められ:eased slightly
+	句:keywords
+	可能
+	図式
+	記され
+	担当する:responsible for
+	認知され:In recognition of
+	一致するよう:as agreed by
+	課-
+
+
+	●未分類
+分析:analysis:~
+
+	取り入れる:taking
+	対し
+	対応する
+	得られ
+	指す
+	挙げる
+	生じ
+	示-
+	除く
+	HTML 4.0 
+	IANA
+	Media Types
+	Media Queries
+	XSLT
+	与え
+	候補:potential
+	対象に
+
+
+	●指示語
+	最初
+	最後
+	月
+	次
+	方
+	上
+	下
+	中
+	他にない:no other
+	他のすべて:Everything else
+	主な:major
+	第
+	いずれにせよ:In either case
+	すでに
+	すなわち
+	ただし
+	にもかかわらず
+	個の
+	前
+	各種
+	多く
+	大きな
+	内
+	節
+	部分
+	一方
+	一部
+	十分
+	ときと同じく:as in
+	向け
+	場合
+	限り
+	際に
+
+
+●●ref_normative
+
+[IANACHARSET]
+    Character Sets.
+    IANA, May 2007.
+    URL: http://www.iana.org/assignments/character-sets
+
+[INFOSET]
+    XML Information Set,
+    J. Cowan, R. Tobin. W3C, February 2004.
+    URL: http://www.w3.org/TR/xml-infoset/
+
+[MQ]
+    Media Queries,
+    H. Lie, T.  Çelik, D. Glazman, A. van Kesteren. W3C, April 2009.
+    URL: http://www.w3.org/TR/css3-mediaqueries/
+
+[RFC2119]
+    Key words for use in RFCs to Indicate Requirement Levels,
+    S. Bradner. IETF, March 1997.
+    URL: https://www.ietf.org/rfc/rfc2119.txt
+
+[RFC2616]
+    Hypertext Transfer Protocol — HTTP/1.1,
+    R. Fielding, J. Gettys, J. Mogul, H.  Frystyk, L. Masinter, P. Leach, T. Berners-Lee. IETF, June 1999.
+    URL: https://www.ietf.org/rfc/rfc2616.txt
+
+[RFC3987]
+    Internationalized Resource Identifiers (IRIs),
+    M. Dürst, M. Suignard. IETF, January 2005.
+    URL: https://www.ietf.org/rfc/rfc3987.txt
+
+[XML]
+    Extensible Markup Language,
+    T. Bray, J. Paoli, C. Sperberg-McQueen, E. Maler, F. Yergeau. W3C, November 2008.
+    URL: http://www.w3.org/TR/xml/
+
+●●ref_informative
+
+[RFC2068]
+    Hypertext Transfer Protocol — HTTP/1.1,
+    R. Fielding, J. Gettys, J. Mogul, H.  Frystyk, T. Berners-Lee. IETF, June 1997.
+    URL: https://www.ietf.org/rfc/rfc2068.txt
+
+[XSLT]
+    XSL Transformations (XSLT) Version 2.0,
+    M. Kay. W3C, January 2007.
+    URL: http://www.w3.org/TR/xslt20/
+
+
+●●trans_metadata
+
+<p>
+~THIS_PAGEは、~W3Cにより，副題に日付にて勧告として発行された
+<a href="~SPEC_URL">Associating Style Sheets with XML documents 1.0 (Second Edition)</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+
+●●spec_metadata
+
+このバージョン
+	https://www.w3.org/TR/2010/REC-xml-stylesheet-20101028
+
+最新バージョン
+	https://www.w3.org/TR/xml-stylesheet/
+
+以前のバージョン
+	https://www.w3.org/TR/2010/PER-xml-stylesheet-20100909/
+
+編集
+	James Clark (First Edition) <a href="mailto:jjc@jclark.com">&lt;jjc@jclark.com&gt;</a>
+	Simon Pieters (Second Edition), Opera Software <a href="mailto:simonp@opera.com">&lt;simonp@opera.com&gt;</a>
+	Henry S. Thompson (Second Edition), University of Edinburgh <a href="mailto:ht@inf.ed.ac.uk">&lt;ht@inf.ed.ac.uk&gt;</a>
+
+
+正誤表
+	https://www.w3.org/1999/06/REC-xml-stylesheet-19990629/errata
+
+各国語翻訳
+	https://www.w3.org/2003/03/Translations/byTechnology?technology=xml-stylesheet
+
+非公式の形式
+	https://www.w3.org/TR/2010/REC-xml-stylesheet-20101028/xml-stylesheet.xml
+
+コメント
+	<a href="mailto:www-xml-stylesheet-comments@w3.org">www-xml-stylesheet-comments@w3.org</a>
+	<a href="http://lists.w3.org/Archives/Public/www-xml-stylesheet-comments/">アーカイブ</a>
+
+</script>
+
+</head>
+
+<header>
+	<hgroup>
+<h1 id="title" title="Associating Style Sheets with XML documents 1.0 (Second Edition)">XML 文書とスタイルシートとの結び付け 1.0 （第 2 版）</h1>
+	</hgroup>
+</header>
+
+<hr>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+<p>
+この文書は、~XML文書の~prologに `xml-stylesheet^c を伴う処理命令を含めることにより、~XML文書に~stylesheetを結付けることを可能にする。
+◎
+This document allows style sheets to be associated with an XML document by including one or more processing instructions with a target of xml-stylesheet in the document's prolog.
+</p>
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+この節では、発行~時点における…
+<span class="trans-note">【
+以下，この節の他の内容は省略する。
+この節に挙げられていたリンクのうち一部は、冒頭の “~~仕様メタデータ” に加えている。
+】</span></p>
+
+<p>
+この第 2 版は、その発行~日までに既知な正誤表をすべて組入れて,
+以前の版では指定されていなかった部分を明確化して,
+`文字列から疑似属性を構文解析する規則$を 他の仕様から再利用できるようにするために再構成されています。
+第 1 版からの変更点についてのより詳細な記述は、<a href="#changes">第 1 版からの変更点</a>に述べられています。
+この版は以前の
+<a href="http://www.w3.org/1999/06/REC-xml-stylesheet-19990629/">1999 年 6 月 29 日 版</a>
+に取って代わるものです。
+◎
+This second edition incorporates all known errata as of the publication date, clarifies several areas left unspecified in the earlier edition, and has been restructured to allow other specifications to reuse the rules for parsing pseudo-attributes from a string. A more detailed description of the changes from the first edition is in B Changes since the first edition. This edition supersedes the previous edition of 29 June 1999.
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="introduction">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+作者は、~XML文書に包含されている情報を~UAがどう呈示するかについて，特定0の意向を持つこともある。
+この仕様は、処理命令を利用して, 1 個~以上の~stylesheet
+— すなわち，指定された言語に欲される具現化を指定する資源 —
+への~linkを与える、 `non-intrusive^en な仕組みを供する。
+~UAはこれらの資源を利用して~XMLの呈示を制御することになる。
+◎
+Authors might have particular intentions as to how user agents are to present the information contained in their XML documents. This specification provides a non-intrusive mechanism, using a processing instruction, to provide links to one or more style sheets, i.e. resources specifying the desired rendering in a designated language. User agents will use these resources to control presentation of XML.
+</p>
+
+
+<div class="example">
+
+<p>
+`link^e 要素により~stylesheetが結付けられている~XHTML文書について考える：
+◎
+Consider an XHTML document with style sheet associations using the link element:
+</p>
+
+<pre class="lang-html">
+&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
+ &lt;head&gt;
+  &lt;title&gt;<span class="comment">
+`link^e 要素を利用した例
+◎
+Example with link elements
+</span>&lt;/title&gt;
+  &lt;link rel="stylesheet" href="common.css"/&gt;
+  &lt;link rel="stylesheet" href="default.css" title="Default style"/&gt;
+  &lt;link rel="alternate stylesheet" href="alt.css" title="Alternative style"/&gt;
+  &lt;link rel="stylesheet" href="single-col.css" media="all and (max-width: 30em)"/&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  ...
+ &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p>
+この文書は、`~xml-stylesheet処理命令$を利用して次のようにも記せる：
+◎
+This document could be written as follows, using xml-stylesheet processing instructions:
+</p>
+
+<pre class="lang-html">
+&lt;?xml-stylesheet href="common.css"?&gt;
+&lt;?xml-stylesheet href="default.css" title="Default style"?&gt;
+&lt;?xml-stylesheet alternate="yes" href="alt.css" title="Alternative style"?&gt;
+&lt;?xml-stylesheet href="single-col.css" media="all and (max-width: 30em)"?&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
+ &lt;head&gt;
+  &lt;title&gt;<span class="comment">
+`xml-stylesheet^c 処理命令を利用した例
+◎
+Example with xml-stylesheet processing instructions
+</span>&lt;/title&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  ...
+ &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+</div>
+
+	</section>
+	<section id="conformance-requirements">
+<h2 title="Conformance requirements">2. 適合性の要件</h2>
+
+<p>
+この仕様における［
+図式, 例, 注記
+］, および明示的に “規範的でない” と記された節は、すべて規範的でないとする。
+他のすべては規範的とする。
+◎
+All diagrams, examples, and notes in this specification are non-normative, as are all sections explicitly marked non-normative. Everything else in this specification is normative.
+</p>
+
+<p>
+この文書の規範的な部分を成す次に挙げる句は、
+`RFC2119$r に述べるように解釈するとする（この仕様においては、これらの句は大文字では記されない）
+⇒＃
+〜しなければナラナイ（ `must^en ）,
+〜してはナラナイ（ `must not^en ）,
+〜するベキである（ `should^en ）,
+〜するベキでない（ `should not^en ）,
+〜してもヨイ（ `may^en ）
+◎
+The key words must, must not, should, should not and may in the normative parts of this document are to be interpreted as described in RFC 2119. These words do not appear in all uppercase letters in this specification. [RFC2119]
+</p>
+
+<p>
+この仕様では、次に挙げる適合性~classが定義される：
+◎
+The following conformance classes are defined by this specification:
+</p>
+
+<dl>
+	<dt title="Documents">文書</dt>
+	<dd>
+文書は、［
+この仕様において，文書に適用される “…ナラナイ” ~levelの判定基準
+］すべてを満たすならば，適合~文書と見なされる。
+◎
+A document is considered to be a conforming document if it satisfies all must-level criteria in this specification that apply to documents.
+</dd>
+	<dd>
+`~xml-stylesheet処理命令$とその疑似属性は、文書~作者からの利用が意図されている。
+それは、それを包含している文書に適用するものとして可用になる［
+~stylesheetへの~linkとそれについての情報
+］を
+— <a href="#the-xml-stylesheet-processing-instruction">~xml-stylesheet処理命令</a>
+節に述べるように —
+供する。
+◎
+xml-stylesheet processing instructions and their pseudo-attributes are intended for use by document authors to provide links to and information about one or more stylesheets, as described in 4 The xml-stylesheet processing instruction, which are available to be applied to the containing document.
+</dd>
+
+	<dt title="xml-stylesheet processors">~xml-stylesheet処理器</dt>
+	<dd>
+~XMLでは、`応用$を［
+`~XML処理器$から~XML文書の情報~内容を受取る~software~module
+］として定義している。
+`~xml-stylesheet処理器@
+とは、そのような応用のうち，この仕様に則って~XML`処理命令$を処理するものを指す。
+`XML$r
+◎
+XML defines an application as a software module which receives the information content of an XML document from an XML processor. [Definition: An xml-stylesheet processor is such an application which processes XML processing instructions in accordance with this specification.] [XML]
+</dd>
+	<dd>
+［
+この仕様において`~xml-stylesheet処理器$に適用される “…ナラナイ” levelの判定基準
+］をすべて満たす`~xml-stylesheet処理器$は、適合`~xml-stylesheet処理器$と見なされる。
+`~xml-stylesheet処理器$には、文書に課される拘束を検査したり施行する必要はない。
+◎
+An xml-stylesheet processor is considered to be a conforming xml-stylesheet processor if it satisfies all must-level criteria in this specification that apply to xml-stylesheet processors. xml-stylesheet processors do not have to check or enforce any of the constraints on documents.
+</dd>
+
+	<dt title="Applications">応用</dt>
+	<dd>
+`~xml-stylesheet処理器$は、より大きい~XML応用の一部を成していても, 独立に機能するものであってもヨイ。
+いずれにせよ，
+`応用@
+は、この仕様が定義する疑似属性~分析の消費器である。
+◎
+An xml-stylesheet processor may be part of a larger XML application, or may function independently. In either case, [Definition: an application is the consumer of the pseudo-attribute analysis defined in this specification.]
+</dd>
+	<dd>
+`~xml-stylesheet処理命令$が包含する情報を，`応用$がどう活用するかの詳細な仕様は、この文書の視野~外である
+— それは、応用ごとに変わるのが理に適うので。
+よって，この仕様は、応用~向けには適合性の要件は設置しない。
+◎
+A detailed specification of how applications exploit the information contained in xml-stylesheet processing instructions is out of scope for this document, as this may reasonably vary from application to application. Accordingly this specification places no conformance requirements on applications.
+</dd>
+	<dd>
+しかしながら、~stylesheet言語の利用を統治する仕様が，応用が利用する~stylesheetをどう識別するか述べる際には、この仕様を参照するものと期待されている。
+そのような仕様は、
+<a href="#the-xml-stylesheet-processing-instruction">~xml-stylesheet処理命令</a>
+節による`疑似属性$の記述と可能な限り整合な仕方で，それら`疑似属性$用の値（またはその不在）に対する解釈を
+— 当の応用と~stylesheet言語にとってイミを成す限りまで —
+指定するものと期待されている。
+◎
+It is however expected that specifications governing the use of stylesheet languages will reference this specification in describing how applications may identify stylesheets for use. Such specifications are expected to specify interpretations for the values (or absense of value) of those pseudo-attributes which they make use of, doing so in a way that is as consistent as possible with those pseudo-attributes' descriptions in 4 The xml-stylesheet processing instruction, insofar as this makes sense for the application and stylesheet language(s) in question.
+</dd>
+</dl>
+
+<p>
+この仕様は、~XML情報~集合 `INFOSET$r が与える~XML語彙を基準に定義される。
+◎
+This specification is defined with reference to the vocabulary for XML provided by the XML Information Set. [INFOSET]
+</p>
+
+<p>
+この仕様の生成規則は、~XML仕様と同じ記法を利用する。
+文法~内の~tokenのうち，この仕様が定義しないものは、~XML仕様に定義される。
+`XML$r
+◎
+The productions in this specification use the same notation as used in the XML specification. Tokens in the grammar that are not defined in this specification are defined in the XML specification. [XML]
+</p>
+
+	</section>
+	<section id="pseudo-attributes">
+<h2 title="Pseudo-attributes">3. 疑似属性</h2>
+
+<p>
+`文字列から疑似属性を構文解析する規則@
+は、この節で与えられる。
+◎
+[Definition: The rules for parsing pseudo-attributes from a string are given in this section.]
+</p>
+
+<p>
+`構文解析した結果@
+は、`疑似属性$の集合になるか, または~errorになる。
+◎
+[Definition: The parsing result is either a set of pseudo-attributes or an error.]
+</p>
+
+<p>
+所与の文字列が 
+`PseudoAtts$P
+生成規則に合致しない場合、`構文解析した結果$は，~errorになるとする。
+◎
+If the given string is not matched by the PseudoAtts production, the parsing result is an error.
+</p>
+
+<p>
+疑似属性を伴う文字列~用の生成規則は、次で与えられる：
+◎
+Productions for strings with pseudo-attributes
+</p>
+
+<dl class="grammar-def" id="d0e323">
+	<dt>`PseudoAtts@P</dt>
+	<dd class="prod">
+`PseudoAtt$P? (`S$P `PseudoAtt$P)* `S$P?
+</dd>
+
+	<dt>`PseudoAtt@P</dt>
+	<dd class="prod">
+`Name$P `S$P? "=" `S$P? `PseudoAttValue$P
+</dd>
+
+	<dt>`PseudoAttValue@P</dt>
+	<dd class="prod">
+('"' ([^"&lt;&amp;] | `CharRef$P | `PredefEntityRef$P)* '"' | "'"
+([^'&lt;&amp;] | `CharRef$P | `PredefEntityRef$P)* "'")
+</dd>
+
+	<dt>`PredefEntityRef@P</dt>
+	<dd class="prod">
+"&amp;amp;" | "&amp;lt;" | "&amp;gt;" | "&amp;quot;" | "&amp;apos;"
+</dd>
+</dl>
+
+
+<p>
+`PseudoAtts$P 生成規則~内で `PseudoAtt$P に合致した各~文字列は、
+`疑似属性@
+を表現する。
+各 `疑似属性$は、次のものからなる：
+◎
+[Definition: Each string matched by PseudoAtt in the PseudoAtts production represents a pseudo-attribute.] A pseudo-attribute has a name and a value.
+</p>
+
+<dl class="def-list">
+	<dt>`名前@</dt>
+	<dd>
+`PseudoAtt$P 生成規則~内で `Name$P に合致した文字列。
+◎
+[Definition: The string matched by Name in the PseudoAtt production constitutes the name of the corresponding pseudo-attribute.]
+</dd>
+
+	<dt>`値@</dt>
+	<dd>
+<p>
+`PseudoAtt$P 生成規則~内で `PseudoAttValue$P に合致した文字列に，以下を適用した結果になる：
+◎
+[Definition: The string matched by PseudoAttValue in the PseudoAtt production — with the three modifications specified below — constitutes the value of the corresponding pseudo-attribute.]
+</p>
+		<ol>
+			<li>
+文字列を成す各 `CharRef$P を、~XMLに則って，それぞれが表現する文字に置換する。
+`XML$r
+◎
+Each CharRef is replaced with the character it represents according to XML [XML].
+</li>
+			<li>
+文字列を成す各 `PredefEntityRef$P を、次に示すように，それぞれに対応する文字に置換する
+⇒＃
+`&amp;amp;^l → `0026^U ；
+`&amp;lt;^l → `003C^U ；
+`&amp;gt;^l → `003E^U ；
+`&amp;quot;^l → `0022^U ；
+`&amp;apos;^l → `0027^U
+◎
+Each PredefEntityRef in PseudoAttValue is replaced with U+0026 (&amp;amp;) if it is "&amp;", U+003C (&amp;lt;) if it is "&lt;", U+003E (&amp;gt;) if it is "&gt;", U+0022 (&amp;quot;) if it is "&quot;" and U+0027 (&amp;apos;) if it is "&apos;".
+</li>
+			<li>
+文字列から最初と最後の文字（引用符）を除去する
+◎
+The first and last character (the start and end quotes) are removed.
+</li>
+		</ol>
+	</dd>
+</dl>
+
+<p>
+次のいずれかに該当する場合、`構文解析した結果$は~errorになるとする：
+◎
+↓</p>
+
+<ul>
+	<li>
+いずれかの `CharRef$P が［
+~XMLによる
+<a href="~TR/xml/#wf-Legalchar">合法~文字（ `Legal Character^en ）整形式~拘束</a>
+］に違反している
+`XML$r
+◎
+The parsing result is an error if the XML Legal Character well-formedness contraint is violated for any CharRef. [XML]
+</li>
+	<li>
+同じ`名前$の`疑似属性$が複数ある。
+◎
+The parsing result is an error if there are more than one pseudo-attribute with the same name.
+</li>
+</ul>
+
+<p>
+`構文解析した結果$が~errorでないならば、それが文字列が表現する`疑似属性$たちの集合を与える。
+◎
+If the parsing result is not an error, then it is the set of pseudo-attributes represented when the given string is matched by the PseudoAtts production.
+</p>
+
+	</section>
+	<section id="the-xml-stylesheet-processing-instruction">
+<h2 title="The xml-stylesheet processing instruction">4. xml-stylesheet 処理命令</h2>
+
+<p>
+処理命令~情報項目は、 `target^ii ~prop `xml-stylesheet^c を持ち, かつ 次のいずれかを満たすとき、
+`~xml-stylesheet処理命令の候補@
+とされる：
+◎
+[Definition: A processing instruction information item is said to be a potential xml-stylesheet processing instruction if＼
+</p>
+
+<ul>
+	<li>(1)
+［
+文書~情報項目の `children^ii ~prop内に現れる
+］~AND［
+文書~情報項目の `children^ii ~propの要素~情報項目よりも前に現れる
+］
+◎
+it has the [target] property xml-stylesheet and it either is in the [children] property of a document information item and appears before the element information item of the document information item's [children] property, or＼
+</li>
+	<li>(2)
+文書~型~宣言~情報項目の `children^ii ~prop内に現れる
+◎
+it appears in the [children] property of a document type declaration information item.]
+</li>
+</ul>
+
+<p>
+`~xml-stylesheet処理命令の候補$ `候補^V に対しては、`~xml-stylesheet処理器$は，［
+`候補^V の `content^ii ~propを成す文字列に
+`文字列から疑似属性を構文解析する規則$を適用して`構文解析した結果$
+］を：
+</p>
+
+<ul>
+	<li>
+`候補^V が前述の (1) に該当するならば、`応用$に報告しなければナラナイ。
+◎
+For potential xml-stylesheet processing instructions that are in the [children] property of a document information item, xml-stylesheet processors must report to the application the parsing result of invoking the rules for parsing pseudo-attributes from a string, using the processing instruction information item's [content] property as the string.
+</li>
+	<li>
+<p>
+`候補^V が前述の (2) に該当するならば、`応用$に報告してもヨイ。
+`応用$に報告しなかった場合、 `候補^V は
+`無視された@
+という。
+◎
+For potential xml-stylesheet processing instructions that are in the [children] property of a document type declaration information item, xml-stylesheet processors may report to the application the parsing result of invoking the rules for parsing pseudo-attributes from a string, using the processing instruction information item's [content] property as the string. [Definition: If it is not reported to the application, the processing instruction information item is said to be ignored.]
+</p>
+
+<p class="note">注記：
+非妥当性検証~XML処理器には［
+~parameter実体／外部~subset
+］を読取ることは要求されていないので、［
+~parameter実体／外部~subset
+］内に現れる処理命令は、文書~型~宣言~情報項目の `children^ii ~prop内には現れない場合もあり得る。
+`XML$r
+◎
+Since non-validating XML processors are not required to read parameter entities or the external subset, it is possible that processing instructions that appear in parameter entities or the external subset will not be present in the document type declaration information item's [children] property. [XML]
+</p>
+	</li>
+</ul>
+
+<p>
+`~xml-stylesheet処理命令の候補$のうち、次を満たすものが
+`~xml-stylesheet処理命令@
+であるとされる
+⇒
+処理命令~情報項目の `content^ii ~propの文字列に対し，`文字列から疑似属性を構文解析する規則$を適用して`構文解析した結果$は~errorでない
+◎
+[Definition: A potential xml-stylesheet processing instruction is said to be an xml-stylesheet processing instruction if the parsing result is not an error when invoking the rules for parsing pseudo-attributes from a string, using the processing instruction information item's [content] property as the string.]
+</p>
+
+<p>
+文書は、［
+`target^ii ~propが `xml-stylesheet^c であるにもかかわらず，`~xml-stylesheet処理命令$にならない処理命令~情報項目
+］を利用してはナラナイ。
+◎
+Documents must not use processing instruction information items with the [target] property xml-stylesheet if they are not xml-stylesheet processing instructions.
+</p>
+
+<p>
+文書は、文書~型~宣言~情報項目の `children^ii ~prop内には，`~xml-stylesheet処理命令$を利用するベキではない。
+◎
+Documents should not use xml-stylesheet processing instructions that are in the [children] property of a document type declaration information item.
+</p>
+
+<p>
+`~xml-stylesheet処理命令$は、次の生成規則に合致する：
+◎
+An xml-stylesheet processing instruction will match the following production:
+◎
+Production for xml-stylesheet processing instruction
+</p>
+
+<dl class="grammar-def" id="d0e611">
+	<dt>`StyleSheetPI@P</dt>
+	<dd class="prod">
+"&lt;?xml-stylesheet" ( (`S$P `PseudoAtts$P)? - (`Char$P* "?&gt;"
+`Char$P*) ) "?&gt;"
+</dd>
+</dl>
+
+
+<p>
+他が言明されない限り，文書は、`~xml-stylesheet処理命令$に，次に挙げる`疑似属性$を指定してもヨイ：
+◎
+Documents may specify the following pseudo-attributes on xml-stylesheet processing instructions, unless otherwise stated:
+</p>
+
+<dl>
+	<dt>`href@pa</dt>
+	<dd>
+参照先~stylesheetの~addressを与える。
+この`疑似属性$は、指定されなければナラナイ。
+`値$に設定する文字列は［
+`RFC3987$r が与える `&lt;IRI-reference&gt;^P 用の構文
+］に合致しなければナラナイ。
+◎
+Gives the address of the referenced style sheet. Documents must specify this pseudo-attribute. Documents must set the value to a string that matches the grammar for &lt;IRI-reference&gt; given in RFC 3987. [RFC3987]
+</dd>
+	<dd class="note">
+<p>注記：
+`~xml-stylesheet処理命令$の `href$pa `疑似属性$に素片識別子を利用すれば、同じ文書~内にある~stylesheetを文書に結付けることもできる。
+◎
+It is possible to associate a style sheet that is in the same document as the xml-stylesheet processing instruction by using just a fragment identifier in the href pseudo-attribute.
+</p>
+
+<p>
+XSLT においてこれがどう管理されるかについては、
+`XSLT$r の
+<a href="~TR/xslt20/#embedded">埋込d~stylesheet~module</a>
+節を見よ。
+◎
+For details on how this is managed in XSLT, see 3.11 Embedded Stylesheet Modules in [XSLT].
+</p>
+	</dd>
+
+	<dt>`type@pa</dt>
+	<dd>
+参照先~stylesheetの助言的な~MIME型（ `Internet media type^en　）を与える。
+指定する場合、`値$に設定する文字列は［
+`RFC2616$r の "Media Types" 節に定義される `media-type^P 生成規則
+］に合致しなければナラナイ。
+◎
+Gives an advisory media type for the referenced style sheet. If specified, documents must set the value to a string that matches the media-type production defined in section 3.7 "Media Types" of RFC 2616. [RFC2616]
+</dd>
+	<dd class="note">注記：
+上において要求される適合性は、生成規則による<em>構文に限られる</em>。
+この仕様は、利用される~MIME型の位置付けに関する要件は課さない。
+`text/xsl^c など，（この仕様の発行~時点で）登録-済みでない一部の~MIME型は，既存の実装からきちんと~supportされている一方、
+`application/xslt+xml^c など，登録-済みである一部の~MIME型はそうでない。
+◎
+Syntactic conformance to the production in RFC 2616 is all that is required by the above. This specification imposes no requirements with respect to the status of the types used. Some unregistered (as of the publication of this specification) media types, such as text/xsl, are well-supported by existing implementations, whereas some registered media types, such as application/xslt+xml, are not.
+</dd>
+	<dd>
+`値$は，助言的であり、応用から利用されるのは，［
+~stylesheetの検索取得に際して，その~MIME型について可用になる情報~源が他にないとき
+］に限られることが意図されている。
+◎
+The value is advisory in that it is intended to be used by an application only when no other source of media type information becomes available during retrieval of the stylesheet itself.
+</dd>
+
+	<dt>`title@pa</dt>
+	<dd>
+<!-- ~stylesheet集合に属する,  -->
+参照先~stylesheetの~titleを与える。
+`値$には `PseudoAttValue$P 生成規則を超える拘束は課されない。
+◎
+Gives the title of the referenced style sheet in a style sheet set. No constraints beyond those of the PseudoAttValue production are placed on the value.
+</dd>
+
+	<dt>`media@pa</dt>
+	<dd>
+参照先~stylesheetの適用-対象になる媒体を与える。
+指定する場合、`値$に設定する文字列は［
+Media Queries 仕様 `MQ$r の `media_query_list^P 生成規則
+］に合致しなければナラナイ。
+◎
+Gives the media for which the referenced style sheet applies. If specified, documents must set the value to a string that matches the media_query_list production of the Media Queries specification. [MQ]
+</dd>
+
+	<dt>`charset@pa</dt>
+	<dd>
+参照先~stylesheetの助言的な文字~符号化法を与える。
+指定する場合、`値$に設定する文字列は次に挙げるものでなければナラナイ
+⇒
+`IANA Character Sets registry^en において “`preferred MIME name^en” と記されている名前, またはその別名【 “`Name^en” または “`Alias^en” 】、あるいは
+そのような名前が無い場合は，その文字~符号化法の名前【（ “`preferred MIME name^en” と記されていない） “`Name^en” 】
+`IANACHARSET$r
+◎
+Gives an advisory character encoding for the referenced style sheet. If specified, documents must set the value to a valid character encoding name, which must be the name or alias labeled as "preferred MIME name" in the IANA Character Sets registry, if there is one, or the encoding's name, if none of the aliases are so labeled. [IANACHARSET]
+</dd>
+	<dd>
+`値$が助言的であるとは，すなわち、応用がその値を利用するのは，~XML文書のときと同じく［
+~stylesheetの検索取得に際して，その符号化法について可用になる情報~源が他にないとき
+］，すなわち［
+~HTTP~headerを介して明示的に, あるいはその~MIME型を介して暗黙的に得られないとき
+］に限られるものと意図されている。
+◎
+The value is advisory in that it is intended to be used by an application only when no other source of encoding information becomes available during retrieval of the stylesheet itself, either explicitly via an HTTP header, or implicitly via its media type, as in the case of XML documents.
+</dd>
+
+	<dt>`alternate@pa</dt>
+	<dd>
+`値$が `yes^l の場合、参照先~stylesheetは代替~stylesheetであることを指示する。
+この場合、`値$が空でない `title$pa `疑似属性$も指定されなければナラナイ。
+指定する場合、`値$に設定する文字列は［
+`yes^l ／ `no^l
+］でなければナラナイ。
+◎
+If the value is "yes", it indicates that the referenced style sheet is an alternative style sheet, and documents must also specify the title pseudo-attribute with a non-empty value. If specified, documents must set the value to either "yes" or "no".
+</dd>
+</dl>
+
+<p>
+`~xml-stylesheet処理命令$に、他の`疑似属性$が設定されてはナラナイ。
+◎
+Documents must not specify other pseudo-attributes on xml-stylesheet processing instructions.
+</p>
+
+<p>
+文書の外部として指定される~stylesheetを指す~linkによる結付け（例：~HTTP `Link^h ~headerによるそれ）は、`~xml-stylesheet処理命令$により指定される結付けよりも前に生じるものと見なされる。
+各~結付けを取り入れるかどうか, それらの順序がどう処理に影響するかを決定することは、`応用$が担当する。
+◎
+Any links to style sheets that are specified externally to the document (e.g. Link headers in some versions of HTTP [RFC2068]) are considered to create associations that occur before the associations specified by the xml-stylesheet processing instructions. The application is responsible for taking all associations and determining how, if at all, their order affects its processing.
+</p>
+
+	</section>
+	<section id="changes">
+<h2>第 1 版からの変更点</h2>
+
+~INFORMATIVE
+
+<p>
+この仕様の第 1 版は，概要としては十分であったが、多くの詳細は言明されていなかった。
+この第 2 版は、それを埋めることを目指す一方で，疑似属性~構成子を独立に引用したり再利用できるよう，呈示を再構成している。
+◎
+The first edition of this specification was admirably brief, but at the same time left many details unstated. This second edition aims to fill the gaps left in the first edition, while restructuring the presentation to provide for independent citation and re-use of the pseudo-attribute construct.
+</p>
+
+<p>
+`xml-stylesheet^c 処理命令の構文や意味論については、上述した再構成を超える変更は加えられていない。
+処理器に対する適合性の拘束は、［
+内部／外部~subsetの中の `xml-stylesheet^c 処理命令
+］は無視してもヨイものと，少し緩められた。
+◎
+Neither the syntax nor the semantics of the xml-stylesheet processing instructions have been changed, beyond the restructuring just mentioned. Conformance constraints on processors have been eased slightly, in that xml-stylesheet processing instructions occurring within the internal or external subset may be ignored.
+</p>
+
+<p>
+主な変更点を以下に挙げる：
+◎
+The following list identifies the major changes which have been made:
+</p>
+<ul>
+	<li>
+第 1 版で利用されていたが定義されてはいなかった，いくつかの用語の定義を供した。
+◎
+Provided definitions for a number of terms used but not defined in the first edition;
+</li>
+	<li>
+適合性の節を追加して、第 1 版では暗黙的であった，処理器に対する適合性と文書に対する適合性が判別されるようにした。
+◎
+Added a conformance section, distinguishing between processor and document conformance, all of which was implicit in the first edition;
+</li>
+	<li>
+第 1 版では［
+要素の開始tagの処理と並行するものと暗黙的に示されていた，~error事例
+］のいくつかは、識別され，処理器に期待される挙動が指定された。
+◎
+Identified a number of error cases, which were implicit in the first edition's appeal to the parallel with element start tag processing, and specified expected processor behaviour;
+</li>
+	<li>
+配備-済みの処理器の挙動が認知される中、
+`xml-stylesheet^c 処理命令は，文書~情報項目の `children^ii 内にあるものを除き 無視できるものとされた。
+◎
+In recognition of deployed processor behaviour, allowed xml-stylesheet processing instructions to be ignored unless they are among the [children] of the document information item;
+</li>
+	<li>
+参照文献をいくつか追加して，
+HTML 4.0 への明示的な依存を除去した
+— HTML 4.0 における利用と整合しつつ現況に合う，各 疑似属性の意味の記述を追加することにより。
+◎
+Added a number of references, but removed the explicit dependence on the HTML 4.0 specification by adding descriptions of the meanings of each of the pseudo-attributes consistent with their HTML 4.0 use but brought up-to-date;
+</li>
+	<li>
+すでに現況に合わない前提を包含していた（規範的でない）“`Rationale^en” 節は、除去された。
+◎
+Removed the (non-normative) Rationale section, as it contained a number of out-of-date assumptions;
+</li>
+	<li>
+`type$pa 疑似属性は、
+<a href="http://www.w3.org/1999/06/REC-xml-stylesheet-19990629/errata">既存の正誤表</a>
+に一致するよう，任意選択にされた。
+◎
+Made the type pseudo-attribute optional, as agreed by existing erratum.
+</li>
+</ul>
+
+	</section>
+
+</main></div>

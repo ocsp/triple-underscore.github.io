@@ -1,0 +1,1229 @@
+/***** 全般設定 *****/
+
+	/* HTML5 Reset CSS */
+main,
+header,
+nav,
+section,
+aside,
+footer,
+figure,
+figcaption {
+	display: block;
+}
+time {
+	display: inline;
+}
+:root {
+
+	/* font-family */
+	/* 既定の font-family
+• 利用する書体は、 UA （利用者の設定）に委ねる。
+• 異なる font-family 内に入れ子にされ得るものを戻すためにも利用。
+	*/
+	--default-font-family: initial;
+
+	/* 色 */
+	/* 背景色 */
+	--bg-color: white; /* 既定の色 */
+	--highlight-bg-color: yellow;
+	--bg-color-1: hsl(0 0% 95%); /* #F2F2F2 */
+	--bg-color-2: hsl(0 0% 90%); /* #E5E5E5 */
+	--bg-color-3: hsl(60 100% 97%); /* #FFFFEE */
+
+	--pale-color: hsl(0 0% 87%); /* 淡い枠線，やや濃い背景 */
+
+	/* テキスト色 */
+	--text-color: black; /* 既定の色 */
+	--dim-color: hsl(0 0% 50%); /* gray 薄いテキスト */
+	--dfn-color: hsl(0 100% 25%); /* maroon; #800000; dfn */
+	--literal-color: gray; /* 文字列 */
+	--comment-color: hsl(120 100% 25%); /* green; #008000; コードブロック内のコメント*/
+	--value-color: hsl(10 60% 33%); /* #883322; var, 値 */
+	--html-color: hsl(0 67% 40%); /* #AA2222; 要素, 内容属性 */
+	--css-color: hsl(204 100% 31%); /* #005A9C; CSS code, property */
+	--css-color-2: hsl(148 100% 20%); /* #006724; CSS descriptor */
+	--js-color: hsl(130 100% 20%); /* #006611; JS 構成子 */
+	--http-field-color: hsl(204 100% 17%); /* #003355; HTTP header, method */
+	--text-color-0: hsl(11 85% 43%); /* #CC3311; orangered; code 全般, dom */
+	--text-color-1: hsl(300 100% 25%); /* #800080; purple; protocol 要素（RFC code 全般）, 疑似 class, event 型 */
+	--text-color-2: hsl(120 61% 30%); /* forestgreen; #228b22; http status code, 他 */
+	--text-color-3: hsl(150 100% 20%); /* #006633; 例外, url scheme 他 */
+	--text-color-4: hsl(15 67% 20%); /* directive 他 */
+
+	 /* table 用： class ごとに変わる */
+	--table-bg-color: hsl(0 0% 95%);
+	--table-border-color: gray;
+	--table-rule-color: silver;
+
+	/* 訳注 */
+	--trans-note-color: hsl(120 85% 17%);
+	--trans-note-bg-color: hsl(120 85% 97%);
+
+}
+
+	/*@font-face
+
+@font-face {
+	font-family: normal;
+	src: local(dummy-undefined);
+	unicode-range: U+3000-9FFF, U+ff??;
+}
+
+@font-face {
+	font-family: "sans-serif1";
+	src: local("Tahoma"), local("helvetica"), local("arial");
+	unicode-range: U+00-024F;
+}
+@font-face {
+	font-family: testing;
+	src: url(__/_UpperEastSide.woff) format("woff");
+	unicode-range: U+0000-007F;
+}
+
+
+@font-face {
+	font-family: sans-serif0;
+	src:
+		local(IPAexGothic),
+		local("YuGothic Medium"),
+		local(YuGo-Medium)
+	;
+}
+
+@font-face {
+	font-family: serif0;
+	src:
+		local("YuMincho Medium"),
+		local(YuMin-Medium),
+		local(IPAMonaPMincho Regular),
+		local(IPAMonaPMincho)
+	;
+}
+
+		local(Inconsolata),
+
+*/
+
+@font-face {
+	font-family: monospace0;
+	src:
+		local(Consolas),
+		local("Lucida Console"),
+		local(Courier),
+		local("DejaVu Sans Mono"),
+		local(Monaco);
+}
+
+@font-face {
+	font-family: sans-serif0;
+	src:
+		local(Tahoma),
+		local(helvetica),
+		local(arial);
+	unicode-range: U+0-24F;
+}
+
+/*
+@font-face {
+	font-family: sans-serif;
+	src: local("XXXXX");
+	unicode-range: U+30A0-30FF;//katakana
+	font-stretch: ultra-condensed;
+}
+*/
+
+pre, code, samp {
+	font-family: monospace0, monospace;
+}
+
+.example {
+	color: var(--example-color, black);
+	background: var(--example-bg-color, #EEEEEE);
+	border-color: var(--example-border-color, silver);
+}
+.note {
+	color: var(--note-color, black);
+	background: var(--note-bg-color, #EEEEEE);
+	border-color: var(--note-border-color, silver);
+}
+.issue{
+	color: var(--issue-color, black);
+	background: var(--issue-bg-color, #EEEEEE);
+	border-color: var(--issue-border-color, silver);
+}
+.warning {
+	color: var(--warning-color, black);
+	background: var(--warning-bg-color, #EEEEEE);
+	border-color: var(--warning-border-color, silver);
+}
+.advisement {
+	color: var(--advisement-color, black);
+	background: var(--advisement-bg-color, #EEEEEE);
+	border-color: var(--advisement-border-color, silver);
+}
+
+/***** 上下 margin *****/
+
+table, pre, header, footer, section, nav {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+header, footer, section, nav {
+	margin-top: 2em;
+}
+
+header {
+	padding-bottom: 1em;
+	margin-bottom: 2em;
+	border-bottom: thin solid silver;
+}
+
+hr {
+	display: block;
+	background: none;
+	border: none;
+	padding: 0;
+	margin: 2em 0;
+	height: auto;
+}
+
+	/* 全体 
+http://www.codestyle.org/css/font-family/sampler-CombinedResults.shtml
+"Trebuchet MS"
+	*/
+html {
+	font-family: var(--default-font-family);
+}
+
+body {
+	padding: 2em 1em 2em 3em;
+	margin: 0;
+	margin-bottom: 50vh;
+	color: var(--text-color black);
+	background: var(--bg-color);
+	line-height: 1.5;
+}
+
+b {
+	font-family: Tahoma, helvetica, arial, sans-serif;
+	font-family: sans-serif0, sans-serif;
+}
+
+	/*
+REC, CR, WD etc. sideways logo (container)
+*/
+#_sideways-logo {
+	display: none;
+}
+@supports (writing-mode: vertical-rl) {
+
+	#_sideways-logo {
+		writing-mode: vertical-rl; /* ideally, sideways-lr */
+		display: block;
+		position: fixed;
+		top: 0;
+		left: 0;
+		white-space: nowrap;
+		font-family: sans-serif0, sans-serif;
+		background-color: hsl(210 80% 33%); /* #115599 */
+		color: white;
+		padding-top: 3em;
+		padding-bottom: 3em;
+		pointer-events: none; /* click 透過 */
+	}
+}
+
+
+/***** 目次 *****/
+nav.toc li {
+	list-style-type: none;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+nav.toc ol {
+	margin-top: 0.2em;
+	margin-bottom: 0.5em;
+}
+nav.toc li > a {
+	display: block;
+	border: none;
+}
+
+/***** 節 *****/
+
+	/* 見出し */
+h1, h2, h3, h4, h5, h6 {
+	text-align: left;
+	color: var(--heading-color);
+	background: transparent;
+}
+
+h1 { font-size: 170%; }
+h2 { font-size: 140%; }
+h3 { font-size: 125%; }
+h4 { font-size: 115%; }
+h5 { font-size: 110%; }
+h6 { font-size: 105%; }
+
+	/* 段落 */
+p, div.p {
+	margin-top: 0.7em;
+	margin-bottom: 0.7em;
+}
+p:first-child, div.p:first-child { margin-top: 0;}
+p:last-child, div.p:last-child { margin-bottom: 0;}
+
+	/* figure */
+figcaption {
+	margin: 0.5em 0;
+	font-size: 90%;
+}
+
+	/* details on header */
+header > details {
+	margin-left: 1.5em;
+}
+header > details > summary {
+	list-style-position: outside;
+}
+
+	/* hr */
+hr {
+	display: block;
+	background: none;
+	border: none;
+	padding: 0;
+	margin: 2em 0;
+	height: 0;
+}
+
+/***** コードブロック *****/
+
+pre {
+	background: transparent;
+	border-color: transparent;
+	white-space: pre-wrap; /* overflow: auto; との2択 */
+	line-height: 1.3;
+	margin-left: 1em;
+	padding: .5em;
+}
+
+/* .example > pre {
+	margin-left: 1em;
+}
+*/
+dd > pre {
+	margin-left: 0;
+}
+
+/* コード内 コメント */
+pre .comment {
+	font-family: var(--default-font-family);
+	color: var(--comment-color);
+	white-space: normal;
+}
+
+	/* 呈示／ ascii art 用 */
+pre.presentation {
+	background: white;
+	border: solid thin var(--pale-color);
+	white-space: pre; 
+	overflow: auto;
+}
+
+	/* IDL */
+pre.idl {
+	background: hsl(204 100% 93%); /* #DDEEFF */
+	border-left: 0.5em solid hsl(204 100% 75%); /* #8CCBF2 */
+}
+
+pre.idl :link, pre.idl :visited {
+	color: inherit;
+	background: transparent;
+}
+
+pre.idl code:not([class]) {
+	color: var(--text-color);
+}
+
+	/* idl defs */
+.idl-def::before {
+	display: block;
+	margin-top: 2em;
+	color: var(--dim-color);
+	content: '— IDL —';
+	font-size: small;
+}
+
+	/* ABNF */
+pre.bnf {
+	background: hsl(216 100% 97%);
+	border-color: hsl(216 54% 72%);
+	color: var(--text-color-1);
+	border-style: solid none;
+	border-width: thin;
+}
+
+	/* JS */
+pre.lang-js,
+pre.lang-json,
+pre.lang-other {
+	background: hsl(30 40% 95%);
+}
+
+	/* http */
+pre.lang-http {
+	background: hsl(216 100% 97%);
+}
+
+	/* TODO
+pre.prod
+pre.grammar
+ */
+pre.lang-css,
+pre.lang-html,
+pre.lang-xml {
+	background: hsl(56 84% 93%); /* #FCFADC */
+}
+
+/***** 表 *****/
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+caption {
+	text-align: left;
+	padding-left: 2em;
+}
+
+th, td {
+	text-align: left;
+	vertical-align: baseline;
+	padding-left: 0.4em;
+	padding-right: 0.4em;
+}
+
+	/* 各種 定義表（ .propdef, .descdef, .eventdef... ) */
+table.def-table {
+	border-spacing: 0;
+	background: var(--table-bg-color);
+	border-left: 0.5em solid var(--table-border-color);
+}
+table.def-table tr {
+	border-top: thin solid var(--table-rule-color);
+}
+table.def-table th {
+	white-space: nowrap;
+}
+table.def-table td {
+	min-width: 16em;
+	border-left: thin solid var(--table-rule-color);
+}
+
+	/* css property 定義表 */
+table.propdef {
+	--table-bg-color: hsl(204 100% 93%); /* #ddeeff; */
+	--table-border-color: hsl(204 100% 75%);
+	--table-rule-color: hsl(204 100% 82%);
+}
+
+	/* css descriptor 定義表 */
+table.descdef {
+	--table-bg-color: hsl(148 53% 93%);
+	--table-border-color: hsl(148 53% 75%); 
+	--table-rule-color: hsl(148 53% 82%); 
+}
+
+	/* DOM event 定義表 */
+table.eventdef {
+	--table-bg-color: hsl(300, 50%, 95%);
+	--table-border-color: hsl(300, 70%, 80%);
+	--table-rule-color: hsl(300, 50%, 85%);
+}
+
+
+@supports (display: grid) and (display: contents) {
+
+.grid-table {
+	display: block;
+	--table-border-color: gray;
+}
+
+.grid-table > tbody,
+.grid-table > thead,
+.grid-table > tfoot {
+	display: contents;
+}
+.grid-table > caption {
+	display: block;
+}
+
+.grid-table tr {
+	display: grid;
+	border-top: none;
+	border-bottom: medium solid var(--table-rule-color);
+}
+.grid-table > thead > tr {
+	border-bottom-color: var(--table-border-color);
+}
+
+.grid-table tr > * {
+	display: block;
+	border: thin solid var(--table-rule-color);
+	border-width: thin 0 0 thin;
+}
+
+}
+
+/***** 画像 *****/
+img {
+	display: inline-block;
+	max-width: 100%;
+	object-fit: contain;
+}
+
+/***** リスト *****/
+
+dl, li, ol {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+	/* 無順序 */
+ul > li {
+	list-style-type: disc;
+}
+	/* 有順序 */
+ol > li {
+	list-style-type: decimal;
+}
+
+	/* 定義リスト */
+dt {
+	font-weight: bold
+}
+dt + dd {
+	margin-top: 0.25em;
+}
+dd + dt {
+	margin-top: 0.5em;
+}
+dd {
+	margin-bottom: 0.5em;
+}
+
+	/* 分岐リスト */
+ul.switch > li,
+ol.switch > li {
+	list-style-type: "\21AA\00A0";
+}
+
+dl.switch > dt {
+	font-weight: normal;
+}
+dl.switch > dt::before {
+	content: "\21AA\00A0";
+}
+
+.def-list > dt::before {
+	content: "• ";
+	color: var(--dim-color);
+}
+
+	/* アルゴリズム用（ ol, ul には利用不可） */
+
+.algo,
+.algorithm {
+	padding: .5em;
+	border: thin solid var(--pale-color);
+	border-radius: .5em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+/* TODO
+ol.algo { padding-left: 2em; } （付番用のアキ）
+*/
+
+	/* 行内整形用 */
+span.block {
+	display: block;
+	margin-left: 2em;
+}
+
+.preline {
+	white-space: pre-line;
+}
+
+
+/***** 行内 *****/
+
+code {
+	color: var(--text-color-0);
+}
+
+	/* 変数 */
+var {
+	color: var(--value-color);
+	font-weight: normal;
+	/* font-family: Tahoma, helvetica, arial, sans-serif;... */
+	white-space: nowrap;
+	word-spacing: -40%; /*	text-transform: capitalize; camelcase が欲しい */
+}
+
+	/* リンク */
+
+/* waiting for support of:
+	@media (hover) { }
+	:local-link
+	text-decoration-*
+*/
+
+:link {
+	text-decoration: none;
+	border-bottom: thin solid hsl(0 0% 60%);/* #999 */
+	color: inherit;
+}
+:visited {
+	color: inherit;
+}
+
+a:active {
+	color: hsl(0 100% 40%); /* #C00 */
+	background: var(--highlight-bg-color);
+}
+
+a:hover {
+	background: var(--highlight-bg-color);
+}
+
+		/* 相対リンク */
+a[href] {
+}
+
+		/* 局所リンク
+color: #00E; override ':visited', ':active' 
+*/
+a[href^="#"] {
+	border-bottom: thin dotted hsl(0 0% 60%);
+}
+
+		/* 絶対リンク */
+
+a[href^="http:"], 
+a[href^="https:"] {
+	text-decoration: none;
+	border-bottom: 2px solid hsl(120 33% 70%);
+	color: inherit;
+}
+
+	/* リンクターゲット */
+*:target {
+	background: var(--highlight-bg-color);
+}
+		/* 節／目次は巨大なので見出しをターゲットにする */
+nav:target,
+section:target {
+	background: transparent;
+	outline: none; /* 処理能 対策 */
+}
+
+nav:target > *:first-child,
+section:target > *:first-child {
+	background: var(--highlight-bg-color);
+}
+
+	/* 用語定義 */
+dfn {
+	font-weight: bolder;
+	font-style: italic;
+	color: var(--dfn-color);
+}
+
+/*
+pre dfn {
+	color: inherit;
+}
+*/
+
+	/* MUST, SHOULD, MAY etc. */
+em.rfc2119 {
+	border-bottom: thin dashed var(--dim-color);
+}
+
+	/* 演算子 */
+.op {
+	color: var(--text-color);
+	font-family: sans-serif;
+/*	font-weight: bold;*/
+}
+
+/***** 共通なデータ型 ******/
+
+	/* exception */
+.error {
+	color: var(--text-color-3);
+}
+
+	/* production */
+.production,
+.prod {
+	color: hsl(0 100% 20%); /* #660000 */
+}
+
+	/* url scheme */
+.scheme {
+	color: var(--text-color-3);
+}
+
+	/* 文字列 */
+.literal {
+	color: var(--literal-color);
+}
+
+	/* 符号位置 */
+.code-point {
+	font-family: sans-serif0, sans-serif;
+}
+		/* 名 */
+.cp-name {
+	color: var(--dim-color);
+	font-family: sans-serif0, sans-serif;
+	font-size: 90%;
+}
+		/* グリフ */
+.char-symbol {
+	color: var(--dim-color);
+	font-family: monospace;
+}
+		/* 16 進値 */
+.hex-value {
+	font-family: sans-serif0, sans-serif;
+}
+
+		/* Unicode character property */
+.char-prop {
+	font-family: serif0, serif;
+	color: var(--text-color-2);
+}
+
+	/* HTTP */
+		/* HTTP header, method, status code */
+.header, .method {
+	color: var(--http-field-color);
+	font-weight: bold;
+}
+
+.status {
+	color: var(--text-color-2);
+}
+
+.directive {
+	color: var(--text-color-4);
+}
+
+		/* protocol element */
+.protocol {
+	color: var(--text-color-1);
+	font-family: monospace0, monospace;
+}
+
+	/* event */
+.event-type {
+	color: var(--text-color-1);
+}
+
+	/* JS */
+.js-slot,
+.js-value,
+.js-intrinsic,
+.js-symbol,
+.js-class,
+.js-type,
+.js-other {
+	color: var(--js-color);
+}
+
+	/* 抽象演算 */
+.abstract {
+	color: var(--js-color);
+	font-family: sans-serif0, sans-serif;
+}
+
+	/* HTML 要素, 内容属性 */
+.element, .attr {
+	color: var(--html-color);
+}
+
+	/** CSS
+.type:     value types
+.at-rule:  at rules
+.property: property names
+.descriptor: descriptornames
+.value:    property values
+.pseudo    pseudo-class, pseudo-element
+.unit:     unit identifier
+.production: production in grammar
+.func:     functional notations
+.css       other constructs
+*/
+
+.css,
+.at-rule,
+.property,
+.descriptor,
+.pseudo,
+.prod,
+.production,
+.type,
+.unit,
+.func,
+.value {
+	font-family: monospace0, monospace;
+}
+
+.css,
+.unit,
+.at-rule,
+.property {
+	color: var(--css-color);
+}
+
+.descriptor {
+	color: var(--css-color-2);
+}
+
+.property {
+	white-space: nowrap;
+}
+
+.pseudo {
+	color: var(--text-color-1);
+}
+
+.func,
+.value {
+	color: var(--value-color);
+}
+
+.type {
+	font-style: italic;
+}
+
+/***** 翻訳用 *****/
+	/* 原文 
+概ね display: block に強制するので table などには利用しないこと
+*/
+*[lang="en"] {
+	display: none;
+	background-color: hsl(240 100% 97%);
+	color: hsl(0 0% 27%);/* #444 */
+	line-height: 1.2em;
+	margin-top:2px;
+}
+
+span[lang="en"] {
+	white-space: pre-line;
+}
+
+pre[lang="en"] {
+	font-family: monospace0;
+	padding: 0;
+	margin: 0;
+}
+
+.show-original *[lang="en"] {
+	display: block;
+}
+
+.show-original tr[lang="en"] {
+	display: table-row;
+}
+
+#_site_nav::before {
+	content: '目次：';
+}
+#_site_nav {
+	position: absolute;
+	top: 0;
+	left: 3em;
+	background: var(--pale-color);
+	margin: 0;
+	padding: 0.5em 1em;
+	white-space: nowrap;
+	overflow: hidden;
+	max-width: calc(100% - 6em);
+}
+#_site_nav > li {
+	display: inline;
+}
+#_site_nav > li:not(:first-child)::before {
+	content: " | ";
+}
+#_site_nav > li:first-child::before {
+}
+
+	/* 訳注 .trans-note a */
+.trans-note {
+	color: var(--trans-note-color);
+	background: var(--trans-note-bg-color);
+	font-family: var(--default-font-family);
+	font-style: normal;
+	font-weight: normal;
+}
+p.trans-note {
+	padding: 0.3em 0.5em;
+}
+
+		/* 参照文献 日本語訳*/
+.trans-ja-refs a {
+	margin-right: 0.5em;
+	background: var(--trans-note-bg-color);
+}
+
+
+/***** 付帯機能用 *****/
+
+@media screen {
+
+	/* 逆参照パネル */
+*[data-cycling],
+section[id] > h1,
+section[id] > h2,
+section[id] > h3,
+section[id] > h4,
+section[id] > h5,
+dfn[id], dt[id] {
+	cursor: pointer;
+}
+
+#_dfnPanel {
+	display: inline;
+	/*
+http://www.w3.org/TR/CSS2/visudet.html#abs-non-replaced-width
+http://www.w3.org/TR/CSS2/visudet.html#abs-non-replaced-height
+top, left ... を指定しなければ（ auto ）親に対し相対的な位置（ top は static position ）
+	*/
+	position: absolute;
+	margin-top: 2em;
+	z-index: 10;
+	height: auto;
+	min-width: 18em;
+	max-width: 70vw;
+	padding: 0.5em 0 0.5em 0.75em ;
+	font: small sans-serif;
+	background: hsl(268 100% 94%);
+	color: black;
+	border: outset 0.2em;
+	text-indent: 0; /* dl.switch */
+}
+
+#_dfnPanel > ul {
+	max-height: 45vh;
+	overflow: auto;
+}
+
+/*
+#_dfnPanel input[type="button"] {
+	display: none;
+}
+#_dfnPanel._fixed input[type="button"] {
+	display: inline;
+}
+*/
+/* クリック後の状態 */
+#_dfnPanel._fixed {
+	position: fixed;
+	bottom: 2.5em;
+	right: 2em;
+}
+
+#_dfnPanel > *:first-child {
+	font-weight: bold;
+	white-space: pre-wrap;
+}
+/*
+#_dfnPanel > *:first-child::after {
+	content: " の参照元：";
+}
+*/
+
+#_dfnPanel * {
+	margin: 0; padding: 0;
+}
+#_dfnPanel ul.empty::before {
+	content: "なし";
+	color: gray;
+	font-style: italic;
+}
+#_dfnPanel li {
+	list-style-type: none;
+	line-height: 1.1em;
+	white-space: pre-line;
+}
+#_dfnPanel li > a {
+	border: outset 2px hsl(240 100% 90%);
+	padding: 2px;
+	display: inline-block;
+	min-width: 1.5em;
+	text-align: center;
+	margin-left: 1px;
+}
+#_dfnPanel li > a:first-child {
+	display: inline-block;
+	vertical-align: top;
+	white-space: nowrap;
+	overflow: hidden;
+	max-width: 16em;
+	text-overflow: ellipsis;
+}
+
+.highlight {
+	outline: thin solid red;
+}
+
+	/* 索引 パネル */
+
+#_index_table {
+	position: fixed;
+	z-index: 5;
+	margin: 0; padding: 0;
+	top: 0; right: 0; bottom: 0;
+	width: 8.5em;
+	background-color: hsl(268 100% 94%);
+}
+
+#_index_table:hover {
+	width: 16em;
+}
+
+#_index_table > button {
+	width: 100%;
+}
+#_index_table > div {
+	position: absolute;
+	top: 2em; right: 0; bottom: 0; left:0;
+	overflow: auto;
+	padding-left: 0.5em;
+}
+
+#_index_table > div > * {
+	display: block;
+	white-space:nowrap;
+}
+
+#_index_table > div > *.code {
+	font-family: monospace0, monospace;
+	color: var(--text-color-0);
+}
+
+	/* 表示制御パネル */
+#_view_control {
+	position: fixed;
+	z-index: 3;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	font-size: small;
+	padding: 0;
+	margin: 0;
+	white-space: nowrap;
+	outline: thin solid transparent;
+	background: transparent;
+}
+
+#_view_control._hoverd,
+#_view_control:hover {
+	outline-color: black;
+	background: hsl(220 100% 90%);
+}
+
+#_view_control > * {
+	visibility: hidden;
+	padding: 0;
+}
+
+#_view_control._hoverd > *,
+#_view_control:hover > * {
+	visibility: visible;
+}
+
+#_view_control::before {
+	content: "切替";
+	display: inline-block;
+	background-color: hsl(220 100% 90%);
+	padding: 3px;
+	margin: 0;
+	outline: thin solid black;
+}
+
+#_view_control._hoverd::before,
+#_view_control:hover::before {
+	outline: none;
+}
+
+
+	/* 日本語訳リンク */
+#_ja_link {
+	font-family: var(--default-font-family);
+	background: hsl(60 100% 77%);
+	color: green;
+	font-weight: normal;
+}
+
+/* 原文の同じ箇所を指すリンク */
+#_dfnPanel ._additional {
+	margin-left:1em;
+}
+
+	/* 内容生成 */
+
+body::before {
+	display: block;
+	content: '読み込み／生成中…この表示が消えない場合はどこかでエラーが生じています';
+	color: red;
+}
+body._expanded::before {
+	content: none;
+}
+
+	/* 動作テスト用 */
+._test {
+	background: hsl(120 100% 97%);
+	color: green;
+	border: ridge green 2px;
+	padding: 0.5em;
+}
+
+
+	/* 目次メニュー化*/
+
+/* waiting for @media (hover) { } support... */
+
+	/* 現在表示中の節 */
+._intersecting {
+	background: var(--pale-color);
+}
+
+body.side-menu {
+	padding-right: 9em;/* 1em + 8em */
+}
+
+body.side-menu nav.toc {
+	width: 8em;
+	margin: 0;
+	padding: 0;
+	padding-left: 0.5em;
+	position: fixed;
+	top: 0; right: 0; bottom: 0;
+	z-index: 2;
+	background-color: hsl(120 80% 97%);
+	overflow: auto;
+	overscroll-behavior: contain;
+}
+
+body.side-menu nav.toc:hover {
+	width: auto;
+	min-width: 8em;
+	max-width: 40%;
+	z-index: 4;
+}
+
+body.side-menu nav.toc > h2 {
+	font-size: 1em;
+	white-space: pre;
+}
+
+body.side-menu nav.toc ol,
+body.side-menu nav.toc li {
+	margin-left: 0;
+	padding-left: 0;
+}
+
+body.side-menu nav.toc > ol {
+	white-space: pre;
+	white-space: nowrap;
+	margin: 0;
+	padding: 0;
+}
+
+}
+
+.fingerprinting:hover,
+.fingerprinting {
+	display: inline-block;
+	width: 46px;
+	height: 64px;
+	float: right;
+	background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NiA2NCIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtZGFzaGFycmF5PSIzLDIsMzUsMiwyMCwyIiBmaWxsPSJub25lIj4KPHBhdGggZD0iTTIgMjNRMTcgLTE2IDQwIDEyTTEgMzVRMTcgLTIwIDQzIDIwTTIgNDBRMTggLTE5IDQ0IDI1TTMgNDNRMTkgLTE2IDQ1IDI5TTUgNDZRMjAgLTEyIDQ1IDMyTTUgNDlRMTEgNDAgMTUgMjdUMjcgMTZUNDUgMzdNNSA0OVExNSAzOCAxOSAyNVQzNCAyN1Q0NCA0MU02IDUyUTE3IDQwIDIxIDI4VDMyIDI5VDQzIDQ0TTYgNTJRMjEgNDIgMjMgMzFUMzAgMzJUNDIgNDdNNyA1NFEyMyA0NyAyNCAzNlQyOCAzNFQ0MSA1ME04IDU2UTI2IDUwIDI2IDM1UTI4IDQ4IDQwIDUzTTEwIDU4UTI0IDU0IDI3IDQ1UTMwIDUyIDM4IDU1TTI3IDUwUTI4IDUzIDM2IDU3TTI1IDUyUTI4IDU2IDMxIDU3TTIyIDU1TDI2IDU3TTEwIDU4TDM3IDU3TTEzIDYwTDMyIDYwTTE2IDYyTDI4IDYzIi8+Cjwvc3ZnPgo=")
+	no-repeat;
+	/* https://resources.whatwg.org/tracking-vector.svg */
+}
+
+
+/*@media screen*/
+
+
+
+
+/***** 印刷用 *****/
+
+@media print {
+._test,
+#_dfnPanel,
+#_view_control,
+._additional {
+	/* see common.js*/
+	display: none;
+}
+
+	pre, table {
+		page-break-inside: avoid;
+	}
+
+	pre {
+		white-space: pre-wrap;
+	}
+
+	h1, h2, h3, h4, h5, h6 {
+		page-break-after: avoid;
+	}
+
+}
+
+
+	/* W3C logo image 
+	http://www.w3.org/Icons/w3c_home
+	float: right;
+	*/
+#_W3C {
+	display: inline-block;
+	float: right;
+	color: transparent;
+	width: 90px;
+	height: 60px;
+	background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZwoJdmVyc2lvbj0iMS4xIgoJeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgoJdmlld0JveD0iLTEzIC05IDE4MCAxMjAiCj4KPCEtLSAwIDAgMTU0IDEwMyAtLT4KCjxyZWN0Cgl4PSItMTMiIHk9Ii05IiByeD0iMTAiIHJ5PSIxMCIKCXdpZHRoPSIxODAiIGhlaWdodD0iMTIwIgoJZmlsbD0iIzAwNUE5QyIKCXN0cm9rZT0ibm9uZSIKLz4KCjwhLS1XMy0tPgo8cGF0aAoJZmlsbD0ibm9uZSIKCXN0cm9rZT0id2hpdGUiCglzdHJva2Utd2lkdGg9IjkiCglkPSIKTTUsMTIgbDE5LjIsNjQgbDE0LjEsLTQ3Ck0zMy41LDEyIGwxOS4yLDY0IGwxOS4yLC02NApNNzAsMTguNSBoMjggbC0xNywyOSB2MwpNODAsNDYgYzMsMCAxOSwwIDE5LDIwCmMwLDUgLTIsMTkgLTE1LDE5CmMtMiwwIC0xMCwwIC0xNSwtMTIKIiAvPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDVBOUMiIHN0cm9rZS13aWR0aD0iNCIKCWQ9IgpNMCwxMiBoMTA1LjUgdjEwCk0wLDkyIGgxMjAKIiAvPgoKPCEtLUMtLT4KPHBhdGgKCWZpbGw9IndoaXRlIgoJc3Ryb2tlPSJub25lIgoJdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTIsLTUpc2NhbGUoMC44KSIKCWQ9IgptIDE4MC45NywyMy44OCAxLjk5LDEyLjA5IC03LjA0LDEzLjQ3CkMgMTYwLjAyLDIxLjY0IDEzOC4wNCw0OC42OSAxNDMuMzcsNzkuMDggMTM1Ljc5LDYzLjY2IDEzOS4wNiw0NC4wMCAxNDYuMDgsMzMuNDIgMTUyLjk3LDIzLjA0IDE2NS4wOSwyMS4yMiAxNzQuMDQsMzcuNzEgegpNIDE4MS44NCw5Mi4yOQpjIC0xMi4xMiwyMi41NSAtMzMuMzgsMjQuNjMgLTQ3LjAzLC0xLjc4IDcuOTgsMjkuNjcgMzMuMTcsNDAuMDUgNDguODIsMTEuMTIgeiIgLz4KPHRleHQKCWZpbGw9IndoaXRlIgoJc3Ryb2tlPSJub25lIgoJdGV4dC1hbmNob3I9Im1pZGRsZSIKCXRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MCwyMikiCglmb250LXNpemU9IjE0Igo+wq48L3RleHQ+Cgo8L3N2Zz4K") no-repeat;
+}
+
+
+/* 媒体対応 */
+
+@media all and (max-width: 45em) {
+	body {
+		padding: 1em 0.5em 1em 1em;
+	}
+	#_sideways-logo {
+		font-size: 0.5em;
+	}
+
+	/* UA style (40px) を上書き */
+	dd {
+		margin-left: 1.5em;
+	}
+	ol, ul {
+		padding-left: 1.5em;
+	}
+}
+

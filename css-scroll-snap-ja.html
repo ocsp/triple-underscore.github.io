@@ -1,0 +1,2592 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Scroll Snap Module Level 1 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+
+<style>
+
+#_ex-overlap {
+	width: 11em;
+	border: thin dashed black;
+	text-align: center;
+	padding: 0 0.5em;
+}
+
+#_ex-overlap > div {
+	border: thin solid black;
+	margin-bottom: 0.5em;
+	position: relative;
+	width: 100%;
+}
+
+#_ex-overlap > div > div {
+	position: absolute;
+	top: 0;
+	right: -2em;
+	width: 1em;
+	height: 4em;
+	border: solid black 2px;
+	border-left: none;
+}
+
+#_ex-overlap > div > div._extent {
+	border: none;
+	height: auto;
+	bottom: 0;
+	border-right: thin solid black;
+	border-radius: 0.5em;
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	let context_prop = '';
+
+	return this.html.replace(
+		/%[\w~一-鿆]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'p':
+	if( indicator === '@') {
+		context_prop = `#valdef-${key}-`;
+	}
+	break;
+case 'pe': 
+	text = `::${key}`;
+	break;
+case 'ps': 
+	text = `:${key}`;
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'vt':
+	text = `&lt;${key}&gt;`;
+	href = context_prop + key;
+	break;
+case 'v':
+	href = context_prop + key;
+	break;
+case 'dgm':
+	return `<a id="_dgm-${key}"></a>`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`
+	break;
+case 'issue':
+	text = `課題 #${key}`;
+	href = `~CSSissue/${key}`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Scroll Snap Module Level 1
+spec_date:2020-02-13
+trans_update:2020-02-15
+source_checked:190318
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-scroll-snap-1/
+spec_status:CR
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:css-ux,css
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2015-11-02
+
+
+●●class_map
+p:property
+css:css
+pe:pseudo
+ps:pseudo
+e:element
+v:value
+vt:type
+t:type
+
+●●tag_map
+p:code
+t:var
+vt:var
+css:code
+pe:code
+ps:code
+m:code
+v:code
+e:code
+c:code
+V:var
+em:em
+
+●●original_id_map
+
+
+snap-coordinate:
+snap-destination:
+
+●●mdn_urls
+propdef-scroll-margin:CSS/scroll-margin
+propdef-scroll-margin-block-end:CSS/scroll-margin-block-end
+propdef-scroll-margin-block-start:CSS/scroll-margin-block-start
+propdef-scroll-margin-block:CSS/scroll-margin-block
+propdef-scroll-margin-bottom:CSS/scroll-margin-bottom
+propdef-scroll-margin-inline-end:CSS/scroll-margin-inline-end
+propdef-scroll-margin-inline-start:CSS/scroll-margin-inline-start
+propdef-scroll-margin-inline:CSS/scroll-margin-inline
+propdef-scroll-margin-left:CSS/scroll-margin-left
+propdef-scroll-margin-right:CSS/scroll-margin-right
+propdef-scroll-margin-top:CSS/scroll-margin-top
+propdef-scroll-padding:CSS/scroll-padding
+propdef-scroll-padding-block-end:CSS/scroll-padding-block-end
+propdef-scroll-padding-block-start:CSS/scroll-padding-block-start
+propdef-scroll-padding-block:CSS/scroll-padding-block
+propdef-scroll-padding-bottom:CSS/scroll-padding-bottom
+propdef-scroll-padding-inline-end:CSS/scroll-padding-inline-end
+propdef-scroll-padding-inline-start:CSS/scroll-padding-inline-start
+propdef-scroll-padding-inline:CSS/scroll-padding-inline
+propdef-scroll-padding-left:CSS/scroll-padding-left
+propdef-scroll-padding-right:CSS/scroll-padding-right
+propdef-scroll-padding-top:CSS/scroll-padding-top
+propdef-scroll-snap-align:CSS/scroll-snap-align
+propdef-scroll-snap-stop:CSS/scroll-snap-stop
+propdef-scroll-snap-type:CSS/scroll-snap-type
+
+●●link_map
+
+
+p.scroll-snap-align:#propdef-scroll-snap-align
+p.scroll-margin:#propdef-scroll-margin
+p.scroll-padding:#propdef-scroll-padding
+p.scroll-snap-type:#propdef-scroll-snap-type
+p.scroll-snap-stop:#propdef-scroll-snap-stop
+
+p.scroll-padding-top:#propdef-scroll-padding-top
+p.scroll-padding-right:#propdef-scroll-padding-right
+p.scroll-padding-bottom:#propdef-scroll-padding-bottom
+p.scroll-padding-left:#propdef-scroll-padding-left
+p.scroll-padding-inline-start:#propdef-scroll-padding-inline-start
+p.scroll-padding-block-start:#propdef-scroll-padding-block-start
+p.scroll-padding-inline-end:#propdef-scroll-padding-inline-end
+p.scroll-padding-block-end:#propdef-scroll-padding-block-end
+p.scroll-padding-block:#propdef-scroll-padding-block
+p.scroll-padding-inline:#propdef-scroll-padding-inline
+p.scroll-margin-top:#propdef-scroll-margin-top
+p.scroll-margin-right:#propdef-scroll-margin-right
+p.scroll-margin-bottom:#propdef-scroll-margin-bottom
+p.scroll-margin-left:#propdef-scroll-margin-left
+p.scroll-margin-block-start:#propdef-scroll-margin-block-start
+p.scroll-margin-inline-start:#propdef-scroll-margin-inline-start
+p.scroll-margin-block-end:#propdef-scroll-margin-block-end
+p.scroll-margin-inline-end:#propdef-scroll-margin-inline-end
+p.scroll-margin-block:#propdef-scroll-margin-block
+p.scroll-margin-inline:#propdef-scroll-margin-inline
+
+p.overflow:~CSSOVERFLOW3#propdef-overflow
+p.overflow-x:~CSSOVERFLOW3#propdef-overflow-x
+p.overflow-y:~CSSOVERFLOW3#propdef-overflow-y
+
+p.padding:~CSSBOX#propdef-padding
+p.margin:~CSSBOX#propdef-margin
+
+	vt.length-percentage:valdef-scroll-padding-length-percentage
+
+	v.none:#valdef-scroll-snap-align-none
+v.start:#valdef-scroll-snap-align-start
+	v.end:#valdef-scroll-snap-align-end
+v.center:#valdef-scroll-snap-align-center
+
+	v.none:#valdef-scroll-snap-type-none
+v.mandatory:#valdef-scroll-snap-type-mandatory
+v.proximity:#valdef-scroll-snap-type-proximity
+
+v.x:#valdef-scroll-snap-type-x
+v.y:#valdef-scroll-snap-type-y
+v.both:#valdef-scroll-snap-type-both
+v.block:#valdef-scroll-snap-type-block
+v.inline:#valdef-scroll-snap-type-inline
+v.point:#valdef-scroll-snap-type-point
+
+v.normal:#valdef-scroll-snap-stop-normal
+v.always:#valdef-scroll-snap-stop-always
+
+t.length:~CSSVAL#length-value
+t.percentage:~CSSVAL#percentage-value
+t.length-percentage:~CSSVAL#typedef-length-percentage
+
+m.scrollTo():~CSSOMVIEW#dom-window-scrollto
+m.scrollBy():~CSSOMVIEW#dom-window-scrollby
+m.scrollIntoView():~CSSOMVIEW#dom-element-scrollintoview
+
+ps.target:~SELECTORS4#target-pseudo
+
+pe.first-letter:~CSSPSEUDO#selectordef-first-letter
+pe.first-line:~CSSPSEUDO#selectordef-first-line
+pe.after:~CSSPSEUDO#selectordef-after
+
+e.section:~HEsections#the-section-element
+e.body:~HEsections#the-body-element
+
+	●用語
+留ng:#snap
+留め:#snap
+留めて:#snap
+留められ:#snap
+留める:#snap
+留めな:#snap
+
+留め区画:#scroll-snap-area
+~scroll留め区画:#scroll-snap-area
+留め容器:#scroll-snap-container
+~scroll留め容器:#scroll-snap-container
+留域:#scroll-snapport
+	~scroll留域:#scroll-snapport
+留め位置:#scroll-snap-position
+留め位置を捕捉する:#captures-snap-positions
+
+軸~値:#axis-value
+厳密度~値:#strictness-value
+
+最適な~view用~領域:#optimal-viewing-region
+
+終止-位置のみ意図され:#intended-end-position
+方向のみ意図され:#intended-direction
+方向, 終止-位置ともに意図され:#intended-direction-and-end-position
+軸に~lock:#axis-lock
+自然な終点:#natural-end-point
+
+	●用語 CSS
+~scroll容器:~CSSOVERFLOW3#scroll-container
+~scroll可能な~overflow域:~CSSOVERFLOW3#scrollable-overflow-region
+~scrollport:~CSSOVERFLOW3#scrollport
+
+整列~容器:~CSSALIGN#alignment-container
+整列~subject:~CSSALIGN#alignment-subject
+
+始端:~CSSWM#css-start
+包含塊の連鎖:~CSSDISP#containing-block-chain
+略式~prop:~CASCADE#shorthand-property
+下位prop:~CASCADE#longhand
+
+塊-軸:~CSSWM#block-axis
+
+	§:~CSS2VISUFX#overflow-clipping
+
+●●words_table1
+
+
+●●words_table
+
+
+
+	●留め／scroll
+留ng:snapping::留め::スナッピング
+留め:snap::~::スナップ
+留めよ:snapしよ::~::スナップしよ
+留めて:snapして::~::スナップして
+留めた:snapした::~::スナップした
+留めら:snapさ::~::スナップさ
+留める:snapする::~::スナップする
+留めれ:snapでき::~::スナップでき
+留直す:snapし直す::留め直す::スナップし直す
+留直し:re-snapping::留め直し::スナップし直し
+	留直す:re-snap
+	再度~留める:re-snap
+
+留域:snapport::留め域::スナップポート
+scrollport::::スクロール域:スクロールポート
+	scrolling:::スクローリング
+scroller::::スクローラ
+	~scroll域:scroller
+scrolling::::スクロール操作
+	~scrolling:scrolling operation
+	~scroll用／操作:scrolling, scrolling operation
+	~scroll可能な:scrollable
+	~scroll不能な:unscrollable
+	~viewの中へ~scrollする:scroll-into-view
+
+	留め位置
+	sectioning into logical divisions
+横:horizontal:~
+縦:vertical:~
+開始時の:starting:~
+着地-:land:~
+止める:stopする:~
+拡げて:expandして:~
+狭めて:reduceして:~
+捕捉-:capture::~
+捉えて:trapして:~
+可視域:visual viewport::~
+	押し出す:push
+	離れ:away form
+	下端:very bottom
+
+	●UI
+pan::::パン
+panning::::パン操作
+	^en:fling
+paging::::ページめくり:ページング
+	~paging:paging／:paging operation
+homing::::ホーム帰還
+swiping::::スワイピング
+toolbar::::ツールバー
+sidebar::::サイドバー
+tabbing-through:tabbing through::タブキーで巡回
+	access不能:inaccessible
+resize::::リサイズ
+	respect:::
+caret::::キャレット
+展示:gallery:~:::ギャラリー
+mousewheel::::マウスホイール
+	~screen上の:on-screen
+	~screenから遠く外れた:far-offscreen
+	~screenから外れる:off-screen
+	~screenの外へ:off-screen
+	~screen幅:screen-width
+tap::::タップ
+	tapping
+touch::::タッチ
+視者:viewer::視る者
+slideshow::::スライドショー
+gesture::::ジェスチャ
+switch::::スイッチ
+	~focus可能:focusable
+	~page割り:paging
+	~page割り:paginate
+掘下げる:delve:掘り下げる
+閲覧-:view:~
+半端:awkward:~
+不精確:imprecise:~
+	精確さに欠く:less-precise
+終了-:terminate:~
+
+物理的挙動:physics:物理的ふるまい
+写真:photo:~
+	写真~集:album
+勢い:momentum:~
+放され:releaseされ:~
+抵抗-:resist:~
+自由:free:~
+固定的:fixed::~
+慣性的:inertial:~
+外方:outward:~
+回廊:corridor:~
+側:side:~
+埋めな:fillしな::~
+埋めて:fillして::~
+埋めら:fillさ::~
+途中:halfway:~
+遮られ:obscureされ:~
+遮って:obscureして:~
+覆われ:coverされ:~
+押下げた:pressした:~
+標的:target::~
+通過-:pass over:~
+	execution
+操作o:operation:操作
+操作o-:operate:操作
+見出し:heading:~
+頭部見出し:header:~
+
+	嵌め続ける:trap する
+	終え:finish
+	判る:aware
+	垣間見える:peek
+	拡がるようbreadth
+	普及:popular
+	大き過ぎる
+	押下げ:press
+	段々:gradual
+	敷き詰める:tile
+	つまみ:thumb
+	遠く外れた:far outside
+	逃れ:escape
+	軸からそれて:from drifting in the non-primary axis
+	向けて:toward
+	量:amount
+	離れ:away
+	互いの~~間隔が広い:widely spaced apart
+	余白:breathing room／breathing space
+	から見える:viewable
+	途切れなく:continuous stream
+	~pageをめくる:page down
+
+	●CSS layout
+	外方へ~offset:outset
+	内方へ~offset:inset
+格子:grid::~
+	格子~化され:gridded
+	-:item
+
+中心:center::~
+中央:center::~
+中央寄せに:center::~
+	中央
+終止-:end::~
+	終止-位置:end position
+終点:end-point::~
+	終点:endpoint
+	先頭
+内方:inward:~
+	-:bounding
+
+領域:region::~
+矩形:rectangle:~
+矩形な:rectangularな:~
+整列-:align::~
+	整列-法:aligning
+	〜に整列される:〜-aligned
+整列:alignment::~
+整列法:alignment::~
+
+	点:point
+	大きい:large
+	近づいた get closed
+	短い:short／lesser
+	散らばる:scatter
+	符合:coincident
+
+
+	●CSS
+変形-:transform::~
+
+	●構造
+
+平坦:flat:~
+
+	●仕様
+paradigm::::パラダイム
+裁量:discretion:~
+厳密度:strictness:~
+方式0:method::方式
+機能的:functional:~
+賢い:smartな:~
+
+素朴:naïve:~
+念頭:mind:~
+策:strategy:~
+最低限:minimum:~
+機構:mechanic:~
+適度:reasonable:~
+	関わらない:not be relevant
+	より明瞭に:clearer—compared to
+off::::オフ
+
+	ある:available
+	荷が重い:onerous
+	事項:pointer
+	仮想の:hypothetical
+	他の何か else:something else
+	category
+	十分近い／に足る:sufficiently
+	少しばかり:slightly
+	直感に反する:unintuitive
+	相応に:fairly
+	誤り:error
+	のみならず:not just
+
+	●仕様（動詞
+意向:intention:~
+多用-:frequent に employ:~
+配慮:care:~
+洗練-:sophisticate:~
+適応-:adapt:~
+判定:judgement:~
+修正-:fix:~
+正した:correctした:~
+強勢-:emphasize:強調
+
+	関わることはない:dependent
+	~~供:-
+	-:applicable
+	きちんと:well-
+	委ねられ:left up to
+	~~発行:publication
+	不可解なふるまい:look weird
+	不可解な:difficult-to-understand／odd
+	仕える:serve
+	外す:penalize
+	義務的:mandatory
+	仕向ける-:encourage
+	指摘-:point out
+	織り込んで，
+	選ばれ:chosen
+	選べなくなる:unchooseable
+	該当する:satisfiable:
+	満たす:satisfy
+
+	●未分類
+加算-:add:~
+log::::ログ
+section:
+	~program的:programmatic／programmatically
+anchor::::アンカー
+	Level:
+矢印:arrow:~
+限界:bounding:~
+	-:contributing
+	seen
+	vary
+	持ってくる:bring
+	~~絞る:reduce 〜 -set
+	~~絞る:scoping
+	見かけ:look
+	戻す:back
+	point
+	potentially
+	混在する:non-adjacent
+	corresponding
+	instance
+	表:table
+	二次元の:2D
+
+	●指示語
+	ほとんど:mostly
+	ほぼ:nearly
+	近い／近く:near
+	最も近い:nearest
+	少数の:small number of
+	-:distinct
+	同時:simultaneous
+	次にある／次回:next
+	集合:set
+	~~基準に:refer
+	:viewing
+	一部でも〜:at least part of
+	0 以外の:non-zero
+	旧:old
+	~~対象:item
+	まだ:still
+	どこか他:somewhere else
+
+●●ref_normative
+
+[CSS-ALIGN-3]
+    Elika Etemad; Tab Atkins Jr.. CSS Box Alignment Module Level 3. 6 December 2018. WD. URL: https://www.w3.org/TR/css-align-3/ 
+[CSS-BOX-3]
+    Elika Etemad. CSS Box Model Module Level 3. 18 December 2018. WD. URL: https://www.w3.org/TR/css-box-3/ 
+[CSS-CASCADE-4]
+    Elika Etemad; Tab Atkins Jr.. CSS Cascading and Inheritance Level 4. 28 August 2018. CR. URL: https://www.w3.org/TR/css-cascade-4/ 
+[CSS-DISPLAY-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Display Module Level 3. 11 July 2019. CR. URL: https://www.w3.org/TR/css-display-3/ 
+[CSS-LOGICAL-1]
+    Rossen Atanassov; Elika Etemad. CSS Logical Properties and Values Level 1. 27 August 2018. WD. URL: https://www.w3.org/TR/css-logical-1/ 
+[CSS-OVERFLOW-3]
+    David Baron; Elika Etemad; Florian Rivoal. CSS Overflow Module Level 3. 31 July 2018. WD. URL: https://www.w3.org/TR/css-overflow-3/ 
+[CSS-PSEUDO-4]
+    Daniel Glazman; Elika Etemad; Alan Stearns. CSS Pseudo-Elements Module Level 4. 25 February 2019. WD. URL: https://www.w3.org/TR/css-pseudo-4/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS-WRITING-MODES-4]
+    Elika Etemad; Koji Ishii. CSS Writing Modes Level 4. 30 July 2019. CR. URL: https://www.w3.org/TR/css-writing-modes-4/ 
+[CSS2]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[CSSOM-VIEW-1]
+    Simon Pieters. CSSOM View Module. 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-view-1/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[SELECTORS-4]
+    Elika Etemad; Tab Atkins Jr.. Selectors Level 4. 21 November 2018. WD. URL: https://www.w3.org/TR/selectors-4/ 
+
+●●
+ref_informative
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Scroll Snap Module Level 1</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+
+●●spec_metadata
+
+このバージョン
+	<span>https://www.w3.org/TR/2020/CR-css-scroll-snap-1-20200213/</span>
+最新発行バージョン
+	https://www.w3.org/TR/css-scroll-snap-1/
+編集者草案
+	https://drafts.csswg.org/css-scroll-snap-1/
+以前のバージョン
+	https://www.w3.org/TR/2019/CR-css-scroll-snap-1-20190131/
+	https://www.w3.org/TR/2018/CR-css-scroll-snap-1-20180814/
+	https://www.w3.org/TR/2017/CR-css-scroll-snap-1-20171214/
+	https://www.w3.org/TR/2017/CR-css-scroll-snap-1-20170824/
+	https://www.w3.org/TR/2017/CR-css-scroll-snap-1-20170209/
+	https://www.w3.org/TR/2016/CR-css-scroll-snap-1-20161020/
+	https://www.w3.org/TR/2016/WD-css-scroll-snap-1-20160623/
+	https://www.w3.org/TR/2016/WD-css-snappoints-1-20160329/
+	https://www.w3.org/TR/2015/WD-css-snappoints-1-20150326/
+
+テスト一式
+	http://test.csswg.org/suites/css-scroll-snap-1_dev/nightly-unstable/
+
+編集
+	Matt Rakow (Microsoft)
+	Jacob Rossi (Microsoft)
+	<a href="http://xanthir.com/contact/">Tab Atkins-Bittner</a> (Google)
+	<a href="http://fantasai.inkedblade.net/contact">Elika J. Etemad / fantasai</a> (Invited Expert)
+
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-scroll-snap-1/Overview.bs">GitHub Editor</a>
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-scroll-snap-1">GitHub Issues</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-scroll-snap-1
+
+フィードバック
+	<a href="mailto:www-style@w3.org?subject=%5Bcss-scroll-snap%5D%20YOUR%20TOPIC%20HERE">www-style@w3.org</a> with subject line “<kbd>[css-scroll-snap] <i>… message topic …</i></kbd>” (<a href="https://lists.w3.org/Archives/Public/www-style/" rel="discussion">archives</a>)
+
+</script>
+
+
+<!-- 
+CSSLINEGRID:https://drafts.csswg.org/css-line-grid/
+CSSSTICKY:http://tabatkins.github.io/specs/css-sticky-scrollbars/
+
+-->
+
+<body>
+
+<header>
+	<hgroup>
+<h1 id="title">CSS によるスクロール留め — CSS Scroll Snap Module Level 1</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この~moduleは、~panning／~scrollingの挙動を “留め位置（ `snap position^en ）” で制御する特能を包含する。
+◎
+This module contains features to control panning and scrolling behavior with “snap positions”.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+この節では、発行時点における…
+<!-- 
+これは編集者草案の公の複製です…
+-->
+【以下，この節の他の内容は <a href="css-common-ja.html#status">~CSS日本語訳 共通~page</a>に委譲。】
+</p>
+
+<!-- 
+A test suite and an implementation report will be produced during the CR period.
+ -->
+
+<p>
+次の特能は
+<a href="css-common-ja.html#at-risk">~risk下</a>
+にあり，勧告候補の期間~中に取下げらるかもしれません：
+◎
+The following features are at-risk, and may be dropped during the CR period:
+</p>
+
+<ul>
+	<li>
+`scroll-snap-stop$p
+◎
+scroll-snap-stop
+</li>
+</ul>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+~scroll可能な内容に対する
+<abbr title="User Experience — 利用者体験">UX</abbr>
+~paradigmでは、~page割り†など，内容を論理的な何~節かに区分するものに人気があり、多用されている。
+これはとりわけ、~touchによる内容とのヤリトリに該当する
+— ~tap~naviを通して階層-構造を掘下げるより，平坦に拡がるように配列された内容を~panする††方が、利用者にとっては，容易かつ素早く操作oできるので。
+例えば，写真~集の中の多数の写真を閲覧するとき、個々の写真を~tapするより，写真の~slideshowを~panする方が利用者には容易になる。
+◎
+Popular UX paradigms for scrollable content frequently employ paging through content, or sectioning into logical divisions. This is especially true for touch interactions where it is quicker and easier for users to quickly pan through a flatly-arranged breadth of content rather than delving into a heirarchical structure through tap navigation. For example, it is easier for a user to view many photos in a photo album by panning through a photo slideshow view rather than tapping on individual photos in an album.
+</p>
+
+<p class="trans-note">【†
+この仕様を通して、語 “~page” は印刷~媒体としての~pageではないことに注意。
+】【††
+“~pan” — 指先などで内容を直に “つかんで” ~scrollする~~操作。
+】</p>
+
+<p>
+しかしながら，［
+~touchによる~panning／~mousewheelによる~scrolling
+］は、その資質からして，入力が不精確になる。
+特に，内容の~page割り効果を［
+きちんと制御された~scrolling体験を保証するように作成する
+］のは、~web開発者にとって困難である。
+利用者による~panningは、半端な~scroll位置に着地し易く，~~対象は~screen上で部分的になる。
+◎
+However, given the imprecise nature of scrolling inputs like touch panning and mousewheel scrolling, it is difficult for web developers to guarantee a well-controlled scrolling experience, in particular creating the effect of paging through content. For instance, it is easy for a user to land at an awkward scroll position which leaves an item partially on-screen when panning.
+</p>
+
+<p>
+これを~~達成するため、この~moduleは，~scroll`留め位置$を導入する。
+それは、［
+~scrollingの完了-時に，`~scroll容器$の`~scrollport$が終止してよい~scroll位置
+］を施行する。
+◎
+To this end, this module introduces scroll snap positions which enforce the scroll positions that a scroll container’s scrollport may end at after a scrolling operation has completed.
+</p>
+
+<p>
+加えて，留ngが~offのときでも［
+~paging／~scroll位置決め
+］に対するより良い制御を提供するため、この~moduleは， `scroll-padding$p ~propを定義する。
+それは，どの`~scroll容器$にも利用でき、［
+~paging／~viewの中へ~scrollする
+］操作oの目的で，`~scroll容器$の`最適な~view用~領域$を調整する。
+同様に， `scroll-margin$p ~propを利用すれば、どの~boxに対しても
+— ~viewの中へ~scrollする操作oの目的で —
+その視覚的な区画を調整できる。
+◎
+Also, to offer better control over paging and scroll positioning even when snapping is off, this module defines the scroll-padding property for use on all scroll containers, to adjust the scroll container’s optimal viewing region for the purpose of paging and scroll-into-view operations. Similarly the scroll-margin property can be used on any box to adjust its visual area for the purpose of scroll-into-view operations.
+</p>
+
+		<section id="placement">
+<h3 title="Module interactions">1.1. ~module間の相互作用</h3>
+
+<p>
+この~moduleは、
+`CSS2$r の
+<a href="~CSS2VISUFX#overflow-clipping">§ ~overflow</a>
+に定義される~scrolling用の~UI特能を拡張する。
+◎
+This module extends the scrolling user interface features defined in [CSS2] section 11.1.
+</p>
+
+<p>
+この~moduleのどの~propも，
+`first-line$pe ／ `first-letter$pe
+疑似要素には適用されない。
+◎
+None of the properties in this module apply to the ::first-line and ::first-letter pseudo-elements.
+</p>
+
+		</section>
+		<section id="values">
+<h3 title="Value Definitions">1.2. 値~定義</h3>
+
+<p class="trans-note">【
+この節の内容は
+<a href="css-common-ja.html#values">~CSS日本語訳 共通~page</a>
+に委譲。
+】</p>
+
+		</section>
+	</section>
+	<section id="examples">
+<h2 title="Motivating Examples">2. 動機にある例</h2>
+
+<div class="example">
+<p>
+次の例では、写真~展示を築くため，`~scroll容器$内に一連の画像が配列されているとする。
+この例の`~scroll容器$は、その中の写真より（同時に複数の画像が見えるほどに）大きく，画像~sizeもまちまちである。
+`mandatory$v の下で要素に基づく留め位置を利用すれば、~scrollingは，画像が~scrollport内で常に中央寄せになるよう完了する。
+
+◎
+In this example, a series of images arranged in a scroll container are used to build a photo gallery. In this example the scroll container is larger than the photos contained within (such that multiple images may be seen simultaneously), and the image sizes vary. Using mandatory element-based snap positions, scrolling will always complete with an image centered in the scroll container’s scrollport.
+</p>
+
+<pre class="lang-css">
+img {
+    /* <span class="comment">
+各~写真の中心が X 軸において`~scroll容器$の中心に整列するよう，留ngを指定する。
+◎
+Specifies that the center of each photo should align with the center of the scroll container in the X axis when snapping
+</span> */
+    `scroll-snap-align$p: `none^v `center$v;
+}
+.photoGallery {
+    width: 500px;
+    `overflow-x$p: auto;
+    `overflow-y$p: hidden;
+    white-space: nowrap;
+    /* <span class="comment">
+~scrollingの完了-時には，~scroll位置が常に留め位置に来るよう要求する。
+◎
+Requires that the scroll position always be at a snap position when the scrolling operation completes.
+</span> */
+    `scroll-snap-type$p: `x$v `mandatory$v;
+}
+</pre>
+
+<pre class="lang-html">
+&lt;div class="photoGallery"&gt;
+    &lt;img src="img1.jpg"&gt;
+    &lt;img src="img2.jpg"&gt;
+    &lt;img src="img3.jpg"&gt;
+    &lt;img src="img4.jpg"&gt;
+    &lt;img src="img5.jpg"&gt;
+&lt;/div&gt;
+</pre>
+
+<figure style="min-height:200px;">
+<img
+	alt=""
+	src="css-scroll-snap/element_snap_positions.svg"
+	style="width:100%;"
+>
+
+<figcaption>
+上の例における~scroll容器の内容の~layout。
+赤色の矩形は`留域$を表現し，青色の各~矩形は`留め区画$を表現している。
+`scroll-snap-align$p は行内~軸（この例では横~軸）において中央（ `center$v ）なので、留域の X 軸~中央と（赤色の点線）, 留め区画の X 軸~中央（黄色の点線）とが整列されるよう，各~scroll位置の所に留め位置が確立される。
+◎
+The layout of the scroll container’s contents in the example. The snapport is represented by the red rectangle, and the snap area is represented by the yellow rectangle. Since the scroll-snap-align is “center” in the inline (horizontal) axis, a snap position is established at each scroll position which aligns the X-center of the snapport (represented by a red dotted line) with the X-center of a snap area (represented by a yellow dotted line).
+</figcaption></figure>
+
+</div>
+
+<div class="example">
+<p>
+次の例では、文書の各 “~page” は，`~scroll容器$の辺に ある程度近い所に整列するよう~page割りされる。
+これにより，前~pageが~~上端付近に “~~垣間見える” ようになり、文書の~~先頭でないことが利用者に~~判るようになる。
+`mandatory$v に代えて `proximity$v による留め位置を利用すれば、利用者は，~pageの途中で止めることも可能になる（~pageごとに留めるよう強制するのでなく）。
+その場合でも，~scrollingが留め位置~近くで終えられたときは、~scrollが調整され，~pageは指定されたとおりに整列するようになる。
+◎
+This example builds a paginated document that aligns each page near to (but not exactly on) the edge of the scroll container. This allows the previous page to “peek” in from above in order to make the user aware that they are not yet at the top of the document. Using proximity snap positions instead of mandatory snap positions allows the user to stop halfway through a page (rather than forcing them to snap one page at a time). However, if a scrolling operation would finish near a snap position, then the scroll will be adjusted to align the page as specified.
+</p>
+
+<pre class="lang-css">
+.page {
+    /* <span class="comment">
+各~pageの上端が留ngに利用されるべきよう定義する。
+◎
+Defines the top of each page as the edge that should be used for snapping
+</span> */
+    `scroll-snap-align$p: `start$v `none^v;
+}
+.docScroller {
+    width: 500px;
+    `overflow-x$p: hidden;
+    `overflow-y$p: auto;
+    /* <span class="comment">
+各~要素の留め区画を，上端~辺からの~offset `100px^v の所に整列するべきよう指定する。
+◎
+Specifies that each element’s snap area should align with a 100px offset from the top edge.
+</span> */
+    `scroll-padding$p: 100px 0 0;
+     /* <span class="comment">
+留め位置に近い所で~scrollingが終えられたときは、留め位置の所で完了するよう仕向ける。
+◎
+Encourages scrolling to end at a snap position when the operation completes, if it is near a snap position
+</span> */
+    `scroll-snap-type$p: `y$v `proximity$v;
+}
+</pre>
+
+<pre class="lang-html">
+&lt;div class="docScroller"&gt;
+    &lt;div class="page"&gt;Page 1&lt;/div&gt;
+    &lt;div class="page"&gt;Page 2&lt;/div&gt;
+    &lt;div class="page"&gt;Page 3&lt;/div&gt;
+    &lt;div class="page"&gt;Page 4&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+<figure style="min-height:600px;">
+<img
+	alt=""
+	src="css-scroll-snap/element_snap_positions_offset.svg"
+	style="float: left;"
+>
+<figcaption>
+上の例における~scroll容器の内容の~layout。
+赤色の矩形は`留域$を表現し（ `scroll-padding$p により，容器の上端から 100px だけ内方へ~offsetされている），青色の各~矩形は各~要素の`留め区画$を表現している。
+`scroll-snap-align$p は Y 軸における “始端”（ `start$v ）なので、留域の Y 軸~始端と（赤色の点線）と, 留め区画の Y 軸~始端（青色の点線）とを整列するように，各~scroll位置の所に留め位置が確立される。
+◎
+The layout of the scroll container’s contents in the example. The snapport is represented by the red rectangle (inset from the top by 100px due to the scroll-padding), and the snap area is represented by the yellow rectangle. Since the scroll-snap-align is “start” in the Y axis, a snap position is established at each scroll position which aligns the Y-start of the snapport (represented by a red dotted line) with the Y-start of a snap area (represented by a yellow dotted line).
+</figcaption>
+</figure>
+
+<div style="clear: both;"></div>
+</div>
+
+	</section>
+	<section id="overview">
+<h2 title="Scroll Snap Model">3. ~scroll留めの~model</h2>
+
+<p>
+この~moduleは、~scroll
+`留め位置@
+用の制御を定義する。
+それは、`~scroll容器$の中で，その内容を特定0の~scroll位置に整列させる。
+作者は、［
+`~scroll容器$上で `scroll-snap-type$p ~propを利用する
+］ことにより，［
+~scrollportが~scrollされ終えたとき，近くにある`留め位置$に着地させる
+］よう要請できる（ `scrollTo()$m ~methodによる，~program的な~scrollも含めて）。
+◎
+This module defines controls fo scroll snap positions, which are scroll positions that produce particular alignments of content within a scroll container. Using the scroll-snap-type property on the relevant scroll container, the author can request a particular bias for the scrollport to land on a snap position after scrolling operations (including programmatic scrolls such as the scrollTo() method).
+</p>
+
+<div class="p">
+<p>
+`留め位置$は、［
+`~scroll容器$ %C の`留域$
+］における，［
+%C 内の要素 %E の`~scroll留め区画$
+］に対する［
+特定0の整列法
+］を通して指定される。
+ここで：
+</p>
+
+<ul>
+	<li>
+%C の`留域$は、 %C の`~scrollport$を %C の `scroll-padding$p だけ狭めて得られる矩形である。
+</li>
+	<li>
+%E の`~scroll留め区画$は、
+%E の~border~boxを %E の `scroll-margin$p だけ拡げて得られる矩形であり、既定では %E の~border~boxになる。
+</li>
+	<li>
+整列法は `scroll-snap-align$p により指定され、前述の 2 つの矩形のどの位置を互いに整列するかを制御する。
+</li>
+</ul>
+◎
+Snap positions are specified as a particular alignment (scroll-snap-align) of an element’s scroll snap area (its border bounding box, as modified by scroll-margin) within the scroll container’s snapport (its scrollport, as reduced by scroll-padding).＼
+</div>
+
+<p>
+これは、概念的には，`整列~容器$における`整列~subject$の整列法を指定することに等価になる。
+`留め位置$は、指定された整列法を満たすような~scroll位置として与えられる。
+◎
+This is conceptually equivalent to specifying the alignment of an alignment subject within an alignment container. A scroll position that satisfies the specified alignment is a snap position.
+</p>
+
+<p>
+`~scrollport$の~scroll位置が`留め位置$に整列するよう調整する動作は、
+`留ng@ （ `snap^en ／ `snapping^en ）
+と呼ばれる。
+`~scroll容器$は、その`~scrollport$の~scroll位置がある`留め位置$にあって，作動中の~scrollingはないとき、その留め位置に`留められ$ているという。
+この~moduleは、`留め$の施行-時に利用する精確な~animationや物理的挙動については，何も 指定しないし義務付けない
+— それは、意図的に~UAに委ねられる。
+◎
+The act of adjusting the scroll position of a scroll container’s scrollport such that it is aligned to a snap position is called snapping, and a scroll container is said to be snapped to a snap position if its scrollport’s scroll position is that snap position and there is no active scrolling operation. The CSS Scroll Snap Module intentionally does not specify nor mandate any precise animations or physics used to enforce snap positions; this is left up to the user agent.
+</p>
+
+<p>
+要素の`留め位置$が影響するのは、要素の`包含塊の連鎖$において，要素に最も近い先祖の`~scroll容器$に限られる。
+◎
+Snap positions only affect the nearest ancestor scroll container on the element’s containing block chain.
+</p>
+
+	</section>
+	<section id="properties-on-the-scroll-container">
+<h2 title="Capturing Scroll Snap Areas: Properties on the scroll container">4. ~scroll留め区画の捕捉-法： ~scroll容器~上の各種~prop</h2>
+
+		<section id="scroll-snap-type">
+<h3 title="Scroll Snapping Rules: the scroll-snap-type property">4.1. ~scroll留ngの規則： `scroll-snap-type^p ~prop</h3>
+
+◎名 `scroll-snap-type@p
+◎値
+`none$v | [ `x$v | `y$v | `block$v | `inline$v | `both$v ] [ `mandatory$v | `proximity$v ]?
+
+◎初 `none$v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword（たち）
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+`scroll-snap-type$p ~propは、`~scroll容器$は`~scroll留め容器$になるかどうか, および［
+そうであれば、どの軸が考慮され，どの~~程度~厳密に`留められ$るべきか
+］を指定する。
+`厳密度~値$は、指定されていない場合は `proximity$v と見做される。
+◎
+The scroll-snap-type property specifies whether a scroll container is a scroll snap container, how strictly it snaps, and which axes are considered. If no strictness value is specified, proximity is assumed.
+</p>
+
+<div class="example">
+<p>
+この例では、見出しへの留ngが，`塊-軸$（横組みでは y 軸, 縦組みでは x 軸）~~方向に可能化されている：
+◎
+In this example, snapping to headings is enabled in the block axis (the y axis for horizontal writing, x axis for vertical writing):
+</p>
+
+<pre class="lang-css">
+html {
+  scroll-snap-type: block;   /* <span class="comment">
+文書~全体の~scroll域に適用される
+◎
+applied to main document scroller
+</span> */
+}
+h1, h2, h3, h4, h5, h6 {
+  scroll-snap-align: start;  /* <span class="comment">
+表示域の始端（上端）に留める
+◎
+snap to the start (top) of the viewport
+</span> */
+}
+</pre>
+</div>
+
+<p>
+~UAは、根~要素に設定された `scroll-snap-type$p 値を文書~表示域に適用するモノトスル。
+（ `overflow$p と違って， `scroll-snap-type^p 値は、~HTML `body$e 要素からは`伝播しない^emことに注意。）
+◎
+UAs must apply the scroll-snap-type value set on the root element to the document viewport. Note that, unlike overflow, scroll-snap-type values are not propagated from HTML body.
+</p>
+
+			<section id="snap-axis">
+<h4 title="Scroll Snap Axis: the x, y, block, inline, and both values">4.1.1.  ~scroll留め軸： `x^v, `y^v, `block^v, `inline^v, `both^v 値</h4>
+
+<p>
+以下に定義される各種
+`軸~値@
+は、［
+`~scroll容器$ %C 内の各~要素が~~供する`留め位置$ %P
+］は，［
+各~軸ごとに独立に評価されるのか, あるいは
+二次元の点として両~軸とも一緒に評価されるのか
+］, および［
+前者の場合， %P は どの軸~~方向の`留め$に影響するか
+］を指定する：
+◎
+The axis values specify what axis(es) are affected by snap positions, and whether snap positions are evaluated independently per axis, or together as a 2D point. Values are defined as follows:
+</p>
+
+<dl class="valdef">
+	<dt>`x@v, `y@v, `block@v, `inline@v</dt>
+	<dd>
+順に：
+%C は、その［
+横~軸, 縦~軸, 塊-軸, 行内-軸
+］~~方向にのみ， %P に`留める$。
+◎
+The scroll container snaps to snap positions in its horizontal axis only.
+◎
+The scroll container snaps to snap positions in its vertical axis only.
+◎
+The scroll container snaps to snap positions in its block axis only.
+◎
+The scroll container snaps to snap positions in its inline axis only.
+</dd>
+
+	<dt>`both@v</dt>
+	<dd>
+%C は、その両~軸~~方向において，軸ごとに独立に %P に`留める$。
+（したがって、軸ごとに異なる要素に`留められ$得る。）
+◎
+The scroll container snaps to snap positions in both of its axes independently (potentially snapping to different elements in each axis). 
+</dd>
+
+</dl>
+			</section>
+			<section id="snap-strictness">
+<h4 title="Scroll Snap Strictness: the none, proximity, and mandatory values">4.1.2.  ~scroll留めの厳密度： `none^v, `proximity^v, `mandatory^v 値</h4>
+
+<p>
+以下に定義される各種
+`厳密度~値@
+は、`~scroll容器$上で，`留め位置$がどの~~程度~厳密に（~scroll位置の調整を強制することにより）施行されるかを指定する：
+◎
+The strictness values (none, proximity, mandatory) specify how strictly snap positions are enforced on the scroll container (by forcing an adjustment to the scroll position). Values are defined as follows:
+</p>
+
+<dl class="valdef">
+	<dt>`none@v</dt>
+	<dd>
+この値が指定されている`~scroll容器$は、`留められ$ないモノトスル。
+◎
+If specified on a scroll container, the scroll container must not snap.
+</dd>
+
+	<dt>`mandatory@v</dt>
+	<dd>【“~~義務的”】</dd>
+	<dd>
+この値が指定されている`~scroll容器$は、［
+~scrollingが作動中でない間，および作動中の~scrollが終了したとき
+］は、妥当な`留め位置$が存在するならば，`留められ$るモノトスル（留め位置が存在しなければ，`留ng$も生じない）。
+◎
+If specified on a scroll container, the scroll container is required to be snapped to a snap position when there are no active scrolling operations. If a valid snap position exists then the scroll container must snap at the termination of a scroll (if none exist then no snapping occurs).
+</dd>
+
+	<dt>`proximity@v</dt>
+	<dd>【“~~近接的”】</dd>
+	<dd>
+この値が指定されている`~scroll容器$に対しては、~UAは
+— 所与の~scroll~parameterに基づいて，自身の裁量で —
+~scrollの終了-時に`留め位置$に`留めて$ヨイ。
+◎
+If specified on a scroll container, the scroll container may snap to a snap position at the termination of a scroll, at the discretion of the UA given the parameters of the scroll.
+</dd>
+</dl>
+
+<p class="advisement"><strong>
+作者は、留め位置に `mandatory$v を利用するときは，多様な［
+~screen~sizeや, 場合によっては内容~size
+］を考慮するべきである。
+留められている, かつ`~scrollport$より大きい要素への~accessは，~UAにより取扱われるが、特に，同じ`~scrollport$内に 留め位置を~~供する内容, ~~供さない内容が混在する場合、後者の内容は，~screenに比して長いときに~access不能になり得る。
+◎
+Authors should use mandatory snap positions with consideration of varyingly-sized screens and (if applicable) varying-sized content. In particular, although access to snapped elements larger than the scrollport is handled by the UA, if authors assign mandatory snapping to non-adjacent siblings, content in between can become inaccessible in cases where it is longer than the screen.
+</strong></p>
+
+<div class="p">
+<p>
+所与の~boxの
+`~scroll留め容器@
+は、次で与えられる：
+</p>
+
+<ul>
+	<li>
+［
+~boxの`包含塊の連鎖$において，`留め位置を捕捉する$
+］ような，~boxに最も近い先祖であって、［
+`~scroll容器$である, `かつ^em
+`scroll-snap-type$p 値は `none$v 以外にされている
+］もの。
+</li>
+	<li>
+ここで、［
+`~scroll容器$である, `または^em
+`scroll-snap-type$p 値が `none$v 以外にされた~box
+］が、
+`留め位置を捕捉する@
+とされる。
+</li>
+</ul>
+
+<p>
+該当するものがない場合、~boxには`~scroll留め容器$はない。
+その場合、~boxの`留め位置$は`留ng$を誘発しないことになる。
+</p>
+
+◎
+A box captures snap positions if it is a scroll container or has a value other than none for scroll-snap-type. If a box’s nearest snap-position capturing ancestor on its containing block chain is a scroll container with a non-none value for scroll-snap-type, that is the box’s scroll snap container. Otherwise, the box has no scroll snap container, and its snap positions do not trigger snapping.
+</div>
+
+			</section>
+			<section id="re-snap">
+<h4 title="Re-snapping After Layout Changes">4.1.3. ~layout変化-後の留直し</h4>
+
+<p>
+文書の内容または~layoutが変化して（例えば内容が
+追加-／移動-／削除-／~resize
+された），`留域$の内容が変化した場合、~UAには，［
+結果の~scroll位置を評価し直して，留直す
+］ことが要求される。
+`~scroll容器$がそれまで`留められ$ていた位置 %P からずれたときは、内容の変化-後も %P がまだ存在するならば（例： %P を与えていた要素は削除されていない）、再度 %P に`留める$モノトスル。
+◎
+If the content or layout of the document changes (e.g. content is added, moved, deleted, resized) such that the content of a snapport changes, the UA must re-evaluate the resulting scroll position, and re-snap if required. If the scroll container was snapped before the content change and that same snap position still exists (e.g. its associated element was not deleted), the scroll container must be re-snapped to that same snap position after the content change.
+</p>
+
+<div class="example">
+
+<p>
+次の例における~log~console（ `.log^css ）は、［
+初期~時に読込まれたとき, および~messageたちが下端に追加される
+］に伴い，内容の下端へ留められ続ける
+— 利用者が~scrollして，その下端~辺から離れない限り：
+◎
+In the following example, the log console, when initially loaded and as each message is added to the bottom, remains snapped to the bottom of the content unless the user has scrolled away from that edge:
+</p>
+
+<pre class="lang-css">
+.log {
+  scroll-snap-type: proximity;
+  align-content: end;
+}
+.log::after {
+  display: block;
+  content: "";
+  scroll-snap-align: end;
+}
+</pre>
+
+<p>
+上の規則は、単独の`~scroll留め区画$ %区画 を作成する
+— それは、 `after$pe 疑似要素で表現され，`~scroll留め容器$の下端に位置される。
+利用者が下端 “近く” へ~scrollした場合、容器は， %区画 へ留められることになる。
+容器に他の内容が動的に追加されても、 %区画 は留められ続けることになる（~scroll容器は、何かかが変化した後もまだ存在するならば，同じ~scroll留め区画に留直すことが要求されるので）。
+しかしながら，利用者が~log内のどこか他へ~scrollした場合には、何もしない。
+◎
+The rules create a single scroll snap area represented by the ::after pseudo-element, positioned at the very bottom of a scroll snap container. If the user scrolls “near” the bottom, the container will snap to it. If more content is dynamically added to the container, it’ll remain snapped to it (because scroll containers are required to re-snap to the same scroll snap area if it still exists after any changes). However, if the user has scrolled to somewhere else in the logs, it won’t do anything at all.
+</p>
+</div>
+
+			</section>
+		</section>
+		<section id="scroll-padding">
+<h3 title="Scroll Snapport: the scroll-padding property">4.2 ~scroll留域： `scroll-padding^p ~prop</h3>
+
+◎名 `scroll-padding@p
+◎値 [ `auto$v | `length-percentage$vt ]{1,4}
+◎初 `auto^v
+◎適 `~scroll容器$
+◎継 されない
+◎百
+`~scrollport$の対応する次元に相対的
+◎
+relative to the corresponding dimension of the scroll container’s scrollport
+◎算
+各~側ごとに，［
+~keyword `auto^v ／算出された `length-percentage$t 値
+］
+◎
+per side, either the keyword auto or a computed &lt;length-percentage&gt; value
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+この~propは、~scrollportを成す
+`最適な~view用~領域@
+を定義する~offsetを指定する（`~scroll留め容器$のみならず，すべての`~scroll容器$用に）
+— その領域は、利用者の~viewにモノを配置する領域として利用される。
+これにより，作者は、他の内容（固定的に位置された~toolbarや~sidebarなど）に遮られた`~scrollport$が成す領域を除外したり，単純に 当の要素と~scrollportの各~辺との合間に余白をとることが可能になる。
+◎
+This property specifies (for all scroll containers, not just scroll snap containers) offsets that define the optimal viewing region of a scrollport: the region used as the target region for placing things in view of the user. This allows the author to exclude regions of the scrollport that are obscured by other content (such as fixed-positioned toolbars or sidebars) or simply to put more breathing room between a targetted element and the edges of the scrollport.
+</p>
+
+<p>
+`scroll-padding$p ~propは，すべての
+<a href="#longhands">`scroll-padding-*^p 下位prop</a>
+を一つの宣言でまとめて設定する`略式~prop$であり、各~側を表現している値をその各 下位propにアテガう
+— `padding$p ~propがその各 下位propに値をアテガうときとちょうど同じように。
+各種~値の意味は：
+◎
+The scroll-padding property is a shorthand property that sets all of the scroll-padding-* longhands in one declaration, assigning values to the longhands representing each side exactly as the padding property does for its longhands. Values have the following meanings:
+</p>
+
+<dl>
+	<dt id="valdef-scroll-padding-length-percentage">`length-percentage$t</dt>
+	<dd>
+`~scrollport$の対応する辺から内方への~offsetを定義する。
+`~scrollport$は根~scroller†であるときは、~offsetは~layout表示域††に相対的になる。
+◎
+Defines an inward offset from the corresponding edge of the scrollport. When the scrollport is the root scroller, the offset is relative to the layout viewport.
+</dd>
+	<dd class="note">注記：
+`~scrollport$は`~scroll容器$の可視域として定義されているが、`~scroll容器$が根~scrollerであるときは，~scroll~padding~offsetは~layout表示域に相対的になる。
+◎
+Though the scrollport is defined as the visual viewport of the scroll container, scroll padding offsets are relative to the layout viewport when the scroll container is the root scroller.
+</dd>
+	<dd class="trans-note">【†
+定義されていないが、~page全体に対応する`~scrollport$（言い換えれば、~UIwindowの中）と見受けられる。
+（注記では、~scrollportでなく，~scroll容器であることを示唆している
+— どっちなのか，はっきりしないが、両方を兼ねるのかもしれない）。
+】【††
+~layout表示域は、~scrollして見出せるもの全体を囲う区画と考えればよいであろう（一般に，可視域より広くなる）。
+】</dd>
+
+	<dt>`auto@v</dt>
+	<dd>
+`~scrollport$の対応する辺からの~offsetは、~UAが決定することを指示する。
+これに対する使用~長さは，一般に既定で `0px^v になるべきであるが、~UAは，
+0 以外の値の方が適切になるときは，それを検出する経験則を利用してヨイ。
+◎
+Indicates that the offset for the corresponding edge of the scrollport is UA-determined. This should generally default to a used length of 0px, but UAs may use heuristics to detect when a non-zero value is more appropriate.
+</dd>
+	<dd class="example">
+例えば~UAは、［
+`position^p が `fixed^v にされた要素が，不透明な~scroll不能な “頭部見出し” として利用されていて、それが下にある内容を遮っていることを検出した
+］ときは、上端~offsetを，その要素の縦幅に解決することもできる
+— “~pageをめくる” 操作o（ <kbd>PgDn</kbd> キーを押下げたときなど）が，内容の “可視な 1 ~page” 分だけ自動的に~scrollするように。
+◎
+For example, a UA could detect when a position:fixed element is being used as an opaque unscrollable “header” that obscures the content below it, and resolve the top offset to the height of that element so that a “page down” operation (such as pressing PgDn) automatically scrolls by one “visible page” of content.
+</dd>
+</dl>
+
+<div class="p">
+<p>
+これらの~offsetは、`~scrollingにおいて^em［
+`~scrollport$の， “利用者から見える” と見なされる領域
+］を~offsetして抑制する。
+その効果は、［
+~layout ／ ~scroll原点 ／ 初期~位置 ／ 要素が実際に`可視^emと見なされるかどうか
+］には及ばないが、次には影響して，［
+`~scrollport$の`最適な~view用~領域$の中では、利用者は 内容を途切れなく見れる
+］ようになるべきである：
+</p>
+
+<ul>
+	<li>
+［
+要素 ／~caret
+］は，~viewの中へ~scrollされると見なされるかどうか。
+</li>
+	<li>
+~paging（ <kbd>PgUp</kbd> ／ <kbd>PgDn</kbd> ~Keyにより, あるいは ~scrollbarから誘発される等価な操作o）に対する~scroll量を抑制するかどうか。
+</li>
+</ul>
+
+◎
+These offsets reduce the region of the scrollport that is considered “viewable” for scrolling operations: they have no effect on layout, on the scroll origin or initial position, or on whether or not an element is considered actually visible, but should affect whether an element or the caret is considered scrolled into view, and reduce the amount of scrolling for paging operations (such as using the PgUp and PgDn keys or triggering equivalent operations from the scrollbar) so that within the optimal viewing region of the scrollport the user sees a continuous stream of content.
+</div>
+
+<p>
+`留め容器$に対しては、この領域は
+`留域@
+も定義する。
+それは、`~scrollport$内の区画であり，`留め位置$を計算するときに `~scroll留め区画$に対する`整列~容器$として利用される。
+◎
+For a scroll snap container this region also defines the scroll snapport—the area of the scrollport that is used as the alignment container for the scroll snap areas when calculating snap positions.
+</p>
+
+<div class="example">
+
+<p>
+`scroll-padding$p を利用して、~slideshow画像を，［
+`~scrollport$内の，固定的に位置された `.toolbar^css で遮られていない部分
+］の中央に据える例：
+◎
+In this example, scroll-padding is used to center slideshow images within the portion of the scrollport that is not obscured by a fixed-position toolbar.
+</p>
+
+<pre class="lang-css">
+html {
+    `overflow-x$p: auto;
+    `overflow-y$p: hidden;
+    `scroll-snap-type$p: `x$v `mandatory$v;
+    `scroll-padding$p: 0 500px 0 0;
+}
+.toolbar {
+    position: fixed;
+    height: 100%;
+    width: 500px;
+    right: 0;
+}
+img {
+    `scroll-snap-align$p: none `center$v;
+}
+</pre>
+
+</div>
+
+<p>
+~UAは、根~要素に設定された `scroll-padding$p 値を文書~表示域に適用するモノトスル。
+（ `overflow$p と違って， `scroll-padding^p 値は、~HTML `body$e 要素からは`伝播しない^emことに注意。）
+◎
+UAs must apply the scroll-padding values set on the root element to the document viewport. (Note that, unlike overflow, scroll-padding values are not propagated from HTML body.)
+</p>
+
+		</section>
+	</section>
+	<section id="properties-on-the-elements">
+<h2 title="Aligning Scroll Snap Areas:  Properties on the elements">5. ~scroll留め区画の整列-法： 要素~上の各種~prop</h2>
+
+		<section id="scroll-margin">
+<h3 title="Scroll Snapping Area: the scroll-margin property">5.1. ~scroll留め区画： `scroll-margin^p ~prop</h3>
+
+◎名 `scroll-margin@p
+◎値 
+`length$t{1,4}
+◎初 `0^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算
+各~側ごとに，絶対~長さ
+◎
+per side, an absolute length
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+この~propは、すべての
+<a href="#longhands">`scroll-margin-*^p 下位prop</a>
+を，一つの宣言でまとめて設定する`略式~prop$であり、各~側を表現している値をその各 下位propにアテガう
+— `margin$p ~propがその各 下位propにアテガうときとちょうど同じように。
+◎
+This property is a shorthand property that sets all of the scroll-margin-* longhands in one declaration, assigning values to the longhands representing each side exactly as the margin property does for its longhands.
+</p>
+
+<p>
+各 値は、外方への~offsetを表現し，
+`~scroll留め区画@
+— 要素を留域に留めるときに利用される~box —
+を定義する。
+`~scroll留め区画$は、［
+変形された~border~box†から，（`~scroll容器$の座標~空間に軸が整列された）矩形な限界~boxを見出した結果
+］に 指定された外方への~offsetを加算する††ことにより，決定される。
+◎
+Values represent outsets defining the scroll snap area that is used for snapping this box to the snapport. The scroll snap area is determined by taking the transformed border box, finding its rectangular bounding box (axis-aligned in the scroll container’s coordinate space), then adding the specified outsets.
+</p>
+
+<p class="trans-note">【†
+CSS Transform による変形と思われる。
+】【††
+負な数を与えた場合、内方へ~offsetされることになる。
+】</p>
+
+<p class="note">注記：
+これは、`~scroll留め区画$が常に矩形になり，その軸は`~scroll容器$の座標~空間に整列されることを確保する。
+◎
+Note: This ensures that the scroll snap area is always rectangular and axis-aligned to the scroll container’s coordinate space.
+</p>
+
+<p>
+標的~要素を定義する素片（ `target$ps に合致するものや, `scrollIntoView()$m の標的になるもの）へ ~pageが~navigateされたときは、~UAは，`~scroll可能な~overflow域$を成す どの区画を~viewの中に持ってくるか決定するときには、要素の
+— ~border~boxではなく —
+`~scroll留め区画$を利用するべきである
+— この要素に対し`留ngが~offである／適用されないときでも^em。
+◎
+If a page is navigated to a fragment that defines a target element (one that would be matched by :target, or the target of scrollIntoView()), the UA should use the element’s scroll snap area, rather than just its border box, to determine which area of the scrollable overflow region to bring into view, even when snapping is off or not applied on this element.
+</p>
+
+		</section>
+		<section id="scroll-snap-align">
+<h3 title="Scroll Snapping Alignment: the scroll-snap-align property">5.2. ~scroll留ngの整列法： `scroll-snap-align^p ~prop</h3>
+
+◎名 `scroll-snap-align@p
+◎値
+[ `none$v | `start$v | `end$v | `center$v ]{1,2}
+◎初 `none$v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 2 個の~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<div >
+<p>
+`scroll-snap-align$p ~propは、要素が生成する~box %~box の`留め位置$を，各~軸ごとに，［
+%容器 の中における %対象 の整列法
+］として指定する
+— ここで：
+</p>
+
+<ul>
+	<li>
+%容器 は、`整列~容器$としての， %~box の`留め容器$の`留域$である
+</li>
+	<li>
+%対象 は、`整列~subject$としての， %~box の`留め区画$である
+</li>
+</ul>
+
+<p>
+2 個の値は、順に，留ngにおける［
+塊, 行内
+］軸~~方向への整列を指定する。
+値が 1 個だけ指定された場合，その値が 2 個目の値も与える。
+</p>
+◎
+The scroll-snap-align property specifies the box’s snap position as an alignment of its snap area (as the alignment subject) within its snap container’s snapport (as the alignment container). The two values specify the snapping alignment in the block axis and inline axis, respectively. If only one value is specified, the second value defaults to the same value.
+</div>
+
+<p>
+%~box の`留め位置$は、値に応じて，［
+対応する軸において， %対象, %容器 を次のように整列させる位置
+］として定義される：
+◎
+Values are defined as follows:
+</p>
+
+<dl class="switch">
+	<dt>`none@v</dt>
+	<dd>
+`留め位置$は定義されず，
+%対象, %容器 は互いに整列されない。
+◎
+This box does not define a snap position in the specified axis.
+</dd>
+
+	<dt>`start@v</dt>
+	<dd>
+%対象, %容器 の始端どうしを整列させる。
+◎
+Start alignment of this box’s scroll snap area within the scroll container’s snapport is a snap position in the specified axis.
+</dd>
+
+	<dt>`end@v</dt>
+	<dd>
+%対象, %容器 の終端どうしを整列させる。
+◎
+End alignment of this box’s scroll snap area within the scroll container’s snapport is a snap position in the specified axis. 
+</dd>
+
+	<dt>`center@v</dt>
+	<dd>
+%対象, %容器 の中央どうしを整列させる。
+◎
+Center alignment of this box’s scroll snap area within the scroll container’s snapport is a snap position in the specified axis. 
+</dd>
+
+</dl>
+
+			<section id="snap-scope">
+<h4 title="Scoping Valid Snap Positions to Visible Boxes">5.2.1. 妥当な留め位置を可視~boxに~~絞る</h4>
+
+<p>
+~scrollを留める目的は，［
+`~scrollport$の中で，内容が最適に見えるように整列する
+］ことなので、［
+留めたときに`留め区画$全体が`留域$の外側に出る
+］ような留め位置は
+— `留域$に要求される整列を満たすことになるとしても —
+妥当とは見なされない。
+◎
+Since the purpose of scroll snapping is to align content within the scrollport for optimal viewing, a scroll position cannot be considered a valid snap position if snapping to it would leave the contributing snap area entirely outside the snapport, even if it otherwise satisfies the required alignment of the snap area.
+</p>
+
+<div class="example">
+
+<p>
+`留め区画$は、例えば［
+その上端~辺が`留域$の上端~辺に符合する
+］ならば，`留域$にて上端が整列される。
+これは、`留め区画$が一部でも~screenに入るならば，［
+`塊-軸$の始端に整列される留ng
+］用の妥当な留め位置と見なされる。
+しかしながら，`留め区画$全体が`留域$の外側に出る場合、`~scroll容器$は そこへ留められるものとは見なせない
+— 要求される整列が満たされようが，視者には関連しないので。
+◎
+For example, a snap area is top-aligned to the snapport if its top edge is coincident with the snapport’s top edge; and this would be considered a valid snap position for block-axis start-aligned snapping of that snap area if at least part of the snap area is on-screen. If the entire snap area is outside the snapport, however, then the scroll container cannot be considered to be snapped because the required alignment, though satisfied, would not be relevant to the viewer.
+</p>
+
+<figure>
+<div style="position: relative; min-width: 21em; min-height: 7em;">
+	<div style="position: absolute; top: 1em; left: 0; border:double 3px black; width:10em; height:5em;line-height: 5em;text-align: center;">
+		<div style="position: absolute; top:-0.7em; line-height: 1em; left:3em; background:white; text-align: center;">`~scrollport$</div>
+<!--  -->
+</div>
+
+	<div style="position: absolute; top: 1em; left: 10em; border-top:thin dashed black; width:5em;height:0;"></div>
+	<div style="position: absolute; top: 1em; left: 15em; border:thin solid black; width:6em; height: 4em;">上端~留ngの要素</div>
+
+</div>
+
+<!-- 
+╔════viewport════╗┈┈┈┈┈┈┈┈┌──────────────┐
+║  ┌─────┐ ┌──┐  ║        │ top-snapping │
+║  ├──┐  │ └──┘  ║        │   element    │
+║  └──┴──┘       ║        │              │
+╚════════════════╝        │              │
+                          └──────────────┘
+-->
+
+<figcaption>
+`留め$時には、~screenから外れる要素への整列は考慮されない。
+◎
+Alignment of an off-screen element is not considered snapping.
+</figcaption></figure>
+
+</div>
+
+<div class="note"><details>
+<summary>
+なぜ、留ngを，可視な要素に限るよう制限するのか？
+◎
+Why limit snapping to only when the element is visible?
+</summary>
+
+<p>
+<a href="https://www.webkit.org/blog/4017/scroll-snapping-with-css-snap-points/">WebKit の実装者たちが指摘した</a>
+ように、留め辺を~canvasを超えて無限に延長すると，［
+【そのような辺たちが成す】格子~化された~layoutの留ng
+］しか許容されなくなり、［
+~screenから外れた要素が，~screen上の要素と整列しないとき
+］に，利用者にとって不可解な挙動になる（しかしながら，この要件が実装者にとって荷が重い場合には、格子~化された挙動を既定として，より賢い挙動を得るような~switchが後で導入され得る。）
+◎
+As the WebKit implementers point out, extending a snap edge infinitely across the canvas only allows for snapping gridded layouts, and produces odd behavior for the user when off-screen elements do not align with on-screen elements. (If this requirement is onerous for implementers however, we can default to a gridded behavior and introduce a switch to get smarter behavior later.)
+</p>
+
+</details></div>
+
+<p class="note">注記：
+`scroll-snap-type$p は，`留め位置$を各~軸ごとに独立に評価するが、一方の軸における`留め位置$は，他方の軸における`留め位置$の<a href="#choosing">選び方</a>に波及する。
+例えば，ある軸から先に`留め位置$を選んで整列した下では、他方の軸における`留め位置$は，`留め区画$を~screenの外へ押し出すため無効になる
+— したがって選べなくなる —
+こともある。
+◎
+Note: Although scroll-snap-type: both evaluates snap positions independently in each axis, choosing of a snap position in one axis can be influenced by snap positions in the other axis. For example, snapping in one axis may push off-screen the snap area that the other axis would otherwise align to, making its snap position invalid and therefore unchooseable.
+</p>
+
+			</section>
+			<section id="snap-overflow">
+<h4 title="Snapping Boxes that Overflow the Scrollport">5.2.2. ~scrollportを~overflowする~boxを留めるとき</h4>
+
+<p>
+`留め区画$が特定0の軸において`留域$より大きい場合、`留め区画$で覆われる`留域$内の~scroll位置のうち，［
+当の軸~~方向の幾何的に直前／直後にある`留め位置$までの距離が，`留域$の当の軸~~方向の~sizeより大きい
+］ものが，その軸において妥当な`留め位置$になる。
+~UAは、ある種の~scroll操作o（例： 明示的な~paging）に際しては，指定された整列を より精確な標的として利用してヨイ。
+◎
+If the snap area is larger than the snapport in a particular axis, then any scroll position in which the snap area covers the snapport, and the distance between the geometrically previous and subsequent snap positions in that axis is larger than size of the snapport in that axis, is a valid snap position in that axis. The UA may use the specified alignment as a more precise target for certain scroll operations (e.g. explicit paging).
+</p>
+
+<div class="example">
+<p>
+例えば、それぞれが留め区画である何枚かの写真があって，どの留め区画も `mandatory$v に留めるようにされている場合（
+<a href="#examples">§ 2</a>
+の最初の例）、写真が`~scrollport$より大きい場合には，写真~全体を見て回れるよう~scrollできることが求まれるであろう。
+◎
+For example, take the first example in § 2 Motivating Examples, which had a photo as the area. The author wants mandatory snapping from item to item, but if the item happens to be larger than your viewport, you want to be able to scroll around the whole thing once you’re over it.
+</p>
+
+<p>
+`留域$より広い`留め区画$が，`~scrollport$を全部的に埋めている間は、容器は任意に~scrollでき，最初に整列された位置へ戻すよう留めようとはしない。
+一方で，全部的に埋めなくなるまでに容器が~scrollされたときは、その区画は
+— 異なる`留め位置$への留ngを誘発するに足るほど~scrollされるまでは —
+外方への~scrollingに抵抗する。
+◎
+Since the snap area is larger than the snapport, while the area fully fills the viewport, the container can be scrolled arbitrarily and will not try to snap back to its aligned position. However, if the container is scrolled such that the area no longer fully fills the viewport in an axis, the area resists outward scrolling until it is scrolled sufficiently to trigger snapping to a different snap position.
+</p></div>
+
+<div class="example">
+
+<p>
+別の例として、入子にされた `section$e 要素たちにより，（上位~sectionを成す）大きい留め区画が（下位~sectionを成す）小さい留め区画で埋められることもある。
+ここでは、どの~sectionも［
+`mandatory$v かつ, 上端（ `start$v ）に留める
+］ようにされているとする。
+十分~短い下位~sectionの中では，通常に留められる一方で、より長い下位~sectionや［
+上位~section内の下位~sectionを含まない広い区間
+］の中では，視者は任意に~scrollできる：
+◎
+For another example, mandatory top-snapping on nested section elements can produce large snapping areas (from large top-level sections) potentially filled with smaller snapping areas (from the subsections). When the subsections are small enough, they snap normally; when they’re longer, the viewer can scroll arbitrarily within them, or within a large segment of the top-level section that has no subsections to snap to.
+</p>
+
+<figure>
+
+<div id="_ex-overlap">
+	<div style="height: 7em; border:none; margin-bottom:0">
+		上位~section
+		<div>1</div>
+		<div class="_extent"></div>
+	</div>
+
+	<div style="height: 2em;">
+		下位~section
+		<div style="right:-4em;">2</div>
+	</div>
+	<div style="height: 3em;">
+		下位~section
+		<div>3</div>
+	</div>
+	<div style="height: 2em;">
+		下位~section
+		<div style="right:-4em;">4</div>
+	</div>
+	<div style="height: 10em;">
+		下位~section
+		<div>5</div>
+		<div class="_extent"></div>
+	</div>
+</div>
+
+<figcaption>
+上の図には，上位~sectionとその 4 個の下位~sectionに対応する
+5 個の留め位置を表現する表示域があり、順に， 1 〜 5 の番号が振られている。
+1 番と 5 番の留め位置は，表示域より広い範囲の一部を成すので、各~範囲の上端と下端の合間で自由に~scrollすることが視者に許容される。
+◎
+In the figure above, the five numbered viewports represent the five snap positions associated with the top-level section and its four subsections. Because the first and last snap positions are part of ranges taller than the viewport, the viewer is allowed to scroll freely between the top and bottom of each range.
+</figcaption></figure>
+
+<p class="note">注記：
+作者が，~section自身に代えて，その`見出し^emに `mandatory$v 留め位置を設定した場合、
+1 番, 5 番の~sectionを成す内容の一部は，利用者から~accessできなくなる
+— 見出し留め区画は、~section全体を覆うまで拡張されないので。
+そのようなわけで、互いの~~間隔が広い要素たちの留め位置に `mandatory$v を利用するのは，不良な案になる。
+◎
+Note: If the author had instead set mandatory snap positions on the headings of each section (rather than the sections themselves), the contents of the first and fifth sections would be partially inaccessible to the user, as the heading snap area does not extend to cover the whole section. This is why it’s a bad idea to use mandatory snap positions on elements that might be widely spaced apart.
+</p>
+</div>
+
+			</section>
+			<section id="unreachable">
+<h4 title="Unreachable Snap Positions">5.2.3. 到達-不能な留め位置</h4>
+
+<p>
+指定された`留め位置$に到達-不能な場合
+— すなわち、そこへ整列させるためには，`~scrollport$において`~scroll可能な~overflow域$の辺を過ぎる所まで~scrollすることが要求される場合
+— この`留め区画$に対する各~軸における `使用^em `留め位置$は、当の軸~~方向に欲される`留め位置$へ向けて `アリな限り^em~scrollした結果の位置になる。
+◎
+If a snap position is unreachable as specified, such that aligning to it would require scrolling the scroll container’s viewport past the edge of its scrollable overflow region, the used snap position for this snap area is the position resulting from scrolling as much as possible in each relevant axis toward the desired snap position.
+</p>
+
+			</section>
+		</section>
+		<section id="scroll-snap-stop">
+<h3 title="Scroll Snap Limits: the scroll-snap-stop property">5.3. ~scroll留めに対する制限s： `scroll-snap-stop^p ~prop</h3>
+
+◎名 `scroll-snap-stop@p
+◎値 `normal$v | `always$v
+◎初 `normal$v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+ある，意図された方向へ~scrollするとき、`自然な終点$に到達して最終的な~scroll位置を選定する前に、`~scroll容器$は，いくつかのアリな`留め位置$（同じ方向へ~scrollする距離がより短い場合に，留めるに妥当な位置）を “通過-” し得る。
+`scroll-snap-stop$p ~propは、そのようなアリな`留め位置$が~scrollingを “捉えて” ，それが自然に終止する前に`~scroll容器$を止めるよう強制できるようにする。
+◎
+When scrolling with an intended direction, the scroll container can “pass over” several possible snap positions (that would be valid to snap to, if the scrolling operation used the same direction but a lesser distance) before reaching the natural endpoint of the scroll operation and selecting its final scroll position. The scroll-snap-stop property allows such a possible snap position to “trap” the scrolling operation, forcing the scroll container to stop before the scrolling operation would naturally end.
+</p>
+
+<p>
+各種 値の定義は：
+◎
+Values are defined as follows:
+</p>
+
+<dl>
+	<dt>`normal@v</dt>
+	<dd>
+`~scroll容器$は、~scrollingを実行する間，この要素により定義される`留め位置$を通過してもヨイ。
+◎
+The scroll container may pass over a snap position defined by this element during the execution of a scrolling operation.
+</dd>
+
+	<dt>`always@v</dt>
+	<dd>
+`~scroll容器$は、~scrollingを実行する間，この要素により定義される`留め位置$を通過しないモノトスル
+— そのような要素たちの`留め位置$のうち，最初に~~遭遇した所で留めるモノトスル。
+◎
+The scroll container must not pass over a snap position defined by this element during the execution of a scrolling operation; it must instead snap to the first of this element’s snap positions.
+</dd>
+</dl>
+
+<p>
+この~propは、`終止-位置のみ意図され$ている~scrollingには効果がない
+— それは、概念的に`留め位置$を “通過しない” ので。
+◎
+This property has no effect on scrolling operations with only an intended end position, as they do not conceptually “pass over” any snap positions.
+</p>
+
+	</section>
+	<section id="snap-concepts">
+<h2 title="Snapping Mechanics">6. 留ngの仕組み</h2>
+
+<p>
+留める際に`留め位置$を選定する~modelを成す精確な~algoは、意図的に，ほぼ未定義にされている
+— ~UAは、［
+利用者の意向, 利用者とのヤリトリ
+］が成す~modelを［
+利用者に最善に仕える
+］ように洗練して，［
+時間とともにどう応答するか
+］を調整できる。
+◎
+The precise model algorithm to select a snap position to snap to is intentionally left mostly undefined, so that user agents can take into account sophisticated models of user intention and interaction and adjust how they respond over time, to best serve the user.
+</p>
+
+<p>
+この節では、［
+~scroll留ngの機構について論じる
+］ため, および［
+効果的な~scroll留ng策は どの様なものになるかについて，いくつかの指針を供する
+］ために有用になる概念を，いくつか定義する。
+~UAには、この指導に適応するように，［
+自身による最善な判定を適用しつつ，留ngにおける自前の挙動を定義する
+］ことが奨励される。
+それはまた、作者が［
+~scroll留ngを念頭に，自身の~UIを設計する
+］ときに依存できるような，［
+最低限の適度な挙動を確保するための，少数の要件
+］も供する。
+◎
+This section defines some useful concepts to aid in discussing scroll-snapping mechanics, and provides some guidelines for what an effective scroll-snapping strategy might look like. User agents are encouraged to adapt this guidance and apply their own best judgement when defining their own snapping behavior. It also provides a small number of behavior requirements, to ensure a minimum reasonable behavior that authors can depend on when designing their interfaces with scroll-snapping in mind.
+</p>
+
+		</section>
+		<section id="scroll-types">
+<h3 title="Types of Scrolling Methods">6.1. ~scrolling方式0の種別</h3>
+
+<p>
+~pageの~scroll動作は、意図された［
+終止-位置 ／ 方向
+］の下で遂行される。
+~scrollingは、この 2 つの組合nに応じて，次に挙げるものに類別される
+— それぞれが，少しばかり異なる扱いになるような：
+◎
+When a page is scrolled, the action is performed with an intended end position and/or an intended direction. Each combination of these two things defines a distinct category of scrolling, which can be treated slightly differently:
+</p>
+
+<dl>
+	<dt>
+`終止-位置のみ意図され@
+る~scroll
+◎
+intended end position
+</dt>
+	<dd class="example">
+<p>
+`終止-位置のみ意図され$る~scrollに共通的な例としては、次が挙げられる：
+◎
+Common examples of scrolls with only an intended end position include:
+</p>
+
+		<ul>
+			<li>
+勢いを伴わずに放された，~panning~gesture
+◎
+a panning gesture, released without momentum
+</li>
+			<li>
+~scrollbarの “つまみ” を明示的に操作するとき
+◎
+manipulating the scrollbar “thumb” explicitly
+</li>
+			<li>
+`scrollTo()$m などの API を介して~program的に~scrollするとき
+◎
+programmatically scrolling via APIs such as scrollTo()
+</li>
+			<li>
+文書の~focus可能な要素を，~tabbing-throughするとき
+◎
+tabbing through the document’s focusable elements
+</li>
+			<li>
+~page内のある~anchorへ~navigateするとき
+◎
+navigating to an anchor within the page
+</li>
+			<li>
+~homing操作o
+— <kbd>Home</kbd> ／ <kbd>End</kbd> ~Keyなどによる
+◎
+homing operations such as the Home/End keys
+</li>
+		</ul>
+	</dd>
+
+	<dt>
+`方向, 終止-位置ともに意図され@
+る~scroll
+◎
+intended direction and end position
+</dt>
+	<dd class="example">
+<p>
+`方向, 終止-位置ともに意図され$る~scrollに共通的な例としては、次が挙げられる：
+◎
+Common examples of scrolls with both an intended direction and end position include:
+</p>
+
+		<ul>
+			<li>
+勢いを伴う “投げつけ（ `fling^en ）” ~gestureに解釈されるもの
+◎
+a “fling” gesture, interpreted with momentum
+</li>
+			<li>
+`scrollBy()$m などの API を介して~program的に~scrollするとき
+◎
+programmatically scrolling via APIs such as scrollBy()
+</li>
+			<li>
+~paging
+— <kbd>PgUp</kbd> ／ <kbd>PgDn</kbd> ~keyなどによる（あるいは ~scrollbarから誘発される等価な操作o）
+◎
+paging operations such as the PgUp/PgDn keys (or equivalent operations on the scrollbar)
+</li>
+		</ul>
+	</dd>
+	<dd>
+この~scrollに意図される終点
+— 留め点などの特能から干渉されない下でのそれ —
+を指して，
+`自然な終点@
+という。
+◎
+The intended end point of the scroll prior to intervention from features such as snap points is its natural end-point.
+</dd>
+
+	<dt>
+`方向のみ意図され@
+る~scroll
+◎
+intended direction
+</dt>
+	<dd class="example">
+<p>
+`方向のみ意図され$る~scrollに共通的な例としては、次が挙げられる：
+◎
+Common examples of scrolls with only an intended direction include: 
+</p>
+
+		<ul>
+			<li>
+~keyboardの矢印~keyの押下げ（または~scrollbar上の等価な操作o）によるもの
+◎
+pressing an arrow key on the keyboard (or equivalent operations on the scrollbar)
+</li>
+			<li>
+（慣性的でなく）固定的な~scrollとして解釈されるような，~swiping~gesture
+◎
+a swiping gesture interpreted as a fixed (rather than inertial) scroll
+</li>
+		</ul>
+	</dd>
+</dl>
+
+<p>
+加えて、~pageの内容は，通例的に［
+縦, 横
+］軸に整列するように~lay-outされるので、~UAは，その方向が［
+縦／横
+］に十分近いときには、~scrollをその
+`軸に~lock@
+することもある。
+`軸に~lock$された~scrollは、その軸のみに沿って~scrollするよう束縛される。
+これは、入力の仕組みが精確さに欠くときでも，軸からそれていかないようにする。
+◎
+Additionally, because page layouts usually align things vertically and/or horizontally, UAs sometimes axis-lock a scroll when its direction is sufficiently vertical or horizontal. An axis-locked scroll is bound to only scroll along that axis. This prevents less-precise input mechanisms from drifting in the non-primary axis.
+</p>
+
+<p class="note">注記：
+この仕様が適用されるのは、~UAが~supportする~scrolling方式0に限られる。
+~UAには、特定0の［
+入力／~scrolling
+］方式0を~supportすることは，要求されない。
+◎
+Note: This specification only applies to scrolling methods supported by the user agent; it does not require the user agent to support any particular input or scrolling method.
+</p>
+
+		</section>
+		<section id="choosing">
+<h3 title="Choosing Snap Positions">6.2. 留め位置の選び方</h3>
+
+<p>
+`~scroll容器$は、その`~scroll可能な~overflow域$に散らばる多数の`留め区画$を持ち得る。
+`留め位置$を選定する素朴な~algoは，利用者にとって直感に反する挙動を生産し得るので、選定~algoを設計する際には配慮を要する。
+以下に、~~考慮されるべきいくつかの事項を挙げる：
+◎
+A scroll container can have many snap areas scattered throughout its scrollable overflow region. A naïve algorithm for selecting a snap position can produce behavior that is unintuitive for users, so care is required when designing a selection algorithm. Here are a few pointers that can aid in the selection process:
+</p>
+
+<ul>
+	<li>
+`留め位置$は、終点（または`自然な終点$）と最終的に留められる~scroll位置との距離を最小~化するよう選ばれるべきである。
+これは、この節に挙げる追加的な拘束の~subjectになる。
+◎
+Snap positions should be chosen to minimize the distance between the end-point (or the natural end-point) and the final snapped scroll position, subject to the additional constraints listed in this section.
+</li>
+	<li>
+~scrollが`軸に~lock$されていてる場合、~scrollしている間は，他方の軸における`留め位置$は 無視されるべきである（それでも、他方の軸における`留め位置$は，最終的な~scroll位置には効果を及ぼし得る）。
+◎
+If a scroll is axis-locked, any snap positions in the other axis should be ignored during the scroll. (However, snap positions in the other axis can still effect the final scroll position.)
+</li>
+	<li>
+~screenから遠く外れた要素が，~scroll位置に不可解な効果をもたらさないようにするため、各~要素の`留め位置$のうち，`留域$が定義する “回廊” から遠く外れたものは、無視されるべきである
+— ここでの回廊とは、次を~~意味する
+⇒＃
+`~scroll可能な~overflow域$を通って移動する回廊 ／
+`方向のみ意図され$ている~scrollにおける~~仮想の “回廊” ／
+`終止-位置のみ意図され$た~scroll後の`留域$
+◎
+In order to prevent a far-offscreen element from having difficult-to-understand effects on the scroll position, snap positions should be ignored if their elements are far outside of the “corridor” that the snapport defines as it moves through the scrollable overflow region, or a hypothetical “corridor” in the direction of a scroll with only an intended direction, or the snapport after an scroll with only an intended end position.
+</li>
+	<li>
+<p>
+~UAは、~scroll方式0に関わらず，利用者が`留め位置$から “逃れられる” ことを確保する`モノトスル^em。
+例えば，［
+留め種別が `mandatory$v で，次にある`留め位置$が ~screen幅の 2 倍より離れている
+］場合、［
+“常に最も近傍に留める” ような，素朴な選定~algo
+］では，［
+終止-位置が~screen幅の 1 倍までしか離れていない場合に，利用者を “嵌め続ける”
+］ことになりかねない。
+もっと良い挙動が得られる賢い~algoとしては、［
+終点までの距離が開始時の`留め位置$から相応に近いときに限り，開始時の`留め位置$に戻り、他の場合は，開始時の留め位置を無視する
+］ことが挙げられる。
+◎
+User agents must ensure that a user can “escape” a snap position, regardless of the scroll method. For example, if the snap type is mandatory and the next snap position is more than two screen-widths away, a naïve “always snap to nearest” selection algorithm might “trap” the user if their end position was only one screen-width away. Instead, a smarter algorithm that only returned to the starting snap position if the end-point was a fairly small distance from it, and otherwise ignored the starting snap position, would give better behavior.
+</p>
+
+<p>
+（これは、［
+`方向のみ意図され$る~scrollに対しては、開始時の`留め位置$は 常に無視する
+］モノトスルことを含意する。）
+◎
+(This implies that a scroll with only an intended direction must always ignore the starting snap positions.)
+</p>
+	</li>
+	<li>
+<p>
+標的~要素を定義する素片（例： `target$ps に合致するものや, `scrollIntoView()$m の標的になるもの）へ~pageが~navigateされたとき，その要素に`留め位置$が定義されている場合には、~UAは，要素に最も近い`~scroll容器$が：
+</p>
+		<ul>
+			<li>
+`~scroll留め容器$であるならば，要素の`留め位置$のいずれかに`留める$ことが要求される。
+【この “いずれか” は、縦~軸, 横~軸のいずれかの成分を指す？】
+</li>
+			<li>
+`~scroll留め容器$でないとき（その `scroll-snap-type$p は `none^v のとき）でも，そうしてヨイ。
+</li>
+		</ul>
+◎
+If a page is navigated to a fragment that defines a target element (e.g. one that would be matched by :target, or the target of scrollIntoView()), and that element defines some snap positions, the user agent must snap to one of that element’s snap positions if its nearest scroll container is a scroll snap container. The user agent may also do this even when the scroll container has scroll-snap-type: none.
+</li>
+</ul>
+
+		</section>
+	</section>
+	<section id="longhands">
+<h2 title="Longhands">付録 A. 各種~下位prop</h2>
+
+<p>
+［
+物理的, 論理的
+］な下位prop（および対応する略式~prop）は、
+`CSS-LOGICAL-1$r に定義されるように相互作用する。
+◎
+The physical and logical longhands (and their shorthands) interact as defined in [CSS-LOGICAL-1].
+</p>
+
+		<section id="padding-longhands-physical">
+<h3 title="Physical Longhands for scroll-padding">`scroll-padding$p 用の物理的な下位prop</h3>
+
+◎名
+`scroll-padding-top@p,<br>
+`scroll-padding-right@p,<br>
+`scroll-padding-bottom@p,<br>
+`scroll-padding-left@p
+◎値 `auto^v | `length-percentage$t
+◎初 `auto^v
+◎適 `~scroll容器$
+◎継 されない
+◎百
+`~scrollport$の対応する次元に相対的
+◎
+relative to the scroll container’s scrollport
+◎算
+~keyword `auto^v ／
+算出された `length-percentage$t 値
+◎
+the keyword auto or a computed &lt;length-percentage&gt; value
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+`scroll-padding$p を成すこれらの
+`下位prop$は、順に，`留域$の［
+上端, 右端, 下端, 左端
+］辺を指定する。
+負な値は無効。
+◎
+These longhands of scroll-padding specify the top, right, bottom, and left edges of the snapport, respectively. Negative values are invalid.
+</p>
+
+		</section>
+		<section id="padding-longhands-logical">
+<h3 title="Flow-relative Longhands for scroll-padding">`scroll-padding$p 用の~flowに相対的な下位prop</h3>
+
+◎名
+`scroll-padding-inline-start@p,<br>
+`scroll-padding-block-start@p,<br>
+`scroll-padding-inline-end@p,<br>
+`scroll-padding-block-end@p
+◎値 `auto^v | `length-percentage$t
+◎初 `auto^v
+◎適 `~scroll容器$
+◎継 されない
+◎百
+`~scrollport$の対応する次元に相対的
+◎
+relative to the scroll container’s scrollport
+◎算
+~keyword `auto^v ／
+算出された `length-percentage$t 値
+◎
+the keyword auto or a computed &lt;length-percentage&gt; value
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+`scroll-padding$p を成すこれらの`下位prop$は、順に，`留域$の［
+塊-始端, 行内-始端, 塊-終端, 行内-終端
+］辺を指定する。
+負な値は無効。
+◎
+These longhands of scroll-padding specify the block-start, inline-start, block-end, and inline-end edges of the snapport, respectively. Negative values are invalid.
+</p>
+
+◎名
+`scroll-padding-block@p,<br>
+`scroll-padding-inline@p
+◎値 [ `auto^v | `length-percentage$t ]{1,2}
+◎初 `auto^v
+◎適 すべての要素
+◎継 されない
+◎百
+`~scrollport$の対応する次元に相対的
+◎
+relative to the scroll container’s scrollport
+◎算 個々の~propを見よ
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+これらは， `scroll-padding$p を成す`下位prop$であると同時に、前者は［
+`scroll-padding-block-start$p, `scroll-padding-block-end$p
+］用の, 後者は［
+`scroll-padding-inline-start$p, `scroll-padding-inline-end$p
+］用の`略式~prop$であり、順に，`留域$の［
+塊-軸, 行内-軸
+］辺を指定する。
+◎
+These shorthands of scroll-padding-block-start + scroll-padding-block-end and scroll-padding-inline-start + scroll-padding-inline-end are longhands of scroll-padding, and specify the block-axis and inline-axis edges of the snapport, respectively.
+</p>
+
+<p>
+値が 2 個~指定された場合、順に，［
+始端, 終端
+］用の値を与える。
+◎
+If two values are specified, the first gives the start value and the second gives the end value.
+</p>
+
+		</section>
+		<section id="margin-longhands-physical">
+<h3 title="Physical Longhands for scroll-margin">`scroll-margin$p 用の物理的な下位prop</h3>
+
+◎名
+`scroll-margin-top@p,<br>
+`scroll-margin-right@p,<br>
+`scroll-margin-bottom@p,<br>
+`scroll-margin-left@p
+◎値
+`length$t
+◎初 `0^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 絶対~長さ
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+`scroll-margin$p を成すこれらの`下位prop$は、順に，`~scroll留め区画$の［
+上端, 右端, 下端, 左端
+］辺を指定する。
+◎
+These longhands of scroll-margin specify the top, right, bottom, and left edges of the scroll snap area, respectively.
+</p>
+
+		</section>
+		<section id="margin-longhands-logical">
+<h3 title="Flow-relative Longhands for scroll-margin">`scroll-margin$p 用の~flowに相対的な下位prop</h3>
+
+◎名
+`scroll-margin-block-start@p,<br>
+`scroll-margin-inline-start@p,<br>
+`scroll-margin-block-end@p,<br>
+`scroll-margin-inline-end@p
+◎値
+`length$t
+◎初 `0^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 絶対~長さ
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+`scroll-margin$p を成すこれらの`下位prop$は、順に，`~scroll留め区画$の［
+塊-始端, 行内-始端, 塊-終端, 行内-終端
+］辺を指定する。
+◎
+These longhands of scroll-margin specify the block-start, inline-start, block-end, and inline-end edges of the scroll snap area, respectively.
+</p>
+
+◎名
+`scroll-margin-block@p,<br>
+`scroll-margin-inline@p
+◎値 `length$t{1,2}
+◎初 `0^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 個々の~propを見よ
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+これらは， `scroll-margin$p を成す`下位prop$であると同時に、前者は［
+`scroll-margin-block-start$p, `scroll-margin-block-end$p
+］用の, 後者は［
+`scroll-margin-inline-start$p, `scroll-margin-inline-end$p
+］用の`略式~prop$であり、順に，`~scroll留め区画$の［
+塊-軸, 行内-軸
+］辺を指定する。
+◎
+These shorthands of scroll-margin-block-start + scroll-margin-block-end and scroll-margin-inline-start + scroll-margin-inline-end are longhands of scroll-margin, and specify the block-axis and inline-axis edges of the scroll snap area, respectively.
+</p>
+
+<p>
+値が 2 個~指定された場合、順に，［
+始端, 終端
+］用の値を与える。
+◎
+If two values are specified, the first gives the start value and the second gives the end value.
+</p>
+
+		</section>
+	</section>
+	<section id="priv-sec">
+<h2 title="Privacy and Security Considerations">7. ~privacyと~security上の考慮点</h2>
+
+<p>
+この仕様は、すでに DOM に直に公開されているものを超えるような，いかなる情報も公開させない。
+これは、~scrollingを少しばかり機能的にするだけである。
+新たな
+~privacy／~security
+上の考慮点はない。
+◎
+This specification does not expose any information whatsoever that is not already exposed to the DOM directly; it just makes scrolling slightly more functional. There are no new privacy or security considerations.
+</p>
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">8. 謝辞</h2>
+
+<p>
+提案と推奨を寄せられた次の方々に。
+うち一部は、この文書に組入れられている：
+</p>
+
+<p lang="en-x-a0">
+Many thanks to
+David Baron,
+Simon Fraser,
+Håkon Wium Lie,
+Theresa O’Connor,
+François Remy,
+Majid Valpour,
+and most especially Robert O’Callahan
+for their proposals and recommendations,
+which have been incorporated into this document.
+</p>
+
+	</section>
+	<section id="changes">
+<h2 title="Changes">9. 変更点</h2>
+
+<p class="trans-note">【
+この訳では、変更箇所の引用は省略する。
+】</p>
+
+<dl>
+	<dt id="changes-20190131">
+<a href="~TR/2019/CR-css-scroll-snap-1-20190131/">2019年 1月 31日 勧告候補</a>
+からの変更点
+◎
+9.1. Changes Since 31 January 2019 CR
+◎
+Changes since the 31 January 2019 Candidate Recommendation include:
+</dt>
+	<dd>
+~scroll留ngが~offにされていても，［
+`scroll-padding$p, `scroll-margin$p
+］は適用されることを強勢した。
+（ `3721$issue ）
+◎
+Emphasized that scroll-padding and scroll-margin do apply even when scroll snapping is off. (Issue 3721)
+</dd>
+	<dd id="change-2019-propagation">
+［
+`scroll-snap-type$p ／ `scroll-padding$p
+］値は、［
+期待されるように，根~要素から文書~表示域へ伝播する
+］ことを明示的に定義した。
+（ `3740$issue ）
+◎
+Defined explicitly that scroll-snap-type and scroll-padding values are propagated from the root element to the document viewport as would be expected. (Issue 3740)
+</dd>
+
+	<dt id="changes-20180814">
+<a href="~TR/2018/CR-css-scroll-snap-1-20180814/">2018年 8月 14日 勧告候補</a>
+からの変更点
+◎
+Changes since the 14 August 2018 Candidate Recommendation include:
+</dt>
+	<dd>
+`scroll-padding$p の下位propの定義~表にて，新たな
+<a href="#valdef-scroll-padding-auto">`auto^v</a>
+~keywordを挙げるよう正した。
+（ `3189$issue ）
+◎
+Corrected scroll-padding longhands to list the new auto keyword in their property definition tables. (Issue 3189)
+</dd>
+	<dd>
+~prop定義~表における “算出d値”, “~animation型” を修正した。
+◎
+Fixed up “Computed value” and “Animation type” lines in the property definition tables.
+</dd>
+	<dd>
+`scroll-margin$p ~prop定義~表にとり残されていた `percentage$t 値を片付けた。
+（ `3289$issue ）
+◎
+Cleaned up stray &lt;percentage&gt; values in scroll-margin property definition tables. (3289) 
+</dd>
+	<dd>
+<a href="~CSSWG/css-scroll-snap-1/issues-cr-2018">各~commentに対する処置集</a>
+もある。
+◎
+A Disposition of Comments is available.
+</dd>
+
+	<dt id="changes-20171214">
+<a href="~TR/2017/CR-css-scroll-snap-1-20171214/">2017年 12月 14日 勧告候補</a>
+からの変更点
+◎
+9.2. Changes Since 14 December 2017 CR
+◎
+Changes since the 14 December 2017 Candidate Recommendation include:
+</dt>
+	<dd>
+`scroll-snap-align$p 略式~propは、論理-略式~propの規約に則って，［
+1 個目, 2 個目
+］の値を順に［
+塊-軸, 行内-軸
+］にアテガうよう修正した。
+（ `2232$issue ）
+◎
+Fixed scroll-snap-align shorthand to assign block-axis value first, inline-axis value second, accordingly to logical shorthand conventions. (Issue 2232
+</dd>
+	<dd>
+`scroll-padding$p に初期~値として，
+~UAによる経験則を織り込むための~keyword `auto^v を追加した
+（ `2728$issue ）
+◎
+Added auto keyword to 'scroll-padding as its initial value to account for UA heuristics. (Issue 2728
+</dd>
+	<dd>
+`scroll-snap-type$p の定義を，
+`scrollTo()$m などの~programによる~scrollも留ngの~subjectになるものと明確化した。
+（ `2593$issue ）
+◎
+Clarified in the definition of scroll-snap-type that programmatig scrolls such as scrollTo() are also subject to snapping. (Issue 2593)
+◎
+Using the scroll-snap-type property on the relevant scroll container, the author can request a particular bias for the scrollport to land on a snap position after scrolling operations (including programmatic scrolls such as the scrollTo() method) .
+</dd>
+	<dd>
+<a href="#snap-scope">§ 妥当な留め位置を可視~boxに~~絞る</a>
+における言い回しを，
+<a href="~TR/2017/CR-css-scroll-snap-1-20171214/#snap-scope">旧~version</a>
+より明瞭になるよう調整した。
+（ `2526$issue ）
+◎
+Adjusted wording in § 5.2.1 Scoping Valid Snap Positions to Visible Boxes to be clearer—compared to old version. (Issue 2526)
+</dd>
+	<dd>
+<a href="~CSSWG/css-scroll-snap-1/issues-cr-2017-12">各~commentに対する処置集</a>
+もある。
+◎
+A Disposition of Comments is available.
+</dd>
+
+	<dt id="changes-20170824">
+<a href="~TR/2017/CR-css-scroll-snap-1-20170824/">2017年 8月 24日 勧告候補</a>
+からの変更点
+◎
+9.3. Changes Since 24 August 2017 CR
+◎
+Changes since the 24 August 2017 Candidate Recommendation include:
+</dt>
+	<dd>
+`target$ps, `scrollIntoView()$m, 等々は、留ngありかどうかに関わらず，
+`scroll-margin$p を織り込むべきである。
+<a href="~CSSWG/css-scroll-snap-1/issues-cr-2016-08#issue-1">Issue 1</a>
+◎
+:target/scrollIntoView()/etc should take scroll-margin into account, regardless of whether snapping is turned on or not. (Issue 1
+</dd>
+	<dd>
+`target$ps, `scrollIntoView()$m, 等々は、留ngありの場合には留め位置を利用するモノトスル（ベキ、ではなく）。
+<a href="~CSSWG/css-scroll-snap-1/issues-cr-2016-08#issue-1">Issue 1</a>
+◎
+:target/scrollIntoView()/etc must (rather than should) use snap positions if snapping is turned on. (Issue 1
+</dd>
+	<dd>
+`scroll-snap-margin^p から `scroll-margin^p に改称した
+— ［
+留ngの挙動に関わらず，要素へ~scrollするときに余白を供する
+］汎用な役割を，より反映するため。
+<a href="~CSSWG/css-scroll-snap-1/issues-cr-2016-08#issue-4">Issue 4</a>
+◎
+Renamed scroll-snap-margin to scroll-margin to reflect its more generic role in providing breathing space for scrolling to an element regardless of snapping behavior. (Issue 4)
+</dd>
+	<dd>
+<a href="~CSSWG/css-scroll-snap-1/issues-cr-2016-08">各~commentに対する処置集</a>
+もある。
+◎
+A Disposition of Comments is available.
+</dd>
+
+	<dt id="changes-20161020">
+<a href="~TR/2016/CR-css-scroll-snap-1-20161020/">2016年 10月 20日 作業草案</a>
+からの変更点
+◎
+9.4. Changes Since 20 October 2016 CR
+◎
+Changes since the 20 October 2016 Candidate Recommendation include:
+</dt>
+	<dd>
+`scroll-padding$p の値は、負でない値に制約した。
+（ `1084$issue ）
+◎
+Restricted scroll-padding to non-negative values. (Issue 1084)
+◎
+Values must be non-negative and are interpreted as for padding …
+</dd>
+	<dd>
+<a href="#scroll-types">§ ~scrolling方式0の種別</a>
+の例に
+~pagingと~homing操作o
+を追加した。
+（ `1605$issue ）
+◎
+Added paging and homing operations to examples in § 6.1 Types of Scrolling Methods. (Issue 1605)
+</dd>
+	<dd>
+一方の軸における留ngは、他方の軸において，特定0の留め区画への留ngがアリかどうかに影響し得ることを明確化した。
+（ `950$issue ）
+◎
+Clarified that snapping in one axis may affect whether snapping to a particular snap area is possible in the other axis. (Issue 950)
+◎
+Although scroll-snap-type: both evaluates snap positions independently in each axis, choosing of a snap position in one axis may be influenced by snap positions in the other axis. For example, snapping in one axis may push off-screen the snap area that the other axis would otherwise align to, making its snap position invalid and therefore unchooseable.
+</dd>
+	<dd>
+［
+`scroll-padding$p ／ `scroll-margin$p
+］略式~propがそれぞれの下位propにどう値をアテガうかを明確化した。
+（ `1050$issue ） 
+◎
+Clarified how the scroll-padding and scroll-margin shorthands assign values to their longhands. (Issue 1050) 
+</dd>
+	<dd>
+~scroll留ngは、特定0の入力~方式0を義務付けないことを明確化した。
+（ `1305$issue ）
+◎
+Clarified that scroll snapping does not mandate any particular input method. (Issue 1305)
+◎
+This specification only applies to scrolling methods supported by the user agent; it does not require the user agent to support any particular input or scrolling method.
+</dd>
+	<dd>
+各種~scrollingに対する，
+`scroll-snap-stop$p に意図される効果を明確化した。
+（ `1552$issue ）
+◎
+Clarified the intended effects of scroll-snap-stop on various scrolling operations. (Issue 1552)
+</dd>
+	<dd>
+`scroll-snap-stop$p が適用されるのは、`~scroll留め容器$におけるすべての`留め位置$ではなく，要素が定義する`留め位置$であることを明確化した。
+◎
+Clarified that scroll-snap-stop is applied to the snap positions defined by the element, not applied to all snap positions in the scroll snap container.
+</dd>
+	<dd>
+例における構文の誤りを修正した。
+§ `scroll-snap-type$p にも新たな例を追加した。
+（ `827$issue ）
+◎
+Fixed some syntax errors in examples and added a new one to the scroll-snap-type section. (Issue 827)
+</dd>
+</dl>
+
+	</section>
+
+</main></div>
+

@@ -1,0 +1,2957 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>Notifications API （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	Util.switchWordsInit({
+		persisted_parts: { _acks1: E('_acks1') },
+		toc_main: 'MAIN0',
+		generate: expand
+	});
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) { //%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'mc':
+	text = 'constructor';
+	href = `#dom-${key.toLowerCase()}-${key.toLowerCase()}`;
+	break;
+case 'm': // IDL member
+case 'mE':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-08-18
+trans_update:2020-08-19
+source_checked:171220
+spec_status:LS
+original_url:https://notifications.spec.whatwg.org/
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:uievents
+copyright:,whatwg
+trans_1st_pub:2018-01-05
+
+
+●●class_map
+E:error
+A:abstract
+jv:js-value
+css:css
+e:element
+a:attr
+v:value
+et:event-type
+
+●●tag_map
+I:code
+m:code
+mO:code
+mE:code
+mA:code
+mGO:code
+mNI:code
+E:code
+p:code
+css:code
+ps:code
+pe:code
+et:code
+e:code
+a:code
+v:code
+c:code
+jv:code
+A:span
+i:i
+em:em
+
+●●mdn_urls
+notification:API/Notification
+notificationevent:API/NotificationEvent
+	callbackdef-notificationpermissioncallback:API/NotificationPermissionCallback
+	dictdef-getnotificationoptions:API/GetNotificationOptions
+dictdef-notificationaction:API/NotificationAction
+	dictdef-notificationeventinit:API/NotificationEventInit
+	dictdef-notificationoptions:API/NotificationOptions
+	enumdef-notificationdirection:API/NotificationDirection
+	enumdef-notificationpermission:API/NotificationPermission
+
+●●link_map
+
+
+	●IDL
+Exposed:~WEBIDLjs#Exposed
+SameObject:~WEBIDLjs#SameObject
+unsigned long:~WEBIDL#idl-unsigned-long
+USVString:~WEBIDL#idl-USVString
+boolean:~WEBIDL#idl-boolean
+DOMString:~WEBIDL#idl-DOMString
+undefined:~WEBIDL#idl-undefined
+
+I.DOMTimeStamp:~WEBIDL#DOMTimeStamp
+I.EventHandler:~WAPI#eventhandler
+I.EventTarget:~DOM4#eventtarget
+I.ExtendableEvent:~SW1#extendableevent
+I.ExtendableEventInit:~SW1#dictdef-extendableeventinit
+I.GetNotificationOptions:#dictdef-getnotificationoptions
+I.Notification:#notification
+I.NotificationAction:#dictdef-notificationaction
+I.NotificationDirection:#enumdef-notificationdirection
+I.NotificationEvent:#notificationevent
+I.NotificationEventInit:#dictdef-notificationeventinit
+I.NotificationOptions:#dictdef-notificationoptions
+I.NotificationPermission:#enumdef-notificationpermission
+I.NotificationPermissionCallback:#callbackdef-notificationpermissioncallback
+I.ServiceWorkerGlobalScope:~SW1#serviceworkerglobalscope
+I.ServiceWorkerRegistration:~SW1#serviceworkerregistration
+I.VibratePattern:~VIBRATION#dom-vibratepattern
+	:~VIBRATION#idl-def-vibratepattern
+
+m.constructor:#dom-notification-notification
+m.new Notification:#dom-notification-notification
+	構築子:#dom-notification-notification
+m.actions:#dom-notification-actions
+m.badge:#dom-notification-badge
+m.body:#dom-notification-body
+m.cancelable:~DOM4#dom-event-cancelable
+m.close:#dom-notification-close
+m.data:#dom-notification-data
+m.dir:#dom-notification-dir
+m.getNotifications:#dom-serviceworkerregistration-getnotifications
+m.icon:#dom-notification-icon
+m.image:#dom-notification-image
+m.lang:#dom-notification-lang
+m.maxActions:#dom-notification-maxactions
+m.onclick:#dom-notification-onclick
+m.onshow:#dom-notification-onshow
+m.onerror:#dom-notification-onerror
+m.onclose:#dom-notification-onclose
+m.onnotificationclick:#dom-serviceworkerglobalscope-onnotificationclick
+m.onnotificationclose:#dom-serviceworkerglobalscope-onnotificationclose
+m.permission:#dom-notification-permission
+m.renotify:#dom-notification-renotify
+m.requestPermission:#dom-notification-requestpermission
+m.requireInteraction:#dom-notification-requireinteraction
+m.showNotification:#dom-serviceworkerregistration-shownotification
+m.silent:#dom-notification-silent
+m.tag:#dom-notification-tag
+m.timestamp:#dom-notification-timestamp
+m.title:#dom-notification-title
+m.vibrate:#dom-notification-vibrate
+m.focus:~HTMLinteraction#dom-window-focus
+
+mA.action:#dom-notificationaction-action
+mA.icon:#dom-notificationaction-icon
+mA.title:#dom-notificationaction-title
+
+mE.action:#dom-notificationevent-action
+mE.notification:#dom-notificationevent-notification
+
+mO.dir:#dom-notificationoptions-dir
+mO.lang:#dom-notificationoptions-lang
+mO.body:#dom-notificationoptions-body
+mO.tag:#dom-notificationoptions-tag
+mO.image:#dom-notificationoptions-image
+mO.icon:#dom-notificationoptions-icon
+mO.badge:#dom-notificationoptions-badge
+mO.vibrate:#dom-notificationoptions-vibrate
+mO.timestamp:#dom-notificationoptions-timestamp
+mO.renotify:#dom-notificationoptions-renotify
+mO.silent:#dom-notificationoptions-silent
+mO.requireInteraction:#dom-notificationoptions-requireinteraction
+mO.data:#dom-notificationoptions-data
+mO.actions:#dom-notificationoptions-actions
+
+mGO.tag:#dom-getnotificationoptions-tag
+mNI.notification:#dom-notificationeventinit-notification
+mNI.action:#dom-notificationeventinit-action
+
+
+l.default:#dom-notificationpermission-default
+l.denied:#dom-notificationpermission-denied
+l.granted:#dom-notificationpermission-granted
+l.auto:#dom-notificationdirection-auto
+l.ltr:#dom-notificationdirection-ltr
+l.rtl:#dom-notificationdirection-rtl
+
+
+A.StructuredDeserialize:~HTMLcloning#structureddeserialize
+A.StructuredSerializeForStorage:~HTMLcloning#structuredserializeforstorage
+
+c.Object.freeze:~TC39#sec-object.freeze
+
+	r.BIDI:#biblio-bidi
+	r.DOM:#biblio-dom
+	r.FETCH:#biblio-fetch
+	r.HTML:#biblio-html
+	r.INFRA:#biblio-infra
+	r.LANG:#biblio-lang
+	r.SERVICE-WORKERS:#biblio-service-workers
+	r.URL:#biblio-url
+	r.VIBRATION:#biblio-vibration
+	r.WEBIDL:#biblio-webidl
+
+	●用語
+唯一の:#_only-one
+
+通知を~alertする:#alert-steps
+通知を閉じる:#close-steps
+通知を~fetchする:#fetch-steps
+通知を示す:#show-steps
+
+最大~動作~数:#maximum-number-of-actions
+
+~text内容:#_text-content
+nT.~sw登録:#service-worker-registration
+nT.~title:#concept-title
+nT.本体:#body
+nT.方向:#concept-direction
+nT.言語:#concept-language
+nT.~tag:#tag
+nT.~data:#data
+nT.時刻印:#timestamp
+nT.生成元:#concept-origin
+nT.再通知-選好~flag:#renotify-preference-flag
+nT.静音~選好~flag:#silent-preference-flag
+nT.対話~選好を要求する~flag:#require-interaction-preference-flag
+
+nT.~badge資源:#badge-resource
+nT.~badge~URL:#badge-url
+
+nT.~icon資源:#icon-resource
+nT.~icon~URL:#icon-url
+
+nT.画像~資源:#image-resource
+nT.画像~URL:#image-url
+nT.振動~pattern:#vibration-pattern
+
+nT.動作~list:#_actions
+nT.動作:#actions
+
+
+許可:#permission
+
+通知~list:#list-of-notifications
+通知:#concept-notification
+持続的:#persistent-notification
+持続的でない:#non-persistent-notification
+通知を作成する:#create-a-notification
+~sw通知~eventを発火する:#fire-a-service-worker-notification-event
+~close~eventを取扱う:#handle-close-events
+
+acT.~icon資源:#action-icon-resource
+acT.名前:#action-name
+acT.~title:#action-title
+acT.~icon~URL:#action-icon-url
+
+
+	●外部
+
+~list:~INFRA#list
+除去する:~INFRA#list-remove
+付加する:~INFRA#list-append
+置換する:~INFRA#list-replace
+
+現在の大域~obj:~WAPI#current-global-object
+入口~設定群~obj:~WAPI#entry-settings-object
+現任の設定群~obj:~WAPI#incumbent-settings-object
+~event~handler~event型:~WAPI#event-handler-event-type
+~event~handler:~WAPI#event-handlers
+enV.生成元:~WAPI#concept-settings-object-origin
+enV.~API用~基底~URL:~WAPI#api-base-url
+~taskを~queueする:~WAPI#queue-a-task
+関連な~Realm:~WAPI#concept-relevant-realm
+例外を報告する:~WAPI#report-the-exception
+
+閲覧文脈:~BROWSERS#browsing-context
+
+作動中の~worker:~SW1#dfn-active-worker
+機能的~eventを発火する:~SW1#fire-functional-event
+
+振動を遂行する:~VIBRATION#dfn-perform-vibration
+検証して正規化する:~VIBRATION#dfn-validate-and-normalize
+
+凍結d配列を作成する:~WEBIDLjs#dfn-create-frozen-array
+
+~event~listener:~DOM4#concept-event-listener
+~eventを発火する:~DOM4#concept-event-fire
+並列的:~HTMLINFRA#in-parallel
+
+~fetch:~FETCH#concept-fetch
+内部~応答:~FETCH#concept-internal-response
+応答:~FETCH#concept-response
+rs.種別:~FETCH#concept-response-type
+
+生成元:~ORIGIN#concept-origin
+同一-生成元:~ORIGIN#same-origin
+~URL構文解析する:~URL1#concept-url-parser
+~URLを直列化する:~URL1#concept-url-serializer
+~sw登録:~SW1#dfn-service-worker-registration
+
+	:~HEimages#update-the-image-data
+	:https://www.w3.org/Bugs/Public/show_bug.cgi?id=24055
+	:http://robert.ocallahan.org/2011/06/permissions-for-web-applications_30.html
+
+_acks1:#_acks1
+
+
+●●ref_data
+VIBRATION=副   ~/vibration-ja.html
+
+●●words_table1
+VIBRATION:vibration-ja.html
+
+●●words_table
+
+
+	●通知
+center::::センター
+存続期間:lifetime:~
+再通知-:renotify::~
+持続化-:persist::~
+持続的:persistent::~
+	持続的でない:non-persistent
+	notices
+
+時刻:time::~
+過去:past:~
+milli::::ミリ
+	~milli秒単位:milliseconds
+	数秒:couple of seconds
+
+	●通知 UI
+mail::::メール
+alert:
+badge::::バッジ
+振動-:vibrate::~
+振動:vibration::~
+段落分断:paragraph-breaking::~
+	本体:main body
+退ける:dismissする:~
+尋ねる:askする:~
+chat::::チャット
+開く:openする:~
+開いた:openした:~
+開かず:openせず:~
+静音:silent::~
+音響:sound::~
+色:color::~
+隅:corner:~
+写真:photo:~
+	会合:meeting
+絵図:picture:~
+双方向-:bidirectional::~
+
+	●仕様
+上品:graceful:~
+不用意:accidental:~
+十分:enough:~
+	easily
+	subsubstep
+	抽象-化-:abstracting
+	nicer
+	頻繁に:frequently
+	不足ない:sufficiently
+	ものとして知られている一つ:the one instance thus far
+
+
+	●仕様（動詞
+保つ:keepする:~
+末端利用者:end user:~:::エンドユーザ
+協調-:coordinate:~
+編集-:edit:~
+増補-:reinforce:~
+慎む:refrainする:~
+
+	に依存する:-dependent
+	ことにして:address
+	とされる:consider
+	可能になる／可能にする:allow
+	でありつつ:while remaining
+	誤って命名され:misnamed
+	不明瞭になる:loss
+	選んで:made 〜 choice:
+	〜にする:make sure
+	いつでも〜であり続ける:remain readily
+	-:assuming
+
+	●未分類（動詞
+閉じる:closeする:~
+	access可能:accessible
+close::::
+丸める:roundする:~
+切取られ:clipされ:切り取られ
+塗る:paintする:~
+運用-:operate:~
+入口:entry::~
+archive::::アーカイブ
+伝達-:convey:~
+
+	付加-:push
+	解決-:fulfill
+	対応ing:corresponding
+	時間差:passed
+
+	●未分類
+desktop::::デスクトップ
+offline::::オフライン
+	options::::option 集
+tab::::タブ
+	~tagを付与:tagged
+website::::web サイト
+現任の:incumbent::~
+例外投出あり:rethrow any exceptions::~
+優先度:priority:~
+整形式性:well-formedness:~
+送信者:sender:~
+機能的:functional::~
+同時並行的:concurrent:~
+入出力:IO:~
+
+	~~相応する:equivalent
+	存続中に:during their lifecycle
+	甲:Alice
+	乙:Bob
+	丙:John Doe
+	1970 年 1 月 1 日:1 January 1970
+	BCP 47
+	P1
+	P2
+	P3
+
+	~F:unset
+	例外が投出されたときは:if this throws an exception,／If this threw an exception
+	~GTE:excess
+	%動作~list:frozenAction
+	~sw登録:serviceWorkerRegistration
+	基底~URL:baseURL
+	-:bring 〜
+	受信箱:inbox
+	遊休中:idle 中
+	~queueされた順に通知する:first-in-first-out
+	存在する:in existence
+	~focusする:intoFocus
+	-:relative
+
+
+	●指示語
+	旧:old
+	最新の:newest
+	最新に:current
+	他が指定されない限り:unless otherwise specified
+	数多の:many
+	大きい:large
+	自体:itself
+	ずっと:much
+	並べて:side by side
+	より高い:higher
+	何種類かの:wide variety of
+	種類:category
+	全体にわたり:throughout
+	低くされ:less than
+	前もって:upfront
+	まだ:thus far
+	より少ない:fewer
+	一部:part
+
+
+
+●●ref_normative
+
+[BIDI]
+    Mark Davis; Aharon Lanin; Andrew Glass. Unicode Bidirectional Algorithm. 12 February 2020. Unicode Standard Annex #9. URL: https://www.unicode.org/reports/tr9/tr9-42.html 
+[DOM]
+    Anne van Kesteren. DOM Standard. Living Standard. URL: https://dom.spec.whatwg.org/ 
+[FETCH]
+    Anne van Kesteren. Fetch Standard. Living Standard. URL: https://fetch.spec.whatwg.org/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[INFRA]
+    Anne van Kesteren; Domenic Denicola. Infra Standard. Living Standard. URL: https://infra.spec.whatwg.org/ 
+[LANG]
+    A. Phillips; M. Davis. Tags for Identifying Languages. September 2009. IETF Best Current Practice. URL: https://tools.ietf.org/html/bcp47 
+[SERVICE-WORKERS]
+    Alex Russell; et al. Service Workers 1. URL: https://w3c.github.io/ServiceWorker/ 
+[URL]
+    Anne van Kesteren. URL Standard. Living Standard. URL: https://url.spec.whatwg.org/ 
+[VIBRATION]
+    Anssi Kostiainen. Vibration API (Second Edition). URL: https://w3c.github.io/vibration/ 
+[WEBIDL]
+    Boris Zbarsky. Web IDL. URL: https://heycam.github.io/webidl/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる
+<a href="https://notifications.spec.whatwg.org/">Notifications API</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+Participate:
+	<a href="https://github.com/whatwg/notifications">GitHub whatwg/notifications</a> (<a href="https://github.com/whatwg/notifications/issues/new">new issue</a>, <a href="https://github.com/whatwg/notifications/issues">open issues</a>)
+	<a href="https://wiki.whatwg.org/wiki/IRC">IRC: #whatwg on Freenode</a>
+
+Commits:
+	<a href="https://github.com/whatwg/notifications/commits">GitHub whatwg/notifications/commits</a>
+	<a href="https://notifications.spec.whatwg.org/commit-snapshots/fc950f91deaad11e535b1fa59995435740b28157/" id="commit-snapshot-link">Snapshot as of this commit</a>
+	<a href="https://twitter.com/notifyapi">@notifyapi</a>
+
+Tests:
+	<a href="https://github.com/web-platform-tests/wpt/tree/master/notifications">web-platform-tests notifications/</a> (<a href="https://github.com/web-platform-tests/wpt/labels/notifications">ongoing work</a>)
+
+各国語翻訳（非規範的）
+	日本語（このページ）
+	<a href="https://w3c-html-ig-zh.github.io/notifications/whatwg/" hreflang="zh" rel="alternate" lang="zh">简体中文</a>
+
+</script>
+
+
+</head>
+
+<body>
+
+<header>
+
+<a href="https://whatwg.org/"><img
+	style="float: right;"
+	alt="WHATWG"
+	height="100"
+	src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDUiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzNjNzkwYSIgc3Ryb2tlLXdpZHRoPSIxMCIvPgo8cGF0aCBkPSJtNDUsMjV2MzVoMTB2LTM1em0wLDQwdjEwaDEwdi0xMCIgZmlsbD0iIzNjNzkwYSIvPgo8L3N2Zz4K"
+></a>
+
+<!-- 
+https://resources.whatwg.org/logo-notifications.svg"
+ -->
+
+	<hgroup>
+<h1 id="title">通知 API — Notifications API</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この標準は、末端利用者~向けに通知を
+— 概して~top-level閲覧文脈の表示域の外側に —
+表示する~APIを定義する。
+それは、~platformに独立でありつつ，既存の通知~systemと互換になるように設計されている。
+◎
+This standard defines an API to display notifications to the end user, typically outside the top-level browsing context’s viewport. It is designed to be compatible with existing notification systems, while remaining platform-independent.
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="terminology">
+<h2 title="Terminology">1. 各種用語</h2>
+
+<p>
+この仕様は、 Infra 標準 `INFRA$r に依存する。
+◎
+This specification depends on the Infra Standard. [INFRA]
+</p>
+
+<p>
+この仕様にて利用される一部の用語は、次に挙げる仕様にて定義される
+⇒
+`DOM$r
+`FETCH$r
+`HTML$r
+`WEBIDL$r
+`SERVICE-WORKERS$r
+`URL$r
+`VIBRATION$r
+◎
+Some terms used in this specification are defined in the DOM, Fetch, HTML, IDL, Service Workers, URL, and Vibration API Standards. [DOM] [FETCH] [HTML] [WEBIDL] [SERVICE-WORKERS] [URL] [VIBRATION]
+</p>
+
+	</section>
+	<section id="notifications">
+<h2 title="Notifications">2. 通知</h2>
+
+<p>
+`通知@
+（ `notification^en ）は、起こった何か
+— ~messageの送達など —
+の抽象的な表現である。
+◎
+A notification is an abstract representation of something that happened, such as the delivery of a message.
+</p>
+
+<p>
+各 `通知$には、以下に挙げるものが結付けられる：
+◎
+↓</p>
+
+<dl class="def-list">
+	<dt>`~sw登録@nT</dt>
+	<dd>
+ε （なし）, または `~sw登録$
+◎
+A notification can have an associated service worker registration.
+</dd>
+
+	<dt>`~title@nT</dt>
+	<dd>
+文字列。
+◎
+A notification has an associated title which is a DOMString.
+</dd>
+
+	<dt>`本体@nT</dt>
+	<dd>
+文字列。
+◎
+A notification has an associated body which is a DOMString.
+</dd>
+
+	<dt>`方向@nT</dt>
+	<dd>
+`NotificationDirection$I 値
+— 次のいずれか
+⇒＃
+`auto^l,
+`ltr^l,
+`rtl^l
+◎
+A notification has an associated direction which is one of auto, ltr, and rtl.
+</dd>
+
+	<dt>`言語@nT</dt>
+	<dd>
+空~文字列, または
+妥当な BCP 47 言語~tagを表現している文字列。
+◎
+A notification has an associated language which is a DOMString representing either a valid BCP 47 language tag or the empty string.
+</dd>
+
+	<dt>`~tag@nT</dt>
+	<dd>
+文字列。
+【<a href="#tags-example">同じ概念的~eventを識別する</a>。】
+◎
+A notification has an associated tag which is a DOMString.
+</dd>
+
+	<dt>`~data@nT</dt>
+	<dd>
+【~appが自前の目的に利用できる任意の~data。】
+◎
+A notification has an associated data.
+</dd>
+
+	<dt>`時刻印@nT</dt>
+	<dd>
+［
+1970 年 1 月 1 日 00:00:00 UTC 
+］から［
+当の【概念的】~event用に通知が作成された時点
+］までの時間差を表す，~milli秒単位による数を表現している `DOMTimeStamp$I 値になる。
+◎
+A notification has an associated timestamp which is a DOMTimeStamp representing the time, in milliseconds since 00:00:00 UTC on 1 January 1970, of the event for which the notification was created.
+</dd>
+	<dd class="note">注記：
+時刻印は、通知【の作成~時刻に代えて，その内容が表す現実の~event】の実際の時刻を指示するためにも利用できる。
+例えば、［
+機器が~offlineにあるために即時に送達できなかった~message用に通知が利用された時点を指す過去
+］にすることも, ［
+開始しつつある会合~用の未来
+］にすることもできる。
+◎
+Timestamps can be used to indicate the time at which a notification is actual. For example, this could be in the past when a notification is used for a message that couldn’t immediately be delivered because the device was offline, or in the future for a meeting that is about to start.
+</dd>
+
+	<dt>`生成元@nT</dt>
+	<dd>
+`生成元$
+◎
+A notification has an associated origin.
+</dd>
+
+	<dt>`再通知-選好~flag@nT</dt>
+	<dd>
+初期~時には ~F とする。
+~T の場合、次を指示する
+⇒
+`通知を示す$ときに与えられた新たな通知が，既存の通知と同じ`~tag$nTを持つならば、その手続きを走らせた後に，末端利用者に~alertされるべきである
+◎
+A notification has an associated renotify preference flag which is initially unset. When set indicates that the end user should be alerted after the show steps have run with a new notification that has the same tag as an existing notification.
+</dd>
+
+	<dt>`静音~選好~flag@nT</dt>
+	<dd>
+初期~時には ~F とする。
+~T の場合、音響や振動は生じないべきであることを指示する。
+【<a href="https://github.com/whatwg/notifications/commit/459bf358cae197a5b88c6a227e018756ef4c21cd">音響の~supportは除去された</a>。】
+◎
+A notification has an associated silent preference flag which is initially unset. When set indicates that no sounds or vibrations should be made.
+</dd>
+
+	<dt>`対話~選好を要求する~flag@nT</dt>
+	<dd>
+初期~時には ~F とする。
+~T の場合、大きさに不足ない~screenを備える機器~上では，通知は
+利用者が当の通知を［
+作動化する／退ける
+］まで，いつでも可用であり続けるべきであることを指示する。
+◎
+A notification has an associated require interaction preference flag which is initially unset. When set, indicates that on devices with a sufficiently large screen, the notification should remain readily available until the user activates or dismisses the notification.
+</dd>
+</dl>
+
+<p>
+各 `通知$には、以下に挙げるものも結付けられ得る。
+初期~時には、いずれも結付けられていないとする
+— ［
+これらがとる／これらに設定される
+］値 ε は，結付けられていないことを表すとする：
+◎
+↓</p>
+
+<dl class="def-list">
+	<dt>`画像~URL@nT</dt>
+	<dt>`~icon~URL@nT</dt>
+	<dt>`~badge~URL@nT</dt>
+	<dd>
+順に，［
+`画像~資源$nT,
+`~icon資源$nT,
+`~badge資源$nT
+］の~URLを与える。
+◎
+A notification can have these associated graphics: an image URL, icon URL, and badge URL; and their corresponding image resource, icon resource, and badge resource.
+</dd>
+
+	<dt>`画像~資源@nT</dt>
+	<dd>
+`通知$を成す内容の一部として示され，［
+`~icon資源$nT, `~badge資源$nT
+］より高い視覚的な優先度で表示されるべき絵図を与える†。
+より少ない状況下で表示されてもヨイが††。
+◎
+An image resource is a picture shown as part of the content of the notification, and should be displayed with higher visual priority than the icon resource and badge resource, though it may be displayed in fewer circumstances.
+</dd>
+	<dd class="trans-note">【†
+言い換えれば、［
+`画像~資源$nTとは、挙げられた 3 種の資源のうち，通知~platformにて 一般に最も高い優先度で表示される画像である
+］ものと定義される，と捉えることもできる。
+】【††
+どれを優先するかは、状況に応じて，通知~platformが制御するかもしれない。
+】</dd>
+
+	<dt>`~icon資源@nT</dt>
+	<dd>
+`通知$を増補する画像（~iconや送信者の写真など）を与える。
+◎
+An icon resource is an image that reinforces the notification (such as an icon, or a photo of the sender).
+</dd>
+
+	<dt>`~badge資源@nT</dt>
+	<dd>
+`~badge資源$nTは、当の~web~app
+— あるいは，~web~appが何種類かの`通知$を送信する場合には、`通知$の種類 —
+を表現している~iconを与える。
+`通知$自体を表示する十分な空間がない場合にも、`通知$を表現するために利用されて`ヨイ^em。
+`通知$の内側に表示されても`ヨイ^emが、その視覚的な優先度は［
+`画像~資源$nT, `~icon資源$nT
+］より低くされるべきである。
+◎
+A badge resource is an icon representing the web application, or the category of the notification if the web application sends a wide variety of notifications. It may be used to represent the notification when there is not enough space to display the notification itself. It may also be displayed inside the notification, but then it should have less visual priority than the image resource and icon resource.
+</dd>
+
+	<dt>`振動~pattern@nT</dt>
+	<dd>
+【通知-時に生じる振動を表す~dataを与える。】
+◎
+A notification can have a vibration pattern. 
+</dd>
+</dl>
+
+<p class="note">注記：
+開発者には、［
+`画像~資源$nT,
+`~icon資源$nT,
+`~badge資源$nT,
+`振動~pattern$nT
+］を通して伝達される情報を，末端利用者が他からも~access可能にすることが奨励される
+— とりわけ，これらの特能を~supportしない通知~platformは、これらを無視するかもしれないので。
+◎
+Developers are encouraged to not convey information through an image, icon, badge, or vibration pattern that is not otherwise accessible to the end user, especially since notification platforms that do not support these features might ignore them.
+</p>
+
+<div class="p">
+<p>
+各 `通知$には、 0 個~以上の
+`動作@nT
+からなる
+`動作~list@nT
+も結付けられる。
+各`動作$nTには、次のものが結付けられる：
+</p>
+
+<dl class="def-list">
+	<dt>`~title@acT</dt>
+	<dd>
+文字列。
+</dd>
+
+	<dt>`名前@acT</dt>
+	<dd>
+文字列。
+</dd>
+
+	<dt>`~icon~URL@acT</dt>
+	<dd>
+ε （ “なし” ）, または`~icon資源$acTの~URL。
+初期~時は ε とする。
+</dd>
+
+	<dt>`~icon資源@acT</dt>
+	<dd>
+ε （ “なし” ）, または画像。
+初期~時は ε とする。
+</dd>
+</dl>
+
+◎A notification has an associated list of zero or more actions. Each action has an associated title and name and can have an associated icon URL and icon resource.＼
+</div>
+
+<p>
+利用者は、通知~自体を作動化する代替として，ある`動作$nTを作動化することもある。
+~UAは、通知~platformの拘束の下で~supportされる
+`最大~動作~数@
+を決定するモノトスル。
+◎
+Users may activate actions, as alternatives to activating the notification itself. The user agent must determine the maximum number of actions supported, within the constraints of the notification platform.
+</p>
+
+<p class="note">注記：
+動作の表示-は~platformに依存するので、開発者には，［
+利用者が通知から呼出せるどの動作も，~web~appの中で可用にする
+］ことが奨励される。
+◎
+Since display of actions is platform-dependent, developers are encouraged to make sure that any action a user can invoke from a notification is also available within the web application.
+</p>
+
+<p class="note no-backref">注記：
+一部の~platformは、`~icon資源$acTを［
+利用者に表示する前に，~platformの視覚的な~styleにより良く合致するよう改変する
+］かもしれない
+— 例えば［
+隅を丸める／特定の色で塗る
+］などにより。
+開発者には、そのような事例に対しても，利用する~iconの重要な情報が［
+隅が切取られる／色が~~不明瞭になる
+］などにより失われないよう，上品に取扱うことが奨励される。
+◎
+Some platforms might modify an icon resource to better match the platform’s visual style before displaying it to the user, for example by rounding the corners or painting it in a specific color. Developers are encouraged to use an icon that handles such cases gracefully and does not lose important information through, e.g., loss of color or clipped corners.
+</p>
+
+<p>
+`通知$のうち、［
+その`~sw登録$nT ~NEQ ε
+］なるものは
+`持続的@
+（ `persistent^en ）
+とされ，他のものは
+`持続的でない@
+（ `non-persistent^en ）とされる。
+【後者の用語は、単なる前者の否定なので，この訳では単に “`持続的$でない” と記すことにする。】
+◎
+A non-persistent notification is a notification without an associated service worker registration.
+◎
+A persistent notification is a notification with an associated service worker registration.
+</p>
+
+<hr>
+
+<div class="algorithm">
+<p>
+`通知を作成する@
+ときは、所与の
+( %~title, %~options, %~sw登録 （省略時は ε ） )
+に対し，次を走らす：
+◎
+To create a notification, given a title, options, and optionally a serviceWorkerRegistration, run these steps:
+</p>
+
+<ol>
+	<li>
+%通知 ~LET 新たな`通知$
+◎
+Let notification be a new notification.
+</li>
+	<li>
+%通知 の`~sw登録$nT ~SET %~sw登録
+◎
+If a serviceWorkerRegistration was provided, set notification’s service worker registration to serviceWorkerRegistration.
+</li>
+	<li>
+<p>
+~IF［
+下に挙げるいずれかが満たされる
+］
+⇒
+~THROW `TypeError^E
+</p>
+		<ul>
+			<li>
+<p>
+［
+%~sw登録 ~EQ ε
+］~AND［
+%~options の `actions$mO は空でない
+］
+◎
+If a serviceWorkerRegistration was not provided and options’s actions is not empty, throw a TypeError exception.
+</p>
+
+<p class="note">注記：
+現在，`動作$nTは、`持続的$な通知に限り，~supportされている。
+◎
+Actions are only currently supported for persistent notifications.
+</p>
+			</li>
+			<li>
+［
+%~options の `silent$mO ~EQ ~T
+］~AND［
+%~options の `vibrate$mO は在る
+］
+◎
+If options’s silent is true and options’s vibrate is present, throw a TypeError exception.
+</li>
+			<li>
+［
+%~options の `renotify$mO ~EQ ~T
+］~AND［
+%~options の `tag$mO ~EQ 空~文字列
+］
+◎
+If options’s renotify is true and options’s tag is the empty string, throw a TypeError exception.
+</li>
+		</ul>
+	</li>
+	<li>
+%通知 の `~data$nT ~SET 
+`StructuredSerializeForStorage$A( %~options の `data$mO )
+（例外投出あり）
+◎
+Set notification’s data to StructuredSerializeForStorage(options’s data). Rethrow any exceptions.
+</li>
+	<li>
+%通知 の
+⇒＃
+`~title$nT ~SET %~title,
+`方向$nT ~SET %~options の `dir$mO,
+`言語$nT ~SET %~options の `lang$mO,
+`生成元$nT ~SET `入口~設定群~obj$の`生成元$enV,
+`本体$nT ~SET %~options の `body$mO,
+`~tag$nT ~SET %~options の `tag$mO
+◎
+Set notification’s title to title.
+◎
+Set notification’s direction to options’s dir.
+◎
+Set notification’s language to options’s lang.
+◎
+Set notification’s origin to the entry settings object’s origin.
+◎
+Set notification’s body to options’s body.
+◎
+Set notification’s tag to options’s tag.
+</li>
+	<li>
+%基底~URL ~LET 
+`入口~設定群~obj$
+<span class="XXX">または`現任の設定群~obj$？</span>
+により指定される`~API用~基底~URL$enV
+◎
+Let baseURL be the API base URL specified by the entry settings object. Or incumbent?
+</li>
+	<li>
+<p>
+%通知 の
+⇒＃
+`画像~URL$nT ~SET `~URLを得る^i( `image$mO ),
+`~icon~URL$nT ~SET `~URLを得る^i( `icon$mO ),
+`~badge~URL$nT ~SET `~URLを得る^i( `badge$mO )
+</p>
+
+<p>
+この段の中で `~URLを得る^i ときは、所与の
+( %名前 )
+に対し，次の下位手続きを走らすとする：
+</p>
+		<ol>
+			<li>
+%url ~LET `失敗^i
+</li>
+			<li>
+~IF［
+%~options に %名前 ~memberは在る
+］
+⇒
+%url ~SET `~URL構文解析する$( その~member値, %基底~URL )
+</li>
+			<li>
+~RET［
+%url ~EQ `失敗^i ならば ε ／
+~ELSE_ %url
+］
+</li>
+		</ol>
+
+◎
+If options’s image is present, parse it using baseURL, and if that does not return failure, set notification’s image URL to the return value. (Otherwise image URL is not set.)
+◎
+If options’s icon is present, parse it using baseURL, and if that does not return failure, set notification’s icon URL to the return value. (Otherwise icon URL is not set.)
+◎
+If options’s badge is present, parse it using baseURL, and if that does not return failure, set notification’s badge URL to the return value. (Otherwise badge URL is not set.)
+</li>
+	<li>
+%通知 の`振動~pattern$nT ~SET ［
+%~options の `vibrate$mO は在るならば
+`検証して正規化する$( その値 )
+の結果 ／
+~ELSE_  ε
+］
+◎
+If options’s vibrate is present, validate and normalize it and set notification’s vibration pattern to the return value. (Otherwise vibration pattern is not set.)
+</li>
+	<li>
+%通知 の`時刻印$nT ~SET ［
+%~options の `timestamp$mO は在るならば その値 ／
+~ELSE_ 次で与えられる値
+］
+⇒
+［
+1970 年 1 月 1 日 00:00:00 UTC 
+］から
+`new Notification()$m 構築子が~callされた時点までの時間差を~milli秒単位で表す数
+◎
+If options’s timestamp is present, set notification’s timestamp to the value. Otherwise, set notification’s timestamp to the number of milliseconds that passed between 00:00:00 UTC on 1 January 1970 and the time at which the Notification constructor was called.
+</li>
+	<li>
+%通知 の
+⇒＃
+`再通知-選好~flag$nT ~SET %~options の `renotify$mO,
+`静音~選好~flag$nT ~SET %~options の `silent$mO,
+`対話~選好を要求する~flag$nT ~SET %~options の `requireInteraction$mO
+◎
+If options’s renotify is true, set notification’s renotify preference flag.
+◎
+If options’s silent is true, set notification’s silent preference flag.
+◎
+If options’s requireInteraction is true, set notification’s require interaction preference flag.
+</li>
+	<li>
+%通知 の`動作~list$nT ~SET 空~list
+◎
+Set notification’s list of actions to an empty list, then＼
+</li>
+	<li>
+<p>
+%~options の `actions$mO 内の~EACH( %~entry ) に対し：
+◎
+for each entry in options’s actions＼
+</p>
+		<ol>
+			<li>
+~IF［
+%通知 の`動作~list$nTの~size ~GTE ~supportされる`最大~動作~数$
+］
+⇒
+~BREAK
+◎
+, up to the maximum number of actions supported (skip any excess entries), perform the following steps:
+</li>
+			<li>
+%動作 ~LET 次のようにされた新たな`動作$nT
+⇒＃
+`名前$acT ~SET %~entry の `action$mA,
+`~title$acT ~SET %~entry の`title$mA
+◎
+Let action be a new action.
+◎
+Set action’s name to the entry’s action.
+◎
+Set action’s title to the entry’s title.
+</li>
+			<li>
+<p>
+~IF［
+%~entry に `icon$mA ~memberは在る
+］：
+</p>
+				<ol>
+					<li>
+%url ~LET `~URL構文解析する$( その~member値, %基底~URL )
+</li>
+					<li>
+~IF［
+%url ~NEQ `失敗^i
+］
+⇒
+%動作 の`~icon~URL$acT ~SET %url
+</li>
+				</ol>
+◎
+If entry’s icon is present, parse it using baseURL, and if that does not return failure, set action’s icon URL to the return value. (Otherwise icon URL is not set.)
+</li>
+			<li>
+%通知 の`動作~list$nTに %動作 を付加する
+◎
+Append action to notification’s list of actions.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %通知
+◎
+Return notification.
+</li>
+</ol>
+</div>
+
+		<section id="lifetime-and-ui-integrations">
+<h3 title="Lifetime and UI integration">2.1. 存続期間と~UI統合</h3>
+
+<p>
+~UAは、 
+`通知~list@
+を保つモノトスル
+— それは、 0 個~以上の`通知$からなる`~list$である。
+~UAには、次の要件が課される：
+◎
+The user agent must keep a list of notifications, which is a list of zero or more notifications. 
+</p>
+
+<ul>
+	<li>
+`持続的$でない通知に対しては，作成した数秒~後には`通知を閉じる$べきである。
+◎
+User agents should run the close steps for a non-persistent notification a couple of seconds after they have been created.
+</li>
+	<li>
+~platformの “通知~center” が可用であっても，`持続的$でない通知をそこに表示するべきでない。
+◎
+User agents should not display non-persistent notification in a platform’s "notification center" (if available).
+</li>
+	<li>
+<p>
+`持続的$な通知を，`通知~list$から除去されるまでは持続化するべきである。
+◎
+User agents should persist persistent notifications until they are removed from the list of notifications.
+</p>
+
+<p class="example">
+`持続的$な通知は、それを表現するいずれかの `Notification$I ~obj上で `close()$m ~methodを呼出すこともできる。
+◎
+A persistent notification could have the close() method invoked of one of its Notification objects.
+</p>
+	</li>
+	<li>
+~platformの “通知~center” が可用ならば，`持続的$な通知をそこに表示するべきである。
+◎
+User agents should display persistent notifications in a platform’s "notification center" (if available).
+</li>
+</ul>
+
+		</section>
+		<section id="permission-model">
+<h3 title="Permission model">2.2. 許可~model</h3>
+
+<p>
+`通知$を表示できるのは、利用者（または利用者に利する~UA）が
+`許可@
+を是認した場合に限られる。
+所与の`生成元$用に［
+`通知$を示す`許可$
+］は、次のいずれかの文字列になる：
+◎
+Notifications can only be displayed if the user (or user agent on behalf of the user) has granted permission. The permission to show notifications for a given origin is one of three strings:
+</p>
+
+<dl>
+	<dt>`default$l</dt>
+	<dd>
+`denied$l に等価であるが、利用者は，まだ明示的に選んではいない。
+◎
+This is equivalent to "denied", but the user has made no explicit choice thus far.
+</dd>
+
+	<dt>`denied$l</dt>
+	<dd>
+利用者は`通知$を求めていないことを意味する。
+◎
+This means the user does not want notifications.
+</dd>
+
+	<dt>`granted$l</dt>
+	<dd>
+`通知$を表示できることを意味する。
+◎
+This means notifications can be displayed.
+</dd>
+</dl>
+
+<p class="note">注記：
+`granted$l を意味するような［
+`default$l に~~相応する文字列
+］は無い。
+その事例では、~appにとっては`許可$を尋ねる理由は無いので，単純に `granted$l が返される。
+◎
+There is no equivalent to "default" meaning "granted". In that case "granted" is simply returned as there would be no reason for the application to ask for permission.
+</p>
+
+		</section>
+		<section id="direction">
+<h3 title="Direction">2.3. 方向</h3>
+
+<p>
+この節における用語 “期待される” は、~HTMLの
+<a href="~HTMLrendering#rendering">具現化~節に利用されるそれ</a>
+と等価とする。
+`HTML$r
+◎
+This section is written in terms equivalent to those used in the Rendering section of HTML. [HTML]
+</p>
+
+<p>
+~UAには、`通知$の`~text内容$における~Unicode意味論を尊守することが期待される
+— ここでの
+`~text内容@
+とは、［
+`~title$nTと`本体$nT, および
+`動作~list$nT内の各`動作$nTの`~title$acT
+］を成す~textの総称である。
+各`~text内容$は、表示されるときには［
+1 個~以上の双方向-~algo段落が成す，互いに独立な集合
+］として，双方向-~algoの規則［
+`P1^i, `P2^i, `P3^i
+］に定義されるように扱うことが期待される
+— 一例として、文字 
+<span class="code-point">U+000A</span> (<span class="char-symbol">LF</span>)
+による段落分断の挙動を~supportすることも含め。
+`通知$の`方向$nTに対する `auto^l 以外の値は、`通知$の各`~text内容$を成す各~段落に対し，規則［
+`P2^i, `P3^i
+］より高~levelの上書きを供する。
+`BIDI$r
+◎
+User agents are expected to honor the Unicode semantics of the text of a notification’s title, body, and the title of each of its actions. Each is expected to be treated as an independent set of one or more bidirectional algorithm paragraphs when displayed, as defined by the bidirectional algorithm’s rules P1, P2, and P3, including, for instance, supporting the paragraph-breaking behavior of U+000A LINE FEED (LF) characters. For each paragraph of the title, body and the title of each of the actions, the notification’s direction provides the higher-level override of rules P2 and P3 if it has a value other than "auto". [BIDI]
+</p>
+
+<p>
+`通知$の`方向$nTは、通知~platformが，`通知$の一連の`動作$nTを 利用者~向けに並べて表示する場合に、それらが従うべき順序も決定する。
+◎
+The notification’s direction also determines the relative order in which the notification’s actions should be displayed to the user, if the notification platform displays them side by side.
+</p>
+
+		</section>
+		<section id="language">
+<h3 title="Language">2.4. 言語</h3>
+
+<p>
+`通知$の`言語$nTは、`通知$の`~text内容$用の首な言語を，文字列で指定する。
+空~文字列は、首な言語は未知であることを指示する。
+他の文字列は、言語~tag `LANG$r として解釈されるモノトスル。
+［
+妥当性／整形式性
+］は、施行されない。
+◎
+The notification’s language specifies the primary language for the notification’s title, body and the title of each of its actions. Its value is a string. The empty string indicates that the primary language is unknown. Any other string must be interpreted as a language tag. Validity or well-formedness are not enforced. [LANG]
+</p>
+
+<p class="note">注記：
+開発者には、妥当な言語~tagのみを利用することが奨励される。
+◎
+Developers are encouraged to only use valid language tags.
+</p>
+
+		</section>
+		<section id="resources">
+<h3 title="Resources">2.5. 資源</h3>
+
+<div class="algorithm">
+<p>
+`通知を~fetchする@
+ときは、所与の
+( `通知$ %通知 )
+に対し：
+◎
+The fetch steps for a given notification notification are:
+</p>
+
+<ol>
+	<li>
+【以下を簡潔に集約するため，この訳では、この段にて次に与える手続きを導入する。】
+<p>
+この手続きの中で，
+`資源を~fetchして復号する^i
+ときは、所与の
+( %url )
+に対し，
+%url を`~fetch$した上で，次を`並列的$に走らす：
+</p>
+		<ol>
+			<li>
+%応答 ~SET ~fetchされた結果の`応答$
+</li>
+			<li>
+%応答 を待機する
+</li>
+			<li>
+~IF［
+%応答 の`内部~応答$の`種別$rs ~EQ `default^l
+］
+⇒
+資源を画像として復号することを試みる
+⇒
+~IF ［
+~UAは 復号された資源の形式を~supportする
+］
+⇒
+復号された資源を結果として，非同期に完了する
+</li>
+			<li>
+ε を結果として，非同期に完了する
+</li>
+		</ol>
+
+<p class="note">注記：
+画像~資源の場合、この資源を~fetchする意図は，
+<a href="~HEimages#update-the-image-data">`img^e に類似する</a>
+が、これは
+<a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=24055">抽象-化する必要がある</a>。
+◎
+The intent is to fetch this resource similar to an &lt;img&gt;, but this needs abstracting.
+</p>
+
+◎
+↓</li>
+	<li>
+( %画像~URL, %~icon~URL, %~badge~URL ) ~LET %通知 の
+( `画像~URL$nT, `~icon~URL$nT, `~badge~URL$nT )
+◎
+↓</li>
+	<li>
+<p>
+~IF［
+通知~platformは画像を~supportする
+］~AND［
+%画像~URL ~NEQ ε
+］
+⇒
+`資源を~fetchして復号する^i( %画像~URL )
+⇒
+これが %結果 を結果として非同期に完了したときは
+⇒
+%通知 の`画像~資源$nT ~SET %結果
+◎
+If the notification platform supports images, fetch notification’s image URL, if image URL is set.
+◎
+The intent is to fetch this resource similar to an &lt;img&gt;, but this needs abstracting.
+◎
+Then, in parallel:
+• Wait for the response.
+• If the response’s internal response’s type is "default", then attempt to decode the resource as image.
+• If the image format is supported, set notification’s image resource to the decoded resource. (Otherwise notification has no image resource.)
+</li>
+	<li>
+~IF［
+通知~platformは~iconを~supportする
+］~AND［
+%~icon~URL ~NEQ ε
+］
+⇒
+`資源を~fetchして復号する^i( %~icon~URL )
+⇒
+これが %結果 を結果として非同期に完了したときは
+⇒
+%通知 の`~icon資源$nT ~SET %結果
+◎
+If the notification platform supports icons, fetch notification’s icon URL, if icon URL is set.
+◎
+The intent is to fetch this resource similar to an &lt;img&gt;, but this needs abstracting.
+◎
+Then, in parallel:
+• Wait for the response.
+• If the response’s internal response’s type is "default", then attempt to decode the resource as image.
+◎
+If the image format is supported, set notification’s icon resource to the decoded resource. (Otherwise notification has no icon resource.)
+</li>
+	<li>
+<p>
+~IF［
+通知~platformは~badgeを~supportする
+］~AND［
+%~badge~URL ~NEQ ε
+］
+⇒
+`資源を~fetchして復号する^i( %~badge~URL )
+⇒
+これが %結果 を結果として非同期に完了したときは
+⇒
+%通知 の`~badge資源$nT ~SET %結果
+◎
+If the notification platform supports badges, fetch notification’s badge URL, if badge URL is set.
+◎
+The intent is to fetch this resource similar to an &lt;img&gt;, but this needs abstracting.
+◎
+Then, in parallel:
+• Wait for the response.
+• If the response’s internal response’s type is "default", then attempt to decode the resource as image.
+• If the image format is supported, set notification’s badge resource to the decoded resource. (Otherwise notification has no badge resource.)
+</li>
+	<li>
+<p>
+~IF［
+通知~platformは動作と動作~iconを~supportする
+］
+⇒
+%通知 の`動作~list$nT内の~EACH( %動作 ) に対し
+⇒
+~IF［
+%動作 の`~icon~URL$acT ~NEQ ε
+］
+⇒
+`資源を~fetchして復号する^i( %動作 の`~icon~URL$acT )
+⇒
+これが %結果 を結果として非同期に完了したときは
+⇒
+%動作 の`~icon資源$acT ~SET %結果
+◎
+If the notification platform supports actions and action icons, then for each action in notification’s list of actions fetch action’s icon URL, if icon URL is set.
+◎
+The intent is to fetch this resource similar to an &lt;img&gt;, but this needs abstracting.
+◎
+Then, in parallel:
+• Wait for the response.
+• If the response’s internal response’s type is "default", then attempt to decode the resource as image.
+• If the image format is supported, set action’s icon resource to the decoded resource. (Otherwise action has no icon resource.)
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="showing-a-notification">
+<h3 title="Showing a notification">2.6. 通知を示すとき</h3>
+
+<div class="algorithm">
+<p>
+`通知を示す@
+ときは、所与の
+( `通知$ %通知 )
+に対し，次を走らす：
+◎
+The show steps for a given notification notification are:
+</p>
+
+<ol>
+	<li>
+%通知 用の`通知を~fetchする$手続きの中で走らせた `資源を~fetchして復号する^i 手続きがあれば、それらすべてが非同期に完了するまで待機する
+◎
+Wait for any fetches to complete and notification’s image resource icon resource, and badge resource to be set (if any), as well as the icon resources for the notification’s actions (if any).
+</li>
+	<li>
+%示した ~LET ~F
+◎
+Let shown be false.
+</li>
+	<li>
+%旧~通知 ~LET `通知~list$内に次を満たす`通知$が［
+在るならば それ ／
+無いならば ~NULL
+］
+⇒
+［
+その`~tag$nT ~EQ %通知 の`~tag$nT ~NEQ 空~文字列
+］~AND［
+( その`生成元$nT, %通知 の`生成元$nT )
+は`同一-生成元$である
+］
+◎
+Let oldNotification be the notification in the list of notifications whose tag is not the empty string and is notification’s tag, and whose origin is same origin with notification’s origin, if any, and null otherwise.
+</li>
+	<li>
+<p>
+~IF［
+%旧~通知 ~NEQ ~NULL
+］：
+◎
+If oldNotification is non-null, then:
+</p>
+		<ol>
+			<li>
+`~close~eventを取扱う$( %旧~通知 )
+◎
+Handle close events with oldNotification.
+</li>
+			<li>
+<p>
+~IF［
+通知~platformは置換を~supportする
+］：
+◎
+If the notification platform supports replacement, then:
+</p>
+				<ol>
+					<li>
+`通知~list$内の %旧~通知 を %通知 に`置換する$
+◎
+Replace oldNotification with notification, in the list of notifications.
+</li>
+					<li>
+%示した ~SET ~T
+◎
+Set shown to true.
+</li>
+				</ol>
+<p class="note">注記：
+通知~platformには、~nativeな置換
+【表示-中の通知を置換する？】
+を~supportすることが強く奨励される
+— その方が利用者~体験は良くなるので。
+◎
+Notification platforms are strongly encouraged to support native replacement as it leads to a better user experience.
+</p>
+			</li>
+			<li>
+~ELSE
+⇒
+`通知~list$から %旧~通知 を`除去する$
+◎
+Otherwise, remove oldNotification from the list of notifications.
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+~IF［
+%示した ~EQ ~F
+］：
+◎
+If shown is false, then:
+</p>
+		<ol>
+			<li>
+`通知~list$に %通知 を`付加する$
+◎
+Append notification to the list of notifications.
+</li>
+			<li>
+機器~上に %通知 を表示する（通知~platformの適切な~APIを~callするなどにより）
+◎
+Display notification on the device (e.g., by calling the appropriate notification platform API).
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+~IF［
+%示した ~EQ ~F
+］~OR［［
+%旧~通知 ~NEQ ~NULL
+］~AND［
+%通知 の`再通知-選好~flag$nT ~EQ ~T
+］］
+⇒
+`通知を~alertする$( %通知 )
+</p>
+<p class="trans-note">【
+原文の ~OR, ~AND の優先順がはっきりしないが、 ~OR 優先だと［
+%示した ~EQ ~F
+］が無為な記述になるので， ~AND 優先と思われる。
+】</p>
+◎
+If shown is false or oldNotification is non-null and notification’s renotify preference flag has been set, then run the alert steps for notification.
+</li>
+	<li>
+~IF［
+%通知 は`持続的$でない
+］
+⇒
+次を走らす`~taskを~queueする$
+⇒
+%通知 を表現している【`唯一の$】 `Notification$I ~objに向けて，名前 `show^et の`~eventを発火する$
+◎
+If notification is a non-persistent notification, then queue a task to fire an event named show on the Notification object representing notification.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="activating-a-notification">
+<h3 title="Activating a notification">2.7. 通知の作動化-法</h3>
+
+<p>
+下層の通知~platformは作動化を~supportする下で、［
+`通知$ %通知 ／
+%通知 の`動作~list$nTを成すいずれかの`動作$nT
+］が利用者により作動化されたときは、~UAは，（他が指定されない限り）次の手続きを走らすモノトスル：
+◎
+When a notification notification, or one of its actions, is activated by the user, assuming the underlying notification platform supports activation, the user agent must (unless otherwise specified) run these steps:
+</p>
+
+<ol>
+	<li>
+<p>
+~IF［
+%通知 は`持続的$である
+］：
+◎
+If notification is a persistent notification, then:
+</p>
+
+		<ol>
+			<li>
+%動作~名 ~LET 空~文字列
+◎
+Let action be the empty string.
+</li>
+			<li>
+~IF［
+利用者により %通知 の`動作~list$nTを成すいずれかの`動作$nTが作動化された
+］
+⇒
+%動作~名 ~SET その`動作$nTの`名前$acT
+◎
+If one of notification’s actions was activated by the user, then set action to that action’s name.
+</li>
+			<li>
+`~sw通知~eventを発火する$( `notificationclick^et, %通知, %動作~名 )
+◎
+Fire a service worker notification event named "notificationclick" given notification and action. 
+</li>
+			<li>
+~RET
+◎
+↓</li>
+		</ol>
+	</li>
+	<li>
+<p>
+次を走らす`~taskを~queueする$：
+◎
+Otherwise, queue a task to run these steps:
+</p>
+
+		<ol>
+			<li>
+<p>
+%~focusする ~LET 次を走らせた結果
+⇒
+［
+%通知 を表現している【`唯一の$】 `Notification$I ~obj
+］に向けて，名前 `click^et の`~eventを発火する$
+— 次のように初期化して
+⇒＃
+`cancelable$m 属性 ~SET ~T
+◎
+Let intoFocus be the result of firing an event named click on the Notification object representing notification, with its cancelable attribute initialized to true.
+</p>
+
+<p class="note">注記：
+~UAには、［
+`click^et ~event用の~event~listenerの中からも， `focus()$m が働くようにする
+］ことが奨励される。
+◎
+User agents are encouraged to make focus() work from within the event listener for the event named click.
+</p>
+			</li>
+			<li>
+~IF［
+%~focusする ~EQ ~T
+］
+⇒
+~UAは %通知 に関係する`閲覧文脈$の表示域に~focusするべきである
+◎
+If intoFocus is true, then the user agent should bring the notification’s related browsing context’s viewport into focus.
+</li>
+		</ol>
+	</li>
+</ol>
+
+<p class="note">注記：
+~web~platform全体にわたり、
+"`activate^en" （ “作動化-” ）は，意図的に "`click^en" と誤って命名されている。
+◎
+Throughout the web platform "activate" is intentionally misnamed as "click".
+</p>
+
+		</section>
+		<section id="closing-a-notification">
+<h3 title="Closing a notification">2.8. 通知の~close法</h3>
+
+<p>
+［
+下層の通知~platform／利用者
+］により`通知$が~closeされたときは、`通知を閉じる$手続きを走らすモノトスル。
+◎
+When a notification is closed, either by the underlying notification platform or by the user, the close steps for it must be run.
+</p>
+
+<div class="algorithm">
+<p>
+`通知を閉じる@
+ときは、所与の
+( `通知$ %通知 )
+に対し，次を走らす：
+◎
+The close steps for a given notification are:
+</p>
+
+<ol>
+	<li>
+~IF［
+%通知 ~NIN `通知~list$
+］
+⇒
+~RET
+◎
+If the list of notifications does not contain notification, then abort these steps.
+</li>
+	<li>
+`~close~eventを取扱う$( %通知 )
+◎
+Handle close events with notification.
+</li>
+	<li>
+`通知~list$から %通知 を`除去する$
+◎
+Remove notification from the list of notifications.
+</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+`~close~eventを取扱う@
+ときは、所与の
+( %通知 )
+に対し，次を走らす：
+◎
+To handle close events given a notification, run these steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+%通知 は`持続的$である
+］~AND［
+%通知 は利用者により~closeされた
+］
+⇒
+`~sw通知~eventを発火する$( `notificationclose^et, %通知 )
+◎
+If notification is a persistent notification and notification was closed by the user, then fire a service worker notification event named "notificationclose" given notification.
+</li>
+	<li>
+~IF［
+%通知 は`持続的$でない
+］
+⇒
+次を走らす`~taskを~queueする$
+⇒
+%通知 を表現している `Notification$I ~objに向けて，名前 `close^et の`~eventを発火する$
+◎
+If notification is a non-persistent notification, then queue a task to fire an event named close on the Notification object representing notification.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="alerting-the-user">
+<h3 title="Alerting the user">2.9. 利用者への~alert法</h3>
+
+<div class="algorithm">
+<p>
+利用者に
+`通知を~alertする@
+ときは、所与の
+( `通知$ %通知 )
+に対し，次を走らす：
+◎
+The alert steps for alerting the user about a given notification are:
+</p>
+
+<ol>
+	<li>
+~IF［
+%通知 の`振動~pattern$nT ~NEQ ε
+］
+⇒
+`振動を遂行する$( %通知 の`振動~pattern$nT )
+◎
+Perform vibration using notification’s vibration pattern, if any.
+</li>
+</ol>
+</div>
+
+		</section>
+	</section>
+	<section id="api">
+<h2 title="API">3. ~API</h2>
+
+<pre class="idl">
+[`Exposed$=(Window,Worker)]
+interface `Notification@I : `EventTarget$I {
+  `Notification$mc(`DOMString$ %title, optional `NotificationOptions$I %options = {}),
+
+  static readonly attribute `NotificationPermission$I `permission$m;
+  [`Exposed$=Window] static Promise&lt;`NotificationPermission$I&gt; `requestPermission$m(optional `NotificationPermissionCallback$I %deprecatedCallback);
+
+  static readonly attribute `unsigned long$ `maxActions$m;
+
+  attribute `EventHandler$I `onclick$m;
+  attribute `EventHandler$I `onshow$m;
+  attribute `EventHandler$I `onerror$m;
+  attribute `EventHandler$I `onclose$m;
+
+  readonly attribute `DOMString$ `title$m;
+  readonly attribute `NotificationDirection$I `dir$m;
+  readonly attribute `DOMString$ `lang$m;
+  readonly attribute `DOMString$ `body$m;
+  readonly attribute `DOMString$ `tag$m;
+  readonly attribute `USVString$ `image$m;
+  readonly attribute `USVString$ `icon$m;
+  readonly attribute `USVString$ `badge$m;
+  [`SameObject$] readonly attribute FrozenArray&lt;`unsigned long$&gt; `vibrate$m;
+  readonly attribute `DOMTimeStamp$I `timestamp$m;
+  readonly attribute `boolean$ `renotify$m;
+  readonly attribute `boolean$ `silent$m;
+  readonly attribute `boolean$ `requireInteraction$m;
+  [`SameObject$] readonly attribute any `data$m;
+  [`SameObject$] readonly attribute FrozenArray&lt;`NotificationAction$I&gt; `actions$m;
+
+  `undefined$ `close$m();
+};
+
+dictionary `NotificationOptions@I {
+  `NotificationDirection$I `dir@mO = "auto";
+  `DOMString$ `lang@mO = "";
+  `DOMString$ `body@mO = "";
+  `DOMString$ `tag@mO = "";
+  `USVString$ `image@mO;
+  `USVString$ `icon@mO;
+  `USVString$ `badge@mO;
+  `VibratePattern$I `vibrate@mO;
+  `DOMTimeStamp$I `timestamp@mO;
+  `boolean$ `renotify@mO = false;
+  `boolean$ `silent@mO = false;
+  `boolean$ `requireInteraction@mO = false;
+  any `data@mO = null;
+  sequence&lt;`NotificationAction$I&gt; `actions@mO = [];
+};
+
+enum `NotificationPermission@I {
+  `default@l,
+  `denied@l,
+  `granted@l
+};
+
+enum `NotificationDirection@I {
+  `auto@l,
+  `ltr@l,
+  `rtl@l
+};
+
+dictionary `NotificationAction@I {
+  required `DOMString$ `action@mA;
+  required `DOMString$ `title@mA;
+  `USVString$ `icon@mA;
+};
+
+callback `NotificationPermissionCallback@I = `undefined$ (`NotificationPermission$I %permission);
+</pre>
+
+<p>
+`Notification$I ~objは、ある`通知$を表現する：
+◎
+↓</p>
+
+<ul>
+	<li id="_only-one">
+`持続的$でない通知を表現する `Notification$I ~objは、
+`new Notification()$m 構築子を通して作成でき，通知ごとに 1 個に限られる。
+◎
+A non-persistent notification is represented by one Notification object and can be created through Notification's constructor.
+</li>
+	<li>
+`持続的$な通知を表現する `Notification$I ~objは、通知ごとに 0 個~以上いくつでもあり得る。
+そのような`通知$は、 `showNotification()$m ~methodを通して作成できる。
+【そのような~objたちは、 `getNotifications()$m を通して／ `~sw通知~eventを発火する$ときに作成される。】
+◎
+A persistent notification is represented by zero or more Notification objects and can be created through the showNotification() method.
+</li>
+</ul>
+
+		<section id="garbage-collection">
+<h3 title="Garbage collection">3.1. ~garbage収集</h3>
+
+<p>
+`Notification$I ~obj %N は、次を満たしている間は~garbage収集されないモノトスル
+⇒
+［
+%N が表現している`通知$ ~IN `通知~list$
+］~AND［
+%N には次に挙げるいずれかの型の`~event~listener$が~~登録されている
+］
+⇒
+`click^et,
+`show^et,
+`close^et,
+`error^et
+◎
+A Notification object must not be garbage collected while the list of notifications contains its corresponding notification and it has an event listener whose type is click, show, close, or error. 
+</p>
+
+		</section>
+		<section id="constructors">
+<h3 title="Constructors">3.2. 構築子</h3>
+
+<div class="algo">
+<p>
+`new Notification(title, options)@m
+構築子~手続きは：
+◎
+The Notification(title, options) constructor, when invoked, must run these steps:
+</p>
+<ol>
+	<li>
+~IF［
+`現在の大域~obj$は `ServiceWorkerGlobalScope$I ~objである
+］
+⇒
+~THROW `TypeError^E
+◎
+If the current global object is a ServiceWorkerGlobalScope object, then throw a TypeError exception.
+</li>
+	<li>
+%通知 ~LET `通知を作成する$( %title, %options )
+（例外投出あり）
+◎
+Let notification be the result of creating a notification given title and options. Rethrow any exceptions.
+</li>
+	<li>
+コレが表現する`通知$ ~SET %通知
+◎
+Let n be a new Notification object associated with notification.
+</li>
+	<li>
+<p>
+この段は`並列的$に走らす：
+◎
+Run these steps in parallel:
+</p>
+		<ol>
+			<li>
+~IF［
+%通知 の`生成元$nT用の`許可$ ~NEQ `granted$l
+］
+⇒
+次を走らす`~taskを~queueする$
+⇒
+%N に向けて，名前 `error^et の`~eventを発火する$
+◎
+If permission for notification’s origin is not "granted", then queue a task to fire an event named error on n,＼
+</li>
+			<li>
+<p>
+~ELSE：
+◎
+and abort these steps.
+</p>
+				<ol>
+					<li>
+`通知を~fetchする$( %通知 )；
+◎
+Run the fetch steps for notification.
+</li>
+					<li>
+`通知を示す$( %通知 )
+◎
+Run the show steps for notification.
+</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+</ol>
+<p>
+◎
+Return n.
+</p>
+</div>
+
+		</section>
+		<section id="static-members">
+<h3 title="Static members">3.3. 静的~member</h3>
+
+<div class="algo">
+<p>
+静的
+`permission@m
+取得子~手続きは
+⇒
+~RET `入口~設定群~obj$の`生成元$enV用の`許可$
+◎
+The static permission attribute’s getter must return permission for the entry settings object’s origin.
+</p>
+
+<p class="note">注記：
+標準を編集する者は、上を複製するのは慎むこと。
+同期的な許可は、同期的な入出力の様なものであり，不良な案である。
+◎
+If you edit standards please refrain from copying the above. Synchronous permissions are like synchronous IO, a bad idea.
+</p>
+</div>
+
+<div class="algo">
+<p>
+静的
+`requestPermission(deprecatedCallback)@m
+~method~手続きは：
+◎
+The static requestPermission(deprecatedCallback) method, when invoked, must run these steps:
+</p>
+<ol>
+	<li>
+%~promise ~LET 新たな~promise
+◎
+Let promise be a new promise.
+</li>
+	<li>
+<p>
+この段は`並列的$に走らす：
+◎
+Run these steps in parallel:
+</p>
+		<ol>
+			<li>
+%入口~生成元 ~LET `入口~設定群~obj$の`生成元$enV
+◎
+↓</li>
+			<li>
+%許可 ~LET %入口~生成元 用の`許可$
+◎
+Let permission be permission for entry settings object’s origin.
+</li>
+			<li>
+~IF［
+%許可 ~EQ `default$l
+］
+⇒
+［
+%入口~生成元 用の通知は受容-可能かどうか
+］を示して，利用者に尋ねる
+⇒
+%許可 ~SET 利用者からの可否に応じて
+⇒
+可ならば `granted$l ／
+否ならば  `denied$l
+◎
+If permission is "default", ask the user whether showing notifications for the entry settings object’s origin is acceptable. If it is, set permission to "granted", and "denied" otherwise.
+</li>
+			<li>
+<p>
+次を走らす`~taskを~queueする$：
+◎
+Queue a task to run these steps:
+</p>
+				<ol>
+					<li>
+%入口~生成元 用の`許可$ ~SET %許可
+◎
+Set permission for the entry settings object’s origin to permission.
+</li>
+					<li>
+~IF［
+%deprecatedCallback ~NEQ ε
+］
+⇒
+%deprecatedCallback( %許可 ) を呼出す
+⇒
+例外が投出されたときは
+⇒
+その`例外を報告する$
+◎
+If deprecatedCallback is given, invoke deprecatedCallback with permission as single argument. If this throws an exception, report the exception.
+</li>
+					<li>
+%許可 で %~promise を解決する
+◎
+Fullfil promise with permission.
+</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+	<li>
+~RET %~promise
+◎
+Return promise.
+</li>
+</ol>
+
+<p class="warning">
+通知は、［
+前もって利用者に何かを尋ねることはイミを成す
+］ものと知られている一つである。
+他の~API用の仕様は、この~patternは利用せずに，
+<a href="http://robert.ocallahan.org/2011/06/permissions-for-web-applications_30.html">より相応しい数多の代替</a>
+いずれかを使役するべきである。
+◎
+Notifications are the one instance thus far where asking the user upfront makes sense. Specifications for other APIs should not use this pattern and instead employ one of the many more suitable alternatives.
+</p>
+</div>
+
+<div class="algo">
+静的
+`maxActions@m
+取得子~手続きは
+⇒
+~RET ~supportされる`最大~動作~数$
+◎
+The static maxActions attribute’s getter must return the maximum number of actions supported.
+</div>
+
+		</section>
+		<section id="object-members">
+<h3 title="Object members">3.4. ~obj~member</h3>
+
+<p>
+次に挙げる`~event~handler$（および対応する`~event~handler~event型$）は、
+`Notification$I ~objの属性として~supportされるモノトスル：
+◎
+The following are the event handlers (and their corresponding event handler event types) that must be supported as attributes by the Notification object.
+</p>
+
+<table><thead><tr><th>`~event~handler$
+<th>`~event~handler~event型$
+</thead><tbody>
+
+<tr><td>`onclick@m
+<td>`click^et
+
+<tr><td>`onshow@m
+<td>`show^et
+
+<tr><td>`onerror@m
+<td>`error^et
+
+<tr><td>`onclose@m
+<td>`close^et
+
+</tbody></table>
+
+<p class="trans-note">【
+以下の［
+属性／~method
+］定義に現れる`通知$は、当の `Notification$I ~objが表現するそれを表す。
+】</p>
+
+<div class="algo">
+`close()@m
+~method手続きは
+⇒
+`通知を閉じる$( `通知$ )
+◎
+The close() method, when invoked, must run the close steps for the notification.
+</div>
+
+<div class="algo">
+`title@m
+取得子~手続きは
+⇒
+~RET `通知$の`~title$nT
+◎
+The title attribute’s getter must return the notification’s title.
+</div>
+
+<div class="algo">
+`dir@m
+取得子~手続きは
+⇒
+~RET `通知$の`方向$nT
+◎
+The dir attribute’s getter must return the notification’s direction.
+</div>
+
+<div class="algo">
+`lang@m
+取得子~手続きは
+⇒
+~RET `通知$の`言語$nT
+◎
+The lang attribute’s getter must return the notification’s language.
+</div>
+
+<div class="algo">
+`body@m
+取得子~手続きは
+⇒
+~RET `通知$の`本体$nT
+◎
+The body attribute’s getter must return the notification’s body.
+</div>
+
+<div class="algo">
+`tag@m
+取得子~手続きは
+⇒
+~RET `通知$の`~tag$nT
+◎
+The tag attribute’s getter must return the notification’s tag.
+</div>
+
+<div class="algo">
+`image@m
+取得子~手続きは
+⇒
+~RET `通知$の`画像~URL$nT %url に応じて
+⇒＃
+ε ならば空~文字列 ／
+~ELSE_ `~URLを直列化する$( %url )
+◎
+The image attribute’s getter must return the notification’s image URL, serialized, and the empty string if there is no notification’s image URL otherwise.
+</div>
+
+<div class="algo">
+`icon@m
+取得子~手続きは
+⇒
+~RET `通知$の`~icon~URL$nT %url に応じて
+⇒＃
+ε ならば空~文字列 ／
+~ELSE_ `~URLを直列化する$( %url )
+◎
+The icon attribute’s getter must return the notification’s icon URL, serialized, and the empty string if there is no notification’s icon URL otherwise.
+</div>
+
+<div class="algo">
+`badge@m
+取得子~手続きは
+⇒
+~RET `通知$の`~badge~URL$nT %url に応じて
+⇒＃
+ε ならば空~文字列 ／
+~ELSE_ `~URLを直列化する$( %url )
+◎
+The badge attribute’s getter must return the notification’s badge URL, serialized, and the empty string if there is no notification’s badge URL otherwise.
+</div>
+
+<div class="algo">
+`vibrate@m
+取得子~手続きは
+⇒
+~RET `通知$の`振動~pattern$nT %~pattern に応じて
+⇒＃
+ε ならば空~list ／
+~ELSE_ %~pattern
+◎
+The vibrate attribute’s getter must return the notification’s vibration pattern, if any, and the empty list otherwise.
+</div>
+
+<div class="algo">
+`timestamp@m
+取得子~手続きは
+⇒
+~RET `通知$の`時刻印$nT
+◎
+The timestamp attribute’s getter must return the notification’s timestamp.
+</div>
+
+<div class="algo">
+`renotify@m
+取得子~手続きは
+⇒
+~RET `通知$の`再通知-選好~flag$nT
+◎
+The renotify attribute’s getter must return the notification’s renotify preference flag.
+</div>
+
+<div class="algo">
+`silent@m
+取得子~手続きは
+⇒
+~RET `通知$の`静音~選好~flag$nT
+◎
+The silent attribute’s getter must return the notification’s silent preference flag.
+</div>
+
+<div class="algo">
+`requireInteraction@m
+取得子~手続きは
+⇒
+~RET `通知$の`対話~選好を要求する~flag$nT
+◎
+The requireInteraction attribute’s getter must return the notification’s require interaction preference flag.
+</div>
+
+<div class="algo">
+`data@m
+取得子~手続きは
+⇒
+~RET `StructuredDeserialize$A( `通知$の`~data$nT, コレに`関連な~Realm$ )
+⇒
+例外が投出されたときは
+⇒
+~RET ~NULL
+◎
+The data attribute’s getter must return StructuredDeserialize(notification’s data, context object’s relevant Realm). If this throws an exception, then return null.
+</div>
+
+<div class="algo">
+<p>
+`actions@m
+取得子~手続きは：
+◎
+The actions attribute’s getter must return the result of the following steps:
+</p>
+<ol>
+	<li>
+%動作~list ~LET 新たな空な
+<code>sequence&lt;`NotificationAction$I&gt;</code>
+型~値
+◎
+Let frozenActions be an empty list of type NotificationAction.
+</li>
+	<li>
+<p>
+`通知$の`動作~list$nT内の ~EACH( %~entry ) に対し：
+◎
+For each entry in the notification’s list of actions, perform the following steps:
+</p>
+		<ol>
+			<li>
+%動作 ~LET 次のようにされた新たな `NotificationAction$I 型~値
+⇒＃
+`action$mA ~SET %~entry の`名前$acT,
+`title$mA ~SET %~entry の`~title$acT,
+`icon$mA ~SET %~entry の`~icon~URL$acT
+◎
+Let action be a new NotificationAction.
+◎
+Set action’s action to entry’s name.
+◎
+Set action’s title to entry’s title.
+◎
+Set action’s icon to entry’s icon URL.
+</li>
+			<li>
+%動作 上で `Object.freeze$c を~callする
+— これは、~scriptによる不用意な変異を防止する。
+◎
+Call Object.freeze on action, to prevent accidental mutation by scripts.
+</li>
+			<li>
+%動作~list に %動作 を付加する
+◎
+Append action to frozenActions.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET `凍結d配列を作成する$( %動作~list )
+◎
+Create a frozen array from frozenActions.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="examples">
+<h3 title="Examples">3.5. 例</h3>
+
+			<section id="using-events">
+<h4 title="Using events from a page">3.5.1. ~pageからの~eventの利用-法</h4>
+
+<p>
+`持続的$でない通知を表現する `Notification$I ~objには、その存続中に~eventが配送される
+— 開発者は、それを利用して，自身が欲する挙動を生成できる。
+◎
+Non-persistent Notification objects dispatch events during their lifecycle, which developers can use to generate desired behaviors.
+</p>
+
+<p>
+`click^et ~eventは、利用者が通知を作動化したときに配送される。
+◎
+The click event dispatches when the user activates a notification.
+</p>
+
+<div class="example">
+<pre class="lang-js">
+var %not = new Notification("Gebrünn Gebrünn by Paul Kalkbrenner", { icon: "newsong.svg", tag: "song" });
+%not.onclick = function() { displaySong(this); };
+</pre>
+</div>
+
+			</section>
+			<section id="using-actions">
+<h4 title="Using actions from a service worker">3.5.2. ~swからの動作の利用-法</h4>
+
+<p>
+`持続的$な通知は、
+`ServiceWorkerGlobalScope$I に向けて
+`notificationclick^et ~eventを発火する。
+◎
+Persistent notifications fire notificationclick events on the ServiceWorkerGlobalScope.
+</p>
+
+<div class="example">
+<p>
+次の例の~swは、
+1 個の “~archive” `動作$nTを伴うある通知を示して、［
+利用者が、~websiteを開かずに，この通知から この共通的な~taskを遂行する
+］ことも可能にする（例えば，通知~platformは、通知~上に~buttonを示すかもしれない）。
+利用者は、通知の本体を作動化して，その受信箱を開くこともできる。
+◎
+Here a service worker shows a notification with a single "Archive" action, allowing users to perform this common task from the notification without having to open the website (for example the notification platform might show a button on the notification). The user can also activate the main body of the notification to open their inbox.
+</p>
+
+<pre class="lang-js">
+self.registration.showNotification("甲さんから新たな~mailです", {
+  actions: [{action: 'archive', title: "~archive"}]
+});
+
+self.addEventListener('notificationclick', function(%event) {
+  %event.notification.close();
+  if (%event.action === 'archive') {
+    silentlyArchiveEmail();
+  } else {
+    clients.openWindow("/受信箱");
+  }
+}, false);
+</pre>
+
+<!--
+New mail from Alice
+ -->
+
+</div>
+
+			</section>
+			<section id="tags-example">
+<h4 title="Using the tag member for multiple instances">3.5.3. 複数の~instance用の `tag^mO ~memberの利用-法</h4>
+
+<p>
+同じ~web~appの複数の~instanceが，同時並行的に運用されることは、頻繁にある
+— 利用者が~browserの複数の~tab内で~mail~appを開いたときなど。
+~desktopは共有される資源であり、通知~APIの `tag$mO ~memberが，これらの~instanceが容易に協調する仕方を供する。
+◎
+Web applications frequently operate concurrently in multiple instances, such as when a user opens a mail application in multiple browser tabs. Since the desktop is a shared resource, the notifications API provides a way for these instances to easily coordinate, by using the tag member.
+</p>
+
+<p>
+同じ概念的~eventを表現する複数の通知には、同じ仕方で~tagを付与できる
+— 両者とも示されるとき、利用者は 1 個の通知のみを受信することになる。
+◎
+Notifications which represent the same conceptual event can be tagged in the same way, and when both are shown, the user will only receive one notification.
+</p>
+
+<figure>
+<pre class="lang-js">
+/* <span class="comment">
+ある~instanceの中で新たな~mailを通知する：
+</span> */
+new Notification("丙さんから~mailです", { tag: 'message1' });
+</pre>
+
+<pre class="lang-js">
+/* <span class="comment">
+少し経ってから，別の~instanceの中で新たな~mailを通知する：
+</span> */
+new Notification("丙さんから~mailです", { tag: 'message1' });
+</pre>
+</figure>
+
+<!-- 
+Instance 1                                   | Instance 2
+                                             |
+// Instance notices there is new mail.       |
+new Notification("New mail from John Doe",   |
+                 { tag: 'message1' });       |
+                                             |
+                                             |  // Slightly later, this instance notices
+                                             |  // there is new mail.
+                                             |  new Notification("New mail from John Doe",
+                                             |                   { tag: 'message1' });
+ -->
+
+<p>
+この状況における結果は、~UAがここの~algoに従うならば，
+<strong>1 個</strong>の通知 `丙さんから~mailです^l になる。
+◎
+The result of this situation, if the user agent follows the algorithms here, is a single notification "New mail from John Doe".
+</p>
+
+			</section>
+			<section id="using-the-tag-member-for-a-single-instance">
+<h4 title="Using the tag member for a single instance">3.5.4. 単独の~instance用の `tag^mO ~memberの利用-法</h4>
+
+<p>
+`tag$mO ~memberは、~appの単独の~instanceからも利用できる
+— 自身の通知を，状態~変化に伴いアリな限り最新に保つために。
+◎
+The tag member can also be used by a single instance of an application to keep its notifications as current as possible as state changes.
+</p>
+
+<div class="example">
+
+<p>
+例えば、甲さんが~chat~appを利用していて，相手の乙さんは甲が “遊休中”† の間に複数の~messageを送信した場合、~appは，［
+甲が各~messageに対する~desktop通知をいちいち見ない
+］ことを選好することもできる。
+【†~appがどうやって “遊休中” を検出するかは、~appに委ねられる。】
+◎
+For example, if Alice is using a chat application with Bob, and Bob sends multiple messages while Alice is idle, the application may prefer that Alice not see a desktop notification for each message.
+</p>
+
+<pre class="lang-js">
+/* <span class="comment">乙からの "こんにちは"</span> */
+new Notification("乙さん： こんにちは", { tag: 'chat_乙' });
+
+/* <span class="comment">乙からの "今日の午後は~~空いてますか？"</span> */
+new Notification("乙さん： こんにちは / 今日の午後は~~空いてますか？", { tag: 'chat_乙' });
+</pre>
+<!-- 
+// Bob says "Hi"
+new Notification("Bob: Hi", { tag: 'chat_Bob' });
+
+// Bob says "Are you free this afternoon?"
+new Notification("Bob: Hi / Are you free this afternoon?", { tag: 'chat_Bob' });
+-->
+
+<p>
+この状況における結果は、`1 個^emの通知になる。
+2 個目の通知は、同じ~tagが伴われた最初の通知を置換する。
+通知を~queueする（~queueされた順に通知する）~platformにおいては、~tagを利用すれば，~queue内での通知の位置も保守-可能になる。
+最新の通知を最初に示すような~platformにおいては、
+`close()$m ~methodを利用して類似な結果を達成することもできる。
+◎
+The result of this situation is a single notification; the second one replaces the first having the same tag. In a platform that queues notifications (first-in-first-out), using the tag allows the notification to also maintain its position in the queue. Platforms where the newest notifications are shown first, a similar result could be achieved using the close() method.
+</p>
+</div>
+
+			</section>
+		</section>
+	</section>
+	<section id="service-worker-api">
+<h2 title="Service worker API">4. ~sw~API</h2>
+
+<pre class="idl">
+dictionary `GetNotificationOptions@I {
+  `DOMString$ `tag@mGO = "";
+};
+
+partial interface `ServiceWorkerRegistration$I {
+  Promise&lt;`undefined$&gt; `showNotification$m(`DOMString$ %title, optional `NotificationOptions$I %options = {});
+  Promise&lt;sequence&lt;`Notification$I&gt;&gt; `getNotifications$m(optional `GetNotificationOptions$I %filter = {});
+};
+
+[`Exposed$=ServiceWorker]
+interface `NotificationEvent@I : `ExtendableEvent$I {
+  `NotificationEvent@mc(`DOMString$ %type, `NotificationEventInit$I %eventInitDict);
+
+  readonly attribute `Notification$I `notification@mE;
+  readonly attribute `DOMString$ `action@mE;
+};
+
+dictionary `NotificationEventInit@I : `ExtendableEventInit$I {
+  required `Notification$I `notification@mNI;
+  `DOMString$ `action@mNI = "";
+};
+
+partial interface `ServiceWorkerGlobalScope$I {
+  attribute `EventHandler$I `onnotificationclick$m;
+  attribute `EventHandler$I `onnotificationclose$m;
+};
+</pre>
+
+<div class="algo">
+<p>
+`showNotification(title, options)@m
+~method手続きは：
+◎
+The showNotification(title, options) method, when invoked, must run these steps:
+</p>
+		<ol>
+			<li>
+%~promise ~LET 新たな~promise
+◎
+Let promise be a new promise.
+</li>
+			<li>
+~IF［
+コレにて`作動中の~worker$ ~EQ ~NULL
+］
+⇒＃
+`TypeError^E 例外で %~promise を却下する；
+~RET %~promise
+◎
+If the context object’s active worker is null, then reject promise with a TypeError exception and return promise.
+</li>
+			<li>
+%~sw登録 ~LET コレ
+◎
+Let serviceWorkerRegistration be the context object.
+</li>
+			<li>
+%通知 ~LET `通知を作成する$( %title, %options, %~sw登録 )
+⇒
+例外が投出されたときは
+⇒＃
+その例外で %~promise を却下する；
+~RET %~promise
+◎
+Let notification be the result of creating a notification given title, options, and serviceWorkerRegistration. If this threw an exception, reject promise with that exception and return promise.
+</li>
+			<li>
+<p>
+この段は`並列的$に走らす：
+◎
+Run these steps in parallel:
+</p>
+				<ol>
+					<li>
+~IF［
+%通知 の`生成元$nT用の`許可$ ~NEQ `granted$l
+］
+⇒
+`TypeError^E 例外で %~promise を却下する
+◎
+If permission for notification’s origin is not "granted", then reject promise with a TypeError exception＼
+</li>
+					<li>
+<p>
+~ELSE：
+◎
+, and abort these steps.
+</p>
+						<ol>
+							<li>
+`通知を~fetchする$( %通知 )
+◎
+Run the fetch steps for notification.
+</li>
+							<li>
+`通知を示す$( %通知 )
+◎
+Run the show steps for notification.
+</li>
+							<li>
+`undefined^jv で %~promise を解決する
+◎
+Resolve promise with undefined.
+</li>
+						</ol>
+					</li>
+				</ol>
+			</li>
+			<li>
+~RET %~promise
+◎
+Return promise.
+</li>
+		</ol>
+</div>
+
+<div class="algo">
+<p>
+`getNotifications(filter)@m
+~method手続きは：
+◎
+The getNotifications(filter) method, when invoked, must run these steps:
+</p>
+		<ol>
+			<li>
+%~promise ~LET 新たな~promise
+◎
+Let promise be a new promise.
+</li>
+			<li>
+<p>
+この段は`並列的$に走らす：
+◎
+Run these steps in parallel:
+</p>
+				<ol>
+					<li>
+%~tag ~LET %filter の `tag^c
+◎
+Let tag be filter’s tag.
+</li>
+					<li>
+%~obj配列 ~LET 新たな~JS配列
+◎
+↓</li>
+					<li>
+<p>
+`通知~list$内の~EACH( `通知$ %通知 ) に対し，作成~順序で：
+</p>
+						<ol>
+							<li>
+<p>
+~IF［
+( %通知 の`生成元$nT, `入口~設定群~obj$の`生成元$enV )
+は`同一-生成元$でない†
+］~OR［
+%通知 の`~sw登録$nT ~NEQ コレ
+］
+⇒
+~CONTINUE
+</p>
+【† “同一-生成元でない” は訳者による推定。原文には単に “`is not^en” としか記されていない。】
+</li>
+							<li>
+~IF［
+%~tag ~NEQ 空~文字列
+］~AND［
+%通知 の`~tag$nT ~NEQ %~tag
+］
+⇒
+~CONTINUE
+</li>
+							<li>
+%~obj配列 に［
+%通知 を表現している新たな `Notification$I ~obj
+］を付加する
+</li>
+						</ol>
+◎
+Let notifications be a list of all notifications in the list of notifications whose origin is the entry settings object’s origin, whose service worker registration is the context object, and whose tag, if tag is not the empty string, is tag.
+◎
+Let objects be an empty JavaScript array.
+◎
+For each notification in notifications, in creation order, create a new Notification object representing notification and push that object to objects.
+</li>
+					<li>
+%~obj配列 で %~promise を解決する
+◎
+Resolve promise with objects.
+</li>
+				</ol>
+			</li>
+			<li>
+~RET %~promise
+◎
+Return promise.
+</li>
+		</ol>
+
+<p class="note">注記：
+この~methodは、 0 個~以上の新たな `Notification$I ~objを返す
+— それらが表現する下層の`通知$には、すでに存在する `Notification$I ~objのそれと同じものもあるかもしれない。
+◎
+This method returns zero or more new Notification objects which might represent the same underlying notification of Notification objects already in existence.
+</p>
+</div>
+
+<hr>
+
+<div class="algorithm">
+<p>
+`~sw通知~eventを発火する@
+ときは、所与の
+( 名前 %名前, `通知$ %通知, 文字列 %動作 （省略時は空~文字列） )
+に対し
+⇒
+%通知 の`~sw登録$nTに向けて，名前 %名前 の`機能的~eventを発火する$
+— `NotificationEvent$I を利用し，次のように初期化して
+⇒＃
+`notification$mE 属性 ~SET %通知 を表現している新たな `Notification$I ~obj,
+`action$mE 属性 ~SET %動作
+◎
+To fire a service worker notification event named name given notification (a notification), and an optional action (a DOMString, defaulting to the empty string), Fire Functional Event name using NotificationEvent on notification’s service worker registration with the following properties: 
+◎
+notification
+• A new Notification object representing notification.
+◎
+action
+• action
+</p>
+</div>
+
+<div class="algo">
+`notification$mE
+取得子~手続きは、初期化-時の値を返す。
+◎
+The notification attribute’s getter must return the value it was initialized to.
+</div>
+
+<div class="algo">
+`action$mE
+取得子~手続きは、初期化-時の値を返す。
+◎
+The action attribute’s getter must return the value it was initialized to.
+</div>
+
+<p>
+次に挙げる`~event~handler$（および対応する`~event~handler~event型$）は、
+`ServiceWorkerGlobalScope$I ~objの属性として~supportされるモノトスル：
+◎
+The following is the event handler (and its corresponding event handler event type) that must be supported as attribute by the ServiceWorkerGlobalScope object:
+</p>
+
+<table><thead><tr><th>`~event~handler$
+<th>`~event~handler~event型$
+</thead><tbody>
+
+<tr><td>`onnotificationclick@m
+<td>`notificationclick^et
+
+<tr><td>`onnotificationclose@m
+<td>`notificationclose^et
+
+</tbody></table>
+
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+`_acks1@
+
+	</section>
+</main></div>
+
+<div hidden>
+<div lang="en-x-a0" id="_acks1">
+<p>
+Thanks to
+Addison Phillips,
+Aharon (Vladimir) Lanin,
+Alex Russell,
+Anssi Kostiainen,
+Arkadiusz Michalski,
+Boris Zbarsky,
+David Håsäther,
+Doug Turner,
+Drew Wilson,
+Ehsan Akhgari,
+Frederick Hirsch,
+Ian Hickson,
+Jake Archibald,
+James Graham,
+John Mellor,
+Jon Lee,
+Jonas Sicking,
+Michael Cooper,
+Michael Henretty,
+Michael™ Smith,
+Michael van Ouwerkerk,
+Nicolás Satragno,
+Olli Pettay,
+Peter Beverloo,
+Philip Jägenstedt,
+Reuben Morais,
+Rich Tibbett,
+Robert Bindar,
+박상현 (Sanghyun Park),
+Simon Pieters,
+Theresa O’Connor,
+timeless, and
+triple-underscore
+for being awesome.
+</p>
+
+<p lang="en-x-a0">
+This standard is written by <a href="https://annevankesteren.nl/" lang="nl">Anne van Kesteren</a> (<a href="https://www.mozilla.org/">Mozilla</a>, <a href="mailto:annevk@annevk.nl">annevk@annevk.nl</a>). An earlier iteration was written
+by John Gregg (<a href="https://www.google.com/">Google</a>, <a href="mailto:johnnyg@google.com">johnnyg@google.com</a>).</p>
+
+<p lang="en-x-a0">
+Copyright © WHATWG (Apple, Google, Mozilla, Microsoft). This work is licensed under a <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution
+4.0 International License</a>.
+</p>
+
+</div>
+</div>

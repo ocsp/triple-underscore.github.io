@@ -1,0 +1,6879 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — User interaction（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		persisted_parts: Util.collectHtmlCodeList(),
+		toc_main: 'editing',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ー]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'a':
+	text = text.slice(text.indexOf('.') + 1);
+	break;
+case 'h':
+	text = `<code class="header">${text}</code>`;
+	break;
+case 'xCode':
+	return `<a id="_ex-${key}">＊</a>`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-09-02
+trans_update:2020-08-19
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/interaction.html
+	abbr_url:HTMLinteraction
+site_nav:uievents,html
+nav_prev:HTMLselectors
+nav_next:HTMLdnd
+trans_1st_pub:2016-11-06
+
+
+●●class_map
+e:element
+a:attr
+et:event-type
+p:property
+st:attr-state
+aH:attr-state
+css:css
+v:value
+E:error
+h:header
+
+●●tag_map
+I:code
+m:code
+E:code
+c:code
+e:code
+a:code
+et:code
+st:span
+aH:span
+h:code
+p:code
+css:code
+samp:samp
+v:code
+i:i
+kbd:kbd
+
+●●original_id_map
+
+
+dom-document-designmode:designMode
+
+●●mdn_urls
+	elementcontenteditable:API/ElementContentEditable
+	focusoptions:API/FocusOptions
+
+the-accesskey-attribute:HTML/Global_attributes/accesskey
+attr-enterkeyhint:HTML/Global_attributes/enterkeyhint
+the-hidden-attribute:HTML/Global_attributes/hidden
+attr-contenteditable:HTML/Global_attributes/contenteditable
+attr-autocapitalize:HTML/Global_attributes/autocapitalize
+attr-fe-autofocus:HTML/Global_attributes/autofocus
+attr-inputmode:HTML/Global_attributes/inputmode
+attr-tabindex:HTML/Global_attributes/tabindex
+
+●●link_map
+
+E.SyntaxError:~WEBIDL#syntaxerror
+
+I.Document:~HTMLdom#document
+I.DocumentOrShadowRoot:~HTMLdom#documentorshadowroot
+I.ElementContentEditable:#elementcontenteditable
+I.Element:~DOM4#interface-element
+I.FocusEvent:~UIEVENTS#focusevent
+I.Node:~DOM4#interface-node
+I.Text:~DOM4#interface-text
+I.Window:~WINDOW#window
+I.Selection:~SELECTIONAPI#dom-selection
+I.FocusOptions:#focusoptions
+I.DOMHighResTimeStamp:~HRTIME#dom-domhighrestimestamp
+
+CEReactions:~HEcustom#cereactions
+
+
+	■DOM
+m.isTrusted:~DOM4#dom-event-istrusted
+m.bubbles:~DOM4#dom-event-bubbles
+m.type:~DOM4#dom-event-type
+
+m.autofocus:#dom-fe-autofocus
+m.accessKey:#dom-accesskey
+m.accessKeyLabel:#dom-accesskeylabel
+m.activeElement:#dom-documentorshadowroot-activeelement
+m.autocapitalize:#dom-autocapitalize
+m.~blur0:#dom-blur
+m.blur:#dom-window-blur
+m.~focus0:#dom-focus
+m.enterKeyHint:#dom-enterkeyhint
+m.focus:#dom-window-focus
+m.click:#dom-click
+m.contentEditable:#dom-contenteditable
+m.hasFocus:#dom-document-hasfocus
+m.hidden:#dom-hidden
+m.isContentEditable:#dom-iscontenteditable
+m.inputMode:#dom-inputmode
+m.preventScroll:#dom-focusoptions-preventscroll
+
+	m.execCommand:#execCommand
+m.execCommand:~EXEC-COMMAND#execcommand%28%29
+m.queryCommandEnabled:~EXEC-COMMAND#dom-document-querycommandenabled%28%29
+m.queryCommandIndeterm:~EXEC-COMMAND#dom-document-querycommandindeterm%28%29
+m.queryCommandState:~EXEC-COMMAND#dom-document-querycommandstate%28%29
+m.queryCommandSupported:~EXEC-COMMAND#dom-document-querycommandsupported%28%29
+m.queryCommandValue:~EXEC-COMMAND#dom-document-querycommandvalue%28%29
+
+m.spellcheck:#dom-spellcheck
+m.tabIndex:#dom-tabindex
+
+m.relatedTarget:~UIEVENTS#dom-focusevent-relatedtarget
+m.detail:~UIEVENTS#dom-uievent-detail
+m.view:~UIEVENTS#dom-uievent-view
+m.show:~HEinteractive#dom-dialog-show
+m.showModal:~HEinteractive#dom-dialog-showmodal
+m.designMode:#dom-document-designmode
+
+	■css
+p.outline:~CSSUI#outline
+p.overflow:~CSSOVERFLOW3#propdef-overflow
+p.white-space:~CSSTEXT#white-space-property
+
+	■e
+e.a:~HEtextlevel#the-a-element
+
+e.area:~HEimages#the-area-element
+e.iframe:~HEembed#the-iframe-element
+e.img:~HEimages#the-img-element
+e.frame:~HTMLobs#frame
+
+e.body:~HEsections#the-body-element
+
+e.canvas:~HEcanvas#the-canvas-element
+
+e.input:~HEinput#the-input-element
+e.button:~HEforms#the-button-element
+e.form:~HEforms#the-form-element
+e.label:~HEforms#the-label-element
+e.output:~HEforms#the-output-element
+e.select:~HEforms#the-select-element
+e.textarea:~HEforms#the-textarea-element
+
+e.details:~HEinteractive#the-details-element
+e.dialog:~HEinteractive#the-dialog-element
+e.summary:~HEinteractive#the-summary-element
+
+e.div:~HEgrouping#the-div-element
+e.link:~HEmetadata#the-link-element
+e.object:~HEembed#the-object-element
+e.video:~HEmedia#the-video-element
+
+e.slot:~HEscripting#the-slot-element
+
+e.~svg-a:~SVGlinking#AElement
+
+
+	■#attr-
+a.accesskey:#the-accesskey-attribute
+a.aria-describedby:~ARIA1#aria-describedby
+a.autocapitalize:#attr-autocapitalize
+a.draggable:~HTMLdnd#the-draggable-attribute
+a.contenteditable:#attr-contenteditable
+a.enterkeyhint:#attr-enterkeyhint
+a.hidden:#the-hidden-attribute
+a.inputmode:#attr-inputmode
+a.spellcheck:#attr-spellcheck
+a.tabindex:#attr-tabindex
+a.title:~HTMLdom#attr-title
+
+a.autofocus:#attr-fe-autofocus
+a.form:~HTMLforms#attr-fae-form
+a.href:~HTMLlinks#attr-hyperlink-href
+a.~href0:~HEmetadata#attr-link-href
+a.pattern:~HEinput#attr-input-pattern
+a.readonly:~HEinput#attr-input-readonly
+a.~readonly0:~HEforms#attr-textarea-readonly
+a.src:~HEimages#attr-img-src
+a.type:~HEinput#attr-input-type
+
+v.none:#attr-inputmode-keyword-none
+v.text:#attr-inputmode-keyword-text
+v.tel:#attr-inputmode-keyword-tel
+v.url:#attr-inputmode-keyword-url
+v.email:#attr-inputmode-keyword-email
+v.numeric:#attr-inputmode-keyword-numeric
+v.decimal:#attr-inputmode-keyword-decimal
+v.search:#attr-inputmode-keyword-search
+
+v.off:#attr-autocapitalize-off
+v.~noneC:#attr-autocapitalize-none
+v.on:#attr-autocapitalize-on
+v.sentences:#attr-autocapitalize-sentences
+v.words:#attr-autocapitalize-words
+v.characters:#attr-autocapitalize-characters
+
+v.enter:#attr-enterkeyhint-keyword-enter
+v.done:#attr-enterkeyhint-keyword-done
+v.go:#attr-enterkeyhint-keyword-go
+v.next:#attr-enterkeyhint-keyword-next
+v.previous:#attr-enterkeyhint-keyword-previous
+v.~search0:#attr-enterkeyhint-keyword-search
+v.send:#attr-enterkeyhint-keyword-send
+
+	■event
+et.blur:~HTMLindex#event-blur
+et.change:~HTMLindex#event-change
+et.focus:~HTMLindex#event-focus
+et.reset:~HTMLindex#event-reset
+et.submit:~HTMLindex#event-submit
+et.contextmenu:~HTMLindex#event-contextmenu
+et.click:~UIEVENTS#event-type-click
+et.dblclick:~UIEVENTS#event-type-dblclick
+et.mousedown:~UIEVENTS#event-type-mousedown
+et.mouseup:~UIEVENTS#event-type-mouseup
+et.mousemove:~UIEVENTS#event-type-mousemove
+et.mouseover:~UIEVENTS#event-type-mouseover
+et.pointerup:~POINTEREVENTS#the-pointerup-event
+et.touchend:~TOUCHEVENTS#event-touchend
+
+st.Email:~HEinput#email-state-(type=email)
+st.Hidden:~HEinput#hidden-state-(type=hidden)
+st.Number:~HEinput#number-state-(type=number)
+st.Password:~HEinput#password-state-(type=password)
+st.Search:~HEinput#text-(type=text)-state-and-search-state-(type=search)
+st.Tel:~HEinput#telephone-state-(type=tel)
+st.Text:~HEinput#text-(type=text)-state-and-search-state-(type=search)
+st.Url:~HEinput#url-state-(type=url)
+
+aH.既定:#autocap-hint-default
+aH.なし:#autocap-hint-none
+aH.一文ごと:#autocap-hint-sentences
+aH.単語ごと:#autocap-hint-words
+aH.文字ごと:#autocap-hint-characters
+
+
+cF.動作:~HEinteractive#command-facet-action
+cF.不能化~状態:~HEinteractive#command-facet-disabledstate
+cF.隠d状態:~HEinteractive#command-facet-hiddenstate
+
+	●用語
+要素:#_element
+
+文書:~HTMLdom#the-document-object
+~tabindex値:#tabindex-value
+
+作動化を消費する~API:#activation-consuming-api
+作動化の消費:#activation-consuming-api
+失効-:#activation-expiry
+作動化の通知:#activation-notification
+作動化を誘発する入力~event:#activation-triggering-input-event
+利用者による作動化を消費-:#consume-user-activation
+最後の作動化の時刻印:#last-activation-timestamp
+非一過な作動化:#sticky-activation
+非一過な作動化で~gateされる~API:#sticky-activation-gated-api
+一過な作動化:#transient-activation
+一過な作動化の所要時間:#transient-activation-duration
+一過な作動化で~gateされる~API:#transient-activation-gated-api
+利用者による作動化で~gateされる~API:#user-activation-gated-apis
+
+利用者の作動化により誘発され:#triggered-by-user-activation
+
+アテガわれている~access~Key:#assigned-access-key
+~modal~dialogにより阻まれ:#blocked-by-a-modal-dialog
+
+
+~design~mode可能化？:#design-mode-enabled
+編集中の~host:#editing-host
+編集-可能:~EXEC-COMMAND#editable
+属する編集中の~host:~EXEC-COMMAND#editing-host-of
+作動中の範囲:~EXEC-COMMAND#active-range
+選択を削除-:~EXEC-COMMAND#delete-the-selection
+
+明に不活:#expressly-inert
+	dlg.明に不活:#expressly-inert-dialog
+
+~task:~WAPI#concept-task
+~taskを~queueする:~WAPI#queue-a-task
+~click~eventを発火-:~WAPI#fire-a-click-event
+~click~eventを発火する:~WAPI#fire-a-click-event
+~focus~eventを発火する:#fire-a-focus-event
+合成な~mouse~eventを発火する:~WAPI#fire-a-synthetic-mouse-event
+関連な大域~obj:~WAPI#concept-relevant-global
+利用者~対話~task源:~WAPI#user-interaction-task-source
+
+~click進捗中~flag:#click-in-progress-flag
+
+~DOM~anchor:#dom-anchor
+~focus鎖:#focus-chain
+~focusを獲得した:#gains-focus
+~focusを得ている:#has-focus-steps
+~focusされて:#focused
+
+~focus可能な区画:#focusable-area
+~focus可能な図形:#_focusable-shape
+
+~focus可能:#focusable
+逐次的に~focus可能:#sequentially-focusable
+~clickで~focus可能:#click-focusable
+
+
+~top-level閲覧文脈の現在の被focus区画:#currently-focused-area-of-a-top-level-browsing-context
+現在の被focus区画:#currently-focused-area-of-a-top-level-browsing-context
+指名する被focus区画:#focused-area-of-the-document
+
+~focusを更新する:#focus-update-steps
+~objを~unfocusする:#unfocusing-steps
+~objを~focusする:#focusing-steps
+~focus可能な区画を取得する:#get-the-focusable-area
+
+自動focus処理-済み~flag:#autofocus-processed-flag
+自動focus候補たち:#autofocus-candidates
+自動focus候補たちを洗出す:#flush-autofocus-candidates
+
+	:#bc-focus-ergo-bcc-focus
+
+~home逐次的~focus~navi順序:#home-sequential-focus-navigation-order
+~home文書:#home-document
+相応しい逐次的に~focus可能な区画:#suitable-sequentially-focusable-area
+
+~focus~lock~flag:#locked-for-focus
+逐次的~focus~navi順序:#sequential-focus-navigation-order
+逐次的~focus~naviの始点:#sequential-focus-navigation-starting-point
+始点:#sequential-focus-navigation-starting-point
+逐次的~focus~navi:#sequential-focus-navigation
+~focus修復~規則:#focus-fixup-rule
+	適切になるなら:#concept-platform-dropeffect-override
+	concept-platform-dropeffect-override-
+
+不活:#inert
+既定の挙動:#concept-spellcheck-default
+既定で継承する:#concept-spellcheck-default-inherit
+既定で行う:#concept-spellcheck-default-true
+既定で行わない:#concept-spellcheck-default-false
+
+逐次的~navi探索~algo:#sequential-navigation-search-algorithm
+~source~node:#source-node
+
+~focus~navi視野:#focus-navigation-scope
+~tabindex順な~focus~navi視野:#tabindex-ordered-focus-navigation-scope
+平坦~化された~tabindex順な~focus~navi視野:#flattened-tabindex-ordered-focus-navigation-scope
+結付けられている~focus~navi所有者:#associated-focus-navigation-owner
+~focus~navi視野の所有者:#focus-navigation-scope-owner
+
+
+自動頭字化~hint:#autocapitalization-hint
+自前の自動頭字化~hint:#own-autocapitalization-hint
+利用する自動頭字化~hint:#used-autocapitalization-hint
+自動頭字化-を継承-:~HEforms#category-autocapitalize
+
+自動focus根:#nearest-ancestor-autofocus-scoping-root-element
+
+~find-in-page:#find-in-page-2
+~find-in-page~UI:#find-in-page-interface
+fiP.~query:#fip-query
+fiP.合致-~list:#fip-matches
+fiP.作動中の合致-:#fip-active-match
+
+	●用語他（HTML
+~HTML要素:~HTMLINFRA#html-elements
+即時に:~HTMLINFRA#immediately
+~live:~HTMLINFRA#live
+文書の中へ挿入された:~HTMLINFRA#insert-an-element-into-a-document
+
+反映する:~HTMLcdom#reflect
+既知な値のみに制限され:~HTMLcdom#limited-to-only-known-values
+
+列挙d属性:~HTMLcms#enumerated-attribute
+真偽-属性:~HTMLcms#boolean-attribute
+妥当でない値~用の既定:~HTMLcms#invalid-value-default
+値なし用の既定:~HTMLcms#missing-value-default
+整数として構文解析する:~HTMLcms#rules-for-parsing-integers
+空白区切りの一意な~token集合:~HTMLcms#_set-of-unique-space-separated-tokens
+妥当な整数:~HTMLcms#valid-integer
+
+~body要素:~HTMLdom#the-body-element-2
+
+閲覧文脈~容器:~BROWSERS#browsing-context-container
+bc.容器:~BROWSERS#bc-container
+閲覧文脈:~BROWSERS#browsing-context
+属する閲覧文脈:~BROWSERS#concept-document-bc
+子~閲覧文脈:~BROWSERS#child-browsing-context
+入子にしている閲覧文脈:~BROWSERS#nested-browsing-context
+親~閲覧文脈:~BROWSERS#parent-browsing-context
+先祖~閲覧文脈:~BROWSERS#ancestor-browsing-context
+子孫~閲覧文脈~list:~BROWSERS#list-of-the-descendant-browsing-contexts
+~top-level閲覧文脈:~BROWSERS#top-level-browsing-context
+作動中の文書:~BROWSERS#active-document
+全部的に作動中:~BROWSERS#fully-active
+作動中の~window:~BROWSERS#active-window
+
+対応する閲覧文脈:~WINDOW#window-bc
+
+標的~要素:~NAVI#target-element
+素片へ~navigateする:~NAVI#navigate-fragid
+
+作動中の~sandbox法~flag集合:~ORIGIN#active-sandboxing-flag-set
+閲覧文脈~sandbox化( 自動~特能 )~flag:~ORIGIN#sandboxed-automatic-features-browsing-context-flag
+生成元:~ORIGIN#concept-origin
+同一-生成元:~ORIGIN#same-origin
+
+不能化され:~HTMLforms#concept-fe-disabled
+変異-可能:~HTMLforms#concept-fe-mutable
+fe.値:~HTMLforms#concept-fe-value
+~form所有者:~HTMLforms#form-owner
+
+入力~eventを発火する:~HEinput#_fire-input-event
+選択-中の~fileの~list:~HEinput#concept-input-type-file-selected
+	~HEtextlevel#the-a-element
+	~HEinput#number-state-(type=number)
+	~HEinput#range-state-(type=range)
+	~HEinput#text-(type=text)-state-and-search-state-(type=search)
+	適用される:~HEinput#concept-input-apply
+
+~commandを定義する:~HEinteractive#concept-command
+~modal~dialogが示され:~HEinteractive#dom-dialog-showmodal
+	公開することもある:~HEinteractive#expose-commands-in-ui
+親~details用の~summary:~HEinteractive#summary-for-its-parent-details
+
+	関連な~canvas~fallback内容として利用中にある:~HEcanvas#being-used-as-relevant-canvas-fallback-content
+
+実際に不能化-:~HTMLselectors#concept-element-disabled
+
+~UI内に公開されている~control:~HEmedia#expose-a-user-interface-to-the-user
+
+~scriptを阻んでいる~stylesheet~counter:~HEmetadata#script-blocking-style-sheet-counter
+
+具現化され:~HTMLrendering#being-rendered
+具現化されて:~HTMLrendering#being-rendered
+	§ 具現化にて示唆されている規則:~HTMLrendering#hiddenCSS
+~hyperlink:~HTMLlinks#hyperlink
+画像~map:~HEimages#image-map
+
+	●用語他
+実装定義:~INFRA#implementation-defined
+
+~ASCII小文字~化する:~INFRA#ascii-lowercase
+	~ASCII大小無視:~INFRA#ascii-case-insensitive
+~ASCII空白:~INFRA#ascii-whitespace
+~ASCII空白で分割する:~INFRA#split-on-ascii-whitespace
+~list:~INFRA#list
+空:~INFRA#list-is-empty
+除去する:~INFRA#list-remove
+付加する:~INFRA#list-append
+空にする:~INFRA#list-empty
+~cloneする:~INFRA#list-clone
+拡張する:~INFRA#list-extend
+
+表示域:~CSS2VISUREN#viewport
+~box~tree:~CSSDISP#box-tree
+~CSS~box:~CSSDISP#box
+~viewの中へ~scrollする:~CSSOMVIEW#scroll-an-element-into-view
+平坦~tree:~CSSSCOPING#flat-tree
+平坦~tree順序:#_flat-tree-order
+
+~node文書:~DOM4#concept-node-document
+~tree順序:~DOM4#concept-tree-order
+子:~DOM4#concept-tree-child
+~node~tree:~DOM4#concept-node-tree
+根:~DOM4#concept-tree-root
+文書~内にある:~DOM4#in-a-document
+文書~要素:~DOM4#document-element
+配送-:~DOM4#concept-event-dispatch
+~eventを発火する:~DOM4#concept-event-fire
+作動化の挙動:~DOM4#eventtarget-activation-behavior
+接続されて:~DOM4#connected
+広義先祖:~DOM4#concept-tree-inclusive-ancestor
+~host:~DOM4#concept-documentfragment-host
+~shadow根:~DOM4#concept-shadow-root
+~shadowも含む~tree順序:~DOM4#concept-shadow-including-tree-order
+~shadowも含む広義先祖:~DOM4#concept-shadow-including-inclusive-ancestor
+~shadowも含む子孫:~DOM4#concept-shadow-including-descendant
+~shadow~host:~DOM4#element-shadow-host
+elm.~shadow根:~DOM4#concept-element-shadow-root
+sR.~focusを委譲する:~DOM4#shadowroot-delegates-focus
+割当先~slot:~DOM4#slotable-assigned-slot
+~composed~flag:~DOM4#composed-flag
+~targetし直す:~DOM4#retarget
+doc.~URL:~DOM4#concept-document-url
+
+現在の高分解能~時刻:~HRTIME#dfn-current-high-resolution-time
+
+上端層:~FULLSCREEN#top-layer
+~URL:~URL1#concept-url
+url.素片:~URL1#concept-url-fragment
+選択:~SELECTIONAPI#dfn-selection
+
+●●words_table1
+
+POINTEREVENTS:pointerevents-ja.html
+TOUCHEVENTS:touch-events-ja.html
+
+
+href0:href
+readonly0:readonly
+blur0:blur
+focus0:focus
+noneC:none
+search0:search
+svg-a:a
+
+●●words_table
+
+	●focus／dialog
+順な:ordered:順による
+	逐次的~focus~navi順序
+	~focus~navi序列
+blur:
+	~focus可能:focusable
+	~focus不能:non-focusable
+	~focus時の:focusing
+	~focus能:focusability
+被focus:focused::被 focus:被フォーカス
+自動focus:autofocus::自動 focus:自動フォーカス
+unfocus::::未フォーカスに
+	~unfocus時の:unfocusing
+
+指名-:designate::~
+標的:target::~::ターゲット
+	標的:focus target
+	標的:new focus target
+届けら:routeさ::~
+届ける:routeする::~
+	経由-:channeled:
+委譲-:delegate:~
+	委譲-先~list:delegates
+
+獲得した:gainした::得た
+獲得しよ:gainしよ::得よ
+
+tabindex:
+図形:shape::~
+修復:fixup::~
+	~focus修復:focus-fixup
+	到達-可能でない:unreachable
+
+前方:forward::~
+後方:backward::~
+不活:inert::~
+	inertness::::
+明に:expressly::~
+環:ring::~
+
+anchor::::アンカー
+
+逐次的:sequential::~
+鎖:chain::~
+進捗中:in progress::~
+隠す:hideする::~
+隠d:hidden::隠され
+隠-:hide::~
+領域:region:~
+
+操作o:operation:操作
+代役:placeholder:~
+候補:candidate:~
+選定法:selection mechanism:~
+始点:starting point:~
+scrolling::::スクロール
+打込み:typing:打ち込み:::タイピング
+打込んで:typeして:打ち込んで:::タイプして
+home:
+誘発元:trigger:~
+
+	され次第:as soon as
+	注目を引かせる:brings 〜 attention
+
+
+	●編集
+綴り:spelling:~
+	綴りが誤っている:misspelt
+検査ng:checking:検査
+編集:editing::~
+編集-:edit::~
+編集中の:editing::~
+	編集-不能:non-editable
+折返す:wrapする::折り返す
+折返され:wrapされ::折り返され
+折返ng:wrapping::折り返し
+境界点:boundary point::~
+選択-:select:~
+
+選択:selection:~
+字下げ:indentation:~
+単語:word:~
+	語全体:whole words
+一文:sentence:文
+自然言語:language:~
+誤り:error::~::エラー
+訂正:correction:~
+	不向き: not well suited
+
+	●UI／呈示
+tab::::タブ
+	tab化された:tabbed
+	^en:tabbing
+	UI:interface／user interface
+design:
+kiosk:
+所在bar:location bar:::URL 欄
+panel::::パネル
+popup::::
+bullet::::ビュレット
+command::::コマンド
+drag::::ドラッグ
+drop::::ドロップ
+modal::::モーダル
+	~modal性:modality
+find-in-page::::ページ内検索
+下位widget:subwidget::下位 widget:下位ウィジェット
+full::::フル
+pointing::::ポインタ指示
+十key:numeric keypad:::テンキーの類
+修飾:modifier:~
+
+声:voice:~
+押下げた:pressした:~
+背景:background:~
+読取器:reader::~::リーダ
+click:
+外形線:outline:~
+美観:aesthetics:~
+
+欄:field::~::フィールド
+探索:search:検索
+上端層:top layer::~
+振動-:vibrate::~
+
+alphabetic-mnemonic:alphabetic mnemonic::alphabetic 符号:アルファベット符号
+電話番号:telephone number:~
+email::::メール
+手早く:quickに:~
+書式区切子:format separator::~
+locale::::ロケール
+virtual-keyboard:virtual keyboard:::ソフトウェアキーボード
+	~keyboardのみの:keyboard-only
+	小数を含む:fractional
+数的:numeric:~
+	数:numeric
+	PIN
+
+自動頭字化-:autocapitalize::~
+自動頭字化:autocapitalization::~
+字l:letter::字°
+頭字化:capitalize::~
+頭字:capital letter::~
+	頭字に:to a capital letter
+voice:::声::ボイス
+打込まれ:typeされ:打ち込まれ:::タイプされ
+打込む:typeする:打ち込む:::タイプする
+打込んだ:typeした:打ち込んだ:::タイプした
+組成-:compose::~
+	助けに:helpful
+改行:new line:~
+	`Enter^kbd ~Key:enter key
+cue::::キュー
+IME:input method editor:IME
+
+能動的:active::~
+知覚-:perceive:~
+一過:transient::~
+非一過:sticky::~
+近過去:recent:~
+経過-:elapse:~
+時刻:time:~
+	時間:time
+失効:expiry:~
+失効-:expire:~
+
+閉じら:closeさ:~
+開く:openする:~
+強調-:highlight:~
+退けら:dismissさ:~
+	退けられた時点:upon dismissal
+
+	長く:long
+	長くとも:at most
+	数秒:a few seconds
+	導く:take 〜 to
+	煩わしい:annoying
+	受けた:get／:got
+	使い勝手:usability
+	使い勝手がすこぶる悪く:significantly less usable
+	使い勝手は悪くなる:become unusable
+	押すこと:pressing
+	最も手前に示される:topmost
+	次へ進める:advance
+
+	●構文
+
+	-:literal
+縮約-:collapse:~
+数字:digit:~
+普通字:letter:~
+頭部の:leading:~
+分割-:split:~
+空白区切りの:space-separated:~
+
+	●event
+trust:
+	~trustされない:not trusted
+composed:
+
+	●内容／DOM
+body:
+shadow:
+details:
+summary:
+	後続-:
+	子たち:children
+広義先祖:inclusive ancestor::~
+割当先:assign 先::あてがい先
+アテガイ:assign 法::あてがい方
+一節:section:~
+
+
+	●保安
+gate:
+濫用-:abuse:~
+悪用-:exploit:~
+
+	●仕様
+素早く:quickに:~
+	-:non-normative
+正当:legitimate:~
+略式的:skeletal:~
+文脈的な:contextual::~
+遺物:artifact:~
+強さ:strength:~
+依存度:dependence:~
+関心:interest:~
+失っ:loseし:~
+選択的:selective:~
+支援-:assist:~
+介入-:intervene:~
+構成-:compose:~
+網羅的:exhaustive:~
+主要な:majorな:~
+用心深く:deliberateに:~
+類別-:classify:~
+複雑:complicated:~
+規定-:dictate:~
+満足-:satisfy:~
+省略可能:optional:~
+未指定:unspecified:~
+弱い:weakな:~
+	弱いものから順に:from weakest to strongest
+
+	なり得る:possible
+	きれいに:neatly
+	きわどい:corner
+	それに代わる:in its stead
+	ないがしろに:detriment
+	に過ぎない:merely
+	も:opt to
+	何らかの方法:somehow
+	何らかの類の:some sort of
+	普及している:prevalent:
+	〜の違いを除いて:modulo
+	申し分ない:fine
+	全面的に:entirely
+	可能性が高い:likely
+	多様な:wide variety of
+	様々な:variety
+	-:in fact
+	それに伴い:thereby
+	現時点で最良:currently-best
+	対照的に:in contrast
+	~~直に:immediately
+
+	custom化:customizable
+	-:abstract concept
+	指定されていない:unspecified
+	ある:particular
+	できるようにする:allow
+	易くする:help
+	概ね、:roughly speaking
+	正当化される:well justify
+	呼応:in response to
+	~~説明:Description
+	できる:capable of
+	満たす:meet
+	も併用することなく:as opposed to
+	-:aforementioned
+	し易く:easily
+	下層を〜成す:underlie
+
+	●未分類
+rich:
+commit:
+game::::ゲーム
+log-in:log in:::ログイン
+main::::メイン
+shortcut::::ショートカット
+space:
+macOS:
+逆順:reverse order:~
+off-screen::::オフスクリーン
+	開閉すること:to be opened or closed
+携帯:mobile::~::モバイル
+電話:phone:~
+洗出す:flushする:洗い出す
+非対称:asymmetry:~
+深い:deepな:~
+	最も深い:deepest
+高分解能:high resolution::~
+履歴上の:historicalな:~
+消費:consumption::~
+辿る:traverseする:~
+
+代用:substitute:~
+合成な:syntheticな:~
+告知-:advertise:~
+保つ:keepする:~
+	なくなった:stop
+切替える:switchする:切り替える
+平坦:flat:~
+所在-:locate::~
+
+	合致-~list:matches
+	designated focused
+	-:header
+	~text片:piece of text
+	-:time
+	-:argument
+	-:required
+	-:relative
+	~~記事:article
+	数:number
+	小さい:small
+	定数:constant number
+
+	投稿-:publish
+	未設定:unset
+	外された:omitted
+	戻せるように:allow 〜 toggle it back
+	したい:want
+	始-:begin
+	伝える:tell／:inform
+	~~由来する:comes from
+	~~検索
+	~~生成
+	~~要請
+	~~連続する:adjacent
+	〜されない:opposed
+	選び取る:pick
+	選んだ:choosing
+	選ぶ:choose
+	-:exception
+	-:setting
+	-:map
+	-:place
+	属する:belong
+	実際に不能化-:disable
+	起こる時点は、いくつかあり得る:can happen at different times
+	語全体:whole words
+	各~合致を:through
+
+	%文書:target
+	%~top文書:topDocument
+	%文書:doc
+	-:inclusiveAncestorDocuments
+	%閲覧文脈:browsingContext
+	%閲覧文脈たち:browsingContexts
+	-:windows
+	%window:window
+	%T:top
+
+	●指示語
+現在に:currently:現在
+一様:uniform:~
+top::::トップ
+
+	直の:immediate
+	先ず:first place
+	などなど:and so forth
+	-:second／third
+	以前の:previous
+	次の:next
+	前の:previous
+	-:originally
+	先ず:first
+	次:next
+	一つに:together
+	一回の:single
+	一回の:per
+	一回以上は:at least once
+	初めて:very first
+	一部に限られる:subset of those
+	一例
+	一方
+	一種
+	一連
+	一部
+	一部分:part of
+	上述
+	以上
+	以下
+	以前
+	以外
+	以降
+	任意
+	個
+	個数
+	全体
+	各種
+	場合
+	前後の:next or previous
+	前述
+	〜単独:alone
+	〜しか:just
+	右列:cells in the right column
+	左列:The cells in the left column
+	左右列にまたがるセル:cells that span both columns
+	直前
+	直前に:just
+	直後
+	自身
+	新
+	旧
+	その検査／:spellchecking
+	とする／:suppose
+	またがる:span
+	利用-中に:being used
+	つつある:about to be
+	いかなる類の:any sort of
+	次回:next time
+	別個な:distinct
+	高い〜ほど:higher
+	ほとんど:mostly
+
+	●他の語
+	-:facet
+	-:in place for
+	-:in the middle
+	-:lack thereof
+	ARIA
+	Alt
+	C:
+	CSS
+	Control
+	Emacs
+	Escape
+	Mac
+	Shift
+	WYSIWYG
+	Windows
+	aforementioned
+	amongst
+	aware
+	became
+	become
+	care
+	caused
+	cell
+	column
+	committing
+	consist
+	earlier:#1
+	equipped
+	express
+	finally
+	follow
+	home
+	instruction
+	lack
+	later
+	lead
+	left
+	mac
+	made
+	marked
+	matching
+	moving
+	off-screen
+	opted
+	in-
+	middle
+	point
+	pre-order
+	put
+	redo
+	reduce
+	referenced
+	rerouting
+	right
+	row
+	said
+	sometime
+	spin-control
+	sure
+	thereof
+	top
+	toward
+	unable
+	unadorned
+	unmark
+	unset
+	vision
+	その場で:on-demand
+	セル
+	一枚の大きな:one big
+	人々:people
+	分断不可:non-breaking
+	前順, 深さ優先:pre-order, depth-first
+	だけで:simply
+	参照
+	参照元:
+	同時:
+	同等に:equally
+	名称:
+	増減:button:up and down buttons in a spin-control version
+
+	対応
+	必ず:make sure
+	指-:refer
+	指す~refer
+	新着:New
+	方法
+	昇順に整列
+	時点
+	普通の:regular
+	条件:conditions
+	注意:
+	注記
+	用途
+	留意
+	省略時
+	組み合わせ:mix
+	表:table
+	複数:
+	該当:
+	詳細:
+	黄色:yellow
+
+	無条件
+	無用に煩雑
+	現時点
+
+●●html_code_list
+■data-model-1
+<map id=wallmap><area alt="入り口ドア" coords="10,10,100,200" href="door.html"></map>
+...
+<img src="images/innerwall.jpeg" alt="ドア付きの白い壁がここにある" usemap="#wallmap">
+...
+<img src="images/outerwall.jpeg" alt="ドア付きの赤い壁がここにある" usemap="#wallmap">
+
+alt="Enter Door"
+...
+alt="There is a white wall here, with a door."
+...
+alt="There is a red wall here, with a door."
+
+
+■autofocus-1
+<input maxlength="256" name="q" value="" ＜autofocus＞>
+<input type="submit" value="Search">
+
+■autofocus-2
+<div contenteditable ＜autofocus＞>Edit <strong>me!</strong><div>
+
+■intro9-1
+<input type=button value=Collect onclick="collect()"
+       ＜accesskey="C 1"＞ id=c>
+
+■accesskey-1
+<nav>
+ <p>
+  <a
+    title="Consortium Activities"
+    ＜accesskey="A"＞
+    href="/Consortium/activities"
+  >Activities</a> |
+  <a
+    title="Technical Reports and Recommendations"
+    ＜accesskey="T"＞
+    href="/TR/"
+  >Technical Reports</a> |
+  <a
+    title="Alphabetical Site Index"
+    ＜accesskey="S"＞
+    href="/Consortium/siteindex"
+  >Site Index</a> |
+  <a
+    title="About This Site"
+    ＜accesskey="B"＞
+    href="/Consortium/"
+  >About Consortium</a> |
+  <a
+    title="Contact Consortium"
+    ＜accesskey="C"＞
+    href="/Consortium/contact"
+  >Contact</a>
+ </p>
+</nav>
+
+<nav>
+ <p>
+  <a title="Consortium Activities" accesskey="A" href="/Consortium/activities">Activities</a> |
+  <a title="Technical Reports and Recommendations" accesskey="T" href="/TR/">Technical Reports</a> |
+  <a title="Alphabetical Site Index" accesskey="S" href="/Consortium/siteindex">Site Index</a> |
+  <a title="About This Site" accesskey="B" href="/Consortium/">About Consortium</a> |
+  <a title="Contact Consortium" accesskey="C" href="/Consortium/contact">Contact</a>
+ </p>
+</nav>
+
+■accesskey-2
+<form action="/search">
+ <label>Search: <input type="search" name="q" ＜accesskey="s 0"＞></label>
+ <input type="submit">
+</form>
+
+■contenteditable-1
+<form method=POST>
+ <fieldset>
+  <legend>新着記事</legend>
+  <textarea name=article>&lt;p>こんにちは&lt;/p></textarea>
+ </fieldset>
+ <p><button>投稿</button></p>
+</form>
+
+<form method=POST>
+ <fieldset>
+  <legend>New article</legend>
+  <textarea name=article>&lt;p>Hello world.&lt;/p></textarea>
+ </fieldset>
+ <p><button>Publish</button></p>
+</form>
+
+■contenteditable-2
+<form method=POST>
+ <fieldset>
+  <legend>新着記事</legend>
+  <textarea id=textarea name=article>&lt;p>こんにちは&lt;/p></textarea>
+＜  <div id=div style="white-space: pre-wrap" hidden><p>こんにちは</p></div>
+  <％script>
+   let textarea = document.getElementById("textarea");
+   let div = document.getElementById("div");
+   textarea.hidden = true;
+   div.hidden = false;
+   div.contentEditable = "true";
+   div.oninput = (e) => {
+     textarea.value = div.innerHTML;
+   };
+  </％script>＞
+ </fieldset>
+ <p><button>投稿</button></p>
+</form>
+
+■contenteditable-3
+<!doctype html>
+<html lang=en>
+<title>Live CSS editing!</title>
+<style style=white-space:pre contenteditable>
+html { margin:.2em; font-size:2em; color:lime; background:purple }
+head, title, style { display:block }
+body { display:none }
+</style>
+
+■spelling-1
+<div contenteditable="true">
+ <span spellcheck="false" id="a">Hell</span><em>o!</em>
+</div>
+
+■spelling-2 bad
+<p spellcheck="true">
+ <label>Name: <input spellcheck=" false" id="b"></label>
+</p>
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる
+HTML 仕様の
+<a href="~SPEC_URL">§ User interaction</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+</head>
+<body>
+
+<header id="head">
+	<hgroup>
+<h1>HTML — 利用者対話 — User interaction</h1>
+	</hgroup>
+</header>
+
+<main id="MAIN" hidden>
+
+	<section id="editing">
+<h2 title="User interaction">6. 利用者~対話</h2>
+
+		<section id="_conventions">
+<h3>【この訳に特有な表記規約】</h3>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, コレ, ε, ~IF, ~THROW 等々）の意味や定義の詳細は，~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+<p>
+用語
+`要素@
+は、 `Element$I ~objの略記として用いられる。
+</p>
+
+		</section>
+		<section id="the-hidden-attribute">
+<h3 title="The hidden attribute">6.1. `hidden^a 属性</h3>
+
+<p>
+`hidden$a 内容~属性は、すべての`~HTML要素$に設定できる。
+`hidden$a 属性は`真偽-属性$である。
+指定された場合、その要素は，利用者からは直に~accessできないことを指示する
+— すなわち，［
+まだ, あるいはそれ以降、~pageの現在の状態に直には関連しない
+］ことを, あるいは［
+~pageの他の部分に再利用される内容を宣言するために利用されている
+］ことを指示する。
+~UAは、 `hidden$a 属性が指定されている要素を具現化するベキでない。
+この要件は、~style層を通して間接的に実装されてもヨイ。
+例えば ~HTML＋~CSS ~UAは、これらの要件を
+<a href="~HTMLrendering#hiddenCSS">§ 具現化にて示唆されている規則</a>
+を利用して実装することもできる。
+◎
+All HTML elements may have the hidden content attribute set. The hidden attribute is a boolean attribute. When specified on an element, it indicates that the element is not yet, or is no longer, directly relevant to the page's current state, or that it is being used to declare content to be reused by other parts of the page as opposed to being directly accessed by the user. User agents should not render elements that have the hidden attribute specified. This requirement may be implemented indirectly through the style layer. For example, an HTML+CSS user agent could implement these requirements using the rules suggested in the Rendering section.
+</p>
+
+<p class="note">注記：
+この属性は、概して~CSSを利用して実装されるので、~CSSを利用して上書きすることもまたアリである。
+一例として，すべての要素に
+`display: block^css
+を適用する規則は、 `hidden$a 属性の効果を取消すことになる。
+したがって，~stylesheetを書く作者には、この属性を有する要素に依然として期待される~styleがアテガわれるよう，注意する必要がある。
+◎
+Because this attribute is typically implemented using CSS, it's also possible to override it using CSS. For instance, a rule that applies 'display: block' to all elements will cancel the effects of the hidden attribute. Authors therefore have to take care when writing their style sheets to make sure that the attribute is still styled as expected.
+</p>
+
+<div class="example">
+
+<p>
+次の略式的な例では、利用者が~log-inするまで~web~gameの~main~screenを隠すために，この属性が利用されている：
+◎
+In the following skeletal example, the attribute is used to hide the web game's main screen until the user logs in:
+</p>
+
+<pre class="lang-html">
+&lt;h1&gt;The Example Game&lt;/h1&gt;
+&lt;section id="login"&gt;
+ &lt;h2&gt;Login&lt;/h2&gt;
+ &lt;form&gt;
+  ...
+  &lt;!-- 利用者~資格を検査したなら， login() を~callする --&gt;
+ &lt;/form&gt;
+ &lt;script&gt;
+  function login() {
+    // ~screenを切り替える
+    document.getElementById('login').hidden = true;
+    document.getElementById('game').hidden = false;
+  }
+ &lt;/script&gt;
+&lt;/section&gt;
+&lt;section id="game" hidden&gt;
+ ...
+&lt;/section&gt;
+</pre>
+
+</div>
+
+<!-- 
+The Example Game
+Login
+
+calls login() once the user's credentials have been checked
+
+// switch screens
+-->
+<p>
+`hidden$a 属性は、他の呈示では正当に示され得るような内容に対し，それを隠す用途には，利用されてはナラナイ。
+例えば、~tab化された~dialog内の~panelを隠す用途に `hidden$a を利用することは，不正である
+— ~tab化された~interfaceは，~overflow呈示の一種に過ぎず、単に~scrollbarを伴う大きな~pageにすべての~form~controlを示すことに同等なので。
+同様に、この属性を ある呈示に限って内容を隠す用途に利用することは，不正である
+— `hidden$a 属性を有するものは、~screen読取器も含め，すべての呈示から隠される。
+◎
+The hidden attribute must not be used to hide content that could legitimately be shown in another presentation. For example, it is incorrect to use hidden to hide panels in a tabbed dialog, because the tabbed interface is merely a kind of overflow presentation — one could equally well just show all the form controls in one big page with a scrollbar. It is similarly incorrect to use this attribute to hide content just from one presentation — if something is marked hidden, it is hidden from all presentations, including, for instance, screen readers.
+</p>
+
+<p>
+`hidden$a 属性を有さない要素から， `hidden$a 属性を有する要素へ`~hyperlink$してはナラナイ。
+同様に、 `hidden$a 属性を有さない［
+`label$e ／ `output$e
+］要素の `for^a 属性が、 `hidden$a 属性を有する要素を指してはナラナイ。
+いずれの参照-も，利用者を惑わすことになるので。
+◎
+Elements that are not themselves hidden must not hyperlink to elements that are hidden. The for attributes of label and output elements that are not themselves hidden must similarly not refer to elements that are hidden. In both cases, such references would cause user confusion.
+</p>
+
+<p>
+しかしながら，他の文脈においては、要素や~scriptが `hidden$a 属性を有する要素を指すこともある。
+◎
+Elements and scripts may, however, refer to elements that are hidden in other contexts.
+</p>
+
+<div class="example">
+
+<p>
+例えば， `href$a 属性の~link先に `hidden$a 属性を有する一節をアテガうのは、不正になる。
+当の内容が［
+適用-可能でない／関連しない
+］ならば、そこへ~linkする理由はない。
+◎
+For example, it would be incorrect to use the href attribute to link to a section marked with the hidden attribute. If the content is not applicable or relevant, then there is no reason to link to it.
+</p>
+
+<p>
+しかしながら， ARIA `aria-describedby$a 属性を利用して `hidden$a 属性を有する記述を指すことは，申し分ない。
+記述を隠すことは，それ~~単独では有用でないことを含意するが、［
+ある要素についての記述を，その要素から参照する
+］ような，特定の文脈において有用になるよう書くことはできるので。
+◎
+It would be fine, however, to use the ARIA aria-describedby attribute to refer to descriptions that are themselves hidden. While hiding the descriptions implies that they are not useful alone, they could be written in such a way that they are useful in the specific context of being referenced from the elements that they describe.
+</p>
+
+<p>
+同様に、 `hidden$a 属性を有する `canvas$e 要素は，~scriptによる~graphic~engineから~off-screen~bufferとして利用されることもあり、~form~controlの `form$a 属性は， `hidden$a 属性を有する `form$e 要素を指すこともある。
+◎
+Similarly, a canvas element with the hidden attribute could be used by a scripted graphics engine as an off-screen buffer, and a form control could refer to a hidden form element using its form attribute.
+</p>
+
+</div>
+
+<p>
+`hidden$a 属性を有する一節~内の要素であっても、依然として作動中であり続ける
+— 例えば，そのような一節~内の［
+~script／~form~control
+］は、依然として［
+実行される／提出される
+］。
+変化するのは、利用者~向けの呈示に限られる。
+◎
+Elements in a section hidden by the hidden attribute are still active, e.g. scripts and form controls in such sections still execute and submit respectively. Only their presentation to the user changes.
+</p>
+
+<p>
+`hidden@m
+~IDL属性は、
+`hidden$a 内容~属性を`反映する$モノトスル。
+◎
+The hidden IDL attribute must reflect the content attribute of the same name.
+</p>
+
+		</section>
+		<section id="inert-subtrees">
+<h3 title="Inert subtrees">6.2. 不活~下位tree</h3>
+
+<p>
+~node（特に，要素／~text~node）は、
+`不活@
+にされ得る。
+~UAは、`不活$にされている~nodeに対しては：
+◎
+This section does not define or create any content attribute named "inert". This section merely defines an abstract concept of inertness.
+◎
+A node (in particular elements and text nodes) can be marked as inert. When a node is inert, then the user agent＼
+</p>
+
+<ul>
+	<li>
+利用者~対話~eventの標的にしないモノトスル
+— その目的においては，~nodeは無かったかのように動作して。
+◎
+must act as if the node was absent for the purposes of targeting user interaction events,＼
+</li>
+	<li>
+`~find-in-page$の目的においては，~nodeを無視してもヨイ。
+◎
+may ignore the node for the purposes of find-in-page, and ＼
+</li>
+	<li>
+その~node内の~textについては，利用者が選択できなくしてもヨイ。
+◎
+may prevent the user from selecting text in that node.＼
+</li>
+</ul>
+
+<p>
+しかしながら，~UAは、~textの探索と選択については，利用者が上の制約を上書きできるようにするベキである。
+◎
+User agents should allow the user to override the restrictions on search and text selection, however.
+</p>
+
+<p class="example">
+例えば、ある~pageに`不活$にされた段落が 1 個だけあって `body$e の~~中程に位置しているとする。
+利用者が，~pointing装置をその段落の外から内に移動させ，そこで~clickした場合、
+`mouseover$et ~eventは発火されず，
+`mousemove$et ／ `click$et
+~eventは，段落ではなく `body$e 要素に向けて発火されることになる。
+◎
+For example, consider a page that consists of just a single inert paragraph positioned in the middle of a body. If a user moves their pointing device from the body over to the inert paragraph and clicks on the paragraph, no mouseover event would be fired, and the mousemove and click events would be fired on the body element rather than the paragraph.
+</p>
+
+<p class="note">注記：
+一般に、不活である~nodeには，~focusできない
+— そのような~nodeが`~commandを定義する$ものであれば，不能化されることになる。
+◎
+When a node is inert, it generally cannot be focused. Inert nodes that are commands will also get disabled.
+</p>
+
+<p>
+`閲覧文脈~容器$ %容器 に対しては、
+%容器 が`不活$にされている間は，［
+%容器 が`入子にしている閲覧文脈$にて`作動中の文書$, および
+その`文書$内のすべての~node
+］も`不活$にするモノトスル。
+◎
+While a browsing context container is marked as inert, its nested browsing context's active document, and all nodes in that Document, must be marked as inert.
+</p>
+
+<p>
+`不活$にされている要素のうち，［
+その`~node文書$は`不活$でない
+］ものは、
+`明に不活@
+とされる：
+◎
+An element is expressly inert if it is inert and its node document is not inert.
+</p>
+
+<p>
+`文書$ %文書 が ある
+`~modal~dialogにより阻まれ@
+ているとは、 %文書 の`上端層$の最後の（最も手前に示される）要素が その~modal~dialog（ `dialog$e 要素）であることをいう。
+%文書 がそのように阻まれている間は、
+%文書 に`接続されて$いるどの~nodeも
+— %dialog と その`~shadowも含む子孫$を除き —
+`不活$にするモノトスル。
+（この段落にて除かれた要素であっても、他の手段を通して，`不活$にされ得る
+— 当の~modal~dialogの一部を成す~nodeであっても，`不活$にされないよう “保護される” わけではない）
+◎
+A Document document is blocked by a modal dialog subject if subject is the topmost dialog element in document's top layer. While document is so blocked, every node that is connected to document, with the exception of the subject element and its shadow-including descendants, must be marked inert. (The elements excepted by this paragraph can additionally be marked inert through other means; being part of a modal dialog does not "protect" a node from being marked inert.)
+</p>
+
+<p class="note">注記：
+`dialog$e 要素の `showModal()$m ~methodは、要素の`~node文書$の`上端層$に要素を追加することにより，この仕組みを誘発する。
+◎
+The dialog element's showModal() method causes this mechanism to trigger, by adding the dialog element to its node document's top layer.
+</p>
+
+		</section>
+		<section id="tracking-user-activation">
+<h3 title="Tracking user activation">6.3 利用者による作動化の追跡-法</h3>
+
+<p>
+ある種の利用者に煩わしくもなり得る~APIの濫用-を防止するため（例：
+~popupを開く／電話を振動する）、~UAは，これらの~APIを利用者が［
+~web~pageと能動的にヤリトリしている／~pageと一回以上はヤリトリした
+］ときに限り許容する。
+この “能動的なヤリトリ” の状態は、この節に定義する仕組みを通して保守される。
+◎
+To prevent abuse of certain APIs that could be annoying to users (e.g., opening popups or vibrating phones), user agents allow these APIs only when the user is actively interacting with the web page or has interacted with the page at least once. This "active interaction" state is maintained through the mechanisms defined in this section.
+</p>
+
+			<section id="user-activation-data-model">
+<h4 title="Data model">6.3.1 ~data~model</h4>
+
+<p>
+利用者による作動化を追跡する目的においては、各 `Window$I %W は，
+`最後の作動化の時刻印@
+を持つ。
+これは、 %W が最後に`作動化の通知$を受けた時刻を指示する数である。
+それは、次の 2 事例を除いて `DOMHighResTimeStamp$I 値に対応する：
+◎
+For the purpose of tracking user activation, each Window W has a last activation timestamp. This is a number indicating the last time W got an activation notification. It corresponds to a DOMHighResTimeStamp value except for two cases:＼
+</p>
+
+<ul>
+	<li>
+正な無限大は，初期~値であり、
+%W はまだ一回も作動化されたことがないことを指示する。
+◎
+positive infinity indicates that W has never been activated, while＼
+</li>
+	<li>
+負な無限大は，［
+`利用者による作動化で~gateされる~API$は、
+%W に対する最後の`利用者による作動化を消費-$した
+］ことを指示する。
+◎
+negative infinity indicates that a user activation-gated API has consumed the last user activation of W. The initial value is positive infinity.
+</li>
+</ul>
+
+<p>
+~UAはまた，
+`一過な作動化の所要時間@
+を定義する。
+それは、［
+ある種の`利用者による作動化で~gateされる~API$（例：~popupを開く）
+］用に［
+利用者による作動化はどれだけ長く可用にされるか
+］を指示する定数である。
+◎
+A user agent also defines a transient activation duration, which is a constant number indicating how long a user activation is available for certain user activation-gated APIs (e.g., for opening popups).
+</p>
+
+<p class="note">注記：
+`一過な作動化の所要時間$は、長くとも数秒までにすることが期待される
+— 利用者が、場合によっては［
+~pageとのヤリトリ, 作動化で~gateされる~APIを~callしている~page
+］の間の~linkを知覚できるように。
+◎
+The transient activation duration is expected be at most a few seconds, so that the user can possibly perceive the link between an interaction with the page and the page calling the activation-gated API.
+</p>
+
+<p>
+これらの 2 種の値は、利用者による作動化の状態を表す［
+%W 用の 2 種の真偽値
+］を含意する：
+◎
+These two values imply two boolean user activation states for W:
+</p>
+
+<dl>
+	<dt>
+`非一過な作動化@
+（ `sticky activation^en ）
+◎
+Sticky activation
+</dt>
+	<dd>
+%W の`非一過な作動化$は、［
+次が満たされる間は ~T ／
+他のときは ~F
+］をとるとする
+⇒
+%W における`最後の作動化の時刻印$ ~LTE `現在の高分解能~時刻$
+◎
+When the current high resolution time is greater than or equal to the last activation timestamp in W, W is said to have sticky activation.
+</dd>
+	<dd>
+利用者は，これまで %W とヤリトリしたことがあるかどうかを指示する。
+これは， %W の履歴上の作動化~状態であり、
+~F から開始して，
+%W が初めて`作動化の通知$を受けたとき ~T に変化する（また、 ~F に戻ることは決してない）。
+◎
+This is W's historical activation state, indicating whether the user has ever interacted in W. It starts false, then changes to true (and never changes back to false) when W gets the very first activation notification.
+</dd>
+
+	<dt>
+`一過な作動化@
+（ `transient activation^en ）
+◎
+Transient activation
+</dt>
+	<dd>
+%W の`一過な作動化$は、［
+次が満たされる間は ~T ／
+他のときは ~F
+］をとるとする
+⇒
+%W における`最後の作動化の時刻印$ ~LTE `現在の高分解能~時刻$ ~LT ( %W における`最後の作動化の時刻印$ ~PLUS `一過な作動化の所要時間$ )
+◎
+When the current high resolution time is greater than or equal to the last activation timestamp in W, and less than the last activation timestamp in W plus the transient activation duration, then W is said to have transient activation.
+</dd>
+	<dd>
+これは、利用者は近過去に %W 内でヤリトリしたかどうかを指示する。
+これは， %W の現在の作動化~状態であり、
+~F 値から開始して，
+%W が毎回`作動化の通知$を受けるごとに制限された時間だけ ~T であり続ける。
+◎
+This is W's current activation state, indicating whether the user has interacted in W recently. This starts with a false value, and remains true for a limited time after every activation notification W gets.
+</dd>
+	<dd>
+`一過な作動化$の状態は、［
+利用者による最後の作動化から`一過な作動化の所要時間$が経過したために， ~F になった場合
+］には，
+`失効-@
+したものと見なされる。
+これは、`作動化の消費$を通して，失効~時刻より前に ~F になり得ることに注意。
+◎
+The transient activation state is considered expired if it becomes false because the transient activation duration time has elapsed since the last user activation. Note that it can become false even before the expiry time through an activation consumption.
+</dd>
+</dl>
+
+			</section>
+			<section id="user-activation-processing-model">
+<h4 title="Processing model">6.3.2 処理~model</h4>
+
+<p>
+`閲覧文脈$ %B における利用者によるヤリトリにより［
+%B にて`作動中の文書$ %D に向けて，`作動化を誘発する入力~event$を発火させた
+］場合には、~UAは
+— ~eventを<em>`配送-$する前に</em> —
+次に与える
+`作動化の通知@
+手続きを遂行するモノトスル：
+◎
+When a user interaction in a browsing context B causes firing of an activation triggering input event in B's active document D, the user agent must perform the following activation notification steps before dispatching the event:
+</p>
+
+<ol>
+	<li>
+%閲覧文脈たち ~LET 次に挙げる`閲覧文脈$からなる~list
+⇒
+%B, %B のすべての`先祖~閲覧文脈$, ［
+%D の`子孫~閲覧文脈~list$を成す閲覧文脈のうち，その`作動中の文書$は %D のそれと`同一-生成元$であるもの
+］
+◎
+Let browsingContexts be a list consisting of:
+• B,
+• all ancestor browsing contexts of B, and
+• all the descendant browsing contexts of D that have active documents from the same origin as that of D.
+</li>
+	<li>
+%閲覧文脈たち を成す
+~EACH( %閲覧文脈 )
+に対し
+⇒
+%閲覧文脈 にて`作動中の~window$の`最後の作動化の時刻印$ ~SET `現在の高分解能~時刻$
+◎
+Let windows be the list of Window objects constructed by taking the active window of each item in browsingContexts.
+◎
+For each window in windows, set window's last activation timestamp to the current high resolution time.
+</li>
+</ol>
+
+<p>
+次をいずれも満たす~eventは、
+`作動化を誘発する入力~event@
+とされる：
+◎
+An activation triggering input event is any event＼
+</p>
+
+<ul>
+	<li>
+`isTrusted$m ~EQ ~T
+◎
+whose isTrusted attribute is true and＼
+</li>
+	<li>
+<p>
+`type$m ~IN { `change$et, `click$et, `contextmenu$et, `dblclick$et, `mouseup$et, `pointerup$et, `reset$et, `submit$et, `touchend$et }
+◎
+whose type is one of:
+• change
+• click
+• contextmenu
+• dblclick
+• mouseup
+• pointerup
+• reset
+• submit
+• touchend
+</p>
+
+<p class="XXX">
+この~eventの集合は、主要な~browser間で一貫でない。
+<a href="~HTMLissue/3849">課題 #3849</a>
+を見よ。
+◎
+The event set is inconsistent across major browsers. See issue #3849.
+</p>
+	</li>
+</ul>
+
+<p>
+［
+この仕様／他の仕様
+］にて定義される`作動化を消費する~API$は、所与の
+( `Window$I %W )
+に対し，次に与える手続きを遂行することにより，
+`利用者による作動化を消費-@
+し得る：
+◎
+Activation consuming APIs defined in this and other specifications can consume user activation by performing the following steps, given a Window W:
+</p>
+
+<ol>
+	<li>
+~IF［
+%W に`対応する閲覧文脈$ ~EQ ~NULL
+］
+⇒
+~RET
+◎
+If W's browsing context is null, then return.
+</li>
+	<li>
+%T ~LET %W に`対応する閲覧文脈$の`~top-level閲覧文脈$
+◎
+Let top be W's browsing context's top-level browsing context.
+</li>
+	<li>
+%閲覧文脈たち ~LET %T にて`作動中の文書$の`子孫~閲覧文脈~list$
+◎
+Let browsingContexts be the list of the descendant browsing contexts of top's active document.
+</li>
+	<li>
+%閲覧文脈たち に %T を`付加する$
+◎
+Append top to browsingContexts.
+</li>
+	<li>
+%閲覧文脈たち を成す
+~EACH( %閲覧文脈 )
+に対し
+⇒
+~IF［
+%閲覧文脈 にて`作動中の~window$の`最後の作動化の時刻印$ ~NEQ 正な無限大
+］
+⇒
+%閲覧文脈 にて`作動中の~window$の`最後の作動化の時刻印$ ~SET 負な無限大
+◎
+Let windows be the list of Window objects constructed by taking the active window of each item in browsingContexts.
+◎
+For each window in windows, if window's last activation timestamp is not positive infinity, then set window's last activation timestamp to negative infinity.
+</li>
+</ol>
+
+<p class="XXX">
+この仕様は、文書たちが成す~treeを辿る方法について明瞭でない。
+<a href="~HTMLissue/5020">課題 #5020</a>
+を見よ。
+◎
+The spec is not clear about how to traverse a tree of documents. See issue #5020.
+</p>
+
+<p class="note">注記：
+~page内の［
+`作動化の通知$, `作動化の消費$
+］により影響される`閲覧文脈$が成す集合は、非対称であることに注意：
+作動化の消費は，~page内のすべての閲覧文脈に対し`一過な作動化$を（ ~F に）変化させるが、作動化の通知が それを（ ~T に）変化させるのは，それらのうち一部の閲覧文脈に限られる。
+ここでの消費は、~~用心深く，網羅的な資質を備える：
+それは、悪意的な~siteが，（場合によっては、 `iframe$e たちが成す深い階層を悪用することにより）一回の利用者による作動化から`作動化を消費する~API$を複数回の~callを為すのを防止する。
+◎
+Note the asymmetry in the sets of browsing contexts in the page that are affected by an activation notification vs an activation consumption: an activation consumption changes (to false) the transient activation states for all browsing contexts in the page, but an activation notification changes (to true) the states for a subset of those browsing contexts. The exhaustive nature of consumption here is deliberate: it prevents malicious sites from making multiple calls to an activation consuming API from a single user activation (possibly by exploiting a deep hierarchy of iframes).
+</p>
+
+			</section>
+			<section id="user-activation-gated-apis">
+<h4 title="APIs gated by user activation">6.3.3 利用者による作動化で~gateされる~API</h4>
+
+<p>
+利用者による作動化に依存する~APIは、次に挙げる 3 種の~levelに類別される
+— 利用者による作動化に対する “依存度の強さ” で，弱いものから順に：
+◎
+APIs that are dependent on user activation are classified into three different levels. The levels are as follows, sorted by their "strength of dependence" on user activation (from weakest to strongest):
+</p>
+
+<dl>
+	<dt>`非一過な作動化で~gateされる~API@</dt>
+	<dd>
+これらの~APIは［
+`非一過な作動化$ ~EQ ~T
+］を要求する
+— なので，利用者による作動化が初めて生じるまでは、阻止される。
+◎
+These APIs require the sticky activation state to be true, so they are blocked until the very first user activation.
+</dd>
+
+	<dt>`一過な作動化で~gateされる~API@</dt>
+	<dd>
+これらの~APIは［
+`一過な作動化$ ~EQ ~T
+］を要求するが、`利用者による作動化を消費-$しない
+— なので，一過な状態が`失効-$するまでは、利用者による一回の作動化に対し複数回の~callが許容される。
+◎
+These APIs require the transient activation state to be true, but they don't consume it, so multiple calls are allowed per user activation until the transient state expires.
+</dd>
+
+	<dt>`作動化を消費する~API@</dt>
+	<dd>
+これらの~APIは［
+`一過な作動化$ ~EQ ~T
+］を要求することに加え、各~callごとに`利用者による作動化を消費-$して，利用者による一回の作動化に対する複数回の~callを防止する。
+◎
+These APIs require the transient activation state to be true, and they consume user activation in each call to prevent multiple calls per user activation.
+</dd>
+</dl>
+
+			</section>
+		</section>
+		<section id="activation">
+<h3 title="Activation behavior of elements">6.4 要素に備わる作動化の挙動</h3>
+
+<p class="trans-note">【
+この節に定義されていた用語 “
+`利用者の作動化により誘発され@
+ている／いない”
+は、前節による，より精緻な定義に置換された。
+この用語を参照している他の仕様は、更新する必要がある。
+】</p>
+
+<p>
+~HTMLにおける ある種の要素は、`作動化の挙動$を備える
+— すなわち、利用者はそれを作動化できる。
+これは、常に `click$et ~eventにより生じる。
+◎
+Certain elements in HTML have an activation behavior, which means that the user can activate them. This is always caused by a click event.
+</p>
+
+<p>
+~UAは、利用者が，`作動化の挙動$を備える要素を手動で
+— 一例として、~keyboardや声~入力を利用したり，~mouse~clickを通して —
+誘発できるようにするベキである。
+利用者が，`作動化の挙動$が定義されている要素を~click以外の方式で誘発したときは、対話~eventの既定の動作においては，要素に向けて`~click~eventを発火-$するモノトスル。
+◎
+The user agent should allow the user to manually trigger elements that have an activation behavior, for instance using keyboard or voice input, or through mouse clicks. When the user triggers an element with a defined activation behavior in a manner other than clicking it, the default action of the interaction event must be to fire a click event at the element.
+</p>
+
+<dl class="domintro">
+	<dt>%element . `click()$m</dt>
+	<dd>
+要素が~clickされたかのように動作させる。
+◎
+Acts as if the element was clicked.
+</dd>
+</dl>
+
+<p>
+各~要素には
+`~click進捗中~flag@
+が結付けられ、初期~時は ~F をとるとする。
+◎
+Each element has an associated click in progress flag, which is initially unset.
+</p>
+
+<div class="algo">
+<p>
+`click()@m
+~method~手続きは：
+◎
+The click() method must run the following steps:
+</p>
+<ol>
+	<li>
+コレは`不能化され$ている~form~controlである
+⇒
+~RET
+◎
+If this element is a form control that is disabled, then return.
+</li>
+	<li>
+~IF［
+コレの`~click進捗中~flag$ ~EQ ~T
+］
+⇒
+~RET
+◎
+If this element's click in progress flag is set, then return.
+</li>
+	<li>
+コレの`~click進捗中~flag$ ~SET ~T
+◎
+Set this element's click in progress flag.
+</li>
+	<li>
+`合成な~mouse~eventを発火する$( コレ, `click^et, `~trustされない^i )
+◎
+Fire a synthetic mouse event named click at this element, with the not trusted flag set.
+</li>
+	<li>
+コレの`~click進捗中~flag$ ~SET ~F
+◎
+Unset this element's click in progress flag.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="focus">
+<h3 title="Focus">6.5. ~focus</h3>
+
+			<section id="introduction-8">
+<h4 title="Introduction">6.5.1. 序論</h4>
+
+~INFORMATIVE
+
+<p>
+~HTML~UIは、概して複数の対話的~widgetからなる
+—
+~form~control,
+~scroll可能な領域,
+~link,
+~dialog~box,
+~browser~tab,
+などなど。
+これらの~widgetは、あるもの（例： ~browser~tab, ~dialog~box）が他のもの（例： ~link, ~form~control）を包含しているような，階層を形成する。
+◎
+An HTML user interface typically consists of multiple interactive widgets, such as form controls, scrollable regions, links, dialog boxes, browser tabs, and so forth. These widgets form a hierarchy, with some (e.g. browser tabs, dialog boxes) containing others (e.g. links, form controls).
+</p>
+
+<p>
+~keyboard~UIによるヤリトリ-時の~Key入力は、~systemから対話的~widgetの階層を経由して，`~focusされて$いる作動中の~widgetにたどり着く。
+◎
+When interacting with an interface using a keyboard, key input is channeled from the system, through the hierarchy of interactive widgets, to an active widget, which is said to be focused.
+</p>
+
+<div class="example">
+
+<p>
+~graphicな環境~内で走っている~browser~tab内で走っている~HTML~appを考える。
+この~appの~pageには，いくつかの~text~controlや~linkがあり、~modal~dialogを現在に示していて，その中にも~text~controlや~buttonがあるとする。
+この局面における~focus可能な~widgetの階層は：
+◎
+Consider an HTML application running in a browser tab running in a graphical environment. Suppose this application had a page with some text controls and links, and was currently showing a modal dialog, which itself had a text control and a button.
+</p>
+
+<p>
+先ず~browser~UIwindowを含み、
+⇒
+~UIwindowは，~HTML~appを包含している~browser~tabを子として持ち、
+⇒
+~tabは，前述の~dialogの他に種々の~linkや~text~controlを子として持ち、
+⇒
+~dialogは，~text~controlや~buttonを子として持つことになる。
+◎
+The hierarchy of focusable widgets, in this scenario, would include the browser window, which would have, amongst its children, the browser tab containing the HTML application. The tab itself would have as its children the various links and text controls, as well as the dialog. The dialog itself would have as its children the text control and the button.
+</p>
+
+<figure>
+<img src="HTML-resources/focus-tree.png" alt="" width="800" height="450">
+<figcaption>
+
+</figcaption></figure>
+
+<p>
+この例において `~focusされて$いる~widgetが，~dialog~box内の~text~controlであった場合、~Key入力は、［
+~graphicな~system →
+① ~web~browser →
+② ~tab →
+③ ~dialog →
+④ ~text~control
+］の順に経由することになる。
+◎
+If the widget with focus in this example was the text control in the dialog box, then key input would be channeled from the graphical system to ① the web browser, then to ② the tab, then to ③ the dialog, and finally to ④ the text control.
+</p>
+
+</div>
+
+<p>
+~keyboard~eventは、常に，この`~focusされて$いる要素を標的にする。
+◎
+Keyboard events are always targeted at this focused element.
+</p>
+
+			</section>
+			<section id="data-model">
+<h4 title="Data model">6.5.2. ~data~model</h4>
+
+<p>
+用語
+`~focus可能な区画@
+は、~keyboard入力の標的になれるような，~UIの領域を指す。
+［
+要素, 要素の一部分, その他の~UAにより管理される領域
+］は、~focus可能な区画になり得る。
+◎
+The term focusable area is used to refer to regions of the interface that can become the target of keyboard input. Focusable areas can be elements, parts of elements, or other regions managed by the user agent.
+</p>
+
+<p>
+各 `~focus可能な区画$は、
+`~DOM~anchor@
+を持つ
+— それは、`~focus可能な区画$の~DOMにおける位置を表現する `Node$I ~objである（`~focus可能な区画$自身が `Node$I であれば，それがそのまま`~DOM~anchor$になる）。
+`~DOM~anchor$は、`~focus可能な区画$を表現する~DOM~objが他にないときに，一部の~APIにより`~focus可能な区画$の代用として利用される。
+◎
+Each focusable area has a DOM anchor, which is a Node object that represents the position of the focusable area in the DOM. (When the focusable area is itself a Node, it is its own DOM anchor.) The DOM anchor is used in some APIs as a substitute for the focusable area when there is no other DOM object to represent the focusable area.
+</p>
+
+<p>
+次の表の 1 列目に、どの~objが`~focus可能な区画$になり得るかを述べる。
+対応する`~DOM~anchor$を表の 2 列目に述べる。
+◎
+The following table describes what objects can be focusable areas. The cells in the left column describe objects that can be focusable areas; the cells in the right column describe the DOM anchors for those elements. (The cells that span both columns are non-normative examples.)
+</p>
+
+<table id="table-fa"><thead><tr><th>`~focus可能な区画$
+<th id="th-fa-dom-rep">`~DOM~anchor$
+<tr><th colspan="2">
+<div class="example"><i>左右列にまたがるセルには、例を示す。</i></div>
+</thead>
+
+<tbody><tr><th id="td-fa-1">
+<p>
+次に挙げる判定基準をすべて満たす要素：
+◎
+Elements that meet all the following criteria:
+</p>
+		<ul>
+			<li>
+［
+要素の`~tabindex値$ ~NEQ ~NULL
+］~OR［
+~UAは要素を~focus可能と決定した
+］
+◎
+the element's tabindex value is non-null, or the element is determined by the user agent to be focusable;
+</li>
+			<li>
+［
+`~shadow~host$でない
+］~OR［［
+その`~shadow根$elm ~NEQ ~NULL
+］~AND［
+その`~shadow根$elmの`~focusを委譲する$sR ~EQ ~F
+］］
+◎
+the element is either not a shadow host, or has a shadow root whose delegates focus is false;
+</li>
+			<li>
+`実際に不能化-$されていない
+◎
+the element is not actually disabled;
+</li>
+			<li>
+`明に不活$でない
+◎
+the element is not expressly inert;
+</li>
+			<li>
+［
+`具現化されて$いる
+］~OR［
+<a href="~HEcanvas#being-used-as-relevant-canvas-fallback-content">関連な~canvas~fallback内容として利用-中にある</a>
+］
+◎
+the element is either being rendered or being used as relevant canvas fallback content.
+</li>
+		</ul>
+
+<td>
+要素~自身。
+◎
+The element itself.
+<tr><td colspan="2">
+
+<div class="example">
+
+<ul><li>`iframe$e
+</li><li><a href="~HEinput#text-(type=text)-state-and-search-state-(type=search)">`&lt;input type=text&gt;^e</a>,
+</li><li>場合によっては（~platform規約に依存する）
+<a href="~HEtextlevel#the-a-element">`&lt;a href="…"&gt;^e</a>
+</li></ul>
+
+◎
+iframe, &lt;input type=text&gt;, sometimes &lt;a href=""&gt; (depending on platform conventions).
+</div>
+</tbody>
+
+<tbody><tr><th id="td-fa-2">
+<p>
+`画像~map$内の
+`~focus可能な図形@
+— そのような図形は、次を満たす各~組
+( `area$e 要素 %A , `img$e 要素 %I )
+ごとに作成される：
+</p>
+
+<ul ><li>%I は、その `usemap^a 属性を通して %A の親である `map^e 要素を指している
+</li><li>%I は、`具現化されて$いる, かつ `明に不活$でない
+</li></ul>
+
+<p class="trans-note">【
+以下では、
+%A を指して 図形を`定義している^i `area$e 要素，
+%I を指して 図形が`属する^i `img$e 要素
+と称することにする。
+】</p>
+
+◎
+The shapes of area elements in an image map associated with an img element that is being rendered and is not expressly inert.
+<td>
+その図形が属する `img$e 要素。
+◎
+The img element.
+<tr><td colspan="2">
+
+<div class="example">
+<p>
+次の例の `area$e 要素は、［
+その親である `map^e 要素への参照を通して それを利用している各 `img$e 要素
+］ごとに 1 個ずつ，計 2 個の図形を作成する。
+各~図形の`~DOM~anchor$は、参照元の `img^e 要素になる。
+◎
+In the following example, the area element creates two shapes, one on each image. The DOM anchor of the first shape is the first img element, and the DOM anchor of the second shape is the second img element.
+</p>
+
+`data-model-1^xCode
+
+</div>
+
+</tbody>
+
+<tbody><tr><th id="td-fa-3">
+<p >
+~UAにより供される下位widget要素であって，次をいずれも満たすもの：
+</p>
+
+<ul ><li>`具現化されて$いる
+</li><li>`実際に不能化-$されてない
+</li><li>`明に不活$でない
+</li></ul>
+
+◎
+The user-agent provided subwidgets of elements that are being rendered and are not actually disabled or expressly inert.
+<td>
+`~focus可能な区画$がその下位widgetである要素。
+◎
+The element for which the focusable area is a subwidget.
+<tr><td colspan="2" headers="td-fa-3">
+
+<div class="example">
+<ul>
+	<li>
+`video$e 要素~用に`~UI内に公開されている~control$
+◎
+The controls in the user interface for a video element,＼
+</li>
+	<li>
+<a href="~HEinput#number-state-(type=number)">`&lt;input type=number&gt;^e</a>
+用の増減~button
+◎
+the up and down buttons in a spin-control version of &lt;input type=number&gt;,＼
+</li>
+	<li>
+`details$e 要素の具現化の一部を成していて，~keyboard入力で当の要素を開閉することを可能化しているもの。
+◎
+the part of a details element's rendering that enables the element to be opened or closed using keyboard input.
+</li>
+</ul>
+</div>
+</tbody>
+
+<tbody><tr><th id="td-fa-4">
+次を満たす要素の，~scroll可能な領域
+⇒
+［
+`具現化されて$いる
+］~AND［
+`明に不活$でない
+］
+◎
+The scrollable regions of elements that are being rendered and are not expressly inert.
+<td>
+その~scroll可能な領域~boxを~~生成させた要素。
+◎
+The element for which the box that the scrollable region scrolls was created.
+<tr><td colspan="2">
+
+<div class="example">
+<p>
+~CSS `overflow$p ~propに対する `scroll^v 値は、概して，~scroll可能な領域を作成させる。
+◎
+The CSS 'overflow' property's 'scroll' value typically creates a scrollable region.
+</p>
+</div>
+
+</tbody>
+
+<tbody><tr><th id="td-fa-5">
+次を満たす`文書$の，`表示域$
+⇒
+［
+`属する閲覧文脈$ ~NEQ ~NULL
+］~AND［
+`不活$でない
+］
+◎
+The viewport of a Document that has a non-null browsing context and is not inert.
+<td>
+`表示域$を作成させている`文書$。
+◎
+The Document for which the viewport was created.
+<tr><td colspan="2">
+<div class="example">
+<p>
+`iframe$e の内容。
+◎
+The contents of an iframe.
+</p>
+</div>
+</tbody>
+
+<tbody><tr><th id="td-fa-6">
+他の任意の，~UAにより~focus可能な区画であると決定された要素, またはその一部分
+— とりわけ，~accessibilityを援助する, あるいは~platform規約により良く合致するような。
+◎
+Any other element or part of an element determined by the user agent to be a focusable area, especially to aid with accessibility or to better match platform conventions.
+
+<td>
+要素。
+◎
+The element.
+<tr><td colspan="2">
+
+<div class="example">
+<p>
+~UAは、利用者が~listを~navigateし易くなるよう，すべての~list~item~bulletを`逐次的に~focus可能$にすることもできる。
+◎
+A user agent could make all list item bullets sequentially focusable, so that a user can more easily navigate lists.
+
+focusable
+</p>
+
+<p>
+同様に，~UAは、
+`title$a 属性を有するすべての要素に対し，その助言的~情報に~accessできるよう，`逐次的に~focus可能$にすることもできる。
+◎
+Similarly, a user agent could make all elements with title attributes sequentially focusable, so that their advisory information can be accessed.
+</p>
+</div>
+
+</tbody></table>
+
+<p id="bc-focus-ergo-bcc-focus" class="note">注記：
+`閲覧文脈~容器$ %容器 （例： `iframe$e ）は `~focus可能な区画$であるが、［
+%容器 が`入子にしている閲覧文脈$ %B ~NEQ ~NULL
+］の場合，［
+%容器 へ届けられる~Key~eventは、
+%B にて`作動中の文書$ %文書 へ~~直に届けられる
+］ようになる。
+同様に，`逐次的~focus~navi$においては、
+%容器 は，本質的には %文書 の代役として動作するに過ぎない。
+◎
+A browsing context container (e.g. an iframe) is a focusable area, but key events routed to a browsing context container get immediately routed to its nested browsing context's active document. Similarly, in sequential focus navigation a browsing context container essentially acts merely as a placeholder for its nested browsing context's active document.
+</p>
+
+<hr>
+
+<p>
+各 `文書$が
+`指名する被focus区画@
+は、文書に属する`~focus可能な区画$のうち 1 つを指すか，何も指さずに ~NULL になる†。
+どの~focus可能な区画がそう指名されるかは、この仕様の各種~algoに基づいて，時間とともに変化する。
+◎
+One focusable area in each Document is designated the focused area of the document. Which control is so designated changes over time, based on algorithms in this specification.
+</p>
+
+<p class="trans-note">【†
+原文は，何も指さない場合ついて述べていないが、それもあり得るらしい（
+<a href="~HTMLissue/5835">課題 #5835</a>
+— 場合によっては、表示域に~fallbackするよう定義されるかもしれない）。
+加えて，［
+それが あり得ること, および その場合には ~NULL になる
+］ことは、`現在の被focus区画$の定義からも要請される。
+】</p>
+
+<div class="algo">
+<p>
+`~top-level閲覧文脈$ %T の，所与の時点における
+`現在の被focus区画@
+は、次を走らせた結果の`~focus可能な区画$である：
+</p>
+<ol>
+	<li>
+<p>
+~WHILE 無条件：
+</p>
+		<ol>
+			<li>
+%文書 ~SET %T にて`作動中の文書$
+</li>
+			<li>
+%F ~LET %文書 が`指名する被focus区画$
+</li>
+			<li>
+~IF［
+%F ~EQ ~NULL
+］
+⇒
+~RET %文書
+</li>
+			<li>
+~IF［
+%F は`閲覧文脈~容器$でない
+］
+⇒
+~RET %F
+</li>
+			<li>
+%T ~SET %F が`入子にしている閲覧文脈$
+</li>
+			<li>
+~IF［
+%T ~EQ ~NULL
+］
+⇒
+~RET %F
+</li>
+		</ol>
+	</li>
+</ol>
+◎
+The currently focused area of a top-level browsing context topLevelBC at any particular time is the focusable area returned by this algorithm:
+• Let candidate be topLevelBC's active document.
+• While candidate's focused area is a browsing context container with a non-null nested browsing context: set candidate to the active document of that browsing context container's nested browsing context.
+• If candidate's focused area is non-null, set candidate to candidate's focused area.
+• Return candidate.
+</div>
+
+<p>
+`現在の被focus区画$の`~DOM~anchor$である要素は、
+`~focusされて@
+いるという。
+そうでない要素がそうなることを、要素は
+`~focusを獲得した@
+という。
+◎
+An element that is the DOM anchor of a focusable area is said to gain focus when that focusable area becomes the currently focused area of a top-level browsing context. When an element is the DOM anchor of a focusable area of the currently focused area of a top-level browsing context, it is focused.
+</p>
+
+<div class="algo">
+<p>
+`~focus可能な区画$ %~subject の
+`~focus鎖@
+は、次に従って構築される有順序~listである：
+◎
+The focus chain of a focusable area subject is the ordered list constructed as follows:
+</p>
+
+<ol>
+	<li>
+%出力 ~LET 空~list
+◎
+Let current object be subject.
+◎
+Let output be an empty list.
+</li>
+	<li>
+<p>
+~WHILE 無条件：
+</p>
+		<ol>
+			<li>
+%出力 に %~subject を付加する
+◎
+Loop: Append current object to output.
+</li>
+			<li>
+~IF［
+%~subject は`~focus可能な図形$である
+］
+⇒
+%出力 に %~subject を定義している `area$e 要素を付加する
+◎
+If current object is an area element's shape, append that area element to output.
+</li>
+			<li>
+~ELIF［
+%~subject は`~focus可能な区画$である
+］~AND［
+%~subject の`~DOM~anchor$ %A ~NEQ %~subject
+］
+⇒
+%出力 に %A を付加する
+◎
+Otherwise, if current object is a focusable area whose DOM anchor is an element that is not current object itself, append that DOM anchor element to output.
+</li>
+			<li>
+~ELIF［
+%~subject は`文書$である
+］~AND［
+%~subject が`属する閲覧文脈$ %B は`子~閲覧文脈$である
+］
+⇒
+%~subject ~SET %B の`容器$bc
+◎
+If current object is a Document whose browsing context is a child browsing context, then set current object to current object's browsing context's container and return to the step labeled loop.
+</li>
+			<li>
+~ELSE
+⇒
+~RET %出力
+◎
+Return output.
+</li>
+		</ol>
+	</li>
+</ol>
+
+<p class="note">注記：
+~focus鎖は、 %O から開始して，（ %O が`現在の被focus区画$である／なり得るならば）
+`~top-level閲覧文脈$に属する`文書$まで，~focus階層を辿り続ける。
+◎
+The chain starts with subject and (if subject is or can be the currently focused area of a top-level browsing context) continues up the focus hierarchy up to the Document of the top-level browsing context.
+</p>
+</div>
+
+<p>
+`~focus可能な区画$である すべての要素は，
+`~focus可能@
+とされる。
+◎
+All elements that are focusable areas are said to be focusable.
+</p>
+
+<p>
+`~focus可能な区画$には、次に挙げる特別な~focus能を有する種別もある：
+◎
+There are two special types of focusability for focusable areas:
+</p>
+
+<ul>
+	<li>
+`逐次的に~focus可能@
+なものは、［
+`~focus可能な区画$であって，それが属する`文書$の`逐次的~focus~navi順序$に含まれているもの
+］のうち，~UAが［
+逐次的に~focus可能である
+］と決定したものである。
+◎
+A focusable area is said to be sequentially focusable if it is included in its Document's sequential focus navigation order and the user agent determines that it is sequentially focusable.
+</li>
+	<li>
+`~clickで~focus可能@
+なものは、`~focus可能な区画$のうち，~UAが［
+~clickで~focus可能である
+］と決定したものである。
+~UAは、~focus可能な区画のうち［
+`~tabindex値$ ~NEQ ~NULL
+］なるものは，~clickで~focus可能と見なすベキである。
+◎
+A focusable area is said to be click focusable if the user agent determines that it is click focusable. User agents should consider focusable areas with non-null tabindex values to be click focusable.
+</li>
+</ul>
+
+<p class="note">注記：
+`~focus可能$でない要素は、`~focus可能な区画$にならないので，`逐次的に~focus可能$にも`~clickで~focus可能$にもならない。
+◎
+Elements which are not focusable are not focusable areas, and thus not sequentially focusable and not click focusable.
+</p>
+
+<div class="note">
+
+<p>注記：
+“要素が`~focus可能$である”
+は、［
+要素を~program的に
+— 例えば， `~focus0()$m ~methodや `autofocus$a 属性を介して —
+~focusできるかどうか
+］についての言明である。
+対照的に，［
+`逐次的に~focus可能$／`~clickで~focus可能$
+］は、［
+`逐次的~focus~navi$／
+`~focus作動化の挙動^【！#focus-activation-behavior】
+］において，~UAが利用者によるヤリトリに どう応答するかを統治する。
+◎
+Being focusable is a statement about whether an element can be focused programmatically, e.g. via the focus() method or autofocus attribute. In contrast, sequentially focusable and click focusable govern how the user agent responds to user interaction: respectively, to sequential focus navigation and as activation behavior.
+</p>
+
+<p>
+~UAは、要素は［
+`~focus可能$であって，自身が属する`文書$の`逐次的~focus~navi順序$に含まれて
+］いても，［
+利用者~選好に則って，`逐次的に~focus可能$でないものと決定する
+］かもしれない。
+例えば，~macOS利用者は、~form~controlでない要素を飛ばすよう，~UAを設定できたり、
+`逐次的~focus~navi$を `Tab^kbd ~Keyだけで（ `Option^kbd ~Keyも併用することなく）行うときは，~linkを飛ばせる。
+◎
+The user agent might determine that an element is not sequentially focusable even if it is focusable and is included in its Document's sequential focus navigation order, according to user preferences. For example, macOS users can set the user agent to skip non-form control elements, or can skip links when doing sequential focus navigation with just the Tab key (as opposed to using both the Option and Tab keys).
+</p>
+
+<p>
+同様に，~UAは、ある要素を［
+`~focus可能$であっても，`~clickで~focus可能$ではないと決定する
+］かもしれない。
+例えば，一部の~UAにおいては、編集-不能な~form~controlは，~clickしても~focusされない
+— すなわち~UAは、そのような~controlを，~clickで~focus可能でないものと決定したことになる。
+◎
+Similarly, the user agent might determine that an element is not click focusable even if it is focusable. For example, in some user agents, clicking on a non-editable form control does not focus it, i.e. the user agent has determined that such controls are not click focusable.
+</p>
+
+<p>
+したがって，要素は、［
+`~focus可能$でありつつ，`逐次的に~focus可能$にも`~clickで~focus可能$にもならない
+］こともある。
+例えば，一部の~UAにおいては、［
+編集-不能な~form~controlのうち，その`~tabindex値$は負な整数であるもの
+］は，利用者によるヤリトリを介しては~focus可能にならず、~program的~APIを介するとき限り，~focus可能になる。
+◎
+Thus, an element can be focusable, but neither sequentially focusable nor click focusable. For example, in some user agents, a non-editable form-control with a negative-integer tabindex value would not be focusable via user interaction, only via programmatic APIs.
+</p>
+</div>
+
+<div class="algo">
+<p>
+利用者が［
+`~focus可能な区画$のうち`~clickで~focus可能$なもの
+］を<a href="#activation">作動化した</a>ときは、~UAは次を走らすモノトスル
+⇒
+`~objを~focusする$( `~focus可能な区画$, ε, `click^l )
+◎
+When a user activates a click focusable focusable area, the user agent must run the focusing steps on the focusable area with focus trigger set to "click".
+</p>
+</div>
+
+<p class="note">注記：
+~focusすることは、`作動化の挙動$ではないことに注意
+— すなわち、要素に対し［
+`click()$m ~methodを~callしても／
+合成な `click$et ~eventを配送しても
+］要素が~focusを得ることはない。
+◎
+Note that focusing is not an activation behavior, i.e. calling the click() method on an element or dispatching a synthetic click event on it won't cause the element to get focused.
+</p>
+
+<hr>
+
+<p>
+~nodeのうち［
+`文書$ ／`~shadow~host$／ `slot$e 要素
+］であるものは、
+`~focus~navi視野の所有者@
+であるとされる。
+◎
+A node is a focus navigation scope owner if it is a document, a shadow host or a slot.
+</p>
+
+<div class="algo">
+<p>
+各`~focus~navi視野の所有者$は、
+`~focus~navi視野@
+を持つ
+— それは，何個かの要素からなる~listであり、その内容は次に従って決定される：
+◎
+Each focus navigation scope owner has a focus navigation scope, which is a list of elements. Its contents are determined as follows:
+</p>
+
+<ul>
+	<li>
+<p>
+先ず，所与の要素 %要素 に
+`結付けられている~focus~navi所有者@
+は、次の~algoで決定される［
+~NULL ／ `~focus~navi視野の所有者$
+］になる：
+◎
+Every element element has an associated focus navigation owner, which is either null or a focus navigation scope owner. It is determined by the following algorithm:
+</p>
+		<ol>
+			<li>
+%親 ~LET %要素 の親
+◎
+↓</li>
+			<li>
+~IF［
+%親 ~EQ  ~NULL
+］
+⇒
+~RET ~NULL
+◎
+If element's parent is null, then return null.
+</li>
+			<li>
+~IF［
+%親 は`~shadow~host$である
+］
+⇒
+~RET %要素 の`割当先~slot$
+◎
+If element's parent is a shadow host, then return element's assigned slot.
+</li>
+			<li>
+~IF［
+%親 は`~shadow根$である
+］
+⇒
+~RET %親 の`~host$
+◎
+If element's parent is a shadow root, then return the parent's host.
+</li>
+			<li>
+~IF［
+%親 は`文書~要素$である
+］
+⇒
+~RET %親 の`~node文書$
+◎
+If element's parent is the document element, then return the parent's node document.
+</li>
+			<li>
+~RET %親 に`結付けられている~focus~navi所有者$
+◎
+Return element's parent's associated focus navigation owner.
+</li>
+		</ol>
+	</li>
+	<li>
+所与の`~focus~navi視野の所有者$ %所有者 の`~focus~navi視野$は、次を満たす要素からなる
+⇒
+それに`結付けられている~focus~navi所有者$ ~EQ %所有者
+◎
+Then, the contents of a given focus navigation scope owner owner's focus navigation scope are all elements whose associated focus navigation owner is owner.
+</li>
+</ul>
+</div>
+
+<p class="note">注記：
+`~focus~navi視野$の中における要素の順序は、この仕様~のどの~algoにも影響iしない。
+順序付けが重要になるのは、下に定義する［
+`~tabindex順な~focus~navi視野$／
+`平坦~化された~tabindex順な~focus~navi視野$
+］の概念に限られる。
+◎
+The order of elements within a focus navigation scope does not impact any of the algorithms in this specification. Ordering only becomes important for the tabindex-ordered focus navigation scope and flattened tabindex-ordered focus navigation scope concepts defined below.
+</p>
+
+<p>
+各`~focus~navi視野の所有者$ %所有者 は，
+`~tabindex順な~focus~navi視野@
+を持つ。
+それは，何個かの［
+`~focus可能な区画$,
+`~focus~navi視野の所有者$
+］からなる`~list$であり、その内容は次に従って決定される：
+◎
+A tabindex-ordered focus navigation scope is a list of focusable areas and focus navigation scope owners. Every focus navigation scope owner owner has tabindex-ordered focus navigation scope, whose contents are determined as follows:
+</p>
+
+<ul>
+	<li>
+次を満たす すべての要素を包含する
+⇒
+［
+要素 ~IN %所有者 の`~focus~navi視野$
+］~AND［
+`~focus~navi視野の所有者$である
+］~AND［
+その`~tabindex値$は負な整数でない
+］
+◎
+It contains all elements in owner's focus navigation scope that are themselves focus navigation scope owners, except the elements whose tabindex value is a negative integer.
+</li>
+	<li>
+次を満たす すべての`~focus可能な区画$を包含する
+⇒
+［
+その`~DOM~anchor$ ~IN %所有者 の`~focus~navi視野$
+］~AND［
+その`~tabindex値$は負な整数でない
+］
+◎
+It contains all of the focusable areas whose DOM anchor is an element in owner's focus navigation scope, except the focusable areas whose tabindex value is a negative integer.
+</li>
+</ul>
+
+<p>
+`~tabindex順な~focus~navi視野$の中における順序は、以下の節に述べるように，各~要素の`~tabindex値$により決定される。
+◎
+The order within a tabindex-ordered focus navigation scope is determined by each element's tabindex value, as described in the section below.
+</p>
+
+<p class="note">注記：
+そこに与える規則は、ほとんど “ベキである” 言明による相対-順序付けで構成されているので，精確な順序付けは与えない。
+◎
+The rules there do not give a precise ordering, as they are composed mostly of "should" statements and relative orderings.
+</p>
+
+<div class="algo">
+<p>
+各`~focus~navi視野の所有者$ %所有者 は、互いに別個な
+`平坦~化された~tabindex順な~focus~navi視野@
+を所有する。
+それは，何個かの`~focus可能な区画$からなる`~list$であり、その内容は次の~algoに従って決定される：
+◎
+A flattened tabindex-ordered focus navigation scope is a list of focusable areas. Every focus navigation scope owner owner owns a distinct flattened tabindex-ordered focus navigation scope, whose contents are determined by the following algorithm:
+</p>
+
+<ol>
+	<li>
+%結果 ~LET 新たな`~list$
+◎
+↓</li>
+	<li>
+<p>
+%所有者 の`~tabindex順な~focus~navi視野$を成す
+~EACH( %~item )
+に対し：
+</p>
+		<ol>
+			<li>
+~IF［
+%~item は`~focus~navi視野の所有者$でない
+］~OR［
+%~item は`~focus可能な区画$である
+］
+⇒
+%結果 に %~item を`付加する$
+</li>
+			<li>
+~IF［
+%~item は`~focus~navi視野の所有者$である
+］
+⇒
+%結果 を［
+%~item の`平坦~化された~tabindex順な~focus~navi視野$
+］で`拡張する$
+</li>
+		</ol>
+◎
+Let result be a clone of owner's tabindex-ordered focus navigation scope.
+◎
+For each item of result:
+• If item is not a focus navigation scope owner, then continue.
+• If item is not a focusable area, then replace item with all of the items in item's flattened tabindex-ordered focus navigation scope.
+• Otherwise, insert the contents of item's flattened tabindex-ordered focus navigation scope after item.
+</li>
+</ol>
+
+<p class="trans-note">【
+この訳では、 “`拡張する$” を利用して，原文の~algoを簡素化している。
+】</p>
+</div>
+
+			</section>
+			<section id="the-tabindex-attribute">
+<h4 title="The tabindex attribute">6.5.3. `tabindex^a 属性</h4>
+
+<p>
+`tabindex@a
+内容~属性は、［
+要素, および それを`~DOM~anchor$とする`~focus可能な区画$
+］を`~focus可能な区画$にすること, その場合に［
+`逐次的に~focus可能$になるのを［
+許容する／防止する
+］こと
+］を，作者に許容する。
+加えて、`逐次的~focus~navi$における それらの相対-順序付けを決定する。
+◎
+The tabindex content attribute allows authors to make an element and regions that have the element as its DOM anchor be focusable areas, allow or prevent them from being sequentially focusable, and determine their relative ordering for sequential focus navigation.
+</p>
+
+<p>
+“tab index” という名称は、一連の~focus可能な要素を~navigateするときに，
+`Tab^kbd ~Keyが共通的に利用されることに~~由来する。
+語 “`tabbing^en” とは、逐次的~focus~naviを利用して到達し得る［
+`逐次的に~focus可能$な`~focus可能な区画$
+］を，前方へ辿ることを指す。
+◎
+The name "tab index" comes from the common use of the Tab key to navigate through the focusable elements. The term "tabbing" refers to moving forward through sequentially focusable focusable areas.
+</p>
+
+<p>
+`tabindex$a 属性に指定される値は、`妥当な整数$でなければナラナイ。
+正な整数は、要素の`~focus可能な区画$の，`逐次的~focus~navi順序$における位置を指定する。
+負な整数は、当の~controlは`逐次的に~focus可能$にしないことを指示する。
+◎
+The tabindex attribute, if specified, must have a value that is a valid integer. Positive numbers specify the relative position of the element's focusable areas in the sequential focus navigation order, and negative numbers indicate that the control is not sequentially focusable.
+</p>
+
+<p>
+開発者は、 `tabindex$a 属性に対する 0, −1 以外の値は注意して利用するベキである
+— 正しく利用するのは複雑なので。
+◎
+Developers should use caution when using values other than 0 or −1 for their tabindex attributes as this is complicated to do correctly.
+</p>
+
+<div class="note">
+<p>注記：
+`tabindex$a 属性にアリな各~値の挙動についての規範的でない要約を次に挙げる（より精確な規則は、下の処理~modelに与える）。
+◎
+The following provides a non-normative summary of the behaviors of the possible tabindex attribute values. The below processing model gives the more precise rules.
+</p>
+
+<dl>
+	<dt>
+省略されている／整数でない【値は妥当でない】
+◎
+omitted (or non-integer values)
+</dt>
+	<dd>
+要素が`~focus可能$かどうか, および そうなる場合に［
+`逐次的に~focus可能$／`~clickで~focus可能$
+］かどうかは、~UAが裁定することになる。
+◎
+The user agent will decide whether the element is focusable, and if it is, whether it is sequentially focusable or click focusable (or both).
+</dd>
+	<dt>
+負な整数
+◎
+−1 (or other negative integer values)
+</dt>
+	<dd>
+要素を`~focus可能$にすることに加え、作者は［
+要素は，`~clickで~focus可能$であるが`逐次的に~focus可能$にならない
+］ことを選好することを指示する。
+~UAは、［
+~click, 逐次的
+］~focus能に関するこの選好を無視するかもしれない
+— 例えば、特定の要素~型~用に~platform規約に則って，あるいは、~keyboardのみの利用者~用に。
+◎
+Causes the element to be focusable, and indicates that the author would prefer the element to be click focusable but not sequentially focusable. The user agent might ignore this preference for click and sequential focusability, e.g., for specific element types according to platform conventions, or for keyboard-only users.
+</dd>
+
+	<dt>0</dt>
+	<dd>
+要素を`~focus可能$にすることに加え、作者は［
+要素は，`~clickで~focus可能$かつ`逐次的に~focus可能$になる
+］ことを選好することを指示する。
+~UAは、［
+~click, 逐次的
+］~focus能に関するこの選好を無視するかもしれない。
+◎
+Causes the element to be focusable, and indicates that the author would prefer the element to be both click focusable and sequentially focusable. The user agent might ignore this preference for click and sequential focusabiity.
+</dd>
+	<dt>
+正な整数
+◎
+positive integer values
+</dt>
+	<dd>
+0 と同じに挙動するが，それに加え、
+`tabindex$a 属性~値が高い要素ほど後になるよう，`~tabindex順な~focus~navi視野$の中での順序付けを与える。
+◎
+Behaves the same as 0, but in addition creates a relative ordering within a tabindex-ordered focus navigation scope, so that elements with higher tabindex attribute value come later.
+</dd>
+</dl>
+
+<p>
+`tabindex$a 属性は、要素を~focus不能にする用途には利用できないことに注意。
+~page作者がそれを行うには、要素を［
+`実際に不能化-$するか, `不活$にする
+］他にない。
+◎
+Note that the tabindex attribute cannot be used to make an element non-focusable. The only way a page author can do that is by disabling the element, or making it inert.
+</p>
+</div>
+
+<hr>
+
+<p>
+所与の要素の
+`~tabindex値@
+は、［
+要素は `tabindex$a 属性 %A を有する
+］~AND［
+`整数として構文解析する$( %A の値 ) ~NEQ `失敗^i
+］ならば その結果 ／
+~ELSE_ ~NULL
+］とする。
+◎
+The tabindex value of an element is the value of its tabindex attribute, parsed using the rules for parsing integers. If parsing fails or the attribute is not specified, then the tabindex value is null.
+</p>
+
+<p>
+所与の`~focus可能な区画$の`~tabindex値$は、その`~DOM~anchor$の`~tabindex値$とする。
+◎
+The tabindex value of a focusable area is the tabindex value of its DOM anchor.
+</p>
+
+<p>
+要素の`~tabindex値$は、次に従って解釈するモノトスル：
+◎
+The tabindex value of an element must be interpreted as follows:
+</p>
+
+<ul>
+	<li>
+<p>
+`~tabindex値$ ~EQ ~NULL の場合：
+◎
+If the value is null
+</p>
+		<ul>
+			<li>
+~UAは，~platform規約に従って，次を決定するベキである
+⇒
+要素は`~focus可能な区画$として見なされるベキかどうか
+— そうであれば
+⇒
+［
+要素, および それを`~DOM~anchor$とする`~focus可能な区画$
+］は`逐次的に~focus可能$になるかどうか
+— そうであれば
+⇒
+それらは、`~tabindex順な~focus~navi視野$において どこに位置するか？
+◎
+The user agent should follow platform conventions to determine if the element should be considered as a focusable area and if so, whether the element and any focusable areas that have the element as their DOM anchor are sequentially focusable, and if so, what their relative position in their tabindex-ordered focus navigation scope is to be.＼
+</li>
+			<li>
+要素は`~focus~navi視野の所有者$である場合、`~focus可能な区画$でない場合でも，自身の`~tabindex順な~focus~navi視野$には含めるモノトスル。
+◎
+If the element is a focus navigation scope owner, it must be included in its tabindex-ordered focus navigation scope even if it is not a focusable area.
+</li>
+			<li>
+同じ`~focus~navi視野$に属する［
+要素, `~focus可能な区画$
+］のうち［
+`~tabindex値$ ~EQ ~NULL
+］なるものたちの［
+`~tabindex順な~focus~navi視野$の中での順序
+］は、`~shadowも含む~tree順序$に従うベキである。
+◎
+The relative ordering within a tabindex-ordered focus navigation scope for elements and focusable areas that belong to the same focus navigation scope and whose tabindex value is null should be in shadow-including tree order.
+</li>
+			<li>
+<p>
+~platform規約の違いを除き、次に挙げる要素は［
+`~focus可能な区画$と見なされ，`逐次的に~focus可能$である
+］ベキであることが示唆される：
+◎
+Modulo platform conventions, it is suggested that the following elements should be considered as focusable areas and be sequentially focusable:
+</p>
+				<ul>
+					<li>
+`a$e 要素のうち， `href$a 属性を有するもの
+◎
+a elements that have an href attribute
+</li>
+					<li>
+`link$e 要素のうち， `~href0$a 属性を有するもの
+◎
+link elements that have an href attribute
+</li>
+					<li>
+`button$e 要素
+◎
+button elements
+</li>
+					<li>
+`input$e 要素のうち，その `type$a 属性の状態 ~NEQ `Hidden$st なるもの
+◎
+input elements whose type attribute are not in the Hidden state
+</li>
+					<li>
+`select$e 要素
+◎
+select elements
+</li>
+					<li>
+`textarea$e 要素
+◎
+textarea elements
+</li>
+					<li>
+`details$e 要素の子である `summary$e 要素のうち，最初のもの
+◎
+summary elements that are the first summary element child of a details element
+</li>
+					<li>
+`draggable$a 属性を有する要素のうち、~UAが［
+利用者が~pointing装置を利用することなく，その要素~用の~drag操作oを始める
+］ことを可能化するもの。
+◎
+Elements with a draggable attribute set, if that would enable the user agent to allow the user to begin a drag operations for those elements without the use of a pointing device
+</li>
+					<li>
+`編集中の~host$
+◎
+Editing hosts
+</li>
+					<li>
+`閲覧文脈~容器$
+◎
+Browsing context containers
+</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li>
+<p>
+`~tabindex値$ ~NEQ ~NULL の場合、要素を`~focus可能な区画$と見なすモノトスル。
+加えて：
+
+<!-- 
+must consider the element as 
+と
+must allow the element to be considered as
+の違いはどこに？
+-->
+◎
+↓</p>
+		<ul>
+			<li>
+<p>
+`~tabindex値$ ~LT 0 の場合、要素を`~tabindex順な~focus~navi視野$からは外すベキである。
+◎
+If the value is a negative integer
+◎
+The user agent must consider the element as a focusable area, but should omit the element from any tabindex-ordered focus navigation scope.
+</p>
+
+<p class="note">注記：
+［
+要素を逐次的~focus~naviから外すとする，作者からの要件
+］を無視する妥当な理由としては、［
+利用者が~focusを移動する仕組みが，逐次的~focus~naviの他にない場合
+］が挙げられる。
+一例として，［
+~keyboardのみの利用者は、負な `tabindex$a を伴う~text~controlを~clickできない
+］ので、［
+~UAが、利用者が~tabで当の~controlへ移れるようにすること
+］は，正当化される。
+◎
+One valid reason to ignore the requirement that sequential focus navigation not allow the author to lead to the element would be if the user's only mechanism for moving the focus is sequential focus navigation. For instance, a keyboard-only user would be unable to click on a text control with a negative tabindex, so that user's user agent would be well justified in allowing the user to tab to the control regardless.
+</p>
+			</li>
+			<li>
+`~tabindex値$ ~GTE 0 の場合、［
+要素, および それを`~DOM~anchor$とする`~focus可能な区画$
+］は`逐次的に~focus可能$にするベキである。
+◎
+If the value is a zero
+◎
+The user agent must allow the element to be considered as a focusable area and should allow the element and any focusable areas that have the element as their DOM anchor to be sequentially focusable.
+◎
+↓↓The relative ordering within a tabindex-ordered focus navigation scope for elements and focusable areas that belong to the same focus navigation scope and whose tabindex value is zero should be in shadow-including tree order.
+◎
+If the value is greater than zero
+◎
+The user agent must allow the element to be considered as a focusable area and should allow the element and any focusable areas that have the element as their DOM anchor to be sequentially focusable,＼
+</li>
+		</ul>
+	</li>
+	<li>
+<p>
+同じ`~focus~navi視野$に属する［
+要素, `~focus可能な区画$
+］ものたちの［
+`~tabindex順な~focus~navi視野$の中での順序
+］は、以下に従うベキである：
+</p>
+
+		<ul>
+			<li>
+［
+`~tabindex値$ ~GT 0
+］なるものは、他のものより先にする。
+</li>
+			<li>
+［
+`~tabindex値$ ~GT 0
+］なるものどうしの順序は、`~tabindex値$の昇順にする（値が小さいものが先）。
+</li>
+			<li>
+［
+`~tabindex値$ ~GTE 0
+］かつ`~tabindex値$が同じものどうしの順序は、`~DOM~anchor$の`~shadowも含む~tree順序$に従う。
+</li>
+		</ul>
+
+<p class="trans-note">【
+`~tabindex値$が［
+負な整数のものどうし／
+負な整数のものと 0 のものどうし
+］の順序は、定義されていない（元々、`~tabindex順な~focus~navi視野$からは外す “ベキ” とされている）。
+同じ`~DOM~anchor$を共有するものどうしの順序も、定義されていない。
+】</p>
+
+◎
+and should place the element — referenced as candidate below — and the aforementioned focusable areas in the tabindex-ordered focus navigation scope where the element is a part of so that, relative to other elements and focusable areas that belong to the same focus navigation scope, they are:
+◎
+before any focusable area whose DOM anchor is an element whose tabindex attribute has been omitted or whose value, when parsed, returns an error,
+◎
+before any focusable area whose DOM anchor is an element whose tabindex attribute has a value equal to or less than zero,
+◎
+after any focusable area whose DOM anchor is an element whose tabindex attribute has a value greater than zero but less than the value of the tabindex attribute on candidate,
+◎
+after any focusable area whose DOM anchor is an element whose tabindex attribute has a value equal to the value of the tabindex attribute on candidate but that is located earlier than candidate in shadow-including tree order,
+◎
+before any focusable area whose DOM anchor is an element whose tabindex attribute has a value equal to the value of the tabindex attribute on candidate but that is located later than candidate in shadow-including tree order, and
+◎
+before any focusable area whose DOM anchor is an element whose tabindex attribute has a value greater than the value of the tabindex attribute on candidate.
+</li>
+</ul>
+
+<p>
+`tabIndex@m
+~IDL属性は、
+`tabindex$a 内容~属性の値を`反映する$モノトスル。
+その既定~値は、［
+次に挙げる要素においては 0 ／
+~ELSE_ −1
+］とする
+⇒＃
+`area$e,
+`button$e,
+`frame$e,
+`iframe$e,
+`input$e,
+`object$e,
+`select$e,
+`textarea$e,
+~SVG `~svg-a$e,
+`親~details用の~summary$
+◎
+The tabIndex IDL attribute must reflect the value of the tabindex content attribute.＼
+The default value is 0 if the element is an a, area, button, frame, iframe, input, object, select, textarea, or SVG a element, or is a summary element that is a summary for its parent details. The default value is −1 otherwise.
+</p>
+
+<p class="note">注記：
+要素~型に応じて既定~値が変わるのは、歴史的な遺物である。
+◎
+The varying default value based on element type is a historical artifact.
+</p>
+
+			</section>
+			<section id="focus-processing-model">
+<h4 title="Processing model">6.5.4. 処理~model</h4>
+
+<p>
+`平坦~tree順序@
+とは、`平坦~tree$における`~tree順序$（前順, 深さ優先の順序）を意味する。
+`~focus可能な区画$たちの`平坦~tree順序$は、それらの`~DOM~anchor$の`平坦~tree順序$に従うとする。
+`CSSSCOPING$r
+【この定義は、他所を簡潔に述べるための，この訳による追加。】
+</p>
+
+<div class="algo">
+<p>
+`~focus可能な区画を取得する@
+ときは、所与の
+( %標的, 文字列 %~focus誘発元 （省略時は ε ） )
+に対し，次の手続きを走らす：
+◎
+To get the focusable area for a focus target that is either an element that is not a focusable area, or is a browsing context, given an optional string focus trigger, run the first matching set of steps from the following list:
+</p>
+
+<ol>
+	<li>
+~Assert：
+%標的 は次のいずれかである
+⇒
+`~focus可能な区画$でない要素 ／ `閲覧文脈$
+◎
+↑</li>
+	<li>
+~IF［
+%標的 は `area$e 要素である
+］~AND［
+%標的 は`~focus可能な図形$を定義している
+］
+⇒
+~RET それらの図形の`~DOM~anchor$のうち，`~tree順序$で最初のもの
+◎
+If focus target is an area element with one or more shapes that are focusable areas
+• Return the shape corresponding to the first img element in tree order that uses the image map to which the area element belongs.
+</li>
+	<li>
+~IF［
+%標的 は要素である
+］~AND［
+%標的 は 1 個以上の［
+`~focus可能な区画$である~scroll可能な領域
+］を伴う
+］
+⇒
+~RET それらの領域のうち，`平坦~tree順序$において最初のもの
+◎
+If focus target is an element with one or more scrollable regions that are focusable areas
+• Return the element's first scrollable region, according to a pre-order, depth-first traversal of the flat tree. [CSSSCOPING]
+</li>
+	<li>
+~IF［
+%標的 は`文書~要素$である
+］
+⇒
+~RET %標的 の`文書$の`表示域$
+◎
+If focus target is the document element of its Document
+• Return the Document's viewport.
+</li>
+	<li>
+~IF［
+%標的 は`閲覧文脈$である
+］
+⇒
+~RET %標的 にて`作動中の文書$
+◎
+If focus target is a browsing context
+• Return the browsing context's active document.
+</li>
+	<li>
+~IF［
+%標的 は`閲覧文脈~容器$である
+］~AND［
+%標的 が`入子にしている閲覧文脈$ %B ~NEQ ~NULL
+］
+⇒
+~RET %B にて`作動中の文書$
+◎
+If focus target is a browsing context container with a non-null nested browsing context
+• Return the browsing context container's nested browsing context's active document.
+</li>
+	<li>
+<p>
+~IF［
+%標的 は`~shadow~host$であって，その`~shadow根$elmの`~focusを委譲する$sR ~EQ ~T
+］：
+◎
+If focus target is a shadow host whose shadow root's delegates focus is true
+</p>
+		<ol>
+			<li>
+~IF［
+%標的 は`~top-level閲覧文脈の現在の被focus区画$の`~DOM~anchor$の`~shadowも含む広義先祖$である
+］
+⇒
+~RET ~NULL
+◎
+If focus target is a shadow-including inclusive ancestor of the currently focused area of a top-level browsing context's DOM anchor, then return null.
+◎
+Otherwise:
+</li>
+			<li>
+%アリな~focus委譲-先~list ~LET `~focus可能な区画$のうち［
+その`~DOM~anchor$は，`平坦~tree$内で %標的 の子孫であるもの
+］からなる，`平坦~tree順序$【！`~DOM~anchor$の`~tree順序$】による~list
+◎
+↓</li>
+			<li>
+~IF［
+%~focus誘発元 ~EQ `click^l
+］
+⇒
+%アリな~focus委譲-先~list から`~clickで~focus可能$でないものを除去する
+◎
+If focus trigger is "click", then let possible focus delegates be the list of all click focusable focusable areas whose DOM anchor is a descendant of focus target in the flat tree.
+◎
+Otherwise, let possible focus delegates be the list of all focusable areas whose DOM anchor is a descendant of focus target in the flat tree.
+</li>
+			<li>
+~RET［
+%アリな~focus委譲-先~list は空でないならば その最初の~item ／
+~ELSE_ ~NULL
+］
+◎
+Return the first focusable area in tree order of their DOM anchors in possible focus delegates, or null if possible focus delegates is empty.
+</li>
+		</ol>
+
+<p class="note">
+`逐次的に~focus可能$かどうかについては、［
+`~shadow~host$,
+`~focusを委譲する$sR
+］の取扱いは，`逐次的~focus~navi順序$を構築するとき行われる。
+すなわち，そのような`~shadow~host$に対しては、逐次的~focus~naviの一部として
+`~objを~focusする$() が~callされることは決してない。
+◎
+For sequential focusability, the handling of shadow hosts and delegates focus is done when constructing the sequential focus navigation order. That is, the focusing steps will never be called on such shadow hosts as part of sequential focus navigation.
+</p>
+	</li>
+	<li>
+~RET ~NULL
+◎
+Otherwise
+• Return null
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`~objを~focusする@
+ときは、所与の
+( %標的, %~fallback標的 （省略時は ε ）, 文字列 %~focus誘発元 （省略時は ε ） )
+に対し，次の手続きを走らす：
+◎
+The focusing steps for an object new focus target that is either a focusable area, or an element that is not a focusable area, or a browsing context, are as follows. They can optionally be run with a fallback target and a string focus trigger.
+</p>
+
+<ol>
+	<li>
+~Assert：
+%標的 は次のいずれかである
+⇒
+`~focus可能な区画$ ／ `~focus可能な区画$でない要素 ／ `閲覧文脈$
+◎
+↑</li>
+	<li>
+~IF［
+%標的 は`~focus可能な区画$でない
+］
+⇒
+%標的 ~SET `~focus可能な区画を取得する$( %標的, %~focus誘発元 )
+◎
+If new focus target is not a focusable area, then set new focus target to the result of getting the focusable area for new focus target, given focus trigger if it was passed.
+</li>
+	<li>
+<p>
+~IF［
+%標的 ~EQ ~NULL
+］：
+◎
+If new focus target is null, then:
+</p>
+		<ol>
+			<li>
+~IF［
+%~fallback標的 ~EQ ε
+］
+⇒
+~RET
+◎
+If no fallback target was specified, then return.
+</li>
+			<li>
+%標的 ~SET %~fallback標的
+◎
+Otherwise, set new focus target to the fallback target.
+</li>
+		</ol>
+	</li>
+	<li>
+~IF［
+%標的 は`閲覧文脈~容器$である
+］~AND［
+%標的 が`入子にしている閲覧文脈$ %B ~NEQ ~NULL
+］
+⇒＃
+%標的 ~SET %B にて`作動中の文書$；
+`and redo this step^en 【（ “この段を再び行う” と解釈したい所だが）意図不明な記述】
+◎
+If new focus target is a browsing context container with non-null nested browsing context, then set new focus target to the nested browsing context's active document, and redo this step.
+</li>
+	<li>
+~IF［
+%標的 は`~focus可能な区画$である
+］~AND［
+%標的 の`~DOM~anchor$は`不活$である
+］
+⇒
+~RET
+◎
+If new focus target is a focusable area and its DOM anchor is inert, then return.
+</li>
+	<li>
+~IF［
+%標的 ~EQ `現在の被focus区画$
+］
+⇒
+~RET
+◎
+If new focus target is the currently focused area of a top-level browsing context, then return.
+</li>
+	<li>
+%旧~鎖 ~LET ［［
+%標的 が見出される`~top-level閲覧文脈$
+］の`現在の被focus区画$
+］の`~focus鎖$
+◎
+Let old chain be the focus chain of the currently focused area of the top-level browsing context in which new focus target finds itself.
+</li>
+	<li>
+%新~鎖 ~LET %標的 の`~focus鎖$
+◎
+Let new chain be the focus chain of new focus target.
+</li>
+	<li>
+`~focusを更新する$( %旧~鎖, %新~鎖, %標的 )
+◎
+Run the focus update steps with old chain, new chain, and new focus target respectively.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+~UAは、利用者が［
+`~focus可能な区画$ ／ `閲覧文脈$
+］ %候補 に~focusを移動しようと試みたときには、`即時に$次を走らすモノトスル
+⇒
+`~objを~focusする$( %候補 )
+◎
+User agents must immediately run the focusing steps for a focusable area or browsing context candidate whenever the user attempts to move the focus to candidate.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`~objを~unfocusする@
+ときは、所与の
+( ［ `~focus可能な区画$ ／ `~focus可能な区画$でない要素 ］ %旧~標的 )
+に対し，次の手続きを走らす：
+◎
+The unfocusing steps for an object old focus target that is either a focusable area or an element that is not a focusable area are as follows:
+</p>
+
+<ol>
+	<li>
+~IF［
+%旧~標的 は`不活$である
+］
+⇒
+~RET
+◎
+If old focus target is inert, then return.
+</li>
+	<li>
+<p>
+~IF［
+次のいずれかが満たされる
+］…：
+</p>
+		<ul>
+			<li>
+［
+`現在の被focus区画$は`~focus可能な図形$である
+］~AND［
+ %旧~標的 は その図形を定義している `area$e 要素である
+</li>
+			<li>
+［
+`現在の被focus区画$は~scroll可能な領域である
+］~AND［
+%旧~標的 は その~scroll可能な領域を有する要素である
+］
+</li>
+		</ul>
+<p>
+…ならば
+⇒
+%旧~標的 ~LET `現在の被focus区画$
+</p>
+◎
+If old focus target is an area element and one of its shapes is the currently focused area of a top-level browsing context, or, if old focus target is an element with one or more scrollable regions, and one of them is the currently focused area of a top-level browsing context, then let old focus target be that currently focused area of a top-level browsing context.
+</li>
+	<li>
+~ELIF［
+%旧~標的 ~NIN `現在の被focus区画$の`~focus鎖$
+］
+⇒
+~RET
+◎
+Let old chain be the focus chain of the currently focused area of a top-level browsing context.
+◎
+If old focus target is not one of the entries in old chain, then return.
+</li>
+	<li>
+~IF［
+%旧~標的 は`~focus可能な区画$である
+］
+⇒
+`~objを~focusする$( %旧~標的 が属する`文書$の`表示域$ )
+◎
+If old focus target is a focusable area, then let new focus target be its Document's viewport.
+◎
+Otherwise, let new focus target be null.
+◎
+If new focus target is not null, then run the focusing steps for new focus target.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`現在の被focus区画$ %F が，それに代わる別の要素が明示的に~focusされずに，何らかの方法で~unfocusされた場合、~UAは，`即時に$次を走らすモノトスル
+⇒
+`~objを~unfocusする$( %F )
+◎
+When the currently focused area of a top-level browsing context is somehow unfocused without another element being explicitly focused in its stead, the user agent must immediately run the unfocusing steps for that object.
+</p>
+</div>
+
+<p class="note">注記：
+`~objを~unfocusする$ことにより，常に~focusが変更されるとは限らない
+— `現在の被focus区画$に適用されるときであっても。
+例えば，`現在の被focus区画$は`表示域$である場合、通例的には，［
+`~objを~focusする$ことにより，別の`~focus可能な区画$が明示的に~focusされる
+］までは，その~focusを保つことになる。
+◎
+The unfocusing steps do not always result in the focus changing, even when applied to the currently focused area of a top-level browsing context. For example, if the currently focused area of a top-level browsing context is a viewport, then it will usually keep its focus regardless until another focusable area is explicitly focused with the focusing steps.
+</p>
+
+<hr>
+
+<p>
+`~focus修復~規則@
+⇒
+`文書$ %文書 が`指名する被focus区画$が %文書 に属さなくなったときは（例：
+`~focus可能な区画$でなくなった ／
+~DOMから除去された ／
+`明に不活$になった,
+等々）
+⇒
+%文書 が`指名する被focus区画$を %文書 の`表示域$にする
+◎
+Focus fixup rule: When the designated focused area of the document is removed from that Document in some way (e.g. it stops being a focusable area, it is removed from the DOM, it becomes expressly inert, etc.), designate the Document's viewport to be the new focused area of the document.
+</p>
+
+<p class="example">
+これは、例えば次のときに起こり得る
+⇒＃
+要素が`文書$から除去されたとき／
+`hidden$a 属性が追加されたとき／
+`input$e 要素が`不能化され$たとき
+◎
+For example, this might happen because an element is removed from its Document, or has a hidden attribute added. It might also happen to an input element when the element gets disabled.
+</p>
+
+<p class="example">
+`文書$が`指名する被focus区画$は `button$e 要素である下で，その~buttonが［
+除去され ／不能化され ／ 隠され
+］た場合、~pageが新たに`指名する被focus区画$は，`文書$の`表示域$になる。
+その結果、 `activeElement$m は`~body要素$を返すようになる。
+◎
+In a Document whose focused area is a button element, removing, disabling, or hiding that button would cause the page's new focused area to be the viewport of the Document. This would, in turn, be reflected through the activeElement API as the body element.
+</p>
+
+<hr>
+
+<div class="algo">
+<p>
+`~focusを更新する@
+ときは、所与の
+( %旧~鎖, %新~鎖, %新~標的 )
+に対し，次の手続きを走らす：
+◎
+The focus update steps, given an old chain, a new chain, and a new focus target respectively, are as follows:
+</p>
+
+<ol>
+	<li>
+~WHILE［
+%旧~鎖 内の最後の~entry ~EQ %新~鎖 内の最後の~entry
+］
+⇒＃
+%旧~鎖 内から最後の~entryを~popする；
+%新~鎖 内から最後の~entryを~popする
+◎
+If the last entry in old chain and the last entry in new chain are the same, pop the last entry from old chain and the last entry from new chain and redo this step.
+</li>
+	<li>
+<p>
+%旧~鎖 内の
+~EACH( ~entry %~entry )
+に対し：
+◎
+For each entry entry in old chain, in order, run these substeps:
+</p>
+		<ol>
+			<li id="unfocus-causes-change-event">
+<p>
+~IF［
+次のいずれも満たされる
+］…
+</p>
+
+<ul ><li>%~entry は `input$e 要素 %要素 である
+</li><li>%要素 には `change$et ~eventが
+<a href="~HEinput#concept-input-apply">適用される</a>
+</li><li>%要素 には`作動化の挙動$は定義されていない
+</li><li>%要素 が~focusされている間に，利用者は %要素 の［
+`値$fe ／ `選択-中の~fileの~list$
+］を変更していて、その（~controlが最初に~focusされたときと異なるような）変更はまだ~commitされていない
+</li></ul>
+
+<p>
+…ならば
+⇒
+`入力~eventを発火する$( %要素, `change$et )
+</p>
+◎
+If entry is an input element, and the change event applies to the element, and the element does not have a defined activation behavior, and the user has changed the element's value or its list of selected files while the control was focused without committing that change (such that it is different to what it was when the control was first focused), then fire an event named change at the element, with the bubbles attribute initialized to true.
+</li>
+			<li>
+%~blur~event標的 ~LET ~NULL
+◎
+↓</li>
+			<li>
+~IF［
+%~entry は要素である
+］
+⇒
+%~blur~event標的 ~LET %~entry
+◎
+If entry is an element, let blur event target be entry.
+</li>
+			<li>
+~ELIF［
+%~entry は`文書$である
+］
+⇒
+%~blur~event標的 ~LET %~entry に`関連な大域~obj$
+◎
+If entry is a Document object, let blur event target be that Document object's relevant global object.
+◎
+Otherwise, let blur event target be null.
+</li>
+			<li>
+%関係する標的 ~LET ~NULL
+◎
+↓</li>
+			<li>
+~IF［
+%~entry ~EQ %旧~鎖 内の最後の~entry
+］~AND［
+%~entry は`要素$である
+］~AND［
+%新~鎖 内の最後の~entryは`要素$である
+］
+⇒
+%関係する標的 ~LET %新~鎖 内の最後の~entry
+◎
+If entry is the last entry in old chain, and entry is an Element, and the last entry in new chain is also an Element, then let related blur target be the last entry in new chain. Otherwise, let related blur target be null.
+</li>
+			<li>
+<p>
+~IF［
+%~blur~event標的 ~NEQ ~NULL
+］
+⇒
+%~blur~event標的 に向けて `~focus~eventを発火する$( `blur$et, %関係する標的 )
+◎
+If blur event target is not null, fire a focus event named blur at blur event target, with related blur target as the related target.
+</p>
+
+<p class="note">注記：
+~eventは発火されない事例もある
+— 例えば、 %~entry は［
+`~focus可能な図形$ ／ ~scroll可能な領域 ／ `表示域$
+］であるとき。
+◎
+In some cases, e.g. if entry is an area element's shape, a scrollable region, or a viewport, no event is fired.
+</p>
+
+			</li>
+		</ol>
+	</li>
+	<li>
+~IF［
+%新~標的 の~focus時に，~platformに特有な関連な規約がある
+］
+⇒
+その規約を適用する（例えば，一部の~platformは、~text~controlに~focusされたときに，その内容を選択する）
+◎
+Apply any relevant platform-specific conventions for focusing new focus target. (For example, some platforms select the contents of a text control when that control is focused.)
+</li>
+	<li>
+<p>
+%新~鎖 内の
+~EACH( ~entry %~entry )
+に対し，逆順に：
+◎
+For each entry entry in new chain, in reverse order, run these substeps:
+</p>
+		<ol>
+			<li>
+~IF［
+%~entry は`~focus可能な区画$である
+］
+⇒
+%~entry が属する`文書$が`指名する被focus区画$ ~SET %~entry
+◎
+If entry is a focusable area: designate entry as the focused area of the document.
+</li>
+			<li>
+%~focus~event標的 ~LET %~entry に応じて
+⇒＃
+要素であるならば %~entry ／
+`文書$であるならば %~entry に`関連な大域~obj$ ／
+~ELSE_ ~NULL
+◎
+If entry is an element, let focus event target be entry.
+◎
+If entry is a Document object, let focus event target be that Document object's relevant global object.
+◎
+Otherwise, let focus event target be null.
+</li>
+			<li>
+%関係する標的 ~LET ~NULL
+◎
+↓</li>
+			<li>
+~IF［
+%~entry ~EQ %新~鎖 内の最後の~entry
+］~AND［
+%~entry は`要素$である
+］~AND［
+%旧~鎖 内の最後の~entryは`要素$である
+］
+⇒
+%関係する標的 ~SET %旧~鎖 内の最後の~entry
+◎
+If entry is the last entry in new chain, and entry is an Element, and the last entry in old chain is also an Element, then let related focus target be the last entry in old chain. Otherwise, let related focus target be null.
+</li>
+			<li>
+<p>
+~IF［
+%~focus~event標的 ~NEQ ~NULL
+］
+⇒
+%~focus~event標的 に向けて `~focus~eventを発火する$( `focus$et, %関係する標的 )
+◎
+If focus event target is not null, fire a focus event named focus at focus event target, with related focus target as the related target.
+</p>
+
+<p class="note">注記：
+~eventは発火されない事例もある
+— 例えば、 %~entry は［
+`~focus可能な図形$ ／ ~scroll可能な領域 ／ `表示域$
+］であるとき。
+◎
+In some cases, e.g. if entry is an area element's shape, a scrollable region, or a viewport, no event is fired.
+</p>
+
+			</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+%要素 に向けて
+`~focus~eventを発火する@
+ときは、所与の
+( 名前 %e, 関係する標的 %r )
+に対し，
+%要素 に向けて，名前 %e の`~eventを発火する$
+— `FocusEvent$I を利用し，次のように初期化して
+⇒＃
+`relatedTarget$m 属性 ~SET %r,
+`view$m 属性 ~SET %要素 の`~node文書$に`関連な大域~obj$,
+`~composed~flag$ ~SET ~T
+◎
+To fire a focus event named e at an element t with a given related target r, fire an event named e at t, using FocusEvent, with the relatedTarget attribute initialized to r, the view attribute initialized to t's node document's relevant global object, and the composed flag set.
+</p>
+</div>
+
+<hr>
+
+<div class="algo">
+<p>
+~UAは、`~top-level閲覧文脈$内で~Key~event %~event を届けるときは、次の手続きを走らすモノトスル：
+◎
+When a key event is to be routed in a top-level browsing context, the user agent must run the following steps:
+</p>
+
+<ol>
+	<li>
+%標的~区画 ~LET `現在の被focus区画$
+◎
+Let target area be the currently focused area of the top-level browsing context.
+</li>
+	<li>
+%標的~node ~LET ［
+%標的~区画 は`~focus可能な区画$ならば %標的~区画 の`~DOM~anchor$ ／
+~ELSE_ %標的~区画
+］
+◎
+If target area is a focusable area, let target node be target area's DOM anchor. Otherwise, target area is a dialog; let target node be target area.
+</li>
+	<li>
+~IF［
+%標的~node は`文書$である
+］
+⇒
+%標的~node ~SET ［
+%標的~node の`~body要素$ ~NEQ ~NULL ならば それ ／
+~ELSE_ %標的~node の`文書~要素$ ~NEQ ~NULL ならば それ ／
+~ELSE_ %標的~node
+］
+◎
+If target node is a Document that has a body element, then let target node be the body element of that Document.
+◎
+Otherwise, if target node is a Document object that has a non-null document element, then let target node be that document element.
+</li>
+	<li>
+<p>
+~IF［
+%標的~node は`不活$である
+］
+⇒
+~RET
+◎
+If target node is not inert, then:
+</p>
+
+<p class="note">注記：
+`現在の被focus区画$は`不活$にもなり得る
+— 例えば`~modal~dialogが示され$ていて，その `dialog$e 要素が`不活$にされているとき。
+それは，~appにおける~logicの誤りによる可能性が高いが。
+◎
+It is possible for the currently focused area of a top-level browsing context to be inert, for example if a modal dialog is shown, and then that dialog element is made inert. It is likely to be the result of a logic error in the application, though.
+</p>
+	<li>
+%canHandle ~LET %標的~node に向けて %~event を`配送-$した結果
+◎
+Let canHandle be the result of dispatching the key event at target node.
+</li>
+	<li>
+~IF［
+%canHandle ~EQ ~T
+］
+⇒
+%標的~区画 に %~event を取扱わせる
+— これは、 %標的~node に向けて`~click~eventを発火する$ことも含み得る。
+◎
+If canHandle is true, then let target area handle the key event. This might include firing a click event at target node.
+</li>
+</ol>
+</div>
+
+<hr>
+
+<div class="algo">
+<p>
+所与の`文書$ %標的 は、所与の時点で，次の手続きが ~T を返すならば
+`~focusを得ている@
+とされる：
+◎
+The has focus steps, given a Document object target, are as follows:
+</p>
+
+<ol>
+	<li>
+%B ~LET %標的 が`属する閲覧文脈$の`~top-level閲覧文脈$
+◎
+Let candidate be target's top-level browsing context's active document.
+◎
+↓</li>
+	<li>
+<p>
+~WHILE 無条件：
+</p>
+		<ol>
+			<li>
+%候補 ~LET %B にて`作動中の文書$
+</li>
+			<li>
+~IF［
+%候補 ~EQ %標的
+］
+⇒
+~RET ~T
+</li>
+			<li>
+%F ~LET %候補 が`指名する被focus区画$
+</li>
+			<li>
+~IF［
+%F は`閲覧文脈~容器$でない
+］
+⇒
+~RET ~F
+</li>
+			<li>
+%B ~SET %F が`入子にしている閲覧文脈$
+</li>
+			<li>
+~IF［
+%B ~EQ ~NULL
+］
+⇒
+~RET ~F
+</li>
+		</ol>
+◎
+While true:
+• If candidate is target, then return true.
+• If the focused area of candidate is a browsing context container with a non-null nested browsing context, then set candidate to the active document of that browsing context container's nested browsing context.
+• Otherwise, return false.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="sequential-focus-navigation">
+<h4 title="Sequential focus navigation">6.5.5. 逐次的~focus~navi</h4>
+
+<p>
+所与の`文書$に属する`~focus可能な区画$のうち いくつかは，
+`逐次的~focus~navi順序@
+により順序付けられる：
+◎
+Each Document has a sequential focus navigation order, which orders some or all of the focusable areas in the Document relative to each other.＼
+</p>
+
+<ul>
+	<li>
+<p>
+その内容と順序付けは、当の文書の`平坦~化された~tabindex順な~focus~navi視野$により与えられる。
+◎
+Its contents and ordering are given by the flattened tabindex-ordered focus navigation scope of the Document.
+</p>
+
+<p class="note">
+`平坦~化された~tabindex順な~focus~navi視野$を定義している規則から、この順序付けは，当の文書の`~tree順序$に関係するとは限らない。
+◎
+Per the rules defining the flattened tabindex-ordered focus navigation scope, the ordering is not necessarily related to the tree order of the Document.
+</p>
+	</li>
+	<li>
+この順序から外された`~focus可能な区画$は、`逐次的~focus~navi$を介しては到達-可能でなくなる。
+◎
+If a focusable area is omitted from the sequential focus navigation order of its Document, then it is unreachable via sequential focus navigation.
+</li>
+</ul>
+
+<p>
+逐次的~focus~naviには
+`逐次的~focus~naviの始点@
+もある。
+それは、初期~時には ε （未設定）とする。
+~UAは、利用者がそれを移動すべく指示したときに，この始点を設定してもヨイ。
+◎
+There can also be a sequential focus navigation starting point. It is initially unset. The user agent may set it when the user indicates that it should be moved.
+</p>
+
+<p class="example">
+例えば~UAは、利用者が文書の内容を~clickしたときに，その~click位置に設定することもできる。
+◎
+For example, the user agent could set it to the position of the user's click if the user clicks on the document contents.
+</p>
+
+<p class="note">注記：
+~UAには、`素片へ~navigateする$ときには，`逐次的~focus~naviの始点$を`標的~要素$に設定することが要求される。
+◎
+User agents are required to set the sequential focus navigation starting point to the target element when navigating to a fragment.
+</p>
+
+<div class="algo">
+<div class="p">
+<p>
+~UAは、利用者から~focusを移動するよう要請されたとき
+— 一例として：
+</p>
+
+<ul><li>ある`~top-level閲覧文脈$ %top 内で，
+</li><li>
+	<ul ><li>(A) %top の`現在の被focus区画$から, または
+	</li><li>(B) %top の外側（例えば，~browserの所在bar）から 先ず %top へ~focusを移動した上で，
+	</li></ul>
+</li><li>ある %方向 ［
+`前方^i または `後方^i
+］へ，
+</li><li>~focusを移動するよう要請された
+</li></ul>
+
+<p>
+ときには（例えば， `Tab^kbd ~Keyを押すことによる既定の動作として）、以下の~algoを利用するモノトスル：
+</p>
+
+<p class="note">注記：
+概して、［
+<kbd>`Tab^kbd</kbd> ／
+<kbd>`Shift^kbd+`Tab^kbd</kbd>
+］を押すことは［
+前方／後方
+］にある~controlへ移動することを要請する。
+</p>
+
+◎
+When the user requests that focus move from the currently focused area of a top-level browsing context to the next or previous focusable area (e.g. as the default action of pressing the tab key), or when the user requests that focus sequentially move to a top-level browsing context in the first place (e.g. from the browser's location bar), the user agent must use the following algorithm:
+</div>
+
+<ol>
+	<li>
+%始点 ~LET 上述の［
+(A) ならば %top の`現在の被focus区画$ ／ (B) ならば %top
+］
+◎
+Let starting point be the currently focused area of a top-level browsing context, if the user requested to move focus sequentially from there, or else the top-level browsing context itself, if the user instead requested to move focus from outside the top-level browsing context.
+</li>
+	<li>
+%~focus始点 ~LET `逐次的~focus~naviの始点$
+◎
+↓</li>
+	<li>
+~IF［
+%~focus始点 ~NEQ ε
+］~AND［
+%~focus始点 は %始点 の内側にある
+］
+⇒
+%始点 ~SET %~focus始点
+◎
+If there is a sequential focus navigation starting point defined and it is inside starting point, then let starting point be the sequential focus navigation starting point instead.
+◎
+Let direction be forward if the user requested the next control, and backward if the user requested the previous control.
+◎
+Typically, pressing tab requests the next control, and pressing shift+tab requests the previous control.
+</li>
+	<li>
+<p>
+~WHILE 無条件：
+◎
+Loop:＼
+</p>
+		<ol>
+			<li>
+<p>
+%選定法 ~LET ［
+次のいずれかが満たされるならば `逐次的^i ／
+~ELSE_ `~DOM順^i
+］：
+</p>
+
+<ul ><li>%始点 は`閲覧文脈$である
+</li><li>%始点 ~IN %始点 が属する`文書$の`逐次的~focus~navi順序$
+</li></ul>
+
+◎
+Let selection mechanism be sequential if the starting point is a browsing context or if starting point is in its Document's sequential focus navigation order.
+◎
+Otherwise, starting point is not in its Document's sequential focus navigation order; let selection mechanism be DOM.
+</li>
+			<li>
+%候補 ~LET `逐次的~navi探索~algo$( %始点, %方向, %選定法 )
+◎
+Let candidate be the result of running the sequential navigation search algorithm with starting point, direction, and selection mechanism as the arguments.
+</li>
+			<li>
+~IF［
+%候補 ~NEQ ~NULL
+］
+⇒＃
+`~objを~focusする$( %候補 )；
+~RET
+◎
+If candidate is not null, then run the focusing steps for candidate and return.
+</li>
+			<li>
+`逐次的~focus~naviの始点$ ~SET ε
+◎
+Otherwise, unset the sequential focus navigation starting point.
+</li>
+			<li>
+<p>
+~IF［
+%始点 ~EQ %top
+］~OR［
+%始点 は %top 内の`~focus可能な区画$である
+］：
+◎
+If starting point is the top-level browsing context, or a focusable area in the top-level browsing context,＼
+</p>
+				<ol>
+					<li>
+<p>
+~IF［
+~UAには、自前の~focus可能な~controlがある
+］
+⇒
+~UAは、次を行うベキである
+⇒
+%方向 を尊守しつつ，~focusを自前の~focus可能な~controlのいずれかに適切に転送する
+◎
+the user agent should transfer focus to its own controls appropriately (if any), honouring direction, and then return.
+</p>
+
+<p class="example">
+例えば，［
+%方向 ~EQ `後方^i
+］の場合、［
+~browserの具現化~区画の直前にある，`逐次的に~focus可能$な~control
+］に~focusすることになる。
+◎
+For example, if direction is backward, then the last sequentially focusable control before the browser's rendering area would be the control to focus.
+</p>
+					</li>
+					<li>
+<p>
+~ELIF［
+`逐次的に~focus可能$な~controlは無い
+］
+⇒
+~UAは、次を行ってもヨイ
+⇒＃
+%始点 ~SET %top；
+~CONTINUE
+</p>
+
+<p class="example">
+~kiosk~mode~browserなど、自前の~focus可能な~controlがない~UAもあり得る。
+</p>
+
+◎
+If the user agent has no sequentially focusable controls — a kiosk-mode browser, for instance — then the user agent may instead restart these steps with the starting point being the top-level browsing context itself.
+</li>
+					<li>
+~RET
+◎
+↑</li>
+				</ol>
+			</li>
+			<li>
+~ELSE（ %始点 は ある`子~閲覧文脈$ %B 内の`~focus可能な区画$である）
+⇒
+%始点 ~SET %B の`容器$bc
+◎
+Otherwise, starting point is a focusable area in a child browsing context. Set starting point to that child browsing context's container and return to the step labeled loop.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`逐次的~navi探索~algo@
+は、所与の
+( %始点, %方向, %選定法 )
+に対し，次を走らす：
+◎
+The sequential navigation search algorithm consists of the following steps. This algorithm takes three arguments: starting point, direction, and selection mechanism.
+</p>
+
+<div >
+
+<ol>
+	<li>
+%文書 ~LET %始点 に応じて
+⇒＃
+`閲覧文脈$であるならば %始点 にて`作動中の文書$ ／
+`~focus可能な区画$であるならば %始点 が属する`文書$†1
+</li>
+	<li>
+%候補~集合 ~LET %文書 の`逐次的~focus~navi順序$
+</li>
+	<li>
+~Assert：
+次が満たされるならば［
+%始点 ~IN %候補~集合 †2
+］である
+⇒
+［
+%始点 は`~focus可能な区画$である
+］~AND［
+%選定法 ~EQ `逐次的^i
+］
+【！ ↓ class="note" 】
+</li>
+	<li>
+%候補~集合 ~SET %候補~集合 内の`~focus可能な区画$のうち，次を満たすものからなる集合†3
+⇒
+［
+その`~DOM~anchor$は`不活$でない
+］~AND［
+`逐次的に~focus可能$である
+］
+</li>
+	<li>
+<p>
+~IF［
+%始点 は`~focus可能な区画$である
+］
+⇒
+%候補~集合 ~SET %候補~集合 内の~focus可能な区画のうち， %方向 に応じて 次に該当するものからなる集合
+⇒＃
+`前方^i ならば %始点 に後続しているもの／
+`後方^i ならば %始点 に先行しているもの
+</p>
+
+<p class="trans-note">【
+明示的に言及されていないが、順序は， %選定法 に応じて［
+`逐次的^i ならば `逐次的~focus~navi順序$ ／
+`~DOM順^i ならば `平坦~tree順序$
+］に基づくと見受けられる。
+一方で，次の次の段では、 %選定法 を問わず，`逐次的~focus~navi順序$に基づくと見受けられる。
+】</p>
+
+	</li>
+	<li>
+~IF［
+%候補~集合 は空である
+］
+⇒
+~RET ~NULL
+</li>
+	<li>
+%候補 ~SET %候補~集合 内の~focus可能な区画のうち， %方向 に応じて
+⇒＃
+`前方^i ならば 最初のもの ／
+`後方^i ならば 最後のもの
+</li>
+	<li>
+~IF［
+%候補 は`閲覧文脈~容器$でない
+］
+⇒
+~RET %候補
+</li>
+	<li>
+%B ~LET %候補 が`入子にしている閲覧文脈$
+</li>
+	<li>
+~IF［
+%B ~EQ ~NULL
+］
+⇒
+~RET %候補
+</li>
+	<li>
+%新~候補 ~LET `逐次的~navi探索~algo$( %B, %方向, `逐次的^i )
+</li>
+	<li>
+~IF［
+%新~候補 ~NEQ ~NULL
+］
+⇒
+~RET %新~候補
+</li>
+	<li>
+~RET `逐次的~navi探索~algo$( %候補, %方向, %選定法 )
+</li>
+</ol>
+
+<div class="trans-note">
+<p>【
+簡明にするため、この手続きの~~構成は，原文から大きく違えている。
+原文では、この手続きにて次の用語が定義されている：
+</p>
+
+<ul ><li>†1 を指して， %始点 の
+`~home文書@
+という。
+</li><li>†2 を指して
+— そこに記された条件が満たされる場合に限り —
+%始点 の
+`~home逐次的~focus~navi順序@
+という。
+</li><li>†3 を指して，
+`相応しい逐次的に~focus可能な区画@
+という。
+</li></ul>
+
+<p>
+が、これらを利用しても無用に煩雑になるだけで，（現時点では）他からも参照されていないので、この訳では利用しない。
+】</p>
+</div>
+
+<ol lang="en">
+	<li>
+<p>
+Pick the appropriate cell from the following table, and follow the instructions in that cell.
+<p>
+The appropriate cell is the one that is from the column whose header describes direction and from the first row whose header describes starting point and selection mechanism.
+
+<table><thead><tr><th>
+<th>direction is forward
+<th>direction is backward
+</thead>
+<tbody><tr><th>
+starting point is a browsing context
+<td>
+Let candidate be the first suitable sequentially focusable area in starting point's active document, if any; or else null
+<td>
+Let candidate be the last suitable sequentially focusable area in starting point's active document, if any; or else null
+<tr><th>
+selection mechanism is DOM
+<td>
+Let candidate be the first suitable sequentially focusable area in the home document following starting point, if any; or else null
+<td>
+Let candidate be the last suitable sequentially focusable area in the home document preceding starting point, if any; or else null
+<tr><th>
+selection mechanism is sequential
+<td>
+Let candidate be the first suitable sequentially focusable area in the home sequential focus navigation order following starting point, if any; or else null
+<td>
+Let candidate be the last suitable sequentially focusable area in the home sequential focus navigation order preceding starting point, if any; or else null
+</tbody></table>
+
+<p>
+A suitable sequentially focusable area is a focusable area whose DOM anchor is not inert and is sequentially focusable.
+<p>
+The home document is the Document to which starting point belongs.
+<p>
+The home sequential focus navigation order is the sequential focus navigation order to which starting point belongs.
+<p class="note">
+The home sequential focus navigation order is the home document's sequential focus navigation order, but is only used when the starting point is in that sequential focus navigation order (when it's not, selection mechanism will be DOM).
+</p>
+	<li>
+<p>
+If candidate is a browsing context container with a non-null nested browsing context, then let new candidate be the result of running the sequential navigation search algorithm with candidate's nested browsing context as the first argument, direction as the second, and sequential as the third.
+<p>
+If new candidate is null, then let starting point be candidate, and return to the top of this algorithm. Otherwise, let candidate be new candidate.
+	<li>
+Return candidate.
+</ol>
+</div>
+</div>
+
+			</section>
+			<section id="focus-management-apis">
+<h4 title="Focus management APIs">6.5.6. ~focus管理~API</h4>
+
+<pre class="idl">
+dictionary `FocusOptions@I {
+  boolean `preventScroll$m = false;
+};
+</pre>
+
+<dl class="domintro">
+	<dt>%documentOrShadowRoot . `activeElement$m</dt>
+	<dd>
+文書~内の要素のうち，~Key~eventが［
+それを経て／それに向けて
+］届けられることになるような，最も深い要素を返す。
+これは概ね、文書~内の~focusされた要素になる。
+◎
+Returns the deepest element in the document through which or to which key events are being routed. This is, roughly speaking, the focused element in the document.
+</dd>
+	<dd>
+この~APIの目的においては、`子~閲覧文脈$が~focusされるときには，その`容器$bcが`親~閲覧文脈$内で
+<a href="#bc-focus-ergo-bcc-focus">~focusされる</a>。
+例えば、利用者が，~focusを `iframe$e 内のある~text~controlに移動させたとき、その `iframe$e が，その`~node文書$上の `activeElement$m から返される要素になる。
+◎
+For the purposes of this API, when a child browsing context is focused, its container is focused in the parent browsing context. For example, if the user moves the focus to a text control in an iframe, the iframe is the element returned by the activeElement API in the iframe's node document.
+</dd>
+	<dd>
+同様に，~focusされた要素が
+%documentOrShadowRoot とは異なる`~node~tree$内にある場合、返される要素は［
+%documentOrShadowRoot は~focusされた要素の`~shadowも含む広義先祖$であるならば
+%documentOrShadowRoot と同じ`~node~tree$内に所在する`~host$ ／
+~ELSE_ ~NULL
+］になる。
+◎
+Similarly, when the focused element is in a different node tree than documentOrShadowRoot, the element returned will be the host that's located in the same node tree as documentOrShadowRoot if documentOrShadowRoot is a shadow-including inclusive ancestor of the focused element, and null if not.
+</dd>
+
+	<dt>%document . `hasFocus()$m</dt>
+	<dd>
+~Key~eventは，［
+%document へ, または %document を経て届けられている
+］ならば ~T を返す。
+~ELSE_ ~F を返す。
+これは概ね、~focusされている［
+当の文書, または
+その内側に入子にされている文書
+］に対応する。
+◎
+Returns true if key events are being routed through or to the document; otherwise, returns false. Roughly speaking, this corresponds to the document, or a document nested inside this one, being focused.
+</dd>
+
+	<dt>%window . `focus()$m</dt>
+	<dd>
+~focusを %window に`対応する閲覧文脈$（もしあれば）に移動させる。
+◎
+Moves the focus to the window's browsing context, if any.
+</dd>
+
+	<dt>%element . `~focus0$m([ { `preventScroll$m: true } ])</dt>
+	<dd>
+~focusを %element に移動させる。
+◎
+Moves the focus to the element.
+</dd>
+	<dd>
+要素が`閲覧文脈~容器$である場合、~focusは，代わりに 要素が`入子にしている閲覧文脈$へ移動される。
+◎
+If the element is a browsing context container, moves the focus to its nested browsing context instead.
+</dd>
+	<dd>
+既定では、この~methodはまた，要素を~viewの中へ~scrollする。
+`preventScroll$m ~optionを供して ~T に設定すれば、この挙動は防止される。
+◎
+By default, this method also scrolls the element into view. Providing the preventScroll option and setting it to true prevents this behavior.
+</dd>
+
+	<dt>%element . `~blur0()$m</dt>
+	<dd>
+~focusを`表示域$に移動させる。
+この~methodは、利用しないことが奨励される。
+`表示域$を~focusしたければ、`文書$の`文書~要素$上で，
+`~focus0()$m ~methodを~callすること。
+◎
+Moves the focus to the viewport. Use of this method is discouraged; if you want to focus the viewport, call the focus() method on the Document's document element.
+</dd>
+	<dd>
+~focus環が目障りであっても、~focus環を隠すためにこの~methodを利用しないこと。
+代わりに、~CSS規則で `outline$p ~prop（外形線）を上書きした上で，~focusされる要素を示すような他の仕方を供すること。
+そのような代替の~focus時の~styleを可用にできなかった場合、~keyboardを首に利用して~pageを~navigateしている人や，~navigateし易くするため~focus外形線を利用している弱視者にとっては、~pageの使い勝手がすこぶる悪くなることに留意すること。
+◎
+Do not use this method to hide the focus ring if you find the focus ring unsightly. Instead, use a CSS rule to override the 'outline' property, and provide a different way to show what element is focused. Be aware that if an alternative focusing style isn't made available, the page will be significantly less usable for people who primarily navigate pages using a keyboard, or those with reduced vision who use focus outlines to help them navigate the page.
+</dd>
+	<dd class="example">
+<p>
+例えば、~linkから外形線を隠す代わりに，黄色の背景を利用して~focusを指示したければ、次も利用できる：
+◎
+For example, to hide the outline from links and instead use a yellow background to indicate focus, you could use:
+</p>
+
+<pre class="lang-css">
+:link:focus, :visited:focus { outline: none; background: yellow; color: black; }
+</pre>
+
+	</dd>
+</dl>
+
+<div class="algo">
+<p>
+`DocumentOrShadowRoot$I の
+`activeElement@m
+取得子~手続きは：
+◎
+The activeElement attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+%候補 ~LET コレの`~node文書$が`指名する被focus区画$の`~DOM~anchor$
+◎
+Let candidate be the DOM anchor of the focused area of this DocumentOrShadowRoot's node document.
+</li>
+	<li>
+%候補 ~SET %候補 をコレに向けて`~targetし直す$
+◎
+Set candidate to the result of retargeting candidate against this DocumentOrShadowRoot.
+</li>
+	<li>
+~IF［
+%候補 の`根$ ~NEQ コレ
+］
+⇒
+~RET ~NULL
+◎
+If candidate's root is not this DocumentOrShadowRoot, then return null.
+</li>
+	<li>
+~IF［
+%候補 は`文書$でない
+］
+⇒
+~RET %候補
+◎
+If candidate is not a Document object, then return candidate.
+</li>
+	<li>
+~RET ［
+%候補 の`~body要素$ ~NEQ ~NULL ならば それ ／
+~ELSE_ %候補 の`文書~要素$ ~NEQ ~NULL ならば それ ／
+~ELSE_ ~NULL
+］
+◎
+If candidate has a body element, then return that body element.
+◎
+If candidate's document element is non-null, then return that document element.
+◎
+Return null.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`Document$I の
+`hasFocus()@m
+~method~手続きは
+⇒
+~RET ［
+コレは`~focusを得ている$ならば ~T ／
+~ELSE_ ~F
+］
+◎
+The hasFocus() method on the Document object, when invoked, must return the result of running the has focus steps with the Document object as the argument.
+</div>
+
+<div class="algo">
+<p>
+`Window$I の
+`focus()@m
+~method~手続きは：
+◎
+The focus() method, when invoked, must run these steps:
+</p>
+<ol>
+	<li>
+%B ~LET コレに`対応する閲覧文脈$
+◎
+Let current be this Window object's browsing context.
+</li>
+	<li>
+~IF［
+%B ~EQ ~NULL
+］
+⇒
+~RET
+◎
+If current is null, then return.
+</li>
+	<li>
+`~objを~focusする$( %B )
+◎
+Run the focusing steps with current.
+</li>
+	<li>
+~IF［
+%B は`~top-level閲覧文脈$である
+］
+⇒
+~UAには，次を誘発することが奨励される
+⇒
+［
+~pageが~focusを獲得しようと試みていることを，利用者に向けて指示する
+］ような，何らかの類の通知
+◎
+If current is a top-level browsing context, user agents are encouraged to trigger some sort of notification to indicate to the user that the page is attempting to gain focus.
+</li>
+</ol>
+</div>
+
+<p>
+`Window$I の
+`blur()@m
+~methodは：
+</p>
+<ul>
+	<li>
+［
+コレに`対応する閲覧文脈$ %B ~NEQ ~NULL
+］ならば，次についての~hintを~UAに供する
+⇒
+~scriptは、利用者が，おそらく %B の内容に対する関心を失ったものと予見している
+— が、当の内容に再び関心が向けられるかもしれない。
+◎
+The blur() method, when invoked, provides a hint to the user agent that the script believes the user probably is not currently interested in the contents of this Window object's browsing context, if non-null, but that the contents might become interesting again in the future.
+</li>
+	<li>
+~UAには、この~methodの~callを全面的に無視することが奨励される。
+◎
+User agents are encouraged to ignore calls to this blur() method entirely.
+</li>
+	<li class="note">注記：
+歴史的に、
+`focus()$m ／ `blur()$m
+~methodは、実際には，~system~levelの~focus
+— `閲覧文脈$を包含している~system~widget（例：~tabや~UIwindow）の~focus —
+にも影響していたが、この挙動は，利用者をないがしろに敵対的~siteから広範に濫用されている。
+◎
+Historically, the focus() and blur() methods actually affected the system-level focus of the system widget (e.g., tab or window) that contained the browsing context, but hostile sites widely abuse this behavior to the user's detriment.
+</li>
+</ul>
+
+<div class="algo">
+<p>
+要素の
+`~focus0(options)@m
+~method~手続きは：
+◎
+The focus(options) method on elements, when invoked, must run the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+コレの`~focus~lock~flag$ ~EQ ~T
+］
+⇒
+~RET
+◎
+If the element is marked as locked for focus, then return.
+</li>
+	<li>
+コレの
+`~focus~lock~flag@
+【初期~時は ~F 】
+~SET ~T
+◎
+Mark the element as locked for focus.
+</li>
+	<li>
+`~objを~focusする$( コレ )
+◎
+Run the focusing steps for the element.
+</li>
+	<li>
+~IF［
+%options の
+`preventScroll@m
+~memberの値 ~EQ ~F
+］
+⇒
+次を与える下で，
+コレを`~viewの中へ~scrollする$
+⇒＃
+~scrollの挙動 ~SET `auto^l, 
+塊~flow方向~位置 ~SET `実装定義$な値,
+行内~基底~方向~位置 ~SET `実装定義$な値
+◎
+If the value of the preventScroll dictionary member of options is false, then scroll the element into view with scroll behavior "auto", block flow direction position set to an implementation-defined value, and inline base direction position set to an implementation-defined value.
+</li>
+	<li>
+コレの`~focus~lock~flag$ ~SET ~F
+◎
+Unmark the element as locked for focus.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+要素の
+`~blur0()@m
+~method~手続きは
+⇒
+`~objを~unfocusする$( コレ )
+◎
+The blur() method, when invoked, should run the unfocusing steps for the element on which the method was called.＼
+</p>
+
+<p>
+~UAは、使い勝手の理由から
+— 選択的に, または一様に —
+この~methodの~callを無視してもヨイ。
+◎
+User agents may selectively or uniformly ignore calls to this method for usability reasons.
+</p>
+
+<p class="example">
+例えば、ただ美観の理由で， `~blur0()$m ~methodを利用して無思慮に~focus環が除去された場合、~keyboard利用者からは，~pageの使い勝手は悪くなるであろう。
+この~methodの~callを無視すれば、利用者は~keyboardのみでも~pageとヤリトリできるようになる。
+◎
+For example, if the blur() method is unwisely being used to remove the focus ring for aesthetics reasons, the page would become unusable by keyboard users. Ignoring calls to this method would thus allow keyboard users to interact with the page.
+</p>
+</div>
+
+			</section>
+			<section id="the-autofocus-attribute">
+<h4>6.5.7. `autofocus^a 属性</h4>
+
+<p>
+`autofocus@a
+内容~属性により、作者は，［
+~pageが読込まれ次第 ／
+当の~formが見出される `dialog$e が示され次第
+］，要素を~focusさせるよう指示できるようになる
+— 利用者は、当の要素に手動で~focusせずに，打込みを開始できるようになる。
+◎
+The autofocus content attribute allows the author to indicate that an element is to be focused as soon as the page is loaded or as soon as the dialog within which it finds itself is shown, allowing the user to just start typing without having to manually focus the main element.
+</p>
+
+<p>
+`autofocus$a
+属性は`真偽-属性$である。
+◎
+The autofocus attribute is a boolean attribute.
+</p>
+
+<p>
+要素 %要素 が属する
+`自動focus根@
+（ `nearest ancestor autofocus scoping root element^en †）は、
+%要素 の`広義先祖$に `dialog$e 要素が［
+在るならば それらのうち %要素 に最も近いもの ／
+無いならば %要素 の last `広義先祖$である要素††
+］とする。
+◎
+An element's nearest ancestor autofocus scoping root element is the element itself if the element is a dialog element, or else is the element's nearest ancestor dialog element, if any, or else is the element's last inclusive ancestor element.
+</p>
+
+<p class="trans-note">【†
+原文の呼称はいかにも長いので、この訳では略記する。
+】【††
+“last” が意図不明。
+“`~tree順序$で最後”
+を意味するならば、定義により，最後の`広義先祖$は %要素 自身になる。
+】</p>
+
+<p>
+同じ`自動focus根$に属する複数の要素が， `autofocus$a 属性を有していてはナラナイ。
+◎
+There must not be two elements with the same nearest ancestor autofocus scoping root element that both have the autofocus attribute specified.
+</p>
+
+<div class="p">
+<p>
+各 `文書$には、次のものが結付けられる：
+</p>
+
+<dl class="def-list">
+	<dt>`自動focus候補たち@</dt>
+	<dd>
+`~list$であり，初期~時には空とする。
+</dd>
+
+	<dt>`自動focus処理-済み~flag@</dt>
+	<dd>
+真偽値であり，初期~時には ~F とする。
+</dd>
+</dl>
+
+◎
+Each Document has an autofocus candidates list, initially empty.
+◎
+Each Document has an autofocus processed flag boolean, initially false.
+</div>
+
+<div class="algo">
+<p>
+`autofocus$a 属性を有する要素 %要素 が，`文書の中へ挿入された$ときは、次の手続きを走らす：
+◎
+When an element with the autofocus attribute specified is inserted into a document, run the following steps:
+</p>
+
+<ol>
+	<li>
+任意選択で
+⇒
+~IF［
+利用者は~focusを変更しないよう望むことを指示した（例えば，~form~control内で打込みを開始することにより）
+］
+⇒
+~RET
+◎
+If the user has indicated (for example, by starting to type in a form control) that they do not wish focus to be changed, then optionally return.
+</li>
+	<li>
+%文書 ~LET %要素 の`~node文書$
+◎
+Let target be the element's node document.
+</li>
+	<li>
+~IF［
+%文書 が`属する閲覧文脈$ ~EQ ~NULL
+］
+⇒
+~RET
+◎
+If target's browsing context is null, then return.
+</li>
+	<li>
+~IF［
+`閲覧文脈~sandbox化( 自動~特能 )~flag$ ~IN %文書 の`作動中の~sandbox法~flag集合$
+］
+⇒
+~RET
+◎
+If target's active sandboxing flag set has the sandboxed automatic features browsing context flag, then return.
+</li>
+	<li>
+%~top文書 ~LET %文書 が`属する閲覧文脈$の`~top-level閲覧文脈$にて`作動中の文書$
+◎
+Let topDocument be the active document of target's browsing context's top-level browsing context.
+</li>
+	<li>
+~IF［
+( %文書 の`生成元$, %~top文書 の`生成元$ )
+は`同一-生成元$でない
+］
+⇒
+~RET
+◎
+If target's origin is not the same as the origin of topDocument, then return.
+</li>
+	<li>
+~IF［
+%~top文書 の`自動focus処理-済み~flag$ ~EQ ~F
+］
+⇒
+~RET
+◎
+If topDocument's autofocus processed flag is false, then＼
+</li>
+	<li>
+%~top文書 の`自動focus候補たち$から %要素 を`除去する$
+◎
+remove the element from topDocument's autofocus candidates, and＼
+</li>
+	<li>
+%~top文書 の`自動focus候補たち$に %要素 を`付加する$
+◎
+append the element to topDocument's autofocus candidates.
+</li>
+</ol>
+
+<p class="note">注記：
+%要素 は、`~focus可能な区画$でない場合でも，`自動focus候補たち$が成す~listに格納される
+— 文書の中へ挿入された時点では，~focus可能な区画でなくとも、`自動focus候補たちを洗出す$時点では そうなり得るので。
+◎
+We do not check if an element is a focusable area before storing it in the autofocus candidates list, because even if it is not a focusable area when it is inserted, it could become one by the time flush autofocus candidates sees it.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`自動focus候補たちを洗出す@
+ときは、所与の
+( 文書 %~top文書 )
+に対し，次の手続きを走らす：
+◎
+To flush autofocus candidates for a document topDocument, run these steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+%~top文書 の`自動focus処理-済み~flag$ ~EQ ~T
+］
+⇒
+~RET
+◎
+If topDocument's autofocus processed flag is true, then return.
+</li>
+	<li>
+%候補たち ~LET %~top文書 の`自動focus候補たち$
+◎
+Let candidates be topDocument's autofocus candidates.
+</li>
+	<li>
+~IF［
+%候補たち は`空$である
+］
+⇒
+~RET
+◎
+If candidates is empty, then return.
+</li>
+	<li>
+<p>
+~IF［
+%~top文書 が`指名する被focus区画$ ~NEQ %~top文書
+］~OR［
+%~top文書 の`~URL$docの`素片$urlは空でない
+【この “空” は、空~文字列, ~NULLの両者を含む？】
+］：
+◎
+If topDocument's focused area is not topDocument itself, or topDocument's URL's fragment is not empty, then:
+</p>
+		<ol>
+			<li>
+%候補たち を`空にする$
+◎
+Empty candidates.
+</li>
+			<li>
+%~top文書 の`自動focus処理-済み~flag$ ~SET ~T
+◎
+Set topDocument's autofocus processed flag to true.
+</li>
+			<li>
+~RET
+◎
+Return.
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+~WHILE［
+%候補たち は`空$でない
+］：
+◎
+While candidates is not empty:
+</p>
+		<ol>
+			<li>
+%要素 ~LET %候補たち[ 0 ]
+◎
+Let element be candidates[0].
+</li>
+			<li>
+%文書 ~LET %要素 の`~node文書$
+◎
+Let doc be element's node document.
+</li>
+			<li>
+~IF［
+%文書 は`全部的に作動中$でない
+］
+⇒＃
+%候補たち から %要素 を`除去する$；
+~CONTINUE
+◎
+If doc is not fully active, then remove element from candidates, and continue.
+</li>
+			<li>
+~IF［
+%文書 が`属する閲覧文脈$の`~top-level閲覧文脈$ ~NEQ %~top文書 が`属する閲覧文脈$
+］
+⇒＃
+%候補たち から %要素 を`除去する$；
+~CONTINUE
+◎
+If doc's browsing context's top-level browsing context is not same as topDocument's browsing context, then remove element from candidates, and continue.
+</li>
+			<li>
+<p>
+~IF［
+%文書 の`~scriptを阻んでいる~stylesheet~counter$ ~GT 0
+］
+⇒
+~RET
+◎
+If doc's script-blocking style sheet counter is greater than 0, then return.
+</p>
+
+<p class="note">注記：
+この事例では、
+%要素 は現時点で最良な候補であるが，
+%文書 は自動focusするに準備済みでない。
+次回に`自動focus候補たちを洗出す$が~callされるとき，再び試行されることになる。
+◎
+In this case, element is the currently-best candidate, but doc is not ready for autofocusing. We'll try again next time flush autofocus candidates is called.
+</p>
+			</li>
+			<li>
+%候補たち から %要素 を`除去する$
+◎
+Remove element from candidates.
+</li>
+			<li>
+~IF［
+%文書 または［
+%文書 が`属する閲覧文脈$のある`先祖~閲覧文脈$にて`作動中の文書$
+］に［
+`~URL$docの`素片$urlは空【！＊↑】でないもの
+］が在る
+］
+⇒
+~CONTINUE
+◎
+Let inclusiveAncestorDocuments be a list consisting of doc, plus the active documents of each of doc's browsing context's ancestor browsing contexts.
+◎
+If URL's fragment of any Document in inclusiveAncestorDocuments is not empty, then continue.
+</li>
+			<li>
+%標的 ~LET %要素
+◎
+Let target be element.
+</li>
+			<li>
+<p>
+~IF［
+%標的 は`~focus可能な区画$でない
+］
+⇒
+%標的 ~SET `~focus可能な区画を取得する$( %標的 )
+◎
+If target is not a focusable area, then set target to the result of getting the focusable area for target.
+</p>
+
+<div class="note">
+<p>注記：
+`自動focus候補たち$は、`~focus可能な区画$でない要素を包含し得る。
+`~focus可能な区画を取得する$~algoにて取扱われる特別な事例に加えて、これが起こり得るわけには，次が挙げられる：
+</p>
+<ul>
+	<li>
+`autofocus$a 属性を有するが［
+`~focus可能な区画$ではなく，決して~focus可能にならない要素
+］が`文書の中へ挿入された$。
+</li>
+	<li>
+要素は~focus可能であったが，`自動focus候補たち$内に格納されたときには，状態sが変化した。
+</li>
+</ul>
+◎
+Autofocus candidates can contain elements which are not focusable areas. In addition to the special cases handled in the get the focusable area algorithm, this can happen because a non-focusable area element with an autofocus attribute was inserted into a document and it never became focusable, or because the element was focusable but its status changed while it was stored in autofocus candidates.
+</div>
+			</li>
+			<li>
+<p>
+~IF［
+%標的 ~NEQ ~NULL
+］：
+◎
+If target is not null, then:
+</p>
+				<ol>
+					<li>
+%候補たち を`空にする$
+◎
+Empty candidates.
+</li>
+					<li>
+%~top文書 の`自動focus処理-済み~flag$ ~SET ~T
+◎
+Set topDocument's autofocus processed flag to true.
+</li>
+					<li>
+`~objを~focusする$( %標的 )
+◎
+Run the focusing steps for target.
+</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+</ol>
+
+<p class="note">注記：
+これは、文書を読込んでいる間の自動的な~focusを取扱う。
+`dialog$e 要素の［
+`show()$m ／ `showModal()$m
+］~methodも， `autofocus$a 属性を処理する。
+◎
+This handles the automatic focusing during document load. The show() and showModal() methods of dialog elements also processes the autofocus attribute.
+</p>
+</div>
+
+<p class="note">注記：
+要素を~focusするとき、~UAは，当の~browser~UIwindowを
+— それが【~OSにおいて】~focusを失っていた場合に —
+~focusする必要があるわけでない。
+◎
+Focusing the element does not imply that the user agent has to focus the browser window if it has lost focus.
+</p>
+
+<p>
+`autofocus@m
+~IDL属性は、
+`autofocus$a 内容~属性を`反映する$モノトスル。
+◎
+The autofocus IDL attribute must reflect the content attribute of the same name.
+</p>
+
+<div class="example">
+<p>
+次の~code片の~text~controlは、文書が読込まれたときに~focusされることになる。
+◎
+In the following snippet, the text control would be focused when the document was loaded.
+</p>
+
+`autofocus-1^xCode
+
+</div>
+
+<div class="example">
+<p>
+`autofocus$a 属性は、~form~controlのみならず，すべての要素に適用される。
+これにより，次の例も許容される。
+◎
+The autofocus attribute applies to all elements, not just to form controls. This allows examples such as the following:
+</p>
+
+`autofocus-2^xCode
+
+</div>
+
+			</section>
+		</section>
+		<section id="assigning-keyboard-shortcuts">
+<h3 title="Assigning keyboard shortcuts">6.6. ~keyboard~shortcutのアテガイ</h3>
+
+			<section id="introduction-9">
+<h4 title="Introduction">6.6.1. 序論</h4>
+
+~INFORMATIVE
+
+<p>
+作動化-／~focusされ得るような各~要素には、
+`accesskey$a 属性を利用して，それを作動化させる単独の~Key組合nをアテガえる。
+◎
+Each element that can be activated or focused can be assigned a single key combination to activate it, using the accesskey attribute.
+</p>
+
+<p>
+正確な~shortcutは、
+`accesskey$a 属性から供される情報を基に，利用者の~keyboardについての情報
+— ［
+~platform上にすでに存在する ／
+~page上で他に指定されている
+］~shortcutなど —
+に基づいて、~UAにより決定される
+◎
+The exact shortcut is determined by the user agent, based on information about the user's keyboard, what keyboard shortcuts already exist on the platform, and what other shortcuts have been specified on the page, using the information provided in the accesskey attribute as a guide.
+</p>
+
+<p>
+`accesskey$a 属性~内にいくつもの代替を供すれば、作者は，多様な入力~装置にわたり関連な~keyboard~shortcutが可用になることを確保できる。
+◎
+In order to ensure that a relevant keyboard shortcut is available on a wide variety of input devices, the author can provide a number of alternatives in the accesskey attribute.
+</p>
+
+<p>
+各~代替は、普通字や数字などの単独の文字からなる。
+◎
+Each alternative consists of a single character, such as a letter or digit.
+</p>
+
+<p>
+~UAは，利用者に~keyboard~shortcutの~listを供せるが、作者にもそうすることが奨励される。
+`accessKeyLabel$m ~IDL属性は、~UAによりアテガわれた実際の~Key組合nを表現している文字列を返す。
+◎
+User agents can provide users with a list of the keyboard shortcuts, but authors are encouraged to do so also. The accessKeyLabel IDL attribute returns a string representing the actual key combination assigned by the user agent.
+</p>
+
+<div class="example">
+
+<p>
+次の例には、~shortcut~Keyを利用して呼出せる~buttonが供されている。
+作者は、アリな~Keyとして，~full~keyboard用の "C" に加え，十keyしかないときに備えて別の~Key "1" も供している。
+◎
+In this example, an author has provided a button that can be invoked using a shortcut key. To support full keyboards, the author has provided "C" as a possible key. To support devices equipped only with numeric keypads, the author has provided "1" as another possibly key.
+</p>
+
+`intro9-1^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+どの~shortcut~Keyがあるか，利用者に伝えるため、次の~scriptでは，~buttonの~labelに ~Key組合nを明示的に追加する：
+【！ opted to＊ 】
+◎
+To tell the user what the shortcut key is, the author has this script here opted to explicitly add the key combination to the button's label:
+</p>
+
+<pre class="lang-js">
+function addShortcutKeyLabel(%button) {
+<strong>  if (%button.accessKeyLabel != '')
+    %button.value += ' (' + %button.accessKeyLabel + ')';</strong>
+}
+addShortcutKeyLabel(document.getElementById('c'));
+</pre>
+
+<p>
+同じ~Key組合nであっても、~browserが示す~labelは，各~platformに普及している規約に応じて異なり得る。
+例えば、~Key組合nが［
+Control ＋ Shift ＋ C
+］ならば、［
+Windows ~browserでは `Ctrl+Shift+C^samp ／
+Mac ~browserでは `^⇧C^samp ／
+Emacs ~browserでは `C-C^samp
+］のように表示されるであろう。
+同様に、~Key組合nが［
+Alt ~Key ＋ Escape ~Key
+］であれば、［
+Windows では `Alt+Esc^samp ／
+Mac では `⌥⎋^samp ／
+Emacs ~browserでは `M-ESC^samp または `ESC ESC^samp
+］が利用されるであろう。
+◎
+Browsers on different platforms will show different labels, even for the same key combination, based on the convention prevalent on that platform. For example, if the key combination is the Control key, the Shift key, and the letter C, a Windows browser might display "Ctrl+Shift+C", whereas a Mac browser might display "^⇧C", while an Emacs browser might just display "C-C". Similarly, if the key combination is the Alt key and the Escape key, Windows might use "Alt+Esc", Mac might use "⌥⎋", and an Emacs browser might use "M-ESC" or "ESC ESC".
+</p>
+
+<p>
+したがって一般に、 `accessKeyLabel$m ~IDL属性から返される値を構文解析しようと試みるのは，賢明とは言えない。
+◎
+In general, therefore, it is unwise to attempt to parse the value returned from the accessKeyLabel IDL attribute.
+</p>
+
+</div>
+
+			</section>
+			<section id="the-accesskey-attribute">
+<h4 title="The accesskey attribute">6.6.2. `accesskey^a 属性</h4>
+
+<p>
+`accesskey$a 内容~属性は、すべての`~HTML要素$に設定できる。
+この属性の値は、要素を［
+作動化する／~focusする
+］ための~keyboard~shortcutを作成する基になる情報として，~UAにより利用される。
+◎
+All HTML elements may have the accesskey content attribute set. The accesskey attribute's value is used by the user agent as a guide for creating a keyboard shortcut that activates or focuses the element.
+</p>
+
+<p>
+この属性に指定する値は、`空白区切りの一意な~token集合$（有順序, 大小区別）であって、各~tokenは，正確に 1 個の符号位置でなければナラナイ。
+◎
+If specified, the value must be an ordered set of unique space-separated tokens none of which are identical to another token and each of which must be exactly one code point in length.
+</p>
+
+<div class="example">
+
+<p>
+次の例では、各~linkに~access~Keyがアテガわれている
+— ~siteに馴染んでいる~keyboard利用者は，関連な~pageに素早く~navigateできるようになる：
+◎
+In the following example, a variety of links are given with access keys so that keyboard users familiar with the site can more quickly navigate to the relevant pages:
+</p>
+
+`accesskey-1^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+次の例では、探索~欄に，アリな~access~Keyとして
+`s^l, `0^l
+の 2 つがこの順で与えられている。
+~full~keyboard装置を備えている~UAは、~shortcut~Keyとして
+<kbd>`Ctrl^kbd+`Alt^kbd+`S^kbd</kbd>
+選び取るであろう。
+一方で，十keyしか備えていない装置~上の~UAは、~Key
+<kbd>`0^kbd</kbd>
+を選び取るであろう：
+◎
+In the following example, the search field is given two possible access keys, "s" and "0" (in that order). A user agent on a device with a full keyboard might pick Ctrl+Alt+S as the shortcut key, while a user agent on a small device with just a numeric keypad might pick just the plain unadorned key 0:
+</p>
+
+`accesskey-2^xCode
+
+</div>
+
+<div class="example">
+<p>
+次の例では、アリな~access~Keyが~buttonに記述されている。
+加えて，~UAが選択した~Key組合nを告知するため、~scriptは，~buttonの~labelを更新しようと試行する。
+◎
+In the following example, a button has possible access keys described. A script then tries to update the button's label to advertise the key combination the user agent selected.
+</p>
+
+<pre class="lang-html">
+&lt;input type=submit accesskey="N @ 1" value="Compose"&gt;
+...
+&lt;script&gt;
+ function labelButton(%button) {
+   if (%button.accessKeyLabel)
+     %button.value += ' (' + %button.accessKeyLabel + ')';
+ }
+ var %inputs = document.getElementsByTagName('input');
+ for (var %i = 0; %i &lt; %inputs.length; %i += 1) {
+   if (%inputs[%i].type == "submit")
+     labelButton(%inputs[%i]);
+ }
+&lt;/script&gt;
+</pre>
+
+<p>
+~buttonの~labelは、~UAに応じて，
+`Compose (⌘N)^l にも `Compose (Alt+⇧+1)^l にもなり得る。
+~UAが~Keyをアテガわなければ、 `Compose^l のみになる。
+正確な文字列は、`アテガわれている~access~Key$, および
+~UAがその~Key組合nをどう表現するかに依存する。
+◎
+On one user agent, the button's label might become "Compose (⌘N)". On another, it might become "Compose (Alt+⇧+1)". If the user agent doesn't assign a key, it will be just "Compose". The exact string depends on what the assigned access key is, and on how the user agent represents that key combination.
+</p>
+
+</div>
+
+			</section>
+			<section id="keyboard-shortcuts-processing-model">
+<h4 title="Processing model">6.6.3. 処理~model</h4>
+
+<p>
+要素に
+`アテガわれている~access~Key@
+とは、要素の `accesskey$a 内容~属性から導出される~Key組合nである
+— 初期~時には、どのような~access~Keyもアテガわれないモノトスル。
+◎
+An element's assigned access key is a key combination derived from the element's accesskey content attribute. Initially, an element must not have an assigned access key.
+</p>
+
+<div class="algo">
+<p>
+~UAは、要素の `accesskey$a 属性が［
+設定- ／ 変更- ／除去-
+］される度に、次の手続きを走らせて得られる~access~Keyで，要素に`アテガわれている~access~Key$を更新するモノトスル：
+◎
+Whenever an element's accesskey attribute is set, changed, or removed, the user agent must update the element's assigned access key by running the following steps:
+</p>
+
+<ol>
+	<li>
+<p>
+~IF［
+要素は `accesskey$a 属性を有する
+］
+⇒
+`~ASCII空白で分割する$( 属性の値 )
+— その結果を成す
+~EACH( %値 )
+に対し：
+◎
+If the element has no accesskey attribute, then skip to the fallback step below.
+◎
+Otherwise, split the attribute's value on ASCII whitespace, and let keys be the resulting tokens.
+◎
+For each value in keys in turn, in the order the tokens appeared in the attribute's value, run the following substeps:
+</p>
+		<ol>
+			<li>
+~IF［
+%値 を成す符号位置の個数 ~NEQ 1
+］
+⇒
+~CONTINUE
+◎
+If the value is not a string exactly one code point in length, then skip the remainder of these steps for this value.
+</li>
+			<li>
+~IF［
+%値 は~systemの~keyboard上のどの~Keyにも対応しない
+］
+⇒
+~CONTINUE
+◎
+If the value does not correspond to a key on the system's keyboard, then skip the remainder of these steps for this value.
+</li>
+			<li>
+~FINGERPRINTING
+任意選択で
+⇒
+~IF［
+%値 に対応する~Keyと, 0 個以上の修飾~Keyとの組み合わせに，~access~Keyとして利用できるものがある
+］
+⇒
+~RET その~Key組合n
+◎
+(This is a tracking vector.)
+If the user agent can find a mix of zero or more modifier keys that, combined with the key that corresponds to the value given in the attribute, can be used as the access key, then the user agent may assign that combination of keys as the element's assigned access key and return.
+</li>
+		</ol>
+	</li>
+	<li>
+任意選択で
+⇒
+~RET ~UAが選んだ~Key組合n
+◎
+Fallback: Optionally, the user agent may assign a key combination of its choosing as the element's assigned access key and then return.
+</li>
+	<li>
+~RET ~access~Keyなし
+◎
+If this step is reached, the element has no assigned access key.
+</li>
+</ol>
+</div>
+
+<p>
+要素~用に~access~Keyを選択してアテガった~UAは、要素の `accesskey$a 内容~属性が変更されるか，要素が別の`文書$へ移動されるまでは、要素に`アテガわれている~access~Key$を変更するベキでない。
+◎
+Once a user agent has selected and assigned an access key for an element, the user agent should not change the element's assigned access key unless the accesskey content attribute is changed or the element is moved to another Document.
+</p>
+
+<div class="p">
+<p>
+`~commandを定義する$ような要素に対し，［
+利用者が，それに`アテガわれている~access~Key$に対応する~Key組合nを押下げた
+］ときは、~UAは，次のいずれも満たされるならば，その~commandの`動作$cFを誘発するモノトスル：
+</p>
+
+<ul><li>~commandの`隠d状態$cF ~EQ ~F （可視である）
+</li><li>~commandの`不能化~状態$cF ~EQ  ~F （可能化されている）
+</li><li>要素は、次を満たす`文書~内にある$
+⇒
+`属する閲覧文脈$ ~NEQ ~NULL
+</li><li>要素, および そのどの先祖も， `hidden$a 属性を有さない
+</li></ul>
+◎
+When the user presses the key combination corresponding to the assigned access key for an element, if the element defines a command, the command's Hidden State facet is false (visible), the command's Disabled State facet is also false (enabled), the element is in a document that has a non-null browsing context, and neither the element nor any of its ancestors has a hidden attribute specified, then the user agent must trigger the Action of the command.
+</div>
+
+<p class="note">注記：
+~UAは、 `accesskey$a 属性を有する要素を，他の仕方で
+— 例えば，特定の~Key組合nに呼応して表示される~menu内に —
+<a href="~HEinteractive#expose-commands-in-ui">公開することもある</a>。
+◎
+User agents might expose elements that have an accesskey attribute in other ways as well, e.g. in a menu displayed in response to a specific key combination.
+</p> 
+
+<hr>
+
+<p>
+`accessKey@m
+~IDL属性は、
+`accesskey$a 内容~属性を`反映する$モノトスル。
+◎
+The accessKey IDL attribute must reflect the accesskey content attribute.
+</p>
+
+<div class="algo">
+`accessKeyLabel@m
+取得子~手続きは
+⇒
+~RET ［
+要素に`アテガわれている~access~Key$はあるならば それを表現する文字列 ／
+~ELSE_ 空~文字列
+］
+◎
+The accessKeyLabel IDL attribute must return a string that represents the element's assigned access key, if any. If the element does not have one, then the IDL attribute must return the empty string.
+</div>
+
+			</section>
+		</section>
+		<section id="editing-2">
+<h3 title="Editing">6.7. 編集</h3>
+
+			<section id="contenteditable">
+<h4 title="Making document regions editable: The contenteditable content attribute">6.7.1. 文書の領域を編集-可能にする： `contenteditable^a 属性</h4>
+
+<pre class="idl">
+interface mixin `ElementContentEditable@I {
+  [`CEReactions$] attribute DOMString `contentEditable$m;
+  [`CEReactions$] attribute DOMString `enterKeyHint$m;
+  readonly attribute boolean `isContentEditable$m;
+  [`CEReactions$] attribute DOMString `inputMode$m;
+};
+</pre>
+
+<div class="p">
+<p>
+`contenteditable@a
+内容~属性は`列挙d属性$である。
+とり得る~keywordの集合は
+{ 空~文字列, `true^v, `false^v }
+であり，次の状態に対応付けられる：
+</p>
+
+<dl class="switch">
+	<dt>空~文字列</dt>
+	<dt>`true^v</dt>
+	<dd>
+`~T^st 状態に対応付けられ、当の要素は編集-可能であることを指示する。
+</dd>
+
+	<dt>`false^v</dt>
+	<dd>
+`~F^st 状態に対応付けられ、当の要素は編集-可能でないことを指示する。
+</dd>
+
+	<dt>`値なし用の既定$</dt>
+	<dt>`妥当でない値~用の既定$</dt>
+	<dd>
+`継承-^st 状態に対応付けられ、当の要素は，親が編集-可能ならそうなることを指示する。
+</dd>
+</dl>
+◎
+The contenteditable content attribute is an enumerated attribute whose keywords are the empty string, true, and false. The empty string and the true keyword map to the true state. The false keyword maps to the false state. In addition, there is a third state, the inherit state, which is the missing value default and the invalid value default.
+◎
+The true state indicates that the element is editable. The inherit state indicates that the element is editable if its parent is. The false state indicates that the element is not editable.
+</div>
+
+<div class="example">
+<p>
+例えば、~page内に 新たな~~記事の~~投稿用に `form$e と `textarea$e があり、利用者は~HTMLで~~記事を書くよう期待されているとする：
+◎
+For example, consider a page that has a form and a textarea to publish a new article, where the user is expected to write the article using HTML:
+</p>
+
+`contenteditable-1^xCode
+
+<p>
+~scriptが可能化されている下では、
+`contenteditable$a 属性を利用して，
+`textarea$e 要素を~rich~text~controlに置換することもできる：
+◎
+When scripting is enabled, the textarea element could be replaced with a rich text control instead, using the contenteditable attribute:
+</p>
+
+`contenteditable-2^xCode
+
+<p>
+例えば，~linkを挿入-可能にする特能は、
+`execCommand()$m ~APIを利用して, あるいは
+`Selection$I ~APIと他の~DOM~APIを利用して実装できる。
+`EXECCOMMAND$r `SELECTION$r `DOM$r
+◎
+Features to enable, e.g., inserting links, can be implemented using the document.execCommand() API, or using Selection APIs and other DOM APIs. [EXECCOMMAND] [SELECTION] [DOM]
+</p>
+
+</div>
+
+<div class="example">
+<p>
+`contenteditable$a
+属性は、効果を great にする【？】ためにも利用できる：
+◎
+The contenteditable attribute can also be used to great effect:
+</p>
+
+`contenteditable-3^xCode
+
+</div>
+
+<dl class="domintro">
+	<dt>%element . `contentEditable$m [ = %value ]</dt>
+	<dd>
+`contenteditable$a 属性の状態に基づいて［
+`true^l, `false^l,  `inherit^l
+］いずれかを返す。
+◎
+Returns "true", "false", or "inherit", based on the state of the contenteditable attribute.
+</dd>
+	<dd>
+設定してその状態を変更できる
+— 新たな値がこれらの文字列のいずれでもない場合、
+`SyntaxError$E 例外が投出される。
+◎
+Can be set, to change that state.
+◎
+Throws a "SyntaxError" DOMException if the new value isn't one of those strings.
+</dd>
+
+	<dt>%element . `isContentEditable$m</dt>
+	<dd>
+要素が編集-可能ならば ~T ／
+~ELSE_ ~F
+を返す。
+◎
+Returns true if the element is editable; otherwise, returns false.
+</dd>
+</dl>
+
+<div class="algo">
+要素の
+`contentEditable@m
+取得子~手続きは
+⇒
+~RET コレの
+`contenteditable$a 内容~属性の状態に応じて
+⇒＃
+`~T^st ならば `true^l ／
+`~F^st ならば `false^l ／
+~ELSE_ `inherit^l
+◎
+The contentEditable IDL attribute, on getting, must return the string "true" if the content attribute is set to the true state, "false" if the content attribute is set to the false state, and "inherit" otherwise.＼
+</div>
+
+<div class="algo">
+<p>
+要素の
+`contentEditable$m
+設定子~手続きは：
+</p>
+<ol>
+	<li>
+%値 ~LET `~ASCII小文字~化する$( 所与の値 )
+</li>
+	<li>
+~IF［
+%値 ~IN { `true^l, `false^l }
+］
+⇒
+コレの `contenteditable$a 内容~属性の値 ~SET %値
+</li>
+	<li>
+~ELIF［
+%値 ~EQ `inherit^l
+］
+⇒
+コレの `contenteditable$a 内容~属性を除去する
+</li>
+	<li>
+~ELSE：
+⇒
+~THROW `SyntaxError$E
+</li>
+</ol>
+◎
+On setting, if the new value is an ASCII case-insensitive match for the string "inherit" then the content attribute must be removed, if the new value is an ASCII case-insensitive match for the string "true" then the content attribute must be set to the string "true", if the new value is an ASCII case-insensitive match for the string "false" then the content attribute must be set to the string "false", and otherwise the attribute setter must throw a "SyntaxError" DOMException.
+</div>
+
+<div class="algo">
+<p>
+要素の
+`isContentEditable@m
+取得子~手続きは
+⇒
+~RET ［
+次が満たされるならば ~T ／
+~ELSE_ ~F
+］
+⇒
+コレは`編集中の~host$または `編集-可能$である
+◎
+The isContentEditable IDL attribute, on getting, must return true if the element is either an editing host or editable, and false otherwise.
+</div>
+
+			</section>
+			<section id="making-entire-documents-editable:-the-designmode-idl-attribute">
+<h4 title="Making entire documents editable: the designMode getter and setter">6.7.2. 文書~全体を編集-可能にする： `designMode^m の取得子と設定子</h4>
+
+<dl class="domintro">
+	<dt>%document . `designMode$m [ = %value ]</dt>
+	<dd>
+文書は［
+編集-可能ならば `on^l ／
+~ELSE_ `off^l
+］返す。
+◎
+Returns "on" if the document is editable, and "off" if it isn't.
+</dd>
+	<dd>
+設定して文書の現在の状態を変更できる。
+これは、文書を~focusした上で，文書~内の選択を設定し直す。
+◎
+Can be set, to change the document's current state. This focuses the document and resets the selection in that document.
+</dd>
+</dl>
+
+<p>
+各 `文書$には，真偽値をとる
+`~design~mode可能化？@
+が結付けられ、初期~時には ~F をとるとする。
+◎
+Document objects have an associated design mode enabled, which is a boolean. It is initially false.
+</p>
+
+<div class="algo">
+`designMode@m
+取得子~手続きは
+⇒
+~RET コレの`~design~mode可能化？$に応じて
+⇒＃
+~T ならば `on^l ／
+~F ならば `off^l
+◎
+The designMode getter steps are to return "on" if this's design mode enabled is true; otherwise "off".
+</div>
+
+<div class="algo">
+<p>
+`designMode$m
+設定子~手続きは：
+◎
+The designMode setter steps are:
+</p>
+<ol>
+	<li>
+%値 ~LET `~ASCII小文字~化する$( 所与の値 )
+◎
+Let value be the given value, converted to ASCII lowercase.
+</li>
+	<li>
+<p>
+~IF［
+%値 ~EQ `on^l
+］~AND［
+コレの`~design~mode可能化？$ ~EQ ~F
+］：
+◎
+If value is "on" and this's design mode enabled is false, then:
+</p>
+		<ol>
+			<li>
+コレの`~design~mode可能化？$ ~SET ~T
+◎
+Set this's design mode enabled to true.
+</li>
+			<li>
+コレにて`作動中の範囲$の［
+始端, 終端
+］境界点をコレの始端に設定し直す
+◎
+Reset this's active range's start and end boundary points to be at the start of this.
+</li>
+			<li>
+~IF［
+コレの`文書~要素$ ~NEQ ~NULL
+］
+⇒
+`~objを~focusする$( コレの`文書~要素$ )
+◎
+Run the focusing steps for this's document element, if non-null.
+</li>
+		</ol>
+	</li>
+	<li>
+~IF［
+%値 ~EQ `off^l
+］
+⇒
+コレの`~design~mode可能化？$ ~SET ~F
+◎
+If value is "off", then set this's design mode enabled to false.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="best-practices-for-in-page-editors">
+<h4 title="Best practices for in-page editors">6.7.3. ~page編集者による最善な実施</h4>
+
+<p>
+作者には、［
+`編集中の~host$, および
+編集-用の仕組みを通して作成された~markup
+］上の `white-space$p ~propを値 `pre-wrap^v に設定することが奨励される。
+~HTMLにおける空白に対する既定の取扱いは， WYSIWYG 編集には不向きであり、
+`white-space$p が既定~値のままだと，一部のきわどい事例では，行lの折返ngが正しく働かなくなる。
+◎
+Authors are encouraged to set the 'white-space' property on editing hosts and on markup that was originally created through these editing mechanisms to the value 'pre-wrap'. Default HTML whitespace handling is not well suited to WYSIWYG editing, and line wrapping will not work correctly in some corner cases if 'white-space' is left at its default value.
+</p>
+
+<div class="example">
+
+<p>
+既定の `normal^v 値が利用された場合に生じる問題の一例として、利用者が［
+"`yellow^kbd", `space^i, `space^i, `ball^kbd"
+］を続けて打込んだときを考える。
+`white-space$p の既定の値（ `normal^v ）の下では，~~連続する `space^i は一つに縮約する呈示が要求されるため、結果の~markupを［
+`yellow^l, `nbsp^i, `space^i, `ball^l
+］の並び, または［
+`yellow^l, `space^i, `nbsp^i, `ball^l
+］の並びとするような編集~規則が必要とされる
+— ここで， `nbsp^i は分断不可 space（ non-breaking space ）,
+`space^i は普通の space（ U+0020 ）を表すとする。
+【！ "␣"】
+◎
+As an example of problems that occur if the default 'normal' value is used instead, consider the case of the user typing "yellow␣␣ball", with two spaces (here represented by "␣") between the words. With the editing rules in place for the default value of 'white-space' ('normal'), the resulting markup will either consist of "yellow&amp;nbsp; ball" or "yellow &amp;nbsp;ball"; i.e., there will be a non-breaking space between the two words in addition to the regular space. This is necessary because the 'normal' value for 'white-space' requires adjacent regular spaces to be collapsed together.
+</p>
+
+<p>
+2 つの単語の合間で行lを折返す必要がある場合、前者の［
+`nbsp^i, `space^i
+］並びの事例では，行lの終端までに単語 `yellow^l のみが収まる場合でも，
+`nbsp^i の直後で次の行lへ折返され、後者の［
+`space^i, `nbsp^i
+］並びの事例では， `nbsp^i の直前で次の行lへ折返される
+— その結果、単語 `ball^l の前に字下げが露わになる。
+◎
+In the former case, "yellow⍽" might wrap to the next line ("⍽" being used here to represent a non-breaking space) even though "yellow" alone might fit at the end of the line; in the latter case, "⍽ball", if wrapped to the start of the line, would have visible indentation from the non-breaking space.
+</p>
+
+<p>
+一方で、 `white-space$p が `pre-wrap^v に設定されている下での編集~規則は、単語の合間に 2 個の `space^i を挟むだけ済む。
+その結果、 2 個の単語は行lの終端の所で分割され，~spaceは具現化からきれいに除去されることになる。
+◎
+When 'white-space' is set to 'pre-wrap', however, the editing rules will instead simply put two regular spaces between the words, and should the two words be split at the end of a line, the spaces would be neatly removed from the rendering.
+</p>
+
+</div>
+
+			</section>
+			<section id="editing-apis">
+<h4 title="Editing APIs">6.7.4. 編集~API</h4>
+
+<p>
+`編集中の~host@
+とは、次のいずれかを満たす`~HTML要素$である：
+◎
+An editing host is either＼
+</p>
+<ul>
+	<li>
+`contenteditable$a 属性は `~T^st 状態にある
+◎
+an HTML element with its contenteditable attribute in the true state, or＼
+</li>
+	<li>
+［
+`文書$の`子$である
+］~AND［
+その`~design~mode可能化？$ ~EQ ~T
+］
+◎
+a child HTML element of a Document whose design mode enabled is true.
+</li>
+</ul>
+
+<div>
+<p>
+次に挙げるものは、
+`EXECCOMMAND$r 仕様にて定義される：
+</p>
+
+<ul ><li id="active-range">`作動中の範囲$
+</li><li id="editing-host-of">~nodeが`属する編集中の~host$
+</li><li id="editable">`編集-可能$
+</li><li>［
+`編集中の~host$ ／ `編集-可能$
+］である要素に課される~UI要件
+</li><li>~text選択
+</li><li id="delete-the-selection">`選択を削除-$する~algo
+</li><li>
+<p>
+次に挙げる各種~method
+⇒＃
+`execCommand()$m,
+`queryCommandEnabled()$m,
+`queryCommandIndeterm()$m,
+`queryCommandState()$m,
+`queryCommandSupported()$m,
+`queryCommandValue()$m
+</li></ul>
+
+◎
+The definition of the terms active range, editing host of, and editable, the user interface requirements of elements that are editing hosts or editable, the execCommand(), queryCommandEnabled(), queryCommandIndeterm(), queryCommandState(), queryCommandSupported(), and queryCommandValue() methods, text selections, and the delete the selection algorithm are defined in execCommand. [EXECCOMMAND]
+</div>
+
+			</section>
+			<section id="spelling-and-grammar-checking">
+<h4 title="Spelling and grammar checking">6.7.5. 綴りや文法の検査ng： `spellcheck^a 属性</h4>
+
+<p>
+~UAは、［
+~form~control（ `textarea$e 要素の値など）や,
+`編集中の~host$内の要素（例： `contenteditable$a を利用して）
+］内の編集-可能~textに対する綴りや文法の検査ngを~supportできる。
+◎
+User agents can support the checking of spelling and grammar of editable text, either in form controls (such as the value of textarea elements), or in elements in an editing host (e.g. using contenteditable).
+</p>
+
+<p>
+~UAは、各~要素に対し，［
+既定のもの, または利用者の選好
+］を通して、
+`既定の挙動@
+を確立するモノトスル。
+各~要素に対してアリな既定の挙動には、次の 3 種がある：
+◎
+For each element, user agents must establish a default behavior, either through defaults or through preferences expressed by the user. There are three possible default behaviors for each element:
+</p>
+
+<dl>
+	<dt>
+`既定で行う@
+◎
+true-by-default
+</dt>
+	<dd>
+要素の内容の綴りや文法は、その内容が編集-可能であって，その検査ngは
+`spellcheck$a 属性を通して明示的に不能化されていないならば、検査される。
+◎
+The element will be checked for spelling and grammar if its contents are editable and spellchecking is not explicitly disabled through the spellcheck attribute.
+</dd>
+	<dt>
+`既定で行わない@
+◎
+false-by-default
+</dt>
+	<dd>
+要素の綴りや文法は、 `spellcheck$a 属性を通して明示的に可能化されていない限り，決して検査されない。
+◎
+The element will never be checked for spelling and grammar unless spellchecking is explicitly enabled through the spellcheck attribute.
+</dd>
+	<dt>
+`既定で継承する@
+◎
+inherit-by-default
+</dt>
+	<dd>
+要素の既定の挙動は、その親~要素のそれと同じになる。
+親~要素がない場合、既定の挙動はない。
+◎
+The element's default behavior is the same as its parent element's. Elements that have no parent element cannot have this as their default behavior.
+</dd>
+
+</dl>
+
+<hr>
+
+<div class="p">
+<p>
+`spellcheck@a
+属性は，`列挙d属性$であり、次に挙げる~keyword, および対応する状態をとり得る：
+</p>
+
+<dl class="switch">
+	<dt>空~文字列</dt>
+	<dt>`true^v</dt>
+	<dd>
+`~T^st 状態に対応付けられる。
+</dd>
+
+	<dt>`false^v</dt>
+	<dd>
+`~F^st 状態に対応付けられる。
+</dd>
+
+	<dt>`値なし用の既定$</dt>
+	<dt>`妥当でない値~用の既定$</dt>
+	<dd>
+`既定の挙動^st 状態に対応付けられる。
+</dd>
+</dl>
+◎
+The spellcheck attribute is an enumerated attribute whose keywords are the empty string, true and false. The empty string and the true keyword map to the true state. The false keyword maps to the false state. In addition, there is a third state, the default state, which is the missing value default and the invalid value default.
+</div>
+
+<p class="note">注記：
+［
+`~T^st ／ `~F^st ／ `既定の挙動^st
+］状態は、当の要素の綴りや文法が，［
+検査される ／ 検査されない ／ 検査されるかどうかは`既定の挙動$に則る
+］ことを指示する。
+`既定の挙動$に則る場合、場合によっては親~要素の `spellcheck$a 状態に基づくことになる。
+◎
+The true state indicates that the element is to have its spelling and grammar checked. The default state indicates that the element is to act according to a default behavior, possibly based on the parent element's own spellcheck state, as defined below. The false state indicates that the element is not to be checked.
+</p>
+
+<hr>
+
+<dl class="domintro">
+	<dt>%element . `spellcheck$m [ = %値 ]</dt>
+	<dd>
+要素の綴りや文法が検査されるならば ~T ／
+~ELSE_ ~F
+を返す。
+◎
+Returns true if the element is to have its spelling and grammar checked; otherwise, returns false.
+</dd>
+	<dd>
+設定して、既定の挙動を上書きしつつ，
+`spellcheck$a 内容~属性を設定できる。
+◎
+Can be set, to override the default and set the spellcheck content attribute.
+</dd>
+</dl>
+
+<div class="algo">
+<div>
+<p>
+要素の
+`spellcheck@m
+取得子~手続きは
+⇒
+~RET コレの `spellcheck$a 内容~属性の状態に応じて
+⇒＃
+`~T^st ならば ~T ／
+`~F^st ならば ~F ／
+`既定の挙動^st ならば コレの`既定の挙動$に応じて ⇒＃
+`既定で行う$ならば ~T ／
+`既定で行わない$ならば ~F ／
+`既定で継承する$ならば コレの親~要素の `spellcheck$m 取得子~手続き() 【親~要素がない場合は ~F ？（はっきりしない）】
+◎
+The spellcheck IDL attribute, on getting, must return true if the element's spellcheck content attribute is in the true state, or if the element's spellcheck content attribute is in the default state and the element's default behavior is true-by-default, or if the element's spellcheck content attribute is in the default state and the element's default behavior is inherit-by-default and the element's parent element's spellcheck IDL attribute would return true; otherwise, if none of those conditions applies, then the attribute must instead return false.
+</div>
+
+<p class="note">注記：
+`spellcheck$m ~IDL属性は、［
+利用者による， `spellcheck$a 内容~属性を上書きする選好
+］からは影響されないため、実際の綴りや文法に対する検査ng状態を反映しないこともある。
+◎
+The spellcheck IDL attribute is not affected by user preferences that override the spellcheck content attribute, and therefore might not reflect the actual spellchecking state.
+</p>
+</div>
+
+<div class="algo">
+<p>
+要素の `spellcheck$m 設定子~手続きは
+⇒
+コレの `spellcheck$a 内容~属性の値 ~SET 所与の値に応じて，次に与える文字列
+⇒＃
+~T ならば `true^l ／
+~F ならば `false^l
+◎
+On setting, if the new value is true, then the element's spellcheck content attribute must be set to the literal string "true", otherwise it must be set to the literal string "false".
+</div>
+
+<hr>
+
+<p>
+この特能の目的において検査-可能な~textは：
+◎
+User agents must only consider the following pieces of text as checkable for the purposes of this feature:
+</p>
+<ul>
+	<li>
+<p>
+次に挙げる~text片に限られるモノトスル：
+◎
+↑</p>
+		<ul>
+			<li>
+<p>
+［
+次のいずれも満たすような `input$e 要素
+］の，`値$fe：
+</p>
+
+<ul><li>`type$a 属性の状態 ~IN { `Text$st, `Search$st, `Url$st, `Email$st }
+</li><li>`変異-可能$ （すなわち、 `readonly$a 属性は有さない, かつ`不能化され$ていない）
+</li></ul>
+◎
+The value of input elements whose type attributes are in the Text, Search, URL, or Email states and that are mutable (i.e. that do not have the readonly attribute specified and that are not disabled).
+</li>
+			<li>
+<p>
+［
+次のいずれも満たすような `textarea$e 要素
+］の，`値$fe：
+</p>
+
+<ul><li>`~readonly0$a 属性は有さない
+</li><li>`不能化され$ていない
+</li></ul>
+
+◎
+The value of textarea elements that do not have a readonly attribute and that are not disabled.
+</li>
+			<li>
+［
+`編集中の~host$ ／ `編集-可能$な要素
+］の子であるような `Text$I ~node内の~text。
+◎
+Text in Text nodes that are children of editing hosts or editable elements.
+</li>
+			<li>
+`編集-可能$な要素の属性~内の~text。
+◎
+Text in attributes of editable elements.
+</li>
+		</ul>
+	</li>
+	<li>
+<p>
+所与の~textが属するとされる要素は、次で与えられる：
+</p>
+
+<ul><li>`Text$I ~nodeの一部を成す~textに対しては、［
+単語, 一文, その他の~text片
+］の最初の文字の直の親である要素。
+</li><li>属性~内の~textに対しては、当の属性を有している要素。
+</li><li>`input$e ／ `textarea$e 要素の値に対しては、要素~自身。
+</li></ul>
+
+◎
+For text that is part of a Text node, the element with which the text is associated is the element that is the immediate parent of the first character of the word, sentence, or other piece of text. For text in attributes, it is the attribute's element. For the values of input and textarea elements, it is the element itself.
+</li>
+</ul>
+
+<div class="algo">
+<p>
+綴りや文法の検査ngが適用-可能な要素 %要素 に属する~textに対する検査ngは、次の~algoの結果が［
+`可能化される^i ならば可能化される ／ `不能化される^i ならば不能化される
+］モノトスル：
+◎
+To determine if a word, sentence, or other piece of text in an applicable element (as defined above) is to have spelling- and grammar-checking enabled, the UA must use the following algorithm:
+</p>
+<ol>
+	<li>
+~IF［
+利用者は、この~textに対する検査ngを不能化している
+］
+⇒
+~RET `不能化される^i
+◎
+If the user has disabled the checking for this text, then the checking is disabled.
+</li>
+	<li>
+~IF［
+利用者は、この~textの検査ngを常に可能化するように強制している
+］
+⇒
+~RET `可能化される^i
+◎
+Otherwise, if the user has forced the checking for this text to always be enabled, then the checking is enabled.
+</li>
+	<li>
+%要素~list ~SET［
+%要素 , および その先祖~要素
+］からなる，%要素 に近い順の~list
+◎
+↓</li>
+	<li>
+<p>
+%要素~list 内の
+~EACH( %E )
+に対し：
+</p>
+		<ol>
+			<li>
+%状態 ~LET %E の `spellcheck$a 内容~属性の状態
+</li>
+			<li>
+~IF［
+%状態 ~EQ `既定の挙動^st
+］
+⇒
+~CONTINUE
+</li>
+			<li>
+~RET %状態 に応じて
+⇒＃
+`~T^st ならば `可能化される^i ／
+`~F^st ならば `不能化される^i
+</li>
+		</ol>
+◎
+Otherwise, if the element with which the text is associated has a spellcheck content attribute, then: if that attribute is in the true state, then checking is enabled; otherwise, if that attribute is in the false state, then checking is disabled.
+◎
+Otherwise, if there is an ancestor element with a spellcheck content attribute that is not in the default state, then: if the nearest such ancestor's spellcheck content attribute is in the true state, then checking is enabled; otherwise, checking is disabled.
+</li>
+	<li>
+<p>
+%要素~list 内の
+~EACH( %E )
+に対し：
+</p>
+		<ol>
+			<li>
+%挙動 ~LET %E の`既定の挙動$
+</li>
+			<li>
+~IF［
+%挙動 ~EQ `既定で継承する$
+］
+⇒
+~CONTINUE†
+</li>
+			<li>
+~RET %挙動 に応じて
+⇒＃
+`既定で行う$ならば `可能化される^i ／
+`既定で行わない$ならば `不能化される^i
+</li>
+		</ol>
+
+<p class="trans-note">【†
+原文では，この~algoを %E の親に対し再帰的に呼出しているが、前~段にて， %E のどの先祖の `spellcheck$a 内容~属性の状態も `既定の挙動^st であることはすでに判っているので、この段で反復することで十分になる。
+】</p>
+
+◎
+Otherwise, if the element's default behavior is true-by-default, then checking is enabled.
+◎
+Otherwise, if the element's default behavior is false-by-default, then checking is disabled.
+◎
+Otherwise, if the element's parent element has its checking enabled, then checking is enabled.
+</li>
+	<li>
+~RET `不能化される^i
+◎
+Otherwise, checking is disabled.
+</li>
+</ol>
+</div>
+
+<p>
+単語や一文などの~textに対する検査ngが可能化されている場合、~UAは，その~text内に綴りや文法の誤りがあれば それを指示するベキである。
+~UAは、綴りや文法の訂正を示唆するときには，文書~内に所与の他の意味論も織り込むベキである — これには、次が含まれる：
+◎
+If the checking is enabled for a word/sentence/text, the user agent should indicate spelling and grammar errors in that text. User agents should take into account the other semantics given in the document when suggesting spelling and grammar corrections.＼
+</p>
+
+<ul>
+	<li>
+綴りや文法に利用する規則を、要素に指定されている自然言語や, 利用者が選好している自然言語~設定群から決定してもヨイ。
+◎
+User agents may use the language of the element to determine what spelling and grammar rules to use, or may use the user's preferred language settings.＼
+</li>
+	<li>
+アリな所では、 `pattern$a などの `input$e 要素~属性を利用して，結果の値が妥当になることを確保するベキである。
+◎
+UAs should use input element attributes such as pattern to ensure that the resulting value is valid, where possible.
+</li>
+</ul>
+
+<p>
+検査ngが不能化されている場合、~UAは，その~textに対する綴りや文法の誤りを指示するベキでない。
+◎
+If checking is disabled, the user agent should not indicate spelling or grammar errors for that text.
+</p>
+
+<div class="example">
+
+<p>
+次の例の単語 `Hello^l に対しては、その綴りを検査するかどうかを決定するときに，~ID `a^l の要素が利用され、その結果，検査されないになる。
+◎
+The element with ID "a" in the following example would be the one used to determine if the word "Hello" is checked for spelling errors. In this example, it would not be.
+</p>
+
+`spelling-1^xCode
+
+<p>
+次の例における~ID `b^l の要素に対しては、検査ngは可能化される（ `input$e 要素~上の属性~値~内の頭部の~ASCII空白は，属性を無視させるので、既定の挙動にかかわらず先祖の値が代わりに利用される）。
+◎
+The element with ID "b" in the following example would have checking enabled (the leading space character in the attribute's value on the input element causes the attribute to be ignored, so the ancestor's value is used instead, regardless of the default).
+</p>
+
+`spelling-2^xCode
+
+</div>
+
+<p class="note">注記：
+この仕様は、綴りや文法~検査器~用の~UIは定義しない。
+例えば~UAは、［
+その場で検査ngを提供する ／
+検査ngが可能化されている間，継続的に検査ngを遂行する ／
+その他の~UI
+］のいずれも利用できる。
+◎
+This specification does not define the user interface for spelling and grammar checkers. A user agent could offer on-demand checking, could perform continuous checking while the checking is enabled, or could use other interfaces.
+</p>
+
+			</section>
+			<section id="autocapitalization">
+<h4 title="Autocapitalization">6.7.6. 自動頭字化： `autocapitalize^a 属性</h4>
+
+<p>
+~textを手入力する~methodには、例えば，携帯~機器~上の~virtual-keyboardや ~voice入力などもあり、各~一文の最初の字lを自動的に頭字化（ capital 化 ）して，利用者を支援することが多い（当の自然言語にこの規約がある下で，~textを組成しているならば）。
+【 字l（ letter ）とは、約物等を除く，“普通の” 文字を指す。】
+自動頭字化を実装する~virtual-keyboardは、自動頭字化されるべき字lが打込まれつつあるとき，自動的に字lを大文字で示すよう切替えるかもしれない（利用者が小文字に戻せるようにしつつ）。
+他の型の入力，例えば~voice入力では、最初に介入する~~余地を利用者に与えない仕方で，自動頭字化を遂行することもある。
+`autocapitalize$a 属性は、作者がそのような挙動を制御できるようにする。
+◎
+Some methods of entering text, for example virtual keyboards on mobile devices, and also voice input, often assist users by automatically capitalizing the first letter of sentences (when composing text in a language with this convention). A virtual keyboard that implements autocapitalization might automatically switch to showing uppercase letters (but allow the user to toggle it back to lowercase) when a letter that should be autocapitalized is about to be typed. Other types of input, for example voice input, may perform autocapitalization in a way that does not give users an option to intervene first. The autocapitalize attribute allows authors to control such behavior.
+</p>
+
+<p>
+`autocapitalize$a 属性は、概して，物理的~keyboardを打込むときの挙動には影響しないように実装される。
+（この理由から, および［
+一部の事例で自動頭字化の挙動を上書きできる／初期~入力の後に~textを編集する
+］能を利用者に与えるため、いかなる類の入力~検証も，この属性には依拠しないモノトスル。）
+◎
+The autocapitalize attribute, as typically implemented, does not affect behavior when typing on a physical keyboard. (For this reason, as well as the ability for users to override the autocapitalization behavior in some cases or edit the text after initial input, the attribute must not be relied on for any sort of input validation.)
+</p>
+
+<p>
+`autocapitalize$a 属性は、次に該当するものに利用できる：
+◎
+The autocapitalize attribute can be used＼
+</p>
+
+<ul>
+	<li>
+`編集中の~host$
+— ~hostされている編集-可能~領域~用に自動頭字化の挙動を制御するためとして。
+◎
+on an editing host to control autocapitalization behavior for the hosted editable region,＼
+</li>
+	<li>
+［
+`input$e ／ `textarea$e
+］要素
+— その要素の中に~textを入力するときの挙動を制御するためとして。
+◎
+on an input or textarea element to control the behavior for inputting text into that element, or＼
+</li>
+	<li>
+`form$e 要素
+— その~formが所有していて, `自動頭字化-を継承-$する要素すべての，既定の挙動を制御するためとして。
+◎
+on a form element to control the default behavior for all autocapitalize-inheriting elements associated with the form element. 
+</li>
+</ul>
+
+<p>
+`autocapitalize$a 属性は、次に該当するものに対しては，決して自動頭字化を可能化させない（この挙動は、下の`利用する自動頭字化~hint$を算出する~algoに含まれている）
+⇒
+`input$e 要素のうち，［
+その`type$a 属性の状態 ~IN { `Url$st, `Email$st, `Password$st }
+］なるもの
+◎
+The autocapitalize attribute never causes autocapitalization to be enabled for input elements whose type attribute is in one of the URL, Email, or Password states. (This behavior is included in the used autocapitalization hint algorithm below.)
+</p>
+
+<p>
+自動頭字化の処理~modelは、次に定義される 5 種の
+`自動頭字化~hint@
+から選定することに基づく：
+◎
+The autocapitalization processing model is based on selecting among five autocapitalization hints, defined as follows:
+</p>
+
+<dl>
+	<dt>`既定@aH</dt>
+	<dd>
+［
+~UA／入力~method
+］は、自前の決定を用立てて，自動頭字化を可能化するベキである。
+【！use make = make use？】
+◎
+The user agent and input method should use make their own determination of whether or not to enable autocapitalization.
+</dd>
+
+	<dt>`なし@aH</dt>
+	<dd>
+自動頭字化は適用されるベキでない（すべての字lは、既定で小文字にされるベキである）。
+◎
+No autocapitalization should be applied (all letters should default to lowercase).
+</dd>
+
+	<dt>`一文ごと@aH</dt>
+	<dd>
+各~一文の最初の字lは、既定で頭字にされるベキである。
+他のすべての字lは、既定で小文字にされるベキである。
+◎
+The first letter of each sentence should default to a capital letter; all other letters should default to lowercase.
+</dd>
+
+	<dt>`単語ごと@aH</dt>
+	<dd>
+各~単語の最初の字lは、既定で頭字にされるベキである。
+他のすべての字lは、既定で小文字にされるベキである
+◎
+The first letter of each word should default to a capital letter; all other letters should default to lowercase.
+</dd>
+	<dt>`文字ごと@aH</dt>
+	<dd>
+すべての字lは、既定で大文字にされるベキである。
+◎
+All letters should default to uppercase.
+</dd>
+</dl>
+
+<p>
+`autocapitalize@a
+属性は，`列挙d属性$であり、その状態は，アリな`自動頭字化~hint$を与える。
+属性の状態により指定される`自動頭字化~hint$は、`利用する自動頭字化~hint$を形成するための他の考慮点と組合されて，~UAの挙動を伝える。
+この属性~用の各種~keywordと, 状態への対応付けは、次で与えられる：
+◎
+The autocapitalize attribute is an enumerated attribute whose states are the possible autocapitalization hints. The autocapitalization hint specified by the attribute's state combines with other considerations to form the used autocapitalization hint, which informs the behavior of the user agent. The keywords for this attribute and their state mappings are as follows:
+</p>
+
+<div>
+<dl class="switch">
+	<dt>`off@v</dt>
+	<dt>`~noneC@v</dt>
+	<dd>
+`なし$aH
+</dd>
+
+	<dt>`on@v</dt>
+	<dt>`sentences@v</dt>
+	<dt>`妥当でない値~用の既定$</dt>
+	<dd>
+`一文ごと$aH
+</dd>
+
+	<dt>`words@v</dt>
+	<dd>
+`単語ごと$aH
+</dd>
+
+	<dt>`characters@v</dt>
+	<dd>
+`文字ごと$aH
+</dd>
+
+	<dt>`値なし用の既定$</dt>
+	<dd>
+`既定$aH
+</dd>
+</dl>
+◎
+Keyword｜State
+off｜none
+none｜none
+on｜sentences
+sentences｜sentences
+words｜words
+characters｜characters
+◎
+The invalid value default is the sentences state. The missing value default is the default state.
+</div>
+
+<dl class="domintro">
+	<dt>%element . `autocapitalize$m [ = %value ]</dt>
+	<dd>
+この要素~用の［
+現在の自動頭字化~状態, または
+未~設定-の場合は空~文字列
+］を返す。
+［
+`input$e ／ `textarea$e
+］要素は、自身の状態を `form$e 要素から継承することに注意：
+その場合， `form$e 要素の自動頭字化~状態を返すことになり、編集-可能~領域~内の要素であっても編集中の~hostの自動頭字化~状態は返さないことになる（要素~自身が，`編集中の~host$でない限り）。
+◎
+Returns the current autocapitalization state for the element, or an empty string if it hasn't been set. Note that for input and textarea elements that inherit their state from a form element, this will return the autocapitalization state of the form element, but for an element in an editable region, this will not return the autocapitalization state of the editing host (unless this element is, in fact, the editing host).
+</dd>
+	<dd>
+設定して， `autocapitalize$a 内容~属性を設定できる（それに伴い，要素~用の自動頭字化の挙動も変更する）。
+◎
+Can be set, to set the autocapitalize content attribute (and thereby change the autocapitalization behavior for the element).
+</dd>
+</dl>
+
+<p>
+所与の要素 %要素 の
+`自前の自動頭字化~hint@
+を算出するときは、次を走らす：
+◎
+To compute the own autocapitalization hint of an element element, run the following steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+%要素 は `autocapitalize$a 内容~属性を有していて，その値 ~NEQ 空~文字列
+］
+⇒
+~RET その属性の状態
+◎
+If the autocapitalize content attribute is present on element, and its value is not the empty string, return the state of the attribute.
+</li>
+	<li>
+~IF［
+%要素 は`自動頭字化-を継承-$する
+］~AND［
+%要素 の`~form所有者$ ~NEQ ~NULL
+］
+⇒
+~RET %要素 の`~form所有者$の`自前の自動頭字化~hint$
+◎
+If element is an autocapitalize-inheriting element and has a non-null form owner, return the own autocapitalization hint of element's form owner.
+</li>
+	<li>
+~RET `既定$aH
+◎
+Return default.
+</li>
+</ol>
+
+<div class="algo">
+<p>
+`autocapitalize@m
+取得子~手続きは
+⇒
+~RET コレの`自前の自動頭字化~hint$に応じて，次に与える文字列
+⇒＃
+`既定$aH ならば 空~文字列／
+`なし$aH ならば `none^l †／
+`一文ごと$aH ならば `sentences^l †／
+`単語ごと$aH ならば `words^l／
+`文字ごと$aH ならば `characters^l
+</p>
+
+<p class="trans-note">【†
+原文では，`自前の自動頭字化~hint$に “対応する文字列” としか記されておらず、例えば `一文ごと$aHに対し［
+"`sentences$v", "`on$v"
+］のどちらを返すか，はっきりしない。
+】</p>
+
+◎
+The autocapitalize IDL attribute, on getting, must return the string value corresponding to own autocapitalization hint of the element, with the exception that the default state maps to the empty string.＼
+</div>
+
+<div class="algo">
+<p>
+`autocapitalize$m 設定子~手続きは
+⇒
+コレの `autocapitalize$a 内容~属性 ~SET 所与の値
+◎
+On setting, it must set the autocapitalize content attribute to the given new value.
+</div>
+
+<hr>
+
+<p>
+~UAは，［
+~text入力~methodに対する自動頭字化の挙動を~custom化する機能性
+］を~supportしていて［
+~web開発者がそれを制御できる
+］ようにしたいと望むならば、要素の中に~textを入力する間，要素~用に
+`利用する自動頭字化~hint@
+を算出するベキである。
+これは、［
+要素の中への~text入力~用に推奨される，自動頭字化の挙動
+］を述べる，`自動頭字化~hint$になる。
+◎
+User agents that support customizable autocapitalization behavior for a text input method and wish to allow web developers to control this functionality should, during text input into an element, compute the used autocapitalization hint for the element. This will be an autocapitalization hint that describes the recommended autocapitalization behavior for text input into the element.
+</p>
+
+<p>
+ある種の状況下においては、［
+~UA／入力~method
+］は，`利用する自動頭字化~hint$を［
+無視する, または上書きする
+］ことを選んでもヨイ。
+◎
+User agents or input methods may choose to ignore or override the used autocapitalization hint in certain circumstances.
+</p>
+
+<p>
+要素 %要素 用に`利用する自動頭字化~hint$は、次の~algoを利用して算出される：
+◎
+The used autocapitalization hint for an element element is computed using the following algorithm:
+</p>
+
+<ol>
+	<li>
+~IF［
+%要素 は `input$e 要素である
+］~AND［
+%要素 の `type$a 属性の状態 ~IN { `Url$st, `Email$st, `Password$st }
+］
+⇒
+~RET `既定$aH
+◎
+If element is an input element whose type attribute is in one of the URL, Email, or Password states, then return default.
+</li>
+	<li>
+~IF［
+%要素 は［
+`input$e ／ `textarea$e
+］要素である
+］
+⇒
+~RET %要素 の`自前の自動頭字化~hint$
+◎
+If element is an input element or a textarea element, then return element's own autocapitalization hint.
+</li>
+	<li>
+~IF［
+%要素 は［
+`編集中の~host$ ／ `編集-可能$な要素
+］である
+］
+⇒
+~RET
+%要素 が`属する編集中の~host$の`自前の自動頭字化~hint$
+◎
+If element is an editing host or an editable element, then return the own autocapitalization hint of the editing host of element.
+</li>
+	<li>
+~Assert：
+この段に到達することは決してない
+— ~text入力が生じるのは，上の判定基準のいずれかを満たす要素に限られるので。
+◎
+Assert: this step is never reached, since text input only occurs in elements that meet one of the above criteria.
+</li>
+</ol>
+
+			</section>
+			<section id="input-modalities:-the-inputmode-attribute">
+<h3 title="Input modalities: the inputmode attribute">6.7.7. 入力~modal性： `inputmode^a 属性</h3>
+
+<p>
+~UAは、次に挙げるものに対し， `inputmode$a 属性を~supportできる
+⇒＃
+~form~control（`textarea$e 要素の値など） ／
+`編集中の~host$内の要素（ `contenteditable$a を利用しているものなど）
+◎
+User agents can support the inputmode attribute on form controls (such as the value of textarea elements), or in elements in an editing host (e.g., using contenteditable).
+</p>
+
+<p>
+`inputmode@a
+内容~属性は、［
+内容を手入力している利用者にとって，どの種類の入力の仕組みが最も助けになるか
+］を指定する，`列挙d属性$である。
+~UAは、属性に与えられた~keywordに応じて，次に述べるような~virtual-keyboardを表示するベキである：
+◎
+The inputmode content attribute is an enumerated attribute that specifies what kind of input mechanism would be most helpful for users entering content.
+◎
+↓</p>
+
+<table><thead><tr><th>~keyword
+<th>~~説明
+</thead><tbody>
+
+<tr><td>`none@v
+</td><td>
+~virtual-keyboardは表示するベキでない。
+この~keywordは、自前の~keyboard~controlを具現化するような内容に，有用になる。
+◎
+The user agent should not display a virtual keyboard. This keyword is useful for content that renders its own keyboard control.
+
+<tr><td>`text@v
+</td><td>
+利用者の~localeにおける~textを入力できるもの。
+◎
+The user agent should display a virtual keyboard capable of text input in the user's locale.
+
+<tr><td>`tel@v
+</td><td>
+電話番号を入力できるもの。
+これは、［
+数字 0 〜 9, 文字 "#", "*"
+］用の~Keyを含むベキである。
+~localeによっては、これには~alphabetic-mnemonicも含まれる（例えば米国では、歴史的に，~label "2" の~Keyには ~label "A", "B", "C" も付与されている）。
+◎
+The user agent should display a virtual keyboard capable of telephone number input. This should including keys for the digits 0 to 9, the "#" character, and the "*" character. In some locales, this can also include alphabetic mnemonic labels (e.g., in the US, the key labeled "2" is historically also labeled with the letters A, B, and C).
+
+<tr><td>`url@v
+</td><td>
+利用者の~localeにおける~textを入力できる, かつ
+`~URL$の入力を援助する~Keyも伴われたもの
+— 次に挙げるような，~domain名に共通的に見出される文字列を手早く入力するための
+⇒
+`/^l, `.^l, `www.^l, `.com^l
+◎
+The user agent should display a virtual keyboard capable of text input in the user's locale, with keys for aiding in the input of URLs, such as that for the "/" and "." characters and for quick input of strings commonly found in domain names such as "www." or ".com".
+
+<tr><td>`email@v
+</td><td>
+利用者の~localeにおける~textを入力できる, かつ
+~email~addressの入力を援助する~Keyも伴われたもの
+— 文字 `@^l, `.^l 用の~Keyなど。
+◎
+The user agent should display a virtual keyboard capable of text input in the user's locale, with keys for aiding in the input of email addresses, such as that for the "@" character and the "." character.
+
+<tr><td>`numeric@v
+</td><td>
+数を入力できるもの。
+この~keywordは、 PIN を手入力するときに有用になる。
+◎
+The user agent should display a virtual keyboard capable of numeric input. This keyword is useful for PIN entry.
+
+<tr><td>`decimal@v
+</td><td>
+小数を含む数を入力できるもの。
+利用者の~locale用の数的~Keyと書式区切子が示されるベキである。
+◎
+The user agent should display a virtual keyboard capable of fractional numeric input. Numeric keys and the format separator for the locale should be shown.
+
+<tr><td>`search@v
+</td><td>
+探索~用に最適化されたもの。
+◎
+The user agent should display a virtual keyboard optimized for search.
+
+</tbody></table>
+
+<p>
+`inputMode@m
+~IDL属性は、`既知な値のみに制限され$る下で，
+`inputmode$a 内容~属性を`反映する$モノトスル。
+◎
+The inputMode IDL attribute must reflect the inputmode content attribute, limited to only known values.
+</p>
+
+<p>
+`inputmode$a が指定されていない（または、~UAが~supportしない状態にある）ときは、~UAは，既定の~virtual-keyboardを決定して利用者に呈示するベキである
+— 決定する際には、入力の［
+`type$a や `pattern$a
+］属性などの文脈的な情報を利用するベキである。
+◎
+When inputmode is unspecified (or is in a state not supported by the user agent), the user agent should determine the default virtual keyboard to be shown. Contextual information such as the input type or pattern attributes should be used to determine which type of virtual keyboard should be presented to the user.
+</p>
+
+			</section>
+			<section id="input-modalities:-the-enterkeyhint-attribute">
+<h3 title="Input modalities: the enterkeyhint attribute">6.7.8. 入力~modal性： `enterkeyhint^a 属性</h3>
+
+<p>
+~UAは、~form~control（ `textarea$e 要素の値などの）や,
+`編集中の~host$内の要素（例： `contenteditable$a を利用しているもの）に対し，
+`enterkeyhint$a 属性を~supportできる。
+◎
+User agents can support the enterkeyhint attribute on form controls (such as the value of textarea elements), or in elements in an editing host (e.g., using contenteditable).
+</p>
+
+<p>
+`enterkeyhint@a
+内容~属性は、`列挙d属性$であり，［
+~virtual-keyboard上の `Enter^kbd ~Key用に，どの動作~label（または~icon）を呈示するか
+］を指定する。
+これは、［
+`Enter^kbd ~Keyの呈示を，利用者にもっと助けになるよう~custom化する
+］ことを，作者に許容する。
+◎
+The enterkeyhint content attribute is an enumerated attribute that specifies what action label (or icon) to present for the enter key on virtual keyboards. This allows authors to customize the presentation of the enter key in order to make it more helpful for users.
+</p>
+
+<table><thead><tr><th>~keyword
+<th>~UAは、［
+代表的に、この列に述べるような操作o
+］用の~cueを呈示するベキである。
+<tbody>
+
+<tr><td>`enter@v
+<td>
+改行を挿入する。
+◎
+The user agent should present a cue for the operation 'enter', typically inserting a new line.
+
+<tr><td>`done@v
+<td>
+入力するものはそれ以上なく，~IMEは閉じられることになる。
+◎
+The user agent should present a cue for the operation 'done', typically meaning there is nothing more to input and the input method editor (IME) will be closed.
+
+<tr><td>`go@v
+<td>
+打込んだ~textの標的へ利用者を導く。
+◎
+The user agent should present a cue for the operation 'go', typically meaning to take the user to the target of the text they typed.
+
+<tr><td>`next@v
+<td>
+~textを受容する次の欄へ利用者を導く。
+◎
+The user agent should present a cue for the operation 'next', typically taking the user to the next field that will accept text.
+
+<tr><td>`previous@v
+<td>
+~textを受容する前の欄へ利用者を導く。
+◎
+The user agent should present a cue for the operation 'previous', typically taking the user to the previous field that will accept text.
+
+<tr><td>`~search0@v
+<td>
+打込んだ~textを探索した結果へ利用者を導く。
+◎
+The user agent should present a cue for the operation 'search', typically taking the user to the results of searching for the text they have typed.
+
+<tr><td>`send@v
+<td>
+~textをその標的へ送達する。
+◎
+The user agent should present a cue for the operation 'send', typically delivering the text to its target.
+</tbody></table>
+
+<p>
+`enterKeyHint@m
+~IDL属性は、
+`既知な値のみに制限され$る下で，
+`enterkeyhint$a 内容~属性を`反映する$モノトスル。
+◎
+The enterKeyHint IDL attribute must reflect the enterkeyhint content attribute, limited to only known values.
+</p>
+
+<p>
+`enterkeyhint$a は指定されていない（または、~UAが~supportしない状態にある）場合、~UAは，~virtual-keyboard上に既定で呈示する動作~label（または~icon）を決定するベキである
+— これを決定するときには、［
+`inputmode$a ／ `type$a ／ `pattern$a
+］属性などの文脈的な情報を利用するベキである。
+◎
+When enterkeyhint is unspecified (or is in a state not supported by the user agent), the user agent should determine the default action label (or icon) to present. Contextual information such as the inputmode, type, or pattern attributes should be used to determine which action label (or icon) to present on the virtual keyboard.
+</p>
+
+			</section>
+		</section>
+		<section id="find-in-page">
+<h3 title="Find-in-page">6.8 ~find-in-page</h3>
+
+			<section id="introduction-10">
+<h4 title="Introduction">6.8.1 序論</h4>
+
+<p>
+この節では、
+`~find-in-page@
+を定義する
+— それは、~UAに備わる共通な仕組みであり，特定0の情報に関して~pageの内容を探索することを利用者に許容する。
+◎
+This section defines find-in-page — a common user-agent mechanism which allows users to search through the contents of the page for particular information.
+</p>
+
+<p>
+`~find-in-page$特能への~accessは、
+`~find-in-page~UI@
+を介して供される。
+これは、~UAが供する~UIであり、探索への入力と~parametersを指定することを利用者に許容する。
+この~UIは、［
+~shortcut／~menu選択
+］の結果として現れることもある。
+◎
+Access to find-in-page feature is provided via a find-in-page interface. This is a user-agent provided user interface, which allows the user to specify input and the parameters of the search. This interface can appear as a result of a shortcut or a menu selection.
+</p>
+
+<p>
+`~find-in-page~UI$内の［
+~text入力, 設定群
+］の組合nは、利用者の
+`~query@fiP
+を表現する。
+これは，概して、利用者が探索したいと求める~textに加え，省略可能な設定群（例：
+語全体に限り†探索するよう制約する能）も含む。
+【† 例えば `strict^l は `restrict^l には合致しないように。】
+◎
+A combination of text input and settings in the find-in-page interface represents the user query. This typically includes the text that the user wants to search for, as well as optional settings (e.g., the ability to restrict the search to whole words only).
+</p>
+
+<p>
+~UAは、所与の`~query$fiPに対し~page内容を処理して，
+0 個以上の合致-からなる
+`合致-~list@fiP
+を識別する。
+各~合致-は、利用者からの`~query$fiPを満足する内容~範囲を与える。
+◎
+The user-agent processes page contents for a given query, and identifies zero or more matches, which are content ranges that satisfy the user query.
+</p>
+
+<p>
+`合致-~list$fiP内のある 1 つの合致-は、強調され, ~viewの中へ~scrollされることにより，利用者から
+`作動中の合致-@fiP
+として識別されるようになる。
+利用者は、`~find-in-page~UI$を利用して`作動中の合致-$fiPを次へ進めることにより，`合致-~list$fiPを成す各~合致-を~navigateできる。
+◎
+One of the matches is identified to the user as the active match. It is highlighted and scrolled into view. The user can navigate through the matches by advancing the active match using the find-in-page interface.
+</p>
+
+<p class="XXX">
+`~find-in-page$が，現在は未指定な `window.find()^c ~APIの下層をどう成すか標準~化することは、
+<a href="~HTMLissue/3539">課題 #3539</a>
+にて追跡されている。
+◎
+Issue #3539 tracks standardizing how find-in-page underlies the currently-unspecified window.find() API.
+</p>
+
+			</section>
+			<section id="interaction-with-selection">
+<h4 title="Interaction with selection">6.8.2 選択との相互作用</h4>
+
+<p>
+~find-in-page処理nは、文書の文脈~内で呼出され，その文書の`選択$に効果を及ぼしてもヨイ。
+特定的には、`作動中の合致-$fiPを定義する範囲が，現在の選択を規定し得る。
+しかしながら、~find-in-page処理nの間，この選択~更新が起こる時点は、いくつかあり得る（例：
+`~find-in-page~UI$が退けられた時点／
+`作動中の合致-$fiPの範囲が変化した時点）。
+◎
+The find-in-page process is invoked in the context of a document, and may have an effect on the selection of that document. Specifically, the range that defines the active match can dictate the current selection. These selection updates, however, can happen at different times during the find-in-page process (e.g. upon the find-in-page interface dismissal or upon a change in the active match range).
+</p>
+
+			</section>
+		</section>
+	</section>
+</main>

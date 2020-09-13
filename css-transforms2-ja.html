@@ -1,0 +1,4193 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Transforms Module Level 2 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<!--%style -->
+<style>
+small.cp {
+	color: gray;
+}
+
+td[colspan] {
+	text-align:center;
+}
+
+#supporting-functions-table > tr > td:first-child {
+	font-family: monospace0, monospace;
+}
+
+.upper-alpha > li {
+	list-style-type: upper-alpha;
+}
+
+._matrix tr {
+	border: none;
+}
+._matrix td {
+	text-align: center;
+}
+._matrix {
+	border-collapse: separate;
+	border-spacing: 0;
+	border: thin solid black;
+	border-style: none solid;
+	border-radius: 5px;
+}
+</style>
+
+<script >
+
+Util.ready = function(){
+	const source_data = {
+		collectParts: collectParts,
+		generate: expand
+	};
+
+	Util.switchWordsInit(source_data);
+
+	return;
+
+	function collectParts(parts){
+		Util.collectParts(parts);
+		// generate_matrix_markup(parts);
+		const data = PAGE_DATA.matrix_data
+.replace( /\s*●(.+)/g,
+	'</tbody></table><table id="_dgm-$1" class="_matrix"><tbody>' )
+.replace(/[\s\S]*?<\/table>/, '')
+.replace(/\n(?=[^<\s])/g, '<tr><td>')
+.replace(/,[ \t]*/g, '<td>')
+.replace(/%m(\d+)/g, '<var>m<sub>$1</sub></var>')
+.replace(/%([\wα-ε]+)/g, '<var>$1</var>')
++ '</tbody></table>';
+		delete PAGE_DATA.matrix_data;
+
+		const div = C('div');
+		div.innerHTML = data;
+		for(let e = div.firstElementChild; e; e = e.nextElementSibling){
+			if(e.id){
+				parts[e.id] = e;
+			}
+		}
+	}
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+	const unicode_map = this.unicode_map;
+
+	return this.html.replace(
+		/%[\wα-ε\-一-鿆~あ-ん]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r': // ref
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'pe': 
+	text = `::${key}`;
+	break;
+case 't': // typedef
+	text = `&lt;${key}&gt;`;
+	break;
+case 'vp': // perspective-origin
+	href=`#valdef-perspective-origin-${key}`;
+	break;
+case 'f': // funcdef
+	text = `${key}()`;
+	break;
+case 'M': // 行列成分
+	text = `m<sub>${key}</sub>`;
+	break;
+case 'dgm':
+	return `<a id="_dgm-${key}">＊</a>`;
+	break;
+case 'cmt':
+	return `/* <span class="comment">${key}</span> */`;
+	break;
+case 'en': // english words
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+case 'bug':
+	return `<a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=${key}">Bug ${key}</a>`;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Transforms Module Level 2
+spec_date:2020-03-04
+trans_update:2019-11-23
+source_checked:191122
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-transforms-2/
+	abbr_url:TRANSFORM2
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:transform,css
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2017-01-14
+
+
+●●class_map
+p:property
+e:element
+a:attr
+css:css
+f:func
+t:type
+v:value
+vp:value
+
+●●tag_map
+p:code
+svg:code
+css:code
+e:code
+a:code
+c:code
+I:code
+m:code
+M:var
+t:var
+b:b
+f:code
+v:code
+vp:code
+V:var
+cite:cite
+
+●●words_table1
+
+FXTF:https://drafts.fxtf.org
+	BUGS:https://www.w3.org/Bugs/Public/show_bug.cgi
+	none:<a class="value" href="#none">none</a>
+none0:none
+
+
+●●words_table
+
+
+	●座標系／行列／変形
+変形-:transform::~
+変形:transform::~
+	変形-原点:transform-origin
+変形n:transformation::変形
+変形d:transformed::変形
+	未~変形dな:untransformed
+
+行列:matrix:~
+行列式:determinant:~
+単位i:identity::単位
+逆行列:inverse:~
+恒等:identity:~
+	恒等~変形-関数:identity transform function
+
+遠近法:perspective::~
+透視:perspective::~
+射影:projection::~
+投影:projection::~
+
+回転-:rotate::~
+回転:rotation::~
+回転角:angle::~
+角度:angle::~
+並進-:translate::~
+並進:translation::~
+拡縮-:scale::~
+拡縮:scale::~
+	拡縮-法:scaling
+拡縮率:scale::~
+拡大-:scale up::~
+縮小-:scale down::~
+斜傾:skew::~::スキュー
+斜傾率:shear::~::シアー
+
+写像:mapping::~::マッピング
+写像-:map::~::マップ
+線型:linear::~
+
+単位元:neutral element:~
+特異性:singularity::~
+
+複合的:composite:~
+組成-:composite::~
+再構成-:recompose::~
+	再構成-法:recomposing
+分解-:decompose::~
+	分解-法:decomposing
+分解:decomposition::~
+派生関数:derived transform function:derived transform 関数:~
+原始関数:primitive:~
+派生:derivative::~
+換算-:convert:~
+換算:conversion:~
+	converting
+四元数:quaternions::~
+等式:equation:~
+	右辺:right hand side
+直交する:orthogonalになる::~
+直交な:orthogonalな::直交する
+直交化する:orthogonal 化する::直交させる
+	:orthogonalize
+	unflip
+斉次:homogeneous::~
+無限小:infinitesimal:~
+	無限小:infinitesimal small／thickness
+無限遠:infinitely far:~
+球面:spherical::~
+vector::::ベクター
+scalar::::スカラー
+作用-:operate:~
+作用:operation:~
+	~~作用:interact
+
+乗算-:multiply:~
+	左から乗算-:pre-multiply
+
+	●幾何
+2D:
+3D:
+4D:
+	-:dimension 
+	~2D:two-dimensional
+	~3D:three-dimensional
+	~4D:four-dimensional
+	~2D:2d
+	~3D:3d
+	~3D:3d-
+	~3D:3D-
+4x4::4×4
+3x2::3×2
+3x3::3×3
+
+裏返す:flipする:~
+裏返され:flipされ:~
+裏表に:back-to-backに:~
+	貼り合わせる:place 〜 back-to-back
+裏面:back:~
+背面:backface:裏面
+表面:front:~
+裏側:reverse side:~
+表側:front side:~
+	前面:in front of
+	前面から後面への
+	後面から前面
+	手前から奥:front-to-back
+	奥から手前:back-to-front
+五角形:pentagon:~
+三角形:triangle:~
+四辺形:quadrilateral:~
+矩形:rectangle:~
+多角形:polygon:~
+四角錐:pyramid:~
+
+時計回り:clockwise:~
+
+垂直:perpendicular:~
+平面:plane:~
+	平面的:as flat planes
+消失点:vanishing point:~
+深度:depth:~
+	深度~順に基づいてdepth-sort
+奥行き:depth:~
+
+横:horizontal:~
+縦:vertical:~
+視点:viewer:~
+	視点:the same place the viewer is looking from
+	視聴者の目の~~位置
+隅:corner:~
+頂点:vertex:~
+封入-:enclose:~
+平坦:flat::~
+	平坦~化:flatten
+	平坦に:flattening
+
+風景:scene:~
+狭小:narrow:~
+遠近感:foreshortening:~
+平行:parallel::~
+
+X:
+Y:
+Z:
+	X:x
+	Y:y
+	Z:z
+	〜に向かって:towards
+	〜倍に:factor
+	ずれ:offset
+	より大きい:greater
+	より大きい:larger
+	より小さく:smaller
+	小さい:small
+	より近く:closer
+	より遠い:further away
+	十分に遠い:very far
+	非常に広大:enormous
+	中央:middle
+	右下方:
+	扉が開く様に:swings closer
+	一定位置
+	カメラ
+		切り取:cut out／chopped off ／ truncating ／ slice away
+	中程度:moderate
+	俯瞰:looking at
+	傾けられて:tilting out
+	全体:complete
+
+	〜量に関わらず，:No matter how far
+	半分:half
+	原点:origin of point
+	原点:point of origin
+	原点からの:origin-centered 
+	両側
+	右方
+	地点:
+	向く:faces
+	周:turns
+	四隅:
+	埋める:fill
+
+	増大-:increases
+	大きく越えて:far past
+	小さい:small
+	左上:upper-left
+	左上隅
+	引き延ばされる:stretched over／stretch out
+	flat surface
+	感:feeling
+	本物らしく:realistic
+	様子
+	手前:in front
+	指す先から:end
+	極小:very small
+
+	正方向
+	無限大
+	無限遠点
+	画面:drawing plane／plane of the screen
+	真正面
+	移動
+	移動量
+	移動／変動するmoves
+	薄さ:thickness
+
+	近さ:close
+	限りなく近付ける:bringing the box closer and closer
+	近付:
+	近似:
+	逆方向:
+	遠く:far
+	遠く離れた:faraway
+	鏡:sheet of glass
+	鏡像:mirror-image 1
+	鏡像をとるmirroring
+	隣接:
+	飛び出す:pop out
+	同一~平面にある:coplanar
+	比例する:proportional
+
+	●アニメーション
+加算:addition::~
+	加算:arithmetic addition
+加法的:additive::~
+累積:accumulation::~
+累積-:accumulate::~
+累積d:accumulated::累積
+結合-:combine::~
+
+反転:flip:~
+始値:source:始値-
+終値:destination:終値-
+
+値a:<var>V</var><sub>a</sub>
+値b:<var>V</var><sub>b</sub>
+	結果値:<var>V<sub>result</sub></var>
+差分:delta:~
+
+
+	●CSS レイアウト
+基準:reference:~
+	基準~box:reference box
+包装:wrapper:~
+	~group化:grouping
+	scrolling
+
+	●塗り／
+積層:stacking::~
+積層順:layering:~
+装飾:decoration:~
+背後:behind:~
+背景:background:~
+背景画:backdrop:~
+色:color:~
+塗ng:painting:塗り
+放射型:radial:~
+不透明度:opacity::~
+gradient::::グラデーション
+
+	●構文
+単位:unit:~
+	単位なしの:unitless
+
+	●仕様
+論拠:reasoning:~
+表記:notation:~
+奇妙:bizarre:~
+修正-:fix:~
+改正-:amend:~
+印象:impression:~
+
+	~~手続き:procedure
+	consequently
+	通例のように:per usual
+	compat
+	有効:effective
+	なるべく:possible
+	の効力により:by virtue of
+	効力を発揮する:comes into play
+	し易く:easier／easily
+	別法として:alternately
+	ゆえに:consequence
+	いずれにせよ:anyway
+	させなくする:prevent
+	方法
+	付録
+	仮想
+	〜下の:contained
+	参考
+	当該の:in question／respective
+	注意:
+	詳細:
+	規定:
+	要する:necessary／
+	に関する:with regards to
+	~~歪める:stress
+	できるようにする／可能にする:allow
+	ふるまう:act
+	判明:tested
+	参照:
+	~~影響を受ける:influenced
+	想定:
+	捉え:thought
+	要する:require
+	試案:pass at an attempt to
+	解く:solve
+	改め得:alter
+	調べる:looking at
+	該当しない:does not count
+	~~追加で:extra
+	壊さな:break
+	~~解明:figure out
+	本当は:really
+	互換性:compat
+	~web互換性:webcompat
+
+	●未分類（動詞
+連結:concatenation:~
+展開-:expand:~
+	同じ〜に共存:share a common〜
+巻上げら:hoist upさ:巻き上げら
+
+stroke::::ストローク
+	~stroke法:stroking
+filter::::フィルタ
+切詰め:clamping:切り詰め
+切抜き:clipping::切り抜き:クリッピング
+割振らな:allocateしな:割り振らな
+
+
+	計算結果:calculate
+	指す:address
+	与えられ:given
+	~~動的:live
+	変動:
+	変化:
+	渡され:passed
+	現れる:appear する
+	~~縮退
+	据え:sits
+	欠落して:missing
+
+	●未分類
+	-:quantity
+列主導:column-major:~
+数学的:mathematical:~
+	数学的:math
+数量的:numerical:~
+公式:formula:~
+
+	~screen外:off-screen
+
+	〜化:instantiated
+graphics::::グラフィックス
+疑似code:pseudo code:疑似コード
+絵図:drawing:~
+固定:anchor:~
+固定長:fixed length:~
+
+交互:alternate:~
+舞台:stage:~
+遊戯用:playing:~
+card::::カード
+texture::::テクスチャ
+memory::::メモリ
+	対:pair
+	1 に基づく:one-based
+
+	web
+	基本:
+	どの程度~正確に〜を精確に指定するための最初の試案:first pass at an attempt to precisely specify how exactly
+	成分値:
+	機能:
+	引数:parameter
+	行~vector
+	等しい:equal
+	等しく:equally
+	記す:write
+	選ばれる:chosen
+	量:amount
+	-:quantity
+	単なる:just
+	見かけ:look:~
+	大きく:larger
+	住まう:living
+
+	●指示語
+
+	個別的／個々の:individual
+	1:one
+	下段:bottom
+	上段:top
+	部分:part
+	上述
+	下図
+	前の例:previous example
+	前段落:
+	前節
+	前節による:former
+	前者
+	後者
+	後述
+	一方
+	一連の:collection／
+	一部
+	以下
+	以外
+	任意
+	次項
+	残りの部分:rest
+	最終的な:final
+	自体:
+	自身:
+		全部:whole thing
+	上の:the previous
+
+	右辺
+	場合:
+	大抵:
+	対応:
+	対象:
+	属している:live in
+	属する
+	時点:
+	橙色:orange
+	水色:light blue 1
+	青色:blue
+	黄緑色:lime
+	黄色の:yellow
+	個目／本目
+	実線:solid outline
+	点線:dashed
+	およそ:about
+	〜からなる:consists
+	一時的:temporarily
+	個数:number of
+	先立:
+	再度
+	-:equal
+
+
+●●original_id_map
+
+●●mdn_urls
+propdef-backface-visibility:CSS/backface-visibility
+propdef-perspective:CSS/perspective
+propdef-perspective-origin:CSS/perspective-origin
+propdef-transform:CSS/transform
+propdef-rotate:CSS/rotate
+propdef-scale:CSS/scale
+propdef-translate:CSS/translate
+propdef-transform-style:CSS/transform-style
+
+typedef-transform-function:CSS/transform-function
+
+funcdef-matrix3d:CSS/transform-function/matrix3d
+funcdef-perspective:CSS/transform-function/perspective
+funcdef-rotatex:CSS/transform-function/rotateX
+funcdef-rotatey:CSS/transform-function/rotateY
+funcdef-rotatez:CSS/transform-function/rotateZ
+funcdef-rotate3d:CSS/transform-function/rotate3d
+funcdef-scalez:CSS/transform-function/scaleZ
+funcdef-scale3d:CSS/transform-function/scale3d
+funcdef-translatez:CSS/transform-function/translateZ
+funcdef-translate3d:CSS/transform-function/translate3d
+
+●●link_map
+
+	●e
+e.a:~SVGlinking#elementdef-a
+	＊e.a:~HEtextlevel#the-a-element
+e.animate:~SVG11/animate.html#AnimateElement
+e.clipPath:~MASKING1#elementdef-clippath
+e.foreignObject:~SVGembedded#elementdef-foreignObject
+e.g:~SVGstruct#elementdef-g
+e.linearGradient:~SVGpservers#elementdef-linearGradient
+e.mask:~MASKING1#elementdef-mask
+e.pattern:~SVGpservers#elementdef-pattern
+e.radialGradient:~SVGpservers#elementdef-radialGradient
+e.set:~SVG11/animate.html#SetElement
+e.svg:~SVGstruct#elementdef-svg
+
+	●p
+p.background-position:~CSSBG#propdef-background-position
+p.clip-path:~MASKING1#propdef-clip-path
+p.clip:~MASKING1#propdef-clip
+	p.clip:~CSS2VISUFX#propdef-clip
+p.filter:~FILTERS#propdef-filter
+p.isolation:~COMPOSITING#propdef-isolation
+	p.isolation:~FXTF/compositing-2/#propdef-isolation
+p.mask-border-source:~MASKING1#propdef-mask-border-source
+p.mask-image:~MASKING1#propdef-mask-image
+p.mix-blend-mode:~COMPOSITING#propdef-mix-blend-mode
+	p.mix-blend-mode:~FXTF/compositing-2/#propdef-mix-blend-mode
+p.offset:~FXTF/motion-1/#propdef-offset
+p.opacity:~CSSCOLOR#propdef-opacity
+p.overflow:~CSSOVERFLOW3#propdef-overflow
+p.position:~CSSPOS#propdef-position
+p.vector-effect:~SVGcoords#VectorEffectProperty
+
+p.backface-visibility:#propdef-backface-visibility
+p.perspective-origin:#propdef-perspective-origin
+p.perspective:#propdef-perspective
+p.rotate:#propdef-rotate
+p.scale:#propdef-scale
+p.translate:#propdef-translate
+p.transform-style:#propdef-transform-style
+
+p.transform:~TRANSFORM#propdef-transform
+p.transform-origin:~TRANSFORM#propdef-transform-origin
+p.z-index:~CSS2VISUREN#propdef-z-index
+
+	●f
+f.matrix3d:#funcdef-matrix3d
+f.perspective:#funcdef-perspective
+f.rotate3d:#funcdef-rotate3d
+f.rotateX:#funcdef-rotatex
+f.rotateY:#funcdef-rotatey
+f.rotateZ:#funcdef-rotatez
+f.scale3d:#funcdef-scale3d
+f.scaleZ:#funcdef-scalez
+f.translate3d:#funcdef-translate3d
+f.translateZ:#funcdef-translatez
+
+f.matrix:~TRANSFORM#funcdef-transform-matrix
+f.rotate:~TRANSFORM#funcdef-transform-rotate
+f.scale:~TRANSFORM#funcdef-transform-scale
+f.scaleX:~TRANSFORM#funcdef-transform-scalex
+f.scaleY:~TRANSFORM#funcdef-transform-scaley
+f.translate:~TRANSFORM#funcdef-transform-translate
+f.translateX:~TRANSFORM#funcdef-transform-translatex
+f.translateY:~TRANSFORM#funcdef-transform-translatey
+
+
+	●t
+t.length:~CSSVAL#length-value
+t.length [0,∞]:~CSSVAL#length-value
+	t.length:#valdef-perspective-length
+t.transform-function:#typedef-transform-function
+	t.matrix3d():#funcdef-matrix3d
+	t.perspective():#funcdef-perspective
+t.angle:~CSSVAL#angle-value
+t.length-percentage:~CSSVAL#typedef-length-percentage
+t.number:~CSSVAL#number-value
+t.percentage:~CSSVAL#percentage-value
+t.position:~CSSVAL#position
+t.zero:~CSSVAL#zero-value
+t.transform-list:~TRANSFORM#typedef-transform-list
+
+	●v
+	v.<length>:#valdef-perspective-origin-length
+	v.<percentage>:#valdef-perspective-origin-percentage
+v.none:#valdef-perspective-none
+v.~none0:#valdef-translate-none
+
+v.bottom:#valdef-perspective-origin-bottom
+v.center:#valdef-perspective-origin-center
+v.left:#valdef-perspective-origin-left
+v.right:#valdef-perspective-origin-right
+v.top:#valdef-perspective-origin-top
+
+v.x:#valdef-rotate-x
+v.y:#valdef-rotate-y
+v.z:#valdef-rotate-z
+
+v.visible:~CSSOVERFLOW3#valdef-overflow-visible
+v.clip:~CSSOVERFLOW3#valdef-overflow-clip
+
+	●用語
+視点:#_viewer
+
+包含塊:~CSSDISP#containing-block
+	包含塊:~CSS2VISUREN#containing-block
+	包含塊:~CSS2VISUDET#containing-block-details
+
+~3D並進:#Translate3dDefined
+~3D回転:#Rotate3dDefined
+~3D変形:#three-d-transform-functions
+~3D変形-関数:#3d-transform-functions
+~3D拡縮:#Scale3dDefined
+~3D変形d要素:#3d-transformed-element
+~3D行列:#3d-matrix
+恒等~変形-関数:#identity-transform-function
+
+1 に基づく値~用の累積:#accumulation-for-one-based-values
+
+~3D描画~文脈:#3d-rendering-context
+	§:#3d-rendering-contexts
+
+§ ~3D変形による描画:#3d-transform-rendering
+§ 変形-関数の数学的~記述:#mathematical-description
+§ 累積~3D変形n行列の算出:#accumulated-3d-transformation-matrix-computation
+§ 行列の補間:#matrix-interpolation
+
+~group化~prop値:#grouping-property-values
+使用~値:~CASCADE#used-value
+算出d値:~CASCADE#computed-value
+積層~文脈:~CSS2VISUREN#stacking-context
+累積~3D変形n行列:#accumulated-3d-transformation-matrix
+透視~投影~行列:#PerspectiveDefined
+透視~行列:#perspective-matrix
+
+すべての子孫~用の包含塊:~TRANSFORM#containing-block-for-all-descendants
+
+~2D~3x2行列:~TRANSFORM#MatrixDefined
+~2D行列:~TRANSFORM#2d-matrix
+~2D並進:~TRANSFORM#TranslateDefined
+基準~box:~TRANSFORM#reference-box
+変形-可能:~TRANSFORM#transformable-element
+変形d要素:~TRANSFORM#transformed-element
+変形n行列:~TRANSFORM#transformation-matrix
+変形-関数:~TRANSFORM#transform-functions
+原始関数:~TRANSFORM#transform-primitives
+	派生関数:~TRANSFORM#transform-primitives
+局所~座標系:~TRANSFORM#local-coordinate-system
+左から乗算-:~TRANSFORM#pre-multiply
+
+
+呈示~属性:~SVGstyling#TermPresentationAttribute
+	呈示~属性:~SVG11/intro.html#TermPresentationAttribute
+解決d値:~CSSOM1#resolved-value
+
+補間:~CSSVAL#interpolation
+加算:~CSSVAL#addition
+累積:~CSSVAL#accumulation
+
+~graphicを参照する要素:~SVGstruct#TermGraphicsReferencingElement
+~graphics要素:~SVGstruct#TermGraphicsElement
+容器~要素:~SVGstruct#TermContainerElement
+
+~list:~INFRA#list
+付加する:~INFRA#list-append
+~cloneする:~INFRA#list-clone
+
+●●matrix_data
+
+
+●3x3matrix
+%a, %c, %e
+%b, %d, %f
+0, 0, 1
+
+●4x4matrix
+%m11, %m21, %m31, %m41
+%m12, %m22, %m32, %m42
+%m13, %m23, %m33, %m43
+%m14, %m24, %m34, %m44
+
+●translate3d
+1, 0, 0, %tx
+0, 1, 0, %ty
+0, 0, 1, %tz
+0, 0, 0, 1 
+
+●scale3d
+%sx, 0, 0, 0
+0, %sy, 0, 0
+0, 0, %sz, 0
+0, 0, 0, 1
+
+●rotate3dmatrix
+1 − 2⋅( %y⋅%y + %z⋅%z )⋅%ss, 2⋅( %x⋅%y⋅%ss − %z⋅%sc ), 2⋅( %x⋅%z⋅%ss + %y⋅%sc ), 0
+2⋅( %x⋅%y⋅%ss + %z⋅%sc ), 1 − 2⋅( %x⋅%x + %z⋅%z )⋅%ss, 2⋅( %y⋅%z⋅%ss − %x⋅%sc ), 0
+2⋅( %x⋅%z⋅%ss − %y⋅%sc ), 2⋅( %y⋅%z⋅%ss + %x⋅%sc ), 1 − 2⋅( %x⋅%x + %y⋅%y )⋅%ss, 0
+0, 0, 0, 1
+
+●perspective
+1, 0, 0, 0
+0, 1, 0, 0
+0, 0, 1, 0
+0, 0, −1/%d, 1
+
+
+●●ref_normative
+
+[COMPOSITING-2]
+    Compositing and Blending Level 2 URL: https://drafts.fxtf.org/compositing-2/ 
+[CSS-BACKGROUNDS-3]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. 17 October 2017. CR. URL: https://www.w3.org/TR/css-backgrounds-3/ 
+[CSS-CASCADE-4]
+    Elika Etemad; Tab Atkins Jr.. CSS Cascading and Inheritance Level 4. 28 August 2018. CR. URL: https://www.w3.org/TR/css-cascade-4/ 
+[CSS-COLOR-4]
+    Tab Atkins Jr.; Chris Lilley. CSS Color Module Level 4. 5 November 2019. WD. URL: https://www.w3.org/TR/css-color-4/ 
+[CSS-MASKING-1]
+    Dirk Schulze; Brian Birtles; Tab Atkins Jr.. CSS Masking Module Level 1. 26 August 2014. CR. URL: https://www.w3.org/TR/css-masking-1/ 
+[CSS-OVERFLOW-3]
+    David Baron; Elika Etemad; Florian Rivoal. CSS Overflow Module Level 3. 31 July 2018. WD. URL: https://www.w3.org/TR/css-overflow-3/ 
+[CSS-TRANSFORMS-1]
+    Simon Fraser; et al. CSS Transforms Module Level 1. 14 February 2019. CR. URL: https://www.w3.org/TR/css-transforms-1/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS21]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[CSSOM]
+    Simon Pieters; Glenn Adams. CSS Object Model (CSSOM). 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-1/ 
+[FILTER-EFFECTS-1]
+    Dirk Schulze; Dean Jackson. Filter Effects Module Level 1. 18 December 2018. WD. URL: https://www.w3.org/TR/filter-effects-1/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[INFRA]
+    Anne van Kesteren; Domenic Denicola. Infra Standard. Living Standard. URL: https://infra.spec.whatwg.org/ 
+[MOTION-1]
+    Dirk Schulze; et al. Motion Path Module Level 1. 18 December 2018. WD. URL: https://www.w3.org/TR/motion-1/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[SVG11]
+    Erik Dahlström; et al. Scalable Vector Graphics (SVG) 1.1 (Second Edition). 16 August 2011. REC. URL: https://www.w3.org/TR/SVG11/ 
+[SVG2]
+    Amelia Bellamy-Royds; et al. Scalable Vector Graphics (SVG) 2. 4 October 2018. CR. URL: https://www.w3.org/TR/SVG2/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Transforms Module Level 2</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+
+
+●●spec_metadata
+
+最新 発行バージョン
+	https://www.w3.org/TR/css-transforms-2/
+以前のバージョン
+	https://www.w3.org/TR/2020/WD-css-transforms-2-20200303/
+
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-transforms-2">GitHub Issues</a>
+
+編集
+	<a class="p-name fn u-url url" href="http://xanthir.com/contact/">Tab Atkins Jr.</a> (Google Inc)
+	<a href="mailto:simon.fraser@apple.com">Simon Fraser</a> (Apple Inc)
+	<a href="mailto:dino@apple.com">Dean Jackson</a> (Apple Inc)
+	<a href="mailto:eoconnor@apple.com">Theresa O’Connor</a> (Apple Inc)
+
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-transforms-2/Overview.bs">GitHub Editor</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-transforms-2
+
+差分仕様
+	yes
+
+</script>
+
+
+</head>
+
+<body>
+
+
+<!--%resource pool -->
+<div id="_persisted_parts" hidden>
+
+<img id="_dgm-coordinates"
+	src="css-transforms2/coordinates.svg"
+	height="240" width="270"
+	alt="Demonstration of the initial coordinate space"
+>
+
+<img id="_dgm-simple-3d-example"
+	height="190" width="210"
+	src="css-transforms2/simple-3d-example.png"
+	alt="Div with a rotateY transform."
+>
+
+<img id="_dgm-perspective_distance"
+	height="600" width="600"
+	src="css-transforms2/perspective_distance.svg"
+	alt="Diagram of scale vs. Z position"
+>
+
+<img id="_dgm-perspective_origin"
+	height="300" width="600"
+	src="css-transforms2/perspective_origin.svg"
+	alt="Diagram of different perspective-origin"
+>
+
+<img id="_dgm-simple-perspective-example"
+	src="css-transforms2/simple-perspective-example.png"
+	height="190" width="210"
+	alt="Div with a rotateY transform, and perspective on its container"
+>
+
+<img id="_dgm-3d-intersection"
+	src="css-transforms2/3d-intersection.png"
+	height="198" width="210"
+	alt="Intersecting sibling elements."
+>
+<img id="_dgm-3d-rendering-context-flat"
+	src="css-transforms2/3d-rendering-context-flat.png"
+	height="200" width="240"
+	alt="Nested 3D transforms, with flattening"
+>
+
+<img id="_dgm-3d-rendering-context-3d"
+	src="css-transforms2/3d-rendering-context-3d.png"
+	height="200" width="240"
+	alt="Nested 3D transforms, with preserve-3d."
+>
+
+</div>
+
+<header>
+	<hgroup>
+<h1 id="title">CSS による 3D 変形 — CSS Transforms Module Level 2</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+CSS Transform （変形, 座標系変換）は、要素を~2Dや~3D空間~内で変形するように~CSSで~style付け可能にする。
+◎
+CSS transforms allows elements styled with CSS to be transformed in two-dimensional or three-dimensional space.
+</p>
+
+<p>
+この仕様は、~3D変形~用の新たな［
+変形~関数／~prop
+］, および 単純な変形~用の便利~関数を追加する。
+◎
+This spec adds new transform functions and properties for three-dimensional transforms, and convenience functions for simple transforms.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公の複製です…
+【以下，この節の他の内容は <a href="css-common-ja.html#status">CSS 日本語訳 共通ページ</a>に委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+<p>
+この仕様は、 `css-transforms-1$r を拡張する差分~仕様であり，作者が要素を~3D空間~内で変形できるようにする。
+`transform$p ~prop用の新たな`~3D変形-関数$により，~3D変形が可能になる。
+加えて，~3D変形で作業し易くするための追加的な~propもあり、作者は，入子にされた~3D変形の~~作用についての制御も可能になる。
+◎
+This specification is a delta spec that extends [css-transforms-1] to allow authors to transform elements in three-dimensional space. New transform functions for the transform property allow three-dimensional transforms, and additional properties make working with three-dimensional transforms easier, and allow the author to control how nested three-dimensional transformed elements interact.
+</p>
+
+<ul>
+	<li>
+`perspective$p ~propは、遠近法による変形nを~~追加で伴う子~要素を，作者が供することを許容する。
+◎
+The perspective property allows the author to provide child elements with an extra perspective transformation.＼
+</li>
+	<li>
+`perspective-origin$p ~propは、遠近法が適用される原点についての制御を供し，それにより実質的な “消失点” の所在を変えられる。
+◎
+The perspective-origin property provides control over the origin at which perspective is applied, effectively changing the location of the "vanishing point".
+</li>
+	<li>
+`transform-style$p ~propは、~3D変形された要素, その~3D変形された子孫たちを，同じ~3D空間に共存させ、~3D~obj階層の構築を可能にする。
+◎
+The transform-style property allows 3D-transformed elements and their 3D-transformed descendants to share a common three-dimensional space, allowing the construction of hierarchies of three-dimensional objects.
+</li>
+	<li>
+`backface-visibility$p ~propは、要素が，その裏側が`視点$から可視になるように，~3D変形を通して反転されているときに、効力を発揮する。
+その種の要素は，隠される方が望ましい状況もあるが、この~propに対する値 `hidden^v の利用が，それをアリにする。
+◎
+The backface-visibility property comes into play when an element is flipped around via three-dimensional transforms such that its reverse side is visible to the viewer. In some situations it is desirable to hide the element in this situation, which is possible using the value of hidden for this property.
+</li>
+</ul>
+
+<p class="note">注記：
+`transform$p ~propの一部の値は，要素を ~3D座標系において変形するが、その要素~自身は~3D~objにはされない。
+それらは~2D平面~内に存在し，奥行きを持たない。
+◎
+Note: While some values of the transform property allow an element to be transformed in a three-dimensional coordinate system, the elements themselves are not three-dimensional objects. Instead, they exist on a two-dimensional plane (a flat surface) and have no depth.
+</p>
+
+<p class="trans-note">【
+`視点@
+とは、想定されている，（一定位置にある）~page閲覧者の目の~~位置、言い換えれば仮想のカメラ~~位置を意味する。
+遠近法が無い~2D描画~文脈の下では、これは有意にならない（実質的に、画面から垂直に閲覧者~側へ向かう，無限遠点にある）。
+`~3D描画~文脈$の下では、画面から視点までの距離, および その文脈~下の~boxの中心から視点への X, Y 軸~方向のずれ量が，実際の描画に織り込まれることになる。
+また、後述される様に，視点は~pageの部分ごとに設定できる。
+ただし，視点の~~位置は~boxに相対的になる
+— ~screenに相対的にする機能（~boxが~scrollされても “画面外では固定的な” 現実の閲覧者の目の~~位置に合わせて動的に描画を変える）は，特に用意されていない。
+】</p>
+
+
+<p>
+この仕様はまた、単純な変形を容易に［
+記述-／~animate
+］できるよう， 3 種の便利~prop［
+`scale$p, `translate$p, `rotate$p
+］も追加する。
+◎
+This specification also adds three convenience properties, scale, translate and rotate, that make it easier to describe and animate simple transforms.
+</p>
+
+		<section id="module-interactions">
+<h3 title="Module Interactions">1.1. ~module間の相互作用</h3>
+
+<p>
+ここでの`~3D変形-関数$は、 `transform$p ~propがとり得る関数の集合を拡張する。
+◎
+The 3D transform functions here extend the set of functions for the transform property.
+</p>
+
+<p>
+［
+`perspective$p ／ `transform-style$p ／ `backface-visibility$p
+］用の一部の値は、`積層~文脈$や`すべての子孫~用の包含塊$を作成する。
+◎
+Some values of perspective, transform-style and backface-visibility result in the creation of a containing block for all descendants, and/or the creation of a stacking context.
+</p>
+
+<p>
+~3D変形は，要素の視覚的な積層順に影響し、
+`CSS21$r の
+<a href="~CSS22/zindex.html#elaborate-stacking-contexts">付録 E</a>
+に述べられている，奥から手前にかけての塗ng順序を上書きする。
+◎
+Three-dimensional transforms affect the visual layering of elements, and thus override the back-to-front painting order described in Appendix E of [CSS21].
+</p>
+
+		</section>
+		<section id="values">
+<h3 title="Value Definitions">1.2. 値~定義</h3>
+
+<p class="trans-note">【
+この節の内容は <a href="css-common-ja.html#values">~CSS日本語訳 共通~page</a>に委譲。
+】</p>
+
+		</section>
+	</section>
+	<section id="terminology">
+<h2 title="Terminology">2. 各種用語</h2>
+
+<dl>
+	<dt>
+`~3D変形d要素@
+◎
+3D transformed element
+</dt>
+	<dd>
+`transform$p ~propの算出d値に `~3D変形-関数$を伴う要素。
+◎
+An element whose computed value for the transform property includes one of the 3D transform functions
+</dd>
+
+	<dt>
+`~3D行列@
+◎
+3D matrix
+</dt>
+	<dd>
+`~2D行列$の要件を充足しない~4x4行列。
+◎
+A 4x4 matrix which does not fulfill the requirements of an 2D matrix.
+</dd>
+
+	<dt>
+`恒等~変形-関数@
+◎
+identity transform function
+</dt>
+	<dd>
+<p>
+<a href="~TRANSFORM#identity-transform-function">`CSS Transforms 1^cite によるそれら</a>
+に加え、恒等~変形-関数の例には次が挙げられる：
+</p>
+
+<div style="white-space:pre-wrap; margin-left: 2em;"
+>`translate3d(0, 0, 0)^v,
+`translateZ(0)^v,
+`scaleZ(1)^v,
+`rotate3d(1, 1, 1, 0)^v,
+`rotateX(0)^v,
+`rotateY(0)^v,
+`rotateZ(0)^v,
+`matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)^v
+</div>
+
+<p>
+遠近法の特殊な事例として，
+`perspective(infinity)^v
+がある
+— この場合、 `34^M の値は無限小になり，したがって変形-関数は単位i行列に等しいものと見做される。
+</p>
+
+◎
+In addition to the identity transform function in CSS Transforms, examples for identity transform functions include translate3d(0, 0, 0), translateZ(0), scaleZ(1), rotate3d(1, 1, 1, 0), rotateX(0), rotateY(0), rotateZ(0) and matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1). A special case is perspective: perspective(infinity). The value of m34 becomes infinitesimal small and the transform function is therefore assumed to be equal to the identity matrix.
+</dd>
+
+	<dt>
+`透視~行列@
+◎
+perspective matrix 
+</dt>
+	<dd>
+［
+`perspective$p, `perspective-origin$p
+］~propの値から，
+<a href="#perspective-matrix-computation">後述の様に</a>
+算出される行列。
+◎
+A matrix computed from the values of the perspective and perspective-origin properties as described below.
+</dd>
+
+	<dt>
+`累積~3D変形n行列@
+◎
+accumulated 3D transformation matrix
+</dt>
+
+	<dd>
+要素に対し，その`~3D描画~文脈$の根に相対的に算出される行列
+— ~~詳細は `§ 累積~3D変形n行列の算出$に。
+◎
+A matrix computed for an element relative to the root of its 3D rendering context, as described below.
+</dd>
+
+	<dt>
+`~3D描画~文脈@
+◎
+3D rendering context
+</dt>
+	<dd>
+同じ~3D座標系に共存するような、先祖が共通な要素の集合。
+~~詳細は
+<a href="#3d-rendering-contexts">§ ~3D描画~文脈</a>に。
+◎
+A set of elements with a common ancestor which share a common three-dimensional coordinate system, as described below.
+</dd>
+</dl>
+
+
+		<section id="serialization-of-the-computed-value">
+<h3 title="Serialization of the computed value of &lt;transform-list&gt;">2.1. `transform-list^t の算出d値の直列化</h3>
+
+<div>
+<p>
+`transform-list$t の`算出d値$を直列化するときは、その中のすべての `transform-function$t を~4x4行列に換算して，順に右から乗算した結果が`~2D行列$の場合は、その結果を `matrix$f として直列化し，他の場合は `matrix3d$f として直列化する。
+</p>
+
+◎
+A &lt;transform-list&gt; for the computed value is serialized to either one &lt;matrix()&gt; or one &lt;matrix3d()&gt; function by the following algorithm:
+
+• Let transform be a 4x4 matrix initialized to the identity matrix. The elements m11, m22, m33 and m44 of transform must be set to 1 all other elements of transform must be set to 0.
+• Post-multiply all &lt;transform-function&gt;s in &lt;transform-list&gt; to transform.
+• Chose between &lt;matrix()&gt; or &lt;matrix3d()&gt; serialization:
+•• If transform is a 2D matrix
+••• Serialize transform to a &lt;matrix()&gt; function.
+•• Otherwise
+••• Serialize transform to a &lt;matrix3d()&gt; function.
+</div>
+
+
+<p class="issue">
+この~textに `CSS Transforms 1^cite の~textを追加して修正する。
+◎
+fix this text to add to the text in CSS Transforms 1.
+</p>
+
+
+		</section>
+	</section>
+	<section id="two-dimensional-subset">
+<h2 title="Two Dimensional Subset">3. ~2Dに限定された機能</h2>
+
+<p>
+~UA は~3D変形を描画できるとは限らず，この仕様の~2Dに限定された機能のみを~supportすることもある。
+この場合：
+◎
+UAs may not always be able to render three-dimensional transforms and then just support a two-dimensional subset of this specification. In this case＼
+</p>
+
+<ul>
+	<li>
+`~3D変形$, および［
+`transform-style$p,
+`perspective$p,
+`perspective-origin$p,
+`backface-visibility$p
+］~propは、~supportされてはならない。
+◎
+three-dimensional transforms and the properties transform-style, perspective, perspective-origin and backface-visibility must not be supported.＼
+</li>
+	<li>
+`§ ~3D変形による描画$は適用されない。
+◎
+Section 3D Transform Rendering does not apply.＼
+</li>
+	<li>
+行列の分解-法は
+“`Graphics Gems II, edited by Jim Arvo^cite”
+による “`unmatrix^en” 手法を~2Dの場合に単純~化した技法を利用する。
+◎
+Matrix decomposing uses the technique taken from the "unmatrix" method in "Graphics Gems II, edited by Jim Arvo", simplified for the 2D case.＼
+</li>
+	<li>
+<p>
+`§ 変形-関数の数学的~記述$は，依然として有効であるが、下図に示すような~3x3変形n行列を利用して~~縮退できる
+— ここで図の［
+%a, %b, %c, %d, %e, %f
+］は、順に［
+`11^M, `12^M, `21^M, `22^M, `41^M, `42^M
+］に対応する（ 6 ~~成分からなる `~2D~3x2行列$を見よ）：
+◎
+Section Mathematical Description of Transform Functions is still effective but can be reduced by using a 3x3 transformation matrix where a equals m11, b equals m12, c equals m21, d equals m22, e equals m41 and f equals m42 (see A 2D 3x2 matrix with six parameter).
+</p>
+
+<figure>`3x3matrix^dgm
+<figcaption>
+~2D変形n用の~3x3行列
+◎
+3x3 matrix for two-dimensional transformations.
+</figcaption></figure>
+
+	</li>
+</ul>
+
+<div class="example">
+
+<p>
+~UAが~3D変形を~supportしない場合の~fallbackも供し易くなる。
+次の例に 2 つの `transform$p ~prop定義を示す。
+1 個目のものは 2 個の~2D変形-関数からなり， 2 個目のものは ~2Dと~3Dの変形-関数を持つ。
+◎
+Authors can easily provide a fallback if UAs do not provide support for three-dimensional transforms. The following example has two property definitions for transform. The first one consists of two two-dimensional transform functions. The second one has a two-dimensional and a three-dimensional transform function.
+</p>
+
+<pre class="lang-css">
+div {
+  transform: scale(2) rotate(45deg);
+  transform: scale(2) rotate3d(0, 0, 1, 45deg);
+}</pre>
+
+
+<p>
+~3D~supportがあれば， 2 個目の定義が 1 個目のものを上書きすることになる。
+~3D~supportが無ければ， 2 個目の定義は無効になり，~UAは 1 個目の定義に~fall-backする。
+◎
+With 3D support, the second definition will override the first one. Without 3D support, the second definition is invalid and a UA falls back to the first definition.
+</p>
+</div>
+
+	</section>
+	<section id="transform-rendering">
+<h2 title="The Transform Rendering Model">4. 変形の描画~model</h2>
+
+<p>
+この仕様は、次に挙げるものを織り込むために，
+`CSS-TRANSFORMS-1$r
+<a href="~TRANSFORM#transform-rendering">§ 変形~描画~model</a>
+を拡張する
+⇒＃
+~3D変形-関数の存在,
+`transform-origin$p の Z 値,
+`perspective$p ~prop,
+`transform-style$p ~propの使用~値が `preserve-3d^v になるときに適用される 新たな 3D描画~model
+◎
+This specification extends CSS Transforms 1 §3 The Transform Rendering Model to account for the existence of three-dimensional transform functions, the Z value of transform-orign, the perspective property, and a new 3D rendering model that applies when the used value of the transform-style property is preserve-3d.
+</p>
+
+<p>
+`~3D変形-関数$は、画面に垂直かつ視点に向けて増大する Z 軸を加えることで，~2D座標~空間を概念的に~3Dに拡張する。
+◎
+Three-dimensional transform functions conceptually extend the coordinate space into three dimensions, adding a Z axis perpendicular to the plane of the screen, that increases towards the viewer.
+</p>
+
+<figure>`coordinates^dgm
+<figcaption>
+初期~時の座標~空間のデモ。
+◎
+Demonstration of the initial coordinate space.
+</figcaption></figure>
+
+
+<p id="transformation-matrix-computation">
+~3D変形では， `transform-origin$p の Z 成分が結果に影響するので、`変形n行列$は［
+`transform$p, `transform-origin$p
+］~propから算出される。
+それは、単位i行列に対し，以下に与える各~変形nを順に累積して得られる
+【各~変形nを表現する行列を，所与の順に右から乗算する】：
+◎
+With 3D transforms, the Z component of transform-origin affects the result, so the transformation matrix is computed from the transform and transform-origin properties as follows:
+• Start with the identity matrix.
+</p>
+
+<ol>
+	<li>
+`transform-origin$p の算出d値で与えられる ( X, Y, Z ) による並進
+【その移動量による`~3D並進$】
+◎
+Translate by the computed X, Y and Z of transform-origin
+</li>
+	<li>
+`transform$p ~prop値に~listされた順で与えられる，各~変形-関数
+◎
+Multiply by each of the transform functions in transform property from left to right
+</li>
+	<li>
+最初の段に与えた ( X, Y, Z ) 値による，逆方向への並進
+【最初の段の~3D並進の逆行列】
+◎
+Translate by the negated computed X, Y and Z values of transform-origin
+</li>
+</ol>
+
+		<section id="3d-transform-rendering">
+<h3 title="3D Transform Rendering">4.1. ~3D変形による描画</h3>
+
+<p>
+通常は、要素は平面的に，要素が属する`積層~文脈$と同じ平面に埋め込まれるように描画される。
+大抵の場合、それは~pageの残りの部分と共有される平面になる。
+~2D変形-関数は要素の外観を改め得るが、描画される平面は，依然として要素が属する積層~文脈と同じになる。
+◎
+Normally, elements render as flat planes, and are rendered into the same plane as their stacking context. Often this is the plane shared by the rest of the page. Two-dimensional transform functions can alter the appearance of an element, but that element is still rendered into the same plane as its stacking context.
+</p>
+
+<p>
+~3D変形を伴う要素のうち，`~3D描画~文脈$に包含されていないものは、適切な変形を適用して描画されるが，他のどの要素とも交差しない。
+この事例における~3D変形は、~2D変形と同様に，単なる塗ng効果と見なせる。
+同様に，その変形は、塗ng順序にも影響しない。
+例えば，正な Z 並進を伴う変形は、要素の見かけを大きくし得るが，その要素を Z にて並進が無い要素の前面に描画させることはない。
+◎
+An element with a three-dimensional transform that is not contained in a 3D rendering context renders with the appropriate transform applied, but does not intersect with any other elements. The three-dimensional transform in this case can be considered just as a painting effect, like two-dimensional transforms. Similarly, the transform does not affect painting order. For example, a transform with a positive Z translation may make an element look larger, but does not cause that element to render in front of elements with no translation in Z.
+</p>
+
+
+<p class="issue">
+入子にされた~3D変形d要素をどう描画するか述べる（たぶん，数学的に)
+◎
+describe how nested 3d-transformed elements render (perhaps with math)
+</p>
+
+<div class="example">
+
+<p class="issue">
+この例は、上の~textに従っていない。
+◎
+This example doesn’t follow from the previous text.
+</p>
+
+<p>
+要素に適用される~3D変形の効果を，次の例に示す：
+◎
+This example shows the effect of three-dimensional transform applied to an element.
+</p>
+
+<pre class="lang-html">
+&lt;style&gt;
+div {
+  height: 150px;
+  width: 150px;
+}
+.container {
+  border: 1px solid black;
+}
+.transformed {
+  transform: rotateY(50deg);
+}
+&lt;/style&gt;
+
+&lt;div class="container"&gt;
+  &lt;div class="transformed"&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+
+<figure>`simple-3d-example^dgm</figure>
+
+<p>
+変形は 縦方向の Y 軸を中心に 50° 回転させる。
+これにより，青色の~boxは狭小に現れるが、~3Dではない。
+◎
+The transform is a 50° rotation about the vertical, Y axis. Note how this makes the blue box appear narrower, but not three-dimensional.
+</p>
+</div>
+
+			<section id="perspective">
+<h4 title="Perspective">4.1.1. 遠近法</h4>
+
+<p>
+遠近法（ `perspective$p ~prop）を利用すれば、風景に奥行き感を与えられる
+— 要素は、その Z 座標（以下 %z ）を高くする（`視点$に近付ける）ほど，より大きく現れ、低くする（`視点$から遠ざける）ほど，より小さく現れる。
+拡縮率は［
+%d ÷ ( %d − %z )
+］に比例する。
+ここで， %d は `perspective$p の値であり，画面から視点と見做される地点（下図の “みなし~~視点”
+【！Assumed Eye Position】
+）までの距離を与える。
+◎
+Perspective can be used to add a feeling of depth to a scene by making elements higher on the Z axis (closer to the viewer) appear larger, and those further away to appear smaller. The scaling is proportional to d/(d − Z) where d, the value of perspective, is the distance from the drawing plane to the the assumed position of the viewer’s eye.
+</p>
+
+<p>
+`~3D変形d要素$に遠近法の外観を適用する仕方には、次の 2 つがある：
+◎
+The appearance of perspective can be applied to a 3d-transformed element in two ways.＼
+</p>
+
+<ul>
+	<li>
+要素の “変形-関数~list” は、 `perspective$f 関数を包含でき，要素の現在の`変形n行列$の中で算出する。
+◎
+First, the element’s 'transform function list' can contain the perspective() function which computes into the element’s 'current transformation matrix'.
+</li>
+	<li>
+要素には、［
+`perspective$p, `perspective-origin$p
+］~propを［
+~3D変形された子の描画
+］に波及するように適用でき、子たちが同じ~3D風景~内に住まうような印象を供するような，それらに共有される遠近法を与える。
+◎
+Second, the perspective and perspective-origin properties can be applied to an element to influence the rendering of its 3d-transformed children, giving them a shared perspective that provides the impression of them living in the same three-dimensional scene.
+</li>
+</ul>
+
+<figure>`perspective_distance^dgm
+<figcaption>
+拡縮-法が `perspective$p ~propと Z 位置に依存する様子を示す図式。
+上段の図式では， %z が %d の半分にされている。
+元の円（実線）が %z （点線の円）の所に現れるようにするため、円は 2 倍に拡大され，水色の円で示されるものになる。
+下段の図式では、円は 2 ÷ 3 倍に縮小されて，元の位置の背後に現れる。
+◎
+Diagrams showing how scaling depends on the perspective property and Z position. In the top diagram, Z is half of d. In order to make it appear that the original circle (solid outline) appears at Z (dashed circle), the circle is scaled up by a factor of two, resulting in the light blue circle. In the bottom diagram, the circle is scaled down by a factor of one-third to make it appear behind the original position.
+</figcaption></figure>
+
+<p>
+通常は、`視点$と見做される地点は，絵図の中心（真正面）にある。
+欲されるなら `perspective-origin$p を設定して，この位置を移動することもできる
+—
+例えば、~page内の複数の絵図が，同じ遠近法を共有すべき場合など。
+◎
+Normally the assumed position of the viewer’s eye is centered on a drawing. This position can be moved if desired – for example, if a web page contains multiple drawings that should share a common perspective – by setting perspective-origin.
+</p>
+
+<figure>`perspective_origin^dgm
+<figcaption>
+遠近法の原点を上方へ移動する効果を示す図式。
+◎
+Diagram showing the effect of moving the perspective origin upward.
+</figcaption></figure>
+
+<p id="perspective-matrix-computation">
+`透視~行列$は、単位i行列に対し，以下に与える各~変形nを順に累積する
+【各~変形nを表現する行列を，所与の順に右から乗算する】
+ことにより算出される：
+◎
+The perspective matrix is computed as follows:
+• Start with the identity matrix.
+</p>
+
+<ol>
+	<li>
+`perspective-origin$p の算出d値で与えられる ( X, Y ) 値による並進
+【その移動量による`~2D並進$】
+◎
+Translate by the computed X and Y values of perspective-origin
+</li>
+	<li>
+<p>
+［
+`perspective$p ~propの値から供される長さ値
+］を引数にとる `perspective$f 変形-関数から得される行列
+【`透視~投影~行列$】
+◎
+Multiply by the matrix that would be obtained from the perspective() transform function, where the length is provided by the value of the perspective property
+</li>
+	<li>
+最初の段に与えた ( X, Y ) 値による，逆方向への並進
+【最初の段の~2D並進の逆行列】
+◎
+Translate by the negated computed X and Y values of perspective-origin
+</li>
+</ol>
+
+
+<div class="example">
+
+<p>
+次の例に、~3D変形が より本物らしく現れるようにするための， `perspective^p の利用を示す：
+◎
+This example shows how perspective can be used to cause three-dimensional transforms to appear more realistic.
+</p>
+
+<pre class="lang-html">
+&lt;style&gt;
+div {
+  height: 150px;
+  width: 150px;
+}
+.container {
+  perspective: 500px;
+  border: 1px solid black;
+}
+.transformed {
+  transform: rotateY(50deg);
+}
+&lt;/style&gt;
+
+&lt;div class="container"&gt;
+  &lt;div class="transformed"&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+
+<figure>`simple-perspective-example^dgm</figure>
+
+<p>
+内縁にある要素は，前の例と同じ変形を持つが、その描画は今や，その親~要素~上の `perspective^p ~propから~~影響を受けている。
+`perspective^p により、絵図の中の点の X, Y 座標は、その Z 座標が（`視点$により近い）正である所では，拡大される一方，（`視点$からより遠い）負な所では縮小され、外観に奥行き感が与えられる。
+◎
+The inner element has the same transform as in the previous example, but its rendering is now influenced by the perspective property on its parent element. Perspective causes vertices that have positive Z coordinates (closer to the viewer) to be scaled up in X and Y, and those further away (negative Z coordinates) to be scaled down, giving an appearance of depth.
+</p>
+</div>
+
+			</section>
+			<section id="3d-rendering-contexts">
+<h4 title="3D Rendering Contexts">4.1.2. ~3D描画~文脈</h4>
+
+<p>
+この節では、~3D変形, および `transform-style$p ~propを利用する内容を描画するための~modelを指定する。
+この~modelを述べるため、 “~3D描画~文脈” の概念を導入する。
+◎
+This section specifies the rendering model for content that uses 3D-transforms and the transform-style property. In order to describe this model, we introduce the concept of a "3D rendering context".
+</p>
+
+<p>
+`~3D描画~文脈$は、［
+~3D変形を描画する目的において，同じ~3D座標系に共存すると見なされるような，共通な先祖
+］を根とする要素の集合である。
+~3D描画~文脈における要素の手前から奥への描画は，その~3D空間における z 位置に依存し、~3D変形により要素が互いに交差するときは，その交差を伴って描画される。
+◎
+A 3D rendering context is a set of elements rooted in a common ancestor that, for the purposes of 3D-transform rendering, are considered to share a common three-dimensional coordinate system. The front-to-back rendering of elements in the a 3D rendering context depends on their z-position in that three-dimensional space, and, if the 3D transforms on those elements cause them to intersect, then they are rendered with intersection.
+</p>
+
+<p>
+その~3D空間における各~要素の位置は、要素から その`~3D描画~文脈$を確立した要素まで，それぞれの変形n行列を累積することにより決定される。
+◎
+The position of each element in that three-dimensional space is determined by accumulating the transformation matrices up from the given element to the element that establishes the 3D rendering context.
+</p>
+
+<p>
+要素は、次に従って~3D描画~文脈［
+を確立する／に関与する
+］：
+◎
+Elements establish and participate in 3D rendering contexts as follows:
+</p>
+
+<ul>
+	<li>
+<p>
+`変形-可能$な要素のうち，
+`transform-style$p の使用~値が `preserve-3d^v になるものは：
+</p>
+		<ul>
+			<li>
+~3D描画~文脈の一部を成してないならば、`~3D描画~文脈$を確立し，要素~自身も その文脈に関与することになる。
+</li>
+			<li>
+ある`~3D描画~文脈$に関与しているならば、その~3D描画~文脈を拡張する
+— 新たなそれを確立することなく。
+</li>
+		</ul>
+◎
+A 3D rendering context is established by a transformable element whose used value for transform-style is preserve-3d and which itself is not part of a 3D rendering context. An element that establishes a 3D rendering context also participates in that context.
+◎
+An element whose used value for transform-style is preserve-3d and which itself participates in a 3D rendering context, extends that 3D rendering context rather than establishing a new one.
+</li>
+	<li>
+要素は、その親が~3D描画~文脈を［
+確立する／拡張する
+］ならば，`~3D描画~文脈$に関与する。
+◎
+An element participates in a 3D rendering context if its parent establishes or extends a 3D rendering context.
+</li>
+</ul>
+
+<p>
+~CSS~propには、要素が他の要素と組成される前に，要素 およびその子孫たちを~groupとして描画するよう要求するような、 “~group化” を強制する値をとるものがある。
+これらには、不透明度, ~filter, 切抜きに影響する~propも含まれる。
+これに関連な~prop値は、`~group化~prop値$に挙げる。
+その帰結として，
+`transform-style$p `preserve-3d^v にされた要素に利用されたときは、その使用~値を `flat^v に変更し，要素が`~3D描画~文脈$を［
+作成-／拡張-
+］させなくする。
+◎
+Some CSS properties have values that are considered to force "grouping": they require that their element and its descendants are rendered as a group before being composited with other elements; these include opacity, filters and properties that affect clipping. The relevant property values are listed under grouping property values. Consequently, when used on an element with transform-style:preserve-3d, they change the used value to flat and prevent it from creating or extending a 3D rendering context.
+</p>
+
+<p class="issue">
+これは、~3D変形d要素の中の未~変形dな内容を，どう取扱うか述べていない
+— ~algoは、おそらく再帰的になる必要がある。
+課題：様々な~engineにおける現在の挙動は何か~~解明して、~web互換性を壊さないよう，もっと明瞭な記述を~~解明する。
+◎
+This doesn’t describe how untransformed content within a 3D transformed element is handled, the alogrithm probably needs to be recursive. Issue: Figure out what the current behaviour of various engines is, and figure out a clearer description that wont break web compat.
+</p>
+
+<p>
+~3D描画~文脈に属する要素の描画は、次の様になる
+— 以下、その~3D描画~文脈を確立している要素を %R と記す（括弧内の “step %数字” は
+<a href="~CSS22/zindex.html#painting-order">CSS 2.1, Appendix E.2 塗ng順序</a>
+のそれを表す）：
+◎
+The rendering of elements in a 3D rendering context is as follows (numbers refer to items in CSS 2.1, Appendix E, Section E.2 Painting Order):
+</p>
+
+<ol class="upper-alpha">
+	<li>
+%R の背景, ~border, 他の~box装飾が描画される（ step 1, 2 ）
+◎
+The background, borders and other box decorations of the establishing element are rendered (steps 1 and 2)
+</li>
+	<li>
+3D 変形を伴わない［
+内容, および子孫~要素
+］は、 step 3 〜 7 に則って順序~付けられ，
+%R に相対的な z=0 平面に描画される
+◎
+The content and descendant elements without 3D transforms, ordered according to steps 3—7, are rendered into a plane at z=0 relative to to the establishing element.
+</li>
+	<li>
+`~3D変形d要素$は，それぞれの自前の平面に`累積~3D変形n行列$により変形されて描画される。
+◎
+3D-transformed elements are each rendered into their own plane, transformed by the accumulated 3D transformation matrix.
+</li>
+	<li>
+`<a href="https://en.wikipedia.org/wiki/Newell%27s_algorithm">Newell の~algo</a>^_
+に則って，段 B, C で生成された平面の集合~間で，交差が遂行される。
+◎
+Intersection is performed between the set of planes generated by steps B and C, according to Newell’s algorithm.
+</li>
+	<li>
+結果の平面の集合が、段 A にて描画された背景と~box装飾の上に，描画される。
+同一~平面にある`~3D変形d要素$たちは、塗ng順序で描画される。
+◎
+The resulting set of planes is rendered on top of the backgrounds and box decorations rendered in this step A. Coplanar 3D transformed elements are rendered in painting order.
+</li>
+</ol>
+
+<p class="issue">
+~2D`変形d要素$たちを それぞれの自前の平面の中へ pop しなくて大丈夫か？
+◎
+is it OK to not pop 2D-transformed elements into their own planes?
+</p>
+
+<p class="issue">
+未~変形dな内容とその子孫に交差を要求した場合、~UAは，追加的な~textureを割振らなければならなくなる（~memory消費が倍になり得る）。
+内容と未~変形dな子孫を，単に背景と~borderに従って描画する方がより効率的になるであろう。
+◎
+requiring intersection with non-transformed content and descendants requires UAs to allocate additional textures (possibly doubling memory use). Would be more efficient to simply render content and untransformed descendants along with background and borders.
+</p>
+
+
+<p>
+z-成分が負にされた変形を伴う要素は，［
+内容, および %R の非~変形 子孫
+］の背後に描画されることに注意。
+したがって `~3D変形d要素$は、内容と非`変形d要素$に浸出し得る。
+◎
+Note that elements with transforms which have a negative z-component will render behind the content and untransformed descendants of the establishing element, and that 3D transformed elements may interpenetrate with content and untransformed elements.
+</p>
+
+<p class="note">注記：
+~3D描画~文脈における`~3D変形d要素$は、深度~順に基づいて互いに交差し得るので、実質的に，互いに同胞であるかのように描画される。
+<code class="css">`transform-style^p: `preserve-3d^v</code>
+による効果は、~3D描画~文脈に属する どの`~3D変形d要素$も，
+%R の下に巻上げられつつ，依然として自身の`累積~3D変形n行列$により描画されるようになるものと，捉えられる。
+◎
+Note: Because the 3D-transformed elements in a 3D rendering context can all depth-sort and intersect with each other, they are effectively rendered as if they were siblings. The effect of transform-style: preserve-3d can then be thought of as causing all the 3D transformed elements in a 3D rendering context to be hoisted up into the establishing element, but still rendered with their accumulated 3D transformation matrix.
+</p>
+
+<div class="example">
+
+<pre class="lang-html">
+&lt;style&gt;
+.scene {
+  background-color: rgba(0, 0, 0, 0.3);
+  perspective: 500px;
+}
+.container {
+      transform-style: preserve-3d;
+}
+.container &gt; div {
+  position: absolute;
+  left: 0;
+}
+.container &gt; :first-child {
+  transform: rotateY(45deg);
+  background-color: orange;
+  top: 10px;
+  height: 135px;
+}
+.container &gt; :last-child {
+  transform: translateZ(40px);
+  background-color: rgba(0, 0, 255, 0.6);
+  top: 50px;
+  height: 100px;
+}
+&lt;/style&gt;
+
+&lt;div class="scene"&gt;
+  &lt;div class="container"&gt;
+    &lt;div&gt;&lt;/div&gt;
+    &lt;div&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+<p>
+この例は、~3D描画~文脈~内の要素が互いに交差し得ることを示す。
+`.container^css 要素は，自身とその 2 個の子孫に対する~3D描画~文脈を確立し、
+`.scene^css 要素は，~3D描画~文脈に遠近法を追加する。
+子は互いに交差し、橙色にされた要素は，容器と互いに交差する。
+◎
+This example shows show elements in a 3D rendering context can intersect. The container element establishes a 3D rendering context for itself and its two children, and the scene element adds perspective to the 3D rendering context. The children intersect with each other, and the orange element also intersects with the container.
+</p>
+
+<figure>`3d-intersection^dgm</figure>
+
+</div>
+
+<div class="example">
+
+<pre class="lang-html">
+&lt;style&gt;
+div {
+  height: 150px;
+  width: 150px;
+}
+.container {
+  perspective: 500px;
+  border: 1px solid black;
+}
+.transformed {
+  transform: rotateY(50deg);
+  background-color: blue; /* <span class="comment">青色</span> */
+}
+.child {
+  transform-origin: top left;
+  transform: rotateX(40deg);
+  background-color: lime; /* <span class="comment">黄緑色</span> */
+}
+&lt;/style&gt;
+
+&lt;div class="container"&gt;
+  &lt;div class="transformed"&gt;
+      &lt;div class="child"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+<p>
+この例は、入子にされた~3D変形の描画の様子を示すものである。
+青色の `div^e は，前の例の様に、その描画が その親~要素~上の遠近法（ `perspective^p ）の~~影響を受けて，変形される。
+黄緑色の要素も，（ `transform-origin$p の効力により，青色の `div^e の上端に固定された） X 軸を中心に回転される，~3D変形を持つ —
+しかしながら，同じ~3D描画~文脈には属さないので、親は平坦になる。
+そのため、黄緑色の要素は短く現れ，青色の要素から “飛び出す” ことはない。
+◎
+This example shows how nested 3D transforms are rendered. The blue div is transformed as in the previous example, with its rendering influenced by the perspective on its parent element. The lime element also has a 3D transform, which is a rotation about the X axis (anchored at the top, by virtue of the transform-origin). However, the lime element is being rendered into the plane of its parent because it is not a member of the same 3D rendering context; the parent is flattening. Thus the lime element only appears shorter; it does not "pop out" of the blue element.
+</p>
+
+<figure>`3d-rendering-context-flat^dgm</figure>
+
+</div>
+
+			</section>
+			<section id="transformed-element-hierarchies">
+<h4 title="Transformed element hierarchies">4.1.3. 変形d要素の階層</h4>
+
+<p>
+`変形d要素$は，既定では、`~3D描画~文脈$を作成せず，自身の内容の平坦~化された表現を作成する。
+この平坦~化する挙動は、
+`transform-style$p ~propに値 `preserve-3d^v を指定して上書きできる
+— それは、同じ~3D空間に共存する，変形された~objたちが成す階層を構築するために有用になる。
+これにより、`変形d要素$の子孫たちが，同じ~3D描画~文脈に共存できるようになる。
+その種の要素の~3D変形されていない子孫たちは、上述の段 C における要素の平面に描画される一方、同じ~3D描画~文脈に共存する`~3D変形d要素$は、それぞれの自前の平面から “飛び出す” 。
+◎
+By default, transformed elements do not create a 3D rendering context and create a flattened representation of their content. However, since it is useful to construct hierarchies of transformed objects that share a common 3-dimensional space, this flattening behavior may be overridden by specifying a value of preserve-3d for the transform-style property. This allows descendants of the transformed element to share the same 3D rendering context. Non-3D-transformed descendants of such elements are rendered into the plane of the element in step C above, but 3D-transformed elements in the same 3D rendering context will "pop out" into their own planes.
+</p>
+
+
+<div class="example">
+
+<pre class="lang-html">
+&lt;style&gt;
+div {
+  height: 150px;
+  width: 150px;
+}
+.container {
+  perspective: 500px;
+  border: 1px solid black;
+}
+.transformed {
+  `transform-style^p: `preserve-3d^v;
+  transform: rotateY(50deg);
+  background-color: blue; /* <span class="comment">青色</span> */
+}
+.child {
+  transform-origin: top left;
+  transform: rotateX(40deg);
+  background-color: lime; /* <span class="comment">黄緑色</span> */
+}
+&lt;/style&gt;</pre>
+
+
+<p>
+この例は、青色の要素~上に
+<code class="css">`transform-style$p: `preserve-3d^v</code>
+が追加されたことを除いて，前の例と一致する。
+青色の要素は今や，その容器の~3D描画~文脈を拡張する。
+それにより，青色と黄緑色の両~要素が同じ~3D空間に共存するので、黄緑色の要素は，容器~上の遠近法の~~影響を受け，その親から【~3D的に】傾けられて描画される。
+◎
+This example is identical to the previous example, with the addition of transform-style: preserve-3d on the blue element. The blue element now extends the 3D rendering context of its container. Now both blue and lime elements share a common three-dimensional space, so the lime element renders as tilting out from its parent, influenced by the perspective on the container.
+</p>
+
+<figure>`3d-rendering-context-3d^dgm</figure>
+
+</div>
+
+			</section>
+			<section id="accumulated-3d-transformation-matrix-computation">
+<h4 title="Accumulated 3D Transformation Matrix Computation">4.1.4. 累積d~3D変形n行列の算出</h4>
+
+<p class="trans-note">【
+この節に用いられる
+~IF, ~WHILE
+その他の記号は、~SYMBOL_DEF_REFを見よ。
+】</p>
+
+<p>
+［
+`~3D描画~文脈$に属する要素を描画する際に利用される変形
+］の最終的な値は、次の様に，~3D変形n行列を累積して算出される：
+◎
+The final value of the transform used to render an element in a 3D rendering context is computed by accumulating an accumulated 3D transformation matrix as follows:
+</p>
+
+
+<ol>
+	<li>
+%M ~LET 単位i行列
+◎
+Let transform be the identity matrix.
+</li>
+	<li>
+%現在の要素 ~LET 対象の変形d要素
+◎
+Let current element be the transformed element.
+</li>
+	<li>
+%親 ~LET %現在の要素 の親
+◎
+Let parent element be the parent element of the transformed element.
+</li>
+	<li>
+%根 ~LET %現在の要素 の`~3D描画~文脈$を確立した要素
+◎
+↓</li>
+	<li>
+<p>
+~WHILE ( %現在の要素 ~NEQ %根 )：
+◎
+While current element is not the element that establishes the transformed element’s 3D rendering context:
+<p>
+		<ol>
+			<li>
+~IF［
+%現在の要素 上の `transform$p 値 ~NEQ `~none0$v
+］
+⇒
+%M に［
+%現在の要素 の`変形n行列$
+］を`左から乗算-$する
+◎
+If current element has a value for transform which is not none, pre-multiply current element’s transformation matrix with the transform.
+</li>
+			<li>
+%M に［
+%現在の要素 の %親 からの~offsetを表現する並進~行列
+］を`左から乗算-$する
+◎
+Compute a translation matrix which represents the offset of current element from its parent element, and pre-multiply that matrix into the transform.
+</li>
+			<li>
+~IF［
+%親 の `perspective$p 値 ~NEQ `none$v
+］
+⇒
+%M に［
+%親 の`透視~行列$
+］を`左から乗算-$する
+◎
+If parent element has a value for perspective which is not none, pre-multiply the parent element’s perspective matrix into the transform.
+</li>
+			<li>
+%現在の要素 ~SET %親
+◎
+Let current element be the parent element.
+</li>
+			<li>
+%親 ~SET %現在の要素 の親
+◎
+Let parent element be the current element’s parent.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %M
+</li>
+</ol>
+
+<p class="note">注記：
+ここに述べたように，`累積~3D変形n行列$は、［
+変形d要素~上の
+<a href="~CSS2VISUREN#visuren">視覚-整形~model</a>
+, および［
+変形d要素から それの`~3D描画~文脈$を確立した要素までにある，先祖の連鎖~内の要素
+］］により生成された~offset織り込む。
+◎
+Note: as described here, the accumulated 3D transformation matrix takes into account offsets generated by the visual formatting model on the transformed element, and elements in the ancestor chain between the transformed element and the element that establishes the its 3D rendering context.
+</p>
+
+			</section>
+			<section id="backface-visibility">
+<h4 title="Backface Visibility">4.1.5. 背面の可視性</h4>
+
+<p>
+~3D変形を利用すれば、要素を，その裏側が可視になるよう変形することもアリになる。
+`~3D変形d要素$は，その両側にて同じ内容を示すので、裏側は表側の鏡像に見えるようになる（要素を鏡に映し出したかのように）。
+通常は、裏側を向けている要素は，視点から可視であり続けるが、
+`backface-visibility$p ~propにより，要素を その裏側が視点に向いているときには不可視にさせられる。
+この挙動は “~~動的（ `live^en ）” である
+— 例えば，
+<code class="css">`backface-visibility$p: `hidden^v</code>
+にされた要素が，その表側と裏側が交互に可視になる様に~animateされている場合、表側が視点に向くときにのみ可視になる
+◎
+Using three-dimensional transforms, it’s possible to transform an element such that its reverse side is visible. 3D-transformed elements show the same content on both sides, so the reverse side looks like a mirror-image of the front side (as if the element were projected onto a sheet of glass). Normally, elements whose reverse side is towards the viewer remain visible. However, the backface-visibility property allows the author to make an element invisible when its reverse side is towards the viewer. This behavior is "live"; if an element with backface-visibility: hidden were animating, such that its front and reverse sides were alternately visible, then it would only be visible when the front side were towards the viewer.
+</p>
+
+<p>
+要素の裏側の可視性は，`累積~3D変形n行列$を利用して考慮されるので、`~3D描画~文脈$を確立している要素の親に相対的になる。
+【可視性は、この親に垂直な方向から決まる？】
+◎
+Visibility of the reverse side of an element is considered using the accumulated 3D transformation matrix, and is thus relative to the parent of the element that establishes the 3D rendering context.
+</p>
+
+
+<p class="note">注記：
+この~propは、遊戯用~cardを作成するときのように， 2 個の要素を裏表に貼り合わせるときに有用になる。
+この~propが無ければ、表面と裏面の要素は，~animationで~cardが裏返される度に互いの~~位置を交換することになる【従って、常に片方しか見えない】。
+別の例として、 6 要素で囲まれた直方体の内面だけを見せたいときが挙げられる。
+◎
+Note: This property is useful when you place two elements back-to-back, as you would to create a playing card. Without this property, the front and back elements could switch places at times during an animation to flip the card. Another example is creating a box out of 6 elements, but where you want to see only the inside faces of the box.
+</p>
+
+<div class="example">
+
+<p>
+次の例に、 "#card" 要素が~clickされたときに裏返されるように見せる方法を示す。
+裏返すときに平坦にならないようにするため、
+#card 上には
+<samp class="css">`transform-style^p: `preserve-3d^v</samp>
+を要することに注意。
+◎
+This example shows how to make a "card" element that flips over when clicked. Note the "transform-style: preserve-3d" on #card which is necessary to avoid flattening when flipped.
+</p>
+
+<pre class="lang-html">
+&lt;style&gt;
+.body { perspective: 500px; }
+#card {
+    position: relative;
+    height: 300px; width: 200px;
+    transition: transform 1s;
+    transform-style: preserve-3d;
+}
+#card.flipped {
+    transform: rotateY(180deg);
+}
+.face {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: silver;
+    border-radius: 40px;
+    backface-visibility: hidden;
+}
+.back {
+    transform: rotateY(180deg);
+}
+&lt;/style&gt;
+&lt;div id="card" onclick="this.classList.toggle('flipped')"&gt;
+    &lt;div class="front face"&gt;Front&lt;/div&gt;
+    &lt;div class="back face"&gt;Back&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+</div>
+
+<p class="issue">
+`backface-visibility^p は
+非~変形d要素／ ~2D`変形d要素$には どう影響iする？
+それぞれの自前の平面の中へ 【！＊】 `pop^en され, 交差するのか？【？】
+◎
+what is the impact of backface-visibility on non-transformed or 2D-transformed elements? Do they get popped into their own planes and intersect?
+</p>
+
+			</section>
+		</section>
+		<section id="processing-of-perspective-transformed-boxes">
+<h3 title="Processing of Perspective-Transformed Boxes">4.2. 遠近法により変形された~boxの処理-法</h3>
+
+<p class="issue">
+これは、供された行列を利用して 要素をどの程度~正確に変形するかを，精確に指定するための最初の試案である。
+それは，理想的なものではないかもしれない
+— 実装者からの~feedbackが奨励される。
+`15605$bug を見よ。
+◎
+This is a first pass at an attempt to precisely specify how exactly to transform elements using the provided matrices. It might not be ideal, and implementer feedback is encouraged. See bug 15605.
+</p>
+
+<p>
+`累積~3D変形n行列$は、`perspective$p ~prop, および
+`transform$p ~prop値の中に在る `perspective()^v 変形-関数から影響される。
+◎
+The accumulated 3D transformation matrix is affected both by the perspective property, and by any perspective() transform function present in the value of the transform property.
+</p>
+
+<p>
+この`累積~3D変形n行列$は 4×4 行列であるが、変形される~objは~2D~boxである。
+~boxの各~隅
+( %a, %b )
+を変形するためには、まず，行列を
+( %a, %b, 0 ,1 ) †
+に適用するモノトスル
+— その結果得られた~4Dの点
+( %x, %y, %z, %w ) ††
+は、次に従って変形されて，~3Dの点
+( %x′, %y′, %z′) †††
+に戻される：
+◎
+This accumulated 3D transformation matrix is a 4×4 matrix, while the objects to be transformed are two-dimensional boxes. To transform each corner (a, b) of a box, the matrix must first be applied to (a, b, 0, 1), which will result in a four-dimensional point (x, y, z, w). This is transformed back to a three-dimensional point (x′, y′, z′) as follows:
+</p>
+
+<p class="trans-note">【
+すなわち、~2D空間を~3D射影~空間に埋め込んだ上で（†），4 次~行列により写像した結果（††）を，~3D空間（†††）に戻す。
+】</p>
+
+<dl >
+	<dt>%w &gt; 0 の場合：</dt>
+	<dd>
+( %x′, %y′, %z′) = ( %x ÷ %w, %y ÷ %w, %z ÷ %w )
+◎
+If w &gt; 0, (x′, y′, z′) = (x/w, y/w, z/w).
+</dd>
+
+	<dt>%w = 0 の場合：</dt>
+	<dd>
+<p>
+( %x′, %y′, %z′) = ( %x × %n, %y × %n, %z × %n )
+</p>
+
+<p>
+%n
+は実装に依存する値であり、なるべく［
+%x′ または %y′
+が表示域~sizeに比して，ずっと大きくなる
+］ように選ばれるべきである。
+例えば， %n = 1000 にした場合、
+(5px, 22px, 0px, 0)
+に対しては
+(5000px, 22000px, 0px)
+になるが、この %n の値は
+(0.1px, 0.05px, 0px, 0)
+に対しては 小さ過ぎることになる。
+この仕様は、 %n についての正確な値は定義しない。
+概念的には、
+( %x′, %y′, %z′)
+は
+( %x, %y, %z )
+方向の<a href="https://en.wikipedia.org/wiki/Plane_at_infinity">無限遠</a>にある。
+◎
+If w = 0, (x′, y′, z′) = (x ⋅ n, y ⋅ n, z ⋅ n). n is an implementation-dependent value that should be chosen so that x′ or y′ is much larger than the viewport size, if possible. For example, (5px, 22px, 0px, 0) might become (5000px, 22000px, 0px), with n = 1000, but this value of n would be too small for (0.1px, 0.05px, 0px, 0). This specification does not define the value of n exactly. Conceptually, (x′, y′, z′) is infinitely far in the direction (x, y, z).
+</dd>
+	<dd class="trans-note">【
+すなわち、射影~空間の中の，実~3D空間では表現し得ない無限遠点については、なるべく近い表示になるような近似的な値で代用する。
+】</dd>
+</dl>
+
+<p>
+変形された~boxの 4 隅すべてで %w ~LT 0 になる場合、~boxは描画されない。
+◎
+If w &lt; 0 for all four corners of the transformed box, the box is not rendered.
+</p>
+
+<p>
+変形された~boxの 1 〜 3 個の隅で %w ~LT 0 の場合、~boxは［
+%w ~LT 0 になる区画
+］に入る隅を切り取った多角形に置換されるモノトスル。
+これは一般に、 3 〜 5 個の頂点からなる多角形であって，そのうち 2 個の隣接する頂点では %w = 0, 残りの頂点では %w ~GT 0 になる。
+しかる後，これらの頂点は、前段落の規則を利用して~3Dの点に変形される。
+概念的には、 %w ~LT 0 になる点は，`視点$の “背後” にあるので可視にならないべきである。
+◎
+If w &lt; 0 for one to three corners of the transformed box, the box must be replaced by a polygon that has any parts with w &lt; 0 cut out. This will in general be a polygon with three to five vertices, of which exactly two will have w = 0 and the rest w &gt; 0. These vertices are then transformed to three-dimensional points using the rules just stated. Conceptually, a point with w &lt; 0 is "behind" the viewer, so should not be visible.
+</p>
+
+<div class="example">
+<pre class="lang-css">
+.transformed {
+  height: 100px;
+  width: 100px;
+  background: lime;
+  transform: perspective(50px) translateZ(100px);
+}
+</pre>
+
+
+<p>
+~boxのどの隅の %z 座標も，`perspective$f に与えた視点の Z 座標より大きい。
+これは~boxが視点の背後にあって表示されないことを意味する。
+数学的には、点
+( %x, %y )
+は，まず
+( %x, %y, 0, 1 )
+にされた後，
+( %x, %y, 100, 1 )
+に並進され，遠近法が適用されて
+( %x, %y, 100, −1 )
+になる。
+この座標の %w ~~成分が負になるため，表示されない。
+実装は %w ~LT 0 の事例を分けて取扱う必要がある。
+さもなければ、この座標を −1 で割った
+( − %x, − %y, −100 )
+による，不正な表示（~boxの鏡像）になり得る。
+◎
+All of the box’s corners have z-coordinates greater than the perspective. This means that the box is behind the viewer and will not display. Mathematically, the point (x, y) first becomes (x, y, 0, 1), then is translated to (x, y, 100, 1), and then applying the perspective results in (x, y, 100, −1). The w-coordinate is negative, so it does not display. An implementation that doesn’t handle the w &lt; 0 case separately might incorrectly display this point as (−x, −y, −100), dividing by −1 and mirroring the box.
+</p>
+</div>
+
+<div class="example">
+<pre class="lang-css">
+.transformed {
+  height: 100px;
+  width: 100px;
+  background: radial-gradient(yellow, blue);     /* <span class="comment">黄色, 青色</span> */
+  transform: perspective(50px) translateZ(50px);
+}
+</pre>
+
+
+<p>
+ここでは、~boxは，中心が視点と同じ所に据えられように，上層へ並進される。
+これは，視界~全体が埋まるまで，~boxを限りなく視点に近付けるようにする。
+既定の `transform-origin$p は，~boxの中心の黄色に塗られる所にあるので、~screenは黄色で埋められることになる。
+◎
+Here, the box is translated upward so that it sits at the same place the viewer is looking from. This is like bringing the box closer and closer to one’s eye until it fills the entire field of vision. Since the default transform-origin is at the center of the box, which is yellow, the screen will be filled with yellow.
+</p>
+
+
+
+<p>
+数学的には、点
+( %x, %y )
+は，最初に
+( %x, %y, 0, 1 )
+としてから,
+( %x, %y, 50, 1 )
+に並進され,
+遠近法を適用した結果，
+( %x, %y, 50, 0 )
+になる。
+左上~隅は、中心に~~位置する変形-原点から相対的に
+( −50, −50 )
+の所にあるので，結果の左上~隅は
+( −50, −50, 50, 0 )
+になる。
+これは左上から十分に遠い ある地点，例えば
+( −5000, −5000, 5000 )
+に変形される。
+同様に、他の隅も十分に遠い所に移される。
+~box全体に引き延ばされる放射型~gradient（ `radial-gradient^p ）は，今や非常に広大になるので、可視~部分は，~scrollを伴わないとするなら，中央の画素の色, 黄色になる筈である。
+しかしながら，~boxは実際には無限でないので、利用者は依然として，周辺まで~scrollして青色~部分を見ることも可能である。
+◎
+Mathematically, the point (x, y) first becomes (x, y, 0, 1), then is translated to (x, y, 50, 1), then becomes (x, y, 50, 0) after applying perspective. Relative to the transform-origin at the center, the upper-left corner was (−50, −50), so it becomes (−50, −50, 50, 0). This is transformed to something very far to the upper left, such as (−5000, −5000, 5000). Likewise the other corners are sent very far away. The radial gradient is stretched over the whole box, now enormous, so the part that’s visible without scrolling should be the color of the middle pixel: yellow. However, since the box is not actually infinite, the user can still scroll to the edges to see the blue parts.
+</p>
+</div>
+
+<div class="example">
+<pre class="lang-css">
+.transformed {
+  height: 50px;
+  width: 50px;
+  background: lime;
+  border: 25px solid blue;
+  transform-origin: left;
+  transform: perspective(50px) rotateY(-45deg);
+}
+</pre>
+
+
+<p>
+~boxの左~辺は固定され、右~辺は扉が開く様に，`視点$に向かって 45° 回転されることになる。
+右~辺は、遠近法の値 `50px^v より大きい
+%z = `70.7px^v
+の所に~~位置させられるので，（視点の “背後” に）消失することになり、可視~部分は，右方へ無限に遠くまで引き延ばされることになる。
+◎
+The box will be rotated toward the viewer, with the left edge staying fixed while the right edge swings closer. The right edge will be at about z = 70.7px, which is closer than the perspective of 50px. Therefore, the rightmost edge will vanish ("behind" the viewer), and the visible part will stretch out infinitely far to the right.
+</p>
+
+<p>
+数学的には、元々の~~位置が変形-原点から相対的に
+( 100, −50 )
+の所にあった~boxの右上~頂点は、最初に
+( 100, −50, 0, 1 )
+に展開された上で，指定された変形が適用され、およそ
+( 70.71, −50, 70.71, −0.4142 )
+の所に写像される。
+この %w 座標 −0.4142 は ~LT 0
+なので，~boxから［
+%w ~LT 0 の区画
+］に入る部分を切り取る必要がある。
+その結果，新たな右上~頂点は
+( 50, −50, 50, 0 )
+になる。
+しかる後、これは同じ方向の, 変形-原点から上の右方の，遠く離れたある点（例えば
+( 5000, −5000, 5000 )
+）に写像される。
+右下~隅についても同様の演算が行われ，遠く右下方へ写像される。
+結果の~boxは、~screenの辺を大きく越えて延ばされる。
+◎
+Mathematically, the top right vertex of the box was originally (100, −50), relative to the transform-origin. It is first expanded to (100, −50, 0, 1). After applying the transform specified, this will get mapped to about (70.71, −50, 70.71, −0.4142). This has w = −0.4142 &lt; 0, so we need to slice away the part of the box with w &lt; 0. This results in the new top-right vertex being (50, −50, 50, 0). This is then mapped to some faraway point in the same direction, such as (5000, −5000, 5000), which is up and to the right from the transform-origin. Something similar is done to the lower right corner, which gets mapped far down and to the right. The resulting box stretches far past the edge of the screen.
+</p>
+
+
+<p>
+ここでも、描画される~boxは依然として有限であり，利用者は~scrollして全部を見れる。
+しかしながら、右側部分
+— 元の~boxの右~端から `30px^v 程の部分 —
+は，すでに切り取られており、利用者の~scroll量に関わらず，可視でなくなる。
+幅 `25px^v の青色の~borderについては、左端, 上端, 下端は可視になるが，右端はそうでない。
+◎
+Again, the rendered box is still finite, so the user can scroll to see the whole thing if he or she chooses. However, the right part has been chopped off. No matter how far the user scrolls, the rightmost 30px or so of the original box will not be visible. The blue border was only 25px wide, so it will be visible on the left, top, and bottom, but not the right.
+</p>
+
+
+
+<p>
+1 個／ 3 個の頂点で %w ~LT 0 になる場合も、同じ基本的~~手続きが適用されることになる。
+ただし、この場合の［
+%w ~LT 0 の区画
+］の切り取りによる結果は、四辺形ではなく, 三角形／五角形になる。
+◎
+The same basic procedure would apply if one or three vertices had w &lt; 0. However, in that case the result of truncating the w &lt; 0 part would be a triangle or pentagon instead of a quadrilateral.
+</p>
+</div>
+
+		</section>
+	</section>
+
+	<section id="individual-transforms">
+<h2 title="Individual Transform Properties: the translate, scale, and rotate properties">5. 個別的な変形~prop：`translate^p, `scale^p, `rotate^p</h2>
+
+<p>
+［
+`translate$p, `rotate$p, `scale$p
+］~propは、~UIにおける代表的な用法に対応する仕方で，作者が単純な変形を独立に指定できるようにする
+— `transform$p における［
+`translate$f, `rotate$f, `scale$f
+］の動作の順序を覚えずに済むよう。
+これらの~propは、それらの動作（同順）を `transform$p とは独立に保って，~screen座標~内で動作する。
+【すなわち，これらの~propによる変形は、<a href="#ctm">決められた順序</a>で適用される。】
+◎
+The translate, rotate, and scale properties allow authors to specify simple transforms independently, in a way that maps to typical user interface usage, rather than having to remember the order in transform that keeps the actions of translate(), rotate() and scale() independent and acting in screen coordinates.
+</p>
+
+
+◎名 `translate@p
+◎値 `~none0$v | `length-percentage$t [ `length-percentage$t `length$t? ]?
+◎初 `none^v
+◎適 `変形-可能$な要素
+◎継 されない
+◎百 ［
+1 個目／ 2 個目
+］の値に対しては、`基準~box$の［
+横幅 ／ 縦幅
+］に相対的
+◎
+relative to the width of the reference box (for the first value) or the height (for the second value)
+◎算 
+~keyword `none^v ／ 
+算出された 2 個の `length-percentage$t 値と 0 〜 1 個の絶対~長さ
+◎
+the keyword none or a pair of computed &lt;length-percentage&gt; values and optionally an absolute length
+◎順 文法に従う
+◎ア 
+算出された値~型による
+— 一方の成分の個数は 2 個で他方は 3 個ある場合は、前者に 0 を追加した上で。
+ただし， `none^v については下を見よ
+◎
+by computed value, adding a third 0 value if needed to match components, but see below for none 
+◎表終
+
+<p>
+`translate$p ~propは、順に X, Y, Z 軸~~方向の並進を指定する 1 〜 3 個の値を受容する：
+◎
+The translate property accepts 1-3 values, each specifying a translation against one axis, in the order X, Y, then Z.
+</p>
+
+<ul>
+	<li>
+2 個~以下の値が与えられた場合、~2D並進を指定する
+— `translate$f 関数と等価になる。
+2 個目の値が欠落している場合の既定は、 `0px^v とする。
+◎
+If only one or two values are given, this specifies a 2d translation, equivalent to the translate() function. If the second value is missing, it defaults to 0px.
+</li>
+	<li>
+3 個の値が与えられた場合、~3D並進を指定する
+— `translate3d$f 関数と等価になる。
+◎
+If three values are given, this specifies a 3d translation, equivalent to the translate3d() function.
+</li>
+</ul>
+
+◎名 `rotate@p
+◎値 `~none0$v | `angle$t | [ `x$v | `y$v | `z$v | `number$t{3} ]? &amp;&amp; `angle$t
+◎初 `none^v
+◎適 `変形-可能$な要素
+◎継 されない
+◎百 受容しない
+◎算 
+［
+~keyword `none^v ／ `angle$t
+］, および省略可能な軸
+— 軸は 3 個の `number$t からなる~list
+◎
+the keyword none, or an &lt;angle&gt;, optionally with an axis consisting of a list of three &lt;number&gt;s
+◎順 文法に従う
+◎ア SLERP として
+【<a href="#interpolation-of-decomposed-3d-matrix-values">~~参照</a>】【！＊】
+— ただし， `none^v については下を見よ
+◎
+as SLERP, but see below for none
+◎表終
+
+<p>
+`rotate$p ~propは、要素を回転する角度（ `angle^t ）, および
+どの軸~周りで回転するか（省略可能）を受容する。
+◎
+The rotate property accepts an angle to rotate an element, and optionally an axis to rotate it around.
+</p>
+
+<p>
+軸が省略された場合、~2D回転を指定する
+— `rotate$f と等価になる。
+◎
+If the axis is omitted, this specifies a 2d rotation, equivalent to the rotate() function.
+</p>
+
+<p>
+他の場合、~3D回転を指定する：
+［
+`x@v ／
+`y@v ／
+`z@v
+］が与えられた場合、その軸~周りの回転を指示する
+— `rotateX$f, 等々による~3D変形-関数と等価になる。 
+別法として、原点からの~vectorを成す x, y, z 成分を表現する 3 個の数を与えることで，明示的に軸を指定できる
+— `rotate3d$f 関数と等価になる。
+◎
+Otherwise, it specifies a 3d rotation: if x, y, or z is given, it specifies a rotation around that axis, equivalent to the rotateX()/etc 3d transform functions. Alternately, the axis can be specified explicitly by giving three numbers representing the x, y, and z components of an origin-centered vector, equivalent to the rotate3d() function.
+</p>
+
+<p class="note">注記：
+<code class="css">`rotate$p: `30deg^v;</code>,
+<code class="css">`rotate$p: `z 30deg^v;</code>
+は、形上では同じ回転を指定するが、前者の宣言は
+<code class="css">`transform$p: `rotate(30deg)^v;</code>
+に等価な~2D変形になる一方、後者は
+<code class="css">`transform$p: `rotateZ(30deg)^v;</code>
+に等価な~3D変形になり，~UAにおいて追加的な副作用があり得る。
+◎
+Note: While rotate: 30deg; and rotate: z 30deg; technically specify the same rotation, the first declaration is a 2d transform equivalent to transform: rotate(30deg);, while the second is a 3d transform equivalent to transform: rotateZ(30deg);, which can have additional side-effects in UAs.
+</p>
+
+◎名 `scale@p
+◎値 `~none0$v | `number$t{1,3}
+◎初 `none^v
+◎適 `変形-可能$な要素
+◎継 されない
+◎百 受容しない
+◎算 
+~keyword `none^v ／ 2 〜 3 個の `number$t からなる~list
+◎
+the keyword none, or a list of 2 or 3 &lt;number&gt;s
+◎順 文法に従う
+◎ア 算出d値の型による
+— ただし， `none^v については下を見よ
+◎
+by computed value, but see below for none
+◎表終
+
+<p>
+`scale$p ~propは、順に X, Y, Z 軸~~方向の拡縮率を指定する 1 〜 3 個の値を受容する。
+◎
+The scale property accepts 1-3 values, each specifying a scale along one axis, in order X, Y, then Z.
+</p>
+
+<p>
+X 値のみ与えられた場合、その値が Y 値も与える。
+◎
+If only the X value is given, the Y value defaults to the same value.
+</p>
+
+<p>
+2 個~以下の値が与えられた場合、~2D拡縮-法を指定する
+— `scale$f 関数と等価になる。
+3 個の値が与えられた場合、~3D拡縮-法を指定する
+— `scale3d$f 関数と等価になる。
+◎
+If one or two values are given, this specifies a 2d scaling, equivalent to the scale() function. If three values are given, this specifies a 3d scaling, equivalent to the scale3d() function.
+</p>
+
+<p>
+これら 3 種の~propは、いずれも
+`~none0@v
+を既定の値として受容する
+— それは、まったく変形を施さないことを指示する。
+特に，この値は、積層~文脈や`すべての子孫~用の包含塊$の作成を<em>誘発しない</em>。
+一方で，他のすべての値は（ `translate$p: `0px^v の様な “恒等” 変形も含めて）、通例の変形と同じく，積層~文脈, および`すべての子孫~用の包含塊$を作成する。
+◎
+All three properties accept (and default to) the value none, which produces no transform at all. In particular, this value does not trigger the creation of a stacking context or containing block for all descendants, while all other values (including “identity” transforms like translate: 0px) create a stacking context and containing block for all descendants, per usual for transforms.
+</p>
+
+<p>
+［
+`translate$p ／ `rotate$p ／ `scale$p
+］が［
+~animateまたは遷移-
+］していて，その［
+<b>from</b> 値, <b>to</b> 値
+］いずれか片方のみ `none^v である場合、その `none^v は，等価な恒等~変形~値［
+`0px^v ／ `0deg^v ／ `1^v 
+］に置換される。
+◎
+When translate, rotate or scale are animating or transitioning, and the from value or to value (but not both) is none, the value none is replaced by the equivalent identity value (0px for translate, 0deg for rotate, 1 for scale).
+</p>
+
+		<section id="individual-transform-serialization">
+<h3 title="Serialization">5.1. 直列化</h3>
+
+
+<p>
+これらの~propの挙動は、 3 個の別個の~mode
+— 変形なし, ~2D変形, ~3D変形 —
+がある。
+よって、~propを直列化するときも，次に従ってそれを織り込むモノトスル：
+◎
+Because these properties have three distinct modes of behavior (no transform, 2d transform, or 3d transform), serialization must take this into account:
+</p>
+
+<dl class="switch">
+	<dt>`translate$p</dt>
+	<dd>
+~2D並進が指定された場合、 1 〜 2 個の値のみを直列化する（通例のように， 2 個目の値が既定の `0px^v の場合、直列化するときには省略する）。
+◎
+If a 2d translation is specified, the property must serialize with only one or two values (per usual, if the second value is 0px, the default, it must be omitted when serializing).
+</dd>
+	<dd>
+~3D並進が指定された場合、 3 個すべての値を直列化する。
+◎
+If a 3d translation is specified, all three values must be serialized.
+</dd>
+	<dd>
+~keyword `none^v が元から指定されていた場合に限り、 `none^v に直列化する（恒等~変形はこれに該当しないので、 ~2D, ~2Dのうち適切な方に直列化する）。
+)
+◎
+It must serialize as the keyword none if and only if none was originally specified. (An identity transform does not count; it must serialize as the 2d or 3d version, as appropriate.)
+</dd>
+
+	<dt>`rotate$p</dt>
+	<dd>
+~2D回転が指定された場合、 `angle$t  1 個だけとして直列化する。
+◎
+If a 2d rotation is specified, the property must serialize as just an &lt;angle&gt;.
+</dd>
+	<dd>
+~3D回転が指定された場合、指定された軸も伴わせて直列化する。
+当の軸は［
+X, Y, Z
+］いずれかの軸に平行である場合、適切な~keywordに直列化する。
+◎
+If a 3d rotation is specified, the property must serialize with an axis specified. If the axis is parallel with the x, y, or z axises, it must serialize as the appropriate keyword.
+</dd>
+	<dd>
+~keyword `none^v が元から指定されていた場合に限り、 `none^v に直列化する（恒等~変形はこれに該当しないので、 ~2D, ~2Dのうち適切な方に直列化する）。
+◎
+It must serialize as the keyword none if and only if none was originally specified. (An identity transform does not count; it must serialize as the 2d or 3d version, as appropriate.)
+</dd>
+
+	<dt>`scale$p</dt>
+	<dd>
+~2D拡縮が指定された場合、 1 〜 2 個の値のみを直列化する（通例のように， 2 個目の値が 1 個目と同じになる既定の場合、直列化するときには省略する）。
+◎
+If a 2d scale is specified, the property must serialize with only one or two values (per usual, if the second value is the same as the first, the default, it must be omitted when serializing).
+</dd>
+	<dd>
+~3D拡縮が指定された場合、 3 個すべての値を直列化する。
+◎
+If a 3d scale is specified, all three values must be serialized.
+</dd>
+	<dd>
+~keyword `none^v が元から指定されていた場合に限り、 `none^v に直列化する（恒等~変形はこれに該当しないので、 ~2D, ~2Dのうち適切な方に直列化する）。
+)
+◎
+It must serialize as the keyword none if and only if none was originally specified. (An identity transform does not count; it must serialize as the 2d or 3d version, as appropriate.)
+</dd>
+</dl>
+
+		</section>
+	</section>
+	<section id="ctm">
+<h2 title="Current Transformation Matrix">6. 現在の変形n行列</h2>
+
+<p>
+`変形n行列$は、次に従って［
+`transform$p,
+`transform-origin$p,
+`translate$p,
+`rotate$p,
+`scale$p,
+`offset$p
+］~propから算出されるように
+【 <a href="#transform-rendering">§ 変形の描画~modelの記述から</a>】
+改正される
+— それは、単位i行列に対し，以下の変形nを累積する：
+◎
+The transformation matrix computation is amended to the following:
+◎
+The transformation matrix is computed from the transform, transform-origin, translate, rotate, scale, and offset properties as follows:
+• Start with the identity matrix.
+</p>
+
+<ol>
+	<li>
+`transform-origin$p の算出d値による ( X, Y, Z ) で並進する
+◎
+Translate by the computed X, Y, and Z values of transform-origin.
+</li>
+	<li>
+`translate$p の算出d値による ( X, Y, Z ) で並進する
+◎
+Translate by the computed X, Y, and Z values of translate.
+</li>
+	<li>
+`rotate$p の算出d値による `angle$t だけ，指定された軸~周りで回転する
+◎
+Rotate by the computed &lt;angle&gt; about the specified axis of rotate.
+</li>
+	<li>
+`scale$p の算出d値による ( X, Y, Z ) 値で拡縮する
+◎
+Scale by the computed X, Y, and Z values of scale.
+</li>
+	<li>
+`offset$p により指定される変形で並進して, 回転する
+◎
+Translate and rotate by the transform specified by offset.
+</li>
+	<li>
+`transform$p ~prop値に~listされた順で与えられる，各~変形-関数
+◎
+Multiply by each of the transform functions in transform from left to right.
+</li>
+	<li>
+最初の段と同じ移動量だけ，逆方向に並進する
+◎
+Translate by the negated computed X, Y and Z values of transform-origin.
+</li>
+</ol>
+
+	</section>
+	<section id="transform-style-property">
+<h2 title="The transform-style Property">7. `transform-style^p ~prop</h2>
+
+◎名 `transform-style@p
+◎値 `flat^v | `preserve-3d^v
+◎初 `flat^v
+◎適 `変形-可能$な要素
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎使
+`~group化~prop値$が［
+在るならば `flat^v ／
+無いならば 指定された~keyword
+］
+◎
+flat if a grouping property is present, specified keyword otherwise 
+◎表終
+
+<p>
+`transform-style$p 用の算出d値 `preserve-3d^v は、［
+`積層~文脈$, `すべての子孫~用の包含塊$
+］の両者を確立する。
+使用~値が `preserve-3d^v になる場合、`~3D描画~文脈$も［
+確立する／拡張する
+］。
+◎
+A computed value of preserve-3d for transform-style establishes both a stacking context and a containing block for all descendants. If the used value is preserve-3d then it also establishes or extends a 3D rendering context.
+</p>
+
+		<section id="grouping-property-values">
+<h3 title="Grouping property values">7.1. ~group化~prop値</h3>
+
+<p>
+以下に挙げる~CSS~prop値は、適用し得るようになる前に，［
+子孫~要素たちの平坦~化された表現を作成する
+］よう~UAに要求する。
+したがって、［
+要素の `transform-style$p 用の値 `preserve-3d^v
+］に対する使用~値を， `flat^v に強制する：
+◎
+The following CSS property values require the user agent to create a flattened representation of the descendant elements before they can be applied, and therefore force the element to have a used style of flat for preserve-3d.
+</p>
+
+<table><thead><tr><th>~prop
+<th>対象になる値
+</thead><tbody>
+
+<tr><td>`overflow$p
+<td>`visible$v, `clip$v 以外の任意の値
+◎
+overflow: any value other than visible or clip.
+
+<tr><td>`opacity$p
+<td>1 より小さい任意の値
+◎
+opacity: any value less than 1.
+
+<tr><td>`filter$p
+<td>`none^v 以外の任意の値
+◎
+filter: any value other than none.
+
+<tr><td>`clip$p
+<td>`auto^v 以外の任意の値
+◎
+clip: any value other than auto.
+
+<tr><td>`clip-path$p
+<td>`none^v 以外の任意の値
+◎
+clip-path: any value other than none.
+
+<tr><td>`isolation$p
+<td>使用~値 `isolate^v
+◎
+isolation: used value of isolate.
+
+<tr><td>`mask-image$p
+<td>`none^v 以外の任意の値
+◎
+mask-image: any value other than none.
+
+<tr><td>`mask-border-source$p
+<td>`none^v 以外の任意の値
+◎
+mask-border-source: any value other than none.
+
+<tr><td>`mix-blend-mode$p
+<td>`normal^v
+以外の任意の値
+◎
+mix-blend-mode: any value other than normal.
+
+</tbody></table>
+
+		</section>
+	</section>
+	<section id="perspective-property">
+<h2 title="The perspective Property">8. `perspective^p ~prop</h2>
+
+◎名 `perspective@p
+◎値
+`none^v | `length [0,∞]$t
+◎初 `none$v
+◎適 `変形-可能$な要素
+◎継 されない
+◎百 受容しない
+◎算
+~keyword `none$v ／ 絶対~長さ
+◎
+the keyword none or an absolute length
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<dl>
+	<dt id="valdef-perspective-length-0">`length [0,∞]$t</dt>
+	<dd>
+射影の中心からの距離。
+◎
+Distance to the center of projection.
+</dd>
+	<dd class="issue">
+射影が射影の中心までの距離であることを検証yする。【？】
+◎
+Verify that projection is the distance to the center of projection.
+</dd>
+	<dd>
+ごく小さな `length$t 値は，［
+奇妙な描画~結果を生産し得る／変形~計算の数量的な正確度を~~歪め得る
+］ので、
+`1px^v 未満の値は，描画の目的においては `1px^v として扱うモノトスル。
+（この切詰めは下層の値には影響しないので、~stylesheet内の
+<code class="css">`perspective$p: `0^v</code>
+を直列化した結果は，依然として `0^v になる。）
+◎
+As very small &lt;length&gt; values can produce bizarre rendering results and stress the numerical accuracy of transform calculations, values less than 1px must be treated as 1px for rendering purposes. (This clamping does not affect the underlying value, so perspective: 0; in a stylesheet will still serialize back as 0.)
+</dd>
+
+	<dt>`none@v</dt>
+	<dd>
+遠近法による変形は適用されない。
+その効果は、数学的には，無限大の `length$t 値に近似する。
+すべての~objは、~canvas上に平坦に現れる。
+◎
+No perspective transform is applied. The effect is mathematically similar to an infinite &lt;length&gt; value. All objects appear to be flat on the canvas.
+</dd>
+</dl>
+
+<p>
+この~propに対する `none$v 以外の値は、積層~文脈を確立する。
+それは、 `transform$p ~propのときと ちょうど同じ様に，`すべての子孫~用の包含塊$も確立する。
+◎
+The use of this property with any value other than none establishes a stacking context. It also establishes a containing block for all descendants, just like the transform property does.
+</p>
+
+<p class="issue">
+［
+積層~文脈／包含塊
+］は，遠近法には本当は必要ではないが、これを変更すると，~web互換性を得られなくなるあろう。
+◎
+We don’t really need to be a stacking context or containing block for perspective, but maybe webcompat means we can’t change this.
+</p>
+
+<p>
+［
+`perspective$p ／ `perspective-origin$p
+］~propの値は、上述に従って`透視~行列$の算出に利用される。
+◎
+The values of the perspective and perspective-origin properties are used to compute the perspective matrix, as described above.
+</p>
+
+	</section>
+	<section id="perspective-origin-property">
+<h2 title="The perspective-origin Property">9. `perspective-origin^p ~prop</h2>
+
+<p>
+`perspective-origin$p ~propは， `perspective$p ~prop用の原点を確立する。
+それは、実質的に，想定される［
+要素の一連の子を俯瞰する`視点$
+］の X, Y 位置を設定する。
+◎
+The perspective-origin property establishes the origin for the perspective property. It effectively sets the X and Y position at which the viewer appears to be looking at the children of the element.
+</p>
+
+◎名 `perspective-origin@p
+◎値 `position$t
+◎初 `50% 50%^v
+◎適 `変形-可能$な要素
+◎継 されない
+◎百
+`基準~box$の~sizeに相対的
+◎
+refer to the size of the reference box.
+◎算 `background-position$p を見よ
+◎順 文法に従う
+◎ア 算出d値の型による
+◎表終
+
+<p>
+［
+`perspective$p ／ `perspective-origin$p
+］~propの値は、上述に従って`透視~行列$の算出に利用される。
+◎
+The values of the perspective and perspective-origin properties are used to compute the perspective matrix, as described above.
+</p>
+
+<p>
+`perspective-origin$p に対する値は、遠近法の原点の，`基準~box$の左上~隅からの~offsetを表現する。
+◎
+The values for perspective-origin represent an offset of the perspective origin from the top left corner of the reference box.
+</p>
+
+<dl>
+	<dt>`percentage$t</dt>
+	<dd>
+遠近法~offsetに対する［
+横／縦
+］の百分率~値は，`基準~box$の［
+横幅／縦幅
+］に相対的になる。
+【絶対~化された結果の】~offset値は，`基準~box$の左上~隅からの［
+横／縦
+］~offsetを表現する。
+◎
+A percentage for the horizontal perspective offset is relative to the width of the reference box. A percentage for the vertical offset is relative to height of the reference box. The value for the horizontal and vertical offset represent an offset from the top left corner of the reference box.
+</dd>
+
+	<dt>`length$t</dt>
+	<dd>
+長さ値は固定長を~offsetとして与える。
+~offset値は、`基準~box$の左上~隅からの［
+横／縦
+］~offsetを表現する。
+◎
+A length value gives a fixed length as the offset. The value for the horizontal and vertical offset represent an offset from the top left corner of the reference box.
+</dd>
+
+	<dt>`top@vp</dt>
+	<dt>`right@vp</dt>
+	<dt>`bottom@vp</dt>
+	<dt>`left@vp</dt>
+	<dd>
+		<ul>
+			<li>
+所与の成分~値の個数が 3 個 以上ある下で，これらの~keywordの次の成分として［
+`percentage^t ／ `length^t
+］値が与えられたならば、その値は，上に挙げられた順に［
+上端, 右端, 下端, 左端
+］辺からの~offsetを表現することになる。
+</li>
+			<li>
+他の場合、これらの~keywordは，上に挙げられた順に［
+縦~位置に対する `0%^v,
+横~位置に対する `100%^v,
+縦~位置に対する `100%^v,
+横~位置に対する `0%^v,
+］に算出される。
+</li>
+		</ul>
+
+◎
+Computes to 0% for the vertical position if one or two values are given, otherwise specifies the top edge as the origin for the next offset.
+◎
+Computes to 100% for the horizontal position if one or two values are given, otherwise specifies the right edge as the origin for the next offset.
+◎
+Computes to 100% for the vertical position if one or two values are given, otherwise specifies the bottom edge as the origin for the next offset.
+◎
+Computes to 0% for the horizontal position if one or two values are given, otherwise specifies the left edge as the origin for the next offset.
+</dd>
+
+	<dt>`center@vp</dt>
+	<dd>
+横~位置が指定されていない場合、横~位置に対する 50% （ `left 50%^v ）に算出される。
+他の場合、縦~位置に対する 50% （ `top 50%^v ）に算出される。
+◎
+Computes to 50% (left 50%) for the horizontal position if the horizontal position is not otherwise specified, or 50% (top 50%) for the vertical position if it is.
+</dd>
+
+</dl>
+
+<p>
+`perspective-origin$p の`解決d値$は、
+<a href="~CSSOM1#resolved-value-special-case-property-like-height">`height^p の様に特別</a>
+とする。
+`CSSOM$r
+◎
+The perspective-origin property is a resolved value special case property like height. [CSSOM]
+</p>
+
+	</section>
+	<section id="backface-visibility-property">
+<h2 title="The backface-visibility Property">10. `backface-visibility^p ~prop</h2>
+
+◎名 `backface-visibility@p
+◎値 `visible^v | `hidden^v
+◎初 `visible^v
+◎適 `変形-可能$な要素
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+<code class="css">`backface-visibility$p: `hidden^v</code>
+を伴う要素の可視性は、次の様にして決定される：
+◎
+The visibility of an element with backface-visibility: hidden is determined as follows:
+</p>
+
+<ol>
+	<li>
+要素の`累積~3D変形n行列$を算出する。
+◎
+Compute the element’s accumulated 3D transformation matrix.
+</li>
+	<li>
+行列の `33^M 成分が負である場合、要素は見えなくされるべきである。
+他の場合は可視である。
+◎
+If the component of the matrix in row 3, column 3 is negative, then the element should be hidden. Otherwise it is visible.
+</li>
+</ol>
+
+
+<p class="issue">
+背面の可視性は `33^M を調べるだけでは判明しない。
+`23014$bug を見よ。
+◎
+Backface-visibility cannot be tested by only looking at m33. See Bug 23014.
+</p>
+
+<p class="trans-note">【
+すなわち、下に述べられている論拠の中の %z 値の大きさ比較と, 視点からの距離の比較は、必ずしも整合しない（例えば、矩形が Y 軸を中心に 90° 近く回転されていて，右方／左方に~~位置するとき）。
+】</p>
+
+<p class="note">注記：
+この定義の論拠は次で与えられる：
+要素が，薄さ無限小な x–y 平面に埋め込まれた矩形であるとする。
+要素が変形されないときの［
+表面／裏面
+］の座標は，ある極小の %ε に対し
+( %x, %y, %ε ) ／ ( %x, %y, − %ε )
+になる。
+変形-後，要素の表面が裏面よりも
+`視点$に近くなる（ %z 値がより高くなる）か, 視点から遠くなるか
+どうかを調べればよい。
+表面の %z 座標は、遠近法を織り込む前の段階で
+`13^M × %x + `23^M × %y + `33^M × %ε + `43^M
+になり，裏面は
+`13^M × %x + `23^M × %y − `33^M × %ε + `43^M
+になる。
+前者の量が後者より大きくなるのは、 `33^M ~GT 0 のとき, そのときに限る。
+（ 0 に等しいときは，視点からの表面と裏面の近さは等しくなる。
+これはおそらく 90° 回転の様な何かを意味する
+—
+それは，いずれにせよ要素を不可視にするので、消失するかどうかを考慮する必要はない）
+◎
+Note: The reasoning for this definition is as follows. Assume elements are rectangles in the x–y plane with infinitesimal thickness. The front of the untransformed element has coordinates like (x, y, ε), and the back is (x, y, −ε), for some very small ε. We want to know if after the transformation, the front of the element is closer to the viewer than the back (higher z-value) or further away. The z-coordinate of the front will be m13x + m23y + m33ε + m43, before accounting for perspective, and the back will be m13x + m23y − m33ε + m43. The first quantity is greater than the second if and only if m33 &gt; 0. (If it equals zero, the front and back are equally close to the viewer. This probably means something like a 90-degree rotation, which makes the element invisible anyway, so we don’t really care whether it vanishes.)
+</p>
+
+	</section>
+	<section id="svg-three-dimensional-functions">
+<h2 title="SVG and 3D transform functions">11. ~SVGと~3D変形-関数</h2>
+
+<p>
+この仕様は、次に挙げる要素に対し，`~3D変形-関数$の適用-を明示的に要求する：
+［
+`容器~要素$
+— `a$e, `g$e, `svg$e
+］,
+すべての`~graphics要素$,
+すべての`~graphicを参照する要素$,
+~SVG `foreignObject$e 要素
+◎
+This specification explicitly requires three-dimensional transform functions to apply to the container elements: a, g, svg, all graphics elements, all graphics referencing elements and the SVG foreignObject element.
+</p>
+
+<p>
+`~3D変形-関数$, および 次に挙げる~prop：
+`perspective$p,
+`perspective-origin$p,
+`transform-style$p,
+`backface-visibility$p
+は、次に挙げる要素には利用できない：
+`clipPath$e,
+`linearGradient$e,
+`radialGradient$e,
+`pattern$e
+。
+それらに対し，変形~listに`~3D変形-関数$が含まれている場合、変形~list全体が無視されるモノトスル。
+また、先に挙げたどの~propの値も無視されるモノトスル。
+これらの要素に包含されている`変形-可能$な要素は、~3D変形-関数を持ち得る。
+`clipPath$e ／ `mask$e ／ `pattern$e
+要素は、その適用-に先立って，［
+子孫~要素の平坦~化された表現を作成する
+］よう~UAに要求するので、
+<code class="css">`transform-style$p: `preserve-3d^v</code>
+の挙動を上書きする。
+◎
+Three-dimensional transform functions and the properties perspective, perspective-origin, transform-style and backface-visibility can not be used for the elements: clipPath, linearGradient, radialGradient and pattern. If a transform list includes a three-dimensional transform function, the complete transform list must be ignored. The values of every previously named property must be ignored. Transformable elements that are contained by one of these elements can have three-dimensional transform functions. The clipPath, mask, pattern elements require the user agent to create a flattened representation of the descendant elements before they can be applied, and therefore override the behavior of transform-style: preserve-3d.
+</p>
+
+<p>
+`~3D描画~文脈$に属する~objに対しては、 `vector-effect$p ~propが `non-scaling-stroke^v にされていても，~objの~stroke法には影響しない。
+◎
+If the vector-effect property is set to non-scaling-stroke and an object is within a 3D rendering context the property has no affect on stroking the object.
+</p>
+
+	</section>
+	<section id="transform-functions">
+<h2 title="The Transform Functions">12. 変形-関数</h2>
+
+<p>
+`transform$p ~propの値は
+`transform-function@t の~listである。
+許容される変形-関数の集合は以下に与えられる。
+この仕様にて `angle$t が利用される所では、 0 に等しい `number$t も許容され，角度 0 として扱われる。
+並進に対する［
+横／縦
+］の `percentage$t 値は，`基準~box$の［
+横幅／縦幅
+］に相対的になる。
+◎
+The value of the transform property is a list of &lt;transform-function&gt;. The set of allowed transform functions is given below. Wherever &lt;angle&gt; is used in this specification, a &lt;number&gt; that is equal to zero is also allowed, which is treated the same as an angle of zero degrees. A percentage for horizontal translations is relative to the width of the reference box. A percentage for vertical translations is relative to the height of the reference box.
+</p>
+
+		<section id="three-d-transform-functions">
+<h3 title="3D Transform Functions">12.1. ~3D変形-関数</h3>
+
+<p>
+以下の各種
+`~3D変形-関数@
+における `zero$t は `0deg^v と同じに挙動する（“単位なしの 0” 角度は 旧来との互換性の理由から保全される）。 
+◎
+In the following 3d transform functions, a &lt;zero&gt; behaves the same as 0deg. ("Unitless 0" angles are preserved for legacy compat reasons.)
+</p>
+
+<dl class="valdef">
+	<dt>`matrix3d@f = matrix3d( `number$t#{16} )</dt>
+	<dd>
+16 個の成分値からなる，列主導の順序による~4x4斉次~行列として、~3D変形nを指定する。
+◎
+specifies a 3D transformation as a 4x4 homogeneous matrix of 16 values in column-major order.
+</dd>
+
+	<dt>`translate3d@f = translate3d( `length-percentage$t, `length-percentage$t, `length$t )</dt>
+	<dd>
+所与の順による `translation-value^t 値からなる移動量~vector
+[ %tx, %ty, %tz ]
+による，`~3D並進$を指定する。
+◎
+specifies a 3D translation by the vector [tx,ty,tz], with tx, ty and tz being the first, second and third translation-value parameters respectively.
+</dd>
+
+	<dt>`translateZ@f = translateZ( `length$t )</dt>
+	<dd>
+所与の `length^t 値 %tz による移動量~vector
+[ 0, 0, %tz ]
+による， Z 方向の`~3D並進$を指定する。
+◎
+specifies a 3D translation by the vector [0,0,tz] with the given amount in the Z direction.
+</dd>
+
+	<dt>`scale3d@f = scale3d( `number$t, `number$t, `number$t )</dt>
+	<dd>
+所与の順による `number^t 値からなる拡縮率~vector
+[ %sx, %sy, %sz ]
+による，`~3D拡縮$を指定する。
+◎
+specifies a 3D scale operation by the [sx,sy,sz] scaling vector described by the 3 parameters.
+</dd>
+
+	<dt>`scaleZ@f = scaleZ( `number$t )</dt>
+	<dd>
+所与の `number^t 値 %sz による拡縮率~vector
+[ 0, 0, %sz ]
+による，`~3D拡縮$を指定する。
+◎
+specifies a 3D scale operation using the [1,1,sz] scaling vector, where sz is given as the parameter.
+</dd>
+
+	<dt>`rotate3d@f = rotate3d( `number$t, `number$t, `number$t, [ `angle$t | `zero$t ] )</dt>
+	<dd>
+所与の順による 3 個の `number^t 値からなる方向~vector
+[ %x, %y, %z ]
+を軸とする, 回転角 `angle^t による，`~3D回転$を指定する。
+[ 0, 0, 0 ]
+のような 正規化できない方向~vectorに対しては、回転は適用されない。
+◎
+specifies a 3D rotation by the angle specified in last parameter about the [x,y,z] direction vector described by the first three parameters. A direction vector that cannot be normalized, such as [0,0,0], will cause the rotation to not be applied.
+</dd>
+	<dd class="note">注記：
+回転は、~vectorが指す先から原点を見たときに時計回りになる。
+◎
+Note: the rotation is clockwise as one looks from the end of the vector toward the origin.
+</dd>
+
+	<dt>`rotateX@f = rotateX( [ `angle$t | `zero$t ] )</dt>
+	<dd>
+`rotate3d(1, 0, 0, &lt;angle&gt;)^v
+と同じ。
+◎
+same as rotate3d(1, 0, 0, &lt;angle&gt;).
+</dd>
+
+	<dt>`rotateY@f = rotateY( [ `angle$t | `zero$t ] )</dt>
+	<dd>
+`rotate3d(0, 1, 0, &lt;angle&gt;)^v
+と同じ。
+◎
+same as rotate3d(0, 1, 0, &lt;angle&gt;).
+</dd>
+
+	<dt>`rotateZ@f = rotateZ( [ `angle$t | `zero$t ] )</dt>
+	<dd>
+`rotate3d(0, 0, 1, &lt;angle&gt;)^v
+と同じ
+— `rotate(&lt;angle&gt;)^v に等価な~3D変形を与える。
+◎
+same as rotate3d(0, 0, 1, &lt;angle&gt;), which is a 3d transform equivalent to the 2d transform rotate(&lt;angle&gt;).
+</dd>
+
+	<dt>`perspective@f = perspective( `length [0,∞]$t )</dt>
+	<dd>
+`透視~投影~行列$を指定する。
+この行列は、空間の点を，その Z 値に基づいて X, Y 方向に拡縮する
+—
+正な Z 値を伴う点は，（画面~上では）原点から離れる方向に拡大し、負な Z 値を伴う点は，原点に近付く方向に縮小する。
+z=0 平面~上の点は不変になる。
+`length^t ~parameterは、`視点$から画面（ z=0 平面）までの距離を表現する。
+この値を小さくする程、視点と画面の四隅を頂点とする四角錐は，より平たくなり、遠近法の効果が誇張されるようになる。
+例えば，値 `1000px^v は中程度の遠近感を与え、値 `200px^v は極度の遠近感を与える。
+◎
+specifies a perspective projection matrix. This matrix scales points in X and Y based on their Z value, scaling points with positive Z values away from the origin, and those with negative Z values towards the origin. Points on the z=0 plane are unchanged. The parameter represents the distance of the z=0 plane from the viewer. Lower values give a more flattened pyramid and therefore a more pronounced perspective effect. For example, a value of 1000px gives a moderate amount of foreshortening and a value of 200px gives an extreme amount.
+</dd>
+	<dd>
+この深度~値が `1px^v 未満である場合、描画の目的においては `1px^v として扱うモノトスル。
+◎
+If the depth value is less than 1px, it must be treated as 1px for the purpose of rendering.
+</dd>
+</dl>
+
+		</section>
+		<section id="transform-primitives">
+<h3 title="Transform function primitives and derivatives">12.2. 原始関数とその派生</h3>
+
+<p>
+一部の変形-関数は、より汎用な変形-関数の特殊な場合として表現できる。
+後者は
+<dfn >~~原始関数</dfn>（ `primitive transform functions^en, または単に `primitive^en ），前者はその
+<dfn >~~派生関数</dfn>（ `derived transform function^en ）と呼ばれる。
+~3Dにおける原始関数と, その派生関数は：
+◎
+Some transform functions can be represented by more generic transform functions. These transform functions are called derived transform functions, and the generic transform functions are called primitive transform functions. Three-dimensional primitives and their derived transform functions are:
+</p>
+
+<table><thead><tr><th>原始関数
+<th>派生関数
+</thead><tbody>
+
+<tr><td id="translate3d-primitive">`translate3d$f
+<td>
+`translateX$f,
+`translateY$f,
+`translateZ$f,
+`translate$f
+◎
+for &lt;translateX()&gt;, &lt;translateY()&gt;, translateZ() and &lt;translate()&gt;.
+
+<tr><td id="scale3d-primitive">`scale3d$f
+<td>
+`scaleX$f,
+`scaleY$f,
+`scaleZ$f,
+`scale$f
+◎
+for &lt;scaleX()&gt;, &lt;scaleY()&gt;, scaleZ() and &lt;scale()&gt;.
+
+<tr><td id="rotate3d-primitive">`rotate3d$f
+<td>
+`rotate$f,
+`rotateX$f,
+`rotateY$f,
+`rotateZ$f
+◎
+for &lt;rotate()&gt;, rotateX(), rotateY() and rotateZ().
+
+</tbody></table>
+
+<p>
+派生関数に対応する原始関数として~2D, ~3D両者がある場合、どちらを利用するかは，文脈から決まる。
+<a href="#interpolation-of-transform-functions">原始関数と派生関数の補間</a>
+を見よ。
+◎
+For derived transform functions that have a two-dimensional primitive and a three-dimensional primitive, the context decides about the used primitive. See Interpolation of primitives and derived transform functions.
+</p>
+
+		</section>
+	</section>
+	<section id="matrix-interpolation">
+<h2 title="Interpolation of Matrices">13. 二つの行列の補間</h2>
+
+<p>
+2 つの行列の合間を補間するためには、まず，それぞれの行列を 対応している並進, 回転, 拡縮, 斜傾
+— `~3D行列$の場合は，それに加えて遠近法の成分
+— に分解する。
+しかる後、この分解された 2 つの［
+一連の行列
+］の間で、互いに対応する行列を，数量的に補間する。
+最後に、その結果の一連の行列を，一つの行列に再構成する。
+◎
+When interpolating between two matrices, each matrix is decomposed into the corresponding translation, rotation, scale, skew and (for a 3D matrix) perspective values. Each corresponding component of the decomposed matrices gets interpolated numerically and recomposed back to a matrix in a final step.
+</p>
+
+		<section id="interpolation-of-3d-matrices">
+<h3 title="Interpolation of 3D matrices">13.1. 二つの~3D行列の補間</h3>
+
+			<section id="decomposing-a-3d-matrix">
+<h4 title="Decomposing a 3D matrix">13.1.1. ~3D行列の分解-法</h4>
+
+<p>
+下の疑似codeは
+“`Graphics Gems II, edited by Jim Arvo^cite”
+による “`unmatrix^en” 手法に基づくが、 Gimbal Locks の問題を避けるため、
+Euler angle の代わりに Quaternions を利用するように改変されている。
+◎
+The pseudo code below is based upon the "unmatrix" method in "Graphics Gems II, edited by Jim Arvo", but modified to use Quaternions instead of Euler angles to avoid the problem of Gimbal Locks.
+</p>
+
+<p class="trans-note">【
+Gimbal Locks — 
+`<a href="https://ja.wikipedia.org/wiki/%E3%82%B8%E3%83%B3%E3%83%90%E3%83%AB">ジンバルロック</a>^_
+】【
+Euler angle — 
+`<a href="https://ja.wikipedia.org/wiki/%E3%82%AA%E3%82%A4%E3%83%A9%E3%83%BC%E8%A7%92">オイラー角</a>^_
+】【
+Quaternions — 
+`<a href="https://ja.wikipedia.org/wiki/%E5%9B%9B%E5%85%83%E6%95%B0">四元数</a>^_
+】</p>
+
+<p>
+次の疑似codeは~4x4斉次~行列に対して働く：
+【！homogeneous transformation matrix同次変形n行列】
+◎
+The following pseudocode works on a 4x4 homogeneous matrix:
+</p>
+
+<pre class="lang-other">
+入力:
+   %matrix      ; ~4x4行列
+出力:
+   %translate ; 3 成分~vectorで表現される並進~成分
+   %scale       ; 3 成分~vectorで表現される拡縮~成分
+   %skew        ; 3 成分~vectorで表現される XY, XZ, YZ 斜傾~成分
+   %perspective ; 4 成分~vectorで表現される遠近法~成分
+   %quaternion  ; 4 成分~vectorで表現される四元数による 回転~成分
+
+返り値:
+   行列が分解し得るなら true, し得ないなら false
+
+
+`行列を正規化する^cmt
+    double %m33 = %matrix[3][3]
+if (%m33 == 0)
+    return false
+
+for (%i = 0; %i &lt; 4; %i++)
+    for (%j = 0; %j &lt; 4; %j++)
+        %matrix[%i][%j] /= %m33
+
+
+`perspective を解くため perspectiveMatrix が利用されるが，それは upper ~3x3成分の特異性を容易に~testする仕方も与える^cmt
+
+%PM = %matrix; `透視~行列, 複製^cmt
+
+%PM[0][3] = %PM[1][3] = %PM[2][3] = 0
+%PM[3][3] = 1
+
+if (determinant(%PM) == 0)
+    return false
+
+`最初に, 遠近法を分離する^cmt
+if (%matrix[0][3] != 0 || %matrix[1][3] != 0 || %matrix[2][3] != 0)
+    `rightHandSide は等式の右辺^cmt
+    %rightHandSide[0] = %matrix[0][3]
+    %rightHandSide[1] = %matrix[1][3]
+    %rightHandSide[2] = %matrix[2][3]
+    %rightHandSide[3] = %matrix[3][3]
+
+    `rightHandSide に PM の逆行列で乗算して，等式を解く^cmt
+    %perspective = multVecMatrix(%rightHandSide, transposeMatrix4(inverse(%PM)))
+else
+    `遠近法なし^cmt
+    %perspective[0] = %perspective[1] = %perspective[2] = 0
+    %perspective[3] = 1
+
+`次に並進を得る^cmt
+for (%i = 0; %i &lt; 3; %i++)
+    %translate[%i] = %matrix[3][%i]
+
+`次は拡縮と斜傾率を得る。 'row' は 3 個の 3 成分~vectorからなる配列^cmt
+for (%i = 0; %i &lt; 3; %i++)
+    row[%i][0] = matrix[%i][0]
+    row[%i][1] = matrix[%i][1]
+    row[%i][2] = matrix[%i][2]
+
+`X 拡縮率を算出して 1 本目の row を正規化する^cmt
+%scale[0] = length(%row[0])
+%row[0] = normalize(%row[0])
+
+`XY 斜傾率を算出して 2 本目の row を 1 本目の row に直交化する^cmt
+%skew[0] = dot(%row[0], %row[1])
+%row[1] = combine(%row[1], %row[0], 1.0, -%skew[0])
+
+`Y 拡縮率を算出した上で 2 本目の row を正規化する^cmt
+%scale[1] = length(%row[1])
+%row[1] = normalize(%row[1])
+%skew[0] /= %scale[1];
+
+`XZ, YZ の斜傾率を算出して， 3 本目の row を直交化する^cmt
+%skew[1] = dot(%row[0], %row[2])
+%row[2] = combine(%row[2], %row[0], 1.0, -%skew[1])
+%skew[2] = dot(%row[1], %row[2])
+%row[2] = combine(%row[2], %row[1], 1.0, -%skew[2])
+
+`Z 拡縮率を得て, 3 本目の row を正規化する^cmt
+%scale[2] = length(%row[2])
+%row[2] = normalize(%row[2])
+%skew[1] /= %scale[2]
+%skew[2] /= %scale[2]
+
+`この時点で, 行列は直交する（各 row ~vectorは互いに直交な単位~vector）。座標系が反転されているか検査する。 行列式が −1 なら 行列と拡縮率を −1 倍する^cmt
+%pdum3 = cross(%row[1], %row[2])
+if (dot(%row[0], %pdum3) &lt; 0)
+    for (%i = 0; %i &lt; 3; %i++)
+        %scale[%i] *= -1;
+        %row[%i][0] *= -1
+        %row[%i][1] *= -1
+        %row[%i][2] *= -1
+
+`回転を~~抽出する^cmt
+%quaternion[0] = 0.5 * sqrt(max(1 + %row[0][0] - %row[1][1] - %row[2][2], 0))
+%quaternion[1] = 0.5 * sqrt(max(1 - %row[0][0] + %row[1][1] - %row[2][2], 0))
+%quaternion[2] = 0.5 * sqrt(max(1 - %row[0][0] - %row[1][1] + %row[2][2], 0))
+%quaternion[3] = 0.5 * sqrt(max(1 + %row[0][0] + %row[1][1] + %row[2][2], 0))
+
+if (%row[2][1] &gt; %row[1][2])
+    %quaternion[0] = -%quaternion[0]
+if (%row[0][2] &gt; %row[2][0])
+    %quaternion[1] = -%quaternion[1]
+if (%row[1][0] &gt; %row[0][1])
+    %quaternion[2] = -%quaternion[2]
+
+return true
+</pre>
+
+<!-- 
+
+Input:  matrix      ; a 4x4 matrix
+Output: translation ; a 3 component vector
+        scale       ; a 3 component vector
+        skew        ; skew factors XY,XZ,YZ represented as a 3 component vector
+        perspective ; a 4 component vector
+        quaternion  ; a 4 component vector
+Returns false if the matrix cannot be decomposed, true if it can
+
+
+// Normalize the matrix.
+if (matrix[3][3] == 0)
+    return false
+
+for (i = 0; i &lt; 4; i++)
+    for (j = 0; j &lt; 4; j++)
+        matrix[i][j] /= matrix[3][3]
+
+// perspectiveMatrix is used to solve for perspective, but it also provides
+// an easy way to test for singularity of the upper 3x3 component.
+perspectiveMatrix = matrix
+
+for (i = 0; i &lt; 3; i++)
+    perspectiveMatrix[i][3] = 0
+
+perspectiveMatrix[3][3] = 1
+
+if (determinant(perspectiveMatrix) == 0)
+    return false
+
+// First, isolate perspective.
+if (matrix[0][3] != 0 || matrix[1][3] != 0 || matrix[2][3] != 0)
+    // rightHandSide is the right hand side of the equation.
+    rightHandSide[0] = matrix[0][3]
+    rightHandSide[1] = matrix[1][3]
+    rightHandSide[2] = matrix[2][3]
+    rightHandSide[3] = matrix[3][3]
+
+    // Solve the equation by inverting perspectiveMatrix and multiplying
+    // rightHandSide by the inverse.
+    inversePerspectiveMatrix = inverse(perspectiveMatrix)
+    transposedInversePerspectiveMatrix = transposeMatrix4(inversePerspectiveMatrix)
+    perspective = multVecMatrix(rightHandSide, transposedInversePerspectiveMatrix)
+else
+    // No perspective.
+    perspective[0] = perspective[1] = perspective[2] = 0
+    perspective[3] = 1
+
+// Next take care of translation
+for (i = 0; i &lt; 3; i++)
+    translate[i] = matrix[3][i]
+
+// Now get scale and shear. 'row' is a 3 element array of 3 component vectors
+for (i = 0; i &lt; 3; i++)
+    row[i][0] = matrix[i][0]
+    row[i][1] = matrix[i][1]
+    row[i][2] = matrix[i][2]
+
+// Compute X scale factor and normalize first row.
+scale[0] = length(row[0])
+row[0] = normalize(row[0])
+
+// Compute XY shear factor and make 2nd row orthogonal to 1st.
+skew[0] = dot(row[0], row[1])
+row[1] = combine(row[1], row[0], 1.0, -skew[0])
+
+// Now, compute Y scale and normalize 2nd row.
+scale[1] = length(row[1])
+row[1] = normalize(row[1])
+skew[0] /= scale[1];
+
+// Compute XZ and YZ shears, orthogonalize 3rd row
+skew[1] = dot(row[0], row[2])
+row[2] = combine(row[2], row[0], 1.0, -skew[1])
+skew[2] = dot(row[1], row[2])
+row[2] = combine(row[2], row[1], 1.0, -skew[2])
+
+// Next, get Z scale and normalize 3rd row.
+scale[2] = length(row[2])
+row[2] = normalize(row[2])
+skew[1] /= scale[2]
+skew[2] /= scale[2]
+
+// At this point, the matrix (in rows) is orthonormal.
+// Check for a coordinate system flip.  If the determinant
+// is -1, then negate the matrix and the scaling factors.
+pdum3 = cross(row[1], row[2])
+if (dot(row[0], pdum3) &lt; 0)
+    for (i = 0; i &lt; 3; i++)
+        scale[i] *= -1;
+        row[i][0] *= -1
+        row[i][1] *= -1
+        row[i][2] *= -1
+
+// Now, get the rotations out
+quaternion[0] = 0.5 * sqrt(max(1 + row[0][0] - row[1][1] - row[2][2], 0))
+quaternion[1] = 0.5 * sqrt(max(1 - row[0][0] + row[1][1] - row[2][2], 0))
+quaternion[2] = 0.5 * sqrt(max(1 - row[0][0] - row[1][1] + row[2][2], 0))
+quaternion[3] = 0.5 * sqrt(max(1 + row[0][0] + row[1][1] + row[2][2], 0))
+
+if (row[2][1] &gt; row[1][2])
+    quaternion[0] = -quaternion[0]
+if (row[0][2] &gt; row[2][0])
+    quaternion[1] = -quaternion[1]
+if (row[1][0] &gt; row[0][1])
+    quaternion[2] = -quaternion[2]
+
+return true
+ -->
+
+			</section>
+			<section id="interpolation-of-decomposed-3d-matrix-values">
+<h4 title="Interpolation of decomposed 3D matrix values">13.1.2. 二つの［ 分解された~3D行列~値 ］の補間</h4>
+
+<p>
+始値~行列を分解して得られた各~成分~値［
+並進, 拡縮, 斜傾, 遠近法
+］は、対応する 終値~行列の各~成分との間で，線型に補間される。
+◎
+Each component of the decomposed values translation, scale, skew and perspective of the source matrix get linearly interpolated with each corresponding component of the destination matrix.
+</p>
+
+<p class="note">注記：
+例えば、始値~行列の
+<code>translate[0]</code>
+と終値~行列の
+<code>translate[0]</code>
+は数量的に補間され，その結果が~animateしている要素の並進を設定するために利用される。
+◎
+Note: For instance, translate[0] of the source matrix and translate[0] of the destination matrix are interpolated numerically, and the result is used to set the translation of the animating element.
+</p>
+
+<p>
+分解された始値／終値~行列の四元数は、下の疑似codeにて述べられる球面~線型~補間（ Slerp ）を利用して，補間される。
+【<a href="https://en.wikipedia.org/wiki/Slerp" >Slerp</a>】
+◎
+Quaternions of the decomposed source matrix are interpolated with quaternions of the decomposed destination matrix using the spherical linear interpolation (Slerp) as described by the pseudo code below:
+</p>
+
+<pre class="lang-other">
+入力:
+   %quaternionA   ; 4 成分~vector
+   %quaternionB   ; 4 成分~vector
+   %t             ; 補間~parameter, 0 &lt;= %t &lt;= 1
+出力:
+   %quaternionDst ; 4 成分~vector
+
+
+%product = dot(%quaternionA, %quaternionB)
+
+`-1.0 &lt;= product &lt;= 1.0 になるように切り詰める^cmt
+%product = min(%product, 1.0)
+%product = max(%product, -1.0)
+
+if (abs(%product) == 1.0)
+   %quaternionDst = %quaternionA
+   return
+
+%theta = acos(%product)
+%w = sin(%t * %theta) * 1 / sqrt(1 - %product * %product)
+
+for (%i = 0; %i &lt; 4; %i++)
+  %quaternionA[%i] *= cos(%t * %theta) - %product * %w
+  %quaternionB[%i] *= %w
+  %quaternionDst[%i] = %quaternionA[%i] + %quaternionB[%i]
+
+</pre>
+
+<!-- 
+Input:  quaternionA   ; a 4 component vector
+        quaternionB   ; a 4 component vector
+        t             ; interpolation parameter with 0 &lt;= t &lt;= 1
+Output: quaternionDst ; a 4 component vector
+
+
+product = dot(quaternionA, quaternionB)
+
+// Clamp product to -1.0 &lt;= product &lt;= 1.0
+product = min(product, 1.0)
+product = max(product, -1.0)
+
+if (abs(product) == 1.0)
+   quaternionDst = quaternionA
+   return
+
+theta = acos(dot)
+w = sin(t * theta) * 1 / sqrt(1 - product * product)
+
+for (i = 0; i &lt; 4; i++)
+  quaternionA[i] *= cos(t * theta) - product * w
+  quaternionB[i] *= w
+  quaternionDst[i] = quaternionA[i] + quaternionB[i]
+
+return
+ -->
+
+			</section>
+			<section id="recomposing-to-a-3d-matrix">
+<h4 title="Recomposing to a 3D matrix">13.1.3. ~3D行列への再構成-法</h4>
+
+
+<p>
+補間の結果の値が、要素の利用元~空間を変形するときに利用される。
+これらの値は~4x4行列に再構成するために利用される。
+これは、次の疑似codeにより行える：
+◎
+After interpolation, the resulting values are used to transform the elements user space. One way to use these values is to recompose them into a 4x4 matrix. This can be done following the pseudo code below:
+</p>
+
+<pre class="lang-other">
+入力:
+   %translation ; 3 成分~vector
+   %scale       ; 3 成分~vector
+   %skew        ; 3 成分~vectorで表現される斜傾~率 XY,XZ,YZ
+   %perspective ; 4 成分~vector
+   %quaternion  ; 4 成分~vector
+出力:
+   %matrix      ; ~4x4行列
+
+`遠近法を適用する^cmt
+for (%i = 0; %i &lt; 4; %i++)
+   %matrix[%i][3] = %perspective[%i]
+
+`並進を適用する^cmt
+for (%i = 0; %i &lt; 4; %i++)
+   for (%j = 0; %j &lt; 3; %j++)
+      %matrix[3][%i] += %translation[%j] * %matrix[%j][%i]
+
+`回転を適用する^cmt
+%x = %quaternion[0]
+%y = %quaternion[1]
+%z = %quaternion[2]
+%w = %quaternion[3]
+
+`四元数による値から複合的な回転~行列を構築する。 rotationMatrix は、初期~時は~4x4単位i行列^cmt
+%rotationMatrix[0][0] = 1 - 2 * (%y * %y + %z * %z)
+%rotationMatrix[0][1] =     2 * (%x * %y - %z * %w)
+%rotationMatrix[0][2] =     2 * (%x * %z + %y * %w)
+%rotationMatrix[1][0] =     2 * (%x * %y + %z * %w)
+%rotationMatrix[1][1] = 1 - 2 * (%x * %x + %z * %z)
+%rotationMatrix[1][2] =     2 * (%y * %z - %x * %w)
+%rotationMatrix[2][0] =     2 * (%x * %z - %y * %w)
+%rotationMatrix[2][1] =     2 * (%y * %z + %x * %w)
+%rotationMatrix[2][2] = 1 - 2 * (%x * %x + %y * %y)
+
+%matrix = multiply(%matrix, %rotationMatrix)
+
+`斜傾を適用する。 temp は初期~時は~4x4の単位i行列^cmt
+if (%skew[2])
+    %temp[2][1] = %skew[2]
+    %matrix = multiply(%matrix, %temp)
+
+if (%skew[1])
+    %temp[2][1] = 0
+    %temp[2][0] = %skew[1]
+    %matrix = multiply(%matrix, %temp)
+
+if (%skew[0])
+    %temp[2][0] = 0
+    %temp[1][0] = %skew[0]
+    %matrix = multiply(%matrix, %temp)
+
+`拡縮を適用する^cmt
+for (%i = 0; %i &lt; 3; %i++)
+   for (%j = 0; %j &lt; 4; %j++)
+      %matrix[%i][%j] *= %scale[%i]
+
+return
+</pre>
+<!-- 
+Input:  translation ; a 3 component vector
+        scale       ; a 3 component vector
+        skew        ; skew factors XY,XZ,YZ represented as a 3 component vector
+        perspective ; a 4 component vector
+        quaternion  ; a 4 component vector
+Output: matrix      ; a 4x4 matrix
+
+Supporting functions (matrix is a 4x4 matrix):
+  matrix  multiply(matrix a, matrix b)   returns the 4x4 matrix product of a * b  
+
+// apply perspective
+for (i = 0; i &lt; 4; i++)
+  matrix[i][3] = perspective[i]
+
+// apply translation
+for (i = 0; i &lt; 3; i++)
+  for (j = 0; j &lt; 3; j++)
+    matrix[3][i] += translation[j] * matrix[j][i]
+
+// apply rotation
+x = quaternion[0]
+y = quaternion[1]
+z = quaternion[2]
+w = quaternion[3]
+
+// Construct a composite rotation matrix from the quaternion values
+// rotationMatrix is a identity 4x4 matrix initially
+rotationMatrix[0][0] = 1 - 2 * (y * y + z * z)
+rotationMatrix[0][1] = 2 * (x * y - z * w)
+rotationMatrix[0][2] = 2 * (x * z + y * w)
+rotationMatrix[1][0] = 2 * (x * y + z * w)
+rotationMatrix[1][1] = 1 - 2 * (x * x + z * z)
+rotationMatrix[1][2] = 2 * (y * z - x * w)
+rotationMatrix[2][0] = 2 * (x * z - y * w)
+rotationMatrix[2][1] = 2 * (y * z + x * w)
+rotationMatrix[2][2] = 1 - 2 * (x * x + y * y)
+
+matrix = multiply(matrix, rotationMatrix)
+
+// apply skew
+// temp is a identity 4x4 matrix initially
+if (skew[2])
+    temp[2][1] = skew[2]
+    matrix = multiply(matrix, temp)
+
+if (skew[1])
+    temp[2][1] = 0
+    temp[2][0] = skew[1]
+    matrix = multiply(matrix, temp)
+
+if (skew[0])
+    temp[2][0] = 0
+    temp[1][0] = skew[0]
+    matrix = multiply(matrix, temp)
+
+// apply scale
+for (i = 0; i &lt; 3; i++)
+  for (j = 0; j &lt; 3; j++)
+    matrix[i][j] *= scale[i]
+
+return
+ -->
+
+
+
+			</section>
+		</section>
+	</section>
+	<section id="interpolation-of-transform-functions">
+<h2 title="Interpolation of primitives and derived transform functions">14. 原始関数と派生関数の補間</h2>
+
+<p>
+同じ名前の 同じ個数の引数を伴う ２つの変形-関数は、前節による換算を要することなく，数量的に補間し得る。
+その計算結果の値は、同じ個数の引数を伴う同じ型の変形-関数になる。
+`matrix$f,
+`matrix3d$f,
+`perspective$f
+については、特別な規則が適用される：
+◎
+Two transform functions with the same name and the same number of arguments are interpolated numerically without a former conversion. The calculated value will be of the same transform function type with the same number of arguments. Special rules apply to &lt;matrix()&gt;, &lt;matrix3d()&gt; and &lt;perspective()&gt;.
+</p>
+
+<p>
+変形-関数
+`matrix$f ／ `matrix3d$f ／ `perspective$f
+は、最初に~4x4行列に換算された上で，`§ 行列の補間$の定義に従って補間される。
+◎
+The transform functions &lt;matrix()&gt;, matrix3d() and perspective() get converted into 4x4 matrices first and interpolated as defined in section Interpolation of Matrices afterwards.
+</p>
+
+<p>
+原始関数 `rotate3d$f の補間~用には、まず，変形-関数の方向~vectorが正規化される。
+［
+正規化された~vectorは等しくない, かつ
+両~回転~角度とも 0 でない
+］場合、変形-関数は，まず~4x4行列に換算された上で、`§ 行列の補間$の定義に従って補間される。
+他の場合、回転~角度は数量的に補間され，［
+両~角度とも 0 の場合は (0, 0, 1) ／
+~ELSE_ 0 でない角度
+］による回転~vectorが利用される。
+◎
+For interpolations with the primitive rotate3d(), the direction vectors of the transform functions get normalized first. If the normalized vectors are not equal and both rotation angles are non-zero the transform functions get converted into 4x4 matrices first and interpolated as defined in section Interpolation of Matrices afterwards. Otherwise the rotation angle gets interpolated numerically and the rotation vector of the non-zero angle is used or (0, 0, 1) if both angles are zero.
+</p>
+
+	</section>
+	<section id="combining-transform-lists">
+<h2 title="Addition and accumulation of transform lists">15. 変形~listの加算と累積</h2>
+
+<div class="algorithm">
+<p>
+2 個の変形~list
+( 値a, 値b )
+の`加算$は、`~list$の連結として定義される
+— すなわち、 %結果値 は次に従って得られる：
+</p>
+
+<ol>
+	<li>
+%結果値 ~LET 値a を`~cloneする$
+</li>
+	<li>
+値b を成す
+~EACH( %変形 )
+に対し
+⇒
+%結果値 に %変形 を`付加する$
+</li>
+</ol>
+
+◎
+Addition of two transform lists Va and Vb is defined as list concatenation such that Vresult is equal to Vb appended to Va.
+</div>
+
+<div class="algorithm">
+<p>
+2 個の変形~list
+( 値a, 値b )
+の`累積$は、合致している変形-関数に関する補間と同じ手続きに従う（
+<a href="~TRANSFORM#interpolation-of-transforms">変形の補間</a>
+`CSS-TRANSFORMS-1$r
+見よ）
+— 必要に応じて［
+~listに`恒等~変形-関数$を補充する／
+`none^v を`恒等~変形-関数$に変換する／
+両~引数を行列に変換する
+］ことも含めて。
+しかしながら，個々の~parameterは、補間する代わりに，加算を利用して結合される。
+ただし、~parameterの値が［
+`恒等~変形-関数$における 1
+］である事例（例：
+拡縮率~parameterや, 行列の `11^M, `22^M, `33^M, `44^M ~~成分
+）においては、次に与える
+`1 に基づく値~用の累積@
+を利用して結合する
+⇒
+%結果値 ~SET 値a ~PLUS 値b ~MINUS 1
+◎
+Accumulation of two transform lists Va and Vb follows the same steps as interpolation with regards to matching transform functions including padding lists with identity transform functions, converting none to an identity transform function, and converting both arguments to matrices as necessary (see CSS Transforms 1 §11 Interpolation of Transforms). However, instead of interpolating the individual parameters, they are combined using arithmetic addition—except in the case of parameters whose value is one in the identity transform function (e.g. scale parameters and matrix elements m11, m22, m33, and m44), which combine using accumulation for one-based values as follows:
+• Vresult = Va + Vb - 1
+</p>
+</div>
+
+<div class="note">
+
+<p>注記：
+上の定義は、［
+値b は 値a からの差分として動作する
+］とする`累積$の意図を保全する。
+それは、次のような~animationが：
+◎
+The above definition preserves the intent of accumulation which is that Vb acts as a delta from Va and allows an animation such as:
+</p>
+
+<pre class="lang-js">
+div.animate(
+  { transform: ['scale(1)', 'scale(2)'] },
+  {
+    duration: 1000,
+    easing: 'ease',
+  }
+);
+</pre>
+
+<p>
+次のように拡張されたとき，期待される挙動を生産することを許容する：
+◎
+to produce the expected behavior when extended as follows:
+</p>
+
+<pre class="lang-js">
+div.animate(
+  { transform: ['scale(1)', 'scale(2)'] },
+  {
+    duration: 1000,
+    easing: 'ease',
+    <mark>iterations: 5,</mark>
+    <mark>iterationComposite: 'accumulate',</mark>
+  }
+);</pre>
+
+</div>
+
+		<section id="neutral-element">
+<h3 title="Neutral element for addition">15.1. 加算における単位元</h3>
+
+<div >
+<p>
+一部の~animationは、加算における単位元を要する。
+変形-関数に対しては、これは 0 値の~scalarまたはその~listである。
+変形-関数に対する単位元の例には，次のものが挙げられる：
+</p>
+
+<ul ><li>`translate(0)^v
+</li><li>`translate3d(0, 0, 0)^v
+</li><li>`translateX(0)^v
+</li><li>`translateY(0)^v
+</li><li>`translateZ(0)^v
+</li><li>`scale(0)^v
+</li><li>`scaleX(0)^v
+</li><li>`scaleY(0)^v
+</li><li>`scaleZ(0)^v
+</li><li>`rotate(0)^v
+</li><li><span class="value">rotate3d(v<sub>x</sub>, v<sub>y</sub>, v<sub>z</sub>, 0)</span>（ここで %v は文脈に依存する~vector）
+</li><li>`rotateX(0)^v
+</li><li>`rotateY(0)^v
+</li><li>`rotateZ(0)^v
+</li><li>`skew(0, 0)^v
+</li><li>`skewX(0)^v
+</li><li>`skewY(0)^v
+</li><li>`matrix(0, 0, 0, 0, 0, 0)^v
+</li><li>`matrix3d(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)^v
+</li><li>`perspective(0)^v
+</li></ul>
+
+◎
+Some animations require a neutral element for addition. For transform functions this is a scalar or a list of scalars of 0. Examples of neutral elements for transform functions are translate(0), translate3d(0, 0, 0), translateX(0), translateY(0), translateZ(0), scale(0), scaleX(0), scaleY(0), scaleZ(0), rotate(0), rotate3d(vx, vy, vz, 0) (where v is a context dependent vector), rotateX(0), rotateY(0), rotateZ(0), skew(0, 0), skewX(0), skewY(0), matrix(0, 0, 0, 0, 0, 0), matrix3d(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) and perspective(0).
+</div>
+
+
+<p class="note">注記：
+［
+`matrix$f, `matrix3d$f, `perspective$f
+］による単位元［
+からの（ `from^b ） ／への（ `to^b ）
+］~animationは、離散的な~animationに~fall-backする（`§ 行列の補間$を見よ）。
+◎
+Note: Animations to or from the neutral element of additions &lt;matrix()&gt;, matrix3d() and perspective() fall back to discrete animations (See § 13 Interpolation of Matrices).
+</p>
+
+		</section>
+	</section>
+	<section id="mathematical-description">
+<h2 title="Mathematical Description of Transform Functions">16. 変形-関数の数学的~記述</h2>
+
+<!-- 
+function make_matrix(data){
+	return (
+		'<math xmlns="http://www.w3.org/1998/Math/MathML">'
+		+ '<mfenced open="[" close="]"><mtable>'
+		+ data.split('／').map(func(row){
+			return '<mtr><mtd>' + row.replace(/｜/g, '</mtd><mtd>') + '</mtd></mtr>'
+		}).join('')
+		+ '</mtable></mfenced></math>'
+	);
+}
+
+<math xmlns="http://www.w3.org/1998/Math/MathML"
+><mfenced open="[" close="]"><mtable>
+<mtr><mtd>x</mtd><mtd>y</mtd></mtr>
+<mtr><mtd>x</mtd><mtd>y</mtd></mtr>
+</mtable></mfenced></math>
+
+ -->
+
+
+<p>
+すべての変形-関数は、次のような形の~4x4変形n行列として数学的に表現できる：
+◎
+Mathematically, all transform functions can be represented as 4x4 transformation matrices of the following form:
+</p>
+
+<figure>`4x4matrix^dgm</figure>
+
+<p class="trans-note">【
+この仕様における行列は、座標を~~縦~vectorと見なして左から作用し、子の局所~座標系から親の局所~座標系への変形nを与える。
+】</p>
+
+<p>
+行列~上の並進の 1 単位は、要素の`局所~座標系$の 1 画素に等価になる。
+◎
+One translation unit on a matrix is equivalent to 1 pixel in the local coordinate system of the element.
+</p>
+
+<ul>
+	<li>
+<p>
+移動量
+%tx, %ty, %tz
+による
+`~3D並進@
+は、次の行列に等価になる：
+◎
+A 3D translation with the parameters tx, ty and tz is equivalent to the matrix:
+</p>
+
+<figure>`translate3d^dgm</figure>
+	</li>
+	<li>
+<p>
+拡縮率
+[ %sx, %sy, %sz ]
+による
+`~3D拡縮@
+は、次の行列に等価になる：
+◎
+A 3D scaling with the parameters sx, sy and sz is equivalent to the matrix:
+</p>
+
+<figure>`scale3d^dgm</figure>
+	</li>
+	<li>
+<p>
+軸~vector
+[ %x, %y, %z ]
+と回転角 %α による
+`~3D回転@
+は、次の行列に等価になる：
+◎
+A 3D rotation with the vector [x,y,z] and the parameter alpha is equivalent to the matrix:
+</p>
+
+<figure>`rotate3dmatrix^dgm</figure>
+
+<p>
+ここで：
+◎
+where:
+</p>
+
+<ul>
+	<li>
+%sc = sin (%α/2) ⋅ cos (%α/2)
+</li>
+	<li>
+%ss = sin (%α/2) ⋅ sin (%α/2)
+</li>
+</ul>
+
+【！rotate3dvariables^dgm】
+
+	</li>
+	<li>
+<p>
+~parameter %d による
+`透視~投影~行列@
+は、次の行列に等価になる：
+◎
+A perspective projection matrix with the parameter d is equivalent to the matrix:
+</p>
+
+<figure>`perspective^dgm</figure>
+
+【！[ x, y, z, 1 ] → [ x, y, z, 1 − z/d ] 〜 [ x/s, y/s, z/s, 1 ];  s = 1 − z/d】
+
+	</li>
+</ul>
+
+
+	</section>
+	<section id="svg-transform">
+<h2 title="The SVG transform Attribute">17. ~SVG `transform^a 属性</h2>
+
+<p>
+この仕様は、新たな呈示~属性として，次に挙げるものも導入する
+⇒＃
+`transform-origin$p,
+`perspective$p,
+`perspective-origin$p,
+`transform-style$p,
+`backface-visibility$p
+◎
+This specification will also introduce the new presentation attributes transform-origin, perspective, perspective-origin, transform-style and backface-visibility.
+</p>
+
+<p>
+新たに導入された呈示~属性の値は
+<a href="~TRANSFORM#svg-data-types">~SVG~data型</a>
+`SVG11$r
+の構文~規則に従って構文解析される。
+◎
+Values on new introduced presentation attributes get parsed following the syntax rules on SVG Data Types [SVG11].
+</p>
+
+	</section>
+	<section id="svg-animation">
+<h2 title="SVG Animation">18. ~SVG~animation</h2>
+
+		<section id="svg-animate-element">
+<h3 title="The animate and set element">18.1. `animate^e, `set^e 要素</h3>
+
+<p>
+この仕様により`呈示~属性$とされる~prop［
+`perspective$p,
+`perspective-origin$p,
+`transform-style$p,
+`backface-visibility$p
+］は、~animate可能である。
+［
+`transform-style$p,
+`backface-visibility$p 
+］は、非~加法的である。
+◎
+The introduce presentation attributes perspective, perspective-origin, transform-style and backface-visibility are animatable. transform-style and backface-visibility are non-additive.
+</p>
+
+		</section>
+	</section>
+	<section id="more-issues">
+<h2 title="More Issues">19. 更なる課題</h2>
+
+<p class="issue">
+<a href="https://lists.w3.org/Archives/Public/www-style/2015Mar/0371.html">https://lists.w3.org/Archives/Public/www-style/2015Mar/0371.html</a>
+により， WG は、~SVGの `non-scaling-stroke^v 仕様
+【 “<a href="~SVGpainting#PaintingVectorEffects">拡縮されない~stroke</a>” 】
+などから利用するために，変形を統一された “拡縮率” に分解するための公式を追加するものと解決した（この仕様は［
+`scaleX$f , `scaleY$f, `scaleZ$f
+］に分解する方法を すでに定義している）。
+<a href="https://www.w3.org/Graphics/SVG/WG/wiki/Proposals/Specifying_decomposition_of_scale">その公式はここに定義される</a>
+。
+◎
+Per https://lists.w3.org/Archives/Public/www-style/2015Mar/0371.html, the WG resolved to add a formula for decomposing a transform into a unified "scale" (the spec already defines how to decompose it into scaleX/Y/Z), for use by things like SVG’s non-scaling stroke spec. Formula is defined here.
+</p>
+	</section>
+	<section id="priv-sec">
+<h2 title="Privacy and Security Considerations">20. ~privacyと~security上の考慮点</h2>
+
+<p>
+この仕様が導入する~privacyや~security上の新たな考慮点はない。
+◎
+This specification introduces no new security or privacy considerations.
+</p>
+	</section>
+</main></div>
+

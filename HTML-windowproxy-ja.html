@@ -1,0 +1,1933 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Window, WindowProxy, Location （ 日本語訳）</title>
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+
+<style>
+.xattr {
+	font-family: monospace0, monospace;
+	color: black;
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'sc': // url scheme
+	text += ':';
+	break;
+case 'sl':
+	text = `[[${key}]]`;
+	break;
+case 'jI':
+	text = `%${key}%`;
+	break;
+case 'jS':
+	text = `@@${key}`;
+	break;
+case 'xA': //
+	text = `[${key}]`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-07-10
+trans_update:2020-07-12
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/browsers.html
+	abbr_url:
+site_nav:browsers,html
+trans_1st_pub:2016-07-12
+
+
+●●class_map
+E:error
+sl:js-slot
+jS:js-symbol
+jI:js-intrinsic
+jA:abstract
+xA:xattr
+
+●●tag_map
+I:code
+m:code
+c:code
+E:code
+sl:span
+jI:code
+jS:code
+jA:span
+xA:span
+V:var
+i:i
+
+●●original_urls
+the-windowproxy-exotic-object:https://html.spec.whatwg.org/multipage/window-object.html
+history:https://html.spec.whatwg.org/multipage/history.html
+
+●●words_table
+
+
+	●IDL／型／構造
+Record:
+Get:
+Set:
+exotic:
+文字列化子:stringifier::~
+	文字列~化:stringify
+
+	●環境／処理
+essential:
+configurable:
+普通の:ordinary::~
+匿名組込み:anonymous built-in::~
+渡され:passされ:~
+
+	-:absent
+	-:invoke
+	観測-可能でない:not observable
+	観測され得ない:unobservable
+	列挙-不可:non-enumerable
+
+	●仕様
+アタられ:consultされ:あたられ
+アタっ:consultし:あたっ
+	最適化-:optimization
+	に伴って:consequence
+	要注意:take extra care
+	に代えて:rather than
+
+	●未分類
+連結-:concatenate::~
+	連結-:concatenation
+埋めら:fillさ:~
+	訪問し直:revisit
+excrescence:
+post-creation:
+safelist:
+scary:
+近過去:recent:~
+
+	-:element
+	-:sort
+	-:nested
+	記憶しておく:memoization
+	合致していない:mismatching
+	付与され:marked
+	後から:lazily
+	指し向ける:indirecting
+	誤った先を指-:misdirect
+	-:order
+	こと:the fact
+	数:number
+	組:tuple
+	過去の:earlier
+	follow
+	~~導かれる:makes its way onto
+
+
+●●original_id_map
+
+
+●●words_table1
+
+
+this:<code class="js-value">this</code>
+true:<code class="js-value">true</code>
+false:<code class="js-value">false</code>
+undefined:<code class="js-value">undefined</code>
+Foo:<var>Foo</var>
+
+
+●●link_map
+
+	●IDL
+xA.LegacyUnforgeable:~WEBIDLjs#LegacyUnforgeable
+
+E.SecurityError:~WEBIDL#securityerror
+
+I.Document:~HTMLdom#document
+I.Location:~HISTORY#location
+I.Window:~WINDOW#window
+I.WindowProxy:#windowproxy
+
+m.document.domain:~ORIGIN#dom-document-domain
+m.document:~WINDOW#dom-document-2
+
+	●js
+sl.Get:#windowproxy-get
+sl.GetOwnProperty:#windowproxy-getownproperty
+sl.DefineOwnProperty:#windowproxy-defineownproperty
+	jA.GetOwnProperty:#location-getownproperty
+
+jA.CrossOriginGet:#crossoriginget-(-o,-p,-receiver-)
+jA.CrossOriginGetOwnPropertyHelper:#crossorigingetownpropertyhelper-(-o,-p-)
+jA.CrossOriginOwnPropertyKeys:#crossoriginownpropertykeys-(-o-)
+jA.CrossOriginProperties:#crossoriginproperties-(-o-)
+jA.CrossOriginSet:#crossoriginset-(-o,-p,-v,-receiver-)
+jA.IsPlatformObjectSameOrigin:#isplatformobjectsameorigin-(-o-)
+jA.CrossOriginPropertyFallback:#crossoriginpropertyfallback-(-p-)
+
+jA.Call:~TC39#sec-call
+jA.IsAccessorDescriptor:~TC39#sec-isaccessordescriptor
+jA.IsCallable:~TC39#sec-iscallable
+jA.IsDataDescriptor:~TC39#sec-isdatadescriptor
+jA.OrdinaryDefineOwnProperty:~TC39#sec-ordinarydefineownproperty
+jA.OrdinaryDelete:~TC39#sec-ordinarydelete
+jA.OrdinaryGet:~TC39#sec-ordinaryget
+jA.OrdinaryGetOwnProperty:~TC39#sec-ordinarygetownproperty
+jA.OrdinaryGetPrototypeOf:~TC39#sec-ordinarygetprototypeof
+jA.OrdinaryOwnPropertyKeys:~TC39#sec-ordinaryownpropertykeys
+jA.OrdinarySet:~TC39#sec-ordinaryset
+jA.SameValue:~TC39#sec-samevalue
+jA.ToString:~TC39#sec-tostring
+jA.ToUint32:~TC39#sec-touint32
+jA.SetImmutablePrototype:~TC39#sec-set-immutable-prototype
+
+sl.Window:#concept-windowproxy-window
+sl.CrossOriginPropertyDescriptorMap:#crossoriginpropertydescriptormap
+sl.DefaultProperties:#defaultproperties
+
+jI.Object.prototype.valueOf:~TC39#sec-object.prototype.valueof
+js.List:~TC39#sec-list-and-record-specification-type
+jS.hasInstance:~HTMLdep#@@hasinstance
+jS.isConcatSpreadable:~HTMLdep#@@isconcatspreadable
+jS.toStringTag:~HTMLdep#@@tostringtag
+jS.toPrimitive:~HTMLdep#@@toprimitive
+x.~prop記述子:~TC39#sec-property-descriptor-specification-type
+	Property Descriptor
+
+
+	●
+子~閲覧文脈:~BROWSERS#child-browsing-context
+文書~treeに属する子~閲覧文脈:~BROWSERS#document-tree-child-browsing-context
+文書~treeに属する子~閲覧文脈の個数:~BROWSERS#number-of-document-tree-child-browsing-contexts
+閲覧文脈:~BROWSERS#browsing-context
+閲覧文脈~容器:~BROWSERS#browsing-context-container
+
+文書~treeに属する子~閲覧文脈~名~prop集合:~WINDOW#document-tree-child-browsing-context-name-property-set
+結付けられている文書:~WINDOW#concept-document-window
+対応する閲覧文脈:~WINDOW#window-bc
+有名~obj:~WINDOW#dom-window-nameditem-filter
+
+
+生成元:~ORIGIN#concept-origin
+同じ生成元~domain:~ORIGIN#same-origin-domain
+
+~navigate:~NAVI#navigate
+
+現在の設定群~obj:~WAPI#current-settings-object
+関連な設定群~obj:~WAPI#relevant-settings-object
+enV.生成元:~WAPI#concept-settings-object-origin
+関連な~Realm:~WAPI#concept-relevant-realm
+
+~JS実行~文脈:~TC39#sec-execution-contexts
+~JS実行~文脈~stack:~TC39#execution-context-stack
+現在の~Realm~Record:~TC39#current-realm
+~essential内部~methodが成す不変則:~TC39#sec-invariants-of-the-essential-internal-methods
+x.tc39/ecma262 #issue 672:https://github.com/tc39/ecma262/issues/672
+
+配列~indexである:~WEBIDLjs#is-an-array-index
+~security検査を遂行する:~WEBIDLjs#dfn-perform-a-security-check
+~interface~obj:~WEBIDLjs#dfn-interface-object
+~platform~obj:~WEBIDL#dfn-platform-object
+
+文書~URL:~DOM4#concept-document-url
+
+故意的な違反:~INFRA#willful-violation
+付加する:~INFRA#list-append
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる HTML 仕様の一部である
+<a href="~SPEC_URL">§ Loading web pages</a>
+内の
+Window, WindowProxy, Location オブジェクトに関係する各節を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+
+<body>
+
+<header>
+	<hgroup>
+<h1>Window, WindowProxy, Location</h1>
+<h2>Loading web pages： § 7.2, § 7.4, § 7.7.5</h2>
+
+	</hgroup>
+
+</header>
+
+<main id="MAIN" hidden>
+
+	<section id="_conventions">
+<h2>【この訳に固有の表記規約】</h2>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, ~IF, ~THROW 等々）の意味や定義の詳細は，~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+<p>
+このページでは、~JS仕様による表記規約が利用されている：
+</p>
+
+<ul>
+	<li>
+抽象-演算には
+<a href="~TC39#sec-returnifabrupt-shorthands">"~NOABRUPT" や "~ABRUPT" を接頭する記法</a>
+が利用される（大雑把に言えば、
+~ABRUPT は その演算から例外が投出され得ることを表し，
+~NOABRUPT は 例外は決して投出されないことを表す）。
+</li>
+	<li>
+`~Foo^sl という表記は、名前 "~Foo" の［
+内部~slot／内部~method／~Record~field
+］を表す。
+</li>
+	<li>
+この訳では、次の記法も用いる
+⇒
+“%O.`~Foo^sl ~EQ ε”
+という表記は、
+%O は名前 `~Foo^l の［
+内部~slot／内部~method／~Record~field
+］を持たず，その値がないことを意味する。
+“〜 ~NEQ ε”
+はその否定を意味する。
+</li>
+</ul>
+
+	</section>
+	<section id="cross-origin-objects">
+<h2 title="Security infrastructure for Window, WindowProxy, and Location objects">7.2. `Window^I, `WindowProxy^I, `Location^I ~obj用の~security基盤</h2>
+
+<p>
+概して，~objは`生成元$を超えて~accessされることはないが、~webは，この規則に対するいくつかの旧来の例外に依存しているため、それらの例外を取り除くと，~web~platformとは言えなくなる。
+◎
+Although typically objects cannot be accessed across origins, the web platform would not be true to itself if it did not have some legacy exceptions to that rule that the web depends upon.
+</p>
+
+		<section id="integration-with-idl">
+<h3 title="Integration with IDL">7.2.1. ~IDLとの統合</h3>
+
+<p>
+`~security検査を遂行する$ときは、所与の
+( %~platform~obj, %識別子, %種別 )
+に対し，次の手続きを走らす：
+◎
+When perform a security check is invoked, with a platformObject, identifier, and type, run these steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+%~platform~obj は［
+`Window$I ／ `Location$I
+］~objでない
+］
+⇒
+~RET
+◎
+If platformObject is not a Window or Location object, then return.
+</li>
+<li>
+<p>
+~NOABRUPT `CrossOriginProperties$jA( %~platform~obj )
+の結果を成す
+~EACH( %e )
+に対し：
+◎
+For each e of ! CrossOriginProperties(platformObject):
+</p>
+
+	<ol>
+		<li>
+~IF［
+`SameValue$jA( %e . `Property^sl, %識別子 ) ~NEQ ~true
+］
+⇒
+~CONTINUE
+◎
+If SameValue(e.[[Property]], identifier) is true, then:
+</li>
+		<li>
+<p>
+%種別 に応じて：
+</p>
+
+<dl class="switch">
+<dt>`~method^i</dt>
+<dd>
+~IF［
+%e . `NeedsGet^sl ~EQ ε
+］~AND［
+%e . `NeedsSet^sl ~EQ ε
+］
+⇒
+~RET
+</dd>
+
+<dt>`取得子^i</dt>
+<dd>
+~IF［
+%e . `NeedsGet^sl ~EQ ~true
+］
+⇒
+~RET
+</dd>
+
+<dt>`設定子^i</dt>
+<dd>
+~IF［
+%e . `NeedsSet^sl ~EQ ~true
+］
+⇒
+~RET
+</dd>
+</dl>
+
+◎
+If type is "method" and e has neither [[NeedsGet]] nor [[NeedsSet]], then return.
+◎
+Otherwise, if type is "getter" and e.[[NeedsGet]] is true, then return.
+◎
+Otherwise, if type is "setter" and e.[[NeedsSet]] is true, then return.
+</li>
+		</ol>
+	</li>
+	<li>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( %~platform~obj ) ~EQ ~false
+］
+⇒
+~THROW `SecurityError$E
+◎
+If ! IsPlatformObjectSameOrigin(platformObject) is false, then throw a "SecurityError" DOMException.
+</li>
+</ol>
+
+		</section>
+		<section id="shared-internal-slot:-crossoriginpropertydescriptormap">
+<h3 title="Shared internal slot: [[CrossOriginPropertyDescriptorMap]]">7.2.2. 共用~内部~slot： `CrossOriginPropertyDescriptorMap^sl</h3>
+
+<p>
+各［
+`Window$I ／ `Location$I
+］~objは、
+`CrossOriginPropertyDescriptorMap@sl
+内部~slotを持つ
+— その初期~時の値は、空~mapとする。
+◎
+Window and Location objects both have a [[CrossOriginPropertyDescriptorMap]] internal slot, whose value is initially an empty map.
+</p>
+
+<p class="note">注記：
+`CrossOriginPropertyDescriptorMap$sl 内部~slotは、次のような~entryたちからなる~mapを包含する：
+~entryの各~keyは、
+( %currentGlobal, %objectGlobal, %propertyKey )
+の組である。
+これらの~entryの値は，［［
+%currentGlobal が［
+`Window$I ／ `Location$I
+］~obj %objectGlobal を検分するとき
+］に，~scriptから可視になるもの
+］を記憶しておくような~prop記述子である。
+それらは、 `CrossOriginGetOwnPropertyHelper$jA() により後から埋められ，未来の検索に際し アタられる。
+◎
+The [[CrossOriginPropertyDescriptorMap]] internal slot contains a map with entries whose keys are (currentGlobal, objectGlobal, propertyKey)-tuples and values are property descriptors, as a memoization of what is visible to scripts when currentGlobal inspects a Window or Location object from objectGlobal. It is filled lazily by CrossOriginGetOwnPropertyHelper, which consults it on future lookups.
+</p>
+
+<p>
+~UAは、この~mapに保持されている値が，［
+値のある部分への参照を保持しているものがない
+］ときは、［
+それに対応する~keyとともに~garbage収集される
+］ことを，許容するべきである。
+すなわち、~garbage収集が観測-可能でない限り。
+◎
+User agents should allow a value held in the map to be garbage collected along with its corresponding key when nothing holds a reference to any part of the value. That is, as long as garbage collection is not observable.
+</p>
+
+  <p class="example">
+例えば，
+<samp>const href = Object.getOwnPropertyDescriptor( %非同一-生成元~所在, `href^l ).set</samp>
+とした下では、~map内の値とそれに対応する~keyは，観測-可能なので~garbage収集できない。
+◎
+For example, with const href = Object.getOwnPropertyDescriptor(crossOriginLocation, "href").set the value and its corresponding key in the map cannot be garbage collected as that would be observable.
+</p>
+
+<p>
+~UAは、 `document.domain$m が設定されたとき，それにより ~mapから
+( ~key, 値 ) ~pairを除去するように最適化してもヨイ。
+`document.domain$m は~~過去の値を訪問し直せないので、これは観測-可能でない。
+◎
+User agents may have an optimization whereby they remove key-value pairs from the map when document.domain is set. This is not observable as document.domain cannot revisit an earlier value.
+</p>
+
+<p class="example">
+例えば
+<samp>www.example.com</samp> 上の
+`document.domain$m を `example.com^l に設定した場合、~UAは，~map内の
+( ~key, 値 ) ~pairのうち，［
+~keyの一部が <samp>www.example.com</samp> であるもの
+］すべてを除去できることになる
+— それが再び`生成元$の一部になることは決してないので、対応する値が~mapから検索取得されることも決してない。
+◎
+For example, setting document.domain to "example.com" on www.example.com means user agents can remove all key-value pairs from the map where part of the key is www.example.com, as that can never be part of the origin again and therefore the corresponding value could never be retrieved from the map.
+</p>
+		</section>
+		<section id="shared-abstract-operations">
+<h3 title="Shared abstract operations">7.2.3. 各種 共用~抽象-演算</h3>
+
+			<section id="crossoriginproperties-(-o-)">
+<h4>7.2.3.1. `CrossOriginProperties^jA( %O )</h4>
+
+<ol>
+	<li>
+~Assert：
+%O は［
+`Location$I ／ `Window$I
+］~objである
+◎
+Assert: O is a Location or Window object.
+</li>
+	<li>
+~IF［
+%O は `Location$I ~objである
+］
+⇒
+~RET «
+{ `Property^sl: `href^l, `NeedsGet^sl: ~false, `NeedsSet^sl: ~true },
+{ `Property^sl: `replace^l }
+»
+◎
+If O is a Location object, then return « { [[Property]]: "href", [[NeedsGet]]: false, [[NeedsSet]]: true }, { [[Property]]: "replace" } ».
+</li>
+	<li>
+~RET «
+<span class="block preline"
+>{ `Property^sl: `window^l, `NeedsGet^sl: ~true, `NeedsSet^sl: ~false },
+{ `Property^sl: `self^l, `NeedsGet^sl: ~true, `NeedsSet^sl: ~false },
+{ `Property^sl: `location^l, `NeedsGet^sl: ~true, `NeedsSet^sl: ~true },
+{ `Property^sl: `close^l },
+{ `Property^sl: `closed^l, `NeedsGet^sl: ~true, `NeedsSet^sl: ~false },
+{ `Property^sl: `focus^l },
+{ `Property^sl: `blur^l },
+{ `Property^sl: `frames^l, `NeedsGet^sl: ~true, `NeedsSet^sl: ~false },
+{ `Property^sl: `length^l, `NeedsGet^sl: ~true, `NeedsSet^sl: ~false },
+{ `Property^sl: `top^l, `NeedsGet^sl: ~true, `NeedsSet^sl: ~false },
+{ `Property^sl: `opener^l, `NeedsGet^sl: ~true, `NeedsSet^sl: ~false },
+{ `Property^sl: `parent^l, `NeedsGet^sl: ~true, `NeedsSet^sl: ~false },
+{ `Property^sl: `postMessage^l }</span>
+»
+◎
+Return « { [[Property]]: "window", [[NeedsGet]]: true, [[NeedsSet]]: false }, { [[Property]]: "self", [[NeedsGet]]: true, [[NeedsSet]]: false }, { [[Property]]: "location", [[NeedsGet]]: true, [[NeedsSet]]: true }, { [[Property]]: "close" }, { [[Property]]: "closed", [[NeedsGet]]: true, [[NeedsSet]]: false }, { [[Property]]: "focus" }, { [[Property]]: "blur" }, { [[Property]]: "frames", [[NeedsGet]]: true, [[NeedsSet]]: false }, { [[Property]]: "length", [[NeedsGet]]: true, [[NeedsSet]]: false }, { [[Property]]: "top", [[NeedsGet]]: true, [[NeedsSet]]: false }, { [[Property]]: "opener", [[NeedsGet]]: true, [[NeedsSet]]: false }, { [[Property]]: "parent", [[NeedsGet]]: true, [[NeedsSet]]: false }, { [[Property]]: "postMessage" } ».
+</li>
+</ol>
+
+
+<p class="note">注記：
+各 有index~propは、~safelistされる必要はない
+— `WindowProxy$I ~objにより直に取扱われるので。
+◎
+Indexed properties do not need to be safelisted as they are handled directly by the WindowProxy object.
+</p>
+
+			</section>
+			<section id="crossoriginpropertyfallback-(-p-)">
+<h4>7.2.3.2. `CrossOriginPropertyFallback^jA( %P )</h4>
+
+<ol>
+	<li>
+~IF［
+%P ~IN {
+`then^l,
+`toStringTag$jS,
+`hasInstance$jS,
+`isConcatSpreadable$jS
+}
+］
+⇒
+~RET `~prop記述子$x {
+`Value^sl: ~undefined,
+`Writable^sl: ~false,
+`Enumerable^sl: ~false,
+`Configurable^sl: ~true
+}
+◎
+If P is "then", @@toStringTag, @@hasInstance, or @@isConcatSpreadable, then return PropertyDescriptor{ [[Value]]: undefined, [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: true }.
+</li>
+	<li>
+~THROW `SecurityError$E
+◎
+Throw a "SecurityError" DOMException.
+</li>
+</ol>
+
+			</section>
+			<section id="isplatformobjectsameorigin-(-o-)">
+<h4>7.2.3.3. `IsPlatformObjectSameOrigin^jA( %O )</h4>
+
+<ol>
+	<li>
+~RET ［
+次が満たされるならば ~true ／
+~ELSE_ ~false
+］
+⇒
+( `現在の設定群~obj$の`生成元$enV, %O に`関連な設定群~obj$の`生成元$enV )
+は`同じ生成元~domain$である
+◎
+Return true if the current settings object's origin is same origin-domain with O's relevant settings object's origin, and false otherwise.
+</li>
+</ol>
+
+<p class="note">注記：
+`現在の設定群~obj$は、概ね “~call元” に対応する
+— この検査は、当の［
+取得子／設定子／~method
+］用の`~JS実行~文脈$が`~JS実行~文脈~stack$へ~~導かれる前に生じるので。
+例えば
+<code>%w.document</code>
+のような~codeにおいては、この段は `document$m 取得子に達する前に，
+`WindowProxy$I %w 用の `Get$sl ~algoの一部として呼出される。
+◎
+Here the current settings object roughly corresponds to the "caller", because this check occurs before the execution context for the getter/setter/method in question makes its way onto the JavaScript execution context stack. For example, in the code w.document, this step is invoked before the document getter is reached as part of the [[Get]] algorithm for the WindowProxy w.
+</p>
+
+			</section>
+			<section id="crossorigingetownpropertyhelper-(-o,-p-)">
+<h4>7.2.3.4. `CrossOriginGetOwnPropertyHelper^jA( %O, %P )</h4>
+
+<p class="note">注記：
+この抽象-演算が ~undefined を返す, かつ
+~custom化する挙動もない場合、~call元は `SecurityError$E 例外を投出する必要がある。
+実施においては、これは，~call元が `CrossOriginPropertyFallback$jA を~callすることにより取扱われる。
+◎
+If this abstract operation returns undefined and there is no custom behavior, the caller needs to throw a "SecurityError" DOMException. In practice this is handled by the caller calling CrossOriginPropertyFallback.
+</p>
+
+<ol>
+	<li>
+%非同一-生成元~key ~LET 組 (
+`現在の設定群~obj$,  %O に`関連な設定群~obj$, %P
+)
+◎
+Let crossOriginKey be a tuple consisting of the current settings object, O's relevant settings object, and P.
+</li>
+	<li>
+<p>
+~NOABRUPT `CrossOriginProperties$jA( %O )
+の結果を成す
+~EACH( %e ) に対し：
+◎
+For each e of ! CrossOriginProperties(O):
+</p>
+
+		<ol>
+			<li>
+<p>
+~IF［
+`SameValue$jA( %e . `Property^sl, %P ) ~EQ ~true
+］：
+◎
+If SameValue(e.[[Property]], P) is true, then:
+</p>
+
+				<ol>
+					<li>
+~IF［
+%O . `CrossOriginPropertyDescriptorMap$sl は，［
+~key ~EQ %非同一-生成元~key
+］なる~entryを包含する
+］
+⇒
+~RET その~entryの値
+◎
+If the value of the [[CrossOriginPropertyDescriptorMap]] internal slot of O contains an entry whose key is crossOriginKey, then return that entry's value.
+</li>
+					<li>
+%元の記述子 ~LET `OrdinaryGetOwnProperty$jA( %O, %P )
+◎
+Let originalDesc be OrdinaryGetOwnProperty(O, P).
+</li>
+					<li>
+%非同一-生成元~記述子 ~LET ~undefined
+◎
+Let crossOriginDesc be undefined.
+</li>
+					<li>
+<p>
+~IF［
+%e . `NeedsGet^sl ~EQ ε
+］~AND［
+%e . `NeedsSet^sl ~EQ ε
+］：
+◎
+If e.[[NeedsGet]] and e.[[NeedsSet]] are absent, then:
+</p>
+
+						<ol>
+							<li>
+%値 ~LET %元の記述子 . `Value^sl
+◎
+Let value be originalDesc.[[Value]].
+</li>
+							<li>
+~IF［
+~NOABRUPT `IsCallable$jA( %値 ) ~EQ ~true
+］
+⇒
+%値 ~SET ［
+`現在の~Realm~Record$内に作成される匿名組込み関数
+］であって，［
+~obj %O 上の~IDL演算 %P
+］と同じ手続きを遂行するもの
+◎
+If ! IsCallable(value) is true, then set value to an anonymous built-in function, created in the current Realm Record, that performs the same steps as the IDL operation P on object O.
+</li>
+							<li>
+%非同一-生成元~記述子 ~SET `~prop記述子$x {
+`Value^sl: %値,
+`Enumerable^sl: ~false,
+`Writable^sl: ~false,
+`Configurable^sl: ~true
+}
+◎
+Set crossOriginDesc to PropertyDescriptor{ [[Value]]: value, [[Enumerable]]: false, [[Writable]]: false, [[Configurable]]: true }.
+</li>
+						</ol>
+					</li>
+					<li>
+<p>
+~ELSE：
+◎
+Otherwise:
+</p>
+						<ol>
+							<li>
+%非同一-生成元~Get ~LET ~undefined
+◎
+Let crossOriginGet be undefined.
+</li>
+							<li>
+~IF［
+%e . `NeedsGet^sl ~EQ ~true
+］
+⇒
+%非同一-生成元~Get ~SET［
+`現在の~Realm~Record$内に作成される匿名組込み関数
+］であって，［
+~obj %O 上の~IDL属性 %P の取得子
+］と同じ手続きを遂行するもの
+◎
+If e.[[NeedsGet]] is true, then set crossOriginGet to an anonymous built-in function, created in the current Realm Record, that performs the same steps as the getter of the IDL attribute P on object O.
+</li>
+							<li>
+%非同一-生成元~Set ~LET ~undefined
+◎
+Let crossOriginSet be undefined.
+</li>
+							<li>
+~IF［
+%e.`NeedsSet^sl ~EQ ~true
+］
+⇒
+%非同一-生成元~Set ~SET［
+`現在の~Realm~Record$内に作成される匿名組込み関数
+］であって，［
+~obj %O 上の~IDL属性 %P の設定子
+］と同じ手続きを遂行するもの
+◎
+If e.[[NeedsSet]] is true, then set crossOriginSet to an anonymous built-in function, created in the current Realm Record, that performs the same steps as the setter of the IDL attribute P on object O.
+</li>
+							<li>
+%非同一-生成元~記述子 ~SET `~prop記述子$x{
+`Get^sl: %非同一-生成元~Get,
+`Set^sl: %非同一-生成元~Set,
+`Enumerable^sl: ~false,
+`Configurable^sl: ~true
+}
+◎
+Set crossOriginDesc to PropertyDescriptor{ [[Get]]: crossOriginGet, [[Set]]: crossOriginSet, [[Enumerable]]: false, [[Configurable]]: true }.
+</li>
+						</ol>
+					</li>
+					<li>
+%O . `CrossOriginPropertyDescriptorMap$sl 内に
+新たな~entry
+( ~key %非同一-生成元~key, 値 %非同一-生成元~記述子 )
+を作成する
+◎
+Create an entry in the value of the [[CrossOriginPropertyDescriptorMap]] internal slot of O with key crossOriginKey and value crossOriginDesc.
+</li>
+					<li>
+~RET %非同一-生成元~記述子
+◎
+Return crossOriginDesc.
+</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+	<li>
+~RET ~undefined
+◎
+Return undefined.
+</li>
+</ol>
+
+<p class="note">注記：
+ここで生産される~prop記述子が~configurableになる理由は、~JS仕様から，`~essential内部~methodが成す不変則$を保全することが要求されるからである。
+特に，~propの値は~naviに伴って変化し得るので、~propは~configurableになることが要求される。
+（しかしながら、既存の~web内容との互換性を得るため，この不変則を保全できない事例もある。
+その点については、 `tc39/ecma262 #issue 672$x, および
+それを参照している この仕様の他所を見よ。）
+`JAVASCRIPT$r
+◎
+The reason that the property descriptors produced here are configurable is to preserve the invariants of the essential internal methods required by the JavaScript specification. In particular, since the value of the property can change as a consequence of navigation, it is required that the property be configurable. (However, see tc39/ecma262 issue #672 and references to it elsewhere in this specification for cases where we are not able to preserve these invariants, for compatibility with existing web content.) [JAVASCRIPT]
+</p>
+
+<p class="note">注記：
+~prop記述子が列挙-不可
+【 `Enumerable^sl: ~false 】
+にされている理由は
+— それは同一-生成元の挙動に合致していないにもかかわらず —
+既存の~web内容との互換性を得るためである。
+詳細は
+<a href="~HTMLissue/3183">issue #3183</a>
+を見よ。
+◎
+The reason the property descriptors are non-enumerable, despite this mismatching the same-origin behavior, is for compatibility with existing web content. See issue #3183 for details.
+</p>
+
+			</section>
+			<section id="crossoriginget-(-o,-p,-receiver-)">
+<h4>7.2.3.5. `CrossOriginGet^jA( %O, %P, %Receiver )</h4>
+
+<ol>
+	<li>
+%記述子 ~LET
+~ABRUPT %O . `GetOwnProperty^sl( %P )
+◎
+Let desc be ? O.[[GetOwnProperty]](P).
+</li>
+	<li>
+~Assert：
+%記述子 ~NEQ ~undefined
+◎
+Assert: desc is not undefined.
+</li>
+	<li>
+~IF［
+~NOABRUPT `IsDataDescriptor$jA( %記述子 ) ~EQ ~true
+］
+⇒
+~RET %記述子 . `Value^sl
+◎
+If ! IsDataDescriptor(desc) is true, then return desc.[[Value]].
+</li>
+	<li>
+~Assert：
+`IsAccessorDescriptor$jA( %記述子 ) ~EQ ~true
+◎
+Assert: IsAccessorDescriptor(desc) is true.
+</li>
+	<li>
+%取得子 ~LET %記述子 . `Get^sl
+◎
+Let getter be desc.[[Get]].
+</li>
+	<li>
+~IF［
+%取得子 ~EQ ~undefined
+］
+⇒
+~THROW `SecurityError$E
+◎
+If getter is undefined, then throw a "SecurityError" DOMException.
+</li>
+	<li>
+~RET
+~ABRUPT `Call$jA( %取得子, %Receiver )
+◎
+Return ? Call(getter, Receiver).
+</li>
+</ol>
+
+			</section>
+			<section id="crossoriginset-(-o,-p,-v,-receiver-)">
+<h4>7.2.3.6. `CrossOriginSet^jA( %O, %P, %V, %Receiver )</h4>
+
+<ol>
+	<li>
+%記述子 ~LET
+~ABRUPT %O . `GetOwnProperty^sl( %P )
+◎
+Let desc be ? O.[[GetOwnProperty]](P).
+</li>
+	<li>
+~Assert：
+%記述子 ~NEQ ~undefined
+◎
+Assert: desc is not undefined.
+</li>
+	<li>
+%設定子 ~LET %記述子 . `Set^sl
+◎
+↓</li>
+	<li>
+<p>
+~IF［
+%設定子 ~NIN { ε, ~undefined }
+］：
+◎
+If desc.[[Set]] is present and its value is not undefined, then:
+</p>
+
+		<ol>
+			<li>
+~ABRUPT `Call$jA( %設定子, %Receiver, « %V »)
+◎
+Perform ? Call(setter, Receiver, «V»).
+</li>
+			<li>
+~RET ~true
+◎
+Return true.
+</li>
+		</ol>
+	</li>
+	<li>
+~THROW `SecurityError$E
+◎
+Throw a "SecurityError" DOMException.
+</li>
+</ol>
+
+
+			</section>
+			<section id="crossoriginownpropertykeys-(-o-)">
+<h4>7.2.3.7. `CrossOriginOwnPropertyKeys^jA( %O )</h4>
+
+<ol>
+	<li>
+%~key~list ~LET 新たな空な `List$js
+◎
+Let keys be a new empty List.
+</li>
+	<li>
+~NOABRUPT `CrossOriginProperties$jA( %O )
+の結果を成す
+~EACH( %e ) に対し
+⇒
+%~key~list に %e . `Property^sl を`付加する$
+◎
+For each e of ! CrossOriginProperties(O), append e.[[Property]] to keys.
+</li>
+	<li>
+~RET 次を連結した結果
+⇒＃
+%~key~list,
+« `then^l, `toStringTag$jS, `hasInstance$jS, `isConcatSpreadable$jS »
+◎
+Return the concatenation of keys and « "then", @@toStringTag, @@hasInstance, @@isConcatSpreadable ».
+</li>
+</ol>
+
+
+			</section>
+		</section>
+	</section>
+	<section id="the-windowproxy-exotic-object">
+<h3 title="The WindowProxy exotic object">7.4. `WindowProxy^I ~exotic~obj</h3>
+
+<div>
+<p>
+各 `閲覧文脈$ %B には、
+`WindowProxy@I
+~obj %P が結付けられる。
+それは、普通の~objである `Window$I ~obj %W を，次のように包装する~exotic~objである：
+</p>
+
+<ul ><li>%P 上のほとんどの演算は、 %W へ指し向けられる。
+</li><li>%B が`~navigate$されたときは、 %W も別の `Window$I ~objに変更される。
+</li><li>%P の `Window@sl 内部~slotが， %W を表現する。
+</li><li>%P に対応する`~interface~obj$はない。
+</li></ul>
+
+<p>
+`WindowProxy$I ~objは、以下の各~節にて明示的に他が指定される場合を除き，普通の内部~methodを利用するモノトスル。
+</p>
+
+◎
+A WindowProxy is an exotic object that wraps a Window ordinary object, indirecting most operations through to the wrapped object. Each browsing context has an associated WindowProxy object. When the browsing context is navigated, the Window object wrapped by the browsing context's associated WindowProxy object is changed.
+◎
+The WindowProxy exotic object must use the ordinary internal methods except where it is explicitly specified otherwise below.
+◎
+There is no WindowProxy interface object.
+◎
+Every WindowProxy object has a [[Window]] internal slot representing the wrapped Window object.
+</div>
+
+<p class="note">注記：
+`WindowProxy$I は、 “proxy（代理）” と命名されているが、本当の proxy がするような，~targetの内部~methodへ polymorphic に dispatch するものではない
+— それは、 `WindowProxy$I ~objと `Location$I ~objとの間の machinery
+【機構？】
+を再利用したいと欲されることに因る。
+`Window$I ~objが普通の~objのままであり続ける限り，これは観測され得ないので、どちらの仕方でも実装できる。
+◎
+Although WindowProxy is named as a "proxy", it does not do polymorphic dispatch on its target's internal methods as a real proxy would, due to a desire to reuse machinery between WindowProxy and Location objects. As long as the Window object remains an ordinary object this is unobservable and can be implemented either way.
+</p>
+
+
+		<section id="windowproxy-getprototypeof">
+<h3>7.4.1. `GetPrototypeOf^sl()</h3>
+
+<ol>
+	<li>
+%W ~LET ~this . `Window$sl
+◎
+Let W be the value of the [[Window]] internal slot of this.
+</li>
+	<li>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( %W ) ~EQ ~true
+］
+⇒
+~RET
+~NOABRUPT `OrdinaryGetPrototypeOf$jA( %W )
+◎
+If ! IsPlatformObjectSameOrigin(W) is true, then return ! OrdinaryGetPrototypeOf(W).
+</li>
+	<li>
+~RET ~NULL
+◎
+Return null.
+</li>
+</ol>
+
+		</section>
+		<section id="windowproxy-setprototypeof">
+<h3>7.4.2. `SetPrototypeOf^sl( %V )</h3>
+
+<ol>
+	<li>
+~RET `SetImmutablePrototype$jA( ~this, %V )
+◎
+Return ! SetImmutablePrototype(this, V).
+</li>
+</ol>
+
+		</section>
+		<section id="windowproxy-isextensible">
+<h3>7.4.3. `IsExtensible^sl()</h3>
+
+<ol>
+	<li>
+~RET ~true
+◎
+Return true.
+</li>
+</ol>
+
+
+		</section>
+		<section id="windowproxy-preventextensions">
+<h3>7.4.4. `PreventExtensions^sl()</h3>
+
+<ol>
+	<li>
+~RET ~false
+◎
+Return false.
+</li>
+</ol>
+
+		</section>
+		<section id="windowproxy-getownproperty">
+<h3>7.4.5. `GetOwnProperty^sl( %P )</h3>
+
+<ol>
+	<li>
+%W ~LET ~this . `Window$sl
+◎
+Let W be the value of the [[Window]] internal slot of this.
+</li>
+	<li>
+<p>
+~IF［
+%P は`配列~indexである$
+］：
+◎
+If P is an array index property name, then:
+</p>
+		<ol>
+			<li>
+%index ~LET
+~NOABRUPT `ToUint32$jA( %P )
+◎
+Let index be ! ToUint32(P).
+</li>
+			<li>
+%~prop個数 ~LET %W の`文書~treeに属する子~閲覧文脈の個数$
+◎
+Let maxProperties be the number of document-tree child browsing contexts of W.
+</li>
+			<li>
+%値 ~LET ~undefined
+◎
+Let value be undefined.
+</li>
+			<li>
+~IF［
+%~prop個数 ~GT 0
+］~AND［
+%index ~LT %~prop個数
+］
+⇒
+%値 ~SET 次に該当する`閲覧文脈$の， `WindowProxy$I ~obj
+⇒
+［
+%W に`対応する閲覧文脈$の`文書~treeに属する子~閲覧文脈$
+］のうち，その`閲覧文脈~容器$が 最も近過去に［
+%W に`結付けられている文書$
+］内に挿入されたもの
+◎
+If maxProperties is greater than 0 and index is less than maxProperties, then set value to the WindowProxy object of the indexth document-tree child browsing context of W's browsing context, sorted in the order that their browsing context container elements were most recently inserted into W's associated Document, the WindowProxy object of the most recently inserted browsing context container's nested browsing context being last.
+</li>
+			<li>
+<p>
+~IF［
+%値 ~EQ ~undefined
+］：
+◎
+If value is undefined, then:
+</p>
+				<ol>
+					<li>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( %W ) ~EQ ~true
+］
+⇒
+~RET ~undefined
+◎
+If ! IsPlatformObjectSameOrigin(W) is true, then return undefined.
+</li>
+					<li>
+~THROW `SecurityError$E
+◎
+Throw a "SecurityError" DOMException.
+</li>
+				</ol>
+			</li>
+			<li>
+~RET `~prop記述子$x{
+`Value^sl: %値,
+`Writable^sl: ~false,
+`Enumerable^sl: ~true,
+`Configurable^sl: ~true
+}
+◎
+Return PropertyDescriptor{ [[Value]]: value, [[Writable]]: false, [[Enumerable]]: true, [[Configurable]]: true }.
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( %W ) ~EQ ~true
+］
+⇒
+~RET
+~NOABRUPT `OrdinaryGetOwnProperty$jA( %W, %P )
+◎
+If ! IsPlatformObjectSameOrigin(W) is true, then return ! OrdinaryGetOwnProperty(W, P).
+</p>
+
+<p class="note">注記：
+これは、~JS仕様の`~essential内部~methodが成す不変則$に対する`故意的な違反$であり、既存の~web内容との互換性を保守するためにある。
+`tc39/ecma262 #issue 672$x
+を見よ。
+`JAVASCRIPT$r
+◎
+This is a willful violation of the JavaScript specification's invariants of the essential internal methods to maintain compatibility with existing web content. See tc39/ecma262 issue #672 for more information. [JAVASCRIPT]
+</p>
+	</li>
+	<li>
+%~prop ~LET
+~NOABRUPT `CrossOriginGetOwnPropertyHelper$jA( %W, %P )
+◎
+Let property be ! CrossOriginGetOwnPropertyHelper(W, P).
+</li>
+	<li>
+~IF［
+%~prop ~NEQ ~undefined
+］
+⇒
+~RET %~prop
+◎
+If property is not undefined, then return property.
+</li>
+	<li>
+<p>
+~IF［
+%~prop ~EQ ~undefined
+］~AND［
+%P ~IN %W の`文書~treeに属する子~閲覧文脈~名~prop集合$
+］：
+◎
+If property is undefined and P is in W's document-tree child browsing context name property set, then:
+</p>
+		<ol>
+			<li>
+%値 ~LET %W の［
+名前 %P を伴う`有名~obj$
+］の `WindowProxy$I ~obj
+◎
+Let value be the WindowProxy object of the named object of W with the name P.
+</li>
+			<li>
+<p>
+~RET `~prop記述子$x{
+`Value^sl: %値,
+`Enumerable^sl: ~false,
+`Writable^sl: ~false,
+`Configurable^sl: ~true
+}
+◎
+Return PropertyDescriptor{ [[Value]]: value, [[Enumerable]]: false, [[Writable]]: false, [[Configurable]]: true }.
+</p>
+
+<p class="note">注記：
+~prop記述子が列挙-不可にされている理由は
+— それは同一-生成元の挙動に合致していないにもかかわらず —
+既存の~web内容との互換性を得るためである。
+<a href="~HTMLissue/3183">issue #3183</a>
+を見よ。
+◎
+The reason the property descriptors are non-enumerable, despite this mismatching the same-origin behavior, is for compatibility with existing web content. See issue #3183 for details.
+</p>
+			</li>
+		</ol>
+	</li>
+	<li>
+~RET
+~ABRUPT `CrossOriginPropertyFallback$jA( %P )
+◎
+Return ? CrossOriginPropertyFallback(P).
+</li>
+</ol>
+
+		</section>
+		<section id="windowproxy-defineownproperty">
+<h3>7.4.6. `DefineOwnProperty^sl( %P, %記述子 )</h3>
+
+<ol>
+	<li>
+%W ~LET ~this . `Window$sl
+◎
+Let W be the value of the [[Window]] internal slot of this.
+</li>
+	<li>
+<p>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( %W ) ~EQ ~true
+］：
+◎
+If ! IsPlatformObjectSameOrigin(W) is true, then:
+</p>
+
+		<ol>
+			<li>
+~IF［
+%P は`配列~indexである$
+］
+⇒
+~RET ~false
+◎
+If P is an array index property name, return false.
+</li>
+			<li>
+<p>
+~RET
+~ABRUPT `OrdinaryDefineOwnProperty$jA( %W, %P, %記述子 )
+◎
+Return ? OrdinaryDefineOwnProperty(W, P, Desc).
+</p>
+
+<p class="note">注記：
+これは、~JS仕様の`~essential内部~methodが成す不変則$に対する`故意的な違反$であり、既存の~web内容との互換性を保守するためにある。
+`tc39/ecma262 #issue 672$x
+を見よ。
+`JAVASCRIPT$r
+◎
+This is a willful violation of the JavaScript specification's invariants of the essential internal methods to maintain compatibility with existing web content. See tc39/ecma262 issue #672 for more information. [JAVASCRIPT]
+</p>
+			</li>
+		</ol>
+	</li>
+	<li>
+~THROW `SecurityError$E
+◎
+Throw a "SecurityError" DOMException.
+</li>
+</ol>
+
+
+		</section>
+		<section id="windowproxy-get">
+<h3>7.4.7. `Get^sl( %P, %Receiver )</h3>
+
+<ol>
+	<li>
+%W ~LET ~this . `Window$sl
+◎
+Let W be the value of the [[Window]] internal slot of this.
+</li>
+	<li>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( %W ) ~EQ ~true
+］
+⇒
+~RET
+~ABRUPT `OrdinaryGet$jA( ~this, %P, %Receiver )
+◎
+If ! IsPlatformObjectSameOrigin(W) is true, then return ? OrdinaryGet(this, P, Receiver).
+</li>
+	<li>
+~RET
+~ABRUPT `CrossOriginGet$jA( ~this, %P, %Receiver )
+◎
+Return ? CrossOriginGet(this, P, Receiver).
+</li>
+</ol>
+
+
+<p class="note">注記：
+%W に代えて ~this が渡される
+—  `OrdinaryGet$jA, `CrossOriginGet$jA は、
+`GetOwnProperty$sl 内部~methodを呼出すことになるので。
+◎
+this is passed rather than W as OrdinaryGet and CrossOriginGet will invoke the [[GetOwnProperty]] internal method.
+</p>
+
+
+		</section>
+		<section id="windowproxy-set">
+<h3>7.4.8. `Set^sl( %P, %V, %Receiver )</h3>
+
+<ol>
+	<li>
+%W ~LET ~this . `Window$sl
+◎
+Let W be the value of the [[Window]] internal slot of this.
+</li>
+	<li>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( %W ) ~EQ ~true
+］
+⇒
+~RET
+~ABRUPT `OrdinarySet$jA( ~this, %P, %V, %Receiver )
+◎
+If ! IsPlatformObjectSameOrigin(W) is true, then return ? OrdinarySet(this, P, V, Receiver).
+</li>
+	<li>
+~RET
+~ABRUPT `CrossOriginSet$jA( ~this, %P, %V, %Receiver )
+◎
+Return ? CrossOriginSet(this, P, V, Receiver).
+</li>
+</ol>
+
+<p class="note">注記：
+%W に代えて ~this が渡される
+— `OrdinarySet$jA, `CrossOriginSet$jA は `GetOwnProperty$sl 内部~methodを呼出すことになるので。
+`OrdinarySet$jA は `DefineOwnProperty$sl 内部~methodも呼出すことになる。
+◎
+this is passed rather than W as OrdinarySet and CrossOriginSet will invoke the [[GetOwnProperty]] internal method. OrdinarySet will also invoke the [[DefineOwnProperty]] internal method.
+</p>
+
+		</section>
+		<section id="windowproxy-delete">
+<h3>7.4.9. `Delete^sl( %P )</h3>
+
+<ol>
+	<li>
+%W ~LET ~this . `Window$sl
+◎
+Let W be the value of the [[Window]] internal slot of this.
+</li>
+	<li>
+<p>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( %W ) ~EQ ~true
+］：
+◎
+If ! IsPlatformObjectSameOrigin(W) is true, then:
+</p>
+		<ol>
+			<li>
+~IF［
+%P は`配列~indexである$
+］
+⇒
+~RET ［
+~NOABRUPT ~this . `GetOwnProperty^sl( %P ) ~EQ ~undefined ならば ~true ／
+~ELSE_ ~false
+］
+◎
+If P is an array index property name, then:
+• Let desc be ! this.[[GetOwnProperty]](P).
+• If desc is undefined, then return true.
+• Return false.
+</li>
+			<li>
+~RET
+~ABRUPT `OrdinaryDelete$jA( %W, %P )
+◎
+Return ? OrdinaryDelete(W, P).
+</li>
+		</ol>
+	</li>
+	<li>
+~THROW `SecurityError$E
+◎
+Throw a "SecurityError" DOMException.
+</li>
+</ol>
+
+		</section>
+		<section id="windowproxy-ownpropertykeys">
+<h3>7.4.10. `OwnPropertyKeys^sl()</h3>
+
+<ol>
+	<li>
+%W ~LET ~this . `Window$sl
+◎
+Let W be the value of the [[Window]] internal slot of this.
+</li>
+	<li>
+%~key~list ~LET 新たな空 `List$js
+◎
+Let keys be a new empty List.
+</li>
+	<li>
+%~prop個数 ~LET %W の`文書~treeに属する子~閲覧文脈の個数$
+◎
+Let maxProperties be the number of document-tree child browsing contexts of W.
+</li>
+	<li>
+%index ~LET 0
+◎
+Let index be 0.
+</li>
+	<li>
+<p>
+~WHILE［
+%index ~LT %~prop個数
+］：
+◎
+Repeat while index &lt; maxProperties,
+</p>
+		<ol>
+			<li>
+%~key~list に
+~NOABRUPT `ToString$jA( %index )
+を`付加する$
+◎
+Add ! ToString(index) as the last element of keys.
+</li>
+			<li>
+%index ~INCBY 1
+◎
+Increment index by 1.
+</li>
+		</ol>
+	</li>
+	<li>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( %W ) ~EQ ~true
+］
+⇒
+~RET 次を連結した結果
+⇒＃
+%~key~list,
+~NOABRUPT `OrdinaryOwnPropertyKeys$jA( %W )
+◎
+If ! IsPlatformObjectSameOrigin(W) is true, then return the concatenation of keys and ! OrdinaryOwnPropertyKeys(W).
+</li>
+	<li>
+~RET 次を連結した結果
+⇒＃
+%~key~list,
+~NOABRUPT `CrossOriginOwnPropertyKeys$jA( %W )
+◎
+Return the concatenation of keys and ! CrossOriginOwnPropertyKeys(W).
+</li>
+</ol>
+
+		</section>
+	</section>
+	<section id="history">
+<h2 title="Session history and navigation">7.9. ~session履歴と~navi</h2>
+
+<p class="trans-note">【
+この節の他の内容は
+<a href="~HISTORY#history">別ページ</a>
+にて。
+】</p>
+
+		<section id="the-location-interface">
+<h3 title="The Location interface">7.9.5. `Location^I ~interface</h3>
+
+
+<p class="trans-note">【
+この節の内容のうち，~APIに関する部分は、
+<a href="~HISTORY#the-location-interface">別ページ</a>
+にて。
+】</p>
+
+<p>
+各 `Window$I ~objには、その作成-時に，新たな `Location$I ~objが結付けられる。
+<!-- unique instance of 〜 allocated -->
+◎
+Each Window object is associated with a unique instance of a Location object, allocated when the Window object is created.
+</p>
+
+
+<p class="warning">
+`Location$I ~exotic~objは、~IDLの寄せ集めであり，［
+~JS~内部~method~post-creationの呼出n, および
+~JS~内部~methodの上書き
+］を通して，それの~scary~security施策と組にして定義される。
+この~excrescenceを実装するときは、要注意。
+◎
+The Location exotic object is defined through a mishmash of IDL, invocation of JavaScript internal methods post-creation, and overridden JavaScript internal methods. Coupled with its scary security policy, please take extra care while implementing this excrescence.
+</p>
+
+<p>
+`Location$I ~objを~作成するときは、次の~手続きを走らす:
+◎
+To create a Location object, run these steps:
+</p>
+
+<ol>
+	<li>
+%L ~LET 新たな `Location$I `~platform~obj$
+◎
+Let location be a new Location platform object.
+</li>
+	<li>
+%valueOf ~LET %L に`関連な~Realm$ . `Intrinsics^sl . <span class="js-slot">[[`Object.prototype.valueOf$jI]]</span>
+◎
+Let valueOf be location's relevant Realm.[[Intrinsics]].[[%Object.prototype.valueOf%]].
+</li>
+	<li>
+~NOABRUPT %L . `DefineOwnProperty^sl( `valueOf^l, { `Value^sl: %valueOf, `Writable^sl: ~false, `Enumerable^sl: ~false, `Configurable^sl: ~false } )
+◎
+Perform ! location.[[DefineOwnProperty]]("valueOf", { [[Value]]: valueOf, [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false }).
+</li>
+	<li>
+~NOABRUPT %L . `DefineOwnProperty^sl( `toPrimitive$jS, { `Value^sl: ~undefined, `Writable^sl: ~false, `Enumerable^sl: ~false, `Configurable^sl: ~false } )
+◎
+Perform ! location.[[DefineOwnProperty]](@@toPrimitive, { [[Value]]: undefined, [[Writable]]: false, [[Enumerable]]: false, [[Configurable]]: false }).
+</li>
+	<li>
+%L . `DefaultProperties$sl ~SET %L . `OwnPropertyKeys^sl()
+◎
+Set the value of the [[DefaultProperties]] internal slot of location to location.[[OwnPropertyKeys]]().
+</li>
+	<li>
+~RET %L
+◎
+Return location.
+</li>
+</ol>
+
+<p class="note">注記：
+自前の~data~propとして［
+`valueOf^c, `toPrimitive$jS
+］を追加すること, および
+`Location$I のすべての~IDL属性に `LegacyUnforgeable$xA を付与することは、
+`Location$I ~interfaceをアタっていたり, それを文字列~化して`文書~URL$を決定し，~securityに敏感な仕方で利用していた、旧来の~codeに要求される。
+特に，［
+`valueOf^c,
+`toPrimitive$jS,
+`LegacyUnforgeable$xA 文字列化子（ `stringifier^m ）
+］は、
+`foo[location] = bar^c
+や
+`location + ""^c
+のような~codeが誤った先を指し得ないことを確保するための軽減である。
+◎
+The addition of valueOf and @@toPrimitive own data properties, as well as the fact that all of Location's IDL attributes are marked [LegacyUnforgeable], is required by legacy code that consulted the Location interface, or stringified it, to determine the document URL, and then used it in a security-sensitive way. In particular, the valueOf, @@toPrimitive, and [LegacyUnforgeable] stringifier mitigations ensure that code such as foo[location] = bar or location + "" cannot be misdirected.
+</p>
+
+<p id="location-internal-methods">
+先に説明したように， `Location$I ~exotic~objは、~security目的のため，~IDLを超える追加的な~logicが要求される。
+`Location$I ~objは、以下の各~節にて明示的に他が指定される場合を除き，普通の内部~methodを利用するモノトスル。
+◎
+As explained earlier, the Location exotic object requires additional logic beyond IDL for security purposes. The Location object must use the ordinary internal methods except where it is explicitly specified otherwise below.
+</p>
+
+<p>
+加えて、どの `Location$I ~objも，
+`DefaultProperties@sl
+内部~slotを持つ
+— それは、~objの作成-時における~objの自前の~propを表現する。
+◎
+Also, every Location object has a [[DefaultProperties]] internal slot representing its own properties at time of its creation.
+</p>
+
+			<section id="location-getprototypeof">
+<h4>7.9.5.1. `GetPrototypeOf^sl()</h4>
+
+<ol>
+	<li>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( ~this ) ~EQ ~true
+］
+⇒
+~RET
+~NOABRUPT `OrdinaryGetPrototypeOf$jA( ~this )
+◎
+If ! IsPlatformObjectSameOrigin(this) is true, then return ! OrdinaryGetPrototypeOf(this).
+</li>
+	<li>
+~RET ~NULL
+◎
+Return null.
+</li>
+</ol>
+
+
+
+
+			</section>
+			<section id="location-setprototypeof">
+<h4>7.9.5.2. `SetPrototypeOf^sl( %V )</h4>
+
+<ol>
+	<li>
+~RET `SetImmutablePrototype$jA( ~this, %V )
+◎
+Return ! SetImmutablePrototype(this, V).
+</li>
+</ol>
+
+			</section>
+			<section id="location-isextensible">
+<h4>7.9.5.3. `IsExtensible^sl()</h4>
+
+<ol>
+	<li>
+~RET ~true
+◎
+Return true.
+</li>
+</ol>
+
+			</section>
+			<section id="location-preventextensions">
+<h4>7.9.5.4. `PreventExtensions^sl()</h4>
+
+<ol>
+	<li>
+~RET ~false
+◎
+Return false.
+</li>
+</ol>
+
+			</section>
+			<section id="location-getownproperty">
+<h4>7.9.5.5. `GetOwnProperty^sl( %P )</h4>
+
+<ol>
+	<li>
+<p>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( ~this ) ~EQ ~true
+］：
+◎
+If ! IsPlatformObjectSameOrigin(this) is true, then:
+</p>
+
+		<ol>
+			<li>
+%記述子 ~LET
+~NOABRUPT `OrdinaryGetOwnProperty$jA( ~this, %P )
+◎
+Let desc be ! OrdinaryGetOwnProperty(this, P).
+</li>
+	<li>
+~IF［
+%P ~IN ~this . `DefaultProperties$sl
+］
+⇒
+%記述子 . `Configurable^sl ~SET ~true
+◎
+If the value of the [[DefaultProperties]] internal slot of this contains P, then set desc.[[Configurable]] to true.
+</li>
+			<li>
+~RET %記述子
+◎
+Return desc.
+</li>
+		</ol>
+	</li>
+	<li>
+%~prop ~LET
+~NOABRUPT `CrossOriginGetOwnPropertyHelper$jA( ~this, %P )
+◎
+Let property be ! CrossOriginGetOwnPropertyHelper(this, P).
+</li>
+	<li>
+~IF［
+%~prop ~NEQ ~undefined
+］
+⇒
+~RET %~prop
+◎
+If property is not undefined, then return property.
+</li>
+	<li>
+~RET
+~ABRUPT `CrossOriginPropertyFallback$jA( %P )
+◎
+Return ? CrossOriginPropertyFallback(P).
+</li>
+</ol>
+
+
+			</section>
+			<section id="location-defineownproperty">
+<h4>7.9.5.6. `DefineOwnProperty^sl( %P, %記述子 )</h4>
+
+<ol>
+	<li>
+<p>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( ~this ) ~EQ ~true
+］：
+◎
+If ! IsPlatformObjectSameOrigin(this) is true, then:
+</p>
+		<ol>
+			<li>
+~IF［
+%P ~IN ~this . `DefaultProperties$sl
+］
+⇒
+~RET ~false
+◎
+If the value of the [[DefaultProperties]] internal slot of this contains P, then return false.
+</li>
+			<li>
+~RET
+~ABRUPT `OrdinaryDefineOwnProperty$jA( ~this, %P, %記述子 )
+◎
+Return ? OrdinaryDefineOwnProperty(this, P, Desc).
+</li>
+		</ol>
+	</li>
+	<li>
+~THROW `SecurityError$E
+◎
+Throw a "SecurityError" DOMException.
+</li>
+</ol>
+
+
+
+
+			</section>
+			<section id="location-get">
+<h4>7.9.5.7. `Get^sl( %P, %Receiver )</h4>
+
+<ol>
+	<li>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( ~this ) ~EQ ~true
+］
+⇒
+~RET
+~ABRUPT `OrdinaryGet$jA( ~this, %P, %Receiver )
+◎
+If ! IsPlatformObjectSameOrigin(this) is true, then return ? OrdinaryGet(this, P, Receiver).
+</li>
+	<li>
+~RET
+~ABRUPT `CrossOriginGet$jA( ~this, %P, %Receiver )
+◎
+Return ? CrossOriginGet(this, P, Receiver).
+</li>
+</ol>
+
+
+
+
+			</section>
+			<section id="location-set">
+<h4>7.9.5.8. `Set^sl( %P, %V, %Receiver )</h4>
+
+<ol>
+	<li>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( ~this ) ~EQ ~true
+］
+⇒
+~RET
+~ABRUPT `OrdinarySet$jA( ~this, %P, %Receiver )
+◎
+If ! IsPlatformObjectSameOrigin(this) is true, then return ? OrdinarySet(this, P, Receiver).
+</li>
+	<li>
+~RET
+~ABRUPT `CrossOriginSet$jA( ~this, %P, %V, %Receiver )
+◎
+Return ? CrossOriginSet(this, P, V, Receiver).
+</li>
+</ol>
+
+
+			</section>
+			<section id="location-delete">
+<h4>7.9.5.9. `Delete^sl( %P )</h4>
+
+<ol>
+	<li>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( ~this ) ~EQ ~true
+］
+⇒
+~RET
+~ABRUPT `OrdinaryDelete$jA( ~this, %P )
+◎
+If ! IsPlatformObjectSameOrigin(this) is true, then return ? OrdinaryDelete(this, P).
+</li>
+	<li>
+~THROW `SecurityError$E
+◎
+Throw a "SecurityError" DOMException.
+</li>
+</ol>
+
+
+			</section>
+			<section id="location-ownpropertykeys">
+<h4>7.9.5.10. `OwnPropertyKeys^sl()</h4>
+
+<ol>
+	<li>
+~IF［
+~NOABRUPT `IsPlatformObjectSameOrigin$jA( ~this ) ~EQ ~true
+］
+⇒
+~RET
+~NOABRUPT `OrdinaryOwnPropertyKeys$jA( ~this )
+◎
+If ! IsPlatformObjectSameOrigin(this) is true, then return ! OrdinaryOwnPropertyKeys(this).
+</li>
+	<li>
+~RET
+~NOABRUPT `CrossOriginOwnPropertyKeys$jA( ~this )
+◎
+Return ! CrossOriginOwnPropertyKeys(this).
+</li>
+</ol>
+
+
+			</section>
+		</section>
+	</section>
+</main>

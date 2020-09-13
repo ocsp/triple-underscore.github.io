@@ -1,0 +1,761 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Overscroll Behavior Module Level 1</title>
+
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		collectParts: Util.collectParts,
+		generate: expand,
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	let context_prop = '';
+
+	return this.html.replace(
+		/%[\w~一-鿆]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'v':
+	href = context_prop + key;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+default:
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Overscroll Behavior Module Level 1
+spec_date:2019-05-24
+trans_update:2019-05-16
+source_checked:181009
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-overscroll-1/
+	abbr_url:CSSOVERSCROLL
+	old_url:css-overscroll-behavior-ja.html
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+conformance:css
+copyright:2019,permissive
+trans_1st_pub:2018-10-09
+
+
+●●class_map
+p:property
+css:css
+e:element
+v:value
+
+
+●●tag_map
+p:code
+css:code
+e:code
+v:code
+m:code
+c:code
+
+●●original_id_map
+
+●●mdn_urls
+propdef-overscroll-behavior:CSS/overscroll-behavior
+propdef-overscroll-behavior-x:CSS/overscroll-behavior-x
+propdef-overscroll-behavior-y:CSS/overscroll-behavior-y
+propdef-overscroll-behavior-block:CSS/overscroll-behavior-block
+propdef-overscroll-behavior-inline:CSS/overscroll-behavior-inline
+
+●●link_map
+
+	●p
+p.overscroll-behavior:#propdef-overscroll-behavior
+p.overscroll-behavior-x:#propdef-overscroll-behavior-x
+p.overscroll-behavior-y:#propdef-overscroll-behavior-y
+p.overscroll-behavior-block:#propdef-overscroll-behavior-block
+p.overscroll-behavior-inline:#propdef-overscroll-behavior-inline
+
+p.writing-mode:~CSSWM#propdef-writing-mode
+	p.overflow:~CSSOVERFLOW3#overflow
+
+v.contain:#valdef-overscroll-behavior-contain
+v.none:#valdef-overscroll-behavior-none
+v.auto:#valdef-overscroll-behavior-auto
+
+
+
+	Animatable::https://drafts.csswg.org/css-transitions/#animatable-properties
+CSS:http://www.w3.org/TR/CSS/
+	Computed value::https://drafts.csswg.org/css-cascade/#computed
+	Inherited::https://drafts.csswg.org/css-cascade/#inherited-property
+	Initial::https://drafts.csswg.org/css-cascade/#initial-values
+	Percentages::https://drafts.csswg.org/css-values/#percentages
+	Value::https://drafts.csswg.org/css-values/#value-defs
+
+
+m.preventDefault():~DOM4#dom-event-preventdefault
+m.passive:~DOM4#dom-addeventlisteneroptions-passive
+m.scrollingElement:~CSSOMVIEW#dom-document-scrollingelement
+
+	●用語
+境界上の既定~動作:#boundary-default-action
+局所的:#local-boundary-default-action
+局所的でない:#non-local-boundary-default-action
+	局所的な境界上の既定~動作:#local-boundary-default-action
+~scroll境界:#scroll-boundary
+連鎖的scroll:#scroll-chaining
+~scroll連鎖:#scroll-chain
+~overscrollの挙動:#overscroll-behavior
+
+	●外部
+~scroll容器:~CSSOVERFLOW3#scroll-container
+~scrollport:~CSSOVERFLOW3#scrollport
+~overflow:~CSSOVERFLOW3#overflow
+
+包含塊~連鎖:~CSSDISP#containing-block-chain
+既定~動作:~UIEVENTS#default-action
+	~passive~flag:~DOM4#event-listener-passive
+	~passive~flag:~DOM4#dom-eventtarget-addeventlistener
+表示域:~CSSOMVIEW#viewport
+
+●●words_table1
+
+
+●●words_table
+
+	●layout／幾何
+縦:vertical::~
+横:horizontal::~
+境界上の:boundary::~
+固定-:fix::~
+	端:left
+物理-:physical:~
+
+	●UI
+affordance:
+passive:
+pull-to-refresh:
+swipe:
+
+sidebar::::サイドバー
+	~sidebar:bar
+gesture::::ジェスチャ
+overscroll::::過スクロール
+scrolling::::スクローリング
+scrollport::::スクロール域
+scroller::::スクローラ
+連鎖的scroll:scroll chaining::連鎖的スクロール
+	連鎖的scroll:chaining
+	連鎖的scroll:hand off scrolling
+	ヤリトリ:interacting
+	局所的でない:non-local
+	辿って~scrollし続けないよう:prevent scrolling from continuing up
+	カクつかせる:will delay scrolling ＋ increased scroll latency
+	^en:rubber banding
+	近辺:near the edge
+
+	●仕様
+programmatic
+欠点:shortcoming::~
+堅牢:robust:~
+高処理能:performant::~
+不利益:detrimental:~
+
+	に関して〜以上の:as strong as
+	に沿って:along
+	され得ない:has no potential to
+	まずない:almost never
+	一部の〜こともある:does not necessarily
+	-:compliant
+	-:Conversely
+	紛らわしくなる:potentially confusing
+	指す:refer
+
+
+	●仕様（動詞
+install::::インストール
+利用ng:using:利用
+修正-:fix:~
+尊重-:respect:~
+	尊重して:with respect to
+	動機にある:motivating
+	-:clamp
+
+	●未分類（動詞
+渡され:passされ:~
+	辿る:follow／
+	先祖へ辿る:recursing up／along
+
+	●未分類
+対応関係:mapping::~
+
+	●指示語
+	いかなる〜ない:can not 〜 any
+	でない:non
+	同時に:the same time
+	向けて:against
+	どこから:originated
+	-:respective
+
+
+
+●●ref_normative
+
+[CSS-OVERFLOW-3]
+    David Baron; Elika Etemad; Florian Rivoal. CSS Overflow Module Level 3. 31 July 2018. WD. URL: https://www.w3.org/TR/css-overflow-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS-WRITING-MODES-4]
+    Elika Etemad; Koji Ishii. CSS Writing Modes Level 4. 24 May 2018. CR. URL: https://www.w3.org/TR/css-writing-modes-4/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+
+●●
+	ref_informative
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Overscroll Behavior Module Level 1</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+編集
+	<a href="mailto:bgirard@fb.com">Benoit Girard</a> (Facebook)
+	<a href="mailto:majidvp@google.com">Majid Valipour</a> (Google)
+
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-overscroll-1/Overview.bs">GitHub Editor</a>
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-overscroll-1">GitHub Issues</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-overscroll-1
+
+</script>
+
+</head>
+<body>
+
+
+
+<header>
+	<hgroup>
+<h1 id="title">CSS Overscroll Behavior Module Level 1</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+
+<p>
+この~moduleは
+`overscroll-behavior$p を定義する。
+それは、`~scroll容器$の~scroll位置が`~scrollport$の辺まで達したときの挙動を制御する。
+これは、［
+`連鎖的scroll$や~overscrollなどの`境界上の既定~動作$は、誘発されるベキでない
+］よう~hintすることを，内容~作者に許容する。
+◎
+This module defines overscroll-behavior to control the behavior when the scroll position of a scroll container reaches the edge of the scrollport. This allows content authors to hint that the boundary default actions, such as scroll chaining and overscroll, should not be triggered.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公の複製です…
+【以下，この節の他の内容は <a href="css-common-ja.html#status">~CSS日本語訳 共通ページ</a>に委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+内容~作者は、［
+一部の`~scroll容器$には、`連鎖的scroll$は生じない
+］よう求めることもある。
+`~scroll容器^には、［
+`包含塊~連鎖$の一部を成しつつ，文書~内で論理的に異なる目的を~serveするもの
+］もあり，［
+`~scroll連鎖$を辿って~scrollし続けない
+］よう求まれることもある。
+これを達成するため、内容~作者は，［
+`passive$m は設定しないまま~event~listenerを~installした上で、`連鎖的scroll$が生じる~riskがあるときは， `preventDefault()$m を利用する
+］ことになる。
+これは、次の理由で不利益になる：
+◎
+A content author does not necessarily want scroll chaining to occur for all scroll containers. Some scroll containers may be part of a containing block chain but may serve a different logical purpose in the document and may want to prevent scrolling from continuing up the scroll chain. To achieve this, a content author will install event listeners without the passive flag set and will use preventDefault when there is a risk that scroll chaining will occur. This is detrimental for the following reasons:
+</p>
+
+<ul>
+	<li>
+~UAは、~scrollするための新たな入力~methodを，将来に導入し得る
+— それは、内容~作者の~event~listenerが~supportしないかもしれない。
+◎
+The user agent may in the future introduce new input methods for scrolling that are not supported by the content author’s event listeners.
+</li>
+	<li>
+~passiveでない~event~listenerは、~scrollをカクつかせる
+— ~UAは、 `preventDefault()$m が~callされたかどうか決定するため，~event~listenerの結果を待機する必要があるので。
+【これが、 `passive$m が導入された理由である。】
+◎
+A non passive event listener will delay scrolling because the user agent will have to wait for the result of the event listener to determine if preventDefault was called causing increased scroll latency.
+</li>
+	<li>
+<p>
+`preventDefault()$m は、当の~event用の`既定~動作$の一部
+— `連鎖的scroll$など —
+だけ取消すのを，内容~作者に許容しない：
+</p>
+		<ul>
+			<li>
+`~scroll境界$の近辺で~scrollされたときの`既定~動作$には、`境界上の既定~動作$に先立って，`~scroll容器$を成す辺まで~scrollすることもある。
+</li>
+			<li>
+`既定~動作$は、~overscroll~affordance†など，作者が取消したいと求めない追加的な挙動を供することもある。
+【† ~scroll可能な~~範囲を超えて~scrollしようとしたことを利用者に示唆するような何か】
+</li>
+		</ul>
+<p>
+`preventDefault()^m は、これらも取消すことになる。
+</p>
+
+◎
+When scrolling is performed near the edge of the scroll boundary, the default action may cause both scrolling to the edge of the scroll container and a boundary default action. Calling preventDefault will not only cancel the boundary default action but also the scroll to the edge of the scrollport.
+◎
+The default action for the event may also provide additional behavior that the author does not want to cancel such as an overscroll affordance. preventDefault doesn’t allow the content author to cancel only some of the default actions such as scroll chaining.
+</li>
+</ul>
+
+<p>
+堅牢かつ高処理能かつ前方-互換な仕方で`連鎖的scroll$と~overscrollを制御することは、内容~作者にとってアリでない。
+`overscroll-behavior$p ~propは、この欠点を修正する。
+◎
+Thus, it is not possible for a content author to control scroll chaining and overscroll in a robust, performant and forward compatible way. The overscroll-behavior property fixes this shortcoming.
+</p>
+
+	</section>
+	<section id="motivating-examples">
+<h2 title="Motivating Examples">2. 動機にある例</h2>
+
+<div class="example">
+
+<p>
+端に固定された~navi用の~sidebarには、文書への`連鎖的scroll$は，およそ求まれない
+— そのような~sidebar上で遂行される~scroll~gestureに，文書の~scrollが意味されることは、まずないので。
+`連鎖的scroll$は防止される下でも，~nativeな~overscroll~affordanceの利用ngは，依然として望ましいことに注意。
+◎
+A position fixed left navigation bar does not want to hand off scrolling to the document because a scroll gesture performed on the navigation bar is almost never meant to scroll the document. Note that using the native overscroll affordances are still desirable while scroll chaining is to be prevented.
+</p>
+
+<pre class="lang-css">
+#sidebar {
+  overscroll-behavior: contain;
+}</pre>
+
+
+<p>
+この事例では、~sidebar上で `contain$v を利用すれば，作者は`連鎖的scroll$を防止できる。
+◎
+In this case, the author can use contain on the sidebar to prevent scrolling from being chained to the parent document element.
+</p>
+
+</div>
+
+<div class="example">
+
+<p>
+自前の~pull-to-refresh効果†を実装したいと求める~pageは、~browserによる~nativeな~overscroll動作を不能化する必要がある。
+【†~overscroll時に “~~空いた空間” を新たな内容で埋めるように更新する】
+【<a href="https://github.com/WICG/overscroll-behavior/issues/21">この例には、いくつか不可解な記述がある</a>】
+◎
+A page wants to implement their own pull-to-refresh effect and thus needs to disable browser native overscroll action.
+</p>
+
+<pre class="lang-css">
+html {
+  /* <span class="comment">
+~pull-to-refreshのみ不能化して，~swipe~naviは許容する。
+【この~pull-to-refreshは何のそれを意味する？】
+◎
+only disable pull-to-refresh but allow swipe navigations
+</span> */
+  overscroll-behavior-y: contain;
+}</pre>
+
+<p>
+この事例では、作者は表示域~上で `contain$v を利用して，［
+~navi動作が~overscrollを誘発する
+］のを防止するよう要素を定義できる。
+◎
+In this case, the author can use contain on the viewport defining element to prevent overscroll from triggering navigation actions.
+</p>
+
+</div>
+
+<div class="example">
+
+<p>
+無限~scrollerは、利用者が境界に達するに伴い，さらに内容を読込む。
+したがって、`連鎖的scroll$のみならず， `rubber banding^en 効果†も不能化することが求まれる
+— それがあると，紛らわしくなる††ので。
+【†ゴムで束ねられているかのように，~overscrollした~~状態を引き戻すような効果 — ~UI~affordanceの一種】
+【††無限でないかのように受け取られかねない。】
+◎
+A infinite scrollers loads more content as user reaches the boundary and thus wants to disable the potentially confusing rubber banding effect in addition to scroll chaining.
+</p>
+
+<pre class="lang-css">
+#infinite_scroller {
+  overscroll-behavior-y: none;
+}</pre>
+
+
+<p>
+この事例では，作者は、無限~scroller上で `none$v を利用して［
+`連鎖的scroll$, ~overscroll~affordance
+］の両者を防止できる。
+◎
+In this case the the author can use none on the infinite scroller to prevent both scroll chaining and overscroll affordance.
+</p>
+</div>
+
+	</section>
+	<section id="scroll-chaining-and-boundary-default-actions">
+<h2 title="Scroll chaining and boundary default actions">3. 連鎖的scrollと境界上の既定~動作</h2>
+
+<p>
+~OSは、`連鎖的scroll$, ~overscroll~affordanceなどの，~scrolling用の規則を備える。
+この仕様は、［
+連鎖的scroll／~overscroll~affordance
+］を［
+実装すること, どう実装するか
+］を，義務付けるものではない。
+この仕様は、［
+これらが実装されている場合に不能化することを，内容~作者に許容する
+］のみである。
+◎
+Operating Systems have rules for scrolling such as scroll chaining and overscroll affordances. This specification does not mandate if and how scroll chaining or overscroll affordances be implemented. This specification only allows the content author to disable them if any are implemented.
+</p>
+
+<p>
+`連鎖的scroll@
+は、`~scroll容器$から先祖`~scroll容器^へ，`~scroll連鎖$を辿るように~scrollingが伝播することを指す。
+概して，連鎖的scrollは、~event~targetから開始して，`包含塊~連鎖$を先祖へ辿るように遂行される。
+この連鎖~内の ある`~scroll容器^が受取った［
+~scroll~event／~scroll~gesture
+］は、当の容器~上で動作し得ることに加え，連鎖を辿って次の容器へ渡され得る。
+連鎖的scrollは、概して，`~scrollport$の境界に達したときに生じる。
+◎
+Scroll chaining is when scrolling is propagated from one scroll container to an ancestor scroll container following the scroll chain. Typically scroll chaining is performed starting at the event target recursing up the containing block chain. When a scroll container in this chain receives a scroll event or gesture it may act on it and/or pass it up the chain. Chaining typically occurs when the scrollport has reached its boundary.
+</p>
+
+<p>
+`~scroll連鎖@
+は、~scrollingが各`~scroll容器$を伝播するときの順序を成す。
+`表示域$は、文書の `scrollingElement$m として`連鎖的scroll$に関与する
+— ［
+~scroll連鎖における配置，それに適用される連鎖的scrollの規則を固守すること
+］の両者に関して。
+◎
+A scroll chain is the order in which scrolling is propagated from one scroll container to another. The viewport participates in scroll chaining as the document’s scrollingElement, both regarding placement in the scroll chain as well as adhering to the chaining rules applied to it.
+</p>
+
+<p>
+`~scroll境界@
+は、`~scroll容器$の~scroll位置が`~scrollport$を成す辺に達していることを指す。
+~scrollされ得ない~scroll容器
+— 当の~scroll方向にて，`~overflow$していないなど —
+は、常に~scroll境界にあるものと見なされる。
+◎
+Scroll boundary refers to when the scroll position of a scroll container reaches the edge of the scrollport. If a scroll container has no potential to scroll, because it does not overflow in the direction of the scroll, the element is always considered to be at the scroll boundary.
+</p>
+
+<p>
+`境界上の既定~動作@
+とは、~UAが定義する`既定~動作$のうち，`~scrollport$の辺に向けて~scrollするときに遂行されるものを指す。
+`境界上の既定~動作$は、［
+`局所的@
+であるもの,
+`局所的でない@†
+もの
+］に大別される。
+前者は、`~scroll容器$上で~page【すなわち，容器の外】とヤリトリすることなく遂行されるものを指す
+— 例：~overscroll~UI~affordanceを表示するなど。
+後者は、~pageとヤリトリするものを指す
+— 例：`連鎖的scroll$や~navi動作など。
+【†この訳では、この用語は利用せず，一律に “`局所的$`でない^em” と記す。】
+◎
+Boundary default action refers to the user-agent-defined default action performed when scrolling against the edge of the scrollport. A local boundary default action is a boundary default action which is performed on the scroll container without interacting with the page, for example displaying a overscroll UI affordance.
+◎
+Conversely, a non-local boundary default action interacts with the page, for example scroll chaining or a navigation action.
+</p>
+
+	</section>
+	<section id="overscroll-behavior-properties">
+<h2 title="Overscroll Behavior Properties">4. ~overscroll挙動~prop</h2>
+
+<p>
+`~overscrollの挙動@
+は、［
+`~scroll容器$の`~scrollport$が自身の~scroll~boxの境界に達したとき
+］の，`~scroll容器$に許可される`境界上の既定~動作$を制御する。
+◎
+The overscroll behavior controls the permitted boundary default action for a scroll container element when its scrollport reaches the boundary of its scroll box.
+</p>
+
+
+<p>
+`overscroll-behavior$p ~propは、`~scroll容器$用に`~overscrollの挙動$を指定する。
+それは、［
+`~scroll容器^は［
+`連鎖的scroll$／~overscroll~affordance
+］を防止するモノトスル
+］よう指定することを，内容~作者に許容する。
+◎
+The overscroll-behavior property specifies the overscroll behavior for a scroll container element. It allows the content author to specify that a scroll container element must prevent scroll chaining and/or overscroll affordances.
+</p>
+
+
+<p>
+`~scroll容器$でない要素は、この~propを受容しつつ，その値を無視するモノトスル。
+この~propは、~UAが~supportするすべての~scrolling~methodに適用されるモノトスル。
+◎
+An element that is not scroll container must accept but ignore the values of this property. This property must be applied to all scrolling methods supported by the user agent.
+</p>
+
+<p class="note">注記：
+この~propは、［
+`連鎖的scroll$, ~overscroll
+］の両者とも防止することに関して，少なくとも `preventDefault()$m 以上の保証は供するベキである。
+さもなければ、内容~作者は，代わりに `preventDefault()^m を利用することになるであろう。
+◎
+Note: This property should provide guarantees that are, at least, as strong as preventDefault for preventing both scroll chaining and overscroll. Doing otherwise would cause content authors to use preventDefault instead.
+</p>
+
+◎名 `overscroll-behavior@p
+◎値 [ `contain^v | `none^v | `auto^v ]{1,2}
+◎初 `auto auto^v
+◎適 `~scroll容器$【を生成する】要素
+◎継 されない
+◎百 受容しない
+◎算 個々の~propを見よ
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+`overscroll-behavior$p ~propは、［
+`overscroll-behavior-x$p, `overscroll-behavior-y$p
+］の指定d値を，この順に設定する略式~propである。
+値が 1 個だけ指定された場合、それが 2 個目の値も与える。
+◎
+The overscroll-behavior property is a shorthand property that sets the specified values of overscroll-behavior-x and overscroll-behavior-y in that order. If only one value is specified, the second value defaults to the same value.
+</p>
+
+<p>
+各種~値の意味は：
+◎
+Values have the following meanings:
+</p>
+
+<dl>
+	<dt>`contain@v</dt>
+	<dd>
+この値は、要素~上では［
+`連鎖的scroll$や~naviなどの，`局所的$でない`境界上の既定~動作$は遂行しない
+］モノトスルことを指示する。
+~UAは、`~scroll連鎖$を先祖へ辿る`連鎖的scroll$は，遂行しないモノトスル
+— 当の要素, その子孫のどこから~scrollされたかに関わらず。
+この値は、~overscroll~affordanceを示すなど，`局所的$である`境界上の既定~動作$がどう挙動するベキかは改変しないモノトスル。
+◎
+This value indicates that the element must not perform non-local boundary default actions such as scroll chaining or navigation. The user agent must not perform scroll chaining to any ancestors along the scroll chain regardless of whether the scroll originated at this element or one of its descendants. This value must not modify the behavior of how local boundary default actions should behave, such as showing any overscroll affordances.
+</dd>
+
+	<dt>`none@v</dt>
+	<dd>
+この値は `contain$v と同じ挙動を含意する。
+加えて、要素~上では［
+~overscroll~affordanceを示すなどの，`局所的$である`境界上の既定~動作$
+］も遂行しないモノトスル。
+◎
+This value implies the same behavior as contain and in addition this element must also not perform local boundary default actions such as showing any overscroll affordances.
+</dd>
+
+	<dt>`auto@v</dt>
+	<dd>
+この値は、［［
+`連鎖的scroll$／~overscroll／~navi~gesture
+］を尊重して，通例の`境界上の既定~動作$を遂行するベキである
+］ことを，~UAに指示する。
+◎
+This value indicates that the user agent should perform the usual boundary default action with respect to scroll chaining, overscroll and navigation gestures.
+</dd>
+</dl>
+
+<p class="note">注記：
+<!-- 連鎖的scroll／~overscroll~affordance -->
+`境界上の既定~動作$を実装しない~UAには、これらの値による副作用は無い。
+<!-- ＊？for a compliant implementation -->
+◎
+Note: In the case where a user agent does not implement scroll chaining and overscroll affordances, these values will have no side effects for a compliant implementation.
+</p>
+
+<p class="note">注記：
+`境界上の既定~動作$は、~program的に~scrollされたときには，誘発されない。
+◎
+Note: Programmatic scrolling is clamped and can not trigger any boundary default actions.
+</p>
+
+		</section>
+		<section id="overscroll-behavior-longhands-physical">
+<h3 title="Physical Longhands for overscroll-behavior">4.1. `overscroll-behavior^p 用の物理-下位prop</h3>
+
+◎名 `overscroll-behavior-x@p, `overscroll-behavior-y@p
+◎値 `contain^v | `none^v | `auto^v
+◎初 `auto^v
+◎適 `~scroll容器$ 要素
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+［
+`overscroll-behavior-x$p ／ `overscroll-behavior-y$p
+］~propは、［
+横~軸／縦~軸
+］における`~overscrollの挙動$を指定する。
+［
+横, 縦
+］両~軸に同時に~scrollされたときは、各~軸における`~overscrollの挙動$が独立に考慮されるベキである。
+◎
+The overscroll-behavior-x property specifies the overscroll behavior in the horizontal axis and the overscroll-behavior-y property specifies the overscroll behavior in the vertical axis. When scrolling is performed along both the horizontal and vertical axes at the same time, the overscroll behavior of each respective axis should be considered independently.
+</p>
+
+		</section>
+		<section id="overscroll-behavior-longhands-logical">
+<h3 title="Flow-relative Longhands for overscroll-behavior">4.2. `overscroll-behavior^p 用の~flowに相対的な下位prop</h3>
+
+◎名 `overscroll-behavior-inline@p, `overscroll-behavior-block@p
+◎値 `contain^v | `none^v | `auto^v
+◎初 `auto^v
+◎適 `~scroll容器$ 要素
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+これらの~propは、［
+`overscroll-behavior-x$p, `overscroll-behavior-y$p
+］~propに対応する。
+その対応関係は、要素の `writing-mode$p に依存する。
+◎
+These properties correspond to the overscroll-behavior-x and overscroll-behavior-y properties. The mapping depends on the element’s writing-mode.
+</p>
+	</section>
+	<section id="security-and-privacy">
+<h2 title="Security and Privacy Considerations">5. ~securityと~privacyの考慮点</h2>
+
+<p>
+この特能に対しては、［
+~security／~privacy
+］に対する既知な影響iは無い。
+この特能は、［
+~overscroll~affordance／~overscroll~navi
+］（例： ~pull-to-refresh, ~swipe~navi）などの，ある種の~native~UI特能を防止するために利用できる。
+しかしながら，これは、~platformにて すでにアリなもの
+— 例：~scrollによる~eventの既定~動作を防止するなど —
+を超えるような，追加的な能を公開するものではない。
+<!-- ＊？cause a scroll -->
+◎
+There are no known security or privacy impacts of this feature. The feature may be used to prevent certain native UI features such as overscroll affordances and overscroll navigations (e.g., pull- to-refresh, swipe navigations). However, this does not expose any additional abilities beyond what is already possible in the platform e.g., by preventing the default action of the event that would cause a scroll.
+</p>
+
+	</section>
+</main></div>
+

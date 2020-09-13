@@ -1,0 +1,60 @@
+:root {
+	--heading-color: black;
+
+	--note-bg-color: hsl(120 70% 95%); /* #E9FBE9 */
+	--note-border-color: hsl(120 70% 60%); /* #52E052 */
+	--example-bg-color: hsl(60 100% 93%); /* #FFFFDD */
+	--example-border-color: hsl(60 43% 77%);/* #DDDDAA */
+	--comment-color: hsl(159 80% 18%); /* #005a3b */
+}
+
+code {
+	color: var(--text-color-1);
+}
+
+.note, .example {
+	padding: 0.5em 1em;
+	border-style: solid none;
+	border-width: thin;
+}
+
+pre {
+	background: hsl(216 100% 97%); /* TODO .bnf と同じ */
+	border-color: hsl(216 54% 72%);
+	border-style: solid none;
+	border-width: thin;
+}
+
+/* 例 */
+div.example {
+	padding: 0.5em;
+	border-width: thin;
+}
+
+/* コード例 */
+.example > pre, samp {
+	color: darkblue;
+}
+
+/* TODO → common.css */
+div.p {
+	margin-bottom: 1.5em;
+	margin-top: 1.5em;
+}
+
+/* protocol element (grammar, production) */
+.token {
+	color: var(--text-color-1);
+}
+.production {
+	font-style: italic;
+	color: var(--text-color-1);
+}
+/* reason/warning phrase */
+.phrase {
+	color: var(--dim-color);
+}
+.warn {
+	color: var(--text-color-4);
+}
+

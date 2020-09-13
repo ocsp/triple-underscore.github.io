@@ -1,0 +1,2995 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>Reporting API （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-w3c.css" type="text/css" />
+
+<style>
+.report {
+	color: var(--text-color-2);
+}
+
+samp {
+	white-space: nowrap;
+	background: #F0F0F0;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN0',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'l':
+	return `"<code class="literal">${key}</code>"`;
+	break;
+case 'm' :
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'sf': // http structured field
+	text = `<sub>sf-</sub>${text}`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+●●options
+
+spec_title:Reporting API
+spec_date:2020-08-19
+trans_update:2020-08-19
+source_checked:200305
+page_state_key:WEBAPPSEC
+original_url:https://w3c.github.io/reporting/
+	abbr_url:REPORTING
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+copyright:2020,permissive
+trans_1st_pub:2016-06-06
+
+
+●●class_map
+P:production
+dir:directive
+st:status
+h:header
+hm:method
+e:element
+E:error
+jT:js-type
+
+●●tag_map
+p:var
+P:code
+dir:code
+h:code
+hm:code
+I:code
+m:code
+e:code
+mb:code
+mB:code
+mTR:code
+E:code
+v:var
+st:code
+jT:code
+c:code
+s:samp
+i:i
+
+●●words_table
+
+	●JS／IDL／データの型／構造／操作
+ES:ECMAScript
+array:
+下位型:subtype::~
+作成時の:creation::~
+縛られ:tieされ:~
+	:creation
+	空でない:non-empty
+	生成したて:directly after generation
+
+	●一般処理
+失敗数:failures::~
+定期的:periodical:~
+巡回-:walk through:~
+多形態的:polymorphic::~
+
+	文脈~上の:contextual
+
+	●報告処理
+報告用:reporting::~::レポート用
+報告処理:reporting::~::レポート処理
+	この仕様の報告処理／報告処理:Reporting
+報告先:endpoint::~::レポート先
+端点:endpoint::~::エンドポイント
+試行数:attempts:~
+	信用に価し得る:potentially-trustworthy
+優先度:priority::~
+	優先度を〜:prioritize
+	prioritizing
+	prioritize
+粒度:granularity:~
+指向ける:directする:指し向ける
+剥取られ:stripされ:剥ぎ取られ
+
+帯域内:in-band:~
+帯域外:out-of-band:~
+帯域幅:bandwidth:~
+
+出自者:originator:~
+非安全:unsafe::~
+
+	●時
+時計:clock::~::クロック
+unix-epoch:unix epoch
+schedule::::スケジュール
+skew:::調整::スキュー
+milliseconds::::ミリ秒数
+素早く:quickに:~
+存続期間:lifetime::~
+延期-:delay::~
+保留-:withhold::~
+時刻:time::~
+	時間差
+	適時に:timely manner
+	時点:point／
+	時刻
+	期間:period
+	秒:second
+	日:day
+	数日先:day or a week later
+	先にくり上げる:preempt
+	高速で軽く:fast, cheap
+
+	●network
+HPKP:
+password::::パスワード
+username::::ユーザ名
+ok:
+main:
+	生成元~用の:per-origin
+収集器:collector::~
+
+	●WebDriver
+WebDriver:
+prompt:
+command::::コマンド
+remote::::リモート
+URI:
+template::::テンプレート
+
+	●保安
+opt-outする::任意で外す:::オプトアウトする
+XSS:cross-site scripting:XSS
+防壁:defense:~
+露呈-:reveal::露わに
+悪化-:worse:~
+悪意度:maliciousness:~
+相関:correlation:~
+警戒:alert:~
+有価値:valuable::~
+	不能化-法:disabling
+
+	●仕様
+framework::::フレームワーク
+	最善な労の下で:best effort
+
+	不必要な:unnecessaryな:~
+	必要な:necessaryな:必要とされる
+適度:reasonable:~
+協力的:cooperative:~
+念頭:mind:~
+恒久的:permanent:~
+安定的:stable:~
+条況:condition:~
+	アリな限り:as 〜 as possible
+	可能性／あり得る:possible
+有権者:constituencies:~
+	既定でない:non-default
+暫定的:provisional:~
+連絡先:contact:~
+類別:classification:~
+修正-:fix:~
+修正:fixing:~
+俯瞰-:overview:~
+	意図されない:unintentional
+学習-:learn:~
+差異:difference:~
+活動:activity:~
+目指す:aimする:~
+信奉-:espouse:~
+自動化:automation:~
+模倣-:simulate:~
+公表-:publish:発行
+著作者:author:~
+変更管理者:change controller:~
+黙って:silentに:~
+中心な:centeredな:~
+
+	一時的な:temporary
+	頭から:in the first place
+	過度に:unreasonable amount
+	しばらくして後:a little while
+	もちろん:of course,
+	現状:status quo
+	誰にとっても:everyone
+	~~一定に:stable
+	~~仕事:job
+	公共性に関わる:a question of commons
+	具体例:concrete example
+	:so long as
+	ので:thus
+	herd immunity
+	ought
+	please
+	:in order to
+	welcome
+	になり得る:potentially
+	なり得る:potentially
+	選んで:choose
+	-:choose
+	それでも:That said
+	総じて:In the aggregate
+	-:desire
+	したい:want
+	助ける:help
+	努める:make effort
+	価値提案:value proposition
+	大雑把に言えば:broad strokes
+	ヒトが読める:human-readable
+	based
+	basis
+	introduction
+	issue
+	lead
+	monkey patching
+	note
+	noted
+	deal
+	discussion
+	proposition
+	published
+	兼ね合い:balanced
+	talk
+	〜に加え:plus an additional
+	すること:make sure
+
+	●未分類
+開いて:openして:~
+閉じら:closeさ:~
+超過-:exceed:~
+折返し:折り返し
+website::::web サイト
+desktop::::デスクトップ
+email::::メール
+memory::::メモリ
+穴:hole:~
+計算法:calculus:~
+負荷:load::~
+連続して:consecutiveに:~
+閾値:threshold:~
+種類:kind:~
+
+	この時点で:reach
+	楽しむ:enjoy
+	楽しめる:enjoyable
+	become
+	did
+	go
+	属する:belong
+	scripting
+	ことにした:chosen
+	であり続ける:remains
+	取り出して:grab
+	選ばれ:chosen
+	-:made
+	Key Pinning:
+	MegaCorp:
+	量:amount
+	field
+	main
+	potential
+	potentially
+	small
+	wikipedia
+	~~優先:win
+	分けてsplit
+	反復順序 the order in which it walks through
+	やりとり:interact
+	-:higher
+	付きの:-tagged
+	代わり:instead
+	に代えて:in place of
+	-:parameter
+	数:number
+	`FETCH^r:Fetch
+	挙げる:three pieces
+	文書に基づかない:non-document-based
+	回数:number of times
+	-:header_type
+	-:moreover
+	%~item:value_and_parameters
+
+	●指示語
+現在:currently:~
+	ごとに別々:distinct
+	互いに異なる:distinct
+	別個:distinct
+	個別:individual
+	一部:subset
+	across
+	against
+	around
+	beyond
+	certain
+	itself
+	later
+	なくなった:no longer
+	何らかの類の:some sort of
+	の様なもの:something like
+	ある~~範囲まで:some extent
+	two
+	themselves
+	thing
+	加えて:moreover
+	most
+	それまで:previously
+	早い段階:during an earlier stage
+	早い／前に:earlier
+	-:itself
+	最終的:eventual
+	一部の:subset of the
+	-:earlier
+	-:through
+	更なる:further／more
+	までの:maximum
+
+●●original_id_map
+
+
+●●words_table1
+
+WEBDRIVER:https://w3c.github.io/webdriver/
+ES6:http://www.ecma-international.org/ecma-262/6.0/
+BEACON:beacon-ja.html
+
+●●mdn_urls
+
+	reporting-endpoints:HTTP/Headers/Reporting-Endpoints
+dom-report:API/Report
+reportingobserver:API/ReportingObserver
+	reportbody:API/ReportBody
+dictdef-reportingobserveroptions:API/ReportingObserverOptions
+	callbackdef-reportingobservercallback:API/ReportingObserverCallback
+	dictdef-generatetestreportparameters:API/GenerateTestReportParameters
+	typedefdef-reportlist:API/ReportList
+dom-reportingobserver-reportingobserver:API/ReportingObserver/ReportingObserver
+dom-reportingobserver-observe:API/ReportingObserver/observe
+dom-reportingobserver-reportingobserver:API/ReportingObserver/ReportingObserver
+dom-reportingobserver-takerecords:API/ReportingObserver/takeRecords
+	dom-report-tojson:API/Report/toJSON
+dom-report-body:API/Report/body
+dom-report-type:API/Report/type
+dom-report-url:API/Report/url
+
+●●link_map
+
+	●IDL
+Exposed:~WEBIDLjs#Exposed
+Default:~WEBIDLjs#Default
+
+undefined:~WEBIDL#idl-undefined
+boolean:~WEBIDL#idl-boolean
+object:~WEBIDL#idl-object
+DOMString:~WEBIDL#idl-DOMString
+
+I.ReportingObserverCallback:#callbackdef-reportingobservercallback
+I.ReportingObserverOptions:#dictdef-reportingobserveroptions
+I.Report:#dom-report
+I.ReportBody:#reportbody
+I.ReportList:#typedefdef-reportlist
+I.ReportingObserver:#reportingobserver
+I.GenerateTestReportParameters:#dictdef-generatetestreportparameters
+
+m.observe:#dom-reportingobserver-observe
+m.constructor:#dom-reportingobserver-reportingobserver
+m.ReportingObserver:#dom-reportingobserver-reportingobserver
+m.takeRecords:#dom-reportingobserver-takerecords
+m.buffered:#dom-reportingobserveroptions-buffered
+m.types:#dom-reportingobserveroptions-types
+m.disconnect:#dom-reportingobserver-disconnect
+m.navigator.sendBeacon:~BEACON#dom-navigator-sendbeacon
+
+m.toJSON:#dom-report-tojson
+m.body:#dom-report-body
+m.type:#dom-report-type
+m.url:#dom-report-url
+
+m.JSON.stringify:~ES6#sec-json.stringify
+m.navigator.userAgent:~HTMLnavigator#dom-navigator-useragent
+
+mB.toJSON:#dom-reportbody-tojson
+mTR.group:#dom-generatetestreportparameters-group
+mTR.message:#dom-generatetestreportparameters-message
+
+	%observer:#dom-reportingobservercallback-observer
+	%reports:#dom-reportingobservercallback-reports
+	%callback:#dom-reportingobserver-reportingobserver-callback-options-callback
+	%options:#dom-reportingobserver-reportingobserver-callback-options-options
+
+c.application/reports+json:#_report-media-type
+
+	●用語
+
+doc.報告先~list:#dom-document-endpoints
+doc.報告~list:#dom-document-reports
+報告を生成する:#generate-a-report
+報告先へ報告たちを送達するよう試みる:#try-delivery
+報告~listを~JSONに直列化する:#serialize-a-list-of-reports-to-json
+報告を~queueする:#reporting-queue
+	~dataを行先~用の種別として~queueする:#queue-report → #reporting-queue
+
+報告先:#endpoint
+eP.名前:#dom-endpoint-name
+eP.~url:#dom-endpoint-url
+eP.失敗数:#dom-endpoint-failures
+
+報告:#report
+報告~種別:#report-type
+rP.試行数:#report-attempts
+rP.本体:#report-body
+rP.時刻印:#report-timestamp
+rP.行先:#report-destination
+rP.種別:#report-reporttype
+rP.~url:#report-url
+rP.~UA:#report-user-agent
+
+i.~test報告を生成する:#generate-test-report
+
+	§
+応答~用に報告先たちを処理する:#process-header
+報告先へ報告を送達するよう試みる:#try-delivery
+
+	●観測 API
+報告用~観測器から可視:#visible-to-reportingobservers
+
+ob.~callback:#reportingobserver-callback
+ob.~options:#reportingobserver-options
+ob.報告~queue:#reportingobserver-report-queue
+報告~buffer:#report-buffer
+報告用~観測器:#reporting-observer
+登録-済み:#registered
+登録-済み観測器~list:#registered-reporting-observer-list
+
+観測器に報告を追加する:#add-report
+報告用~観測器を呼出す:#invoke-observers
+報告用~観測器に通知する:#notify-observers
+
+	●用語（HTTP
+
+hm.POST:~HTTPrq#POST
+
+h.Content-Security-Policy:~CSP3#header-content-security-policy
+	~CSP3#content-security-policy
+h.Reporting-Endpoints:#reporting-endpoints
+	§ `Reporting-Endpoints$h:#header
+h.Public-Key-Pins:~RFCx/rfc7469#section-2.1
+h.User-Agent:~HTTPrq#field.user-agent
+
+st.410:~HTTPrs#status.410
+
+P.URI-reference:~HTTPsem#p.URI-reference
+P.sf-dictionary:~HEADER-STRUCTURE#p.sf-dictionary
+	廃）sh-dictionary
+
+~field値:~HTTPsem#field-value
+有構造~header:~HEADER-STRUCTURE#structured-header
+sf.辞書:~HEADER-STRUCTURE#sf-dictionary
+sf.文字列:~HEADER-STRUCTURE#sf-string
+sf.~item:~HEADER-STRUCTURE#sf-item
+sf.~parameter:~HEADER-STRUCTURE#sf-parameter
+sf.~parameters:~HEADER-STRUCTURE#sf-parameters
+
+	●用語（外部
+
+dir.report-to:~CSP3#directive-report-to
+	dir.report-to:~CSP3#directives-reporting
+
+~list:~INFRA#list
+有順序~集合:~INFRA#ordered-set
+有順序~map:~INFRA#ordered-map
+空:~INFRA#list-is-empty
+除去する:~INFRA#list-remove
+付加する:~INFRA#list-append
+set.付加する:~INFRA#set-append
+空にする:~INFRA#list-empty
+~cloneする:~INFRA#list-clone
+~size:~INFRA#list-size
+~byte列:~INFRA#byte-sequence
+~JSONを~byte列に直列化する:~INFRA#serialize-json-to-bytes
+
+~callback this 値:~WEBIDLjs#dfn-callback-this-value
+~callbackを呼出す:~WEBIDLjs#invoke-a-callback-function
+
+~realm:~TC39#realm
+~ES大域~環境:~TC39#realm
+
+~URL:~URL1#concept-url
+~URL構文解析する:~URL1#concept-url-parser
+~URLを直列化する:~URL1#concept-url-serializer
+
+url.~password:~URL1#concept-url-password
+url.~username:~URL1#concept-url-username
+url.素片:~URL1#concept-url-fragment
+url.生成元:~URL1#concept-url-origin
+url.~scheme:~URL1#concept-url-scheme
+~URL文字列:~URL1#valid-url-string
+
+hd.値:~FETCH#concept-header-value
+hd.名前:~FETCH#concept-header-name
+有構造~field値を取得する:~FETCH#concept-header-list-get-structured-header
+	名前に持つ~header:~FETCH#_headers-of-name
+~fetch:~FETCH#concept-fetch
+~header:~FETCH#concept-header
+~header~list:~FETCH#concept-header-list
+~main~fetch:~FETCH#main-fetch
+~ok状態s:~FETCH#ok-status
+応答:~FETCH#concept-response
+
+rs.~header~list:~FETCH#concept-response-header-list
+rs.~URL:~FETCH#concept-response-url
+rs.状態s:~FETCH#concept-response-status
+
+要請:~FETCH#concept-request
+本体:~FETCH#concept-body
+bd.~source:~FETCH#concept-body-source
+rq.~URL:~FETCH#concept-request-url
+rq.~header~list:~FETCH#concept-request-header-list
+rq.~client:~FETCH#concept-request-client
+rq.~window:~FETCH#concept-request-window
+rq.~sw~mode:~FETCH#request-service-workers-mode
+rq.起動元:~FETCH#concept-request-initiator
+rq.種別:~FETCH#concept-request-type
+rq.行先:~FETCH#concept-request-destination
+rq.~mode:~FETCH#concept-request-mode
+rq.資格証~mode:~FETCH#concept-request-credentials-mode
+rq.非安全-要請~flag:~FETCH#unsafe-request-flag
+rq.本体:~FETCH#concept-request-body
+rq.生成元:~FETCH#concept-request-origin
+
+	＊応答を待機する:~FETCH#wait-for-a-response
+文書:~DOM4#concept-document
+
+環境~設定群~obj:~WAPI#environment-settings-object
+~taskを~queueする:~WAPI#queue-a-task
+作成時の~URL:~WAPI#concept-environment-creation-url
+	＊作成時の~URL:~WAPI#creation-url
+~realm実行~文脈:~WAPI#realm-execution-context
+例外を報告する:~WAPI#report-the-exception
+
+作動中の文書:~BROWSERS#active-document
+生成元:~ORIGIN#origin
+
+信用に価し得る:~SECURE-CONTEXT#is-origin-trustworthy
+
+~JSON~text:~RFCx/rfc8259#section-2
+上位domain合致-:~RFCx/rfc6797#section-8.2
+
+現在の閲覧文脈:~WEBDRIVER#dfn-current-browsing-context
+利用者~promptを取扱う:~WEBDRIVER#dfn-handle-any-user-prompts
+拡張~command:~WEBDRIVER#dfn-extension-command
+取得しようと試行する:~WEBDRIVER#dfn-try
+~remote端~手続き:~WEBDRIVER#dfn-remote-end-steps
+~URI~template:~WEBDRIVER#dfn-extension-command-uri-template
+~WebDriver~error~code:~WEBDRIVER#dfn-error-code
+~WebDriver~error:~WEBDRIVER#dfn-error
+wd.成功:~WEBDRIVER#dfn-success
+i.無効な引数:~WEBDRIVER#dfn-invalid-argument
+i.そのような~windowは無い:~WEBDRIVER#dfn-no-such-window
+
+
+●●ref_data
+NETWORKERRORLOGGING=副   ~/network-error-logging-ja.html
+
+●●ref_normative
+
+[DOM]
+    Anne van Kesteren. DOM Standard. Living Standard. URL: https://dom.spec.whatwg.org/ 
+[ECMA-262]
+    ECMAScript Language Specification. URL: https://tc39.es/ecma262/ 
+[FETCH]
+    Anne van Kesteren. Fetch Standard. Living Standard. URL: https://fetch.spec.whatwg.org/ 
+[FileAPI]
+    Marijn Kruisselbrink; Arun Ranganathan. File API. 11 September 2019. WD. URL: https://www.w3.org/TR/FileAPI/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[INFRA]
+    Anne van Kesteren; Domenic Denicola. Infra Standard. Living Standard. URL: https://infra.spec.whatwg.org/ 
+[RFC3864]
+    G. Klyne; M. Nottingham; J. Mogul. Registration Procedures for Message Header Fields. September 2004. Best Current Practice. URL: https://tools.ietf.org/html/rfc3864 
+[RFC5234]
+    D. Crocker, Ed.; P. Overell. Augmented BNF for Syntax Specifications: ABNF. January 2008. Internet Standard. URL: https://tools.ietf.org/html/rfc5234 
+[RFC7231]
+    R. Fielding, Ed.; J. Reschke, Ed.. Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content. June 2014. Proposed Standard. URL: https://httpwg.org/specs/rfc7231.html 
+[RFC8259]
+    T. Bray, Ed.. The JavaScript Object Notation (JSON) Data Interchange Format. December 2017. Internet Standard. URL: https://tools.ietf.org/html/rfc8259 
+[SECURE-CONTEXTS]
+    Mike West; Yan Zhu. Secure Contexts. URL: https://w3c.github.io/webappsec-secure-contexts/ 
+[STRUCTURED-HEADERS]
+    Mark Nottingham; Poul-Henning Kamp. Structured Field Values for HTTP. URL: https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html 
+[URL]
+    Anne van Kesteren. URL Standard. Living Standard. URL: https://url.spec.whatwg.org/ 
+[WebDriver]
+    Simon Stewart; David Burns. WebDriver. 5 June 2018. REC. URL: https://www.w3.org/TR/webdriver1/ 
+[WebIDL]
+    Boris Zbarsky. Web IDL. 15 December 2016. ED. URL: https://heycam.github.io/webidl/ 
+
+●●ref_informative
+
+[CSP3]
+    Mike West. Content Security Policy Level 3. 15 October 2018. WD. URL: https://www.w3.org/TR/CSP3/ 
+[HTML-DESIGN-PRINCIPLES]
+    Anne van Kesteren; Maciej Stachowiak. HTML Design Principles. 26 November 2007. WD. URL: https://www.w3.org/TR/html-design-principles/ 
+[NETWORK-ERROR-LOGGING]
+    Douglas Creager; et al. Network Error Logging. 25 September 2018. WD. URL: https://www.w3.org/TR/network-error-logging-1/ 
+[RFC7469]
+    C. Evans; C. Palmer; R. Sleevi. Public Key Pinning Extension for HTTP. April 2015. Proposed Standard. URL: https://tools.ietf.org/html/rfc7469 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、 W3C により編集者草案として公開された
+<a href="~SPEC_URL">Reporting API</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+バージョン履歴
+	https://github.com/w3c/reporting/commits/master/index.src.html
+編集
+	<a href="mailto:dcreager@dcreager.net">Douglas Creager</a> (GitHub)
+	<a href="mailto:iclelland@google.com">Ian Clelland</a> (Google Inc.)
+	<a href="mailto:mkwst@google.com">Mike West</a> (Google Inc.)
+前任編集者
+	<a href="mailto:igrigorik@google.com">Ilya Grigorik</a> (Google Inc.)
+	<a href="mailto:paulmeyer@google.com">Paul Meyer</a> (Google Inc.)
+Participate
+	<a href="https://github.com/w3c/reporting/issues/new">File an issue</a> (<a href="https://github.com/w3c/reporting/issues">open issues</a>)
+commit 履歴
+	https://github.com/w3c/reporting/commits/master
+Feedback／Mailing list
+	<a href="mailto:public-web-perf@w3.org?subject=%5Breporting%5D">public-web-perf@w3.org</a> (<a href="mailto:public-web-perf-request@w3.org?subject=subscribe">subscribe</a>, <a href="https://lists.w3.org/Archives/Public/public-web-perf/">archives</a>)
+発行者
+	<a href="https://www.w3.org/webperf/">Web Performance</a> Working Group
+
+</script>
+
+</head>
+
+<body>
+
+<header>
+	<hgroup>
+<h1 id="title">Reporting API</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<div class="p">
+<p>
+この文書は、報告処理の汎用~frameworkを定義する：
+</p>
+
+<ol>
+	<li>
+開発者は、名前が付与された［
+`報告先$の集合
+］を，`生成元$に結付けれる。
+</li>
+	<li>
+様々な~platform特能（
+Content Security Policy, Network Error Reporting,
+その他）が、これらの報告先を利用して，それぞれに特有な報告を一貫した方式で送達する。
+</li>
+</ol>
+
+◎
+This document defines a generic reporting framework which allows web developers to associate a set of named reporting endpoints with an origin. Various platform features (like Content Security Policy, Network Error Reporting, and others) will use these endpoints to deliver feature-specific reports in a consistent manner.
+</div>
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公の複製です…
+【以下、この節の他の内容は <a href="w3c-common-ja.html#status">W3C 日本語訳 共通ページ</a>／冒頭の仕様メタデータに委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+<p>
+この文書は、［
+他の仕様が利用したり拡張し得る，汎用な報告処理
+］用に，次に挙げる基盤を供する：
+◎
+This document provides three pieces of infrastructure for generic reporting, which may be used or extended by other specifications:
+</p>
+
+<ul>
+	<li>
+`報告~種別$と`報告先$を定義するための汎用な~framework
+◎
+A generic framework for defining report types and reporting endpoints, and＼
+</li>
+	<li>
+`報告$たちを`報告先$へ~HTTP越しに送信するための文書~形式
+◎
+a document format for sending reports to endpoints over HTTP.
+</li>
+	<li>
+次のための特有な仕組み
+⇒
+`文書$内の`報告先$を環境設定して、各 `報告$のうち，その文書に存続期間が縛られたものを送達する
+◎
+A specific mechanism for configuring reporting endpoints in a document, and for delivering reports whose lifetime is tied to that document.
+</li>
+	<li>
+`文書$の中で生成された報告を観測するための~API【！~JS~interface】
+◎
+A JavaScript interface for observing reports generated within a document.
+</li>
+</ul>
+
+<p>
+他の仕様は、これらを［
+拡張しても／用立てても
+］ヨイ。
+一例として，［
+具象的な報告~種別を定義する／
+文書に基づかない報告~用に代替な環境設定や送達の仕組みを定義する
+］など。
+◎
+Other specifications may extend or make use of these pieces, for instance by defining concrete report types, or alternative configuration or delivery mechanisms for non-document-based reports.
+</p>
+
+		<section id="guarantees">
+<h3 title="Guarantees">1.1. 保証</h3>
+
+<p>
+この仕様は、~website活動の帯域外で実行されるような，最善な労の下で報告を送達する~systemを供することを目指す。
+~UAは、報告の送達に優先度をあてがったり，それらを~scheduleする~~仕事をより良く行える立場にある
+— ~UAは、［
+個々の~websiteが有さない，非同一-生成元の活動
+］について俯瞰でき，また，［
+~websiteの読込ngが頭から防止される~error条況
+］に際しても報告を送達できるので。
+◎
+This specification aims to provide a best-effort report delivery system that executes out-of-band with website activity. The user agent will be able to do a better job prioritizing and scheduling delivery of reports, as it has an overview of cross-origin activity that individual websites do not, and can deliver reports based on error conditions that would prevent a website from loading in the first place.
+</p>
+
+<p>
+しかしながら，送達は、いかなる仕方でも保証されない
+— 報告処理は、依拠-可能な通信~channelとしての利用は意図されていない。
+~network条件によっては、報告は その行先へまったく到達できなくなることもある。
+また，~UAには、理由があれば，報告を却下して送達しないことも許可される。
+◎
+The delivery is not, however, guaranteed in any way, and reporting is not intended to be used as a reliable communications channel. Network conditions may prevent reports from reaching their destination at all, and user agents are permitted to reject and not deliver a report for any reason.
+</p>
+
+		</section>
+		<section id="examples">
+<h3 title="Examples">1.2. 例</h3>
+
+<p class="trans-note">【
+読みやすくするため、この仕様の~HTTP~header例には，行を折返して字下げする整形が施されているものもあるが、
+HTTP/1.1 構文としては，そのような改行法は廃用にされたことに注意。
+】</p>
+
+<div class="example">
+<p>
+MegaCorp 社は、［
+~CSP（ `Content Security Policy^en `CSP$r ）と~HPKP（ `Key Pinning^en `RFC7469$r ）
+］に対する違反~報告を収集したいとする。
+そうするには、［
+`endpoint-1^l と命名される，一連の報告先
+］を定義する，次の~headerに加えて：
+◎
+MegaCorp Inc. wants to collect Content Security Policy and Key Pinning violation reports. It can do so by delivering the following header to define a set of reporting endpoints named "endpoint-1":
+</p>
+
+<pre class="lang-http">
+`Reporting-Endpoints$h: endpoint-1="https://example.com/reports"
+</pre>
+
+<p>
+［
+~CSP／~HPKP
+］報告をその報告先へ指向ける，次の~headerを送達する：
+◎
+And the following headers, which direct CSP and HPKP reports to that  endpoint:
+</p>
+
+<pre class="lang-http">
+`Content-Security-Policy$h: ...; `report-to$dir endpoint-1
+`Public-Key-Pins$h: ...; `report-to^dir=endpoint-1
+</pre>
+</div>
+
+<div class="example">
+<p>
+しばらくして後， MegaCorp 社は、~script処理を単純~化するため，これら 2 種の報告を，種別ごとに別々の報告先に分けて処理するものと裁定した。
+そうするには、 `Reporting-Endpoints$h に定義する報告先を次の様に異ならせる：
+◎
+After processing reports for a little while, MegaCorp Inc. decides to split the processing of these two types of reports out into two distinct endpoints in order to make the processing scripts simpler. It can do so by delivering the following header to define two reporting endpoints:
+</p>
+
+<pre class="lang-http">
+`Reporting-Endpoints$h:
+    csp-endpoint="https://example.com/csp-reports",
+    hpkp-endpoint="https://example.com/hpkp-reports"
+</pre>
+
+<p>
+加えて、次の~headerで［
+~CSP, ~HPKP
+］報告をそれら別々に命名された報告先へ指向ける：
+◎
+And the following headers, which direct CSP and HPKP reports to those named endpoints:
+</p>
+
+<pre class="lang-http">
+`Content-Security-Policy$h: ...; `report-to$dir csp-endpoint
+`Public-Key-Pins$h: ...; report-to=hpkp-endpoint
+</pre>
+
+</div>
+
+		</section>
+	</section>
+	<section id="generic-reporting">
+<h2 title="Generic Reporting Framework">2. 汎用な報告処理~framework</h2>
+
+<p class="informative">
+この節は、［
+報告／報告先
+］の汎用な概念, および報告が
+`application/reports+json$c
+形式にどう直列化されるかを定義する。
+◎
+This section defines the generic concepts of reports and endpoints, and how reports are serialized into the application/reports+json format.
+</p>
+
+		<section id="concept">
+<h3 title="Concepts">2.1. 各種~概念</h3>
+
+			<section id="concept-endpoints">
+<h4 title="Endpoints">2.1.1. 報告先</h4>
+
+<p>
+`報告先@
+（ `reporting endpoint^en ／ 略して `endpoint^en ）は、［
+特定0の`生成元$用の`報告$
+］の送信-先になり得る【~network端点の】所在を与える。
+◎
+An endpoint is location to which reports for a particular origin may be sent.
+</p>
+
+<p>
+各 `報告先$は、次のものを持つ：
+◎
+↓</p>
+
+<dl class="def-list">
+	<dt>
+`名前@eP
+◎
+Each endpoint has a name,＼
+</dt>
+	<dd>
+~ASCII文字列。
+◎
+which is an ASCII string.
+</dd>
+
+	<dt>
+`~url@eP
+◎
+Each endpoint has a url,＼
+</dt>
+	<dd>
+`~URL$
+◎
+which is a URL.
+</dd>
+
+	<dt>
+`失敗数@eP
+（ `failures^en ）
+◎
+Each endpoint has a failures,＼
+</dt>
+	<dd>
+負でない整数。
+この報告先が要請に対し応答するのに連続して失敗した回数を表現する。
+◎
+which is a non-negative integer representing the number of consecutive times this endpoint has failed to respond to a request.
+</dd>
+</dl>
+
+			</section>
+			<section id="concept-report-type">
+<h4 title="Report Type">2.1.2. 報告~種別</h4>
+
+<p>
+`報告~種別@
+は、空でない文字列であり，`報告$の`本体$rP内に どの~dataを包含させるかを指定する。
+◎
+A report type is a non-empty string that specifies the set of data that is contained in the body of a report.
+</p>
+
+<p>
+（この仕様も含む各種~仕様にて定義される）`報告~種別$には、
+`報告用~観測器から可視@
+であると指定されるものもある
+— それは、`報告用~観測器$は，その`報告~種別$に属する`報告$
+【`報告$のうち，`種別$rP ~EQ その`報告~種別$なるもの】
+を観測できることを意味する。
+`報告~種別$は、既定では`報告用~観測器から可視$でないとする。
+◎
+When a report type is defined (in this spec or others), it can be specified to be visible to ReportingObservers, meaning that reports of that type can be observed by a reporting observer. By default, report types are not visible to ReportingObservers.
+</p>
+
+			</section>
+			<section id="concept-reports">
+<h4 title="Reports">2.1.3. 報告</h4>
+
+<p>
+`報告@
+（ `report^en ）は、指定された`報告先$へ送達することが~UAに期待されるような，任意な~dataからなる~collectionである。
+◎
+A report is a collection of arbitrary data which the user agent is expected to deliver to a specified endpoint.
+</p>
+
+<p>
+各 `報告$は、次のものを持つ：
+◎
+↓</p>
+
+<dl class="def-list">
+	<dt>
+`本体@rP
+（ `body^en ）
+◎
+Each report has a body,＼
+</dt>
+	<dd>
+~NULL, または`~JSON~text$に直列化できる~obj。
+この~objが包含する~fieldは、報告の`種別$rPにより決定される。
+◎
+which is either null or an object which can be serialized into a JSON text. The fields contained in a report’s body are determined by the report’s type.
+</dd>
+
+	<dt>
+`~url@rP
+◎
+Each report has a url,＼
+</dt>
+	<dd>
+概して、報告を生成した［
+`Document^I ／ `Worker^I
+］の~address
+【を表現する`~URL文字列$】
+になる。
+◎
+which is typically the address of the Document or Worker from which the report was generated.
+</dd>
+	<dd class="note">注記：
+この直列化された~URLからは，［
+`~username$url, `~password$url, `素片$url
+］は剥取られる。
+<a href="#capability-urls">§ 能力~URL</a>
+を見よ。
+◎
+Note: We strip the username, password, and fragment from this serialized URL. See § 8.1 Capability URLs.
+</dd>
+
+	<dt>
+`~UA@rP
+（ `user agent^en ）
+◎
+Each report has a user agent,＼
+</dt>
+	<dd>
+この報告を生成した`要請$の `User-Agent$h `~header$の値。
+◎
+which is the value of the User-Agent header of the request from which the report was generated.
+</dd>
+	<dd class="note">注記：
+`報告$の`~UA$rPは、［
+`報告$を生成した~page用に~browserが送信した `User-Agent^h
+【すなわち、~pageを要請したときのそれ】
+］を表現する。
+これは、収集器へ報告を~uploadするときに~HTTP~header内に送信される `User-Agent^h とは，別個になり得る
+— 一例として、~browserが “~desktop~siteを要請する” 特能~用などに，既定でない `User-Agent^h 文字列を利用することにした所など。
+◎
+Note: The user agent of a report represents the User-Agent sent by the browser for the page which generated the report. This is potentially distinct from the User-Agent sent in the HTTP headers when uploading the report to a collector — for instance, where the browser has chosen to use a non-default User-Agent string such as the "request desktop site" feature.
+</dd>
+
+	<dt>
+`行先@rP
+（ `destination^en ）
+◎
+Each report has a destination,＼
+</dt>
+	<dd>
+［
+この報告の送信-先となる，`文書$の`報告先$
+］の`名前$ePを表現している文字列
+◎
+which is a string representing the name of the document’s endpoint that the report will be sent to.
+</dd>
+
+	<dt>
+`種別@rP
+（ `type^en ）
+◎
+Each report has a type,＼
+</dt>
+	<dd>
+`報告~種別$。
+◎
+which is a report type.
+</dd>
+
+	<dt>
+`時刻印@rP
+（ `timestamp^en ）
+◎
+Each report has a timestamp,＼
+</dt>
+	<dd>
+この報告が生成された時刻を，~unix-epochからの~millisecondsで記録する。
+◎
+which records the time at which the report was generated, in milliseconds since the unix epoch.
+</dd>
+
+	<dt>
+`試行数@rP
+（ `attempts counter^en ）
+◎
+Each report has an attempts counter,＼
+</dt>
+	<dd>
+負でない整数。
+~UAがこの報告を送達しようと試みた回数を表現する。
+◎
+which is a non-negative integer representing the number of times the user agent attempted to deliver the report.
+</dd>
+</dl>
+
+			</section>
+		</section>
+		<section id="media-type">
+<h3 title="Media Type">2.2. ~MIME型</h3>
+
+<p>
+`application/reports+json@c
+が、指定された報告先へ報告を `POST$hm するときに利用される~MIME型（ `Internet media type^en ）を与える。
+◎
+The media type used when POSTing reports to a specified endpoint is application/reports+json.
+</p>
+		</section>
+		<section id="queue-report">
+<h3 title="Queue data as type for destination">2.3. ~dataを行先~用の種別として~queueする</h3>
+
+<div class="algo">
+<p>
+`報告を~queueする@
+ときは、所与の
+⇒＃
+直列化-可能な~obj %~data,
+文字列 %種別,
+文字列 %行先,
+`環境~設定群~obj$ %設定群（省略時は ε ）,
+`~URL$ %url（ 省略時は ε ）
+◎終
+に対し：
+◎
+To queue a report given a serializable object (data), a string (type), another string (destination), an optional environment settings object (settings), and an optional URL (url):
+</p>
+
+<ol>
+	<li>
+%報告 ~LET 次のように初期化された 新たな`報告$~obj
+⇒＃
+`本体$rP ~SET %~data,
+`~UA$rP ~SET `navigator.userAgent$m の現在の値,
+`行先$rP ~SET %行先,
+`種別$rP ~SET %種別,
+`時刻印$rP ~SET 現在の時刻印,
+`試行数$rP ~SET 0
+◎
+Let report be a new report object with its values initialized as follows:
+◎
+body
+• data
+user agent
+• The current value of navigator.userAgent
+destination
+• destination
+type
+• type
+timestamp
+• The current timestamp.
+attempts
+• 0
+</li>
+	<li>
+~IF［
+%~url ~EQ ε
+］
+⇒
+%~url ~SET %設定群 の`作成時の~URL$
+◎
+If url was not provided by the caller, let url be settings’s creation URL.
+</li>
+	<li>
+%~url の
+⇒＃
+`~username$url ~SET 空~文字列,
+`~password$url ~SET 空~文字列 【原文は ~NULL だが、それは過去の `URL$r 仕様に基づくもの】
+◎
+Set url’s username to the empty string, and its password to null.
+</li>
+	<li>
+%報告 の`~url$rP ~SET
+`~URLを直列化する$( %~url, `素片は除外する^i )
+◎
+Set report’s url to the result of executing the URL serializer on url with the exclude fragment flag set.
+</li>
+	<li>
+<p>
+~IF［
+%設定群 ~NEQ ε
+］：
+◎
+If settings is given, then
+</p>
+		<ol>
+			<li>
+%環境 ~LET %設定群 の`~realm実行~文脈$の`~realm$の`~ES大域~環境$
+◎
+Let environment be settings’s realm execution context’s realm’s ECMAScript global environment.
+</li>
+			<li>
+`報告用~観測器に通知する$( %環境, %報告 )
+◎
+Execute § 4.2 Notify reporting observers on environment with report with environment and report.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %報告
+◎
+Return report.
+</li>
+</ol>
+
+<p class="note">注記：
+`報告用~観測器$が観測するのは、同じ`環境~設定群~obj$からの報告に限られる。
+◎
+Note: reporting observers can only observe reports from the same environment settings object.
+</p>
+
+<p class="note">注記：
+報告~内の直列化された~URLからは，［
+`~username$url, `~password$url, `素片$url
+］は剥取られる。
+<a href="#capability-urls">§ 能力~URL</a>
+を見よ。
+◎
+Note: We strip the username, password, and fragment from the serialized URL in the report. See § 8.1 Capability URLs.
+</p>
+
+<p class="note">注記：
+~UAは、何か理由があれば，報告を却下してもヨイ。
+一例として、この~APIは，任意な量の~dataに対する送達は保証しない。
+◎
+Note: The user agent MAY reject reports for any reason. This API does not guarantee delivery of arbitrary amounts of data, for instance.
+</p>
+
+<p class="note">注記：
+（~JS~engineを備えない）非~UA~clientは、`報告用~観測器$とヤリトリするべきでないので，上の最後の段を走らすべきでない。
+◎
+Note: Non user agent clients (with no JavaScript engine) should not interact with reporting observers, and thus should return in step 6.
+</p>
+</div>
+
+		</section>
+		<section id="serialize-reports">
+<h3 title="Serialize Reports">2.4. 報告を直列化する</h3>
+
+<div class="algo">
+<p>
+`報告~listを~JSONに直列化する@
+ときは、所与の
+( `報告$の~list %報告たち )
+に対し：
+◎
+To serialize a list of reports to JSON,
+</p>
+
+<ol>
+	<li>
+%~collection ~LET 新たな~ES `Array^jT ~obj `ECMA-262$r
+◎
+Let collection be a new ECMAScript Array object [ECMA-262].
+</li>
+	<li>
+<p>
+%報告たち 内の
+~EACH( %報告 )
+に対し：
+◎
+For each report in reports:
+</p>
+		<ol>
+			<li>
+<p>
+%~data ~LET 次のようにされた~propを有する新たな~ES `Object^jT
+`ECMA-262$r
+⇒＃
+`age^c ~SET %報告 の`時刻印$rPから現在の時刻までの ~millisecondsによる時間差,
+`type^c ~SET %報告 の`種別$rP,
+`url^c ~SET %報告 の`~url$rP,
+`user_agent^c ~SET %報告 の`~UA$rP,
+`body^c ~SET %報告 の`本体$rP
+◎
+Let data be a new ECMAScript Object with the following properties [ECMA-262]:
+◎
+age
+• The number of milliseconds between report’s timestamp and the current time.
+type
+• report’s type
+url
+• report’s url
+user_agent
+• report’s user agent
+body
+• report’s body
+</p>
+
+<p class="note">注記：
+~skewの~subjectである~client側の時計には，依拠できないので、絶対的な時刻印ではなく， `age^c 属性を送達する。
+<a href="#fingerprinting-clock-skew">§ 時計~skew</a>
+も見よ
+◎
+Note: Client clocks are unreliable and subject to skew. We therefore deliver an age attribute rather than an absolute timestamp. See also § 9.2 Clock Skew
+</p>
+			</li>
+			<li>
+%報告 の`試行数$rP ~INCBY 1
+◎
+Increment report’s attempts.
+</li>
+			<li>
+%~collection に %~data を付加する
+◎
+Append data to collection.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET `~JSONを~byte列に直列化する$( %~collection )
+◎
+Return the byte sequence resulting from executing serialize JSON to bytes on collection.
+</li>
+</ol>
+</div>
+
+		</section>
+	</section>
+	<section id="document-reporting">
+<h2 title="Document Centered Reporting">3. 文書~中心な報告~法</h2>
+
+<p>
+この節は、［［
+文書~内の各~動作により生成される`報告$
+］用の`報告先$
+］を環境設定するための仕組みを定義する。
+そのような各`報告$の存続期間は、それを生成した文書に縛られる。
+◎
+This section defines the mechanism for configuring reporting endpoints for reports generated by actions in a document. Such reports have a lifetime which is tied to the document where they generated.
+</p>
+
+		<section id="document-configuration">
+<h3 title="Document configuration">3.1. 文書~環境設定</h3>
+
+<p>
+各`文書$は、
+`報告先~list@doc
+— 0 個以上の`報告先$からなる~list —
+を有する。
+この~listを成す`報告先$たちの`名前$ePは，互いに異なるモノトスル（
+`応答~用に報告先たちを処理する$ ~algoが，これを保証する
+— `Reporting-Endpoints$h ~header値に同じ名前の~entryが複数~在る場合、最初のもの†だけ保つことにより。
+【† 最後のもの？（<a href="~HEADER-STRUCTURE#parse-dictionary">~~参照</a>）】
+）
+◎
+Each document has an endpoints list, which is a list of endpoints, each of which MUST have a distinct name. (The algorithm in § 3.3 Process reporting endpoints for response guarantees this by keeping the first entry in a Reporting-Endpoints header with a particular name.)
+</p>
+
+<p>
+~serverは、 `Reporting-Endpoints$h ~HTTP応答~headerを介して，自身が返す資源~用に報告先の集合を定義してもヨイ。
+この仕組みは、
+§ `Reporting-Endpoints$h ~HTTP応答~headerにて定義され，その処理は
+§ `応答~用に報告先たちを処理する$にて定義される。
+◎
+A server MAY define a set of reporting endpoints for a resource it returns, via the Reporting-Endpoints HTTP response header field. This mechanism is defined in § 3.2 The Reporting-Endpoints HTTP Response Header Field, and its processing in § 3.3 Process reporting endpoints for response.
+</p>
+
+<p>
+各`文書$は、
+`報告~list@doc
+— 0 個以上の`報告$からなる~list —
+を有する。
+◎
+Each document has an reports list, which is a list of reports.
+</p>
+
+		</section>
+		<section id="header">
+<h3 title="The Reporting-Endpoints HTTP Response Header Field">3.2. `Reporting-Endpoints^h ~HTTP応答~header</h3>
+
+<p>
+`Reporting-Endpoints@h
+~HTTP応答~headerの値は、所与の資源~用に報告処理の環境設定を構築するために利用される。
+◎
+The value of the Reporting-Endpoints HTTP response header field is used to construct the reporting configuration for a resource.
+</p>
+
+<p>
+`Reporting-Endpoints$h は、`有構造~header$であり，その`~field値$の型は `辞書$sfである
+`STRUCTURED-HEADERS$r
+。
+この辞書を成す各~entryの値 %報告先 は、`報告$たちを送達してもよい`報告先$を定義する：
+◎
+Reporting-Endpoints is a Dictionary Structured Header [STRUCTURED-HEADERS]. Each entry in the dictionary defines an endpoint to which reports may be delivered.＼
+</p>
+
+<ul>
+	<li>
+%報告先 の値は文字列でなければナラナイ。
+◎
+The entry value MUST be a string.
+</li>
+	<li>
+%報告先 は、`文字列$sfを値にとる`~item$sfとして定義され，
+`URI-reference$P として解釈される。
+%報告先 の値が妥当な `URI-reference$P でない場合、当の %報告先 は無視するモノトスル。
+◎
+Each endpoint is defined by a String Item, which is interpreted as a URI-reference. If its value is not a valid URI-reference, that endpoint member MUST be ignored.
+</li>
+	<li>
+%報告先 の値が表現する~URL【の`生成元$url】は`信用に価し得る$ものでなければナラナイ
+`SECURE-CONTEXTS$r
+。
+~UAは、~secureでない`報告先$を無視することになる。
+◎
+Moreover, the URL that the member’s value represents MUST be potentially trustworthy [SECURE-CONTEXTS]. Non-secure endpoints will be ignored.
+</li>
+	<li>
+%報告先 用には`~parameter$sfは定義されない
+— `~parameters$sfが指定されても，黙って無視されることになる。
+◎
+No parameters are defined for endpoints, and any parameters which are specified will be silently ignored.
+</li>
+</ul>
+
+<p>
+この~headerは、次の~ABNF文法により表現される
+`RFC5234$r
+：
+◎
+The header is represented by the following ABNF grammar [RFC5234]:
+</p>
+
+<pre class="bnf">
+Reporting-Endpoints = `sf-dictionary$P
+</pre>
+
+		</section>
+		<section id="process-header">
+<h3 title="Process reporting endpoints for response">3.3. 応答~用に報告先たちを処理する</h3>
+
+<div class="algo">
+<p>
+この~algoは、所与の
+( `応答$ %応答 )
+に対し，`報告先$の~listを抽出して返す：
+◎
+Given a response (response), this algorithm extracts and returns a list of endpoints.
+</p>
+
+<p class="note">注記：
+この~algoは、`~main~fetch$ `FETCH$r の段 13 あたりで~callされる。
+◎
+Note: This algorithm is called from around step 13 of main fetch [FETCH].
+</p>
+
+<p class="issue">
+`Fetch monkey patching. Talk to Anne.^en
+【実際にはまだ `FETCH$r に統合されていない（ “段 13 あたり” には該当する記述はまだない）。】
+</p>
+
+<ol>
+	<li>
+<p>
+~IF［
+%応答 の~HTTPS状態† ~NEQ `modern^l
+］~AND［
+%応答 の`~URL$rsの`生成元$urlは`信用に価し得る$ものでない
+］
+⇒
+~RET
+</p>
+
+<p class="trans-note">【†
+用語 “~HTTPS状態” は、過去に `FETCH$r にて定義されていたが今や廃されたので，この段は更新される必要がある（参考： `modern^l は、概ね， “~HTTPS越しに送達された” ことを意味する）。
+】</p>
+◎
+Abort these steps if response’s HTTPS state is not "modern", and the origin of response’s url is not potentially trustworthy.
+</li>
+	<li>
+%構文解析した~header ~LET %応答 の`~header~list$rsから`有構造~field値を取得する$( `Reporting-Endpoints$h, `辞書^i )
+◎
+Let parsed header be the result of executing get a structured field value given "Reporting-Endpoints" and "dictionary" from response’s header list.
+</li>
+	<li>
+~IF［
+%構文解析した~header ~EQ ~NULL
+］
+⇒
+~RET
+◎
+If parsed header is null, abort these steps.
+</li>
+	<li>
+%報告先~list ~LET 空~list
+◎
+Let endpoints be an empty list.
+</li>
+	<li>
+<p>
+%構文解析した~header を成す
+~EACH( %名前 → %~item )
+に対し：
+◎
+For each name → value_and_parameters of parsed header:
+</p>
+		<ol>
+			<li>
+~IF［
+%~item は`~item$sfでない
+］
+⇒
+~CONTINUE
+◎
+↓</li>
+			<li>
+%報告先~url文字列 ~LET %~item の値
+◎
+Let endpoint url string be the first element of the tuple value_and_parameters.＼
+</li>
+			<li>
+~IF［
+%報告先~url文字列 は文字列でない
+］
+⇒
+~CONTINUE
+◎
+If endpoint url string is not a string, then continue.
+</li>
+			<li>
+%報告先~url ~LET `~URL構文解析する$( %報告先~url文字列, %応答 の`~URL$rs )
+◎
+Let endpoint url be the result of executing the URL parser on endpoint url string, with base URL set to response’s url.＼
+</li>
+			<li>
+~IF［
+%報告先~url ~EQ `失敗^i
+］
+⇒
+~CONTINUE
+◎
+If endpoint url is failure, then continue.
+</li>
+			<li>
+~IF［
+%報告先~url の`生成元$url【！`生成元$】は`信用に価し得る$ものでない
+］
+⇒
+~CONTINUE
+◎
+If endpoint url’s origin is not potentially trustworthy, then continue.
+</li>
+
+			<li>
+%報告先~list に次のようにされた`報告先$を付加する
+⇒＃
+`名前$eP ~SET %名前,
+`~url$eP ~SET %報告先~url,
+`失敗数$eP ~SET 0,
+◎
+Let endpoint be a new endpoint whose properties are set as follows:
+◎
+name
+• name
+url
+• endpoint url
+failures
+• 0
+◎
+Add endpoint to endpoints.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %報告先~list
+◎
+Return endpoints.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="report-generation">
+<h3 title="Report Generation">3.4. 報告の生成</h3>
+
+			<section id="generate-report">
+<h4 title="Generate report of type with data">3.4.1. ある種別の報告を %~data で生成する</h4>
+
+<div class="algo">
+<p>
+~UAは
+`報告を生成する@
+ときは、所与の
+( `文書$ %文書, 文字列 %種別, 文字列 %行先, 直列化-可能な~obj %~data )
+に対し，次の手続きを走らすモノトスル
+:
+◎
+When the user agent is to generate a report for a Document (document), given a string (type), another string (destination), and a serializable object (data), it must run the following steps:
+</p>
+<ol>
+	<li>
+%設定群 ~LET %文書 の`環境~設定群~obj$【？】
+◎
+Let settings be document’s environment settings object.
+</li>
+	<li>
+%報告 ~LET `報告を~queueする$( %~data, %種別, %端点, %設定群 )
+◎
+Let report be the result of running § 2.3 Queue data as type for destination with data, type, endpoint and settings.
+</li>
+	<li>
+%報告 を %文書 の`報告~list$doc【！`報告$】に付加する
+◎
+Append report to document’s reports.
+</li>
+</ol>
+</div>
+
+			</section>
+		</section>
+		<section id="report-delivery">
+<h3 title="Report Delivery">3.5. 報告の送達</h3>
+
+<p>
+様々な特能が、時を経るにつれ，文書~用に`報告$の~listを~queueすることになる。
+~UAは、定期的に，現在~queueされた報告の~listを取り出して，それらに結付けられている報告先へ送達することになる。
+この文書は、~UAが従うべき~scheduleは定義しない。
+~UAは、報告を適時に送達するための文脈~上の情報を
+— 利用者~体験への影響iとの兼ね合いも含め —
+十分に有するものと見做される。
+◎
+Over time, various features will queue up a list of reports for a document. The user agent will periodically grab the list of currently queued reports, and deliver them to the associated endpoints. This document does not define a schedule for the user agent to follow, and assumes that the user agent will have enough contextual information to deliver reports in a timely manner, balanced against impacting a user’s experience.
+</p>
+
+<p>
+それでも~UAは、~queueしたなら，アリな限り早く報告を送達するよう努めるべきである
+— 報告の~dataは、生成したての頃の方が数日先よりも有意に有用になり得るので。
+◎
+That said, a user agent SHOULD make an effort to deliver reports as soon as possible after queuing, as a report’s data might be significantly more useful in the period directly after its generation than it would be a day or a week later.
+</p>
+
+		<section id="send-reports">
+<h4 title="Send reports">3.5.1. 報告を送信する</h4>
+
+<div class="algo">
+<p>
+~UAは，文書~用に報告の~listを送信するときは、所与の
+( `報告$の~list %報告たち, `文書$ %文書 )
+に対し，次の手続きを実行する：
+◎
+A user agent sends a list of reports (reports) for a document (document) by executing the following steps:
+</p>
+
+<p class="trans-note">【
+この訳では、以下に現れる “~map” に対し，`有順序~map$に定義される記法を流用するが、~map内を反復する際の順序については（有意になるかもしれないが），原文には言及されていない。
+】</p>
+
+<ol>
+	<li>
+%報告先~map ~LET 空~map
+◎
+Let endpoint map be an empty map of endpoint objects to lists of report objects.
+</li>
+	<li>
+%文書 の`報告先~list$docを成す
+~EACH( %報告先 )
+に対し
+⇒
+%報告先~map[ %報告先 の`名前$eP ] ~SET 空~list
+◎
+↓</li>
+	<li>
+<p>
+%報告たち 内の
+~EACH( %報告 )
+に対し：
+◎
+For each report in reports:
+</p>
+		<ol>
+			<li>
+~IF［
+%報告先~map[ %報告 の`行先$rP ] ~NEQ ε
+］
+⇒
+%報告先~map[ %報告 の`行先$rP ] に %報告 を付加する
+◎
+If there exists an endpoint (endpoint) in document’s endpoints list whose name is report’s destination:
+• Append report to endpoint map’s list of reports for endpoint.
+</li>
+			<li>
+~ELSE
+⇒
+%報告たち から %報告 を除去する
+◎
+Otherwise, remove report from reports.
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+%文書 の`報告先~list$docを成す
+~EACH( %報告先 )
+に対し：
+◎
+For each (endpoint, report list) pair in endpoint map:
+</p>
+		<ol>
+			<li>
+%報告~list ~LET %報告先~map[ %報告先 の`名前$eP ]
+◎
+↑</li>
+			<li>
+%生成元~map ~LET 空~map
+— これは、`生成元$を［
+`報告$~objの~list
+］に対応付ける
+◎
+Let origin map be an empty map of origins to lists of report objects.
+</li>
+			<li>
+<p>
+%報告~list 内の
+~EACH( %報告 )
+に対し：
+◎
+For each report in report list:
+</p>
+
+				<ol>
+					<li>
+%生成元 ~LET %報告 の`~url$rPの`生成元$url【！`生成元$／直列化する？】
+◎
+Let origin be the origin of report’s url.
+</li>
+					<li>
+%生成元~map[ %生成元 ] に %報告 を付加する
+◎
+Append report to origin map’s list of reports for origin.
+</li>
+					<li>
+<p>
+この段は非同期に実行するとする。
+</p>
+
+<p>
+%生成元~map を成す
+~EACH( %生成元 → %生成元~用の報告たち )
+に対し：
+◎
+For each (origin, per-origin reports) pair in origin map, execute the following steps asynchronously:
+</p>
+						<ol>
+							<li>
+%結果 ~LET
+`報告先へ報告たちを送達するよう試みる$( %報告先, %生成元, %生成元~用の報告たち )
+◎
+Let result be the result of executing § 3.5.2 Attempt to deliver reports to endpoint on endpoint, origin, and per-origin reports.
+</li>
+							<li>
+~IF［
+%結果 ~EQ `失敗^i
+］
+⇒
+%報告先 の`失敗数$eP ~INCBY 1
+◎
+If result is "Failure":
+• Increment endpoint’s failures.
+</li>
+							<li>
+~ELIF［
+%結果 ~EQ `報告先を除去する^i
+］
+⇒
+%文書 の`報告~list$docから %報告先 を除去する
+◎
+If result is "Remove Endpoint":
+• Remove endpoint from document’s endpoints list.
+</li>
+							<li>
+%生成元~用の報告たち を成す
+~EACH( %報告 )
+に対し
+⇒
+%報告たち から %報告 を除去する
+◎
+Remove each report from reports.
+</li>
+						</ol>
+					</li>
+				</ol>
+<p class="issue">
+ここでは、失敗した報告を試行し直す仕組みは指定されない。
+そのような仕組みをここに追加するか，送達は失敗したことの何らかの指示を供するかもしれない。
+◎
+We don’t specify any retry mechanism here for failed reports. We may want to add one here, or provide some indication that the delivery failed.
+</p>
+			</li>
+		</ol>
+	</li>
+</ol>
+
+<p class="note">注記：
+~UAは、収集された［
+報告／報告先
+］のうち一部のみ送達するよう試みることにしてもヨイ（例えば、一度にすべての報告を送信すると 帯域幅を過度に消費するとき, 等々）。
+報告が~cacheから除去されるのは，送達が試みらた後に限られるので、ここで飛ばされた報告は，単に後で送達されることになる。
+◎
+Note: User agents MAY decide to attempt delivery for only a subset of the collected reports or endpoints (because, for example, sending all the reports at once would consume an unreasonable amount of bandwidth, etc). As reports are only removed from the cache after delivery has been attempted, skipped reports will simply be delivered later.
+</p>
+</div>
+
+		</section>
+		<section id="try-delivery">
+<h4 title="Attempt to deliver reports to endpoint">3.5.2. %報告先 へ %報告 を送達するよう試みる</h4>
+
+<div class="algo">
+<p>
+この~algoは、所与の
+( `報告先$ %報告先, `生成元$ %生成元, `報告$の~list %報告たち )
+に対し，`要請$を構築して %報告先 へ送達するよう試みた上で、次を返す
+⇒＃
+送達に失敗したならば `失敗^i ／
+送達に成功したならば `成功^i ／
+報告先が `410$st 応答を送信することにより，報告先としての自身を明示的に除去したならば `報告先を除去する^i
+◎
+Given an endpoint (endpoint), an origin (origin), and a list of reports (reports), this algorithm will construct a request, and attempt to deliver it to endpoint. It returns "Success" if that delivery succeeds, "Remove Endpoint" if the endpoint explicitly removes itself as a reporting endpoint by sending a 410 response, and "Failure" otherwise.
+</p>
+<ol>
+	<li>
+%本体 ~LET 次のようにされた新たな`本体$
+⇒
+`~source$bd ~SET `報告~listを~JSONに直列化する$( %報告たち )
+◎
+Let body be the result of executing serialize a list of reports to JSON on reports.
+◎
+↓</li>
+	<li>
+%要請 ~LET 次のようにされた新たな`要請$
+`FETCH$r
+⇒＃
+`~URL$rq ~SET %報告先 の`~url$eP,
+`生成元$rq ~SET %生成元,
+`~header~list$rq ~SET `~header$( `Content-Type^h / `application/reports+json^l ) のみからなる新たな`~header~list$,
+`~client$rq ~SET ~NULL,
+`~window$rq ~SET `no-window^l,
+`~sw~mode$rq ~SET `none^l,
+`起動元$rq ~SET 空~文字列,
+`行先$rq ~SET `report^l,
+`~mode$rq ~SET `cors^l,
+`非安全-要請~flag$rq ~SET ~T,
+`資格証~mode$rq ~SET `include^l,
+`本体$rq ~SET %本体
+◎
+Let request be a new request with the following properties [FETCH]:
+◎
+url
+• endpoint’s url
+origin
+• origin
+header list
+• A new header list containing a header named "Content-Type" whose value is "application/reports+json"
+client
+• null
+window
+• "no-window"
+service-worker mode
+• "none"
+initiator
+• ""
+destination
+• "report"
+mode
+• "cors"
+unsafe-request flag
+• set
+credentials
+• "include"
+body
+• A body whose source is body.
+</li>
+	<li>
+%要請 を`~fetch$する`~taskを~queueする$
+◎
+Queue a task to fetch request.
+</li>
+	<li>
+<a href="~FETCH#wait-for-a-response">%応答 を待機する</a>【？】
+◎
+Wait for a response (response).
+</li>
+	<li>
+~RET %応答 の`状態s$rsに応じて，次に与える値
+⇒＃
+`~ok状態s$（ `200^st 〜 `299^st ）であるならば `成功^i ／
+`410$st （ Gone ） `RFC7231$r ならば `報告先を除去する^i ／
+~ELSE_ `失敗^i
+◎
+If response’s status is an OK status (200-299), return "Success".
+◎
+If response’s status is 410 Gone [RFC7231], return "Remove Endpoint".
+◎
+Return "Failure".
+</li>
+</ol>
+</div>
+
+			</section>
+		</section>
+	</section>
+	<section id="observers">
+<h2 title="Reporting Observers">4. 報告用~観測器</h2>
+
+<p>
+`報告用~観測器@
+（ `reporting observer^en ）は、一部の種別の`報告$を，~JSから観測する
+— それは、~JSにおいては `ReportingObserver$I ~objにより表現される。
+◎
+A reporting observer observes some types of reports from JavaScript, and is represented in JavaScript by the ReportingObserver object.
+</p>
+
+<p>
+各`~ES大域~環境$には、次に挙げるものが結付けられる：
+◎
+↓</p>
+
+<dl class="def-list">
+	<dt>
+`登録-済み観測器~list@
+（ `registered reporting observer list^en ）
+◎
+Each ECMAScript global environment has a registered reporting observer list,＼
+</dt>
+	<dd>
+`報告用~観測器$たちが成す`有順序~集合$。
+◎
+which is an ordered set of reporting observers.
+</dd>
+	<dd>
+`報告用~観測器$が
+`登録-済み@
+であるとは、ある`登録-済み観測器~list$内に在ることを~~意味する。
+◎
+Any reporting observer that is in a registered reporting observer list is considered registered.
+</dd>
+
+	<dt>
+`報告~buffer@
+（ `report buffer^en ）
+◎
+Each ECMAScript global environment has a report buffer,＼
+</dt>
+	<dd>
+この`~ES大域~環境$内で生成された`報告$たちが成す`~list$。
+初期~時には空とする。
+報告たちは、生成された順序で格納される。
+◎
+which is a list of reports that have been generated in that ECMAScript global environment. This list is initially empty, and the reports are stored in the same order in which they are generated.
+</dd>
+	<dd class="note">注記：
+`報告~buffer$の目的は、`報告用~観測器$が，自身が作成される前に生成された報告を（ ~optionsの `buffered$m を介して）観測できるようにすることである。
+例えば、報告には，観測器が作成-可能になる前に生成されるものもある
+— ~page読込ngの早い段階や，報告を観測したいと望む~JS~libraryが読込まれる前など。
+◎
+Note: The purpose of the report buffer is to allow reporting observers to observe reports that were generated earlier than that observer could be created (via the buffered option). For example, some reports might be generated during an earlier stage of page loading than when an observer could first be created, or before a JavaScript library is loaded that wishes to observe these reports.
+</dd>
+</dl>
+
+<p class="note">注記：
+報告用~観測器が関連するのは、~JS~engineを備える~UA用に限られる。
+◎
+Note: Reporting observers are only relevant for user agents with JavaScript engines.
+</p>
+
+		<section id="interface-reporting-observer">
+<h3 title="Interface ReportingObserver">4.1. ~interface `ReportingObserver^I</h3>
+
+<pre class="idl">
+[`Exposed$=(Window,Worker)]
+interface `ReportBody@I {
+  [`Default$] `object$ `toJSON@mB();
+};
+
+[`Exposed$=(Window,Worker)]
+interface `Report$I {
+  [`Default$] `object$ `toJSON@m();
+  readonly attribute `DOMString$ `type$m;
+  readonly attribute `DOMString$ `url$m;
+  readonly attribute `ReportBody$I? `body$m;
+};
+
+[`Exposed$=(Window,Worker)]
+interface `ReportingObserver@I {
+  `constructor$m(`ReportingObserverCallback$I %callback, optional `ReportingObserverOptions$I %options = {})
+  `undefined$ `observe$m();
+  `undefined$ `disconnect$m();
+  `ReportList$I `takeRecords$m();
+};
+
+callback `ReportingObserverCallback@I = `undefined$ (sequence&lt;`Report$I&gt; %reports, `ReportingObserver$I %observer);
+
+dictionary `ReportingObserverOptions@I {
+  sequence&lt;`DOMString$&gt; `types@m;
+  `boolean$ `buffered@m = false;
+};
+
+typedef sequence&lt;`Report$I&gt; `ReportList@I;
+</pre>
+
+<p>
+`Report@I
+は、~appに公開される`報告$の表現を成す。
+その［
+`type@m ／
+`url@m ／
+`body@m
+］取得子~手続きは、`報告$の［
+`種別$rP ／
+`~url$rP ／
+`本体$rP
+］を返す。
+◎
+A Report is the application exposed representation of a report. type returns type, url returns url, and body returns body.
+</p>
+
+<p>
+各 `ReportingObserver$I ~objには、次の概念が結付けられる：
+◎
+Each ReportingObserver object has these associated concepts:
+</p>
+
+<dl class="def-list">
+	<dt>`~callback@ob</dt>
+	<dd>
+作成-時に設定される~callback関数。
+◎
+A callback function set on creation.
+</dd>
+
+	<dt>`~options@ob</dt>
+	<dd>
+作成-時に設定される `ReportingObserverOptions$I 辞書。
+◎
+A ReportingObserverOptions dictionary called options.
+</dd>
+
+	<dt>`報告~queue@ob</dt>
+	<dd>
+`Report$I ~objたちが成す~list。
+初期~時には空とする。
+◎
+A list of Report objects called the report queue, which is initially empty.
+</dd>
+</dl>
+
+<p>
+`ReportList$I は、 `Report$I たちが成す連列を表現する
+— それは、~JS~arrayに見出されるすべての便利~methodも，開発者に供する。
+◎
+A ReportList represents a sequence of Reports, providing developers with all the convenience methods found on JavaScript arrays.
+</p>
+
+<div class="algo">
+<p>
+`ReportingObserver(callback, options)@m
+構築子~手続きは
+⇒＃
+コレの`~callback$ob ~SET %callback,
+コレの`~options$ob ~SET %options
+◎
+The ReportingObserver(callback, options) constructor, when invoked, must run these steps:
+• Create a new ReportingObserver object observer.
+• Set observer’s callback to callback.
+• Set observer’s options to options.
+• Return observer.
+</div>
+
+<div class="algo">
+<p>
+`observe()@m
+~method~手続きは：
+◎
+The observe() method, when invoked, must run these steps:
+</p>
+<ol>
+	<li>
+%環境 ~LET コレが属する`~ES大域~環境$
+◎
+Let environment be the ECMAScript global environment associated with the context object.
+</li>
+	<li>
+%環境 の`登録-済み観測器~list$にコレを`付加する$set【！＊】
+◎
+Append the context object to the registered reporting observer list of its associated ECMAScript global environment.
+</li>
+	<li>
+~IF［
+コレの `~options$ob の `buffered$m ~EQ ~F
+］
+⇒
+~RET
+◎
+If the context object’s buffered option is false, return.
+</li>
+	<li>
+コレの`~options$ob の `buffered$m ~SET ~F
+◎
+Set context object’s buffered option to false.
+</li>
+	<li>
+%環境 の`報告~buffer$内の
+~EACH( %報告 )
+に対し
+⇒
+次を走らす`~taskを~queueする$
+⇒
+`観測器に報告を追加する$( %報告, コレ )
+◎
+For each report in the report buffer associated with environment, queue a task to execute § 4.3 Add report to observer with report and the context object.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`disconnect()@m
+~method~手続きは：
+⇒
+コレが属する`~ES大域~環境$の`登録-済み観測器~list$からコレを`除去する$
+◎
+The disconnect() method, when invoked, must run these steps:
+• If the context object is not registered, return.
+• Remove the context object from the registered reporting observer list of its associated ECMAScript global environment.
+</div>
+
+<div class="algo">
+<p>
+`takeRecords()@m
+~method~手続きは：
+◎
+The takeRecords() method, when invoked, must run these steps:
+</p>
+<ol>
+	<li>
+%報告たち ~LET コレの`報告~queue$obを`~cloneする$
+◎
+Let reports be a copy of the context object’s report queue.
+</li>
+	<li>
+コレの`報告~queue$obを`空にする$
+◎
+Empty the context object’s report queue.
+</li>
+	<li>
+~RET %報告たち
+◎
+Return reports.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="notify-observers">
+<h3 title="Notify reporting observers on environment with report">4.2. 報告用~観測器に通知する</h3>
+
+<div class="algo">
+<p>
+この~algoは、報告の内容を`登録-済み$の`報告用~観測器$から可用にする。
+それは、所与の
+( `~ES大域~環境$ %環境, `報告$ %報告 )
+に対し，次を走らす：
+◎
+This algorithm makes report’s contents available to any registered reporting observers on the provided ECMAScript global environment environment.
+</p>
+<ol>
+	<li>
+%環境 に`登録-済み$の
+~EACH( `報告用~観測器$ %観測器 )
+に対し
+⇒
+`観測器に報告を追加する$( %報告, %観測器 )
+◎
+For each ReportingObserver observer registered with environment, execute § 4.3 Add report to observer on report and observer.
+</li>
+	<li>
+%~buffer ~LET %環境 の`報告~buffer$
+◎
+↓</li>
+	<li>
+%~buffer に %報告 を`付加する$
+◎
+Append report to the report buffer associated with environment.
+</li>
+	<li>
+~IF［
+%~buffer 内の~itemのうち［
+~itemの`種別$rP ~EQ %報告 の`種別$rP
+］を満たすものの個数 ~GT 100
+］
+⇒
+%~buffer から 該当する最初の~itemを`除去する$
+◎
+Let type be report’s type.
+◎
+If the report buffer now contains more than 100 reports with type equal to type, remove the earliest item with type equal to type in the report buffer.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="add-report">
+<h3 title="Add report to observer">4.3. 観測器に報告を追加する</h3>
+
+<div class="algo">
+<p>
+この~algoは、報告を観測器の`報告~queue$obに追加する
+— 報告の`種別$rPが観測器から観測-可能ならば。
+それは、所与の
+( `報告$ %報告, `報告用~観測器$ %観測器 )
+に対し，次を走らす：
+◎
+Given a report report and a ReportingObserver observer, this algorithm adds report to observer’s report queue, so long as report’s type is observable by observer.
+</p>
+<ol>
+	<li>
+%種別 ~LET %報告 の`種別$rP
+◎
+↓</li>
+	<li>
+~IF［
+%種別 は`報告用~観測器から可視$でない
+］
+⇒
+~RET
+◎
+If report’s type is not visible to ReportingObservers, return.
+</li>
+	<li>
+~IF［
+%観測器 の`~options$ob の `types$m ~memberは在る
+］~AND［
+%種別 ~NIN その~memberの値
+］
+⇒
+~RET
+◎
+If observer’s options has a non-empty types member which does not contain report’s type, return.
+</li>
+	<li>
+<p>
+%観測器 の`報告~queue$obに［
+次のように初期化された新たな `Report$I
+］を`付加する$
+⇒＃
+`type$m ~SET %報告 の`種別$rP,
+`url$m ~SET %報告 の`~url$rP,
+`body$m ~SET %報告 の`本体$rP
+◎
+Create a new Report r with type initialized to report’s type, url initialized to report’s url, and body initialized to report’s body.
+</p>
+
+<p class="issue">
+`body$m を多形態的に初期化するにはどうする？
+◎
+how to polymorphically initialize body?
+◎
+↑Append r to observer’s report queue.
+</p>
+	</li>
+	<li>
+~IF［
+%観測器 の`報告~queue$obの`~size$ ~EQ 1
+］
+⇒
+次を走らす`~taskを~queueする$
+⇒
+`報告用~観測器を呼出す$( %観測器 が属する`~ES大域~環境$ )
+【！＊不要:copy of】
+の登録-済み観測器~list → 報告用~観測器を呼出す
+-->
+◎
+If the size of observer’s report queue is 1, Queue a task to § 4.4 Invoke reporting observers with notify list with a copy of the registered reporting observer list of the ECMAScript global environment associated with observer.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="invoke-observers">
+<h3 title="Invoke reporting observers with notify list">4.4. 報告用~観測器を呼出す</h3>
+
+<div class="algo">
+<p>
+この~algoは、それまでに観測された各［
+挙動の報告
+］用に，観測器の`~callback$obを呼出す。
+それは、所与の
+( %環境 )
+に対し，次を走らす：
+◎
+This algorithm invokes observer callback functions for reports of previously observed behavior.
+</p>
+<ol>
+	<li>
+<p>
+%環境 の`登録-済み観測器~list$内の
+~EACH( %観測器 )
+に対し：
+◎
+For each ReportingObserver observer in notify list:
+</p>
+		<ol>
+			<li>
+~IF［
+%観測器 の`報告~queue$obは空である
+］
+⇒
+~CONTINUE
+◎
+If observer’s report queue is empty, then continue.
+</li>
+			<li>
+%報告たち ~LET %観測器 の`報告~queue$obを`~cloneする$
+◎
+Let reports be a copy of observer’s report queue
+</li>
+			<li>
+%観測器 の`報告~queue$obを`空にする$
+◎
+Empty observer’s report queue
+</li>
+			<li>
+`~callbackを呼出す$( %観測器 の`~callback$ob, « %報告たち, %観測器 », %観測器 )
+⇒
+例外が投出されたときは
+⇒
+その`例外を報告する$
+【反復は継続する】
+◎
+Invoke observer’s callback with a list of arguments consisting of reports and observer, and observer as the callback this value. If this throws an exception, report the exception.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+		</section>
+	</section>
+	<section id="implementation">
+<h2 title="Implementation Considerations">5. 実装にあたっての考慮点</h2>
+		<section id="delivery">
+<h3 title="Delivery">5.1. 送達</h3>
+
+<p>
+開発者にアリな限り素早く~feedbackを供するため、~UAは，アリな限り早く報告を送達するよう試みるべきである。
+しかしながら，これには、利用者への影響iとの兼ね合いも加味される
+— 利用者が~~優先される。
+そのことを念頭に、~UAは、利用者の活動や文脈について自身が有する知識に基づいて，報告の送達を延期してもヨイ。
+◎
+The user agent SHOULD attempt to deliver reports as soon as possible to provide feedback to developers as quickly as possible. However, when this desire is balanced against the impact on the user, the user wins. With that in mind, the user agent MAY delay delivery of reports based on its knowledge of the user’s activities and context.
+</p>
+
+<p>
+一例として、~UAは，報告する~data伝送の優先度を他の~network流通より低く抑えるべきである。
+利用者による明示的な~website活動があれば、報告よりその流通を先にくり上げるべきである。
+◎
+For instance, the user agent SHOULD prioritize the transmission of reporting data lower than other network traffic. The user’s explicit activities on a website should preempt reporting traffic.
+</p>
+
+<p>
+不必要な~data~costを防止するため、~UAは、報告の送達を 利用者にとって~networkが高速で軽くなるまで，まるごと保留することを選んでもヨイ。
+◎
+The user agent MAY choose to withhold report delivery entirely until the user is on a fast, cheap network in order to prevent unnecessary data cost.
+</p>
+
+<p>
+~UAは、生成元に応じて報告の優先度を~~操作してもヨイ（たぶん，利用者が最も頻繁に訪問する生成元を優先する？）
+◎
+The user agent MAY choose to prioritize reports from particular origins over others (perhaps those that the user visits most often?)
+</p>
+
+		</section>
+		<section id="gc">
+<h3 title="Garbage Collection">5.2. ~garbage収集</h3>
+
+<p>
+~UAは、~cacheした［
+`報告$／`報告先$
+］を定期的に巡回した上で，関連しなくなったものは破棄するべきである。
+これらには、次が含まれる：
+◎
+Periodically, the user agent SHOULD walk through the cached reports and endpoints, and discard those that are no longer relevant. These include:
+</p>
+
+<ul>
+	<li>
+`報告先$のうち，`失敗数$ePが［
+~UA定義な閾値（ 5 回くらいが適度？）
+］を超過したもの
+◎
+endpoints whose failures exceed some user-agent-defined threshold (~5 seems reasonable)
+</li>
+	<li>
+`報告$のうち，ある任意な期間（ 2 日くらい？）送達されていないもの
+◎
+reports which have not been delivered in some arbitrary period of time (perhaps ~2 days?)
+</li>
+</ul>
+
+<p>
+破棄されたどの`報告$も、`報告用~観測器$の`報告~buffer$から除去されるべきである。
+◎
+For any reports that are discarded, these reports should also be removed from the report buffer of any reporting observer.
+</p>
+
+		</section>
+	</section>
+	<section id="sample-reports">
+<h2 title="Sample Reports">6. 報告の見本</h2>
+
+<div class="example">
+
+<pre class="lang-http">
+POST / HTTP/1.1
+Host: example.com
+...
+Content-Type: application/reports+json
+
+[{
+  "type": "csp-violation",
+  "age": 10,
+  "url": "https://example.com/vulnerable-page/",
+  "user_agent": "Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0",
+  "body": {
+    "blocked": "https://evil.com/evil.js",
+    "directive": "script-src",
+    "policy": "script-src 'self'; object-src 'none'",
+    "status": 200,
+    "referrer": "https://evil.com/"
+  }
+}, {
+  "type": "hpkp",
+  "age": 32,
+  "url": "https://www.example.com/",
+  "user_agent": "Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0",
+  "body": {
+    "date-time": "2014-04-06T13:00:50Z",
+    "hostname": "www.example.com",
+    "port": 443,
+    "effective-expiration-date": "2014-05-01T12:40:50Z",
+    "served-certificate-chain": [
+      "-----BEGIN CERTIFICATE-----\n
+      MIIEBDCCAuygAwIBAgIDAjppMA0GCSqGSIb3DQEBBQUAMEIxCzAJBgNVBAYTAlVT\n
+      ...
+      HFa9llF7b1cq26KqltyMdMKVvvBulRP/F/A8rLIQjcxz++iPAsbw+zOzlTvjwsto\n
+      WHPbqCRiOwY1nQ2pM714A5AuTHhdUDqB1O6gyHA43LL5Z/qHQF1hwFGPa4NrzQU6\n
+      yuGnBXj8ytqU0CwIPX4WecigUCAkVDNx\n
+      -----END CERTIFICATE-----",
+      ...
+    ]
+  }
+}, {
+  "type": "nel",
+  "age": 29,
+  "url": "https://example.com/thing.js",
+  "user_agent": "Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0",
+  "body": {
+    "referrer": "https://www.example.com/",
+    "server-ip": "234.233.232.231",
+    "protocol": "",
+    "status-code": 0,
+    "elapsed-time": 143,
+    "age": 0,
+    "type": "http.dns.name_not_resolved"
+  }
+}]
+</pre>
+</div>
+
+	</section>
+	<section id="automation">
+<h2 title="Automation">7. 自動化</h2>
+
+<p>
+この文書は、［
+~UAによる自動化／~appを~testする
+］目的で， `WebDriver$r 仕様~用に いくつかの`拡張~command$を定義する。
+◎
+For the purposes of user-agent automation and application testing, this document defines a number of extension commands for the [WebDriver] specification.
+</p>
+
+		<section id="generate-test-report-command">
+<h3 title="Generate Test Report">7.1. ~test報告を生成する</h3>
+
+<p>
+`~test報告を生成する@i
+（ `Generate Test Report^en ）`拡張~command$は、`報告$の生成を，~test目的で模倣する。
+この報告は、`登録-済み$の`報告用~観測器$があれば，それらにより観測されることになる。
+◎
+The Generate Test Report extension command simulates the generation of a report for the purposes of testing. This report will be observed by any registered reporting observers.
+</p>
+
+<p>
+この`拡張~command$は、以下に従って定義される：
+◎
+The extension command is defined as follows:
+</p>
+
+<pre class="idl">
+dictionary `GenerateTestReportParameters@I {
+  required `DOMString$ `message@mTR;
+  `DOMString$ `group@mTR = "default";
+};
+</pre>
+
+<div>
+
+<table><thead><tr><th>~HTTP~method
+<th>`~URI~template$
+</thead><tbody>
+
+<tr><td>`POST^hm
+</td><td>`/session/{session id}/reporting/generate_test_report^c
+</td></tr>
+
+</tbody></table>
+◎
+HTTP Method｜Prefix｜Name
+POST｜/session/{session id}/reporting｜generate_test_report
+</div>
+
+<p>
+以下における
+`~WebDriver~error$( %~error~code )
+という表記は、次の略記である
+⇒
+`~WebDriver~error~code$として %~error~code を伴う，新たな`~WebDriver~error$
+◎
+↓</p>
+
+<div class="algo">
+<p>
+`~remote端~手続き$は、所与の
+( %parameters )
+に対し，次を走らす：
+◎
+The remote end steps are:
+</p>
+<ol>
+	<li>
+~IF［
+%parameters は~JSON
+<a href="~FILEAPI#blob-url-entry-object">Object</a>【 `Object^jT ？】
+でない
+］
+⇒
+~RET `~WebDriver~error$( `無効な引数$i )
+◎
+If parameters is not a JSON Object, return a WebDriver error with WebDriver error code invalid argument.
+</li>
+	<li>
+%~message ~LET %parameters の `message$mTR ~propを`取得しようと試行する$
+◎
+Let message be the result of trying to get parameters’s message property.
+</li>
+	<li>
+~IF［
+%~message `is not present^en
+【%~message は~errorである？】
+］
+⇒
+~RET `~WebDriver~error$( `無効な引数$i )
+◎
+If message is not present, return a WebDriver error with WebDriver error code invalid argument.
+</li>
+	<li>
+~IF［
+`現在の閲覧文脈$は、もはや開いていない
+］
+⇒
+~RET `~WebDriver~error$( `そのような~windowは無い$i )
+◎
+If the current browsing context is no longer open, return a WebDriver error with WebDriver error code no such window.
+</li>
+	<li>
+%値 ~LET `利用者~promptを取扱う$
+◎
+Handle any user prompts and＼
+</li>
+	<li>
+~IF［
+%値 は`~WebDriver~error$である
+］
+⇒
+~RET %値
+◎
+return its value if it is a WebDriver error.
+</li>
+	<li>
+%~group ~LET %parameters の `group$mTR ~prop
+◎
+Let group be parameters’s group property.
+</li>
+	<li>
+%本体 ~LET 次のようにされた~propを有する新たな `Object^jT
+⇒
+`body_message^c ~SET %~message
+◎
+Let body be a new object that can be serialized into a JSON text, containing a single string field, body_message.
+◎
+Set body_message to message.
+</li>
+	<li>
+%設定群 ~LET `現在の閲覧文脈$にて`作動中の文書$の`環境~設定群~obj$【？】
+◎
+Let settings be the environment settings object of the current browsing context’s active document.
+</li>
+	<li>
+`報告を~queueする$( %本体, `test^l, %~group, %設定群 )
+◎
+Execute § 2.3 Queue data as type for destination with body, "test", group, and settings.
+</li>
+	<li>
+~RET ~dataとして ~NULL を伴う`成功$wd
+◎
+Return success with data null.
+</li>
+</ol>
+</div>
+
+		</section>
+	</section>
+	<section id="security">
+<h2 title="Security Considerations">8. ~securityの考慮点</h2>
+
+		<section id="capability-urls">
+<h3 title="Capability URLs">8.1. 能力~URL</h3>
+
+<p>
+~URLには，それ自体が有価値なものもある。
+そのような~URLが，この仕様の報告処理の仕組みを介して漏洩される可能性を軽減するため、`報告$の出自者として格納される~URLからは，［
+資格証, `素片$url
+］の~dataは剥取られる。
+しかしながら，特能により、そのような~dataが 報告の`本体$rPを介して意図せず漏洩される可能性も，依然としてある。
+実装者は、報告の本体に包含された~URLに対しても，同様に剥取られることを確保するべきである。
+◎
+Some URLs are valuable in and of themselves. To mitigate the possibility that such URLs will be leaked via this reporting mechanism, we strip out credential information and fragment data from the URL we store as a report’s originator. It is still possible, however, for a feature to unintentionally leak such data via a report’s body. Implementers SHOULD ensure that URLs contained in a report’s body are similarly stripped.
+</p>
+
+		</section>
+	</section>
+	<section id="privacy">
+<h2 title="Privacy Considerations">9. ~privacy上の考慮点</h2>
+
+		<section id="network-leakage">
+<h3 title="Network Leakage">9.1. ~network漏洩e</h3>
+
+<p>
+~pageが読込まれてから報告が生成され, 送信されるまでには遅延があるので、利用者が［
+ある~network上にいる間に生成された報告が，別の~network上にいる間に送信される
+］ことも，まったくアリになる。
+◎
+Because there is a delay between a page being loaded and a report being generated and sent, it’s entirely possible for a report generated while a user is on one network to be sent while the user is on another network.
+</p>
+
+<p>
+この挙動は、当の報告を生成した文書の存続期間に制限される。
+そのような文書は
+— どの事例でも，文書が閉じられた後でも —
+他の手段（例： `navigator.sendBeacon()$m の仕組み）を通して，新たな~network上で流通を生成することもできるが。
+◎
+This behaviour is limited to the lifetime of the document which generated the reports, though, and such a document could be generating traffic on the new network through other means in any case, even after the document is closed, through mechanisms such as navigator.sendBeacon.
+</p>
+
+<p class="issue">
+軽減策を考慮する。
+例えば、別の~networkへ変更されたときは，報告を落とすこともできるような。
+<a href="https://github.com/w3c/BackgroundSync/issues/107">BackgroundSync/issues#107</a>
+◎
+Consider mitigations. For example, we could drop reports if we change from one network to another. &lt;https://github.com/w3c/BackgroundSync/issues/107&gt;
+</p>
+
+		</section>
+		<section id="fingerprinting-clock-skew">
+<h3 title="Clock Skew">9.2. 時計~skew</h3>
+
+<p>
+利用者~側の局所~時計は，~server上の時計から任意な量だけ~skewされるので、各~報告には，それが生成された時点の時刻印でなく， `age^c ~propが伴われて送達される。
+これにより、報告の［
+生成-時刻と送信-時刻
+］の差異は、時計~skewに関わらず~~一定になり、この~APIを介する時計~skewが公開されることによる指紋収集の~riskも避けれる。
+◎
+Each report is delivered along with an age property, rather than the timestamp at which it was generated. We do this because each user’s local clock will be skewed from the clock on the server by an arbitrary amount. The difference between the time the report was generated and the time it was sent will be stable, regardless of clock skew, and we can avoid the fingerprinting risk of exposing the clock skew via this API.
+</p>
+
+		</section>
+		<section id="correlation">
+<h3 title="Cross-origin correlation">9.3. 非同一-生成元の相関</h3>
+
+<p>
+複数の生成元がすべて同じ報告先を利用する場合、その報告先は，［
+それぞれから生成元~付きの報告を受信する
+］ことになるので、特定0の利用者がある~websiteの集合とやりとりしたことを学習できることになる。
+これは、［
+複数の生成元が，同じ情報を協力的に追跡する能
+］がある現状を，より悪化させるものには見えない。
+それは、［
+今日における~HTML `img^e 要素でアリなもの
+］以上の新たな追跡~能を是認するものではない。
+◎
+If multiple origins all use the same reporting endpoint, that endpoint may learn that a particular user has interacted with a certain set of websites, as it will receive origin-tagged reports from each. This doesn’t seem worse than the status quo ability to track the same information from cooperative origins, and doesn’t grant any new tracking ability above and beyond what’s possible with &lt;img&gt; today.
+</p>
+
+		</section>
+		<section id="disable">
+<h3 title="Disabling Reporting">9.4. 報告処理の不能化-法</h3>
+
+<p>
+報告処理は、ある~~範囲までは，公共性に関わる。
+報告が送達されることは、総じて，誰にとっても有用であろう。
+~bugを修正できる開発者には，直接的な便益があり、それにより利用者たちが楽しむ~siteも，より安定的かつ楽しめるものになるので、利用者も間接的な便益を得ることになる。
+具体例として，~CSPは、~siteの防壁~内にありうる穴について開発者に警戒を促すことにより，~XSS攻撃に対する集団免疫
+【<a href="https://en.wikipedia.org/wiki/Herd_immunity">`herd immunity^en</a>】
+の様なものを促進する。
+それらの~bugの修正は、~CSPを~supportしない~UAを利用している利用者までも助ける。
+◎
+Reporting is, to some extent, a question of commons. In the aggregate, it seems useful for everyone for reports to be delivered. There is direct benefit to developers, as they can fix bugs, which means there’s indirect benefit to users, as the sites they enjoy will be more stable and enjoyable. As a concrete example, Content Security Policy grants something like herd immunity to cross-site scripting attacks by alerting developers about potential holes in their sites' defenses. Fixing those bugs helps every user, even those whose user agents don’t support Content Security Policy.
+</p>
+
+<p>
+計算法は、もちろん，送達されている~dataの資質と報告先の相対的な悪意度に依存するが、それは，大雑把に言えば価値提案である。
+◎
+The calculus, of course, depends on the nature of data that’s being delivered, and the relative maliciousness of the reporting endpoints, but that’s the value proposition in broad strokes.
+</p>
+
+<p>
+それでも、この一般~便益が，［
+そのような~systemを個別に~opt-outする利用者の能
+］を超えて優先されるようなことは、許容されない。
+報告の送信には帯域幅~costがかかることに加え、［
+~websiteが帯域内で得せる以上の，少量の情報
+］も露呈し得る（一例として， `NETWORK-ERROR-LOGGING$r ）。
+`HTML-DESIGN$r にて信奉されている有権者の優先度を保守するため、~UAは，利用者が報告処理を適度な粒度で不能化できるようにするモノトスル。
+◎
+That said, it can’t be the case that this general benefit be allowed to take priority over the ability of a user to individually opt-out of such a system. Sending reports costs bandwidth, and potentially could reveal some small amount of additional information above and beyond what a website can obtain in-band ([NETWORK-ERROR-LOGGING], for instance). User agents MUST allow users to disable reporting with some reasonable amount of granularity in order to maintain the priority of constituencies espoused in [HTML-DESIGN-PRINCIPLES].
+</p>
+
+		</section>
+	</section>
+	<section id="iana-considerations">
+<h2 title="IANA Considerations">10. IANA 考慮点</h2>
+
+		<section id="header-field-registration">
+<h3 title="The Reporting-Endpoints Header">10.1. `Reporting-Endpoints^h ~header</h3>
+
+<p>
+恒久的~message~header~registryは、次の登録で更新されるべきである：
+`RFC3864$r
+◎
+The permanent message header field registry should be updated with the following registration: [RFC3864]
+</p>
+
+<div>
+<table><tbody><tr><th>~header名前
+<td>`Reporting-Endpoints^h
+
+<tr><th>適用-可能な~protocol
+<td>http
+
+<tr><th>位置付け
+<td>標準
+
+<tr><th>~~著作／変更管理者
+<td>W3C
+
+<tr><th>仕様~文書
+<td>この仕様（§ `Reporting-Endpoints$h ~HTTP応答~headerを見よ）
+
+</tbody></table>
+
+◎
+Header field name
+• Reporting-Endpoints
+Applicable protocol
+• http
+Status
+• standard
+Author/Change controller
+• W3C
+Specification document
+• This specification (see § 3.2 The Reporting-Endpoints HTTP Response Header Field)
+</div>
+
+		</section>
+		<section id="media-type-registration">
+<h3 title="The application/reports+json Media Type">10.2. ~MIME型 `application/reports+json^c</h3>
+
+<dl>
+	<dt>
+型~名
+◎
+Type name
+</dt>
+	<dd>`application^c</dd>
+
+	<dt>
+下位型~名
+◎
+Subtype name
+</dt>
+	<dd>`reports+json^c</dd>
+
+	<dt>
+要求される~parameter
+◎
+Required parameters
+</dt>
+	<dd>N/A</dd>
+
+	<dt>
+任意選択の~parameter
+◎
+Optional parameters
+</dt>
+	<dd>N/A</dd>
+
+	<dt>
+符号化法の考慮点
+◎
+Encoding considerations
+</dt>
+	<dd>
+~MIME型 `application/json^l 用に指定されものに一致する。
+`RFC8259$r を見よ。
+◎
+Encoding considerations are identical to those specified for the "application/json" media type. See [RFC8259].
+</dd>
+
+	<dt>
+~security上の考慮点
+◎
+Security considerations
+</dt>
+	<dd>
+<a href="#security">§ ~securityの考慮点</a>
+を見よ。
+◎
+See § 8 Security Considerations.
+</dd>
+
+	<dt>
+相互運用能の考慮点
+◎
+Interoperability considerations
+</dt>
+	<dd>
+この文書は、適合する~messageの形式と その解釈を指定する。
+◎
+This document specifies the format of conforming messages and the interpretation thereof.
+</dd>
+
+	<dt>
+公表された仕様
+◎
+Published specification
+</dt>
+	<dd>
+<a href="#media-type">§ ~MIME型</a>
+◎
+§ 2.2 Media Type
+</dd>
+
+	<dt>
+この~MIME型を利用する応用
+◎
+Applications that use this media type
+</dt>
+	<dt>
+素片~識別子の考慮点
+◎
+Fragment identifier considerations
+</dt>
+	<dt>
+追加的な情報
+◎
+Additional information
+</dt>
+	<dd>N/A</dd>
+
+	<dt>
+更なる情報~用の個人の
+~email~address／連絡先
+◎
+Person and email address to contact for further information
+</dt>
+	<dd>
+この文書の編集者たち。
+◎
+This document’s editors.
+</dd>
+
+	<dt>
+意図される用法
+◎
+Intended usage:
+</dt>
+	<dd>
+COMMON
+</dd>
+
+	<dt>
+用法~上の制約
+◎
+Restrictions on usage:
+</dt>
+	<dd>N/A</dd>
+
+	<dt>
+著作者
+◎
+Author
+</dt>
+	<dd>
+この文書の編集者たち。
+◎
+This document’s editors.
+</dd>
+
+	<dt>
+変更管理者
+◎
+Change controller
+</dt>
+	<dd>W3C</dd>
+
+	<dt>
+暫定的な登録？
+◎
+Provisional registration?
+</dt>
+	<dd>Yes.</dd>
+</dl>
+
+		</section>
+	</section>
+</main></div>

@@ -1,0 +1,742 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>RFC 6901 - JavaScript Object Notation (JSON) Pointer （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="http-common.css" type="text/css" />
+
+<script src="common0.js"></script>
+<script src="common1.js" async></script>
+
+<script>
+Util.ready = function(){
+	const source_data = {
+		generate: expand,
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/`(.+?)([$\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#ref-${key}`;
+	break;
+case 'l':
+	text = `'<code>${key}</code>'`;
+	break;
+case 'X': // byte value
+	text = '%x' + text;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+trans_update:2014-12-29
+original_url:https://tools.ietf.org/html/rfc6901.html
+spec_status:IETFPR
+page_state_key:JSON
+no_original_dfn:true
+no_index:true
+ref_id_prefix:ref-
+ref_rfc:true
+main:MAIN
+toc:toc
+trans_1st_pub:2013-04-13
+
+●●class_map
+P:production
+X:hex-value
+h:header
+
+●●tag_map
+P:code
+c:code
+X:span
+
+●●link_map
+
+●●words_table1
+0:~0
+1:~1
+01:~01
+1b:~1b
+0n:~0n
+ベキ:<em class="rfc2119">べき</em>
+ナラナイ:<em class="rfc2119">ならない</em>
+
+●●words_table
+
+	●構文
+octet::::オクテット
+percent::::パーセント
+	~~展開-:unescaped
+URI:
+素片識別子:fragment identifier::~
+backslash::::バックスラッシュ
+制御文字:control character::~
+引用符:quotation mark::~
+数字:digit::~
+文字並び:sequence::~
+	列:sequence
+非数値:non-numeric::~
+	10 進:base-10
+	NUL
+
+	●JSON Pointer
+JSON-Pointer:JSON Pointer
+root::::ルート
+参照先の:referenced::~
+	参照-先:which value is referenced
+無符号:unsigned::~
+
+	●処理
+条態:condition::~
+終了-:terminate:~
+回復-:recover::~
+置換-:置換
+	置換:substitution／:transform／:turn
+
+	終了させ:results in termination
+	欠落している:missing
+	存在しない:nonexistent
+	始まり:begins with
+	先ず:first
+	記された順に:sequentially
+
+	●仕様
+位置付け:status:~
+同意:consensus:~
+	てしまう:incorrect
+発行:publication:~
+誤り:error:~
+誤解釈-:misinterpret:~
+成果物:product:~
+見越して:anticipateして:~
+
+	句:keyword
+	有効:in effect
+	少なくとも:but are not limited to
+	後述:see below
+	権利
+	注意
+	ある:available
+	記され
+	告知:Notice
+	メモ
+	~~位置する
+	-:received
+	~~制約条項
+	~~正確に
+	~~無保証:warranty
+	則り
+	目次
+	著作権
+	IESG
+	IETF
+	Internet Standards Track 
+	Internet
+
+	●未分類
+実体的な:concreteな:実体のある
+
+	~~表現:identify
+	reverse solidus
+	~~規則:scheme
+	後続して:accompanying
+	~~指示-:mark
+	遭遇し:upon an／for any of
+	際して
+	際に
+	し得る
+	不可
+	付与され
+	取り出され
+	含-
+	持たされ:have
+	指す
+	日付
+	種類の
+
+	●指示語
+	先頭
+	結果
+	行
+	最初の
+	次のような
+	照らして:against
+	並び
+	予め
+	以下の
+	何らか:some／
+	個
+	個数
+	場合
+	対し
+	対する
+	後
+
+
+●●ref_normative
+[RFC2119]
+    Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, ~RFC2119, March 1997.
+[RFC3629]
+    Yergeau, F., "UTF-8, a transformation format of ISO 10646", STD 63, ~RFC3629, November 2003.
+[RFC3986]
+    Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform Resource Identifier (URI): Generic Syntax", STD 66, ~RFC3986, January 2005.
+[RFC4627]
+    Crockford, D., "The application/json Media Type for JavaScript Object Notation (JSON)", ~RFC4627, July 2006.
+[RFC5234]
+    Crocker, D., Ed. and P. Overell, "Augmented BNF for Syntax Specifications: ABNF", STD 68, ~RFC5234, January 2008.
+
+●●ref_informative
+
+[RFC6838]
+    Freed, N., Klensin, J., and T. Hansen, "Media Type Specifications and Registration Procedures", BCP 13, ~RFC6838, January 2013.
+
+●●spec_metadata
+
+発行
+	Internet Engineering Task Force (IETF)
+RFC
+	6901
+分類
+	Standards Track
+ISSN
+	2070-1721
+編集
+	P. Bryan, Ed. Salesforce.com
+	K. Zyp SitePen (USA)
+	M. Nottingham, Ed. Akamai
+日付
+	2013 年 4 月
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、
+~IETF により PROPOSED STANDARD として発行された，
+RFC 6901
+<a href="~SPEC_URL">JavaScript Object Notation (JSON) Pointer</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+</head>
+<body>
+
+<header>
+	<hgroup>
+<h1>JavaScript Object Notation (JSON) Pointer</h1>
+<h2>RFC 6901</h2>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+~ABSTRACT
+
+<p>
+~JSON-Pointerは JavaScript Object Notation (JSON) 文書の中の特定の値を識別するための文字列の構文を定義する。
+◎
+JSON Pointer defines a string syntax for identifying a specific value within a JavaScript Object Notation (JSON) document.
+</p>
+
+<h2 title="Status of This Memo">このメモの位置付け</h2>
+
+<p>
+これは、 Internet Standards Track 文書である。
+◎
+This is an Internet Standards Track document.
+</p>
+
+<p>
+この文書は、
+<abbr title="Internet Engineering Task Force">IETF</abbr>
+よる成果物であり，
+IETF ~communityの同意を表現するものである。
+それは、公な考査を受け，
+<abbr title="Internet Engineering Steering Group">IESG</abbr>
+から発行が認可されたものである。
+Internet 標準についての更なる情報は
+<a href="~RFCx/rfc5741#section-2">RFC5741 § 2</a>
+にある。
+◎
+This document is a product of the Internet Engineering Task Force (IETF). It represents the consensus of the IETF community. It has received public review and has been approved for publication by the Internet Engineering Steering Group (IESG). Further information on Internet Standards is available in Section 2 of RFC 5741.
+</p>
+
+
+<p>
+この文書の現在の位置付け, 正誤表, ~feedbackの方法についての情報は、
+<a href="https://www.rfc-editor.org/info/rfc6901">https://www.rfc-editor.org/info/rfc6901</a>
+から得られる。
+◎
+Information about the current status of this document, any errata, and how to provide feedback on it may be obtained at http://www.rfc-editor.org/info/rfc6901.
+</p>
+
+<h5 title="Copyright Notice">著作権の~~告知</h5>
+
+<p lang="en-x-a0">
+Copyright (c) 2013 IETF Trust and the persons identified as the document authors. All rights reserved.
+</p>
+
+<p>
+この文書は、その発行の日付から有効な、
+<a href="https://tools.ietf.org/html/bcp78">BCP 78</a>,
+および IETF Trust の IETF Documents に対する Legal Provisions Relating の~subjectになる（
+<a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a>
+）。
+これらの文書には，この文書に関するあなたの~~権利と~~制約条項が述べらているので、注意深く考査されたし。
+この文書から取り出された Code Components は、
+Trust Legal Provisions の Section 4.e
+に述べられるように， Simplified BSD License ~textを含んでいなければならず、
+Simplified BSD License に記されるように，~~無保証で供される。
+◎
+This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document. Please review these documents carefully, as they describe your rights and restrictions with respect to this document. Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.
+</p>
+
+
+<main id="MAIN0">
+
+	<section id="section-1">
+<h2 title="Introduction">1. 序論</h2>
+
+<p>
+この仕様は、JSON（ `JavaScript Object Notation^en ）文書 `RFC4627$r の中の特定の値を識別するための文字列の構文，~JSON-Pointerを定義する。
+~JSON-Pointerは、~JSON文字列~値でも,
+~URI（ `Uniform Resource Identifier^en ） `RFC3986$r
+の素片識別子でも，容易に表出できるように意図されている。
+◎
+This specification defines JSON Pointer, a string syntax for identifying a specific value within a JavaScript Object Notation (JSON) document [RFC4627]. JSON Pointer is intended to be easily expressed in JSON string values as well as Uniform Resource Identifier (URI) [RFC3986] fragment identifiers.
+2. Conventions
+</p>
+
+	</section>
+	<section id="section-2">
+<h2 title="Conventions">2. 表記規約</h2>
+
+<p>
+この文書における句［
+“〜しなければナラナイ（ `MUST^en ）”,
+“〜するベキである（ `SHOULD^en ）”
+］は、 `RFC2119$r に述べるように解釈されるものとする。
+◎
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119].
+</p>
+
+<p>
+この仕様は、~ABNF記法（ `Augmented Backus Naur Form^en ）`RFC5234$r を利用して，規範的な構文~規則を表出する。
+◎
+This specification expresses normative syntax rules using Augmented Backus-Naur Form (ABNF) [RFC5234] notation.
+</p>
+
+	</section>
+	<section id="section-3">
+<h2 title="Syntax">3. 構文</h2>
+
+<p>
+~JSON-Pointerは、それぞれの先頭に文字 `/^c' （ `2F^X ）が付与された， 0 個以上の参照~token（
+<code>reference-token</code>
+）の並びからなる，~Unicode文字列（
+`RFC4627$r,
+<a href="~RFCx/rfc4627#section-3">§ 3</a>
+を見よ）である。
+◎
+A JSON Pointer is a Unicode string (see [RFC4627], Section 3) containing a sequence of zero or more reference tokens, each prefixed by a '/' (%x2F) character.
+</p>
+
+<p>
+~JSON-Pointerにおいては、［
+文字 `~^l （ `7E^X ） ／ 文字 `/^l （ `2F^X ）
+］には特別な意味があるので，参照~tokenの中では［
+`~0^l ／ `~1^l
+］に符号化しておく必要がある。
+◎
+Because the characters '~' (%x7E) and '/' (%x2F) have special meanings in JSON Pointer, '~' needs to be encoded as '~0' and '/' needs to be encoded as '~1' when these characters appear in a reference token.
+</p>
+
+
+<p>
+~JSON-Pointerの~ABNF構文は次で与えられる：
+◎
+The ABNF syntax of a JSON Pointer is:
+</p>
+
+<pre class="bnf">
+json-pointer    = *( "/" reference-token )
+reference-token = *( unescaped / escaped )
+unescaped       = %x00-2E / %x30-7D / %x7F-10FFFF
+   ; <span class="comment">
+`2F^X （ `/^l ）と `7E^X （ `~^l ）は `unescaped^c から除外される
+◎
+%x2F ('/') and %x7E ('~') are excluded from 'unescaped'
+</span>
+escaped         = "~" ( "0" / "1" )
+   ; <span class="comment">
+それぞれ `~^l と `/^l を表現する
+◎
+representing '~' and '/', respectively
+</span>
+</pre>
+
+<p>
+この構文に適合しない~JSON-Pointer値は~error条態とされる（
+<a href="#section-7">§ 7</a>
+を見よ）。
+◎
+It is an error condition if a JSON Pointer value does not conform to this syntax (see Section 7).
+</p>
+
+<p>
+~JSON-Pointerは~byte列ではなく，文字列で指定されるものであることに注意。
+◎
+Note that JSON Pointers are specified in characters, not as bytes.
+</p>
+
+	</section>
+	<section id="section-4">
+<h2 title="Evaluation">4. 評価</h2>
+
+<p>
+~JSON-Pointerの評価は、~JSON文書の~root値への参照から始まり，文書~内の何らかの値への参照で完了する。
+~JSON-Pointer内の各~参照~tokenは、記された順に評価される。
+◎
+Evaluation of a JSON Pointer begins with a reference to the root value of a JSON document and completes with a reference to some value within the document. Each reference token in the JSON Pointer is evaluated sequentially.
+</p>
+
+<p>
+各~参照~tokenの評価においては、先ず~escapeされた文字を復号する。
+これを遂行するときは、先ず文字並び `~1^l を `/^l に置換してから，文字並び `~0^l を `~^l に置換する。
+この順序で置換することで、
+`~01^l が `~1^l に置換されてから `/^l に置換されてしまう誤りは避けられるようになる（文字列 `~01^l は正しく `~1^l に置換される）。
+◎
+Evaluation of each reference token begins by decoding any escaped character sequence. This is performed by first transforming any occurrence of the sequence '~1' to '/', and then transforming any occurrence of the sequence '~0' to '~'. By performing the substitutions in this order, an implementation avoids the error of turning '~01' first into '~1' and then into '/', which would be incorrect (the string '~01' correctly becomes '~1' after transformation).
+</p>
+
+<p>
+参照~tokenは、次の~~規則に則って，現在の参照-先を改変する：
+◎
+The reference token then modifies which value is referenced according to the following scheme:
+</p>
+
+<ul>
+	<li>
+現在の参照先の値は~JSON~objである場合
+⇒
+新たな参照先の値は、参照~tokenで識別される名前の~obj~memberになるとする。
+~member名は、~tokenと同じ個数の~Unicode文字からなり, かつ それらの符号位置が~byteごとに等しいとき，~tokenに等しいとされる
+— いかなる~Unicode文字~正規化も遂行しないこと。
+参照先の~member名が~obj内で一意でない場合、参照先の値は未定義とし，評価は失敗したとされる（後述）。
+◎
+If the currently referenced value is a JSON object, the new referenced value is the object member with the name identified by the reference token. The member name is equal to the token if it has the same number of Unicode characters as the token and their code points are byte-by-byte equal. No Unicode character normalization is performed. If a referenced member name is not unique in an object, the member that is referenced is undefined, and evaluation fails (see below).
+</li>
+	<li>
+<p>
+現在の参照先の値は~JSON配列である場合、参照~tokenは次のいずれかでなければナラナイ：
+◎
+o If the currently referenced value is a JSON array, the reference token MUST contain either:
+</p>
+		<ul>
+			<li>
+無符号 10 進~整数を表現する，数字のみからなる文字列（下の~ABNFを見よ — 先頭の 0 は許容されないことに注意）
+⇒
+この場合の新たな参照先の値は、この~tokenで識別される~indexに~~位置する，配列~要素になるものとする（ ~index 0 が最初の要素を指す）。
+◎
+characters comprised of digits (see ABNF below; note that leading zeros are not allowed) that represent an unsigned base-10 integer value, making the new referenced value the array element with the zero-based index identified by the token, or
+</li>
+			<li>
+単独の文字 `-^l
+⇒
+この場合の新たな参照先の値は、配列の最後の要素の後の（存在しない）~memberになるものとする。
+◎
+* exactly the single character "-", making the new referenced value the (nonexistent) member after the last array element.
+</li>
+		</ul>
+	</li>
+</ul>
+
+
+<p>
+配列~indexの~ABNF構文は次で与えられる：
+◎
+The ABNF syntax for array indices is:
+</p>
+
+<pre class="bnf">
+array-index = %x30 / ( %x31-39 *(%x30-39) )
+              ; <span class="comment">
+`0^l, または数字。ただし、先頭の `0^l は不可
+◎
+"0", or digits without a leading "0"
+</span>
+</pre>
+
+<p>
+実装は、~JSON-Pointerの各~参照~tokenを文書の内容に照らして順に評価し、実体的な値に解決できない参照~tokenに~~遭遇した際には，それを~error条態とする。
+例えば、配列に対する非数値~tokenによる参照は，~error条態になる。
+詳細は <a href="#section-7">§ 7</a> に。
+◎
+Implementations will evaluate each reference token against the document's contents and will raise an error condition if it fails to resolve a concrete value for any of the JSON pointer's reference tokens. For example, if an array is referenced with a non-numeric token, an error condition will be raised. See Section 7 for details.
+</p>
+
+<p>
+配列~indexにおける文字 `-^l の利用は、定義により，存在しない配列~要素を参照することから、常にそのような~error条態となる。
+したがって，~JSON-Pointerを利用する応用は、何かに有用になるならば，その文字がどう取扱われるべきか指定する必要がある。
+◎
+Note that the use of the "-" character to index an array will always result in such an error condition because by definition it refers to a nonexistent array element. Thus, applications of JSON Pointer need to specify how that character is to be handled, if it is to be useful.
+</p>
+
+<p>
+~JSON-Pointer応用から特定の動作が定義されていない~error条態は、評価を終了させる。
+◎
+Any error condition for which a specific action is not defined by the JSON Pointer application results in termination of evaluation.
+</p>
+
+	</section>
+	<section id="section-5">
+<h2 title="JSON String Representation">5. ~JSON文字列による表現</h2>
+
+<p>
+~JSON-Pointerは、~JSON文字列~値により表現できる。
+その際には、
+`RFC4627$r, <a href="~RFCx/rfc4627#section-2.5">§ 2.5</a> に則り，次に挙げる文字は すべて~escapeされなければナラナイ
+⇒＃
+引用符 `"^l （ `22^X ）,
+~backslash `\^l （ `5C^X ）,
+制御文字（ `00-1F^X ）
+◎
+A JSON Pointer can be represented in a JSON string value. Per [RFC4627], Section 2.5, all instances of quotation mark '"' (%x22), reverse solidus '\' (%x5C), and control (%x00-1F) characters MUST be escaped.
+</p>
+
+<p>
+~JSON文字列を~JSON-Pointerとして処理する際には、その前に，~backslashによる~escape列は~~展開されなければならないことに注意。
+◎
+Note that before processing a JSON string as a JSON Pointer, backslash escape sequences must be unescaped.
+</p>
+
+<div class="example">
+
+<p>
+次のような~JSON文書が与えられたとするとき：
+◎
+For example, given the JSON document
+</p>
+
+<pre class="lang-json">
+{
+   "foo": ["bar", "baz"],
+   "": 0,
+   "a/b": 1,
+   "c%d": 2,
+   "e^f": 3,
+   "g|h": 4,
+   "i\\j": 5,
+   "k\"l": 6,
+   " ": 7,
+   "m~n": 8
+}
+</pre>
+
+<p>
+次の~textの各行の先頭に記された~JSON文字列を評価した結果は，同じ行に後続して記された値への参照になる：
+◎
+The following JSON strings evaluate to the accompanying values:
+</p>
+
+<pre>
+""           // <span class="comment">
+文書~全体
+◎
+the whole document
+</span>
+"/foo"       ["bar", "baz"]
+"/foo/0"     "bar"
+"/"          0
+"/a~1b"      1
+"/c%d"       2
+"/e^f"       3
+"/g|h"       4
+"/i\\j"      5
+"/k\"l"      6
+"/ "         7
+"/m~0n"      8
+</pre>
+</div>
+
+	</section>
+	<section id="section-6">
+<h2 title="URI Fragment Identifier Representation">6. ~URI素片識別子による表現</h2>
+
+<p>
+~JSON-Pointerは、~URI素片識別子により表現できる。
+そのためには、~UTF-8
+`RFC3629$r
+により~octet列に符号化してから、
+`RFC3986$r により素片識別子に許容されない すべての文字（~octet）を，~percent符号化する。
+◎
+A JSON Pointer can be represented in a URI fragment identifier by encoding it into octets using UTF-8 [RFC3629], while percent-encoding those characters not allowed by the fragment rule in [RFC3986].
+</p>
+
+<p>
+素片識別子に~JSON-Pointerを利用する~MIME型は、その素片識別子の構文として（通例的には，その登録において `RFC6838$r ），明示的に~JSON-Pointerを指定する必要があることに注意。
+文書が~JSONであるからといって、その素片識別子の構文に~JSON-Pointerを利用し得ることにはならないので。
+特に、 `application/json^c における素片識別子の構文は~JSON-Pointerではない。
+◎
+Note that a given media type needs to specify JSON Pointer as its fragment identifier syntax explicitly (usually, in its registration [RFC6838]). That is, just because a document is JSON does not imply that JSON Pointer can be used as its fragment identifier syntax. In particular, the fragment identifier syntax for application/json is not JSON Pointer.
+</p>
+
+<div class="example">
+<p>
+上のものと同じ文書~例に対し、次の~textの各行の先頭に記された~URI素片識別子を評価した結果は，同じ行に後続して記された値への参照になる：
+◎
+Given the same example document as above, the following URI fragment identifiers evaluate to the accompanying values:
+</p>
+
+<pre>
+#            // <span class="comment">
+文書~全体
+◎
+the whole document
+</span>
+#/foo        ["bar", "baz"]
+#/foo/0      "bar"
+#/           0
+#/a~1b       1
+#/c%25d      2
+#/e%5Ef      3
+#/g%7Ch      4
+#/i%5Cj      5
+#/k%22l      6
+#/%20        7
+#/m~0n       8
+</pre>
+
+</div>
+
+	</section>
+	<section id="section-7">
+<h2 title="Error Handling">7. ~errorの取扱い</h2>
+
+<p>
+~error条態に際しては、~JSON-Pointerの評価は完了できなくなる。
+◎
+In the event of an error condition, evaluation of the JSON Pointer fails to complete.
+</p>
+
+<p>
+~error条態には、少なくとも，以下のものが含まれる：
+◎
+Error conditions include, but are not limited to:
+</p>
+
+<ul>
+	<li>
+無効な~pointer構文
+◎
+Invalid pointer syntax
+</li>
+	<li>
+存在しない値への参照
+◎
+A pointer that references a nonexistent value
+</li>
+</ul>
+
+<p>
+この仕様は、~errorをどう取扱うかは定義しない。
+~JSON-Pointerの応用は、個々の種類の~errorがもたらす影響iとその取扱いについて，指定するベキである。
+◎
+This specification does not define how errors are handled. An application of JSON Pointer SHOULD specify the impact and handling of each type of error.
+</p>
+
+<p>
+例えば、~errorに際し~pointer処理を停止する応用もあれば，値が欠落している所に既定の値を挿入して回復しようと試みる応用もあろう。
+◎
+For example, some applications might stop pointer processing upon an error, while others may attempt to recover from missing values by inserting default ones.
+</p>
+
+	</section>
+	<section id="section-8">
+<h2 title="Security Considerations">8. ~securityの考慮点</h2>
+
+<p>
+~JSON-Pointerが実際の~JSON値を参照する保証はない。
+したがって，~JSON-Pointerを利用する応用は、そのような状況を見越して，どう取扱うか定義しておくべきである。
+◎
+A given JSON Pointer is not guaranteed to reference an actual JSON value. Therefore, applications using JSON Pointer should anticipate this situation by defining how a pointer that does not resolve ought to be handled.
+</p>
+
+<p>
+~JSON-Pointerは NUL 文字（ ~Unicode U+0000 ）も含み得ることに注意。
+NUL が文字列の終端を~~指示する~programming言語においては，誤解釈しないように~careする必要がある。
+◎
+Note that JSON pointers can contain the NUL (Unicode U+0000) character. Care is needed not to misinterpret this character in programming languages that use NUL to mark the end of a string.
+</p>
+
+	</section>
+	<section id="section-9">
+<h2 title="Acknowledgements">9. 謝辞</h2>
+
+<p>
+この仕様に案, ~feedback, 言い回しを寄せられた次の方々に：
+◎
+The following individuals contributed ideas, feedback, and wording to this specification:
+</p>
+
+<p lang="en-x-a0">
+Mike Acar, Carsten Bormann, Tim Bray, Jacob Davies, Martin J. Duerst, Bjoern Hoehrmann, James H. Manger, Drew Perttula, and Julian Reschke.
+</p>
+
+	</section>
+
+</main></div>

@@ -1,0 +1,2838 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Communication（日本語訳）</title>
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'comms',
+		collectParts: Util.collectParts,
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+	let context = '';
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|``?(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'sl':
+	text = `[[${key}]]`;
+	break;
+case 'P': // production
+	href = `#_p.${key}`;
+	break;
+case 'mc':
+	text = 'constructor';
+	href = `#dom-${key.toLowerCase()}`;
+	break;
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case '0x': // escape '%'
+	return `%x${key}`;
+	break;
+case 'U':
+	text = `U+${key}`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(match[1] === '`') {
+	if(indicator === '^'){
+		context = key;
+	} else {
+		klass = `${klass}!${context}`;
+	}
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-09-02
+trans_update:2020-08-26
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/comms.html
+	abbr_url:HTMLcomms
+site_nav:comms,network,html
+nav_prev:HTMLnavigator
+nav_next:HTMLsse
+trans_1st_pub:2016-12-06
+
+●●original_urls
+the-messageevent-interface:https://html.spec.whatwg.org/multipage/comms.html
+server-sent-events:https://html.spec.whatwg.org/multipage/server-sent-events.html
+network:https://html.spec.whatwg.org/multipage/web-sockets.html
+web-messaging:https://html.spec.whatwg.org/multipage/web-messaging.html
+channel-messaging:https://html.spec.whatwg.org/multipage/web-messaging.html
+broadcasting-to-other-browsing-contexts:https://html.spec.whatwg.org/multipage/web-messaging.html
+
+●●class_map
+e:element
+a:attr
+E:error
+P:production
+et:event-type
+st:attr-state
+sl:js-slot
+jT:js-type
+jA:abstract
+v:value
+U:code-point
+
+●●tag_map
+I:code
+m:code
+E:code
+c:code
+e:code
+a:code
+et:code
+st:span
+sl:span
+jA:span
+jT:code
+P:code
+v:code
+t:var
+i:i
+U:span
+
+●●words_table1
+
+postMessageO:postMessage
+
+●●words_table
+
+	●network / messaging
+address-book:address book::address 帳:アドレス帳
+email::::メール
+メールアドレス:contact:::~
+social::::ソーシャル
+
+server-sent::::サーバ送信
+web-socket:web socket
+hostname::::ホスト名
+rate::::レート
+	rate-limiting
+投函-:post::~::ポスト
+	投函~法:posting
+	投函-済み:posted
+broadcast::::ブロードキャスト
+文書間:cross-document::~
+close:
+	~close済み:closed
+	~close中:closing
+messaging:::message 法:メッセージ法
+pipe::::パイプ
+remote::::リモート
+	source設定群:sourceSettings
+
+受信器:receiver::~
+受信者:recipient::~
+返信-:send back::~
+切断-:disconnect::~
+連絡-:entangle::~
+連絡:entangle::~
+
+添付-:attach:~
+主体:entity:~
+宛先:target::~
+消去っ:go awayし:消え去っ
+
+	●保安
+DoS:denial-of-service:DoS
+XSS:cross-site scripting:XSS
+log-in:log in:::ログイン
+log-out:log out:::ログアウト
+	~obj能力:object-capability
+悪用-:exploit::~
+機密的:confidential:~
+濫用-:abuse:~
+特権:privilege::~
+	信用-済み:trusted
+欠陥:flaw::~
+動作者:actor::~
+提供-:provide::~
+提供者:provider::~
+消費者:consumer::~
+
+増殖-:multiply:~
+読取る:readする::読み取る
+
+	●IDL／型／構造
+出自に:originate:~
+property::::プロパティ
+	options:options
+
+	●環境
+agent:
+担当の:responsible::~
+現任の:incumbent:~
+
+	●処理
+locking::::ロック処理
+	clone~record:cloneRecord
+	収集し直-:recollect
+cross-process::::プロセス間
+搬送-:ship::~
+	搬送-済み:shipped
+未搬送:unshipped::~
+公告-:announce::~
+保持体:holder::~::ホルダ
+静止-:pause::~
+回送-:forward::~
+弱い:weakな:~
+	同時に:simultaneous
+保たれ:keepされ:~
+保っ:keepし:~
+
+例外投出あり:rethrow any exceptions::~
+即座:prompt::~
+認知-:acknowledge:~
+	短い:short
+	二重化された:two-ways
+破棄予定:doomed:~
+	生きた:liveな
+	生き残り続け:continue to live
+	毎分:per minute
+
+代理-:proxy::~
+時間:time:~
+一定時間:certain amount of time:~
+
+	●構文／stream
+	LF:
+	CR:
+	COLON
+	space
+	BOM
+直列形:serialized::~::シリアル形
+逆直列化-:deserialize::~::逆シリアル化
+
+
+	●仕様
+原則的:principle:~
+対称:symmetric:~
+機会:chance:~
+注意-:care:~
+	格別に注意する:extra care
+高価:expensive:~
+難点:difficulties:~
+解決策:solution:~
+基礎:basis:~
+簡易的:naïve:~
+black-box::::ブラックボックス
+仮想の:virtual:~
+
+	実用的でなくなる:impractical
+	大げさすぎる:unreasonable overhead
+	見込みが高い:likely
+	任意選択:may／optional
+	~~消費:usage
+	不要:no longer needed
+	-:criteria
+	~~主な違い:key difference
+	-:further
+	渡-:pass
+	似た命名の:similarly-named
+	できないこと:inability
+	逆も同様:vice-versa
+	当の:in question
+	手の込んだ:elaborate
+	目に見える:apparent
+	optionally
+	無論:of course
+	ばかりの:just been
+	こっち:over here
+	そっち:your
+	委ねる:opening up
+	確かめる:make sure
+	引き継いで:continuing
+	することもあり得る:possibility of 〜 trying to
+	〜に基づく:based／-based
+	まったくin the slightest
+	単に:merely
+	何か:anything
+	これら二者:together
+	特に:most particularly
+	自らに利する:on its behalf
+	困った:rather unfortunate
+	要は:key
+
+	●仕様（動詞
+協調:coordination:~
+切替えれ:switchでき:切り替えれ
+発展:evolution:~
+計算:computation:~
+勧める:adviseする:~
+
+	判別できない:distinguishableでない
+	利用できなく:usable
+	影響しな:unaffected
+	抽象-化:abstracting out
+	放置-:forgot
+	using:
+	consist:
+	know
+	導く:lead
+	〜とする:suppose
+
+
+	●未分類（動詞
+mark::::マーク
+開かれ:openされ:~
+	伝え:tell
+	与:give
+
+
+	●未分類
+clear:
+game::::ゲーム
+memory::::メモリ
+tab::::タブ
+	:time
+	捉える:viewed as a
+wildcard-keyword:wildcard keyword:::ワイルドカード
+個人名:person:~
+側:side:~
+
+	利己:own
+	同様
+	場合
+	方法
+	注記
+	始-:begin
+	対応:corresponding
+	-:back
+	入って来る:incoming
+	どこか:floor
+	片:piece
+	後で:later
+	相手~側~port:twin
+	note
+	-:causing
+	respective
+	instantaneous
+	leaving
+	starting
+	first-class
+	passing
+	amount
+	long
+	sometime
+	altogether
+	part
+	came
+	形:form
+	同順の:maintaining their relative order
+
+	可能
+	数値
+	~~回復:
+	一時的に多量の:high transient
+	-:outer
+	新~port~list:newPorts
+	宛先~生成元:targetOrigin
+	宛先~port:targetPort
+	宛先~window:targetWindow
+	宛先~Realm:targetRealm
+	serialized
+	finalTargetPort
+	deserializeRecord
+	parsedURL
+	messageClone
+	port1
+	port2
+	doomed
+	transfer
+	targetPort
+	broadcastChannel
+	sourceChannel
+	BroadcastChannel
+	MessagePort
+
+	●指示語
+	古いものから順:oldest first
+	最早／それ以降:no longer
+	最終的:final
+	最終:final
+	-:whereby
+	-:identical
+	two
+	同じ:single
+	:earlier
+	次:next
+	nothing
+	now
+	前回:the previous
+	一方
+	他方
+	片方
+	一連
+	両端:each end
+	今度:now
+	以下
+	以外
+	以降
+	個
+	初回
+	前節
+	各種
+	唯一
+	対応
+	次第
+	段階
+	時点
+	部位
+
+	別:alternate
+
+●●original_id_map
+
+●●mdn_urls
+
+broadcastchannel:API/BroadcastChannel
+messagechannel:API/MessageChannel
+messageevent:API/MessageEvent
+	messageeventinit:API/MessageEventInit
+	messageeventsource:API/MessageEventSource
+messageport:API/MessagePort
+	postmessageoptions:API/PostMessageOptions
+
+●●link_map
+
+
+	●IDL
+Transferable:~HTMLcloning#transferable
+	
+E.DataCloneError:~WEBIDL#datacloneerror
+E.InvalidStateError:~WEBIDL#invalidstateerror
+E.SyntaxError:~WEBIDL#syntaxerror
+
+object:~WEBIDL#idl-object
+
+I.BroadcastChannel:#broadcastchannel
+	I.DOMException:~WEBIDL#idl-DOMException
+I.ArrayBuffer:~WEBIDL#idl-ArrayBuffer
+I.Blob:~FILEAPI#blob
+I.Document:~HTMLdom#document
+文書:~HTMLdom#the-document-object
+I.Event:~DOM4#interface-event
+I.EventHandler:~WAPI#eventhandler
+I.EventInit:~DOM4#dictdef-eventinit
+I.EventSource:~HTMLsse#eventsource
+I.EventTarget:~DOM4#interface-eventtarget
+I.File:~FILEAPI#file
+I.FileList:~FILEAPI#filelist-section
+I.MessageChannel:#messagechannel
+I.MessageEvent:#messageevent
+I.MessageEventInit:#messageeventinit
+I.MessageEventSource:#messageeventsource
+I.MessagePort:#messageport
+I.PostMessageOptions:#postmessageoptions
+I.ServiceWorker:~SW1#serviceworker
+I.SharedWorkerGlobalScope:~WORKERS#sharedworkerglobalscope
+I.WebSocket:~WEBSOCKET#websocket
+I.Window:~WINDOW#window
+~window:~WINDOW#the-window-object
+
+	＊
+I.WindowProxy:~WINDOW#windowproxy
+I.WorkerGlobalScope:~WORKERS#workerglobalscope
+I.XMLHttpRequest:~XHR#xmlhttprequest
+
+jT.Date:~TC39#sec-date-objects
+
+constructor:~DOM4#concept-event-constructor
+
+	9.5
+m!MessagePort.close:#dom-messageport-close
+m!MessagePort.postMessage:#dom-messageport-postmessage
+m!MessagePort.~postMessageO:#dom-messageport-postmessage-options
+m!MessagePort.start:#dom-messageport-start
+m!MessagePort.onmessage:#handler-messageport-onmessage
+m!MessagePort.onmessageerror:#handler-messageport-onmessageerror
+
+
+	9.6
+m.new BroadcastChannel:#dom-broadcastchannel
+	m!BroadcastChannel.constructor:#dom-broadcastchannel
+m!BroadcastChannel.postMessage:#dom-broadcastchannel-postmessage
+m!BroadcastChannel.name:#dom-broadcastchannel-name
+m!BroadcastChannel.close:#dom-broadcastchannel-close
+m!BroadcastChannel.onmessage:#handler-broadcastchannel-onmessage
+m!BroadcastChannel.onmessageerror:#handler-broadcastchannel-onmessageerror
+
+	9.5.2
+	m.constructor:#dom-messagechannel
+m.new MessageChannel:#dom-messagechannel
+m.port1:#dom-messagechannel-port1
+m.port2:#dom-messagechannel-port2
+
+m.postMessage:#dom-window-postmessage
+m.~postMessageO:#dom-window-postmessage-options
+m.window.postMessage:#dom-window-postmessage
+
+m.initMessageEvent:#dom-messageevent-initmessageevent
+m.lastEventId:#dom-messageevent-lasteventid
+m.origin:#dom-messageevent-origin
+m.ports:#dom-messageevent-ports
+m.source:#dom-messageevent-source
+m.data:#dom-messageevent-data
+
+m.transfer:#dom-postmessageoptions-transfer
+m.targetOrigin:~WINDOW#dom-windowpostmessageoptions-targetorigin
+
+m.addEventListener:~DOM4#dom-eventtarget-addeventlistener
+~close中~flag:~WORKERS#dom-workerglobalscope-closing
+m.initEvent:~DOM4#dom-event-initevent
+e.iframe:~HEembed#the-iframe-element
+et.connect:~HTMLindex#event-workerglobalscope-connect
+et.hashchange:~HTMLindex#event-hashchange
+et.message:~HTMLindex#event-message
+et.messageerror:~HTMLindex#event-messageerror
+et.resize:~CSSOMVIEW#eventdef-window-resize
+
+sl.Detached:~HTMLcloning#detached
+
+	●用語
+~channel名:#channel-name
+~close済み~flag:#concept-broadcastchannel-closed
+
+eS.最後の~event~ID文字列:~HTMLsse#concept-event-stream-last-event-id
+
+~port~message~queue:#port-message-queue
+未搬送な~port~message~queue:#unshipped-port-message-queue
+投函-済み~message~task源:#posted-message-task-source
+搬送-済み~flag:#has-been-shipped
+
+~port 1:#port-1
+~port 2:#port-2
+~portを連絡する:#entangle
+~windowに~messageを投函する手続き:#window-post-message-steps
+~message~portに~messageを投函する手続き:#message-port-post-message-steps
+
+	§
+	:#event-stream-interpretation
+~server-sent~event:~HTMLsse#server-sent-events
+~broadcast~channel:#broadcasting-to-other-browsing-contexts
+~channel~messaging:#channel-messaging
+文書間~messaging:#web-messaging
+
+
+	●用語（HTML
+jA.StructuredSerialize:~HTMLcloning#structuredserialize
+jA.StructuredDeserialize:~HTMLcloning#structureddeserialize
+jA.StructuredSerializeWithTransfer:~HTMLcloning#structuredserializewithtransfer
+jA.StructuredDeserializeWithTransfer:~HTMLcloning#structureddeserializewithtransfer
+転送-可能:~HTMLcloning#transferable-objects
+転送-手続き:~HTMLcloning#transfer-steps
+転送-受信-時の手続き:~HTMLcloning#transfer-receiving-steps
+
+設定群~obj:~WAPI#settings-object
+関連な~Realm:~WAPI#concept-relevant-realm
+関連な~agent:~WAPI#relevant-agent
+関連な設定群~obj:~WAPI#relevant-settings-object
+関連な大域~obj:~WAPI#concept-relevant-global
+~Realm:~WAPI#concept-global-object-realm
+現任の設定群~obj:~WAPI#incumbent-settings-object
+enV.大域~obj:~WAPI#concept-settings-object-global
+enV.生成元:~WAPI#concept-settings-object-origin
+
+~event~loop:~WAPI#event-loop
+aG.~event~loop:#concept-agent-event-loop
+~event~handler:~WAPI#event-handlers
+~event~handler~IDL属性:~WAPI#event-handler-idl-attributes
+~event~handler~event型:~WAPI#event-handler-event-type
+~task:~WAPI#concept-task
+~taskを~queueする:~WAPI#queue-a-task
+大域~taskを~queueする:~WAPI#queue-a-global-task
+~task~queue:~WAPI#task-queue
+~task源:~WAPI#task-source
+tK.文書:~WAPI#concept-task-document
+~DOM操作~task源:~WAPI#dom-manipulation-task-source
+担当の文書:~WAPI#responsible-document
+
+全部的に作動中:~BROWSERS#fully-active
+閲覧文脈:~BROWSERS#browsing-context
+
+結付けられている文書:~WINDOW#concept-document-window
+対応する閲覧文脈:~WINDOW#window-bc
+
+同一-生成元:~ORIGIN#same-origin
+生成元:~ORIGIN#concept-origin
+生成元を直列化する:~ORIGIN#ascii-serialisation-of-an-origin
+
+~navigate:~NAVI#navigate
+休止-可能:~WORKERS#suspendable-worker
+~worker:~WORKERS#worker
+共用~worker:~WORKERS#sharedworker
+共用~worker内:~WORKERS#sharedworkerglobalscope
+
+	●用語（外部
+実装定義:~INFRA#implementation-defined
+追跡~行路:~INFRA#tracking-vector
+
+~web-socket:~WEBSOCKET#network
+
+凍結d配列:~WEBIDL#dfn-frozen-array-type
+新たな:~WEBIDLjs#new
+
+~eventを発火する:~DOM4#concept-event-fire
+
+url.生成元:~URL1#concept-url-origin
+url.素片:~URL1#concept-url-fragment
+~URL:~URL1#concept-url
+	~URL~record:~URL1#concept-url
+~URL構文解析する:~URL1#concept-url-parser
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる HTML 仕様の § Communication 内の
+<a href="~HTMLLS/comms.html#the-messageevent-interface">§ The MessageEvent interfaces</a>,
+<a href="~HTMLLS/web-messaging.html#web-messaging">§ Cross-document messaging</a>,
+<a href="~HTMLLS/web-messaging.html#channel-messaging">§ Channel messaging</a>,
+<a href="~HTMLLS/web-messaging.html#broadcasting-to-other-browsing-contexts">§ Broadcasting to other browsing contexts</a>
+を日本語に翻訳したものです
+~PUB
+</p>
+
+</script>
+
+</head>
+<body>
+
+
+<header id="head">
+	<hgroup>
+<h1>通信 — Communication</h1>
+	</hgroup>
+
+</header>
+
+<main id="MAIN" hidden>
+
+	<section id="comms">
+<h1 title="Communication">9. 通信</h1>
+
+		<section id="_conventions">
+<h2>【この訳に固有の表記規約】</h2>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, コレ, ~IF, ~THROW, 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+		</section>
+		<section id="the-messageevent-interface">
+<h2 title="The MessageEvent interfaces">9.1. `MessageEvent$I ~interface</h2>
+
+  
+<p>
+`~server-sent~event$における~message,
+`~web-socket$,
+`文書間~messaging$,
+`~channel~messaging$,
+`~broadcast~channel$
+では、各 `message$et ~eventに `MessageEvent$I ~interfaceを利用する：
+◎
+Messages in server-sent events, web sockets, cross-document messaging, channel messaging, and broadcast channels use the MessageEvent interface for their message events:
+</p>
+
+<pre class="idl">
+[Exposed=(Window,Worker,AudioWorklet)]
+interface `MessageEvent@I : `Event$I {
+  `constructor$(DOMString %type, optional `MessageEventInit$I %eventInitDict = {});
+
+  readonly attribute any `data$m;
+  readonly attribute USVString `origin$m;
+  readonly attribute DOMString `lastEventId$m;
+  readonly attribute `MessageEventSource$I? `source$m;
+  readonly attribute FrozenArray&lt;`MessagePort$I&gt; `ports$m;
+
+  undefined `initMessageEvent$m(DOMString %type, optional boolean %bubbles = false, optional boolean %cancelable = false, optional any %data = null, optional USVString %origin = "", optional DOMString %lastEventId = "", optional `MessageEventSource$I? %source = null, optional sequence&lt;`MessagePort$I&gt; %ports = []);
+};
+
+dictionary `MessageEventInit@I : `EventInit$I {
+  any data = null;
+  USVString origin = "";
+  DOMString lastEventId = "";
+  `MessageEventSource$I? source = null;
+  sequence&lt;`MessagePort$I&gt; ports = [];
+};
+
+typedef (`WindowProxy$I or `MessagePort$I or `ServiceWorker$I) `MessageEventSource@I;
+</pre>
+
+<dl class="domintro">
+
+	<dt>%event . `data$m</dt>
+	<dd>
+~messageの~dataを返す。
+◎
+Returns the data of the message.
+</dd>
+
+	<dt>%event . `origin$m</dt>
+	<dd>
+［
+`~server-sent~event$ ／
+`文書間~messaging$
+］の下では、~messageの生成元を返す。
+◎
+Returns the origin of the message, for server-sent events and cross-document messaging.
+</dd>
+
+	<dt>%event . `lastEventId$m</dt>
+	<dd>
+`~server-sent~event$の下では、`最後の~event~ID文字列$eSを返す。
+◎
+Returns the last event ID string, for server-sent events.
+</dd>
+
+	<dt>%event . `source$m</dt>
+	<dd>
+`文書間~messaging$の下では、~source~window
+【送信-元~window】
+の `WindowProxy$I を返す。
+`SharedWorkerGlobalScope$I ~objに向けて発火された `connect$et ~eventにおいては、添付されている `MessagePort$Iを返す。
+◎
+Returns the WindowProxy of the source window, for cross-document messaging, and the MessagePort being attached, in the connect event fired at SharedWorkerGlobalScope objects.
+</dd>
+
+	<dt>%event . `ports$m</dt>
+	<dd>
+［
+`文書間~messaging$ ／ `~channel~messaging$
+］の下では、~messageに伴われて送信された `MessagePort$I 配列を返す。
+◎
+Returns the MessagePort array sent with the message, for cross-document messaging and channel messaging.
+</dd>
+</dl>
+
+<div class="algo">
+<p>
+`data@m
+取得子~手続きは、初期化-時の値を返す。
+◎
+The data attribute must return the value it was initialized to.＼
+</p>
+
+<p>
+結果は、送信されてきた~messageを表現する。
+◎
+It represents the message being sent.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`origin@m
+取得子~手続きは、初期化-時の値を返す。
+◎
+The origin attribute must return the value it was initialized to.＼
+</p>
+
+<p>
+これは、［
+`~server-sent~event$ ／
+`文書間~messaging$
+］の下では、~messageを送信した文書の`生成元$を表現する（概して 当の文書の［
+~scheme, ~hostname, ~port
+］からなるなるが、その［
+~path／`素片$url
+］は含まない
+)。
+◎
+It represents, in server-sent events and cross-document messaging, the origin of the document that sent the message (typically the scheme, hostname, and port of the document, but not its path or fragment).
+</p>
+</div>
+
+<div class="algo">
+<p>
+`lastEventId@m
+取得子~手続きは、初期化-時の値を返す。
+◎
+The lastEventId attribute must return the value it was initialized to.＼
+</p>
+
+<p>
+これは、`~server-sent~event$の下では、
+`EventSource$I ~objの`最後の~event~ID文字列$eSを表現する。
+◎
+It represents, in server-sent events, the last event ID string of the event source.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`source@m
+取得子~手続きは、初期化-時の値を返す。
+◎
+The source attribute must return the value it was initialized to.＼
+</p>
+
+<p>
+これは、`文書間~messaging$の下では、~messageを送ってきた`~window$に`対応する閲覧文脈$の `WindowProxy$I を表現する。
+`共用~worker内$で利用される `connect$et ~eventにおいては、新たに接続している `MessagePort$I になる。
+◎
+It represents, in cross-document messaging, the WindowProxy of the browsing context of the Window object from which the message came; and in the connect events used by shared workers, the newly connecting MessagePort.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`ports@m
+取得子~手続きは、初期化-時の値を返す。
+◎
+The ports attribute must return the value it was initialized to.＼
+</p>
+
+<p>
+これは、［
+`文書間~messaging$ ／ `~channel~messaging$
+］の下では、~messageに伴って送信される `MessagePort$I 配列を表現する。
+◎
+It represents, in cross-document messaging and channel messaging, the MessagePort array being sent.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`initMessageEvent()@m
+~method~手続きは、似た命名の `initEvent()$m ~methodに相似的な方式で~eventを初期化する。
+`DOM$r
+◎
+The initMessageEvent() method must initialize the event in a manner analogous to the similarly-named initEvent() method. [DOM]
+</p>
+
+<p class="note">注記：
+種々の~API（例： `WebSocket$I や `EventSource$I ）は、
+`MessagePort$I ~APIを利用せずに，
+`MessageEvent$I ~interfaceを `message$et ~eventに利用する。
+◎
+Various APIs (e.g., WebSocket, EventSource) use the MessageEvent interface for their message event without using the MessagePort API.
+</p>
+</div>
+
+		</section>
+		<section id="server-sent-events">
+<h2 title="Server-sent events">9.2. ~server-sent~event</h2>
+
+<p class="trans-note">【
+この節の内容の和訳は、<a href="~HTMLsse#network">別ページ</a>にて。
+】</p>
+
+		</section>
+		<section id="network">
+<h2 title="Web sockets">9.3. ~web-socket</h2>
+
+<p class="trans-note">【
+この節の内容の和訳は、<a href="~WEBSOCKET#network">別ページ</a>にて。
+】</p>
+
+		</section>
+		<section id="web-messaging">
+<h2 title="Cross-document messaging">9.4. 文書間~messaging</h2>
+<a id="crossDocumentMessages"></a>
+
+<p>
+~securityや~privacyの理由から、~web~browserは，異なる~domainに属する文書どうしが互いに影響しあうのを防止する
+— すなわち、~XSSは許容されないようにする。
+◎
+Web browsers, for security and privacy reasons, prevent documents in different domains from affecting each other; that is, cross-site scripting is disallowed.
+</p>
+
+<p>
+これは重要な~security用の特能であるが、異なる~domainに属する~pageとの通信は，その~pageが敵対的でなくとも防止される。
+この節では、~source~domainに関わらず，文書どうしが互いに~messageを通信しあえるようにする~systemを、~XSS攻撃を可能化しないように設計される仕方で導入する。
+◎
+While this is an important security feature, it prevents pages from different domains from communicating even when those pages are not hostile. This section introduces a messaging system that allows documents to communicate with each other regardless of their source domain, in a way designed to not enable cross-site scripting attacks.
+</p>
+
+<p class="note" id="fingerprint-postMessage">
+注記：
+`postMessage()$m ~APIは、`追跡~行路$として利用され得る。
+【！~FINGERPRINTING】
+◎
+The postMessage() API can be used as a tracking vector.
+</p>
+
+			<section id="introduction-13">
+<h3 title="Introduction">9.4.1. 序論</h3>
+
+~INFORMATIVE
+
+<div class="example">
+
+<p>
+例えば，ある文書 %A が
+`iframe$e 要素を包含していて,
+その要素は 別の文書 %B を包含している下で，
+%A 内の~scriptが %B の`~window$の
+`window.postMessage()$m を~callした場合、~message~eventは，その~objに向けて発火される
+— %A の`~window$を出自にしているよう~markされた上で。
+%A 内の~scriptは次の様になるであろう：
+◎
+For example, if document A contains an iframe element that contains document B, and script in document A calls postMessage() on the Window object of document B, then a message event will be fired on that object, marked as originating from the Window of document A. The script in document A might look like:
+</p>
+
+<pre class="lang-js">
+var %o = document.getElementsByTagName('iframe')[0];
+%o.contentWindow.postMessage('Hello world', 'https://b.example.org/');
+</pre>
+
+<p>
+%B 内の~scriptは、入って来る~eventに対する~event~handlerを登録するため、
+`addEventListener()^m （または類似な仕組み）を利用することになる。
+例えば，次の様になるであろう：
+◎
+To register an event handler for incoming events, the script would use addEventListener() (or similar mechanisms). For example, the script in document B might look like:
+</p>
+
+<pre class="lang-js">
+window.addEventListener('message', receiver, false);
+function receiver(%e) {
+  if (%e.origin == 'https://example.com') {
+    if (%e.data == 'Hello world') {
+      %e.source.postMessage('Hello', %e.origin);
+    } else {
+      alert(%e.data);
+    }
+  }
+}
+</pre>
+
+<p>
+この~scriptは、まず，~domainが期待されるものかどうか検査する。
+次に，~messageの中身に応じて、利用者に表示するか，または
+~message送信してきた文書に ~messageを返信して応答する。
+◎
+This script first checks the domain is the expected domain, and then looks at the message, which it either displays to the user, or responds to by sending a message back to the document which sent the message in the first place.
+</p>
+
+</div>
+
+			</section>
+			<section id="security-postmsg">
+<h3 title="Security">9.4.2. ~security</h3>
+
+				<section id="authors">
+<h4 title="Authors">9.4.2.1. 作者</h4>
+
+<p id="security-4" class="warning">
+利己~目的で~siteを濫用する敵対的~主体から 利用者を保護するため、この~APIの利用にあたっては，格別に注意することが要求される。
+◎
+Use of this API requires extra care to protect users from hostile entities abusing a site for their own purposes.
+</p>
+
+<p>
+作者は、 `origin$m 属性を検査して，受容する~messageを，自身が期待する~domainから受信されるものに限ることを確保するべきである。
+作者の~message取扱い~code内に~bugがある場合、敵対的~siteにより悪用され得ることになる。
+◎
+Authors should check the origin attribute to ensure that messages are only accepted from domains that they expect to receive messages from. Otherwise, bugs in the author's message handling code could be exploited by hostile sites.
+</p>
+
+<p>
+加えて， `origin$m 属性を検査した後でも、作者は，当の~dataが期待される形式であるかどうか検査するべきである。
+さもなければ，~eventの~sourceが~XSSに対する欠陥を突いて攻撃されていた場合に、
+`window.postMessage()$m ~methodで送信された情報は，攻撃により受信器にまで伝播されることになる。
+◎
+Furthermore, even after checking the origin attribute, authors should also check that the data in question is of the expected format. Otherwise, if the source of the event has been attacked using a cross-site scripting flaw, further unchecked processing of information sent using the postMessage() method could result in the attack being propagated into the receiver.
+</p>
+
+<p>
+作者は、機密的~情報を包含するような~messageに対しては，生成元~引数（ %targetOrigin ）に~wildcard-keyword （ `*^l ）を渡すべきでない。
+そうしない以外に、~messageの送達-先を意図された受信者のみに限るよう保証する仕方はない。
+◎
+Authors should not use the wildcard keyword (*) in the targetOrigin argument in messages that contain any confidential information, as otherwise there is no way to guarantee that the message is only delivered to the recipient to which it was intended.
+</p>
+
+<hr>
+
+<p>
+どの生成元からの~messageも受容する作者には、~DoS攻撃の~riskを考慮することが奨励される。
+攻撃者は大容量の~messageを送信することもできる。
+受信-中の~pageが高価な計算を遂行したり，そのような各~messageごとの送信により~network流通が生じる場合、攻撃者の~messageは，~DoS攻撃~用に増殖される。
+作者には、そのような攻撃が実用的でなくなるよう，~rate制限-法を使役することが奨励される（毎分あたりの~message数を一定に抑えるなど）。
+◎
+Authors who accept messages from any origin are encouraged to consider the risks of a denial-of-service attack. An attacker could send a high volume of messages; if the receiving page performs expensive computation or causes network traffic to be sent for each such message, the attacker's message could be multiplied into a denial-of-service attack. Authors are encouraged to employ rate limiting (only accepting a certain number of messages per minute) to make such attacks impractical.
+</p>
+
+				</section>
+				<section id="user-agents">
+<h4 title="User agents">9.4.2.2. ~UA</h4>
+
+<p>
+この~API
+【による~message】
+の完全性は、ある`生成元$の~scriptが，任意な~eventを（`同一-生成元$でない）他の生成元に属する~objへ（ `dispatchEvent()^m などを用いて）投函できないことに基づいている。
+◎
+The integrity of this API is based on the inability for scripts of one origin to post arbitrary events (using dispatchEvent() or otherwise) to objects in other origins (those that are not the same).
+</p>
+
+<p class="note">注記：
+実装者には、この特能を実装するにあたり，格別に注意することが督促される。
+この特能は、作者がある~domainから別の~domainへ情報を伝送できるようにする
+— 通常は，~securityの理由から許容されないような。
+また，~UAには、ある種の~propertyへの~accessを，一方には許容しつつ, 他方には許容しないよう注意深くなることが要求される。
+◎
+Implementors are urged to take extra care in the implementation of this feature. It allows authors to transmit information from one domain to another domain, which is normally disallowed for security reasons. It also requires that UAs be careful to allow access to certain properties but not others.
+</p>
+
+<hr>
+
+<p>
+簡易的な~siteを~DoS攻撃から保護するため、~UAには，異なる`生成元$の間での~message流通~rateの制限-法を考慮することが奨励される。
+◎
+User agents are also encouraged to consider rate-limiting message traffic between different origins, to protect naïve sites from denial-of-service attacks.
+</p>
+
+				</section>
+			</section>
+			<section id="posting-messages">
+<h3 title="Posting messages">9.4.3. ~messageの投函-法</h3>
+
+<dl class="domintro">
+
+	<dt>%window . `~postMessageO(message [, options ])$m</dt>
+	<dd>
+%message を %window へ投函する。
+%message は有構造~objにもなり得る。
+例えば次のものを包含できる
+⇒＃
+入子にされた~objや配列 ／
+~JS値（ `string^jT, `number^jT, `Date$jT ~obj, 等々）／
+`File$I, `Blob$I, `FileList$I, `ArrayBuffer$I などの，ある種の~data~obj
+◎
+Posts a message to the given window. Messages can be structured objects, e.g. nested objects and arrays, can contain JavaScript values (strings, numbers, Date objects, etc), and can contain certain data objects such as File Blob, FileList, and ArrayBuffer objects.
+</dd>
+	<dd>
+%options の `transfer$m ~member内に~listされた~objは、~cloneされるのみならず転送される
+— すなわち，送信-側からは、それ以降，それらを利用できなくなる。
+◎
+Objects listed in the transfer member of options are transferred, not just cloned, meaning that they are no longer usable on the sending side.
+</dd>
+	<dd>
+%options の `targetOrigin$m ~memberを利用して，宛先~生成元を指定できる。
+供されない場合の既定は `/^l になる
+— この既定は、 %message の宛先を同一-生成元のみに制約する。
+◎
+A target origin can be specified using the targetOrigin member of options. If not provided, it defaults to "/". This default restricts the message to same-origin targets only.
+</dd>
+	<dd>
+宛先 %window の生成元が，宛先~生成元に合致しない場合、情報~漏洩eを避けるため， %message は破棄される。
+生成元に関わらず %message を宛先へ送信するためには、宛先~生成元を `*^l に設定する。
+◎
+If the origin of the target window doesn't match the given target origin, the message is discarded, to avoid information leakage. To send the message to the target regardless of origin, set the target origin to "*".
+</dd>
+	<dd>
+次の場合は `DataCloneError$E が投出される
+⇒
+%transfer 配列が同じ~objを重複して包含する場合／
+%message を~cloneできなかった場合
+◎
+Throws a "DataCloneError" DOMException if transfer array contains duplicate objects or if message could not be cloned.
+</dd>
+
+	<dt>%window . `postMessage(message, targetOrigin [, transfer ])$m</dt>
+	<dd>
+これは `postMessage()^m の別~versionであり、宛先~生成元を~parameterとして指定する。
+次の 2 つの~callは等価になる
+⇒＃
+<code>window.postMessage(%message, %target, %transfer)</code>,
+<code>window.postMessage(%message, {targetOrigin: %target, transfer: %transfer})</code>
+◎
+This is an alternate version of postMessage() where the target origin is specified as a parameter. Calling window.postMessage(message, target, transfer) is equivalent to window.postMessage(message, {targetOrigin, transfer}).
+</dd>
+</dl>
+
+<p class="note">注記：
+新たな`文書$へ~navigateされたばかりの`閲覧文脈$に対応する`~window$に向けて，~messageを投函した場合、その~messageは，意図した受信者に受信されない見込みが高い
+— 宛先 `閲覧文脈$内の~scriptは、~messageに対する~listenerを設定しておく時間を要するので。
+したがって，一例として［
+~messageが 新たに作成された子 `iframe$e の`~window$に送信される状況
+］においては、作者には，［
+子である方の`文書$から先に，受信する用意が整った旨を親~宛に公告する~messageを投函させ、親は，この~messageを待機してから~messageを投函し始める
+］ようにすることを勧める。
+◎
+When posting a message to a Window of a browsing context that has just been navigated to a new Document is likely to result in the message not receiving its intended recipient: the scripts in the target browsing context have to have had time to set up listeners for the messages. Thus, for instance, in situations where a message is to be sent to the Window of newly created child iframe, authors are advised to have the child Document post a message to their parent announcing their readiness to receive messages, and for the parent to wait for this message before beginning posting messages.
+</p>
+
+<div class="algorithm">
+<p>
+`~windowに~messageを投函する手続き@
+は、所与の
+( %宛先~window, %~message, %~options )
+に対し，次に従う：
+◎
+The window post message steps, given a targetWindow, message, and options, are as follows:
+</p>
+
+<ol>
+	<li>
+%宛先~Realm ~LET %宛先~window の`~Realm$
+◎
+Let targetRealm be targetWindow's Realm.
+</li>
+	<li>
+%現任の設定群 ~LET `現任の設定群~obj$
+◎
+Let incumbentSettings be the incumbent settings object.
+</li>
+	<li>
+%宛先~生成元 ~LET %~options[ "`targetOrigin$m" ]
+◎
+Let targetOrigin be options["targetOrigin"].
+</li>
+	<li>
+~IF［
+%宛先~生成元 ~EQ `002F^U （ `/^l ）
+］
+⇒
+%宛先~生成元 ~SET %現任の設定群 の`生成元$enV
+◎
+If targetOrigin is a single U+002F SOLIDUS character (/), then set targetOrigin to incumbentSettings's origin.
+</li>
+	<li>
+<p>
+~ELIF［
+%宛先~生成元 ~NEQ `002A^U （ `*^l ）
+］：
+◎
+Otherwise, if targetOrigin is not a single U+002A ASTERISK character (*), then:
+</p>
+		<ol>
+			<li>
+%解析済み~URL ~LET `~URL構文解析する$( %宛先~生成元 )
+◎
+Let parsedURL be the result of running the URL parser on targetOrigin.
+</li>
+			<li>
+~IF［
+%解析済み~URL ~EQ `失敗^i
+］
+⇒
+~THROW `SyntaxError$E
+◎
+If parsedURL is failure, then throw a "SyntaxError" DOMException.
+</li>
+			<li>
+%宛先~生成元 ~SET %解析済み~URL の`生成元$url
+◎
+Set targetOrigin to parsedURL's origin.
+</li>
+		</ol>
+	</li>
+	<li>
+%transfer ~LET %~options[ "`transfer$m" ]
+◎
+Let transfer be options["transfer"].
+</li>
+	<li>
+%転送-を伴う直列化-結果 ~LET `StructuredSerializeWithTransfer$jA( %message, %transfer )
+（例外投出あり）
+◎
+Let serializeWithTransferResult be StructuredSerializeWithTransfer(message, transfer). Rethrow any exceptions.
+</li>
+	<li>
+<p>
+次を走らす`大域~taskを~queueする$(
+`投函-済み~message~task源@†,
+%宛先~window )：
+◎
+Queue a global task on the posted message task source given targetWindow to run the following steps:
+</p>
+
+<p class="trans-note">【†
+この`~task源$は、ここでしか利用されない
+— すなわち、`~task~queue$を他と共有しない目的で定義されている。
+】</p>
+		<ol>
+			<li>
+~IF［
+%宛先~生成元 ~NEQ `002A^U （ `*^l ）
+］~AND［
+( %宛先~window に`結付けられている文書$の`生成元$,  %宛先~生成元 )
+は`同一-生成元$でない
+］
+⇒
+~RET
+◎
+If the targetOrigin argument is not a single literal U+002A ASTERISK character (*) and targetWindow's associated Document's origin is not same origin with targetOrigin, then return.
+</li>
+			<li>
+%生成元 ~LET `生成元を直列化する$( %現任の設定群 の`生成元$enV )
+◎
+Let origin be the serialization of incumbentSettings's origin.
+</li>
+			<li>
+%~source ~LET %現任の設定群 の`大域~obj$enV（`~window$）に対応している `WindowProxy$I ~obj
+◎
+Let source be the WindowProxy object corresponding to incumbentSettings's global object (a Window object).
+</li>
+			<li>
+<p>
+%逆直列化-~record ~LET `StructuredDeserializeWithTransfer$jA( %転送-を伴う直列化-結果, %宛先~Realm )
+◎
+Let deserializeRecord be StructuredDeserializeWithTransfer(serializeWithTransferResult, targetRealm).
+</p>
+
+<p>
+ここで例外が投出されたときは、~catchして：
+◎
+If this throws an exception, catch it,＼
+</p>
+				<ol>
+					<li>
+%宛先~window に向けて，名前 `messageerror$et の`~eventを発火する$
+— `MessageEvent$I を利用し，次のように初期化して
+⇒＃
+`origin$m 属性 ~SET %生成元,
+`source$m 属性 ~SET %~source
+◎
+fire an event named messageerror at targetWindow, using MessageEvent, with the origin attribute initialized to origin and the source attribute initialized to source,＼
+</li>
+					<li>
+~RET
+◎
+and then return
+</li>
+				</ol>
+			</li>
+			<li>
+%~message~clone ~LET %逆直列化-~record . `Deserialized^sl
+◎
+Let messageClone be deserializeRecord.[[Deserialized]].
+</li>
+			<li>
+%新~port~list ~LET
+%逆直列化-~record . `TransferredValues^sl 内の すべての `MessagePort$I ~objからなる，同順の新たな`凍結d配列$
+◎
+Let newPorts be a new frozen array consisting of all MessagePort objects in deserializeRecord.[[TransferredValues]], if any, maintaining their relative order.
+</li>
+			<li>
+%宛先~window に向けて，名前 `message$et の`~eventを発火する$
+— `MessageEvent$I を利用し，次のように初期化して
+⇒＃
+`origin$m 属性 ~SET %生成元,
+`source$m 属性 ~SET %~source,
+`data$m 属性 ~SET  %~message~clone,
+`ports$m 属性 ~SET %新~port~list
+◎
+Fire an event named message at targetWindow, using MessageEvent, with the origin attribute initialized to origin, the source attribute initialized to source, the data attribute initialized to messageClone, and the ports attribute initialized to newPorts.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<div class="algo">
+`Window$I の
+`~postMessageO(message, options)@m
+~method~手続きは
+⇒
+`~windowに~messageを投函する手続き$( コレ, %message, %options )
+◎
+The postMessage(message, options) method, when invoked on a Window object, must run the following steps:
+• Let targetWindow be this Window object.
+• Run the window post message steps providing targetWindow, message, and options.
+</div>
+
+<div class="algo">
+`Window$I の
+`postMessage(message, targetOrigin, transfer)@m
+~method~手続きは
+⇒
+`~windowに~messageを投函する手続き$( コレ, %message, «[ "`targetOrigin$m" → %targetOrigin, "`transfer$m" → %transfer ]» )
+◎
+The postMessage(message, targetOrigin, transfer) method, when invoked on a Window object, must run the following steps:
+• Let targetWindow be this Window object.
+• Let options be «[ "targetOrigin" → targetOrigin, "transfer" → transfer ]».
+• Run the window post message steps providing targetWindow, message, and options.
+</div>
+
+			</section>
+		</section>
+		<section id="channel-messaging">
+<h2 title="Channel messaging">9.5. ~channel~messaging</h2>
+
+<!-- ``MessagePort^I -->
+
+			<section id="introduction-14">
+<h3 title="Introduction">9.5.1. 序論</h3>
+
+~INFORMATIVE
+
+<p>
+`~channel~messaging$
+【channel messaging （ “~channelを介した~messageの送信-法” ）】
+を利用すれば、作者は，独立な~code片どうし（例えば，異なる`閲覧文脈$内で走っているもの）を 直に通信させれる。
+◎
+To enable independent pieces of code (e.g. running in different browsing contexts) to communicate directly, authors can use channel messaging.
+</p>
+
+<p>
+この仕組みにおける通信~channelは、両端に~portを伴う，二重化された~pipeとして実装される。
+一方の~portに送信される~messageは，他方の~portに送達され、逆も同様になる。
+各~messageは、走っている`~task$を中断したり阻むことなく，~DOM~eventとして送達される。
+◎
+Communication channels in this mechanism are implemented as two-ways pipes, with a port at each end. Messages sent in one port are delivered at the other port, and vice-versa. Messages are delivered as DOM events, without interrupting or blocking running tasks.
+</p>
+
+<p>
+接続（ “連絡された”  2 個の~port）を作成するためには、
+`new MessageChannel()$m 構築子を~callする：
+◎
+To create a connection (two "entangled" ports), the MessageChannel() constructor is called:
+</p>
+
+<pre class="lang-js">
+var %channel = new MessageChannel();
+</pre>
+
+<p>
+一方の~portは 局所~portとして保たれ、他方の~portは ~remote~codeへ送信される
+— 例えば `window.postMessage()$m を用いて：
+◎
+One of the ports is kept as the local port, and the other port is sent to the remote code, e.g. using postMessage():
+</p>
+
+<pre class="lang-js">
+%otherWindow.postMessage('hello', 'https://example.com', [%channel.port2]);
+</pre>
+
+<p>
+~messageを送信するためには、局所~port上の ``postMessage()$m ~methodを利用する：
+◎
+To send messages, the postMessage() method on the port is used:
+</p>
+
+<pre class="lang-js">
+%channel.port1.postMessage('hello');
+</pre>
+
+<p>
+~messageを受信するためには、 `message$et ~eventを~listenする：
+◎
+To receive messages, one listens to message events:
+</p>
+
+<pre class="lang-js">
+%channel.port1.onmessage = handleMessage;
+function handleMessage(%event) {
+  /* <span class="comment">
+~messageは %event の`data$m 属性~内にある
+◎
+message is in event.data
+</span> */
+  // ...
+}
+</pre>
+
+<p>
+~portに送信する~dataは、有構造~dataも可能である。
+例えば，次では、一連の文字列からなる配列が `MessagePort$I に渡される：
+◎
+Data sent on a port can be structured data; for example here an array of strings is passed on a MessagePort:
+</p>
+
+<pre class="lang-js">
+%channel.port1.postMessage(['hello', 'world']);
+</pre>
+
+				<section id="examples-5">
+<h4 title="Examples">9.5.1.1. 例</h4>
+
+~INFORMATIVE
+
+<div class="example">
+
+<p>
+この例では、  2 つの~JS~libraryが `MessagePort$I を用いて互いに接続される。
+これにより，~libraryは、~APIを何ら変更することなく，後で［
+`~worker$ ~obj／異なる~frame
+］内に~hostすることも可能になる。
+◎
+In this example, two JavaScript libraries are connected to each other using MessagePorts. This allows the libraries to later be hosted in different frames, or in Worker objects, without any change to the APIs.
+</p>
+
+<pre class="lang-html">
+&lt;script src="contacts.js"&gt;&lt;/script&gt; &lt;!-- <span class="comment">
+%contacts ~objを公開する
+◎
+exposes a contacts object
+</span> --&gt;
+&lt;script src="compose-mail.js"&gt;&lt;/script&gt; &lt;!-- <span class="comment">
+%composer ~objを公開する
+◎
+exposes a composer object
+</span> --&gt;
+&lt;script&gt;
+ var %channel = new MessageChannel();
+ %composer.addContactsProvider(%channel.port1);
+ %contacts.registerConsumer(%channel.port2);
+&lt;/script&gt;
+</pre>
+
+<p>
+`addContactsProvider()^c 関数の実装は、次の様になる：
+◎
+Here's what the "addContactsProvider()" function's implementation could look like:
+</p>
+
+<pre class="lang-js">
+function addContactsProvider(%port) {
+  %port.onmessage = function (%event) {
+    switch (%event.data.messageType) {
+      'search-result': handleSearchResult(%event.data.results); break;
+      'search-done': handleSearchDone(); break;
+      'search-error': handleSearchError(%event.data.message); break;
+      // ...
+    }
+  };
+};
+</pre>
+
+<p>
+あるいは、次の様に実装することもできる：
+◎
+Alternatively, it could be implemented as follows:
+</p>
+
+<pre class="lang-js">
+function addContactsProvider(%port) {
+  %port.addEventListener('message', function (%event) {
+    if (%event.data.messageType == 'search-result')
+      handleSearchResult(%event.data.results);
+  });
+  %port.addEventListener('message', function (%event) {
+    if (%event.data.messageType == 'search-done')
+      handleSearchDone();
+  });
+  %port.addEventListener('message', function (%event) {
+    if (%event.data.messageType == 'search-error')
+      handleSearchError(%event.data.message);
+  });
+  // ...
+  %port.start();
+};
+</pre>
+
+<p>
+上の 2 つの~codeにおける~~主な違いは、
+`addEventListener()$m を利用した場合，
+``start()$m ~methodも呼出す必要がある点にある。
+``onmessage$m を利用した場合，暗黙的に ``start()$m も~callされる。
+◎
+The key difference is that when using addEventListener(), the start() method must also be invoked. When using onmessage, the call to start() is implied.
+</p>
+
+<p>
+``start()$m ~methodは、明示的に~callされようが，（ ``onmessage$m を設定することにより）暗黙的に~callされようが，~messageの~flowを開始する。
+その前の初期~時においては、~message~portに投函された~messageは
+— ~scriptが自身による~handlerを設定しておく機会を得る前に，どこかへ落とされないよう —
+静止される。
+◎
+The start() method, whether called explicitly or implicitly (by setting onmessage), starts the flow of messages: messages posted on message ports are initially paused, so that they don't get dropped on the floor before the script has had a chance to set up its handlers.
+</p>
+
+</div>
+
+				</section>
+				<section id="ports-as-the-basis-of-an-object-capability-model-on-the-web">
+<h4 title="Ports as the basis of an object-capability model on the web">9.5.1.2. ~web上の~obj能力~modelの基礎としての~port</h4>
+
+~INFORMATIVE
+
+<p>
+~portは、［
+~system内の他の動作者に，制限された能力を公開する仕方
+］と捉えることもできる（~obj能力~model的イミで
+【参考：<a href="https://en.wikipedia.org/wiki/Object-capability_model">~obj能力~model</a>】
+）。
+これは、弱い能力~systemにも、強い能力~modelにもなり得る。
+弱い能力~systemにおける~portは、単に同じ生成元の中の簡便な~modelとして利用される。
+強い能力~systemにおける~portは、ある生成元に属する %提供者 （ `provider^en ）から 別の生成元に属する %消費者 （ `consumer^en ）に向けて， %消費者 が［
+%提供者 に効果を及ぼせる ／
+%提供者 からの情報を得する
+］ような唯一の仕組みとして，提供される。
+◎
+Ports can be viewed as a way to expose limited capabilities (in the object-capability model sense) to other actors in the system. This can either be a weak capability system, where the ports are merely used as a convenient model within a particular origin, or as a strong capability model, where they are provided by one origin provider as the only mechanism by which another origin consumer can effect change in or obtain information from provider.
+</p>
+
+<p>
+例えば、ある %~social~site の~pageが，次のような 2 個の `iframe$e を埋込んでいる状況を考える：
+◎
+For example, consider a situation in which a social web site embeds＼
+</p>
+<ul>
+	<li>
+%提供者~frame は、（ %~social~site とは別の生成元に属する） %提供者
+— ここでは，利用者の~address-bookを提供している~serviceとする —
+からの内容を含んでいる
+◎
+in one iframe the user's email contacts provider (an address book site, from a second origin), and＼
+</li>
+	<li>
+%消費者~frame は、（また別の生成元に属する）
+%消費者
+— 例えば，ある~game~siteなど —
+からの内容を含んでいる
+◎
+in a second iframe a game (from a third origin).＼
+</li>
+</ul>
+
+<p>
+%~social~site ~page, および %消費者~frame 内からは、
+%提供者~frame の内側にあるものには~accessできない
+— これら二者が %提供者~frame の内側に何か及ぼせるのは、次に限られる：
+◎
+The outer social site and the game in the second iframe cannot access anything inside the first iframe; together they can only:
+</p>
+
+<ul>
+	<li>
+%提供者~frame を［
+%提供者~frame の~URLと`素片$urlだけ異なる`~URL$
+］へ`~navigate$する
+—  %提供者~frame 内の`~window$は `hashchange$et ~eventを受信することになる。
+◎
+Navigate the iframe to a new URL, such as the same URL but with a different fragment, causing the Window in the iframe to receive a hashchange event.
+</li>
+	<li>
+%提供者~frame を~resizeする
+— %提供者~frame 内の`~window$は `resize$et ~eventを受信することになる。
+◎
+Resize the iframe, causing the Window in the iframe to receive a resize event.
+</li>
+	<li>
+`window.postMessage()$m ~APIを用いて， %提供者~frame 内の`~window$へ `message$et ~eventを送信する。
+◎
+Send a message event to the Window in the iframe using the window.postMessage() API.
+</li>
+</ul>
+
+<p>
+%提供者 は、これらのうち，特に 3 番目の~method
+— `message$et ~event —
+を利用して、他の生成元から~accessできるような，利用者の~address-bookを操作するための~APIを提供する。
+例えば、~message
+"<code class="literal">add-contact: Guillaume Tell &lt;tell@pomme.example.net&gt;</code>"
+に対し、それが与える個人名とその~email~addressを 利用者の~address-bookに追加することにより，応答することもできる。
+◎
+The contacts provider can use these methods, most particularly the third one, to provide an API that can be accessed by other origins to manipulate the user's address book. For example, it could respond to a message "add-contact Guillaume Tell &lt;tell@pomme.example.net&gt;" by adding the given person and email address to the user's address book.
+</p>
+
+<p>
+~web上の どの~siteも利用者の~address-bookを操作できては困るので、
+%提供者 は，当の %~social~site など, 一定の信用-済み~siteに限って，これを許容するであろう。
+◎
+To avoid any site on the web being able to manipulate the user's contacts, the contacts provider might only allow certain trusted sites, such as the social site, to do this.
+</p>
+
+<p>
+ここで、 %消費者 は，利用者の~address-bookにメールアドレス（例えば、~gameの対戦相手の）を追加したいと求めていて、
+%~social~site は，自らに利するため それを許容する用意があるとする
+— それは，本質的には、 %提供者 が %~social~site と信用-を “共有すること” に等しい。
+これを行う仕方にはいくつかあり、最も単純なのは， %~social~site が %消費者 ~siteと %提供者  ~siteとの間の~messageを代理することであろう。
+しかしながら、この解決策には難点がある：
+◎
+Now suppose the game wanted to add a contact to the user's address book, and that the social site was willing to allow it to do so on its behalf, essentially "sharing" the trust that the contacts provider had with the social site. There are several ways it could do this; most simply, it could just proxy messages between the game site and the contacts site. However, this solution has a number of difficulties:＼
+</p>
+
+<ul>
+	<li>
+%~social~site は、［
+%消費者 ~siteが特権を濫用しないこと
+］を完全に信用するか，あるいは 許容したくない要請（メールアドレスを［
+複数~追加する ／ 読取る ／ 削除する
+］など）ではないことを確かめるため，各~要請を検証yすることが要求される。
+◎
+it requires the social site to either completely trust the game site not to abuse the privilege, or it requires that the social site verify each request to make sure it's not a request that it doesn't want to allow (such as adding multiple contacts, reading the contacts, or deleting them);＼
+</li>
+	<li>
+他にもいくつかの %消費者 が居て，同時に %提供者 とヤリトリすることもあり得る場合、複階性が増す。
+◎
+it also requires some additional complexity if there's ever the possibility of multiple games simultaneously trying to interact with the contacts provider.
+</li>
+</ul>
+
+<p>
+~message~channelと `MessagePort$I ~objを用いれば、これらの問題すべてを消し去れる。
+%消費者 がメールアドレスを追加したいと求める旨を %~social~site に伝えたとき、 %~social~site は、メールアドレスを追加することではなく，［
+1 個のメールアドレスを追加する<em>能力</em>
+］について， %提供者 に依頼できる。
+それに対し， %提供者 は、
+`MessagePort$I ~objの~pairを作成して，その片方を %~social~site に返信する。
+%~social~site は、受信したそれを %消費者 に回送する。
+それにより、 %消費者 と %提供者 は，直に接続されることになり、
+%提供者 は， “1 個のメールアドレスを追加する” 要請のみ尊守すればよいことを知る。
+言い換えれば、 %消費者 には， 1 個のメールアドレスを追加する能力が是認されたことになる。
+◎
+Using message channels and MessagePort objects, however, all of these problems can go away. When the game tells the social site that it wants to add a contact, the social site can ask the contacts provider not for it to add a contact, but for the capability to add a single contact. The contacts provider then creates a pair of MessagePort objects, and sends one of them back to the social site, who forwards it on to the game. The game and the contacts provider then have a direct connection, and the contacts provider knows to only honor a single "add contact" request, nothing else. In other words, the game has been granted the capability to add a single contact.
+</p>
+
+				</section>
+				<section id="ports-as-the-basis-of-abstracting-out-service-implementations">
+<h4 title="Ports as the basis of abstracting out service implementations">9.5.1.3. ~service実装を抽象-化する基礎としての~port</h4>
+
+~INFORMATIVE
+
+<p>
+前~節からの例を引き継いで、特に， %提供者 側を考える。
+初期~実装では、単純に~serviceの `iframe$e 内で `XMLHttpRequest$I ~objを利用していたが、~serviceの発展に伴い，単独の `WebSocket$I 接続を備える`共用~worker$の利用に代えたいと求めることもあろう。
+◎
+Continuing the example from the previous section, consider the contacts provider in particular. While an initial implementation might have simply used XMLHttpRequest objects in the service's iframe, an evolution of the service might instead want to use a shared worker with a single WebSocket connection.
+</p>
+
+<p>
+初期~設計の段階で， `MessagePort$I ~objを［
+能力を是認するため／
+または単に複数の独立な~sessionを同時に許容するため
+］に利用していたなら、~service実装は，~APIに全く手を加えずに［
+各 `iframe$e ごとに `XMLHttpRequest$I を用いる~model
+］から［
+`WebSocket$I を共有する~model
+］へ切替えれるようになる
+— ~service提供者~側のすべての~portは、~APIの利用者にまったく影響することなく，共用~workerに回送できる。
+◎
+If the initial design used MessagePort objects to grant capabilities, or even just to allow multiple simultaneous independent sessions, the service implementation can switch from the XMLHttpRequests-in-each-iframe model to the shared-WebSocket model without changing the API at all: the ports on the service provider side can all be forwarded to the shared worker without it affecting the users of the API in the slightest.
+</p>
+
+				</section>
+			</section>
+			<section id="message-channels">
+<h3 title="Message channels">9.5.2. ~message~channel</h3>
+
+<pre class="idl">
+[Exposed=(Window,Worker)]
+interface `MessageChannel@I {
+  ``MessageChannel$mc();
+
+  readonly attribute `MessagePort$I `port1$m;
+  readonly attribute `MessagePort$I `port2$m;
+};
+</pre>
+
+<dl class="domintro">
+	<dt>%channel = `new MessageChannel()$m</dt>
+	<dd>
+2 個の新たな `MessagePort$I ~objが伴われた，新たな `MessageChannel$I ~objを返す。
+◎
+Returns a new MessageChannel object with two new MessagePort objects.
+</dd>
+
+	<dt>%channel . `port1$m</dt>
+	<dd>
+1 個目の `MessagePort$I ~objを返す。
+◎
+Returns the first MessagePort object.
+</dd>
+
+	<dt>%channel . `port2$m</dt>
+	<dd>
+2 個目の `MessagePort$I ~objを返す。
+◎
+Returns the second MessagePort object.
+</dd>
+</dl>
+
+<p>
+各 `MessageChannel$I ~objには、
+`~port 1@,
+`~port 2@
+が結付けられる
+— どちらも `MessagePort$I ~objを与える。
+◎
+A MessageChannel object has an associated port 1 and an associated port 2, both MessagePort objects.
+</p>
+
+<div class="algo">
+<p>
+`new MessageChannel()@m
+構築子~手続きは：
+◎
+The new MessageChannel() constructor steps are:
+</p>
+<ol>
+	<li>
+コレの`~port 1$ ~SET コレに`関連な~Realm$に属する`新たな$ `MessagePort$I
+◎
+Set this's port 1 to a new MessagePort in this's relevant Realm.
+</li>
+	<li>
+コレの`~port 2$ ~SET コレに`関連な~Realm$に属する`新たな$ `MessagePort$I
+◎
+Set this's port 2 to a new MessagePort in this's relevant Realm.
+</li>
+	<li>
+`~portを連絡する$( コレの`~port 1$, コレの`~port 2$ )
+◎
+Entangle this's port 1 and this's port 2.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`port1@m
+取得子~手続きは
+⇒
+~RET コレの`~port 1$
+◎
+The port1 getter steps are to return this's port 1.
+</div>
+
+<div class="algo">
+`port2@m
+取得子~手続きは
+⇒
+~RET コレの`~port 2$
+◎
+The port2 getter steps are to return this's port 2.
+</div>
+
+			</section>
+			<section id="message-ports">
+<h3 title="Message ports">9.5.3. ~message~port</h3>
+
+<p>
+各~channelは、 2 個の~message~portを持つ。
+一方の~portから送信された~dataは，他方の~portに受信され、逆も同様になる。
+◎
+Each channel has two message ports. Data sent through one port is received by the other port, and vice versa.
+</p>
+
+<pre class="idl">
+[Exposed=(Window,Worker,AudioWorklet) `Transferable$]
+interface `MessagePort@I : `EventTarget$I {
+  undefined ``postMessage$m(any %message, sequence&lt;`object$&gt; %transfer);
+  undefined ``~postMessageO$m(any %message, optional `PostMessageOptions$I %options = {});
+  undefined ``start$m();
+  undefined ``close$m();
+
+  // event handlers
+  attribute `EventHandler$I ``onmessage$m;
+  attribute `EventHandler$I ``onmessageerror$m;
+};
+
+dictionary `PostMessageOptions@I {
+  sequence&lt;`object$&gt; `transfer@m = [];
+};
+</pre>
+
+<dl class="domintro">
+
+	<dt>%port . ``postMessage( message, transfer)$m【！ [, transfer]】</dt>
+	<dt>%port . ``~postMessageO(message [, options])$m</dt>
+	<dd>
+~channelを通して~messageを投函する。
+［
+%transfer ／ ［
+%options の `transfer$m ~member
+］］内に~listされた~objは、~cloneされるのみならず転送される
+— すなわち，送信-側からは、それ以降，それらを利用できなくなる。
+◎
+Posts a message through the channel. Objects listed in transfer are transferred, not just cloned, meaning that they are no longer usable on the sending side.
+</dd>
+	<dd>
+次の場合は `DataCloneError$E が投出される
+⇒
+%transfer が 同じ［
+~obj／~port
+］を重複して包含する場合 ／
+%message を~cloneできなかった場合
+◎
+Throws a "DataCloneError" DOMException if transfer contains duplicate objects or port, or if message could not be cloned.
+</dd>
+
+	<dt>%port . ``start()$m</dt>
+	<dd>
+この~portに受信される／された~messageを配送させ始める。
+◎
+Begins dispatching messages received on the port.
+</dd>
+
+	<dt>%port . ``close()$m</dt>
+	<dd>
+この~portを切断する。
+以降、この~portは 作動中でなくなる。
+◎
+Disconnects the port, so that it is no longer active.
+</dd>
+</dl>
+
+<div class="p">
+<p>
+各 `MessagePort$I ~objは、別のそれと連絡され得る（その関係性は対称になる）。
+</p>
+
+<p class="trans-note">【
+`port1$m, `port2$m のどちらを手元において もう片方を転送しようがかまわない。
+】</p>
+
+<p>
+各 `MessagePort$I ~objは、次のものを持つ：
+</p>
+<dl class="def-list">
+	<dt>`~port~message~queue@</dt>
+	<dd>
+`~task源$†。
+初期~時には空とする。
+`~port~message~queue$は、初期~時には不能化されており，ある時点で可能化され得る。
+可能化された後，再び不能化されることは決してない（~queue~内の~messageたちは、別の~queueへ移動されたり，すべて除去されることもあるが
+— それは、不能化されるのとほぼ同じ効果になる）。
+</dd>
+	<dd class="trans-note">【†
+すなわち，個々の`~port~message~queue$は、`~task~queue$であると同時に，独立な~task源を成す。
+】</dd>
+
+	<dt>`搬送-済み~flag@</dt>
+	<dd>
+初期~時には ~F をとるモノトスル
+</dd>
+</dl>
+◎
+Each MessagePort object can be entangled with another (a symmetric relationship). Each MessagePort object also has a task source called the port message queue, initially empty. A port message queue can be enabled or disabled, and is initially disabled. Once enabled, a port can never be disabled again (though messages in the queue can get moved to another queue or removed altogether, which has much the same effect). A MessagePort also has a has been shipped flag, which must initially be false.
+</div>
+
+<p>
+ある~port %P の`~port~message~queue$ %Q が可能化されたときは、
+`~event~loop$は， %Q をその`~task源$の一つとして利用する†モノトスル。
+【†すなわち、 %Q を成す各~taskを~event~loopの中で走らすことになる。】
+%P に`関連な大域~obj$は`~window$である場合、
+%Q に~queueされた`~task$の`文書$tKは，
+%P に`関連な大域~obj$に`結付けられている文書$になるモノトスル。
+◎
+When a port's port message queue is enabled, the event loop must use it as one of its task sources. When a port's relevant global object is a Window, all tasks queued on its port message queue must be associated with the port's relevant global object's associated Document.
+</p>
+
+<p class="note">注記：
+当の文書は`全部的に作動中$である一方で，【~port用に登録された】すべての~event~listenerの~scriptは［
+その`設定群~obj$が指定する`担当の文書$は，`全部的に作動中$でない
+］場合、~queueされた~messageたちは，それらの文書が再び`全部的に作動中$に［
+ならない限り／なるまでは
+］，受信されないことになる。
+◎
+If the document is fully active, but the event listeners all have scripts whose settings objects specify responsible documents that are not fully active, then the messages will not be recieved unless and until the documents become fully active again.
+</p> 
+
+<div class="p">
+<p>
+各 `~event~loop$は、
+`未搬送な~port~message~queue@
+と呼ばれる`~task源$を持つ。
+これは， “仮想の†” ~queueであり、［
+下の条件を満たす各 `MessagePort$I %P の`~port~message~queue$
+］内の~taskすべてを，~taskが~queueされた順序††で包含しているかのように動作するモノトスル
+— ~taskが`未搬送な~port~message~queue$から除去されるときは、代わりに，それが実際に属する`~port~message~queue$から除去するモノトスル。
+</p>
+
+<p>
+ここで、各 %P は，次をすべて満たすとする：
+</p>
+
+<ul><li>%P の`搬送-済み~flag$ ~EQ ~F
+</li><li>%P の`~port~message~queue$は可能化されている
+</li><li>%P に`関連な~agent$の`~event~loop$aG ~EQ 当の`~event~loop$
+</li></ul>
+
+<p class="trans-note">【†
+“仮想の” — すなわち、いくつかの~queueを包装するだけの，それ自身は実体を持たない~queue。
+】【††
+異なる`~port~message~queue$に属する~taskどうしの，`未搬送な~port~message~queue$の中での順序がどう定義されるのかは、明確に述べられていない（単に時系列順？）。
+】</p>
+
+◎
+Each event loop has a task source called the unshipped port message queue. This is a virtual task source: it must act as if it contained the tasks of each port message queue of each MessagePort whose has been shipped flag is false, whose port message queue is enabled, and whose relevant agent's event loop is that event loop, in the order in which they were added to their respective task source. When a task would be removed from the unshipped port message queue, it must instead be removed from its port message queue.
+</div>
+
+<p>
+［
+`MessagePort$I の`搬送-済み~flag$ ~EQ ~F
+］の下では、その`~port~message~queue$は，`~event~loop$の目的においては無視するモノトスル（代わりに，`未搬送な~port~message~queue$が利用される）。
+◎
+When a MessagePort's has been shipped flag is false, its port message queue must be ignored for the purposes of the event loop. (The unshipped port message queue is used instead.)
+</p>
+
+<p class="note">注記：
+`MessagePort$I ~obj %P の`搬送-済み~flag$は、［
+%P, %P の相手~側~port, %P の~clone元~obj
+］のいずれかが，転送されるか, すでにされている
+］ときに ~T にされる。
+%P の`搬送-済み~flag$が ~T にされて以降は、
+%P の`~port~message~queue$は first-class `~task源$
+【すなわち， “通常の，独立な” ~task源】
+として動作し，`未搬送な~port~message~queue$には影響しなくなる
+【その一部を成さなくなる】。
+◎
+The has been shipped flag is set to true when a port, its twin, or the object it was cloned from, is or has been transferred. When a MessagePort's has been shipped flag is true, its port message queue acts as a first-class task source, unaffected to any unshipped port message queue.
+</p>
+
+<div class="algorithm">
+<p>
+~UAは，
+`~portを連絡する@
+ときは、所与の 2 個の `MessagePort$I ~obj
+( %A, %B )
+に対し，次の手続きを走らすモノトスル：
+◎
+When the user agent is to entangle two MessagePort objects, it must run the following steps:
+</p>
+
+<ol>
+	<li>
+<p>
+~EACH ( %P ~IN { %A, %B } ) に対し
+⇒
+~IF［
+%P に連絡されている別の `MessagePort$I ~obj %Q がある
+］
+⇒
+%P と %Q との連絡を解く
+◎
+If one of the ports is already entangled, then disentangle it and the port that it was entangled with.
+</p>
+
+<p class="note">注記：
+%P, %Q が，ある `MessageChannel$I ~obj %C の 2 個の~portを成していた場合、
+%C は最早~実際の~channelを表現しなくなる
+— それ以降、 %P と %Q が連絡されることはない。
+◎
+If those two previously entangled ports were the two ports of a MessageChannel object, then that MessageChannel object no longer represents an actual channel: the two ports in that object are no longer entangled.
+</p>
+
+	</li>
+	<li>
+<p>
+%A, %B を，ある新たな~channelの 2 個の部位を形成するように結付けて連絡する（その~channelを表現する `MessageChannel$I ~objは，まだない）
+◎
+Associate the two ports to be entangled, so that they form the two parts of a new channel. (There is no MessageChannel object that represents this channel.)
+</p>
+
+<p>
+この時点で %A, %B は 互いに連絡されたことになる。
+◎
+Two ports A and B that have gone through this step are now said to be entangled; one is entangled to the other, and vice versa.
+</p>
+
+<p class="note">注記：
+この仕様は，この処理-を instantaneous として述べるが、実装は，~message passing 【？】を介して実装する見込みが高い。
+要は、他の~algoと同様，その最終的な結果が、~black-box的イミで “単に” 仕様が定めるものと判別できなければよい。
+◎
+While this specification describes this process as instantaneous, implementations are more likely to implement it via message passing. As with all algorithms, the key is "merely" that the end result be indistinguishable, in a black-box sense, from the specification.
+</p>
+
+	</li>
+</ol>
+</div>
+
+<hr>
+
+<p id="transferMessagePort">
+`MessagePort$I ~objは`転送-可能$である：
+◎
+MessagePort objects are transferable objects.＼
+</p>
+
+<ul>
+	<li class="algo">
+<p>
+その`転送-手続き$は、所与の
+( %値, %~data保持体 )
+に対し，次を走らす：
+◎
+Their transfer steps, given value and dataHolder, are:＼
+</p>
+		<ol>
+			<li>
+%値 の`搬送-済み~flag$ ~SET ~T
+◎
+Set value's has been shipped flag to true.
+</li>
+			<li>
+%~data保持体 . `PortMessageQueue^sl ~SET %値 の`~port~message~queue$
+◎
+Set dataHolder.[[PortMessageQueue]] to value's port message queue.
+</li>
+			<li>
+<p>
+~IF［
+ある別~port %~remote~port が %値 に連絡されている
+］：
+◎
+If value is entangled with another port remotePort, then:
+</p>
+				<ol>
+					<li>
+%~remote~port の`搬送-済み~flag$ ~SET ~T
+◎
+Set remotePort's has been shipped flag to true.
+</li>
+			<li>
+<p>
+%~data保持体 . `RemotePort^sl ~SET %~remote~port
+◎
+Set dataHolder.[[RemotePort]] to remotePort.
+</li>
+				</ol>
+			</li>
+			<li>
+<p>
+~ELSE
+⇒
+%~data保持体 . `RemotePort^sl ~SET ~NULL
+◎
+Otherwise, set dataHolder.[[RemotePort]] to null.
+</li>
+		</ol>
+	</li>
+	<li class="algo">
+<p>
+その`転送-受信-時の手続き$は、所与の
+( %~data保持体, %値 )
+に対し，次を走らす：
+◎
+Their transfer-receiving steps, given dataHolder and value, are:
+</p>
+		<ol>
+			<li>
+%値 の`搬送-済み~flag$ ~SET ~T
+◎
+Set value's has been shipped flag to true.
+</li>
+			<li>
+<p>
+%~data保持体 . `PortMessageQueue^sl を成す
+~EACH( `message$et ~eventを発火する`~task$ %~task )
+に対し：
+</p>
+				<ol>
+					<li>
+%~task を %値 の`~port~message~queue$に移動する
+— この`~port~message~queue$は、（初期~時の）不能化~状態のまま変えないとする
+</li>
+					<li>
+~IF［
+%値 に`関連な大域~obj$は`~window$である
+］
+⇒
+%~task の`文書$tK ~SET %値 に`関連な大域~obj$に`結付けられている文書$
+</li>
+				</ol>
+◎
+Move all the tasks that are to fire message events in dataHolder.[[PortMessageQueue]] to the port message queue of value, if any,＼
+leaving value's port message queue in its initial disabled state, and,＼
+if value's relevant global object is a Window, associating the moved tasks with value's relevant global object's associated Document.
+</li>
+			<li>
+~IF［
+%~data保持体 . `RemotePort^sl ~NEQ ~NULL
+］
+⇒
+`~portを連絡する$( %~data保持体 . `RemotePort^sl, %値 )
+⇒
+（これは、元の転送された~portと %~data保持体 . `RemotePort^sl との連絡を解くことになる。）
+◎
+If dataHolder.[[RemotePort]] is not null, then entangle dataHolder.[[RemotePort]] and value. (This will disentangle dataHolder.[[RemotePort]] from the original port that was transferred.)
+</li>
+		</ol>
+	</li>
+</ul>
+
+<hr>
+
+<div class="algorithm">
+<p>
+`~message~portに~messageを投函する手続き@
+は、所与の
+( %宛先~port, %~message, %options )
+に対し，次に従う：
+◎
+The message port post message steps, given a targetPort, message and options are as follows:
+</p>
+
+<ol>
+	<li>
+%transfer ~LET %options[ "`transfer$m" ]
+◎
+Let transfer be options["transfer"].
+</li>
+	<li>
+~IF［
+コレ ~IN %transfer
+］
+⇒
+~THROW `DataCloneError$E
+◎
+If transfer contains this MessagePort, then throw a "DataCloneError" DOMException.
+</li>
+	<li>
+%破棄予定 ~LET ~F
+◎
+Let doomed be false.
+</li>
+	<li>
+<p>
+~IF［
+%宛先~port ~NEQ ~NULL
+］~AND［
+%宛先~port ~IN %transfer
+］：
+</p>
+
+<ol><li>%破棄予定 ~SET ~T
+</li><li>任意選択で
+⇒
+%宛先~port が自身に向けて投函された結果，通信~channelは失われることを、~UAの開発者~consoleに報告する
+</li></ol>
+
+◎
+If targetPort is not null and transfer contains targetPort, then set doomed to true and optionally report to a developer console that the target port was posted to itself, causing the communication channel to be lost.
+</li>
+	<li>
+%転送-を伴う直列化-結果 ~LET `StructuredSerializeWithTransfer$jA( %message, %transfer )
+（例外投出あり）
+◎
+Let serializeWithTransferResult be StructuredSerializeWithTransfer(message, transfer). Rethrow any exceptions.
+</li>
+	<li>
+~IF［
+%宛先~port ~EQ ~NULL
+］~OR［
+%破棄予定 ~EQ ~T
+］
+⇒
+~RET
+◎
+If targetPort is null, or if doomed is true, then return.
+</li>
+	<li>
+<p>
+次の手続きを走らす`~task$を
+%宛先~port の`~port~message~queue$に追加する：
+◎
+Add a task that runs the following steps to the port message queue of targetPort:
+</p>
+		<ol>
+			<li>
+<p>
+%最終~宛先~port ~LET この~taskが見出される`~port~message~queue$を持つ `MessagePort$I ~obj
+◎
+Let finalTargetPort be the MessagePort in whose port message queue the task now finds itself.
+</p>
+<p class="note">
+これは %宛先~port と異なり得る
+— %宛先~port 自身が転送されるに伴い，その~taskすべても移動された場合には。
+◎
+This can be different from targetPort, if targetPort itself was transferred and thus all its tasks moved along with it.
+</p>
+			</li>
+			<li>
+%宛先~Realm ~LET %最終~宛先~port に`関連な~Realm$
+◎
+Let targetRealm be finalTargetPort's relevant Realm.
+</li>
+			<li>
+<p>
+%逆直列化-~record ~LET `StructuredDeserializeWithTransfer$jA( %転送-を伴う直列化-結果, %宛先~Realm )
+◎
+Let deserializeRecord be StructuredDeserializeWithTransfer(serializeWithTransferResult, targetRealm).
+</p>
+
+<p>
+ここで例外が投出されたときは、~catchして：
+◎
+If this throws an exception, catch it,＼
+</p>
+				<ol>
+					<li>
+%最終~宛先~port に向けて，名前 `messageerror$et の`~eventを発火する$
+—  `MessageEvent$I を利用して
+◎
+fire an event named messageerror at finalTargetPort, using MessageEvent,＼
+</li>
+					<li>
+~RET
+◎
+and then return.
+</li>
+				</ol>
+			</li>
+			<li>
+%~message~clone ~LET %逆直列化-~record . `Deserialized^sl
+◎
+Let messageClone be deserializeRecord.[[Deserialized]].
+</li>
+			<li>
+%新~port~list ~LET
+%逆直列化-~record . `TransferredValues^sl 内の すべての `MessagePort$I ~objからなる，同順の新たな`凍結d配列$
+◎
+Let newPorts be a new frozen array consisting of all MessagePort objects in deserializeRecord.[[TransferredValues]], if any, maintaining their relative order.
+</li>
+			<li>
+%最終~宛先~port に向けて，名前 `message$et の`~eventを発火する$
+— `MessageEvent$I を利用し，次のように初期化して
+⇒＃
+`data$m 属性 ~SET  %~message~clone,
+`ports$m 属性 ~SET %新~port~list
+◎
+Fire an event named message at finalTargetPort, using MessageEvent, with the data attribute initialized to messageClone and the ports attribute initialized to newPorts.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+``~postMessageO( message, options )@m
+~method~手続きは：
+◎
+The postMessage(message, options) method, when invoked on a MessagePort object must run the following steps:
+</p>
+<ol>
+	<li>
+%宛先~port ~LET ［
+コレに連絡されている~portは在るならば それ ／
+~ELSE_ ~NULL
+］
+◎
+Let targetPort be the port with which this MessagePort is entangled, if any; otherwise let it be null.
+</li>
+	<li>
+`~message~portに~messageを投函する手続き$( %宛先~port, %message, %options )
+◎
+Run the message port post message steps providing targetPort, message and options.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+``postMessage( message, transfer )@m
+~method~手続きは：
+◎
+The postMessage(message, transfer) method, when invoked on a MessagePort object must run the following steps:
+</p>
+<ol>
+	<li>
+%宛先~port ~LET ［
+コレに連絡されている~portは在るならば それ ／
+~ELSE_ ~NULL
+］
+◎
+Let targetPort be the port with which this MessagePort is entangled, if any; otherwise let it be null.
+</li>
+	<li>
+`~message~portに~messageを投函する手続き$( %宛先~port, %message, «[ "`transfer$m" → %transfer ]» )
+◎
+Let options be «[ "transfer" → transfer ]».
+◎
+Run the message port post message steps providing targetPort, message and options.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+``start()@m
+~method~手続きは
+⇒
+コレの`~port~message~queue$を
+— まだ可能化されていなければ —
+可能化する
+◎
+The start() method, when invoked, must enable this MessagePort object's port message queue, if it is not already enabled.
+</div>
+
+<div class="algo">
+<p>
+``close()@m
+~method~手続きは：
+◎
+The close() method, when invoked, must run these steps:
+</p>
+<ol>
+	<li>
+コレの `Detached$sl 内部~slot ~SET ~T
+◎
+Set this MessagePort object's [[Detached]] internal slot value to true.
+</li>
+	<li>
+~IF［
+コレに別~portが連絡されている
+］
+⇒
+その連絡を解く
+◎
+If this MessagePort object is entangled, disentangle it.
+</li>
+</ol>
+</div>
+
+<hr>
+
+<p>
+`MessagePort$I ~interfaceを実装している~すべての~objは、以下に挙げる`~event~handler$, および対応する`~event~handler~event型$を，`~event~handler~IDL属性$として~supportするモノトスル：
+◎
+The following are the event handlers (and their corresponding event handler event types) that must be supported, as event handler IDL attributes, by all objects implementing the MessagePort interface:
+</p>
+
+<table><thead><tr><th>`~event~handler$
+<th>`~event~handler~event型$
+</thead>
+
+<tbody><tr><td>``onmessage@m
+<td>`message$et
+
+<tr><td>``onmessageerror@m
+<td>`messageerror$et
+
+</tbody></table>
+
+<p>
+%P の`~port~message~queue$は、
+`MessagePort$I ~obj %P の ``onmessage$m ~IDL属性が初回に設定された時点で，
+%P の ``start()$m ~methodが~callされたかのように可能化されるモノトスル。
+◎
+The first time a MessagePort object's onmessage IDL attribute is set, the port's port message queue must be enabled, as if the start() method had been called.
+</p>
+
+			</section>
+			<section id="broadcasting-to-many-ports">
+<h3 title="Broadcasting to many ports">9.5.4. 多数の~portへの~broadcast法</h3>
+
+~INFORMATIVE
+
+<p>
+多数の~portへ~broadcastすることは、原則的には，比較的~単純であり、~message送信-用の `MessagePort$I ~objからなる配列を保っておいて，配列~内を反復して, ~messageを送信すればよい。
+しかしながら、相手~側が消去っても それらの~portを~garbage収集できなくなるという，困った効果もある。
+この問題を避けるには、相手~側から自身の存在を認知させるような，単純な~protocolを実装するとよい
+— 一定時間そうしなかったなら，消去ったと見做して、 `MessagePort$I ~objを~closeすることにより，~garbage収集に任せるような。
+◎
+Broadcasting to many ports is in principle relatively simple: keep an array of MessagePort objects to send messages to, and iterate through the array to send a message. However, this has one rather unfortunate effect: it prevents the ports from being garbage collected, even if the other side has gone away. To avoid this problem, implement a simple protocol whereby the other side acknowledges it still exists. If it doesn't do so after a certain amount of time, assume it's gone, close the MessagePort object, and let it be garbage collected.
+</p>
+
+			</section>
+			<section id="ports-and-garbage-collection">
+<h3 title="Ports and garbage collection">9.5.5. ~portと~garbage収集</h3>
+
+<p>
+`MessagePort$I ~obj %O が連絡されたときは、~UAは，次のいずれかから %O への強い参照-があるかのように動作するモノトスル
+⇒＃
+%O に連絡されている `MessagePort$I ~obj／
+%O に`関連な大域~obj$
+◎
+When a MessagePort object o is entangled, user agents must either act as if o's entangled MessagePort object has a strong reference to o, or as if o's relevant global object has a strong reference to o.
+</p>
+
+<div class="note">
+
+<p>注記：
+したがって，~message~portは、受信して~event~listenerをあてがった後は，放置しておくこともできる
+— その~event~listenerが~messageを受信できる限り，~channelは保守される。
+◎
+Thus, a message port can be received, given an event listener, and then forgotten, and so long as that event listener could receive a message, the channel will be maintained.
+</p>
+
+<p>
+無論，これが当の~channelの両~側に生じた場合、両~portとも~garbage収集され得る
+— それらは、互いに強い参照-があるとしても，生きた~codeからは到達-不能になるので。
+◎
+Of course, if this was to occur on both sides of the channel, then both ports could be garbage collected, since they would not be reachable from live code, despite having a strong reference to each other.
+</p>
+
+</div>
+
+<p>
+更には， `MessagePort$I ~obj %O は、次のいずれかが満たされている間は，~garbage収集されないモノトスル：
+◎
+Furthermore, a MessagePort object must not be garbage collected＼
+</p> 
+
+<ul>
+	<li>
+ある`~task~queue$内の ある`~task$が、 %O に向けて配送される~eventを参照している
+◎
+while there exists an event referenced by a task in a task queue that is to be dispatched on that MessagePort object, or＼
+</li>
+	<li>
+%O の`~port~message~queue$は、空でない, かつ 可能化されている
+◎
+while the MessagePort object's port message queue is enabled and not empty.
+</li>
+</ul>
+
+<p class="note">注記：
+作者には、 `MessagePort$I ~objを明示的に~closeして，それらの連絡を解くことが強く奨励される
+— そうすれば、それらの資源を収集し直せるようになる。
+多数の `MessagePort$I ~objを作成して，それらを~closeすることなく破棄することは、一時的に多量の~memoryを~~消費させ得る
+— ~garbage収集は、とりわけ， `MessagePort$I に対する~garbage収集に~cross-processの協調も孕まれ得る所では、即座に遂行されるとは限らないので。
+◎
+Authors are strongly encouraged to explicitly close MessagePort objects to disentangle them, so that their resources can be recollected. Creating many MessagePort objects and discarding them without closing them can lead to high transient memory usage since garbage collection is not necessarily performed promptly, especially for MessagePorts where garbage collection can involve cross-process coordination.
+</p>
+
+			</section>
+		</section>
+		<section id="broadcasting-to-other-browsing-contexts">
+<h2 title="Broadcasting to other browsing contexts">9.6. 他の閲覧文脈への~broadcast法</h2>
+
+<!-- ``BroadcastChannel^I -->
+
+<p>
+ときには、［
+同じ~UA内で同じ利用者から開かれているが，互いに関係しない異なる`閲覧文脈$内にある
+］ような，同じ`生成元$に属する複数の~pageどうしが、互いに通知を送信しあう必要が生じることもある。
+例えば、
+“利用者がこっちに~log-inしたから、そっちでも資格証を再度~検査してくれ”
+。
+◎
+Pages on a single origin opened by the same user in the same user agent but in different unrelated browsing contexts sometimes need to send notifications to each other, for example "hey, the user logged in over here, check your credentials again".
+</p>
+
+<p>
+もっと手の込んだ事例においては、`共用~worker$が最も適切な解決策になる
+— 例えば：
+共有されている状態の~lockingを管理する ／
+~serverと複数の局所~clientとの間で 資源の同期法を管理する ／
+`WebSocket$I 接続を~remote~hostと共有する，等々。
+◎
+For elaborate cases, e.g. to manage locking of shared state, to manage synchronization of resources between a server and multiple local clients, to share a WebSocket connection with a remote host, and so forth, shared workers are the most appropriate solution.
+</p>
+
+<p>
+共用~workerでは大げさにすぎるような単純な事例では、作者は，この節に述べる 単純な~channelに基づく~broadcastの仕組みを利用できる。
+◎
+For simple cases, though, where a shared worker would be an unreasonable overhead, authors can use the simple channel-based broadcast mechanism described in this section.
+</p>
+
+<pre class="idl">
+[Exposed=(Window,Worker)]
+interface `BroadcastChannel@I : `EventTarget$I {
+  ``BroadcastChannel$mc(DOMString %name);
+  readonly attribute DOMString ``name$m;
+  undefined ``postMessage$m(any %message);
+  undefined ``close$m();
+  attribute `EventHandler$I ``onmessage$m;
+  attribute `EventHandler$I ``onmessageerror$m;
+};
+</pre>
+
+<dl class="domintro">
+
+	<dt>%broadcastChannel = `new BroadcastChannel(name)$m</dt>
+	<dd>
+~channel名 %name の~channelを介して~messageを［
+送信できる／受信できる
+］ような，新たな `BroadcastChannel$I ~objを返す。
+◎
+Returns a new BroadcastChannel object via which messages for the given channel name can be sent and received.
+</dd>
+
+	<dt>%broadcastChannel . ``name$m</dt>
+	<dd>
+（構築子に渡された）~channel名を返す。
+◎
+Returns the channel name (as passed to the constructor).
+</dd>
+
+	<dt>%broadcastChannel . ``postMessage(message)$m</dt>
+	<dd>
+所与の~messageを，この~channelに設定しておかれた 他の `BroadcastChannel$I ~objへ送信する。
+~messageは、入子の~objや配列など，有構造~dataも可能である。
+◎
+Sends the given message to other BroadcastChannel objects set up for this channel. Messages can be structured objects, e.g. nested objects and arrays.
+</dd>
+
+	<dt>%broadcastChannel . ``close()$m</dt>
+	<dd>
+`BroadcastChannel$I ~objを~closeして，~garbage収集に委ねる。
+◎
+Closes the BroadcastChannel object, opening it up to garbage collection.
+</dd>
+</dl>
+
+<div class="p">
+<p>
+`BroadcastChannel$I ~objは、次のものを持つ：
+</p>
+
+<dl class="def-list">
+	<dt>`~channel名@</dt>
+	<dd>
+共有する通信~channelを識別する文字列。
+</dd>
+
+	<dt>`~close済み~flag@</dt>
+	<dd>
+~T ならば、通信は~closeされたことを指示する。
+</dd>
+</dl>
+
+◎
+A BroadcastChannel object has a channel name and a closed flag.
+
+A BroadcastChannel object has a channel name, a BroadcastChannel settings object, and a closed flag.
+</div>
+
+<div class="algo">
+`new BroadcastChannel(name)@m
+構築子~手続きは
+⇒
+コレの
+⇒＃
+`~channel名$ ~SET %name,
+`~close済み~flag$ ~SET ~F
+◎
+The new BroadcastChannel(name) constructor steps are:
+• Set this's channel name to name.
+• Set this's closed flag to false.
+</div>
+
+<div class="algo">
+``name@m
+取得子~手続きは
+⇒
+~RET コレの`~channel名$
+◎
+The name getter steps are to return this's channel name.
+</div>
+
+<div class="algo">
+<p>
+``postMessage( message )@m
+~method~手続きは：
+◎
+The postMessage(message) method steps are:
+</p>
+<ol>
+	<li>
+~IF［
+コレの`~close済み~flag$ ~EQ ~T
+］
+⇒
+~THROW `InvalidStateError$E
+◎
+If this's closed flag is true, then throw an "InvalidStateError" DOMException.
+</li>
+	<li>
+%直列形 ~LET  `StructuredSerialize$jA( %~message, %宛先~Realm )
+（例外投出あり）
+◎
+Let serialized be StructuredSerialize(message). Rethrow any exceptions.
+</li>
+	<li>
+%~source生成元 ~LET コレに`関連な設定群~obj$の`生成元$enV
+◎
+Let sourceOrigin be this's relevant settings object's origin.
+</li>
+	<li>
+<p>
+%行先~list ~LET 次をすべて満たす `BroadcastChannel$I ~obj %O すべてからなる~list：
+◎
+Let destinations be a list of BroadcastChannel objects that match the following criteria:
+</p>
+		<ul>
+			<li>
+<p>
+%O に`関連な大域~obj$ %G は、次のいずれかを満たす：
+◎
+Their relevant global object is either:
+</p>
+				<ul>
+					<li>
+［
+%G は `Window$I ~objである
+］~AND［
+%G に`結付けられている文書$は`全部的に作動中$である
+］
+◎
+a Window object whose associated Document is fully active, or
+</li>
+					<li>
+［
+%G は `WorkerGlobalScope$I ~objである
+］~AND［
+%G の`~close中~flag$ ~EQ ~F
+］~AND［
+%G の`~worker$は`休止-可能$でない
+］
+◎
+a WorkerGlobalScope object whose closing flag is false and whose worker is not a suspendable worker.
+</li>
+				</ul>
+			</li>
+			<li>
+( %O に`関連な設定群~obj$の`生成元$enV, %~source生成元 )
+は`同一-生成元$である
+◎
+Their relevant settings object's origin is same origin with sourceOrigin.
+</li>
+			<li>
+%O の`~channel名$ ~EQ コレの`~channel名$
+◎
+Their channel name is this's channel name.
+</li>
+		</ul>
+	</li>
+	<li>
+%行先~list からコレを除去する
+◎
+Remove source from destinations.
+</li>
+	<li>
+%行先~list を成す `BroadcastChannel$I たちを，次が満たされるように~sortする
+⇒
+`関連な~agent$が同じものどうしは、古いものから，作成された順に並ぶ
+（これは、完全な順序付けは定義しない。~UAは、この拘束の下で，`実装定義$な方式で更に~sortしてもヨイ。）
+◎
+Sort destinations such that all BroadcastChannel objects whose relevant agents are the same are sorted in creation order, oldest first. (This does not define a complete ordering. Within this constraint, user agents may sort the list in any implementation-defined manner.)
+</li>
+	<li>
+<p>
+%行先~list 内の ~EACH( %行先 ) に対し
+⇒
+次を走らす`大域~taskを~queueする$( `~DOM操作~task源$, %行先 に`関連な大域~obj$ )
+◎
+For each destination in destinations, queue a global task on the DOM manipulation task source given destination's relevant global object to perform the following steps:
+</p>
+		<ol>
+			<li>
+~IF［
+%行先 の`~close済み~flag$ ~EQ ~F
+］
+⇒
+~RET
+◎
+If destination's closed flag is true, then abort these steps.
+</li>
+			<li>
+%宛先~Realm ~LET %行先 に`関連な~Realm$
+◎
+Let targetRealm be destination's relevant Realm.
+</li>
+			<li>
+<p>
+%~data ~LET `StructuredDeserialize$jA( %直列形, %宛先~Realm )
+◎
+Let data be StructuredDeserialize(serialized, targetRealm).
+</p>
+
+<p>
+ここで例外が投出されたときは、~catchして：
+◎
+If this throws an exception, catch it,＼
+</p>
+				<ol>
+					<li>
+%行先 に向けて，名前 `messageerror$et の`~eventを発火する$
+— `MessageEvent$I を利用し，次のように初期化して
+⇒＃
+`origin$m 属性 ~SET `生成元を直列化する$( %~source生成元 )
+◎
+fire an event named messageerror at destination, using MessageEvent, with the origin attribute initialized to the serialization of sourceOrigin,＼
+</li>
+					<li>
+~RET
+◎
+and then abort these steps.
+</li>
+				</ol>
+			</li>
+			<li>
+%行先 に向けて，名前 `message$et の`~eventを発火する$
+— `MessageEvent$I を利用し，次のように初期化して
+⇒＃
+`data$m 属性 ~SET %~data,
+`origin$m 属性 ~SET `生成元を直列化する$( %~source生成元 )
+◎
+Fire an event named message at destination, using MessageEvent, with the data attribute initialized to data and the origin attribute initialized to the serialization of sourceOrigin.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<div class="p">
+<p>
+`BroadcastChannel$I ~obj %O に対しては、次がいずれも満たされている間は，
+%O に`関連な大域~obj$から %O への強い参照-があるモノトスル：
+</p>
+
+<ul ><li>%O の`~close済み~flag$ ~EQ ~F
+</li><li>%O 向けの［
+`message$et ／ `messageerror$et
+］~event用に登録されている~event~listenerがある
+</li></ul>
+
+◎
+While a BroadcastChannel object whose closed flag is false has an event listener registered for message or messageerror events, there must be a strong reference from the BroadcastChannel object's relevant global object to the BroadcastChannel object itself.
+</div>
+
+<div class="algo">
+<p>
+``close()@m
+~method~手続きは
+⇒
+コレの`~close済み~flag$ ~SET ~T
+◎
+The close() method steps are to set this's closed flag to true.
+</p>
+
+<p class="note">注記：
+作者には、 `BroadcastChannel$I ~objが不要になり次第，~UAが~garbage収集できるように
+明示的に~closeすることが強く奨励される。
+多数の `BroadcastChannel$I ~objを作成して，~event~listenerを伴わせたまま ~closeすることなく破棄した場合、目に見える~memory漏洩へ導く
+— それらの~objは、~event~listenerがある限り（または、それらが属する［
+~page／~worker
+］が~closeされるまで），生き残り続けようとするので。
+◎
+Authors are strongly encouraged to explicitly close BroadcastChannel objects when they are no longer needed, so that they can be garbage collected. Creating many BroadcastChannel objects and discarding them while leaving them with an event listener and without closing them can lead to an apparent memory leak, since the objects will continue to live for as long as they have an event listener (or until their page or worker is closed).
+</p>
+</div>
+
+<hr>
+
+<p>
+`BroadcastChannel$I ~interfaceを実装している~すべての~objは、以下に挙げる`~event~handler$, および対応する`~event~handler~event型$を，`~event~handler~IDL属性$として~supportするモノトスル：
+◎
+The following are the event handlers (and their corresponding event handler event types) that must be supported, as event handler IDL attributes, by all objects implementing the BroadcastChannel interface:
+</p>
+
+<table><thead><tr><th>`~event~handler$
+<th>`~event~handler~event型$
+</thead>
+
+<tbody><tr><td>``onmessage@m
+<td>`message$et
+
+<tr><td>``onmessageerror@m
+<td>`messageerror$et
+
+</tbody></table>
+
+<div class="example">
+<p>
+ある~pageが利用者が，いつ~log-outしたか知りたいと求めているとする
+— 同じ~siteに属する別の~tabの~pageから利用者がそうしたときでも：
+◎
+Suppose a page wants to know when the user logs out, even when the user does so from another tab at the same site:
+</p>
+
+<pre class="lang-js">
+var %authChannel = new BroadcastChannel('auth');
+%authChannel.onmessage = function (%event) {
+  if (%event.data == 'logout')
+    showLogout();
+}
+
+function logoutRequested() {
+  /* <span class="comment">
+利用者から~log-outを請われたとき，~callされる
+◎
+called when the user asks us to log them out
+</span> */
+  doLogout();
+  showLogout();
+  %authChannel.postMessage('logout');
+}
+
+function doLogout() {
+  /* <span class="comment">
+利用者は実際に~log-outした（例： ~cookieを~clearするなど）
+◎
+actually log the user out (e.g. clearing cookies)
+</span> */
+  // ...
+}
+
+function showLogout() {
+  /* <span class="comment">
+~log-outしたことを指示するように，~UIを更新する
+◎
+update the UI to indicate we're logged out
+</span> */
+  // ...
+}
+</pre>
+
+</div>
+
+		</section>
+	</section>
+</main>

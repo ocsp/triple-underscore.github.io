@@ -1,0 +1,4885 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8" />
+<title>Geometry Interfaces Module Level 1 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-w3c.css" type="text/css" />
+
+<style>
+._matrix tr {
+	border: none;
+}
+._matrix td {
+	text-align: center;
+}
+._matrix {
+	border-collapse: separate;
+	border-spacing: 0;
+	border: thin solid black;
+	border-style: none solid;
+	border-radius: 5px;
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN0',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[~\w\-一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) { //%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'm':
+case 'pR':
+case 'pM':
+case 'rR':
+case 'rM':
+case 'r0':
+case 'xR':
+case 'xM':
+case 'q':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\b[a-zA-Z]\w*/g, '<var>$&</var>');
+	}
+	break;
+case 'mc':
+	klass = 'm';
+	text = 'constructor';
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'l':
+	return `"<code class="literal">${text}</code>"`;
+	break;
+case 'sl':
+	text = `[[${key}]]`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+return text;
+
+	}
+}
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:Geometry Interfaces Module Level 1
+spec_date:2020-03-28
+trans_update:2020-04-08
+checked:180806
+original_url:https://drafts.fxtf.org/geometry/
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:transform,svg
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2016-12-27
+
+
+●●class_map
+E:error
+p:css
+css:css
+v:value
+f:css
+t:type
+e:element
+a:attr
+sl:js-slot
+jA:abstract
+jv:js-value
+
+●●tag_map
+I:code
+m:code
+xR:code
+xM:code
+xI:code
+pR:code
+pM:code
+pI:code
+q:code
+qI:code
+rR:code
+rM:code
+rI:code
+r0:code
+E:code
+p:code
+css:code
+c:code
+t:var
+f:code
+sl:span
+jA:abstract
+jv:code
+i:i
+css:code
+v:code
+
+●●words_table1
+
+
+SameValueZero:<a href="#_SameValueZero"><sub>±0</sub></a>
+
+
+●●words_table
+
+
+
+	●仕様
+	risk下に:at-Risk
+proprietary::::プロプライエタリ
+状態情報:status information:~
+訂正:correction:~
+
+	得る:possible
+	基づいて:in the sense of
+	支持を受けて:in favor for
+	-:primary benefit
+	~~一貫して:throughout
+	勧める:advise
+	~~作者:content creators
+	待たれる:awaiting
+	-:allowing
+
+	●IDL／型／操作／構造
+NaN:
+多重定義-:overload::~
+	設定:settings
+作成子:creator::~
+
+	●構文／直列化
+comma::::カンマ
+修復-:fixup::~
+
+文字列化子:stringifier::~
+直列形:serialized::~::シリアル形
+下位-:sub-:~
+逆直列化-:deserialize::~::逆シリアル化
+逆直列化:deserialization::~::逆シリアル化
+
+	●処理
+optional:
+往来-:roundtrip::~
+
+	●幾何／演算
+	graphic上の:graphical
+2D:
+3D:
+	2d
+	3d
+3x2:3×2
+4x4:4×4
+is-2D:is 2D
+	skewX
+	skewY
+X:
+Y:
+w:
+x:
+y:
+z:
+	invert
+可逆:invertible::~
+max:::
+min:::
+vector::::ベクター
+限界:bounding::~
+矩形:rectangle::~
+視座:perspective::~
+回転角:angle::~
+並進-:translate::~
+並進:translation::~
+四辺形:quadrilateral::~
+点:point::~
+点1:point 1::~
+点2:point 2::~
+点3:point 3::~
+点4:point 4::~
+行列:matrix::~
+	単位~行列
+回転:rotation::~
+変形-:transform::~
+変形:transform::~
+変形n:transformation::変形
+	~~変換-:transform
+幾何:geometry::~
+幾何的:geometric::~
+	成分:component／element
+拡縮-:scale::~
+拡縮:scale::~
+横方向:horizontal::~
+縦方向:vertical::~
+斜傾:skew::~
+軸:軸
+列主導順:column-major order::~
+乗算-:multiply::~
+	pre-multiply
+	post-multiply
+乗算:multiplication::~
+単位度:in degree:単位は度
+時計回り:clockwise::~
+不規則:irregular::~
+成分:
+	-:non-uniform
+	-:around
+
+	●CSS
+CSSOM:
+
+	●security
+install::::インストール
+悪用-:exploit:~
+入口:entry-point:~
+測定-:measure:~
+個人識別可能:personally-identifiable:~
+	集計-:used to test
+	可能性がある:could potentially
+
+
+	●未分類
+memory::::メモリ
+形:form:~
+転換-:turn:~
+割振り:allocation:割り振り
+数学的:mathematical:~
+中間的:intermediate:~
+	-:namesake
+	put:
+	保持-:-
+	冒頭に:initial
+
+	●指示語
+	早期の:earlier
+	以前の:previous
+	以外:something sese
+	どこでも:everywhere
+	広く:widely
+	より近く:more close
+	-:anymore
+	総数:total number of 
+	赤丸:red colored circles
+	与えられてない:is missing
+	-:figure:::
+	follow
+	get
+	-:item
+	live:
+	made
+	non-zero
+	number
+	previous
+	thank
+
+	Context:
+	DOMMatrix:
+	DOMQuad:
+	DOMQuadInit:
+	DOMRect:
+	DOMRectInit:
+	DOMRectReadOnly:
+	canvas:::
+	close:::
+
+●●original_id_map
+
+●●mdn_urls
+dommatrix:API/DOMMatrix
+dommatrixreadonly:API/DOMMatrixReadOnly
+dompoint:API/DOMPoint
+dictdef-dompointinit:API/DOMPointInit
+dompointreadonly:API/DOMPointReadOnly
+domquad:API/DOMQuad
+domrect:API/DOMRect
+	domrectlist:API/DOMRectList
+domrectreadonly:API/DOMRectReadOnly
+svgpoint:API/SVGPoint
+svgrect:API/SVGRect
+svgmatrix:API/SVGMatrix
+webkitcssmatrix:API/WebKitCSSMatrix
+	dictdef-dommatrixinit:API/DOMMatrixInit
+	dictdef-dommatrix2dinit:API/DOMMatrix2DInit
+	dictdef-domquadinit:API/DOMQuadInit
+	dictdef-domrectinit:API/DOMRectInit
+
+●●link_map
+
+	●IDL
+
+Default:~WEBIDLjs#Default
+Exposed:~WEBIDLjs#Exposed
+NewObject:~WEBIDLjs#NewObject
+SameObject:~WEBIDLjs#SameObject
+LegacyWindowAlias:~WEBIDLjs#LegacyWindowAlias
+Serializable:~HTMLcloning#serializable
+
+	object:~WEBIDL#idl-object
+I.unrestricted double:~WEBIDL#idl-unrestricted-double
+	unsigned long
+	boolean
+	...
+
+I.DOMMatrix:#dommatrix
+I.DOMMatrixInit:#dictdef-dommatrixinit
+I.DOMMatrix2DInit:#dictdef-dommatrix2dinit
+I.DOMMatrixReadOnly:#dommatrixreadonly
+I.DOMPoint:#dompoint
+I.DOMPointInit:#dictdef-dompointinit
+I.DOMPointReadOnly:#dompointreadonly
+I.DOMQuad:#domquad
+I.DOMQuadInit:#dictdef-domquadinit
+I.DOMRect:#domrect
+I.DOMRectList:#domrectlist
+I.DOMRectInit:#dictdef-domrectinit
+I.DOMRectReadOnly:#domrectreadonly
+I.DOMString:~WEBIDL#idl-DOMString
+
+I.SVGPoint:#svgpoint
+I.SVGRect:#svgrect
+I.SVGMatrix:#svgmatrix
+I.WebKitCSSMatrix:#webkitcssmatrix
+
+I.Window:~WINDOW#window
+I.Worker:~WORKERS#worker
+
+I.Float32Array:~WEBIDL#idl-Float32Array
+I.Float64Array:~WEBIDL#idl-Float64Array
+
+E.SyntaxError:~WEBIDL#syntaxerror
+	https://html.spec.whatwg.org/multipage/infrastructure.html#js-syntaxerror
+E.InvalidStateError:~WEBIDL#invalidstateerror
+
+m.DOMMatrixReadOnly:#dom-dommatrixreadonly-dommatrixreadonly
+xR.a:#dom-dommatrixreadonly-a
+xR.b:#dom-dommatrixreadonly-b
+xR.c:#dom-dommatrixreadonly-c
+xR.d:#dom-dommatrixreadonly-d
+xR.e:#dom-dommatrixreadonly-e
+xR.f:#dom-dommatrixreadonly-f
+xR.flipX:#dom-dommatrixreadonly-flipx
+xR.flipY:#dom-dommatrixreadonly-flipy
+xR.fromFloat32Array:#dom-dommatrixreadonly-fromfloat32array
+xR.fromFloat64Array:#dom-dommatrixreadonly-fromfloat64array
+xR.fromMatrix:#dom-dommatrixreadonly-frommatrix
+xR.inverse:#dom-dommatrixreadonly-inverse
+xR.is2D:#dom-dommatrixreadonly-is2d
+xR.isIdentity:#dom-dommatrixreadonly-isidentity
+xR.m11:#dom-dommatrixreadonly-m11
+xR.m12:#dom-dommatrixreadonly-m12
+xR.m13:#dom-dommatrixreadonly-m13
+xR.m14:#dom-dommatrixreadonly-m14
+xR.m21:#dom-dommatrixreadonly-m21
+xR.m22:#dom-dommatrixreadonly-m22
+xR.m23:#dom-dommatrixreadonly-m23
+xR.m24:#dom-dommatrixreadonly-m24
+xR.m31:#dom-dommatrixreadonly-m31
+xR.m32:#dom-dommatrixreadonly-m32
+xR.m33:#dom-dommatrixreadonly-m33
+xR.m34:#dom-dommatrixreadonly-m34
+xR.m41:#dom-dommatrixreadonly-m41
+xR.m42:#dom-dommatrixreadonly-m42
+xR.m43:#dom-dommatrixreadonly-m43
+xR.m44:#dom-dommatrixreadonly-m44
+xR.multiply:#dom-dommatrixreadonly-multiply
+xR.rotate:#dom-dommatrixreadonly-rotate
+xR.rotateAxisAngle:#dom-dommatrixreadonly-rotateaxisangle
+xR.rotateFromVector:#dom-dommatrixreadonly-rotatefromvector
+xR.scale3d:#dom-dommatrixreadonly-scale3d
+xR.scale:#dom-dommatrixreadonly-scale
+xR.scaleNonUniform:#dom-dommatrixreadonly-scalenonuniform
+xR.skewX:#dom-dommatrixreadonly-skewx
+xR.skewY:#dom-dommatrixreadonly-skewy
+xR.toFloat32Array:#dom-dommatrixreadonly-tofloat32array
+xR.toFloat64Array:#dom-dommatrixreadonly-tofloat64array
+xR.transformPoint:#dom-dommatrixreadonly-transformpoint
+xR.translate:#dom-dommatrixreadonly-translate
+xR.stringifier:#dommatrixreadonly-stringification-behavior
+xR.toJSON:#dom-dommatrixreadonly-tojson
+
+
+m.DOMMatrix:#dom-dommatrix-dommatrix
+xM.fromFloat32Array:#dom-dommatrix-fromfloat32array
+xM.fromFloat64Array:#dom-dommatrix-fromfloat64array
+xM.fromMatrix:#dom-dommatrix-frommatrix
+xM.invertSelf:#dom-dommatrix-invertself
+xM.multiplySelf:#dom-dommatrix-multiplyself
+xM.preMultiplySelf:#dom-dommatrix-premultiplyself
+xM.rotateAxisAngleSelf:#dom-dommatrix-rotateaxisangleself
+xM.rotateFromVectorSelf:#dom-dommatrix-rotatefromvectorself
+xM.rotateSelf:#dom-dommatrix-rotateself
+xM.scale3dSelf:#dom-dommatrix-scale3dself
+xM.scaleSelf:#dom-dommatrix-scaleself
+xM.setMatrixValue:#dom-dommatrix-setmatrixvalue
+xM.skewXSelf:#dom-dommatrix-skewxself
+xM.skewYSelf:#dom-dommatrix-skewyself
+xM.translateSelf:#dom-dommatrix-translateself
+
+
+xI.a:#dom-dommatrix2dinit-a
+xI.b:#dom-dommatrix2dinit-b
+xI.c:#dom-dommatrix2dinit-c
+xI.d:#dom-dommatrix2dinit-d
+xI.e:#dom-dommatrix2dinit-e
+xI.f:#dom-dommatrix2dinit-f
+xI.is2D:#dom-dommatrixinit-is2d
+xI.m11:#dom-dommatrix2dinit-m11
+xI.m12:#dom-dommatrix2dinit-m12
+xI.m13:#dom-dommatrixinit-m13
+xI.m14:#dom-dommatrixinit-m14
+xI.m21:#dom-dommatrix2dinit-m21
+xI.m22:#dom-dommatrix2dinit-m22
+xI.m23:#dom-dommatrixinit-m23
+xI.m24:#dom-dommatrixinit-m24
+xI.m31:#dom-dommatrixinit-m31
+xI.m32:#dom-dommatrixinit-m32
+xI.m33:#dom-dommatrixinit-m33
+xI.m34:#dom-dommatrixinit-m34
+xI.m41:#dom-dommatrix2dinit-m41
+xI.m42:#dom-dommatrix2dinit-m42
+xI.m43:#dom-dommatrixinit-m43
+xI.m44:#dom-dommatrixinit-m44
+
+xE.m11:#matrix-m11-element
+xE.m12:#matrix-m12-element
+xE.m13:#matrix-m13-element
+xE.m14:#matrix-m14-element
+xE.m21:#matrix-m21-element
+xE.m22:#matrix-m22-element
+xE.m23:#matrix-m23-element
+xE.m24:#matrix-m24-element
+xE.m31:#matrix-m31-element
+xE.m32:#matrix-m32-element
+xE.m33:#matrix-m33-element
+xE.m34:#matrix-m34-element
+xE.m41:#matrix-m41-element
+xE.m42:#matrix-m42-element
+xE.m43:#matrix-m43-element
+xE.m44:#matrix-m44-element
+
+
+
+m.DOMPoint:#dom-dompoint-dompoint
+pM.fromPoint:#dom-dompoint-frompoint
+
+m.DOMPointReadOnly:#dom-dompointreadonly-dompointreadonly
+pR.fromPoint:#dom-dompointreadonly-frompoint
+pR.matrixTransform:#dom-dompointreadonly-matrixtransform
+pR.w:#dom-dompointreadonly-w
+pR.x:#dom-dompointreadonly-x
+pR.y:#dom-dompointreadonly-y
+pR.z:#dom-dompointreadonly-z
+pR.toJSON:#dom-dompointreadonly-tojson
+
+pI.w:#dom-dompointinit-w
+pI.x:#dom-dompointinit-x
+pI.y:#dom-dompointinit-y
+pI.z:#dom-dompointinit-z
+
+m.DOMQuad:#dom-domquad-domquad
+q.fromQuad:#dom-domquad-fromquad
+q.fromRect:#dom-domquad-fromrect
+q.getBounds:#dom-domquad-getbounds
+q.p1:#dom-domquad-p1
+q.p2:#dom-domquad-p2
+q.p3:#dom-domquad-p3
+q.p4:#dom-domquad-p4
+q.toJSON:#dom-domquad-tojson
+
+qI.p1:#dom-domquadinit-p1
+qI.p2:#dom-domquadinit-p2
+qI.p3:#dom-domquadinit-p3
+qI.p4:#dom-domquadinit-p4
+
+m.DOMRect:#dom-domrect-domrect
+rM.fromRect:#dom-domrect-fromrect
+rM.height:#dom-domrect-height
+rM.width:#dom-domrect-width
+rM.x:#dom-domrect-x
+rM.y:#dom-domrect-y
+
+m.length:#dom-domrectlist-length
+m.item:#dom-domrectlist-item
+
+rI.height:#dom-domrectinit-height
+rI.width:#dom-domrectinit-width
+rI.x:#dom-domrectinit-x
+rI.y:#dom-domrectinit-y
+
+m.DOMRectReadOnly:#dom-domrectreadonly-domrectreadonly
+rR.fromRect:#dom-domrectreadonly-fromrect
+rR.height:#dom-domrectreadonly-height
+rR.width:#dom-domrectreadonly-width
+rR.x:#dom-domrectreadonly-x
+rR.y:#dom-domrectreadonly-y
+rR.z:#dom-domrectreadonly-z
+rR.w:#dom-domrectreadonly-w
+rR.top:#dom-domrectreadonly-top
+rR.right:#dom-domrectreadonly-right
+rR.bottom:#dom-domrectreadonly-bottom
+rR.left:#dom-domrectreadonly-left
+rR.toJSON:#dom-domrectreadonly-tojson
+
+r0.x:#dom-domrectreadonly-domrect-x
+r0.y:#dom-domrectreadonly-domrect-y
+r0.width:#dom-domrectreadonly-domrect-width
+r0.height:#dom-domrectreadonly-domrect-height
+r0.top:#dom-domrectreadonly-domrect-top
+r0.right:#dom-domrectreadonly-domrect-right
+r0.bottom:#dom-domrectreadonly-domrect-bottom
+r0.left:#dom-domrectreadonly-domrect-left
+
+m.getBoundingClientRect:~CSSOMVIEW#dom-element-getboundingclientrect
+
+jA.ToString:~TC39#sec-tostring
+jA.SameValueZero:~TC39#sec-samevaluezero
+
+	●用語
+
+~NaN安全な最小:#nan-safe-minimum
+~NaN安全な最大:#nan-safe-maximum
+
+点:#point
+~listから点を作成する:#_create-a-dompoint-from-a-list
+辞書から点を作成する:#create-a-dompointreadonly-from-the-dictionary
+	DOMPointReadOnlyを作成-:#create-a-dompointreadonly-from-the-dictionary
+	DOMPointを作成-:#create-a-dompoint-from-the-dictionary
+点を行列で変形する:#transform-a-point-with-a-matrix
+
+~x座標:#point-x-coordinate
+~y座標:#point-y-coordinate
+~z座標:#point-z-coordinate
+~w視座:#point-w-perspective
+点1:#quadrilateral-point-1
+点2:#quadrilateral-point-2
+点3:#quadrilateral-point-3
+点4:#quadrilateral-point-4
+
+矩形:#rectangle
+原点:#rectangle-origin
+縦幅~寸法:#rectangle-height-dimension
+横幅~寸法:#rectangle-width-dimension
+rT.~x座標:#rectangle-x-coordinate
+rT.~y座標:#rectangle-y-coordinate
+~listから矩形を作成する:#_create-a-domrect-from-a-list
+辞書から矩形を作成する:#create-a-domrectreadonly-from-the-dictionary
+	~DOMRectを作成-:#create-a-domrect-from-the-dictionary
+	~DOMRectReadOnlyを作成-:#create-a-domrectreadonly-from-the-dictionary
+
+四辺形:#quadrilateral
+辞書から四辺形を作成する:#create-a-domquad-from-the-domquadinit-dictionary
+R.辞書から四辺形を作成する:#create-a-domquad-from-the-domrectinit-dictionary
+	DOMQuadInit辞書から~DOMQuadを作成-
+	DOMRectInit辞書から~DOMQuadを作成-:#create-a-domquad-from-the-domrectinit-dictionary
+
+行列:#matrix
+~4x4抽象-行列:#abstract-matrix
+列主導順:#_column-major order
+変異-可能な複製:#_mutable-matrix
+行列として構文解析する:#parse-a-string-into-an-abstract-matrix
+行列~成分:#_matrix-elements
+
+右から乗算-:#post-multiply
+左から乗算-:#pre-multiply
+乗算-:#multiply
+	自己乗算:#_self-multiply
+	~2D条件:#_2D-condition
+
+~2D用に辞書を検証して修復する:#matrix-validate-and-fixup-2d
+辞書を検証して修復する:#matrix-validate-and-fixup
+~listから行列を作成する:#_create-a-matrix-from-a-list
+~2D行列を作成する:#create-a-2d-matrix
+~3D行列を作成する:#create-a-3d-matrix
+~2D辞書から行列を作成する:#_create-a-matrix-from-the-dictionary-2d
+	#create-a-dommatrixreadonly-from-the-2d-dictionary
+	#create-a-dommatrix-from-the-2d-dictionary
+辞書から行列を作成する:#_create-a-matrix-from-the-dictionary
+	#create-a-dommatrixreadonly-from-the-dictionary
+	#create-a-dommatrix-from-the-dictionary
+
+~is-2D:#matrix-is-2d
+
+	作成子:#dommatrix-create
+	変異-不能:#immutable-transformation-methods
+	変異-可能:#mutable-transformation-methods
+
+現在の大域~obj:~WAPI#current-global-object
+
+旧来の~window上の別名:~WEBIDLjs#_legacy-window-alias
+
+	●serialization
+下位-直列化:~HTMLcloning#sub-serialization
+直列化-可能:~HTMLcloning#serializable-objects
+直列化~手続き:~HTMLcloning#serialization-steps
+下位-直列化:~HTMLcloning#sub-serialization
+下位-逆直列化:~HTMLcloning#sub-deserialization
+逆直列化~手続き:~HTMLcloning#deserialization-steps
+
+
+	●CSS
+
+p.transform:~TRANSFORM#propdef-transform
+
+t.length:~CSSVAL#length-value
+	t.transform-function:~TRANSFORM#typedef-transform-function
+t.transform-function:~TRANSFORM2#typedef-transform-function
+t.transform-list:~TRANSFORM#typedef-transform-list
+f.matrix():~TRANSFORM#funcdef-transform-matrix
+f.matrix3d():~TRANSFORM2#funcdef-matrix3d
+
+絶対~長さ:~CSSVAL#absolute-length
+	NaN:~CSSVAL#valdef-calc-nan
+	Infinity:~CSSVAL#valdef-calc-infinity
+構文解析-:~CSSSYN#css-parse-something-according-to-a-css-grammar
+
+~3D変形-関数:~TRANSFORM2#3d-transform-functions
+	#three-d-transform-functions
+	~TRANSFORM#transform-primitives
+~3D並進:~TRANSFORM2#Translate3dDefined
+~3D拡縮:~TRANSFORM2#Scale3dDefined
+~3D回転:~TRANSFORM2#Rotate3dDefined
+~2D回転:~TRANSFORM#RotateDefined
+~X軸~不変の~2D斜傾:~TRANSFORM#SkewXDefined
+~Y軸~不変の~2D斜傾:~TRANSFORM#SkewYDefined
+
+行内~level:~CSSDISP#inline-level
+
+●●ref_normative
+
+[CSS-TRANSFORMS-2]
+    Tab Atkins Jr.; et al. CSS Transforms Module Level 2. 3 March 2020. WD. URL: https://www.w3.org/TR/css-transforms-2/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS3-SYNTAX]
+    Tab Atkins Jr.; Simon Sapin. CSS Syntax Module Level 3. 16 July 2019. CR. URL: https://www.w3.org/TR/css-syntax-3/ 
+[CSS3-TRANSFORMS]
+    Simon Fraser; et al. CSS Transforms Module Level 1. 14 February 2019. CR. URL: https://www.w3.org/TR/css-transforms-1/ 
+[ECMA-262]
+    ECMAScript Language Specification. URL: https://tc39.es/ecma262/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[WEBIDL]
+    Boris Zbarsky. Web IDL. 15 December 2016. ED. URL: https://heycam.github.io/webidl/ 
+
+●●ref_informative
+
+[CSSOM-VIEW]
+    Simon Pieters. CSSOM View Module. 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-view-1/ 
+[SVG11]
+    Erik Dahlström; et al. Scalable Vector Graphics (SVG) 1.1 (Second Edition). 16 August 2011. REC. URL: https://www.w3.org/TR/SVG11/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">Geometry Interfaces Module Level 1</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/geometry-1/
+
+編集者草案
+	https://drafts.fxtf.org/geometry/
+
+以前のバージョン
+	https://www.w3.org/TR/2014/CR-geometry-1-20141125/
+	https://www.w3.org/TR/2014/WD-geometry-1-20140918/
+	https://www.w3.org/TR/2014/WD-geometry-1-20140626/
+	https://www.w3.org/TR/2014/WD-geometry-1-20140522/
+	https://www.w3.org/TR/2013/WD-matrix-20130919/
+
+バージョン履歴
+	https://github.com/w3c/fxtf-drafts/commits/master
+
+テスト一式
+	http://test.csswg.org/suites/geometry-1_dev/nightly-unstable/
+
+編集
+	<a href="mailto:dschulze@adobe.com">Dirk Schulze</a> (Adobe Inc.)
+	<a href="mailto:chrishtr@chromium.org">Chris Harrelson</a> (Google Inc.)
+
+前任編集者
+	<a href="mailto:simonp@opera.com">Simon Pieters</a> (Opera Software AS)
+	<a href="rcabanier@magicleap.com">Rik Cabanier</a> (Magic Leap)
+
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/fxtf-drafts/blob/master/geometry-1/Overview.bs">GitHub Editor
+
+最新の課題
+	<a href="https://github.com/w3c/fxtf-drafts/labels/geometry-1">GitHub Issues</a>
+
+
+</script>
+
+
+</head>
+
+<body>
+<header>
+
+
+
+	<hgroup>
+<h1>Geometry Interfaces Module Level 1</h1>
+	</hgroup>
+
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この仕様は、他の~moduleや仕様が［
+点 ／ 矩形 ／ 四辺形 ／ 変形n行列
+］を表現するときに利用できる，基本的な幾何的~interfaceを供する。
+◎
+This specification provides basic geometric interfaces to represent points, rectangles, quadrilaterals and transformation matrices that can be used by other modules or specifications.
+</p>
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公の複製です…
+【以下，この節の他の内容は <a href="css-common-ja.html#status">CSS 日本語訳 共通ページ</a>に委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+この仕様は、［
+点, 矩形, 四辺形, ［
+~3x2／~4x4
+］変形n行列
+］を表現するための，数種の幾何~interfaceを述べる。
+◎
+This specification describes several geometry interfaces for the representation of points, rectangles, quadrilaterals and transformation matrices with the dimension of 3x2 and 4x4.
+</p>
+
+<p>
+~SVGの~interface［
+`SVGPoint^I, `SVGRect^I, `SVGMatrix^I
+］は、ここに定義される各種~interfaceの別名とされることになる
+— それらの~interfaceを［
+~SVG ／ Canvas 2D Context  ／ CSS Transforms
+］から共通して利用することの支持を受けて。
+`SVG11$r
+`HTML$r
+`CSS3-TRANSFORMS$r
+◎
+The SVG interfaces SVGPoint, SVGRect and SVGMatrix are aliasing the here defined interfaces in favor for common interfaces used by SVG, Canvas 2D Context and CSS Transforms. [SVG11] [HTML] [CSS3-TRANSFORMS]
+</p>
+
+	</section>
+	<section id="_conventions">
+<h2>【この訳に固有の表記規約】</h2>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, 此れ, ~IF, ~THROW 等々）の意味や定義の詳細は，~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+<p>
+浮動小数点数（有限でないものも含む）の比較における記号 ~EQ に添えられる
+“<dfn id="_SameValueZero"><sub>±0</sub></dfn>”
+は、［
+`-0^jv, `+0^jv
+］も互いに同じと見なす（すなわち，
+`-0^jv ~EQ~SameValueZero `+0^jv
+）ことを除き，通常の ~EQ と同じ意味とする（特に， `NaN^jv ~EQ~SameValueZero `NaN^jv ）。
+記号 ~NEQ に添えられたときは ~EQ~SameValueZero の否定を表すとする。
+</p>
+
+<p class="trans-note">【
+原文では，この比較を表すために `SameValueZero$jA() 抽象-演算も一部~用いられているが（ `SameValueZero^jA( `-0^jv, `+0^jv ) は ~T を返す）、表記を一貫させるため，上の定義を用いることにする。
+】</p>
+
+	</section>
+	<section id="DOMPoint">
+<h2 title="The DOMPoint interfaces">2. `DOMPoint^I ~interface</h2>
+
+<p>
+~2D／~3Dの
+`点@
+は、次の~IDL~interfaceで表現できる：
+◎
+A 2D or a 3D point can be represented by the following WebIDL interfaces:
+</p>
+
+<pre class="idl">
+[`Exposed$=(Window,Worker), `Serializable$]
+interface `DOMPointReadOnly@I {
+    `DOMPointReadOnly$mc(
+        optional unrestricted double %x = 0,
+        optional unrestricted double %y = 0,
+        optional unrestricted double %z = 0,
+        optional unrestricted double %w = 1
+    );
+
+    [`NewObject$] static `DOMPointReadOnly$I `fromPoint$pR(optional `DOMPointInit$I %other = {});
+
+    readonly attribute unrestricted double `x$pR;
+    readonly attribute unrestricted double `y$pR;
+    readonly attribute unrestricted double `z$pR;
+    readonly attribute unrestricted double `w$pR;
+
+    [`NewObject$] `DOMPoint$I `matrixTransform$pR(optional `DOMMatrixInit$I %matrix = {});
+
+    [`Default$] object `toJSON@pR();
+};
+
+[`Exposed$=(Window,Worker), `Serializable$, `LegacyWindowAlias$=`SVGPoint@I]
+interface `DOMPoint@I : `DOMPointReadOnly$I {
+    `DOMPoint$mc(
+        optional unrestricted double %x = 0,
+        optional unrestricted double %y = 0,
+        optional unrestricted double %z = 0,
+        optional unrestricted double %w = 1
+    );
+
+    [`NewObject$] static `DOMPoint$I `fromPoint$pM(optional `DOMPointInit$I %other = {});
+
+    inherit attribute unrestricted double `x$pR;
+    inherit attribute unrestricted double `y$pR;
+    inherit attribute unrestricted double `z$pR;
+    inherit attribute unrestricted double `w$pR;
+};
+
+dictionary `DOMPointInit@I {
+    unrestricted double `x@pI = 0;
+    unrestricted double `y@pI = 0;
+    unrestricted double `z@pI = 0;
+    unrestricted double `w@pI = 1;
+};
+</pre>
+
+<div class="p">
+<p>
+各 `DOMPointReadOnly$I ~obj %P は、次に挙げる内部~member変数を持つものと見做される：
+</p>
+
+<dl class="def-list">
+	<dt>`~x座標@, `~y座標@, `~z座標@, `~w視座@</dt>
+	<dd>
+これらは、 %P が表現する`点$
+— 単に “%P の点” とも記される —
+を成す各 成分を与える。
+</dd>
+	<dd class="trans-note">【
+~3D射影空間~内の点を表現する。
+`~w視座$（ w-perspective ）は “遠近感” を与えるためにある。
+】</dd>
+</dl>
+
+<p>
+`DOMPointReadOnly$I ~interfaceは、これらの変数に~accessできなければナラナイ。
+それを継承している `DOMPoint$I ~interfaceは、これらの変数の値も設定できなければナラナイ。
+</p>
+◎
+The following algorithms assume that DOMPointReadOnly objects have the internal member variables x coordinate, y coordinate, z coordinate and w perspective. DOMPointReadOnly as well as the inheriting interface DOMPoint must be able to access and set the value of these variables.
+</div>
+
+<p>
+`DOMPointReadOnly$I ~objを返す各種~interfaceは、内部~member変数~値を改変してもヨイ。
+そのような~interfaceは、その能を注釈文にて明示的に指定しなければナラナイ。
+◎
+An interface returning an DOMPointReadOnly object by an attribute or function may be able to modify internal member variable values. Such an interface must specify this ability explicitly in prose.
+</p>
+
+<p>
+内部~member変数は、公開されないモノトスル。
+◎
+Internal member variables must not be exposed in any way.
+</p>
+
+<dl class="idl-def">
+	<dt>`DOMPointReadOnly(x, y, z, w)@m</dt>
+	<dt>`DOMPoint(x, y, z, w)@m</dt>
+	<dd>
+これらの構築子の被呼出時には、次の結果を返すモノトスル
+⇒
+`~listから点を作成する$( «%x, %y, %z, %w» ), それぞれの~interface型 )
+◎
+The DOMPointReadOnly(x, y, z, w) and DOMPoint(x, y, z, w) constructors, when invoked, must run the following steps:
+◎
+Let point be a new DOMPointReadOnly or DOMPoint object as appropriate.
+◎
+Set point’s variables x coordinate to x, y coordinate to y, z coordinate to z and w perspective to w.
+◎
+Return point.
+</dd>
+
+	<dt>`DOMPointReadOnly$I . `fromPoint(other)@pR</dt>
+	<dt>`DOMPoint$I . `fromPoint(other)@pM</dt>
+	<dd>
+これらの静的~methodの被呼出時には、次の結果を返すモノトスル
+⇒
+`辞書から点を作成する$( %other, それぞれの~interface型 )
+◎
+The fromPoint(other) static method on DOMPointReadOnly must create a DOMPointReadOnly from the dictionary other.
+◎
+The fromPoint(other) static method on DOMPoint must create a DOMPoint from the dictionary other.
+</dd>
+</dl>
+
+<div class="algorithm">
+<p>
+【！DOMPointReadOnlyを作成-@／DOMPointを作成-@】
+<a id="create-a-dompoint-from-the-dictionary"></a>
+`辞書から点を作成する@
+ときは、所与の
+( `DOMPointInit$I 型の辞書 %other, 型 %T )
+に対し，次の結果を返す
+⇒
+`~listから点を作成する$( 次に与える~list, %T )
+⇒
+%other の辞書~member
+( `x$pI, `y$pI, `z$pI, `w$pI )
+値が成す同順の~list
+</p>
+
+<p class="trans-note">【
+この手続きを呼出している一部の~methodは，［
+%other として渡す `DOMPointInit$I 型の引数
+］を省略して呼出せるが、その場合でも `WEBIDL$r に則って，省略された引数は自動的に［
+各~memberが既定~値に初期化された `DOMPointInit$I 値（点 ( 0, 0, 0, 1 ) を表現する）
+］に~~変換されることになる。
+】</p>
+</div>
+
+<div class="algorithm">
+<p>
+`~listから点を作成する@
+ときは所与の
+( ~list « %x, %y, %z, %w », %T ~IN { `DOMPointReadOnly$I,  `DOMPoint$I } )
+に対し，型 %T の新たな~instanceを その内部~変数を次のように初期化した上で返す
+⇒
+( `~x座標$, `~y座標$, `~z座標$, `~w視座$ )
+~SET ( %x, %y, %z, %w )
+◎
+To create a DOMPointReadOnly from a dictionary other, or to create a DOMPoint from a dictionary other, follow these steps:
+• Let point be a new DOMPointReadOnly or DOMPoint as appropriate.
+• Set point’s variables x coordinate to other’s x dictionary member, y coordinate to other’s y dictionary member, z coordinate to other’s z dictionary member and w perspective to other’s w dictionary member.
+• Return point.
+</p>
+</div>
+
+<dl class="idl-def">
+	<dt>`x@pR, `y@pR, `z@pR, `w@pR</dt>
+	<dd>
+これらの属性の取得子は、それぞれ順に，此れの［
+`~x座標$, `~y座標$, `~z座標$, `~w視座$
+］値を返すモノトスル。
+◎
+↓</dd>
+	<dd>
+`DOMPoint$I 上のこれらの属性の設定子は、それぞれ順に，此れの［
+`~x座標$, `~y座標$, `~z座標$, `~w視座$
+］を所与の値に設定するモノトスル。
+◎
+The x attribute, on getting, must return the x coordinate value. For the DOMPoint interface, setting the x attribute must set the x coordinate to the new value.
+◎
+The y attribute, on getting, must return the y coordinate value. For the DOMPoint interface, setting the y attribute must set the y coordinate to the new value.
+◎
+The z attribute, on getting, must return the z coordinate value. For the DOMPoint interface, setting the z attribute must set the z coordinate to the new value.
+◎
+The w attribute, on getting, must return the w perspective value. For the DOMPoint interface, setting the w attribute must set the w perspective to the new value.
+</dd>
+
+	<dt>`matrixTransform(matrix)@pR</dt>
+	<dd>
+<p>
+被呼出時には、次を走らすモノトスル：
+◎
+The matrixTransform(matrix) method, when invoked, must run the following steps:
+</p>
+
+		<ol>
+			<li>
+%M ~LET `辞書から行列を作成する$( %matrix, `DOMMatrix$I )
+◎
+Let matrixObject be the result of invoking create a DOMMatrix from the dictionary matrix.
+</li>
+			<li>
+~RET `点を行列で変形する$( 此れ, %M )
+◎
+Return the result of invoking transform a point with a matrix, given the current point and matrixObject. The current point does not get modified.
+</li>
+		</ol>
+	</dd>
+	<dd>
+`matrixTransform()$pR は現在の `DOMPointReadOnly$I ~objを改変することなく，新たな `DOMPoint$I ~objを返す。
+◎
+matrixTransform() does not modify the current DOMPointReadOnly object and returns a new DOMPoint object.
+</dd>
+</dl>
+
+<div class="example">
+<p>
+`DOMPoint$I ~instance %point 上の `matrixTransform()$pR ~methodを，
+`DOMMatrix$I ~instance %matrix を引数に~callする例：
+◎
+In this example the method matrixTransform() on a DOMPoint instance is called with a DOMMatrix instance as argument.
+</p>
+
+<pre class="lang-js">
+var %point = new DOMPoint(5, 4);
+var %matrix = new DOMMatrix([2, 0, 0, 2, 10, 10]);
+var %transformedPoint = %point.matrixTransform(%matrix);
+</pre>
+
+<p>
+変数 %point は、 ( `~x座標$, `~y座標$ ) が ( 5, 4 ) に初期化された，新たな `DOMPoint$I ~objに設定される。
+次に，この新たな `DOMPoint$I は、 %matrix により拡縮され並進される。
+結果の %transformedPoint の ( `~x座標$, `~y座標$ ) は ( 20, 18 ) になる。
+◎
+The point variable is set to a new DOMPoint object with x coordinate initialized to 5 and y coordinate initialized to 4. This new DOMPoint is now scaled and the translated by matrix. This resulting transformedPoint has the x coordinate 20 and y coordinate 18.
+</p>
+
+</div>
+		<section id="transforming-a-point-with-a-matrix">
+<h3 title="Transforming a point with a matrix">2.1. 点を行列で変形する</h3>
+
+<p>
+`点を行列で変形する@
+ときは、所与の
+( `DOMPointReadOnly$I ~obj %P, `DOMMatrixReadOnly$I ~obj %M )
+に対し，次の結果を返す
+⇒
+`~listから点を作成する$( 次の結果, `DOMPoint$I )
+⇒
+%P の
+( `~x座標$, `~y座標$, `~z座標$, `~w視座$ )
+が成す新たな縦~vectorに %M の`行列$を`左から乗算-$した結果からなる~list
+◎
+To transform a point with a matrix, given point and matrix:
+• Let x be point’s x coordinate.
+• Let y be point’s y coordinate.
+• Let z be point’s z coordinate.
+• Let w be point’s w perspective.
+• Let pointVector be a new column vector with the elements being x, y, z, and w, respectively.
+• x y z w
+• Set pointVector to pointVector post-multiplied by matrix.＊原文誤 
+• Let transformedPoint be a new DOMPoint object.
+• Set transformedPoint’s x coordinate to pointVector’s first element.
+• Set transformedPoint’s y coordinate to pointVector’s second element.
+• Set transformedPoint’s z coordinate to pointVector’s third element.
+• Set transformedPoint’s w perspective to pointVector’s fourth element.
+• Return transformedPoint.
+</p>
+
+<p class="note">注記：
+［
+%M の`~is-2D$ ~EQ ~T
+］~AND［
+%P の`~z座標$ ~EQ~SameValueZero `0^jv
+］~AND［
+%P の`~w視座$ ~EQ `1^jv
+］ならば，これは~2D変形nになり、他の場合は~3D変形nになる。
+◎
+Note: If matrix’s is 2D is true, point’s z coordinate is 0 or -0, and point’s w perspective is 1, then this is a 2D transformation. Otherwise this is a 3D transformation.
+</p>
+
+		</section>
+	</section>
+	<section id="DOMRect">
+<h2 title="The DOMRect interfaces">3. `DOMRect^I ~interface</h2>
+
+<p>
+`DOMRectReadOnly$I ~interfaceを実装している~objは、
+`矩形@
+を表現する。
+◎
+Objects implementing the DOMRectReadOnly interface represent a rectangle.
+</p>
+
+<p>
+各 矩形は次の~propを持つ：
+◎
+Rectangles have the following properties:
+</p>
+
+<dl class="def-list">
+	<dt>`原点@
+◎
+origin
+</dt>
+	<dd>
+矩形の横方向~原点は、矩形の`横幅~寸法$が［
+負でなければ左端 ／負であれば右端
+］辺に~~位置する。
+同様に，矩形の縦方向~原点は、矩形の`縦幅~寸法$が［
+負でなければ上端 ／負であれば下端
+］辺に~~位置する。
+◎
+When the rectangle has a non-negative width dimension, the rectangle’s horizontal origin is the left edge; otherwise, it is the right edge. Similarly, when the rectangle has a non-negative height dimension, the rectangle’s vertical origin is the top edge; otherwise, it is the bottom edge.
+</dd>
+
+	<dt>`~x座標@rT
+◎
+x coordinate
+</dt>
+	<dd>
+表示域の左端~辺から相対的な，矩形の`原点$の横方向~~位置を与える。
+◎
+The horizontal distance between the viewport’s left edge and the rectangle’s origin.
+</dd>
+
+	<dt>`~y座標@rT
+◎
+y coordinate
+</dt>
+	<dd>
+表示域の上端~辺から相対的な，矩形の`原点$の縦方向~~位置を与える。
+◎
+The vertical distance between the viewport’s top edge and the rectangle’s origin.
+</dd>
+
+	<dt>`横幅~寸法@
+◎
+width dimension
+</dt>
+	<dd>
+矩形の横幅を表す
+— 負にもなり得る。
+◎
+The width of the rectangle. Can be negative.
+</dd>
+
+	<dt>`縦幅~寸法@
+◎
+height dimension
+</dt>
+	<dd>
+矩形の縦幅を表す
+— 負にもなり得る。
+◎
+The height of the rectangle. Can be negative.
+</dd>
+</dl>
+
+<pre class="idl">
+[`Exposed$=(Window,Worker), `Serializable$]
+interface `DOMRectReadOnly@I {
+    `DOMRectReadOnly$mc(
+        optional unrestricted double %x = 0,
+        optional unrestricted double %y = 0,
+        optional unrestricted double %width = 0,
+        optional unrestricted double %height = 0
+    );
+
+    [`NewObject$] static `DOMRectReadOnly$I `fromRect$rR(optional `DOMRectInit$I %other = {});
+
+    readonly attribute unrestricted double `x@rR;
+    readonly attribute unrestricted double `y@rR;
+    readonly attribute unrestricted double `width@rR;
+    readonly attribute unrestricted double `height@rR;
+    readonly attribute unrestricted double `top@rR;
+    readonly attribute unrestricted double `right@rR;
+    readonly attribute unrestricted double `bottom@rR;
+    readonly attribute unrestricted double `left@rR;
+
+    [`Default$] object `toJSON@rR();
+};
+
+[`Exposed$=(Window,Worker) `Serializable$, `LegacyWindowAlias$=`SVGRect@I]
+interface `DOMRect@I : `DOMRectReadOnly$I {
+    `DOMRect$mc(
+        optional unrestricted double %x = 0,
+        optional unrestricted double %y = 0,
+        optional unrestricted double %width = 0,
+        optional unrestricted double %height = 0
+    );
+
+    [`NewObject$] static `DOMRect$I `fromRect$rM(optional `DOMRectInit$I %other = {});
+
+    inherit attribute unrestricted double `x@rM;
+    inherit attribute unrestricted double `y@rM;
+    inherit attribute unrestricted double `width@rM;
+    inherit attribute unrestricted double `height@rM;
+};
+
+dictionary `DOMRectInit@I {
+    unrestricted double `x@rI = 0;
+    unrestricted double `y@rI = 0;
+    unrestricted double `width@rI = 0;
+    unrestricted double `height@rI = 0;
+};
+</pre>
+
+<div class="p">
+<p>
+各 `DOMRectReadOnly$I ~objは、次に挙げる内部~member変数を持つものと見做される
+⇒
+`~x座標$rT,
+`~y座標$rT,
+`横幅~寸法$,
+`縦幅~寸法$
+</p>
+
+<p>
+`DOMRectReadOnly$I ~interfaceは、これらの変数に~accessできなければナラナイ。
+それを継承している `DOMRect$I ~interfaceは、これらの変数の値も設定できなければナラナイ。
+</p>
+◎
+The following algorithms assume that DOMRectReadOnly objects have the internal member variables x coordinate, y coordinate, width dimension and height dimension. DOMRectReadOnly as well as the inheriting interface DOMRect must be able to access and set the value of these variables.
+</div>
+
+<p>
+`DOMRectReadOnly$I ~objを返す各種~interfaceは、内部~member変数~値を改変してもヨイ。
+そのような~interfaceは、その能を注釈文にて明示的に指定しなければナラナイ。
+◎
+An interface returning an DOMRectReadOnly object by an attribute or function may be able to modify internal member variable values. Such an interface must specify this ability explicitly in prose.
+</p>
+
+<p>
+内部~member変数は、公開されないモノトスル。
+◎
+Internal member variables must not be exposed in any way.
+</p>
+
+<dl class="idl-def">
+	<dt>`DOMRectReadOnly(x, y, width, height)@m</dt>
+	<dt>`DOMRect(x, y, width, height)@m</dt>
+	<dd>
+これらの構築子の被呼出時には、次の結果を返すモノトスル
+⇒
+`~listから矩形を作成する$( « %x, %y, %width, %height », それぞれの~interface型 )
+◎
+The DOMRectReadOnly(x, y, width, height) and DOMRect(x, y, width, height) constructors, when invoked, must run the following steps:
+◎
+Let rect be a new DOMRectReadOnly or DOMRect object as appropriate.
+◎
+Set rect’s variables x coordinate to x, y coordinate to y, width dimension to width and height dimension to height.
+◎
+Return rect.
+</dd>
+
+	<dt>`DOMRectReadOnly$I . `fromRect(other)@rR</dt>
+	<dt>`DOMRect$I . `fromRect(other)@rM</dt>
+	<dd>
+これらの静的~methodの被呼出時には、次の結果を返すモノトスル
+⇒
+`辞書から矩形を作成する$( %other, それぞれの~interface型 )
+◎
+The fromRect(other) static method on DOMRectReadOnly must create a DOMRectReadOnly from the dictionary other.
+◎
+The fromRect(other) static method on DOMRect must create a DOMRect from the dictionary other.
+</dd>
+</dl>
+
+【！ ~DOMRectReadOnlyを作成-@／~DOMRectを作成-@】
+
+<div class="algorithm">
+<p>
+<a id="create-a-domrect-from-the-dictionary"></a>
+`辞書から矩形を作成する@
+ときは、所与の
+( 辞書 %other, 型 %T ~IN { `DOMRect$I, `DOMRectReadOnly$I } )
+に対し，次の結果を返す
+⇒
+`~listから矩形を作成する$( 次に与える~list, %T )
+⇒
+%other の
+( `x$rI, `y$rI,`width$rI, `height$rI )
+~member値が成す同順の~list
+</p>
+
+<p class="trans-note">【
+ここでも、`辞書から点を作成する$ときに述べたのと同様のことが該当する。
+】</p>
+</div>
+
+<div class="algorithm">
+<p>
+`~listから矩形を作成する@
+ときは、所与の
+( ~list « %x, %y,%width, %height »,
+型 %T ~IN { `DOMRect$I, `DOMRectReadOnly$I } )
+に対し，型 %T の新たな~instanceを その各種 内部~変数を次のように設定した上で返す
+⇒
+( `~x座標$rT, `~y座標$rT, `横幅~寸法$, `縦幅~寸法$ ) ~SET ( %x, %y,%width, %height )
+◎
+To create a DOMRectReadOnly from a dictionary other, or to create a DOMRect from a dictionary other, follow these steps:
+• Let rect be a new DOMRectReadOnly or DOMRect as appropriate.
+• Set rect’s variables x coordinate to other’s x dictionary member, y coordinate to other’s y dictionary member, width dimension to other’s width dictionary member and height dimension to other’s height dictionary member.
+• Return rect.
+</p>
+</div>
+
+<dl class="idl-def">
+	<dt>`x@r0, `y@r0, `width@r0, `height@r0</dt>
+	<dd>
+これらの属性の取得子は、順に，此れの［
+`~x座標$rT, `~y座標$rT, `横幅~寸法$, `縦幅~寸法$
+］値を返すモノトスル。
+◎
+↓</dd>
+	<dd>
+`DOMRect$I 上の これらの属性の設定子は、順に，此れの［
+`~x座標$rT, `~y座標$rT, `横幅~寸法$, `縦幅~寸法$
+］を所与の値に設定するモノトスル。
+◎
+The x attribute, on getting, must return the x coordinate value. For the DOMRect interface, setting the x attribute must set the x coordinate to the new value.
+◎
+The y attribute, on getting, it must return the y coordinate value. For the DOMRect interface, setting the y attribute must set the y coordinate to the new value.
+◎
+The width attribute, on getting, must return the width dimension value. For the DOMRect interface, setting the width attribute must set the width dimension to the new value.
+◎
+The height attribute, on getting, must return the height dimension value. For the DOMRect interface, setting the height attribute must set the height dimension value to the new value.
+</dd>
+
+	<dt>`top@r0【！＊】</dt>
+	<dd>
+取得子は、次を返すモノトスル
+⇒
+`~NaN安全な最小$( 此れの`~y座標$rT, 此れの`~y座標$rT ~PLUS 此れの`縦幅~寸法$ )
+◎
+The top attribute, on getting, must return the NaN-safe minimum of the y coordinate and the sum of the y coordinate and the height dimension.
+</dd>
+
+	<dt>`right@r0</dt>
+	<dd>
+取得子は、次を返すモノトスル
+⇒
+`~NaN安全な最大$( 此れの`~x座標$rT, 此れの`~x座標$rT ~PLUS 此れの`横幅~寸法$ )
+◎
+The right attribute, on getting, must return the NaN-safe maximum of the x coordinate and the sum of the x coordinate and the width dimension.
+</dd>
+
+	<dt>`bottom@r0</dt>
+	<dd>
+取得子は、次を返すモノトスル
+⇒
+`~NaN安全な最大$( 此れの`~y座標$rT, 此れの`~y座標$rT ~PLUS 此れの`縦幅~寸法$ )
+◎
+The bottom attribute, on getting, must return the NaN-safe maximum of the y coordinate and the sum of the y coordinate and the height dimension.
+</dd>
+
+	<dt>`left@r0</dt>
+	<dd>
+取得子は、次を返すモノトスル
+⇒
+`~NaN安全な最小$( 此れの`~x座標$rT, 此れの`~x座標$rT ~PLUS 此れの`横幅~寸法$ )
+◎
+The left attribute, on getting, must return the NaN-safe minimum of the x coordinate and the sum of the x coordinate and the width dimension.
+</dd>
+</dl>
+
+	</section>
+	<section id="DOMRectList">
+<h2 title="The DOMRectList interfaces">4. `DOMRectList^I ~interface</h2>
+
+<pre class="idl">
+[`Exposed$=Window]
+interface `DOMRectList@I {
+    readonly attribute unsigned long `length$m;
+    getter `DOMRect$I? `item$m(unsigned long %index);
+};
+</pre>
+
+<dl class="idl-def">
+	<dt>`length@m</dt>
+	<dd>
+取得子は、此れに結付けられている `DOMRect$I ~objの総数を返すモノトスル。
+◎
+The length attribute must return the total number of DOMRect objects associated with the object.
+</dd>
+
+	<dt>`item(index)@m</dt>
+	<dd>
+被呼出時には、［［
+0 ~LTE %index ~LT ( 此れに結付けられている `DOMRect$I ~objの総数 )
+］ならば それらのうち %index 番の `DOMRect$I ~obj ／
+~ELSE_ ~NULL
+］を返すモノトスル。
+◎
+The item(index) method, when invoked, must return null when index is greater than or equal to the number of DOMRect objects associated with the DOMRectList. Otherwise, the DOMRect object at index must be returned. Indices are zero-based.
+</dd>
+</dl>
+
+<p class="advisement"><strong>
+`DOMRectList$I が存在するのは、旧来の~Web内容との互換性のために限られる。
+新たな~APIを指定するときには、利用してはナラナイ
+— 代わりに `sequence&lt;DOMRect&gt;^c を利用すること。
+`WEBIDL$r
+</strong>
+◎
+DOMRectList only exists for compatibility with legacy Web content. When specifying a new API, DOMRectList must not be used. Use sequence&lt;DOMRect&gt; instead. [WEBIDL]
+</p>
+	</section>
+	<section id="DOMQuad">
+<h2 title="The DOMQuad interface">5. `DOMQuad^I ~interface</h2>
+
+<p>
+`DOMQuad$I ~interfaceを実装している~objは、
+`四辺形@
+を表現する。
+◎
+Objects implementing the DOMQuad interface represents a quadrilateral.
+</p>
+
+<p class="trans-note">【
+4 個の頂点には、同一平面内などの制約はない。
+】</p>
+
+<pre class="idl">
+[`Exposed$=(Window,Worker), `Serializable$]
+interface `DOMQuad@I {
+    `DOMQuad$mc(
+        optional `DOMPointInit$I %p1 = {},
+        optional `DOMPointInit$I %p2 = {},
+        optional `DOMPointInit$I %p3 = {},
+        optional `DOMPointInit$I %p4 = {}
+    );
+
+    [`NewObject$] static `DOMQuad$I `fromRect$q(optional `DOMRectInit$I %other = {});
+    [`NewObject$] static `DOMQuad$I `fromQuad$q(optional `DOMQuadInit$I %other = {});
+
+    [`SameObject$] readonly attribute `DOMPoint$I `p1$q;
+    [`SameObject$] readonly attribute `DOMPoint$I `p2$q;
+    [`SameObject$] readonly attribute `DOMPoint$I `p3$q;
+    [`SameObject$] readonly attribute `DOMPoint$I `p4$q;
+    [`NewObject$] `DOMRect$I `getBounds$q();
+
+    [`Default$] object `toJSON@q();
+};
+
+dictionary `DOMQuadInit@I {
+  `DOMPointInit$I `p1@qI;
+  `DOMPointInit$I `p2@qI;
+  `DOMPointInit$I `p3@qI;
+  `DOMPointInit$I `p4@qI;
+};
+</pre>
+
+<div class="p">
+<p>
+各 `DOMQuad$I ~obj %Q は、次に挙げる内部~member変数を持つものと見做される：
+</p>
+
+<dl class="def-list">
+	<dt>`点1@, `点2@, `点3@, `点4@</dt>
+	<dd>
+これらは、 `DOMPoint$I ~objを保持し， %Q を通して［
+取得-／設定-
+］できなければナラナイ。
+</dd>
+	<dd>
+作者は，これらの `DOMPoint$I ~objを改変して，
+%Q が表現する四辺形に直に影響させれる。
+</dd>
+	<dd class="trans-note">【
+四辺形を成す各~辺の順序は，これらの点の番号順に従うものと見受けられるが、この仕様の中では，この順序に幾何学的な意味は定義されていない。
+】</dd>
+</dl>
+
+◎
+The following algorithms assume that DOMQuad objects have the internal member variables point 1, point 2, point 3, and point 4, which are DOMPoint objects. DOMQuad must be able to access and set the value of these variables. The author can modify these DOMPoint objects, which directly affects the quadrilateral.
+</div>
+
+<p>
+`DOMQuad$I ~objを返す各種~interfaceは、内部~member変数~値を改変してもヨイ。
+そのような~interfaceは、その能を注釈文にて明示的に指定しなければナラナイ。
+◎
+An interface returning a DOMQuad object by an attribute or function may be able to modify internal member variable values. Such an interface must specify this ability explicitly in prose.
+</p>
+
+<p>
+内部~member変数は、公開されないモノトスル。
+◎
+Internal member variables must not be exposed in any way.
+</p>
+
+<dl class="idl-def">
+	<dt>`DOMQuad(p1, p2, p3, p4)@m</dt>
+	<dd>
+この構築子の被呼出時には、新たな `DOMQuad$I を，その内部~変数を次のように設定した上で返すモノトスル
+⇒
+［
+`点1$ ／ `点2$ ／ `点3$ ／ `点4$
+］ ~SET それぞれ順に，`辞書から点を作成する$(［
+%p1 ／ %p2 ／ %p3 ／ %p4
+］, `DOMPoint$I )
+◎
+The DOMQuad(p1, p2, p3, p4) constructor, when invoked, must run the following steps:
+• Let point1 be a new DOMPoint object with its attributes set to the values of the namesake dictionary members in p1.
+• Let point2 be a new DOMPoint object with its attributes set to the values of the namesake dictionary members in p2.
+• Let point3 be a new DOMPoint object with its attributes set to the values of the namesake dictionary members in p3.
+• Let point4 be a new DOMPoint object with its attributes set to the values of the namesake dictionary members in p4.
+• Return a new DOMQuad with point 1 set to point1, point 2 set to point2, point 3 set to point3 and point 4 set to point4.
+</dd>
+	<dd class="note">注記：
+`DOMPoint$I ／ `DOMPointReadOnly$I
+を引数に渡すこともアリである。
+渡された引数は、 `WEBIDL$r の規則に従って，内部的に正しい~obj型に~~変換されることになる†。
+【†単に同じ名前の~propを持つ JS Object 値として解釈されるので。】
+◎
+Note: It is possible to pass DOMPoint/DOMPointReadOnly arguments as well. The passed arguments will be transformed to the correct object type internally following the WebIDL rules. [WEBIDL]
+</dd>
+
+	<dt>`fromRect(other)@q</dt>
+	<dd>
+この静的~methodの被呼出時には、次の結果を返すモノトスル
+⇒
+`DOMRectInit$I `辞書から四辺形を作成する$R( %other )
+◎
+The fromRect(other) static method on DOMQuad must create a DOMQuad from the DOMRectInit dictionary other.
+</dd>
+	<dd class="algorithm">
+<p>
+`DOMRectInit$I `辞書から四辺形を作成する@R
+ときは、所与の
+( `DOMRectInit$I 辞書 %other )
+に対し，次の手続きに従う：
+◎
+To create a DOMQuad from a DOMRectInit dictionary other, follow these steps:
+</p>
+		<ol>
+			<li>
+( %x, %y, %width, %height ) ~LET
+%other の ( `x$rI, `y$rI, `width$rI, `height$rI ) ~member値
+【！ rR → rI 】
+◎
+Let x, y, width and height be the value of other’s x, y, width and height dictionary members, respectively.
+</li>
+			<li>
+<p>
+~RET 内部~変数が次のように設定された新たな `DOMQuad$I ~obj：
+◎
+↓</p>
+
+<ul><li>`点1$ ~SET `~listから点を作成する$( « %x, %y, 0, 1 », `DOMPoint$I )
+◎
+Let point1 be a new DOMPoint object with x coordinate set to x, y coordinate set to y, z coordinate set to 0 and w perspective set to 1.
+
+</li><li>`点2$ ~SET `~listから点を作成する$( « %x ~PLUS %width, %y, 0, 1 », `DOMPoint$I )
+◎
+Let point2 be a new DOMPoint object with x coordinate set to x + width, y coordinate set to y, z coordinate set to 0 and w perspective set to 1.
+
+</li><li>`点3$ ~SET `~listから点を作成する$( « %x ~PLUS %width, %y ~PLUS %height, 0, 1 », `DOMPoint$I )
+◎
+Let point3 be a new DOMPoint object with x coordinate set to x + width, y coordinate set to y + height, z coordinate set to 0 and w perspective set to 1.
+
+</li><li>`点4$ ~SET `~listから点を作成する$( « %x, %y ~PLUS %height, 0, 1 », `DOMPoint$I )
+◎
+Let point4 be a new DOMPoint object with x coordinate set to x, y coordinate set to y + height, z coordinate set to 0 and w perspective set to 1.
+◎
+Return a new DOMQuad with point 1 set to point1, point 2 set to point2, point 3 set to point3 and point 4 set to point4.
+</li>
+				</ul>
+			</li>
+		</ol>
+	</dd>
+
+	<dt>`fromQuad(other)@q</dt>
+	<dd>
+この静的~methodの被呼出時には、次の結果を返すモノトスル
+⇒
+`DOMQuadInit$I
+`辞書から四辺形を作成する$( %other )
+◎
+The fromQuad(other) static method on DOMQuad must create a DOMQuad from the DOMQuadInit dictionary other.
+</dd>
+	<dd class="algorithm">
+【！~DOMQuadを作成-】
+`DOMQuadInit$I
+`辞書から四辺形を作成する@
+ときは、所与の
+( `DOMQuadInit$I 辞書 %other )
+に対し，新たな `DOMQuad$I ~objを，その内部~変数を次のように設定した上で返すモノトスル
+⇒
+［
+`点1$ ／ `点2$ ／ `点3$ ／ `点4$
+］ ~SET
+それぞれ順に，`辞書から点を作成する$( 次に与える値, `DOMPoint$I )
+⇒
+%other に［
+`p1$qI ／ `p2$qI ／ `p3$qI ／ `p4$qI
+］~memberは
+⇒＃
+在るならば その値 ／
+無いならば 新たな `DOMPointInit$I 値
+◎
+To create a DOMQuad from a DOMQuadInit dictionary other, follow these steps:
+• Let point1 be the result of invoking create a DOMPoint from the dictionary p1 dictionary member of other, if it exists.
+• Let point2 be the result of invoking create a DOMPoint from the dictionary p2 dictionary member of other, if it exists.
+• Let point3 be the result of invoking create a DOMPoint from the dictionary p3 dictionary member of other, if it exists.
+• Let point4 be the result of invoking create a DOMPoint from the dictionary p4 dictionary member of other, if it exists.
+• Return a new DOMQuad with point 1 set to point1, point 2 set to point2, point 3 set to point3 and point 4 set to point4.
+</dd>
+
+	<dt>`p1@q, `p2@q, `p3@q, `p4@q</dt>
+	<dd>
+これらの属性の取得子は、順に，此れの［
+`点1$, `点2$, `点3$, `点4$
+］を返すモノトスル。
+◎
+The p1 attribute must return point 1.
+◎
+The p2 attribute must return point 2.
+◎
+The p3 attribute must return point 3.
+◎
+The p4 attribute must return point 4.
+</dd>
+
+	<dt>`getBounds()@q</dt>
+	<dd>
+<p>
+被呼出時には、次を走らすモノトスル：
+◎
+The getBounds() method, when invoked, must run the following algorithm:
+</p>
+		<ol>
+			<li>
+%S ~LET 此れの［
+`点1$, `点2$, `点3$, `点4$
+］からなる~list
+◎
+Let bounds be a DOMRect object.
+</li>
+			<li>
+%左端 ~LET `~NaN安全な最小$( %S 内の各~点の`~x座標$からなる~list )
+◎
+Let left be the NaN-safe minimum of point 1’s x coordinate, point 2’s x coordinate, point 3’s x coordinate and point 4’s x coordinate.
+</li>
+			<li>
+%上端 ~LET `~NaN安全な最小$( %S 内の各~点の`~y座標$からなる~list )
+◎
+Let top be the NaN-safe minimum of point 1’s y coordinate, point 2’s y coordinate, point 3’s y coordinate and point 4’s y coordinate.
+</li>
+			<li>
+%右端 ~LET `~NaN安全な最大$( %S 内の各~点の`~x座標$からなる~list )
+◎
+Let right be the NaN-safe maximum of point 1’s x coordinate, point 2’s x coordinate, point 3’s x coordinate and point 4’s x coordinate.
+</li>
+			<li>
+%下端 ~LET `~NaN安全な最大$( %S 内の各~点の`~y座標$からなる~list )
+◎
+Let bottom be the NaN-safe maximum of point 1’s y coordinate, point 2’s y coordinate, point 3’s y coordinate and point 4’s y coordinate.
+</li>
+			<li>
+~RET 次のように設定された 新たな `DOMRect$I ~obj
+⇒
+( `~x座標$rT, `~y座標$rT, `横幅~寸法$, `縦幅~寸法$ )
+~SET
+( %左端, %上端, %右端 − %左端, %下端 − %上端 )
+◎
+Set x coordinate of bounds to left, y coordinate of bounds to top, width dimension of bounds to right - left and height dimension of bounds to bottom - top.
+◎
+Return bounds.
+</li>
+		</ol>
+	</dd>
+</dl>
+
+<div class="example">
+
+<p>
+次の例では、
+`DOMQuad()$m 構築子は、
+`DOMPoint$I ／ `DOMPointInit$I
+型の値を引数に~callされている。
+両~型の引数とも受容され，利用できる：
+◎
+In this example the DOMQuad constructor is called with arguments of type DOMPoint and DOMPointInit. Both arguments are accepted and can be used.
+</p>
+
+<pre class="lang-js">
+var %point = new DOMPoint(2, 0);
+var %quad1 = new DOMQuad(%point, {x: 12, y: 0}, {x: 12, y: 10}, {x: 2, y: 10});
+</pre>
+
+<p>
+上による結果, および次による結果の `DOMQuad$I %quad1, %quad2 の互いに対応する属性が表現する点は、互いに等価になる：
+◎
+The attribute values of the resulting DOMQuad quad1 above are also equivalent to the attribute values of the following DOMQuad quad2:
+</p>
+
+<pre class="lang-js">
+var %rect = new DOMRect(2, 0, 10, 10);
+var %quad2 = DOMQuad.fromRect(%rect);
+</pre>
+</div>
+
+<div class="example">
+
+<p>
+不規則な四辺形の例：
+◎
+This is an example of an irregular quadrilateral:
+</p>
+
+<pre class="lang-js">
+new DOMQuad({x: 40, y: 25}, {x: 180, y: 8}, {x: 210, y: 150}, {x: 10, y: 180});
+</pre>
+
+<figure>
+<!-- 
+	aria-label="An irregular..."
+	aria-role="img"
+-->
+<svg
+	height="200"
+	width="230"
+>
+<title>An irregular quadrilateral with none of the sides being vertical or horizontal. Its four corners are marked with red circles. Around this quadrilateral is a dashed rectangle. All sides of this rectangle are vertical or horizontal and tangent the quadrilateral.</title>
+<polygon fill="rgb(51, 153, 204)" points="40 25, 180 8, 210 150, 10 180"></polygon>
+<rect fill="none" height="172" stroke="black" stroke-dasharray="3 2" width="200" x="10" y="8"></rect>
+<circle cx="40" cy="25" fill="rgb(204, 51, 51)" r="3"></circle>
+<circle cx="180" cy="8" fill="rgb(204, 51, 51)" r="3"></circle>
+<circle cx="210" cy="150" fill="rgb(204, 51, 51)" r="3"></circle>
+<circle cx="10" cy="180" fill="rgb(204, 51, 51)" r="3"></circle>
+</svg>
+
+<figcaption>
+`DOMQuad$I により表現される不規則な四辺形。
+4 個の赤丸は、 `DOMPoint$I 型の属性
+`p1$q, `p2$q, `p3$q, `p4$q
+を表現する。
+破線の矩形は、 `DOMQuad$I の `getBounds()$q ~methodから返される限界~矩形を表現する。
+◎
+An irregular quadrilateral represented by a DOMQuad. The four red colored circles represent the DOMPoint attributes p1 to p4. The dashed rectangle represents the bounding rectangle returned by the getBounds() method of the DOMQuad.
+</figcaption>
+
+</figure>
+
+</div>
+
+	</section>
+	<section id="DOMMatrix">
+<h2 title="The DOMMatrix interfaces">6. `DOMMatrix^I ~interface</h2>
+
+<p>
+`DOMMatrix$I ／ `DOMMatrixReadOnly$I
+~interfaceは、~graphic上の文脈における変形nを表すための，数学的な
+`行列@
+を表現する。
+以下の各~節では、この~interfaceの詳細を述べる。
+◎
+The DOMMatrix and DOMMatrixReadOnly interfaces each represent a mathematical matrix with the purpose of describing transformations in a graphical context. The following sections describe the details of the interface.
+</p>
+
+<figure>
+<table class="_matrix"><tbody>
+<tr><td>%m11<td>%m21<td>%m31<td>%m41
+<tr><td>%m12<td>%m22<td>%m32<td>%m42
+<tr><td>%m13<td>%m23<td>%m33<td>%m43
+<tr><td>%m14<td>%m24<td>%m34<td>%m44
+</tbody></table>
+
+<figcaption>
+%m11 〜 %m44 成分を有する
+`~4x4抽象-行列@
+。
+◎
+A 4x4 abstract matrix with items m11 to m44.
+</figcaption>
+</figure>
+
+<p>
+以下の節では、次の用語が用いられる：
+◎
+In the following sections, terms have the following meaning:
+</p>
+
+<dl class="def-list">
+	<dt>`右から乗算-@（ post-multiply ）</dt>
+	<dd>
+項 %A に項 %B を右から乗算するときは、
+%A を %A × %B の結果に改変する。
+◎
+Term A post-multiplied by term B is equal to A · B.
+</dd>
+	<dd class="trans-note">【
+この × は行列の乗算。
+%A や %B は正方~行列に限られない。
+】【
+原文には， “（ %A を）改変する” とは記されていないが、概ね，そのような用法で用いられており、この区別は重要なので，ここでは明示的に記す。
+改変しない必要がある場合、下の`乗算-$を用いて記述することにする。
+】</dd>
+
+	<dt>`左から乗算-@（ pre-multiply ）</dt>
+	<dd>
+項 %A に項 %B を左から乗算するときは、
+%A を %B × %A の結果に改変する。
+◎
+Term A pre-multiplied by term B is equal to B · A.
+</dd>
+	<dd class="trans-note">【
+点 %A に行列 %B を左から乗算する場合、
+%A を，その各~成分が成す縦~vectorによる 1×4 の行列と見なすことになる。
+】</dd>
+
+	<dt>`乗算-@（ multiply ）</dt>
+	<dd>
+項 %A, %B を乗算するときは、
+%A × %B の結果を返す（ %A, %B は改変されない）。
+◎
+Multiply term A by term B is equal to A · B.
+</dd>
+	<dd class="trans-note">【
+可換でないので、 %A, %B の順序は有意になる。
+】</dd>
+</dl>
+
+<pre class="idl">
+[`Exposed$=(Window,Worker), `Serializable$]
+interface `DOMMatrixReadOnly@I {
+    `DOMMatrixReadOnly$mc(optional (DOMString or sequence&lt;unrestricted double&gt;) %init);
+
+    [`NewObject$] static `DOMMatrixReadOnly$I `fromMatrix$xR(optional `DOMMatrixInit$I %other = {});
+    [`NewObject$] static `DOMMatrixReadOnly$I `fromFloat32Array$xR(`Float32Array$I %array32);
+    [`NewObject$] static `DOMMatrixReadOnly$I `fromFloat64Array$xR(`Float64Array$I %array64);
+
+    /* <span class="comment">
+これらの属性は、単に，~4x4行列のある成分の別名
+◎
+These attributes are simple aliases for certain elements of the 4x4 matrix
+</span> */
+    readonly attribute unrestricted double `a$xR;
+    readonly attribute unrestricted double `b$xR;
+    readonly attribute unrestricted double `c$xR;
+    readonly attribute unrestricted double `d$xR;
+    readonly attribute unrestricted double `e$xR;
+    readonly attribute unrestricted double `f$xR;
+
+    readonly attribute unrestricted double `m11$xR;
+    readonly attribute unrestricted double `m12$xR;
+    readonly attribute unrestricted double `m13$xR;
+    readonly attribute unrestricted double `m14$xR;
+    readonly attribute unrestricted double `m21$xR;
+    readonly attribute unrestricted double `m22$xR;
+    readonly attribute unrestricted double `m23$xR;
+    readonly attribute unrestricted double `m24$xR;
+    readonly attribute unrestricted double `m31$xR;
+    readonly attribute unrestricted double `m32$xR;
+    readonly attribute unrestricted double `m33$xR;
+    readonly attribute unrestricted double `m34$xR;
+    readonly attribute unrestricted double `m41$xR;
+    readonly attribute unrestricted double `m42$xR;
+    readonly attribute unrestricted double `m43$xR;
+    readonly attribute unrestricted double `m44$xR;
+
+    readonly attribute boolean `is2D$xR;
+    readonly attribute boolean `isIdentity$xR;
+
+    /* <span class="comment">
+変異-不能な変形~method
+◎
+Immutable transform methods
+</span> */
+    [`NewObject$] `DOMMatrix$I `translate$xR(
+        optional unrestricted double %tx = 0,
+        optional unrestricted double %ty = 0,
+        optional unrestricted double %tz = 0);
+    [`NewObject$] `DOMMatrix$I `scale$xR(
+        optional unrestricted double %scaleX = 1,
+        optional unrestricted double %scaleY,
+        optional unrestricted double %scaleZ = 1,
+        optional unrestricted double %originX = 0,
+        optional unrestricted double %originY = 0,
+        optional unrestricted double %originZ = 0);
+    [NewObject] DOMMatrix `scaleNonUniform$xR(
+        optional unrestricted double %scaleX = 1,
+        optional unrestricted double %scaleY = 1);
+
+    [`NewObject$] `DOMMatrix$I `scale3d$xR(
+        optional unrestricted double %scale = 1,
+        optional unrestricted double %originX = 0,
+        optional unrestricted double %originY = 0,
+        optional unrestricted double %originZ = 0);
+    [`NewObject$] `DOMMatrix$I `rotate$xR(
+        optional unrestricted double %rotX = 0,
+        optional unrestricted double %rotY,
+        optional unrestricted double %rotZ);
+    [`NewObject$] `DOMMatrix$I `rotateFromVector$xR(
+        optional unrestricted double %x = 0,
+        optional unrestricted double %y = 0);
+    [`NewObject$] `DOMMatrix$I `rotateAxisAngle$xR(
+        optional unrestricted double %x = 0,
+        optional unrestricted double %y = 0,
+        optional unrestricted double %z = 0,
+        optional unrestricted double %angle = 0);
+    [`NewObject$] `DOMMatrix$I `skewX$xR(optional unrestricted double %sx = 0);
+    [`NewObject$] `DOMMatrix$I `skewY$xR(optional unrestricted double %sy = 0);
+    [`NewObject$] `DOMMatrix$I `multiply$xR(optional `DOMMatrixInit$I %other = {});
+    [`NewObject$] `DOMMatrix$I `flipX$xR();
+    [`NewObject$] `DOMMatrix$I `flipY$xR();
+    [`NewObject$] `DOMMatrix$I `inverse$xR();
+
+    [`NewObject$] `DOMPoint$I `transformPoint$xR(optional `DOMPointInit$I %point = {});
+    [`NewObject$] `Float32Array$I `toFloat32Array$xR();
+    [`NewObject$] `Float64Array$I `toFloat64Array$xR();
+    [`Exposed$=Window] `stringifier$xR;
+	[`Default$] object `toJSON@xR();
+};
+
+[`Exposed$=(Window,Worker), `Serializable$, `LegacyWindowAlias$=(`SVGMatrix@I,`WebKitCSSMatrix@I)]
+interface `DOMMatrix@I : `DOMMatrixReadOnly$I {
+    `DOMMatrix$mc(optional (DOMString or sequence&lt;unrestricted double&gt;) %init);
+
+    [`NewObject$] static `DOMMatrix$I `fromMatrix$xM(optional `DOMMatrixInit$I %other = {});
+    [`NewObject$] static `DOMMatrix$I `fromFloat32Array$xM(`Float32Array$I %array32);
+    [`NewObject$] static `DOMMatrix$I `fromFloat64Array$xM(`Float64Array$I %array64);
+
+    /* <span class="comment">
+これらの属性は、単に，~4x4行列のある成分の別名
+◎
+These attributes are simple aliases for certain elements of the 4x4 matrix
+</span> */
+    inherit attribute unrestricted double `a$xR;
+    inherit attribute unrestricted double `b$xR;
+    inherit attribute unrestricted double `c$xR;
+    inherit attribute unrestricted double `d$xR;
+    inherit attribute unrestricted double `e$xR;
+    inherit attribute unrestricted double `f$xR;
+
+    inherit attribute unrestricted double `m11$xR;
+    inherit attribute unrestricted double `m12$xR;
+    inherit attribute unrestricted double `m13$xR;
+    inherit attribute unrestricted double `m14$xR;
+    inherit attribute unrestricted double `m21$xR;
+    inherit attribute unrestricted double `m22$xR;
+    inherit attribute unrestricted double `m23$xR;
+    inherit attribute unrestricted double `m24$xR;
+    inherit attribute unrestricted double `m31$xR;
+    inherit attribute unrestricted double `m32$xR;
+    inherit attribute unrestricted double `m33$xR;
+    inherit attribute unrestricted double `m34$xR;
+    inherit attribute unrestricted double `m41$xR;
+    inherit attribute unrestricted double `m42$xR;
+    inherit attribute unrestricted double `m43$xR;
+    inherit attribute unrestricted double `m44$xR;
+
+    /* <span class="comment">
+変異-可能な変形~method
+◎
+Mutable transform methods
+</span> */
+    `DOMMatrix$I `multiplySelf$xM(optional `DOMMatrixInit$I %other = {});
+    `DOMMatrix$I `preMultiplySelf$xM(optional `DOMMatrixInit$I %other = {});
+    `DOMMatrix$I `translateSelf$xM(
+        optional unrestricted double %tx = 0,
+        optional unrestricted double %ty = 0,
+        optional unrestricted double %tz = 0);
+    `DOMMatrix$I `scaleSelf$xM(
+        optional unrestricted double %scaleX = 1,
+        optional unrestricted double %scaleY,
+        optional unrestricted double %scaleZ = 1,
+        optional unrestricted double %originX = 0,
+        optional unrestricted double %originY = 0,
+        optional unrestricted double %originZ = 0);
+    `DOMMatrix$I `scale3dSelf$xM(
+        optional unrestricted double %scale = 1,
+        optional unrestricted double %originX = 0,
+        optional unrestricted double %originY = 0,
+        optional unrestricted double %originZ = 0);
+    `DOMMatrix$I `rotateSelf$xM(
+        optional unrestricted double %rotX = 0,
+        optional unrestricted double %rotY,
+        optional unrestricted double %rotZ);
+    `DOMMatrix$I `rotateFromVectorSelf$xM(
+        optional unrestricted double %x = 0,
+        optional unrestricted double %y = 0);
+    `DOMMatrix$I `rotateAxisAngleSelf$xM(
+        optional unrestricted double %x = 0,
+        optional unrestricted double %y = 0,
+        optional unrestricted double %z = 0,
+        optional unrestricted double %angle = 0);
+    `DOMMatrix$I `skewXSelf$xM(optional unrestricted double %sx = 0);
+    `DOMMatrix$I `skewYSelf$xM(optional unrestricted double %sy = 0);
+    `DOMMatrix$I `invertSelf$xM();
+
+    [`Exposed$=Window] `DOMMatrix$I `setMatrixValue$xM(DOMString %transformList);
+};
+
+dictionary `DOMMatrix2DInit@I {
+    unrestricted double `a@xI;
+    unrestricted double `b@xI;
+    unrestricted double `c@xI;
+    unrestricted double `d@xI;
+    unrestricted double `e@xI;
+    unrestricted double `f@xI;
+    unrestricted double `m11@xI;
+    unrestricted double `m12@xI;
+    unrestricted double `m21@xI;
+    unrestricted double `m22@xI;
+    unrestricted double `m41@xI;
+    unrestricted double `m42@xI;
+};
+
+dictionary `DOMMatrixInit@I : `DOMMatrix2DInit$I {
+    unrestricted double `m13@xI = 0;
+    unrestricted double `m14@xI = 0;
+    unrestricted double `m23@xI = 0;
+    unrestricted double `m24@xI = 0;
+    unrestricted double `m31@xI = 0;
+    unrestricted double `m32@xI = 0;
+    unrestricted double `m33@xI = 1;
+    unrestricted double `m34@xI = 0;
+    unrestricted double `m43@xI = 0;
+    unrestricted double `m44@xI = 1;
+    boolean `is2D@xI;
+};
+</pre>
+
+<div class="p">
+<p>
+各 `DOMMatrixReadOnly$I ~obj %M は、次に挙げる内部~member変数を持つものと見做される：
+</p>
+
+<dl class="def-list">
+	<dt id="_matrix-elements">`m11@xE, `m12@xE, `m13@xE, `m14@xE, `m21@xE, `m22@xE, `m23@xE, `m24@xE, `m31@xE, `m32@xE, `m33@xE, `m34@xE, `m41@xE, `m42@xE, `m43@xE, `m44@xE</dt>
+	<dd>
+%M が表現する`行列$
+— 単に “%M の行列” とも記される —
+を成す各 成分を与える。
+それぞれ、この節の冒頭に示した~4x4`行列$の同~名の成分に対応する。
+</dd>
+	<dd>
+`列主導順@
+とは、上に挙げた順による成分の順序を意味する。
+</dd>
+
+	<dt>`~is-2D$</dt>
+	<dd>
+~T または ~F。
+~T ならば、 %M は~2D行列を表現することを指示する（が、逆は真でない）。
+</dd>
+</dl>
+
+<p>
+`DOMMatrixReadOnly$I ~interfaceは、これらの変数に~accessできなければナラナイ。
+それを継承している `DOMMatrix$I ~interfaceは、これらの変数の値も設定できなければナラナイ。
+</p>
+◎
+The following algorithms assume that DOMMatrixReadOnly objects have the internal member variables m11 element, m12 element, m13 element, m14 element, m21 element, m22 element, m23 element, m24 element, m31 element, m32 element, m33 element, m34 element, m41 element, m42 element, m43 element, m44 element and is 2D. DOMMatrixReadOnly as well as the inheriting interface DOMMatrix must be able to access and set the value of these variables.
+</div>
+
+<p>
+`DOMMatrixReadOnly$I ~objを返す各種~interfaceは、内部~member変数~値を改変してもヨイ。
+そのような~interfaceは、その能を注釈文にて明示的に指定しなければナラナイ。
+◎
+An interface returning an DOMMatrixReadOnly object by an attribute or function may be able to modify internal member variable values. Such an interface must specify this ability explicitly in prose.
+</p>
+
+<p>
+内部~member変数は、公開されないモノトスル。
+◎
+Internal member variables must not be exposed in any way.
+</p>
+
+<p>
+`DOMMatrix$I ／
+`DOMMatrixReadOnly$I
+~interfaceは
+`SVG11$r の `SVGMatrix^I ~interfaceを置換する。
+◎
+The DOMMatrix and DOMMatrixReadOnly interfaces replace the SVGMatrix interface from SVG. [SVG11]
+</p>
+
+		<section id="dommatrixinit-dictionary">
+<h3 title="DOMMatrix2DInit and DOMMatrixInit dictionaries">6.1. `DOMMatrix2DInit^I, `DOMMatrixInit^I 辞書</h3>
+
+<div class="algorithm">
+<p>
+`~2D用に辞書を検証して修復する@
+ときは、所与の
+( ［
+`DOMMatrix2DInit$I ／ `DOMMatrixInit$I
+］辞書 %辞書 )
+に対し，次を走らす：
+◎
+To validate and fixup (2D) a DOMMatrix2DInit or DOMMatrixInit dictionary dict, run the following steps:
+</p>
+
+<ol>
+	<li>
+<p>
+下の表 A の ~EACH( %行 ) に対し
+⇒
+~IF［
+%行 の 1 列目の~member %m1 は %辞書 に在る
+］~AND［
+%行 の 2 列目の~member %m2 は %辞書 に在る
+］~AND［
+%m1 の値 ~NEQ~SameValueZero %m2 の値
+］
+⇒
+~THROW `TypeError^E
+</p>
+
+<table><caption>表 A</caption>
+<tbody><tr><td>`m11$xI
+<td>`a$xI
+<td>1
+
+<tr><td>`m12$xI
+<td>`b$xI
+<td>0
+
+<tr><td>`m21$xI
+<td>`c$xI
+<td>0
+
+<tr><td>`m22$xI
+<td>`d$xI
+<td>1
+
+<tr><td>`m41$xI
+<td>`e$xI
+<td>0
+
+<tr><td>`m42$xI
+<td>`f$xI
+<td>0
+
+</tbody></table>
+
+◎
+If if at least one of the following conditions are true for dict, then throw a TypeError exception and abort these steps.
+• a and m11 are both present and SameValueZero(a, m11) is false.
+• b and m12 are both present and SameValueZero(b, m12) is false.
+• c and m21 are both present and SameValueZero(c, m21) is false.
+• d and m22 are both present and SameValueZero(d, m22) is false.
+• e and m41 are both present and SameValueZero(e, m41) is false.
+• f and m42 are both present and SameValueZero(f, m42) is false.
+</li>
+	<li>
+上の表 A の ~EACH( %行 ) に対し
+⇒
+~IF［
+%行 の 1 列目の~member %m は %辞書 に無い
+］
+⇒
+%辞書 の %m ~memberの値 ~SET ［
+%行 の 2 列目の~memberは %辞書 に在るならば その値 ／
+~ELSE_ %行 の 3 列目の値
+］
+◎
+If m11 is not present then set it to the value of member a, or value 1 if a is also not present.
+◎
+If m12 is not present then set it to the value of member b, or value 0 if b is also not present.
+◎
+If m21 is not present then set it to the value of member c, or value 0 if c is also not present.
+◎
+If m22 is not present then set it to the value of member d, or value 1 if d is also not present.
+◎
+If m41 is not present then set it to the value of member e, or value 0 if e is also not present.
+◎
+If m42 is not present then set it to the value of member f, or value 0 if f is also not present.
+◎
+Note: The SameValueZero comparison algorithm returns true for two NaN values, and also for 0 and -0. [ECMA-262]
+</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+`辞書を検証して修復する@
+ときは、所与の
+( `DOMMatrixInit$I 辞書 %辞書 )
+に対し，次を走らす：
+◎
+To validate and fixup a DOMMatrixInit dictionary dict, run the following steps:
+</p>
+<ol>
+	<li>
+`~2D用に辞書を検証して修復する$( %辞書 )
+◎
+Validate and fixup (2D) dict.
+</li>
+	<li>
+%is2D ~LET ［
+次が満たされるならば ~T ／
+~ELSE_ ~F
+］
+⇒
+どの %m ~IN { `m13$xI, `m14$xI, `m23$xI, `m24$xI, `m31$xI, `m32$xI, `m33$xI, `m34$xI, `m43$xI, `m44$xI }
+に対しても
+⇒
+%辞書 の %m ~memberの値 ~EQ~SameValueZero %m の既定~値
+◎
+↓</li>
+			<li>
+~IF［
+%is2D ~EQ ~F
+］~AND［
+`is2D$xI ~memberは %辞書 に在る ~AND その値 ~EQ ~T
+］
+⇒
+~THROW `TypeError^E
+◎
+If is2D is true and: at least one of m13, m14, m23, m24, m31, m32, m34, m43 are present with a value other than 0 or -0, or at least one of m33, m44 are present with a value other than 1, then throw a TypeError exception and abort these steps.
+</li>
+			<li>
+%辞書 の `is2D$xI ~memberの値 ~SET %is2D
+◎
+If is2D is not present and at least one of m13, m14, m23, m24, m31, m32, m34, m43 are present with a value other than 0 or -0, or at least one of m33, m44 are present with a value other than 1, set is2D to false.
+◎
+If is2D is still not present, set it to true.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="dommatrix-parse">
+<h3 title="Parsing a string into an abstract matrix">6.2. 文字列を構文解析して抽象-行列を得る</h3>
+
+<div class="algorithm">
+<p>
+`行列として構文解析する@
+ときは、所与の
+( 文字列 %変形~list~文字列 )
+に対し，次を走らせた結果を返す：
+◎
+To parse a string into an abstract matrix, given a string transformList, means to run the following steps. It will either return a 4x4 abstract matrix and a boolean 2dTransform, or failure.
+</p>
+<ol>
+	<li>
+( %行列, %is2D ) ~LET ( 単位~行列を成す`~4x4抽象-行列$, ~T )
+◎
+↓</li>
+	<li>
+~IF［
+%変形~list~文字列 ~EQ 空~文字列
+］
+⇒
+~RET ( %行列, %is2D )
+◎
+If transformList is the empty string, set it to the string "matrix(1, 0, 0, 1, 0, 0)".
+</li>
+	<li>
+%変形~list ~LET ~CSS `transform$p ~propの文法を与える下で，
+%変形~list~文字列 を`構文解析-$した結果
+
+`CSS3-TRANSFORMS$r
+`CSS3-SYNTAX$r
+◎
+Parse transformList into parsedValue given the grammar for the CSS transform property. The result will be a &lt;transform-list&gt;, the keyword none, or failure.＼
+</li>
+	<li>
+<p>
+%変形~list に応じて：
+</p>
+		<dl class="switch">
+			<dt>`失敗^i</dt>
+			<dt>`none^v 以外の~keywordが利用されている</dt>
+			<dd>
+~RET ( ε, ε )
+</dd>
+
+			<dt>~keyword `none^v</dt>
+			<dd>
+~RET ( %行列, %is2D )
+</dd>
+
+			<dt>`transform-list$t</dt>
+			<dd>
+~IF［
+%変形~list 内の，ある `transform-function$t 内の ある `length$t 値の単位は、`絶対~長さ$でない
+］
+⇒
+~RET ( ε, ε )
+</dd>
+		</dl>
+
+◎
+If parsedValue is failure, or any &lt;transform-function&gt; has &lt;length&gt; values without absolute length units, or any keyword other than none is used, then return failure. [CSS3-SYNTAX] [CSS3-TRANSFORMS]
+◎
+If parsedValue is none, set parsedValue to a &lt;transform-list&gt; containing a single identity matrix.
+</li>
+	<li>
+<p>
+%変形~list 内の ~EACH ( `transform-function$t %変形-関数 ) に対し：
+</p>
+		<ol>
+			<li>
+~IF［
+%変形-関数 は`~3D変形-関数$である
+］
+⇒
+%is2D ~SET ~F
+</li>
+			<li>
+%行列 に次で与えられる行列を`右から乗算-$する
+⇒
+<a href="~TRANSFORM#transform-functions">変形-関数</a>, および その［
+<a href="~TRANSFORM#mathematical-description">~2D行列</a> ／
+<a href="~TRANSFORM2#mathematical-description">~3D行列</a>
+］による数学的~記述に従って，
+%変形-関数 が表現する`~4x4抽象-行列$
+`CSS3-TRANSFORMS$r
+</li>
+		</ol>
+◎
+Let 2dTransform track the 2D/3D dimension status of parsedValue.
+◎
+If parsedValue consists of any three-dimensional transform functions
+• Set 2dTransform to false.
+Otherwise
+• Set 2dTransform to true.
+◎
+Transform all &lt;transform-function&gt;s to 4x4 abstract matrices by following the “Mathematical Description of Transform Functions”. [CSS3-TRANSFORMS]
+◎
+Let matrix be a 4x4 abstract matrix as shown in the initial figure of this section. Post-multiply all matrices from left to right and set matrix to this product.
+</li>
+	<li>
+~RET ( %行列, %is2D )
+◎
+Return matrix and 2dTransform.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="dommatrix-create">
+<h3 title="Creating DOMMatrixReadOnly and DOMMatrix objects">6.3.  `DOMMatrixReadOnly^I ／ `DOMMatrix^I ~objの作成-法</h3>
+
+<div class="algorithm">
+<p>
+`~2D行列を作成する@
+ときは、所与の
+( ~list « %a, %b, %c, %d, %e, %f », 
+型 %T ~IN { `DOMMatrixReadOnly$I,  `DOMMatrix$I } )
+に対し，型 %T の新たな~instanceをその各種 内部~変数を次のように設定した上で返す：
+◎
+To create a 2d matrix of type type being either DOMMatrixReadOnly or DOMMatrix, with a sequence init of 6 elements, follow these steps:
+</p>
+
+<ul>
+	<li>
+( `m11$xE, `m12$xE, `m21$xE, `m22$xE, `m41$xE, `m42$xE )
+~SET
+( %a, %b, %c, %d, %e, %f )
+◎
+Let matrix be a new instance of type.
+◎
+Set m11 element, m12 element, m21 element, m22 element, m41 element and m42 element to the values of init in order starting with the first value.
+</li>
+	<li>
+( `m13$xE, `m14$xE, `m23$xE, `m24$xE, `m31$xE, `m32$xE, `m34$xE, `m43$xE )
+~SET
+( 0, 0, 0, 0, 0, 0, 0, 0 )
+◎
+Set m13 element, m14 element, m23 element, m24 element, m31 element, m32 element, m34 element, and m43 element to 0.
+</li>
+	<li>
+( `m33$xE, `m44$xE ) ~SET ( 1, 1 )
+◎
+Set m33 element and m44 element to 1.
+</li>
+	<li>
+`~is-2D$ ~SET ~T
+◎
+Set is 2D to true.
+◎
+Return matrix
+</li>
+</ul>
+</div>
+
+<div class="algorithm">
+<p>
+`~3D行列を作成する@
+ときは、所与の
+( ~4x4行列 %行列, 型 %T ~IN { `DOMMatrixReadOnly$I, `DOMMatrix$I } )
+に対し，次を走らす：
+◎
+To create a 3d matrix with type being either DOMMatrixReadOnly or DOMMatrix, with a sequence init of 16 elements, follow these steps:
+</p>
+
+<ol>
+	<li>
+%M ~LET 型 %T の新たな~instance
+◎
+Let matrix be a new instance of type.
+</li>
+	<li>
+%M の行列 ~SET %行列
+◎
+Set m11 element to m44 element to the values of init in column-major order.
+</li>
+	<li>
+%M の`~is-2D$ ~SET ~F
+◎
+Set is 2D to false.
+</li>
+	<li>
+~RET %M
+◎
+Return matrix
+</li>
+</ol>
+</div>
+
+<dl class="idl-def">
+	<dt>`DOMMatrixReadOnly(init)@m</dt>
+	<dt>`DOMMatrix(init)@m</dt>
+	<dd>
+<p>
+これらの構築子の被呼出時には、次を走らすモノトスル：
+◎
+The DOMMatrixReadOnly(init) and the DOMMatrix(init) constructors must follow these steps:
+</p>
+		<ol>
+			<li>
+%T ~LET ［
+`DOMMatrixReadOnly()$m に対しては `DOMMatrixReadOnly$I 型 ／
+`DOMMatrix()$m に対しては `DOMMatrix$I 型
+］
+◎
+↓</li>
+			<li>
+~IF［
+%init は省略されている
+］
+⇒
+~RET `~2D行列を作成する$( « 1, 0, 0, 1, 0, 0 », %T )
+◎
+If init is omitted
+• Return the result of invoking create a 2d matrix of type DOMMatrixReadOnly or DOMMatrix as appropriate, with the sequence [1, 0, 0, 1, 0, 0].
+</li>
+			<li>
+<p>
+~IF［
+%init は `DOMString$I である
+］：
+◎
+If init is a DOMString
+</p>
+				<ol>
+					<li>
+~IF［
+`現在の大域~obj$は `Window$I ~objでない
+］
+⇒
+~THROW `TypeError^E
+◎
+If current global object is not a Window object, then throw a TypeError exception.
+</li>
+					<li>
+( %行列, %is2D ) ~LET `行列として構文解析する$( %init )
+◎
+Parse init into an abstract matrix, and let matrix and 2dTransform be the result.＼
+</li>
+					<li>
+~IF［
+%行列 ~EQ ε
+］
+⇒
+~THROW `SyntaxError$E
+◎
+If the result is failure, then throw a "SyntaxError" DOMException.
+</li>
+					<li>
+~IF［
+%is2D ~EQ ~T
+］
+⇒
+~RET `~2D行列を作成する$( 次に与える~list, %T )
+⇒
+%行列 の［
+%m11, %m12, %m21, %m22, %m41, %m42
+］成分からなる同順の~list
+◎
+If 2dTransform is true
+• Return the result of invoking create a 2d matrix of type DOMMatrixReadOnly or DOMMatrix as appropriate, with a sequence of numbers, the values being the elements m11, m12, m21, m22, m41 and m42 of matrix.
+</li>
+					<li>
+~RET `~3D行列を作成する$( %行列, %T )
+◎
+Otherwise
+• Return the result of invoking create a 3d matrix of type DOMMatrixReadOnly or DOMMatrix as appropriate, with a sequence of numbers, the values being the 16 elements of matrix.
+</li>
+				</ol>
+			</li>
+			<li>
+~IF［
+%init は~IDL連列~型である
+］
+⇒
+~RET `~listから行列を作成する$( %init に等価な~list, %T )
+◎
+If init is a sequence with 6 elements
+◎
+Return the result of invoking create a 2d matrix of type DOMMatrixReadOnly or DOMMatrix as appropriate, with the sequence init.
+◎
+If init is a sequence with 16 elements
+◎
+Return the result of invoking create a 3d matrix of type DOMMatrixReadOnly or DOMMatrix as appropriate, with the sequence init.
+◎
+Otherwise
+◎
+Throw a TypeError exception.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`DOMMatrixReadOnly$I . `fromMatrix(other)@xR</dt>
+	<dt>`DOMMatrix$I . `fromMatrix(other)@xM</dt>
+	<dd>
+これらの静的~methodの被呼出時には、次の結果を返すモノトスル
+⇒
+`辞書から行列を作成する$( %other, それぞれの~interface型 )
+◎
+The fromMatrix(other) static method on DOMMatrixReadOnly must create a DOMMatrixReadOnly from the dictionary other.
+◎
+The fromMatrix(other) static method on DOMMatrix must create a DOMMatrix from the dictionary other.
+</dd>
+</dl>
+
+<div class="algorithm">
+<p>
+<a id="#create-a-dommatrixreadonly-from-the-2d-dictionary"></a>
+<a id="#create-a-dommatrix-from-the-2d-dictionary"></a>
+`~2D辞書から行列を作成する@
+ときは、所与の
+( 辞書 %other, 型 %T ~IN { `DOMMatrix$I, `DOMMatrixReadOnly$I } )
+に対し，次の手続きに従う：
+◎
+To create a DOMMatrixReadOnly from a 2D dictionary other or to create a DOMMatrix from a 2D dictionary other, follow these steps:
+</p>
+
+<ol>
+	<li>
+`~2D用に辞書を検証して修復する$( %other )
+◎
+Validate and fixup (2D) other.
+</li>
+	<li>
+~RET
+`~2D行列を作成する$( 次に与える~list, %T )
+⇒
+%other の 6 成分
+( `m11$xI, `m12$xI, `m21$xI, `m22$xI, `m41$xI, `m42$xI )
+からなる同順の~list
+◎
+Return the result of invoking create a 2d matrix of type DOMMatrixReadOnly or DOMMatrix as appropriate, with a sequence of numbers, the values being the 6 elements m11, m12, m21, m22, m41 and m42 of other in the given order.
+</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+<a id="create-a-dommatrixreadonly-from-the-dictionary"></a>
+<a id="create-a-dommatrix-from-the-dictionary"></a>
+`辞書から行列を作成する@
+ときは、所与の
+( 辞書 %other, 型 %T ~IN { `DOMMatrix$I, `DOMMatrixReadOnly$I } )
+に対し，次の手続きに従う：
+◎
+To create a DOMMatrixReadOnly from a dictionary other or to create a DOMMatrix from a dictionary other, follow these steps:
+</p>
+
+<ol>
+	<li>
+`辞書を検証して修復する$( %other )
+◎
+Validate and fixup other.
+</li>
+	<li>
+~IF［
+%other の `is2D$xI 辞書~member ~EQ ~T
+］
+⇒
+~RET
+`~2D行列を作成する$( 次に与える~list, %T )
+⇒
+%other の 6 成分
+( `m11$xI, `m12$xI, `m21$xI, `m22$xI, `m41$xI, `m42$xI )
+からなる同順の~list
+◎
+If the is2D dictionary member of other is true
+• Return the result of invoking create a 2d matrix of type DOMMatrixReadOnly or DOMMatrix as appropriate, with a sequence of numbers, the values being the 6 elements m11, m12, m21, m22, m41 and m42 of other in the given order.
+</li>
+	<li>
+~RET `~3D行列を作成する$( 次に与える行列, %T )
+⇒
+各~成分が %other の同~名の~memberで与えられる~4x4行列
+◎
+Otherwise
+• Return the result of invoking create a 3d matrix of type DOMMatrixReadOnly or DOMMatrix as appropriate, with a sequence of numbers, the values being the 16 elements m11, m12, m13, ..., m44 of other in the given order.
+</li>
+</ol>
+</div>
+
+<dl class="idl-def">
+	<dt>`DOMMatrixReadOnly$I . `fromFloat32Array(array32)@xR</dt>
+	<dt>`DOMMatrix$I . `fromFloat32Array(array32)@xM</dt>
+	<dt>`DOMMatrixReadOnly$I . `fromFloat64Array(array64)@xR</dt>
+	<dt>`DOMMatrix$I . `fromFloat64Array(array64)@xM</dt>
+	<dd>
+これらの静的~methodの被呼出時には、次の結果を返すモノトスル
+⇒
+`~listから行列を作成する$( ［
+%array32 ／ %array64
+］に等価な~list, それぞれの~interface型 )
+◎
+The fromFloat32Array(array32) static method on DOMMatrixReadOnly and the fromFloat32Array(array32) static method on DOMMatrix must follow these steps:
+• If array32 has 6 elements
+•• Return the result of invoking create a 2d matrix of type DOMMatrixReadOnly or DOMMatrix as appropriate, with a sequence of numbers taking the values from array32 in the provided order.
+• If array32 has 16 elements
+•• Return the result of invoking create a 3d matrix of type DOMMatrixReadOnly or DOMMatrix as appropriate, with a sequence of numbers taking the values from array32 in the provided order.
+• Otherwise
+•• Throw a TypeError exception.
+◎
+The fromFloat64Array(array64) static method on DOMMatrixReadOnly and the fromFloat64Array(array64) static method on DOMMatrix must follow these steps:
+• If array64 has 6 elements
+•• Return the result of invoking create a 2d matrix of type DOMMatrixReadOnly or DOMMatrix as appropriate, with a sequence of numbers taking the values from array64 in the provided order.
+• If array32 has 16 elements
+•• Return the result of invoking create a 3d matrix of type DOMMatrixReadOnly or DOMMatrix as appropriate, with a sequence of numbers taking the values from array64 in the provided order.
+• Otherwise
+•• Throw a TypeError exception.
+</dd>
+</dl>
+
+<div class="algorithm">
+<p>
+`~listから行列を作成する@
+ときは、所与の (
+~list %成分~list,
+型 %T ~IN { `DOMMatrixReadOnly$I, `DOMMatrix$I }
+)
+に対し， %成分~list の長さに応じて：
+</p>
+
+<dl class="switch">
+	<dt>6 個</dt>
+	<dd>
+~RET `~2D行列を作成する$( %成分~list, %T )
+</dd>
+
+	<dt>16 個</dt>
+	<dd>
+~RET `~3D行列を作成する$( 次に与える行列, %T )
+⇒
+%成分~list により，各 成分~値が`列主導順$で与えられる~4x4行列
+</dd>
+
+	<dt>その他</dt>
+	<dd>
+~THROW `TypeError^E
+</dd>
+</dl>
+◎
+↑</div>
+
+		</section>
+		<section id="dommatrix-attributes">
+<h3 title="DOMMatrix attributes">6.4. `DOMMatrix^I 属性</h3>
+
+<dl class="idl-def">
+	<dt>`m11@xR, `m12@xR, `m13@xR, `m14@xR, `m21@xR, `m22@xR, `m23@xR, `m24@xR, `m31@xR, `m32@xR, `m33@xR, `m34@xR, `m41@xR, `m42@xR, `m43@xR, `m44@xR</dt>
+	<dd>
+これら 16 個の属性は、それぞれ，［
+当の属性と同~名の，此れの`行列~成分$
+］に対応する。
+◎
+The following attributes m11 to m44 correspond to the 16 items of the matrix interfaces.
+</dd>
+	<dd>
+これらの属性の取得子は、［
+当の属性と同~名の，此れの`行列~成分$
+］の値を返すモノトスル。
+◎
+↓</dd>
+	<dd>
+<p>
+`DOMMatrix$I 上の これらの属性の設定子は、次を走らすモノトスル：
+</p>
+		<ol>
+			<li>
+［
+当の属性と同~名の，此れの`行列~成分$
+］の値 ~SET 所与の値
+</li>
+			<li>
+~IF［
+当の属性は［
+`m11$xR,
+`m12$xR,
+`m21$xR,
+`m22$xR,
+`m41$xR,
+`m42$xR
+］のいずれかである
+］
+⇒
+~RET
+</li>
+			<li>
+~IF［
+所与の値 ~EQ~SameValueZero ［
+当の属性と同~名の， `DOMMatrixInit$I 上の~member
+］の既定~値
+］
+⇒
+~RET
+</li>
+			<li>
+此れの `~is-2D$ ~SET ~F
+</li>
+		</ol>
+
+◎
+• The m11 and a attributes, on getting, must return the m11 element value. For the DOMMatrix interface, setting the m11 or the a attribute must set the m11 element to the new value.
+• The m12 and b attributes, on getting, must return the m12 element value. For the DOMMatrix interface, setting the m12 or the b attribute must set the m12 element to the new value.
+• The m13 attribute, on getting, must return the m13 element value. For the DOMMatrix interface, setting the m13 attribute must set the m13 element to the new value and, if the new value is not 0 or -0, set is 2D to false.
+• The m14 attribute, on getting, must return the m14 element value. For the DOMMatrix interface, setting the m14 attribute must set the m14 element to the new value and, if the new value is not 0 or -0, set is 2D to false.
+• The m21 and c attributes, on getting, must return the m21 element value. For the DOMMatrix interface, setting the m21 or the c attribute must set the m21 element to the new value.
+• The m22 and d attributes, on getting, must return the m22 element value. For the DOMMatrix interface, setting the m22 or the d attribute must set the m22 element to the new value.
+• The m23 attribute, on getting, must return the m23 element value. For the DOMMatrix interface, setting the m23 attribute must set the m23 element to the new value and, if the new value is not 0 or -0, set is 2D to false.
+• The m24 attribute, on getting, must return the m24 element value. For the DOMMatrix interface, setting the m24 attribute must set the m24 element to the new value and, if the new value is not 0 or -0, set is 2D to false.
+• The m31 attribute, on getting, must return the m31 element value. For the DOMMatrix interface, setting the m31 attribute must set the m31 element to the new value and, if the new value is not 0 or -0, set is 2D to false.
+• The m32 attribute, on getting, must return the m32 element value. For the DOMMatrix interface, setting the m32 attribute must set the m32 element to the new value and, if the new value is not 0 or -0, set is 2D to false.
+• The m33 attribute, on getting, must return the m33 element value. For the DOMMatrix interface, setting the m33 attribute must set the m33 element to the new value and, if the new value is not 1, set is 2D to false.
+• The m34 attribute, on getting, must return the m34 element value. For the DOMMatrix interface, setting the m34 attribute must set the m34 element to the new value and, if the new value is not 0 or -0, set is 2D to false.
+• The m41 and e attributes, on getting, must return the m41 element value. For the DOMMatrix interface, setting the m41 or the e attribute must set the m41 element to the new value.
+• The m42 and f attributes, on getting, must return the m42 element value. For the DOMMatrix interface, setting the m42 or the f attribute must set the m42 element to the new value.
+• The m43 attribute, on getting, must return the m43 element value. For the DOMMatrix interface, setting the m43 attribute must set the m43 element to the new value and, if the new value is not 0 or -0, set is 2D to false.
+• The m44 attribute, on getting, must return the m44 element value. For the DOMMatrix interface, setting the m44 attribute must set the m44 element to the new value and, if the new value is not 1, set is 2D to false.
+</dd>
+
+	<dt>`a@xR, `b@xR, `c@xR, `d@xR, `e@xR, `f@xR</dt>
+	<dd>
+これらの取得子／設定子は、順に，此れの［
+`m11$xR, `m12$xR, `m21$xR, `m22$xR, `m41$xR, `m42$xR
+］属性と同じにふるまうモノトスル。
+◎
+↑</dd>
+	<dd class="note">注記：
+これらの属性は、此れの行列の~2D成分に対応する。
+◎
+The following attributes a to f correspond to the 2D components of the matrix interfaces.
+◎
+• The a attribute is an alias to the m11 attribute.
+• The b attribute is an alias to the m12 attribute.
+• The c attribute is an alias to the m21 attribute.
+• The d attribute is an alias to the m22 attribute.
+• The e attribute is an alias to the m41 attribute.
+• The f attribute is an alias to the m42 attribute.
+</dd>
+
+	<dt>`is2D@xR</dt>
+	<dd>
+この属性と次の `isIdentity$xR 属性は、
+`DOMMatrixReadOnly$I の状態情報を供する。
+◎
+The following attributes provide status information about DOMMatrixReadOnly.
+</dd>
+	<dd>
+取得子は、此れの`~is-2D$を返すモノトスル。
+◎
+The is2D attribute must return the value of is 2D.
+</dd>
+
+	<dt>`isIdentity@xR</dt>
+	<dd>
+<p>
+取得子は、［
+此れの行列が次をいずれも満たすならば ~T ／
+~ELSE_ ~F
+］を返すモノトスル：
+</p>
+
+<ul><li>［
+`m11$xE ／ `m22$xE ／ `m33$xE ／ `m44$xE
+］成分の値 ~EQ `1^jv
+</li><li>他のすべての成分の値 ~EQ~SameValueZero `0^jv
+</li></ul>
+
+◎
+The isIdentity attribute must return true if m12 element, m13 element, m14 element, m21 element, m23 element, m24 element, m31 element, m32 element, m34 element, m41 element, m42 element, m43 element are 0 or -0 and m11 element, m22 element, m33 element, m44 element are 1. Otherwise it must return false.
+</dd>
+</dl>
+
+<p>
+各 `DOMMatrixReadOnly$I ~obj %M は、真偽値をとる
+`~is-2D@
+~flagを持ち、 ~T ならば次を指示する：
+◎
+Every DOMMatrixReadOnly object must be flagged with a boolean is 2D. This flag indicates that:
+</p>
+
+<ul>
+	<li>
+%M の行列は、~2D行列として初期化された。
+詳細は、個々の<a href="#dommatrix-create">作成子</a>を見よ。
+◎
+The current matrix was initialized as a 2D matrix. See individual creators for more details.
+</li>
+	<li>
+%M の行列には、~2D変形nでない演算は適用されていない。
+どの演算が`~is-2D$を ~F に設定することになるかは、各種［
+<a href="#mutable-transformation-methods">変異-可能</a> ／
+<a href="#immutable-transformation-methods">変異-不能</a>
+］な変形n~methodごとに定義される。
+◎
+Only 2D transformation operations were applied. Each mutable or immutable transformation method defines if is 2D must be set to false.
+</li>
+</ul>
+
+<p class="note">注記：
+`DOMMatrix$I ~obj上の`~is-2D$が ~F に設定されて以降は、
+`setMatrixValue()$xM ~methodを~callする以外に ~T に戻ることは，決してない。
+【何らかの演算により，~2D行列になったとしても。】
+◎
+Note: Is 2D can never be set to true when it was set to false before on a DOMMatrix object with the exception of calling the setMatrixValue() method.
+</p>
+
+		</section>
+		<section id="immutable-transformation-methods">
+<h3 title="Immutable transformation methods">6.5. 変異-不能な変形n~method</h3>
+
+<p>
+以下の各種~methodは、現在の行列を改変せずに，新たな `DOMMatrix$I ~objを返す。
+◎
+The following methods do not modify the current matrix and return a new DOMMatrix object.
+</p>
+
+<p>
+`DOMMatrixReadOnly$I ~obj  %M の
+`変異-可能な複製@
+とは、新たな `DOMMatrix$I ~objであって，その内部~変数すべて
+— `行列~成分$すべて, `~is-2D$ —
+が %M から複製されたものとする。
+</p>
+
+<p class="trans-note">【
+この用語は、以下を簡潔に記述するために，この訳に導入したものである。
+】</p>
+
+<dl class="idl-def">
+	<dt>`translate(tx, ty, tz)@xR</dt>
+	<dd>
+被呼出時には、此れの`変異-可能な複製$上で
+`translateSelf(tx, ty, tz)$xM
+を遂行した結果を返すモノトスル。
+◎
+Let result be the resulting matrix initialized to the values of the current matrix.
+◎
+Perform a translateSelf() transformation on result with the arguments tx, ty, tz.
+◎
+Return result.
+◎
+The current matrix is not modified.
+</dd>
+
+	<dt>`scale(scaleX, scaleY, scaleZ, originX, originY, originZ)@xR</dt>
+	<dd>
+被呼出時には、此れの`変異-可能な複製$上で
+`scaleSelf( scaleX, scaleY, scaleZ, originX, originY, originZ )$xM
+を遂行した結果を返すモノトスル
+— %scaleY は与えられてない場合は %scaleX と同じ値にする下で。
+◎
+If scaleY is missing, set scaleY to the value of scaleX.
+◎
+Let result be the resulting matrix initialized to the values of the current matrix.
+◎
+Perform a scaleSelf() transformation on result with the arguments scaleX, scaleY, scaleZ, originX, originY, originZ.
+◎
+Return result.
+◎
+The current matrix is not modified.
+</dd>
+
+	<dt>`scaleNonUniform(scaleX, scaleY)@xR</dt>
+	<dd class="note">注記：
+旧来の理由から、
+`SVG11$r に定義される `SVGMatrix$I との互換性を得るためとして，~supportされる。
+作者には、代わりに `scale()$xR を利用することが奨励される。
+◎
+Note: Supported for legacy reasons to be compatible with SVGMatrix as defined in SVG 1.1 [SVG11]. Authors are encouraged to use scale() instead.
+</dd>
+	<dd>
+被呼出時には、此れの`変異-可能な複製$上で
+`scaleSelf(scaleX, scaleY, 1, 0, 0, 0)$xM
+を遂行した結果を返すモノトスル。
+◎
+Let result be the resulting matrix initialized to the values of the current matrix.
+◎
+Perform a scaleSelf() transformation on result with the arguments scaleX, scaleY, 1, 0, 0, 0.
+◎
+Return result.
+◎
+The current matrix is not modified.
+</dd>
+
+	<dt>`scale3d(scale, originX, originY, originZ)@xR</dt>
+	<dd>
+被呼出時には、此れの`変異-可能な複製$上で
+`scale3dSelf(scale, originX, originY, originZ)$xM
+を遂行した結果を返すモノトスル。
+◎
+Let result be the resulting matrix initialized to the values of the current matrix.
+◎
+Perform a scale3dSelf() transformation on result with the arguments scale, originX, originY, originZ.
+◎
+Return result.
+◎
+The current matrix is not modified.
+</dd>
+
+	<dt>`rotate(rotX, rotY, rotZ)@xR</dt>
+	<dd>
+被呼出時には、此れの`変異-可能な複製$上で
+`rotateSelf(rotX, rotY, rotZ)$xM
+を遂行した結果を返すモノトスル。
+◎
+Let result be the resulting matrix initialized to the values of the current matrix.
+◎
+Perform a rotateSelf() transformation on result with the arguments rotX, rotY, rotZ.
+◎
+Return result.
+◎
+The current matrix is not modified.
+</dd>
+
+	<dt>`rotateFromVector(x, y)@xR</dt>
+	<dd>
+被呼出時には、此れの`変異-可能な複製$上で
+`rotateFromVectorSelf(x, y)$xM
+を遂行した結果を返すモノトスル。
+◎
+Let result be the resulting matrix initialized to the values of the current matrix.
+◎
+Perform a rotateFromVectorSelf() transformation on result with the arguments x, y.
+◎
+Return result.
+◎
+The current matrix is not modified.
+</dd>
+
+	<dt>`rotateAxisAngle(x, y, z, angle)@xR</dt>
+	<dd>
+被呼出時には、此れの`変異-可能な複製$上で
+`rotateAxisAngleSelf(x, y, z, angle)$xM
+を遂行した結果を返すモノトスル。
+◎
+Let result be the resulting matrix initialized to the values of the current matrix.
+◎
+Perform a rotateAxisAngleSelf() transformation on result with the arguments x, y, z, angle.
+◎
+Return result.
+◎
+The current matrix is not modified.
+</dd>
+
+	<dt>`skewX(sx)@xR</dt>
+	<dd>
+被呼出時には、此れの`変異-可能な複製$上で
+`skewXSelf(sx)$xM
+を遂行した結果を返すモノトスル。
+◎
+Let result be the resulting matrix initialized to the values of the current matrix.
+Perform a skewXSelf() transformation on result with the argument sx.
+◎
+Return result.
+◎
+The current matrix is not modified.
+</dd>
+
+	<dt>`skewY(sy)@xR</dt>
+	<dd>
+被呼出時には、此れの`変異-可能な複製$上で
+`skewYSelf(sy)$xM
+を遂行した結果を返すモノトスル。
+◎
+Let result be the resulting matrix initialized to the values of the current matrix.
+◎
+Perform a skewYSelf() transformation on result with the argument sy.
+◎
+Return result.
+◎
+The current matrix is not modified.
+</dd>
+
+	<dt>`multiply(other)@xR</dt>
+	<dd>
+被呼出時には、此れの`変異-可能な複製$上で
+`multiplySelf(other)$xM
+を遂行した結果を返すモノトスル。
+◎
+Let result be the resulting matrix initialized to the values of the current matrix.
+◎
+Perform a multiplySelf() transformation on result with the argument other.
+◎
+Return result.
+◎
+The current matrix is not modified.
+</dd>
+
+	<dt>`flipX()@xR</dt>
+	<dd>
+被呼出時には、此れの`変異-可能な複製$上で
+`scaleSelf(-1, 1, 1, 0, 0, 0)$xM
+を遂行した結果を返すモノトスル。
+◎
+Let result be the resulting matrix initialized to the values of the current matrix.
+◎
+Post-multiply result with new DOMMatrix([-1, 0, 0, 1, 0, 0]).
+◎
+Return result.
+◎
+The current matrix is not modified.
+</dd>
+
+	<dt>`flipY()@xR</dt>
+	<dd>
+被呼出時には、此れの`変異-可能な複製$上で
+`scaleSelf(1, -1, 1, 0, 0, 0)$xM
+を遂行した結果を返すモノトスル。
+◎
+Let result be the resulting matrix initialized to the values of the current matrix.
+◎
+Post-multiply result with new DOMMatrix([1, 0, 0, -1, 0, 0]).
+◎
+Return result.
+◎
+The current matrix is not modified.
+</dd>
+
+	<dt>`inverse()@xR</dt>
+	<dd>
+被呼出時には、此れの`変異-可能な複製$上で
+`invertSelf()$xM
+を遂行した結果を返すモノトスル。
+◎
+Let result be the resulting matrix initialized to the values of the current matrix.
+◎
+Perform a invertSelf() transformation on result.
+◎
+Return result.
+◎
+The current matrix is not modified.
+</dd>
+</dl>
+
+<p>
+以下の~methodは、現在の行列を改変しない。
+◎
+The following methods do not modify the current matrix.
+</p>
+
+<dl class="idl-def">
+	<dt>`transformPoint(point)@xR</dt>
+	<dd>
+被呼出時には、次の結果を返す（引数 %point は改変されない）
+⇒
+`点を行列で変形する$( %point, 此れ )
+◎
+Let pointObject be the result of invoking create a DOMPoint from the dictionary point. Return the result of invoking transform a point with a matrix, given pointObject and the current matrix. The passed argument does not get modified.
+</dd>
+
+	<dt>`toFloat32Array()@xR</dt>
+	<dd>
+被呼出時には、此れの`行列~成分$すべてを`列主導順$で `Float32Array$I に直列化して返す。
+◎
+Returns the serialized 16 elements m11 to m44 of the current matrix in column-major order as Float32Array.
+</dd>
+
+	<dt>`toFloat64Array()@xR</dt>
+	<dd>
+被呼出時には、此れの`行列~成分$すべてを`列主導順$で `Float64Array$I に直列化して返す。
+◎
+Returns the serialized 16 elements m11 to m44 of the current matrix in column-major order as Float64Array.
+</dd>
+
+	<dt>`stringifier@xR</dt>
+	<dd>
+<p>
+文字列~化の挙動は、次を走らすモノトスル：
+◎
+stringification behavior
+</p>
+		<ol>
+			<li>
+<p>
+~IF［
+此れの`行列~成分$に，値が有限でないものがある
+］
+⇒
+~THROW `InvalidStateError$E
+◎
+If one or more of m11 element through m44 element are a non-finite value, then throw an "InvalidStateError" DOMException.
+</p>
+
+<p class="note">注記：
+~CSS構文は `NaN^jv ／ `Infinity^jv 値を表現し得ない。
+◎
+Note: The CSS syntax cannot represent NaN or Infinity values.
+</p>
+			</li>
+			<li>
+<p>
+この手続きの目的においては、所与の~list %~list を
+`~comma区切りで文字列~化^i
+するときは，次を走らせた結果を返すとする：
+</p>
+				<ol>
+						<li>
+%結果 ~LET 空~文字列
+</li>
+						<li>
+<p>
+%~list 内の~EACH( %~item ) に対し：
+</p>
+							<ol>
+								<li>
+%結果 に
+~NOABRUPT `ToString$jA( %~item )
+を付加する
+</li>
+								<li>
+~IF［
+この~~反復は最後でない
+］
+⇒
+%結果 に
+文字 U+002C COMMA, U+0020 SPACE
+を順に付加する
+</li>
+							</ol>
+						</li>
+						<li>
+~RET %結果
+</li>
+				</ol>
+◎
+Let string be the empty string.
+</li>
+			<li>
+<p>
+此れの`~is-2D$ に応じて：
+◎
+If is 2D is true, then:
+</p>
+					<dl class="switch">
+						<dt>~T</dt>
+						<dd>
+<p>
+~RET 次に挙げる文字列を順に連結した結果：
+</p>
+
+<ol ><li>`matrix(^l
+</li><li>此れの`行列~成分$［
+`m11$xE, `m12$xE, `m21$xE, `m22$xE, `m41$xE, `m42$xE
+］からなる同順の~listを， `~comma区切りで文字列~化^i した結果
+</li><li>`)^l
+</li></ol>
+
+◎
+• Append "matrix(" to string.
+• Append ! ToString(m11 element) to string.
+• Append ", " to string.
+• Append ! ToString(m12 element) to string.
+• Append ", " to string.
+• Append ! ToString(m21 element) to string.
+• Append ", " to string.
+• Append ! ToString(m22 element) to string.
+• Append ", " to string.
+• Append ! ToString(m41 element) to string.
+• Append ", " to string.
+• Append ! ToString(m42 element) to string.
+• Append ")" to string.
+</dd>
+						<dd class="note">注記：
+これは、 `matrix()$f 関数の形による文字列になる。
+`CSS3-TRANSFORMS$r
+◎
+Note: The string will be in the form of a a CSS Transforms &lt;matrix()&gt; function. [CSS3-TRANSFORMS]
+</dd>
+
+						<dt>~F</dt>
+						<dd>
+<p>
+~RET 次に挙げる文字列を順に連結した結果：
+</p>
+
+<ol ><li>`matrix3d(^l
+</li><li>此れの`行列~成分$すべてからなる`列主導順$による~listを， `~comma区切りで文字列~化^i した結果
+</li><li>`)^l
+</li></ol>
+
+◎
+Otherwise:
+• Append "matrix3d(" to string.
+• Append ! ToString(m11 element) to string.
+• Append ", " to string.
+• Append ! ToString(m12 element) to string.
+• Append ", " to string.
+• Append ! ToString(m13 element) to string.
+• Append ", " to string.
+• Append ! ToString(m14 element) to string.
+• Append ", " to string.
+• Append ! ToString(m21 element) to string.
+• Append ", " to string.
+• Append ! ToString(m22 element) to string.
+• Append ", " to string.
+• Append ! ToString(m23 element) to string.
+• Append ", " to string.
+• Append ! ToString(m24 element) to string.
+• Append ", " to string.
+原文抜け m31...m34
+• Append ! ToString(m41 element) to string.
+• Append ", " to string.
+• Append ! ToString(m42 element) to string.
+• Append ", " to string.
+• Append ! ToString(m43 element) to string.
+• Append ", " to string.
+• Append ! ToString(m44 element) to string.
+• Append ")" to string.
+</dd>
+						<dd class="note">注記：
+これは、 `matrix3d()$f 関数の形による文字列になる。
+`CSS3-TRANSFORMS$r
+◎
+Note: The string will be in the form of a a CSS Transforms &lt;matrix3d()&gt; function. [CSS3-TRANSFORMS]
+◎
+Return string.
+</dd>
+					</dl>
+			</li>
+		</ol>
+	</dd>
+</dl>
+
+<div class="example">
+
+<p>
+行列を作成して~2D変形n~methodを~callする例：
+◎
+In this example, a matrix is created and several 2D transformation methods are called:
+</p>
+
+<pre class="lang-js">
+var %matrix = new DOMMatrix();
+%matrix.scaleSelf(2);
+%matrix.translateSelf(20,20);
+console.assert(%matrix.toString() === `matrix(2, 0, 0, 2, 40, 40)^l);
+</pre>
+
+</div>
+
+<div class="example">
+
+<p>
+行列を作成して~3D変形n~methodを~callする例：
+◎
+In the following example, a matrix is created and several 3D transformation methods are called:
+</p>
+
+<pre class="lang-js">
+var %matrix = new DOMMatrix();
+%matrix.scale3dSelf(2);
+console.assert(matrix.toString() === `matrix3d(2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1)^l);
+</pre>
+
+<p>
+~3D演算に対しては、 `stringifier$xR は，~3D行列を表現する文字列を返す。
+◎
+For 3D operations, the stringifier returns a string representing a 3D matrix.
+</p>
+
+</div>
+
+<div class="example">
+<p>
+次の例は、行列に有限でない値があるので，例外を投出する：
+◎
+This example will throw an exception because there are non-finite values in the matrix.
+</p>
+
+<pre class="lang-js">
+var %matrix = new DOMMatrix([NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN, NaN]);
+var %string = matrix + " Batman!";
+</pre>
+
+</div>
+
+		</section>
+		<section id="mutable-transformation-methods">
+<h3 title="Mutable transformation methods">6.6. 変異-可能な変形n~method</h3>
+
+<p>
+以下の各種~methodは、それが呼出された行列~objを改変した上で，~obj自身を返す。
+これにより、~~作者は~method~callを連鎖できるようになる。
+◎
+The following methods modify the current matrix, so that each method returns the matrix where it was invoked on. The primary benefit of this is allowing content creators to chain method calls.
+</p>
+
+<div class="example">
+
+<p>
+次の~codeは：
+◎
+The following code example:
+</p>
+
+<pre class="lang-js">
+var %matrix = new DOMMatrix();matrix.translateSelf(20, 20);
+%matrix.scaleSelf(2);
+%matrix.translateSelf(-20, -20);
+</pre>
+
+<p>
+次に等価になる：
+◎
+is equivalent to:
+</p>
+
+<pre class="lang-js">
+var %matrix = new DOMMatrix();
+%matrix.translateSelf(20, 20).scaleSelf(2).translateSelf(-20, -20);
+</pre>
+</div>
+
+<p class="note">注記：
+~methodを連鎖して~callする作者には、変形n~methodのうち変異-可能な方を利用することを勧める
+— そうすれば、~UA内の中間的な `DOMMatrix$I ~objの作成に因る不必要な~memory割振りを避けれるので。
+◎
+Note: Authors who use chained method calls are advised to use mutable transformation methods to avoid unnecessary memory allocations due to creation of intermediate DOMMatrix objects in user agents.
+</p>
+
+<dl class="idl-def">
+	<dt>`multiplySelf(other)@xM</dt>
+	<dd>
+<p>
+被呼出時には、次を走らすモノトスル：
+</p>
+		<ol>
+			<li>
+%M ~LET
+`辞書から行列を作成する$( %other, `DOMMatrix$I )
+◎
+Let otherObject be the result of invoking create a DOMMatrix from the dictionary other.
+</li>
+			<li>
+此れの行列に %M を`右から乗算-$する
+◎
+The otherObject matrix gets post-multiplied to the current matrix.
+</li>
+			<li>
+~IF［
+%M の`~is-2D$ ~EQ ~F
+］
+⇒
+此れの`~is-2D$ ~SET ~F
+◎
+If is 2D of otherObject is false, set is 2D of the current matrix to false.
+</li>
+			<li>
+~RET 此れ
+◎
+Return the current matrix.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`preMultiplySelf(other)@xM</dt>
+	<dd>
+<p>
+被呼出時には、次を走らすモノトスル：
+</p>
+		<ol>
+			<li>
+%M ~LET
+`辞書から行列を作成する$( %other, `DOMMatrix$I )
+◎
+Let otherObject be the result of invoking create a DOMMatrix from the dictionary other.
+</li>
+			<li>
+此れの行列に %M を`左から乗算-$する
+◎
+The otherObject matrix gets pre-multiplied to the current matrix.
+</li>
+			<li>
+~IF［
+%M の`~is-2D$ ~EQ ~F
+］
+⇒
+此れの`~is-2D$ ~SET ~F
+◎
+If is 2D of otherObject is false, set is 2D of the current matrix to false.
+</li>
+	<li>
+~RET 此れ
+◎
+Return the current matrix.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`translateSelf(tx, ty, tz)@xM</dt>
+	<dd>
+<p>
+被呼出時には、次を走らすモノトスル：
+</p>
+		<ol>
+			<li>
+此れの行列に次の行列を`右から乗算-$する
+⇒
+移動量
+( %tx, %ty, %tz )
+による`~3D並進$を表現する行列
+`CSS3-TRANSFORMS$r
+◎
+Post-multiply a translation transformation on the current matrix. The 3D translation matrix is described in CSS Transforms. [CSS3-TRANSFORMS]
+</li>
+			<li>
+~IF［
+%tz ~NEQ~SameValueZero `0^jv
+］
+⇒
+此れの`~is-2D$ ~SET ~F
+◎
+If tz is specified and not 0 or -0, set is 2D of the current matrix to false.
+</li>
+			<li>
+~RET 此れ
+◎
+Return the current matrix.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`scaleSelf( scaleX, scaleY, scaleZ, originX, originY, originZ )@xM</dt>
+	<dd>
+<p>
+被呼出時には、次を走らすモノトスル：
+</p>
+		<ol>
+			<li>
+~IF［
+%scaleY は与えられてない
+］
+⇒
+%scaleY ~SET %scaleX
+◎
+↓</li>
+			<li>
+<p>
+此れの行列に［
+次に与える 3 個の行列
+`CSS3-TRANSFORMS$r
+］を，順に`右から乗算-$する：
+◎
+↓</p>
+				<ol>
+					<li>
+移動量
+( %originX, %originY, %originZ )
+による`~3D並進$を表現する行列
+◎
+Perform a translateSelf() transformation on the current matrix with the arguments originX, originY, originZ.
+◎
+If scaleY is missing, set scaleY to the value of scaleX.
+</li>
+			<li>
+[ %scaleX, %scaleY, %scaleZ ]
+による`~3D拡縮$を表現する行列
+◎
+Post-multiply a non-uniform scale transformation on the current matrix. The 3D scale matrix is described in CSS Transforms with sx = scaleX, sy = scaleY and sz = scaleZ. [CSS3-TRANSFORMS]
+</li>
+			<li>
+移動量
+( −%originX, −%originY, −%originZ )
+による`~3D並進$を表現する行列
+◎
+Negate originX, originY and originZ.
+◎
+Perform a translateSelf() transformation on the current matrix with the arguments originX, originY, originZ.
+</li>
+				</ol>
+			</li>
+			<li>
+~IF［
+%scaleZ ~NEQ `1^jv
+］
+⇒
+此れの`~is-2D$ ~SET ~F
+◎
+If scaleZ is not 1, set is 2D of the current matrix to false.
+</li>
+			<li>
+~RET 此れ
+◎
+Return the current matrix.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`scale3dSelf(scale, originX, originY, originZ)@xM</dt>
+	<dd>
+<p>
+被呼出時には、次を走らすモノトスル：
+</p>
+		<ol>
+			<li>
+此れ上で
+`scaleSelf(scale, scale, scale, originX, originY, originZ)$xM
+を遂行する
+</li>
+			<li>
+~RET 此れ
+</li>
+		</ol>
+
+◎
+Apply a translateSelf() transformation to the current matrix with the arguments originX, originY, originZ.
+◎
+Post-multiply a uniform 3D scale transformation (m11 = m22 = m33 = scale) on the current matrix. The 3D scale matrix is described in CSS Transforms with sx = sy = sz = scale. [CSS3-TRANSFORMS]
+◎
+Apply a translateSelf() transformation to the current matrix with the arguments -originX, -originY, -originZ.
+◎
+If scale is not 1, set is 2D of the current matrix to false.
+◎
+Return the current matrix.
+</dd>
+	<dd class="trans-note">【
+原文の記述には、`~is-2D$の設定-法に誤りがある。
+】</dd>
+
+	<dt>`rotateSelf(rotX, rotY, rotZ)@xM</dt>
+	<dd>
+<p>
+被呼出時には、次を走らすモノトスル：
+</p>
+		<ol>
+			<li>
+~IF［
+%rotZ は与えられてない
+］
+⇒
+%rotZ ~SET `0^jv
+◎
+↓</li>
+			<li>
+~IF［
+%rotY は与えられてない
+］
+⇒
+%rotY ~SET `0^jv
+◎
+If rotY and rotZ are both missing, set rotZ to the value of rotX and set rotX and rotY to 0.
+◎
+If rotY is still missing, set rotY to 0.
+◎
+If rotZ is still missing, set rotZ to 0.
+</li>
+			<li>
+~IF［
+( %rotX, %rotY ) ~NEQ~SameValueZero ( `0^jv, `0^jv )
+］
+⇒
+此れの`~is-2D$ ~SET ~F
+◎
+If rotX or rotY are not 0 or -0, set is 2D of the current matrix to false.
+</li>
+			<li>
+<p>
+此れの行列に［
+次に与える 3 個の行列
+`CSS3-TRANSFORMS$r
+］を，順に`右から乗算-$する：
+◎
+↓</p>
+				<ol>
+					<li >
+軸~vector [ 0, 0, 1 ] と回転角 %rotZ （単位度） による`~3D回転$を表現する行列
+◎
+Post-multiply a rotation transformation on the current matrix around the vector 0, 0, 1 by the specified rotation rotZ in degrees. The 3D rotation matrix is described in CSS Transforms with alpha = rotZ in degrees. [CSS3-TRANSFORMS]
+</li>
+			<li>
+軸~vector [ 0, 1, 0 ] と回転角 %rotY （単位度） による`~3D回転$を表現する行列
+◎
+Post-multiply a rotation transformation on the current matrix around the vector 0, 1, 0 by the specified rotation rotY in degrees. The 3D rotation matrix is described in CSS Transforms with alpha = rotY in degrees. [CSS3-TRANSFORMS]
+</li>
+			<li>
+軸~vector [ 1, 0, 0 ] と回転角 %rotX （単位度） による`~3D回転$を表現する行列
+◎
+Post-multiply a rotation transformation on the current matrix around the vector 1, 0, 0 by the specified rotation rotX in degrees. The 3D rotation matrix is described in CSS Transforms with alpha = rotX in degrees. [CSS3-TRANSFORMS]
+</li>
+				</ol>
+			</li>
+			<li>
+~RET 此れ
+◎
+Return the current matrix.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`rotateFromVectorSelf(x, y)@xM</dt>
+	<dd>
+<p>
+被呼出時には、次を走らすモノトスル：
+</p>
+		<ol>
+			<li>
+%回転角 ~LET 0
+</li>
+			<li>
+~IF［
+( %x, %y ) ~NEQ~SameValueZero ( `0^jv, `0^jv )
+］
+⇒
+%回転角 ~SET
+~vector [ 1, 0 ] と [ %x, %y ]【！ <sup>T</sup>】
+との間の時計回り方向の角度
+【時計回り — X 軸, Y 軸の方向は？どっちの~vectorから？】
+◎
+↓</li>
+			<li>
+此れの行列に次の行列を`右から乗算-$する
+⇒
+回転角 %回転角 による`~2D回転$を表現する行列
+`CSS3-TRANSFORMS$r
+</li>
+			<li>
+~RET 此れ
+</li>
+		</ol>
+◎
+Post-multiply a rotation transformation on the current matrix. The rotation angle is determined by the angle between the vector (1,0)T and (x,y)T in the clockwise direction. If x and y should both be 0 or -0, the angle is specified as 0. The 2D rotation matrix is described in CSS Transforms where alpha is the angle between the vector (1,0)T and (x,y)T in degrees. [CSS3-TRANSFORMS]
+◎
+Return the current matrix.
+</dd>
+
+	<dt>`rotateAxisAngleSelf(x, y, z, angle)@xM</dt>
+	<dd>
+<p>
+被呼出時には、次を走らすモノトスル：
+</p>
+		<ol>
+			<li>
+此れの行列に次の行列を`右から乗算-$する
+⇒
+軸~vector [ %x, %y, %z ] と回転角 %angle （単位度）による`~3D回転$を表現する行列
+`CSS3-TRANSFORMS$r
+◎
+Post-multiply a rotation transformation on the current matrix around the specified vector x, y, z by the specified rotation angle in degrees. The 3D rotation matrix is described in CSS Transforms with alpha = angle in degrees. [CSS3-TRANSFORMS]
+</li>
+			<li>
+~IF［
+( %x, %y ) ~NEQ~SameValueZero ( `0^jv, `0^jv )
+］
+⇒
+此れの`~is-2D$ ~SET ~F
+◎
+If x or y are not 0 or -0, set is 2D of the current matrix to false.
+</li>
+			<li>
+~RET 此れ
+◎
+Return the current matrix.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`skewXSelf(sx)@xM</dt>
+	<dd>
+<p>
+被呼出時には、次を走らすモノトスル：
+</p>
+		<ol>
+			<li>
+此れの行列に次の行列を`右から乗算-$する
+⇒
+角度 %sx （単位度）による`~X軸~不変の~2D斜傾$を表現する行列
+`CSS3-TRANSFORMS$r
+◎
+Post-multiply a skewX transformation on the current matrix by the specified angle sx in degrees. The 2D skewX matrix is described in CSS Transforms with alpha = sx in degrees. [CSS3-TRANSFORMS]
+</li>
+			<li>
+~RET 此れ
+◎
+Return the current matrix.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`skewYSelf(sy)@xM</dt>
+	<dd>
+<p>
+被呼出時には、次を走らすモノトスル：
+</p>
+		<ol>
+			<li>
+此れの行列に次の行列を`右から乗算-$する
+⇒
+角度 %sy （単位度）による`~Y軸~不変の~2D斜傾$を表現する行列
+`CSS3-TRANSFORMS$r
+◎
+Post-multiply a skewX transformation on the current matrix by the specified angle sy in degrees. The 2D skewY matrix is described in CSS Transforms with beta = sy in degrees. [CSS3-TRANSFORMS]
+</li>
+			<li>
+~RET 此れ
+◎
+Return the current matrix.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`invertSelf()@xM</dt>
+	<dd>
+<p>
+被呼出時には、次を走らすモノトスル：
+</p>
+		<ol>
+			<li>
+~IF［
+此れの行列は可逆である
+］
+⇒
+此れの行列 ~SET 此れの行列の逆~行列
+◎
+Invert the current matrix.
+</li>
+			<li>
+~ELSE
+⇒＃
+此れのすべての`行列~成分$ ~SET `NaN^jv；
+此れの`~is-2D$ ~SET ~F
+◎
+If the current matrix is not invertible set all attributes to NaN and set is 2D to false.
+</li>
+			<li>
+~RET 此れ
+◎
+Return the current matrix.
+</li>
+		</ol>
+	</dd>
+
+	<dt>`setMatrixValue(transformList)@xM</dt>
+	<dd>
+<p>
+被呼出時には、次を走らすモノトスル：
+</p>
+		<ol>
+			<li>
+( %行列, %is2D ) ~LET `行列として構文解析する$( %transformList )
+◎
+Parse transformList into an abstract matrix, and let matrix and 2dTransform be the result.＼
+</li>
+			<li>
+~IF［
+%行列 ~EQ ε
+］
+⇒
+~THROW `SyntaxError$E
+◎
+If the result is failure, then throw a "SyntaxError" DOMException.
+</li>
+			<li>
+此れの`~is-2D$ ~SET %is2D
+◎
+Set is 2D to the value of 2dTransform.
+</li>
+			<li>
+此れの各 `行列~成分$ ~SET %行列 の対応する成分の値
+◎
+Set m11 element through m44 element to the element values of matrix in column-major order.
+</li>
+			<li>
+~RET 此れ
+◎
+Return the current matrix.
+</li>
+		</ol>
+	</dd>
+</dl>
+
+		</section>
+	</section>
+	<section id="structured-serialization">
+<h2 title="Structured serialization">7. 有構造~直列化</h2>
+
+<p>
+［
+`DOMPointReadOnly$I ／
+`DOMPoint$I ／
+`DOMRectReadOnly$I ／
+`DOMRect$I ／
+`DOMQuad$I ／
+`DOMMatrixReadOnly$I ／
+`DOMMatrix$I
+］~objは、`直列化-可能$である。
+`HTML$r
+◎
+DOMPointReadOnly, DOMPoint, DOMRectReadOnly, DOMRect, DOMQuad, DOMMatrixReadOnly, and DOMMatrix objects are serializable objects. [HTML]
+</p>
+
+<div class="algorithm">
+<p>
+［
+`DOMPointReadOnly$I ／ `DOMPoint$I
+］用の`直列化~手続き$は、所与の
+( %値, %直列形 )
+に対し，次を走らす：
+◎
+The serialization steps for DOMPointReadOnly and DOMPoint, given value and serialized, are:
+</p>
+
+<ol>
+	<li>
+%直列形 . `X^sl ~SET %値 の`~x座標$
+◎
+Set serialized.[[X]] to value’s x coordinate.
+</li>
+	<li>
+%直列形 . `Y^sl ~SET %値 の`~y座標$
+◎
+Set serialized.[[Y]] to value’s y coordinate.
+</li>
+	<li>
+%直列形 . `Z^sl ~SET %値 の`~z座標$
+◎
+Set serialized.[[Z]] to value’s z coordinate.
+</li>
+	<li>
+%直列形 . `W^sl ~SET %値 の`~w視座$
+◎
+Set serialized.[[W]] to value’s w perspective.
+</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+［
+`DOMPointReadOnly$I ／ `DOMPoint$I
+］用の`逆直列化~手続き$は、所与の
+( %直列形, %値 )
+に対し，次を走らす：
+◎
+Their deserialization steps, given serialized and value, are:
+</p>
+
+<ol>
+	<li>
+%値 の`~x座標$ ~SET %直列形 . `X^sl
+◎
+Set value’s x coordinate to serialized.[[X]].
+</li>
+	<li>
+%値 の`~y座標$ ~SET %直列形 . `Y^sl
+◎
+Set value’s y coordinate to serialized.[[Y]].
+</li>
+	<li>
+%値 の`~z座標$ ~SET %直列形 . `Z^sl
+◎
+Set value’s z coordinate to serialized.[[Z]].
+</li>
+	<li>
+%値 の`~w視座$ ~SET %直列形 . `W^sl
+◎
+Set value’s w perspective to serialized.[[W]].
+</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+［
+`DOMRectReadOnly$I ／ `DOMRect$I
+］用の`直列化~手続き$は、所与の
+( %値, %直列形 )
+に対し，次を走らす：
+◎
+The serialization steps for DOMRectReadOnly and DOMRect, given value and serialized, are:
+</p>
+
+<ol>
+	<li>
+%直列形 . `X^sl ~SET %値 の`~x座標$rT
+◎
+Set serialized.[[X]] to value’s x coordinate.
+</li>
+	<li>
+%直列形 . `Y^sl ~SET %値 の`~y座標$rT
+◎
+Set serialized.[[Y]] to value’s y coordinate.
+</li>
+	<li>
+%直列形 . `Width^sl ~SET %値 の`横幅~寸法$
+◎
+Set serialized.[[Width]] to value’s width dimension.
+</li>
+	<li>
+%直列形 . `Height^sl ~SET %値 の`縦幅~寸法$
+◎
+Set serialized.[[Height]] to value’s height dimension.
+</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+［
+`DOMRectReadOnly$I ／ `DOMRect$I
+］用の`逆直列化~手続き$は、所与の
+( %直列形, %値 )
+に対し，次を走らす：
+◎
+Their deserialization steps, given serialized and value, are:
+</p>
+
+<ol>
+	<li>
+%値 の`~x座標$rT ~SET %直列形 . `X^sl
+◎
+Set value’s x coordinate to serialized.[[X]].
+</li>
+	<li>
+%値 の`~y座標$rT ~SET %直列形 . `Y^sl
+◎
+Set value’s y coordinate to serialized.[[Y]].
+</li>
+	<li>
+%値 の`横幅~寸法$ ~SET %直列形 . `Width^sl
+◎
+Set value’s width dimension to serialized.[[Width]].
+</li>
+	<li>
+%値 の`縦幅~寸法$ ~SET %直列形 . `Height^sl
+◎
+Set value’s height dimension to serialized.[[Height]].
+</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+`DOMQuad$I 用の`直列化~手続き$は、所与の
+( %値, %直列形 )
+に対し，次を走らす：
+◎
+The serialization steps for DOMQuad, given value and serialized, are:
+</p>
+
+<ol>
+	<li>
+%直列形 . `P1^sl ~SET %値 の`点1$の`下位-直列化$
+◎
+Set serialized.[[P1]] to the sub-serialization of value’s point 1.
+</li>
+	<li>
+%直列形 . `P2^sl ~SET %値 の`点2$の`下位-直列化$
+◎
+Set serialized.[[P2]] to the sub-serialization of value’s point 2.
+</li>
+	<li>
+%直列形 . `P3^sl ~SET %値 の`点3$の`下位-直列化$
+◎
+Set serialized.[[P3]] to the sub-serialization of value’s point 3.
+</li>
+	<li>
+%直列形 . `P4^sl ~SET %値 の`点4$の`下位-直列化$
+◎
+Set serialized.[[P4]] to the sub-serialization of value’s point 4.
+</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+`DOMQuad$I 用の`逆直列化~手続き$は、所与の
+( %直列形, %値 )
+に対し，次を走らす：
+◎
+Their deserialization steps, given serialized and value, are:
+</p>
+
+<ol>
+	<li>
+%値 の`点1$ ~SET %直列形 . `P1^sl の`下位-逆直列化$
+◎
+Set value’s point 1 to the sub-deserialization of serialized.[[P1]].
+</li>
+	<li>
+%値 の`点2$ ~SET %直列形 . `P2^sl の`下位-逆直列化$
+◎
+Set value’s point 2 to the sub-deserialization of serialized.[[P2]].
+</li>
+	<li>
+%値 の`点3$ ~SET %直列形 . `P3^sl の`下位-逆直列化$
+◎
+Set value’s point 3 to the sub-deserialization of serialized.[[P3]].
+</li>
+	<li>
+%値 の`点4$ ~SET %直列形 . `P4^sl の`下位-逆直列化$
+◎
+Set value’s point 4 to the sub-deserialization of serialized.[[P4]].
+</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+［
+`DOMMatrixReadOnly$I ／ `DOMMatrix$I
+］用の`直列化~手続き$は、所与の
+( %値, %直列形 )
+に対し，次を走らす：
+◎
+The serialization steps for DOMMatrixReadOnly and DOMMatrix, given value and serialized, are:
+</p>
+
+<ol>
+	<li>
+<p>
+~IF［
+%値 の`~is-2D$ ~EQ ~T
+］：
+◎
+If value’s is 2D is true:
+</p>
+		<ol>
+			<li>
+%直列形 . `M11^sl ~SET %値 の`m11$xE
+◎
+Set serialized.[[M11]] to value’s m11 element.
+</li>
+			<li>
+%直列形 . `M12^sl ~SET %値 の`m12$xE
+◎
+Set serialized.[[M12]] to value’s m12 element.
+</li>
+			<li>
+%直列形 . `M21^sl ~SET %値 の`m21$xE
+◎
+Set serialized.[[M21]] to value’s m21 element.
+</li>
+			<li>
+%直列形 . `M22^sl ~SET %値 の`m22$xE
+◎
+Set serialized.[[M22]] to value’s m22 element.
+</li>
+			<li>
+%直列形 . `M41^sl ~SET %値 の`m41$xE
+◎
+Set serialized.[[M41]] to value’s m41 element.
+</li>
+			<li>
+%直列形 . `M42^sl ~SET %値 の`m42$xE
+◎
+Set serialized.[[M42]] to value’s m42 element.
+</li>
+			<li>
+%直列形 . `Is2D^sl ~SET ~T
+◎
+Set serialized.[[Is2D]] to true.
+</li>
+		</ol>
+
+<p class="note">注記：
+~2D［
+`DOMMatrix$I ／
+`DOMMatrixReadOnly$I
+］においては、一部の他の要素
+— 例： `m13$xE —
+は `-0^jv をとり得る
+— それは、この~algoにより往来しないことになる。
+◎
+Note: It is possible for a 2D DOMMatrix or DOMMatrixReadOnly to have -0 for some of the other elements, e.g., the m13 element, which will not be roundtripped by this algorithm.
+</li>
+	<li>
+<p>
+~ELSE：
+◎
+Otherwise:
+</p>
+		<ol>
+			<li>
+%直列形 . `M11^sl ~SET %値 の`m11$xE
+◎
+Set serialized.[[M11]] to value’s m11 element.
+</li>
+			<li>
+%直列形 . `M12^sl ~SET %値 の`m12$xE
+◎
+Set serialized.[[M12]] to value’s m12 element.
+</li>
+			<li>
+%直列形 . `M13^sl ~SET %値 の`m13$xE
+◎
+Set serialized.[[M13]] to value’s m13 element.
+</li>
+			<li>
+%直列形 . `M14^sl ~SET %値 の`m14$xE
+◎
+Set serialized.[[M14]] to value’s m14 element.
+</li>
+			<li>
+%直列形 . `M21^sl ~SET %値 の`m21$xE
+◎
+Set serialized.[[M21]] to value’s m21 element.
+</li>
+			<li>
+%直列形 . `M22^sl ~SET %値 の`m22$xE
+◎
+Set serialized.[[M22]] to value’s m22 element.
+</li>
+			<li>
+%直列形 . `M23^sl ~SET %値 の`m23$xE
+◎
+Set serialized.[[M23]] to value’s m23 element.
+</li>
+			<li>
+%直列形 . `M24^sl ~SET %値 の`m24$xE
+◎
+Set serialized.[[M24]] to value’s m24 element.
+</li>
+			<li>
+%直列形 . `M31^sl ~SET %値 の`m31$xE
+◎
+Set serialized.[[M31]] to value’s m31 element.
+</li>
+			<li>
+%直列形 . `M32^sl ~SET %値 の`m32$xE
+◎
+Set serialized.[[M32]] to value’s m32 element.
+</li>
+			<li>
+%直列形 . `M33^sl ~SET %値 の`m33$xE
+◎
+Set serialized.[[M33]] to value’s m33 element.
+</li>
+			<li>
+%直列形 . `M34^sl ~SET %値 の`m34$xE
+◎
+Set serialized.[[M34]] to value’s m34 element.
+</li>
+			<li>
+%直列形 . `M41^sl ~SET %値 の`m41$xE
+◎
+Set serialized.[[M41]] to value’s m41 element.
+</li>
+			<li>
+%直列形 . `M42^sl ~SET %値 の`m42$xE
+◎
+Set serialized.[[M42]] to value’s m42 element.
+</li>
+			<li>
+%直列形 . `M43^sl ~SET %値 の`m43$xE
+◎
+Set serialized.[[M43]] to value’s m43 element.
+</li>
+			<li>
+%直列形 . `M44^sl ~SET %値 の`m44$xE
+◎
+Set serialized.[[M44]] to value’s m44 element.
+</li>
+			<li>
+%直列形 . `Is2D^sl ~SET ~F
+◎
+Set serialized.[[Is2D]] to false.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+［
+`DOMMatrixReadOnly$I ／ `DOMMatrix$I
+］用の`逆直列化~手続き$は、所与の
+( %直列形, %値 )
+に対し，次を走らす：
+◎
+Their deserialization steps, given serialized and value, are:
+</p>
+
+<ol>
+	<li>
+<p>
+~IF［
+%直列形 . `Is2D^sl ~EQ ~T
+］：
+◎
+If serialized.[[Is2D]] is true:
+</p>
+		<ol>
+			<li>
+%値 の`m11$xE ~SET %直列形 . `M11^sl
+◎
+Set value’s m11 element to serialized.[[M11]].
+</li>
+			<li>
+%値 の`m12$xE ~SET %直列形 . `M12^sl
+◎
+Set value’s m12 element to serialized.[[M12]].
+</li>
+			<li>
+%値 の`m13$xE ~SET `0^jv
+◎
+Set value’s m13 element to 0.
+</li>
+			<li>
+%値 の`m14$xE ~SET `0^jv
+◎
+Set value’s m14 element to 0.
+</li>
+			<li>
+%値 の`m21$xE ~SET %直列形 . `M21^sl
+◎
+Set value’s m21 element to serialized.[[M21]].
+</li>
+			<li>
+%値 の`m22$xE ~SET %直列形 . `M22^sl
+◎
+Set value’s m22 element to serialized.[[M22]].
+</li>
+			<li>
+%値 の`m23$xE ~SET `0^jv
+◎
+Set value’s m23 element to 0.
+</li>
+			<li>
+%値 の`m24$xE ~SET `0^jv
+◎
+Set value’s m24 element to 0.
+</li>
+			<li>
+%値 の`m31$xE ~SET `0^jv
+◎
+Set value’s m31 element to 0.
+</li>
+			<li>
+%値 の`m32$xE ~SET `0^jv
+◎
+Set value’s m32 element to 0.
+</li>
+			<li>
+%値 の`m33$xE ~SET `1^jv
+◎
+Set value’s m33 element to 1.
+</li>
+			<li>
+%値 の`m34$xE ~SET `0^jv
+◎
+Set value’s m34 element to 0.
+</li>
+			<li>
+%値 の`m41$xE ~SET %直列形 . `M41^sl
+◎
+Set value’s m41 element to serialized.[[M41]].
+</li>
+			<li>
+%値 の`m42$xE ~SET %直列形 . `M42^sl
+◎
+Set value’s m42 element to serialized.[[M42]].
+</li>
+			<li>
+%値 の`m43$xE ~SET `0^jv
+◎
+Set value’s m43 element to 0.
+</li>
+			<li>
+%値 の`m44$xE ~SET `1^jv
+◎
+Set value’s m44 element to 1.
+</li>
+			<li>
+%値 の`~is-2D$ ~SET ~T
+◎
+Set value’s is 2D to true.
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+~ELSE：
+◎
+Otherwise:
+</p>
+		<ol>
+			<li>
+%値 の`m11$xE ~SET %直列形 . `M11^sl
+◎
+Set value’s m11 element to serialized.[[M11]].
+</li>
+			<li>
+%値 の`m12$xE ~SET %直列形 . `M12^sl
+◎
+Set value’s m12 element to serialized.[[M12]].
+</li>
+			<li>
+%値 の`m13$xE ~SET %直列形 . `M13^sl
+◎
+Set value’s m13 element to serialized.[[M13]].
+</li>
+			<li>
+%値 の`m14$xE ~SET %直列形 . `M14^sl
+◎
+Set value’s m14 element to serialized.[[M14]].
+</li>
+			<li>
+%値 の`m21$xE ~SET %直列形 . `M21^sl
+◎
+Set value’s m21 element to serialized.[[M21]].
+</li>
+			<li>
+%値 の`m22$xE ~SET %直列形 . `M22^sl
+◎
+Set value’s m22 element to serialized.[[M22]].
+</li>
+			<li>
+%値 の`m23$xE ~SET %直列形 . `M23^sl
+◎
+Set value’s m23 element to serialized.[[M23]].
+</li>
+			<li>
+%値 の`m24$xE ~SET %直列形 . `M24^sl
+◎
+Set value’s m24 element to serialized.[[M24]].
+</li>
+			<li>
+%値 の`m31$xE ~SET %直列形 . `M31^sl
+◎
+Set value’s m31 element to serialized.[[M31]].
+</li>
+			<li>
+%値 の`m32$xE ~SET %直列形 . `M32^sl
+◎
+Set value’s m32 element to serialized.[[M32]].
+</li>
+			<li>
+%値 の`m33$xE ~SET %直列形 . `M33^sl
+◎
+Set value’s m33 element to serialized.[[M33]].
+</li>
+			<li>
+%値 の`m34$xE ~SET %直列形 . `M34^sl
+◎
+Set value’s m34 element to serialized.[[M34]].
+</li>
+			<li>
+%値 の`m41$xE ~SET %直列形 . `M41^sl
+◎
+Set value’s m41 element to serialized.[[M41]].
+</li>
+			<li>
+%値 の`m42$xE ~SET %直列形 . `M42^sl
+◎
+Set value’s m42 element to serialized.[[M42]].
+</li>
+			<li>
+%値 の`m43$xE ~SET %直列形 . `M43^sl
+◎
+Set value’s m43 element to serialized.[[M43]].
+</li>
+			<li>
+%値 の`m44$xE ~SET %直列形 . `M44^sl
+◎
+Set value’s m44 element to serialized.[[M44]].
+</li>
+			<li>
+%値 の`~is-2D$ ~SET ~F
+◎
+Set value’s is 2D to false.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+	</section>
+	<section id="priv-sec">
+<h2 title="Privacy and Security Considerations">8. ~privacyと~securityの考慮点</h2>
+
+<p>
+`DOMMatrix$I ／ `DOMMatrixReadOnly$I
+~interfaceには、文字列を~CSS構文として構文解析する入口もある。
+したがって、
+`CSS3-SYNTAX$r 仕様の
+<a href="~CSSSYN#priv-sec">~privacyと~securityの考慮点</a>
+が適用される。
+◎
+The DOMMatrix and DOMMatrixReadOnly interfaces have entry-points to parsing a string with CSS syntax. Therefore the privacy and security considerations of the CSS Syntax specification applies. [CSS3-SYNTAX]
+</p>
+
+<p class="example">
+これは、~UAにおける~CSS構文解析器の~bugを悪用するために利用される可能性がある。
+◎
+This could potentially be used to exploit bugs in the CSS parser in a user agent.
+</p>
+
+<p>
+その他に既知な，~security／~privacy上の影響iは、この仕様に定義される~interfaceにはない。
+しかしながら，この仕様に定義される~interfaceを利用する~APIを有する他の仕様は、
+~security／~privacy
+上の課題を導入する可能性がある。
+◎
+There are no other known security or privacy impacts of the interfaces defined in this specification. However, other specifications that have APIs that use the interfaces defined in this specification could potentially introduce security or privacy issues.
+</p>
+
+<p class="example">
+例えば，
+`CSSOM-VIEW$r に定義される `getBoundingClientRect()$m は、 `DOMRect$I を返す。
+それは、［
+特定0の~fontで~~描画される~textを包含している，`行内~level$の要素
+］の~sizeを測定するためにも利用でき，利用者が その~fontを~installしたかどうかについての情報を公開する。
+多数の共通的な~fontに対し，その情報が集計された場合、個人識別可能にもなり得る。
+◎
+For example, the getBoundingClientRect() API defined in CSSOM View returns a DOMRect that could be used to measure the size of an inline element containing some text of a particular font, which exposes information about whether the user has that font installed. That information, if used to test many common fonts, can then be personally-identifiable information. [CSSOM-VIEW]
+</p>
+
+	</section>
+	<section id="historical">
+<h2 title="Historical">9. 歴史的</h2>
+
+~INFORMATIVE
+
+<p>
+この仕様における各種~interfaceは、様々な仕様に見出される，早期の類似な~interface, および一部の~UAに見出される~proprietaryな~interfaceを置換するものと意図されている。
+この節は、それらの~interfaceを列挙することを試みる。
+◎
+The interfaces in this specification are intended to replace earlier similar interfaces found in various specifications as well as proprietary interfaces found in some user agents. This section attempts to enumerate these interfaces.
+</p>
+
+		<section id="historical-cssom">
+<h3 title="CSSOM View">9.1. CSSOM View</h3>
+
+<p>
+`CSSOM-VIEW$r の早期の改訂に定義されていた `ClientRect^I ~interfaceは、
+`DOMRect$I に置換された。
+この仕様に適合する実装は、
+`ClientRect^I を~supportしないことになる。
+◎
+Earlier revisions of CSSOM View defined a ClientRect interface, which is replaced by DOMRect. Implementations conforming to this specification will not support ClientRect. [CSSOM-VIEW]
+</p>
+
+		</section>
+		<section id="historical-svg">
+<h3 title="SVG">9.2. ~SVG</h3>
+
+<p>
+~SVGの早期の改訂に定義されていた［
+`SVGPoint$I ／ `SVGRect$I ／ `SVGMatrix$I
+］は、この仕様にて［
+`DOMPoint$I ／ `DOMRect$I ／ `DOMMatrix$I
+］の別名として定義された。
+`SVG11$r
+◎
+Earlier revisions of SVG defined SVGPoint, SVGRect, SVGMatrix, which are defined in this specifications as aliases to DOMPoint, DOMRect, DOMMatrix, respectively. [SVG11]
+</p>
+
+		</section>
+		<section id="historical-non-standard">
+<h3 title="Non-standard">9.3. 非~標準な~interface</h3>
+
+<p>
+一部の~UAは、 `WebKitPoint^I ~interfaceを~supportしていた。
+この仕様に適合する実装は、
+`WebKitPoint^I を~supportしないことになる。
+◎
+Some user agents supported a WebKitPoint interface. Implementations conforming to this specification will not support WebKitPoint.
+</p>
+
+<p>
+いくつかの~UAは、
+`WebKitCSSMatrix$I ~interfaceを~supportしていた
+— それは~Web上でも広く利用されている。
+それは、この仕様にて
+`DOMMatrix$I の別名として定義された。
+◎
+Several user agents supported a WebKitCSSMatrix interface, which is also widely used on the Web. It is defined in this specification as an alias to DOMMatrix.
+</p>
+
+<p>
+一部の~UAは、
+`MSCSSMatrix^I ~interfaceを~supportしていた。
+この仕様に適合する実装は、
+`MSCSSMatrix^I を~supportしないことになる。
+◎
+Some user agents supported a MSCSSMatrix interface. Implementations conforming to this specification will not support MSCSSMatrix.
+</p>
+		</section>
+	</section>
+	<section id="conventions">
+<h2 title="Document conventions">規約</h2>
+
+<p>
+所与の 1 個以上の `unrestricted double$I 値からなる~listに対し：
+◎
+↓</p>
+
+<ul>
+	<li>
+`~NaN安全な最小@
+は、~list内に `NaN^jv が［
+在るならば `NaN^jv ／
+無いならば ~list内で最小な値
+］を返す。
+◎
+The NaN-safe minimum of a non-empty list of unrestricted double values is NaN if any member of the list is NaN, or the minimum of the list otherwise.
+</li>
+	<li>
+`~NaN安全な最大@
+は、~list内に `NaN^jv が［
+在るならば `NaN^jv ／
+無いならば ~list内で最大な値
+］を返す。
+◎
+Analogously, the NaN-safe maximum of a non-empty list of unrestricted double values is NaN if any member of the list is NaN, or the maximum of the list otherwise.
+</li>
+</ul>
+
+	</section>
+	<section id="changes">
+<h2 title="Changes since last publication">最後の発行版からの変更点</h2>
+
+~INFORMATIVE
+
+<p>
+<a href="~TR/2014/WD-geometry-1-20140918/">2014年 11月 25日 勧告候補</a>
+からの変更点は：
+◎
+The following changes were made since the 25 November 2014 Candidate Recommendation.
+</p>
+
+<ul>
+	<li>
+各種~interfaceは、一般に，多重定義された構築子に代えて，特定の静的~演算を構築に利用するよう変更して、それらの~interfaceがより一貫するようにした。
+しかしながら， `DOMMatrix$I は、
+`WebKitCSSMatrix$I との互換性のため，依然として多重定義された構築子を利用する。
+◎
+Changed the interfaces to generally use specific static operations for construction instead of using overloaded constructors, and made the interfaces more consistent. However, DOMMatrix still uses an overloaded constructor for compatibility with WebKitCSSMatrix.
+</li>
+	<li>
+`DOMMatrixInit$I 辞書を導入した。
+◎
+Introduced the DOMMatrixInit dictionary.
+</li>
+	<li>
+各種~interfaceに~JSON直列化子を追加した。
+◎
+Added JSON serializers for the interfaces.
+</li>
+	<li>
+<p>
+`DOMMatrixReadOnly$I, `DOMMatrix$I
+を
+`WebKitCSSMatrix$I に互換になるよう変更した：
+◎
+Changed DOMMatrixReadOnly and DOMMatrix to be compatible with WebKitCSSMatrix:
+</p>
+		<ul>
+			<li>
+`rotate()$xR, `rotateSelf()$xM の引数~名を
+( %angle, %originX, %originY ) から ( %rotX, %rotY, %rotZ ) に変更した。
+◎
+Changed rotate() and rotateSelf() arguments from (angle, originX, originY) to (rotX, rotY, rotZ).
+</li>
+			<li>
+`scale()$xR ／ `scaleSelf()$xM
+~methodを，以前の
+`scaleNonUniform()^m ／ `scaleNonUniformSelf()^m
+~methodにより近くなるよう変更した上で、各種 `scaleNonUniformSelf()^m ~methodは落とした。
+`scaleNonUniform()^m ~method用の~supportは、旧来の理由から保たれる。
+◎
+Changed the scale() and scaleSelf() methods to be more like the previous scaleNonUniform()/scaleNonUniformSelf() methods, and dropped the scaleNonUniformSelf() method. Keep support for scaleNonUniform() for legacy reasons.
+</li>
+			<li>
+`DOMMatrix$I ／ `DOMMatrixReadOnly$I
+~methodに対するすべての引数は、
+`setMatrixValue()$xM を除き，~optionalにした。
+◎
+Made all arguments optional for DOMMatrix/DOMMatrixReadOnly methods, except for setMatrixValue().
+</li>
+			<li>
+引数をとらない構築子を追加した。
+◎
+Added no-argument constructor.
+</li>
+			<li>
+`WebKitCSSMatrix$I は、
+`DOMMatrix$I に対する`旧来の~window上の別名$であるものと定義した。
+◎
+Defined WebKitCSSMatrix to be a legacy window alias for DOMMatrix.
+</li>
+		</ul>
+	</li>
+	<li>
+`Worker$I においては、
+`DOMMatrix$I ／ `DOMMatrixReadOnly$I
+は，~CSS構文の構文解析と文字列~化を~supportしないとした。
+◎
+In workers, DOMMatrix and DOMMatrixReadOnly do not support parsing or stringifying with CSS syntax.
+</li>
+	<li>
+各種~interfaceの有構造~直列化を定義した。
+◎
+Defined structured serialization of the interfaces.
+</li>
+	<li>
+`DOMQuad$I 上の~live `bounds^m 属性は，~liveでない `getBounds()$q ~methodに置換された。
+ “結付けられている限界~矩形” の概念も除去された。
+◎
+The live bounds attribute on DOMQuad was replaced with a non-live getBounds() method. The "associated bounding rectangle" concept was also removed.
+</li>
+	<li>
+`DOMMatrix$I ／ `DOMMatrixReadOnly$I
+用の文字列~構文解析器は、~SVG規則に代えて~CSS規則を利用するよう変更した。
+◎
+Changed the string parser for DOMMatrix and DOMMatrixReadOnly to use CSS rules instead of SVG rules.
+</li>
+	<li>
+`DOMMatrix$I ／ `DOMMatrixReadOnly$I
+の文字列化子は、今や有限でない値があるときは例外を投出し，他の場合は
+`ToString$jA ~algoを利用する。
+`ECMA-262$r
+◎
+The stringifier for DOMMatrix and DOMMatrixReadOnly now throws if there are non-finite values, and otherwise uses the ToString algorithm. [ECMA-262]
+</li>
+	<li>
+`0^jv, `-0^jv
+の比較は、~~一貫して等しいものと扱われるようにした。
+◎
+Made comparisons treat 0 and -0 as equal throughout.
+</li>
+	<li>
+次の節を追加した：
+<a href="#priv-sec">~privacyと~security上の考慮点</a>,
+<a href="#historical">歴史的</a>
+◎
+Added § 8 Privacy and Security Considerations and § 9 Historical sections.
+</li>
+</ul>
+
+<p>
+<a href="~TR/2014/WD-geometry-1-20140918/">2014年 9月 18日 作業草案</a>
+からの変更点は：
+◎
+The following changes were made since the 18 September 2014 Working Draft.
+</p>
+
+<ul>
+	<li>
+`DOMPointReadOnly$I,
+`DOMPoint$I,
+`DOMRectReadOnly$I,
+`DOMRect$I,
+`DOMQuad$I,
+`DOMMatrixReadOnly$I,
+`DOMMatrix$I
+を
+`Window$I, `Worker$I 上に公開した。
+~interfaceの~clone法を定義した。
+◎
+Exposed DOMPointReadOnly, DOMPoint, DOMRectReadOnly, DOMRect, DOMQuad, DOMMatrixReadOnly and DOMMatrix to Window and Worker. Defined cloning of the interface.
+</li>
+</ul>
+
+<p>
+<a href="~TR/2014/WD-geometry-1-20140626/">2014年 6月 26日 Last Call Public 作業草案</a>
+からの変更点は：
+◎
+The following changes were made since the 26 June 2014 Last Call Public Working Draft.
+</p>
+
+<ul>
+	<li>
+`DOMPointReadOnly$I
+の構築子は、 4 個の引数をとるようにした。
+◎
+DOMPointReadOnly got a constructor taking 4 arguments.
+</li>
+	<li>
+`DOMRectReadOnly$I
+の構築子は、 4 個の引数をとるようにした
+◎
+DOMRectReadOnly got a constructor taking 4 arguments.
+</li>
+	<li>
+`DOMMatrixReadOnly$I
+の構築子は、 数の連列を引数にとるようにした。
+◎
+DOMMatrixReadOnly got a constructor taking a sequence of numbers as argument.
+</li>
+	<li>
+`DOMRectList^I は `ArrayClass^I に転換した。
+この~interfaceを利用できるのは、旧来の~interface用に限られる。
+◎
+DOMRectList turned to an ArrayClass. The interfaces can just be used for legacy interfaces.
+</li>
+	<li>
+`DOMRectList^I は、~browserからの~feedbackが待たれる~risk下にあるものとした。
+◎
+Put DOMRectList on at-Risk awaiting browser feedback.
+</li>
+	<li>
+すべての~interfaceは、［
+読専かどうか／ 継承している挙動
+］を述べるため，内部~成分に基づいて述べるようにした。
+◎
+All interfaces are described in the sense of internal elements to describe the read-only/writable and inheriting behavior.
+</li>
+	<li>
+`IndexSizeError^E 例外を `TypeError^E に置換した。
+◎
+Replace IndexSizeError exception with TypeError.
+</li>
+</ul>
+
+<p>
+<a href="~TR/2014/WD-geometry-1-20140522/">2014年 5月 22日 最初の公な作業草案</a>
+からの変更点は：
+◎
+The following changes were made since the 22 May 2014 First Public Working Draft.
+</p>
+
+<ul>
+	<li>
+変異-可能な変形n~methodを， "〜By" から "〜Self" に改称した（例：
+`translateBy()^m から `translateSelf()^m に）。
+◎
+Renamed mutable transformation methods *By to *Self. (E.g. translateBy() got renamed to translateSelf().)
+</li>
+	<li>
+`invert()^m を `invertSelf()$xM に改称した。
+◎
+Renamed invert() to invertSelf().
+</li>
+	<li>
+文字列による変形n~listを引数にとる `setMatrixValue()$xM を追加した。
+◎
+Added setMatrixValue() which takes a transformation list as DOMString.
+</li>
+	<li>
+`is2D$xR, `isIdentity$xR
+属性は、今や読専になった。
+◎
+is2D and isIdentity are read-only attributes now.
+</li>
+	<li>
+~3D変形nや属性~設定-による `is2D$xR を追跡するため、対応する~flagを `DOMMatrixReadOnly$I に追加した。
+◎
+DOMMatrixReadOnly gets flagged to track 3D transformation and attribute settings for is2D.
+</li>
+	<li>
+`invertSelf()$xM, `inverse()$xR
+は、例外を投出しないようにした。
+◎
+invertSelf() and inverse() do not throw exceptions anymore.
+</li>
+</ul>
+
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p>
+注意深い考査, ~comment, 訂正を寄せられた、次の方々に感謝する：
+</p>
+
+<div lang="en-x-a0">
+The editors would like to thank Robert O’Callahan for contributing to this specification.
+Many thanks to Dean Jackson for his initial proposal of DOMMatrix.
+Thanks to
+
+Adenilson Cavalcanti,
+Benoit Jacob,
+Boris Zbarsky,
+Brian Birtles,
+Cameron McCormack,
+Domenic Denicola,
+Kari Pihkala,
+Max Vujovic,
+Mike Taylor,
+Peter Hall,
+Philip Jägenstedt,
+Simon Fraser,
+and
+Timothy Loh
+
+for their careful reviews, comments, and corrections.
+</div>
+
+	</section>
+</main></div>

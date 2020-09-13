@@ -1,0 +1,2540 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Window object, WindowProxy exotic object（日本語訳）</title>
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w~\-一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${key}</code>"`;
+	break;
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'sl':
+	text = `[[${key}]]`;
+	break;
+case 'jI':
+	text = `%${key}%`;
+	break;
+case 'bP': //
+	text = `${key}<code>BarProp</code> ~obj`;
+	break;
+case 'U':
+	text = `U+${key}`;
+	break;
+case 'smb':
+	text = `(<span class="char-symbol">${key}</span>)`
+	break;
+case 'obsMb':
+	text = '廃用にされた~memberもある';
+	href= `~HTMLLS/obsolete.html#${key}-partial`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-08-25
+trans_update:2020-08-26
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/window-object.html
+	abbr_url:WINDOW
+site_nav:browsers,html
+nav_prev:BROWSERS
+nav_next:ORIGIN
+trans_1st_pub:2016-07-12
+
+
+●●class_map
+e:element
+a:attr
+et:event-type
+sc:scheme
+E:error
+h:header
+sl:js-slot
+jI:js-intrinsic
+jA:abstract
+js:js-other
+U:code-point
+v:value
+obsMb:comment
+
+●●tag_map
+I:code
+m:code
+c:code
+e:code
+a:code
+sc:code
+et:code
+h:code
+E:code
+sl:span
+jI:code
+jA:span
+js:span
+U:span
+v:code
+V:var
+i:i
+obsMb:span
+
+●●words_table
+
+
+	●構文
+区切子:separator:~
+読飛ばす:skipする:読み飛ばす
+	過ぎない:past
+	COLON:
+	FULL-STOP:
+	数:number
+
+	●network／保安
+unload:
+
+	●型／構造／操作
+作成時の:creation::~
+	getting
+	設定し直-:reset
+
+	●処理 / js / event
+exotic:
+agent:
+prototype-chain:prototype chain
+進行中の:ongoing:~
+例外投出あり:rethrow any exceptions:~
+普通の:ordinary:~
+片付け:cleanup::~
+終了入子:termination nesting::終了入れ子
+
+	●環境 ／ 閲覧
+id:
+opener:::open 元
+入口:entry::~
+現在:currently:~
+現任の:incumbent:~
+	予約-済み:reserved
+探索-:search:~
+補助:auxiliary::~
+近しい:familiar with:~
+読込直す:reloadする::読み込み直す::リロードする
+走査:traversal::辿り
+回復-:salvage:~
+未所有化:disowned::~
+埋込元:embedder::埋め込み元
+	戻る:back
+	進む:forward
+
+	●UI
+scrollbar:
+toolbar:
+location-bar:
+menu-bar:
+personal-bar:
+status-bar:
+prompt:
+tab::::タブ
+	~tab付き:tabbed
+pointing::::ポインタ指示
+
+隠す:hideする::~
+閉じる:closeする::~
+閉じた:closeした::~
+閉じら:closeさ::~
+閉じれ:closeでき::~
+	閉じるとき~closing:
+閉中:is closing::閉じかけ
+開く:openする::~
+開いた:openした::~
+開いて:openして::~
+
+
+	●仕様
+活動:activity::~::アクティビティ
+適格:eligible:~
+拒否-:refuse:~
+
+	だけに限られる:exactly
+	壊れやすい:brittle
+	よい:ok
+	~~実際，:Indeed
+
+	●未分類
+filter::::フィルタ
+open:
+command::::コマンド
+iframe-srcdoc:iframe srcdoc
+同等:equal:~
+担当の:responsible:~
+新-:new:~
+	-:lead
+	-:obtain
+	選ぶ:choose する
+	渡-:pass
+	vary
+	“お気に入り”:favorite
+	~force-close
+	非:non
+	point
+
+	%~top-level作成時の~URL:topLevelCreationURL
+	%~top-level生成元:topLevelOrigin
+	%~window種別:windowType
+
+	●指示語
+	まったく別の:completely different
+	anything
+	あらゆるもの:everything
+	-:later
+	に類するもの:or some similar interface concept
+	直上／直下に:immediately below or after
+	以下:the following
+	:as follows
+	所与の時点:at any moment
+
+●●words_table1
+
+HTMLWPROXY:HTML-windowproxy-ja.html
+postMessageO:postMessage
+about_blank:about:blank
+
+●●original_id_map
+dom-window-document:dom-document-2
+dom-window-frames:dom-frames
+dom-window-length:dom-length
+dom-window-name:dom-name
+dom-window-open:dom-open
+dom-window-self:dom-self
+dom-window-window:dom-window
+
+	number-of-document-tree-child-browsing-contexts:number-of-child-browsing-contexts
+
+●●mdn_urls
+	barprop:API/BarProp
+window:API/Window
+	windowproxy:API/WindowProxy
+	windowpostmessageoptions:API/WindowPostMessageOptions
+
+●●link_map
+
+	●IDL
+LegacyUnenumerableNamedProperties:~WEBIDLjs#LegacyUnenumerableNamedProperties
+LegacyUnforgeable:~WEBIDLjs#LegacyUnforgeable
+LegacyNullToEmptyString:~WEBIDLjs#LegacyNullToEmptyString
+
+object:~WEBIDL#idl-object
+
+I.DOMHighResTimeStamp:~HRTIME#dom-domhighrestimestamp
+	~HTMLdep#domhighrestimestamp
+I.ApplicationCache:~HTMLLS/offline.html#applicationcache
+I.BarProp:#barprop
+I.Document:~HTMLdom#document
+I.Element:~DOM4#interface-element
+I.GlobalEventHandlers:~WAPI#globaleventhandlers
+I.WindowEventHandlers:~WAPI#windoweventhandlers
+I.EventTarget:~DOM4#interface-eventtarget
+I.History:~HISTORY#history-3
+I.HTMLCollection:~DOM4#interface-htmlcollection
+I.Location:~HISTORY#location
+I.Navigator:~HTMLnavigator#navigator
+I.Window:#window
+I.WindowProxy:#windowproxy
+I.WorkerGlobalScope:~WORKERS#workerglobalscope
+I.WindowPostMessageOptions:#windowpostmessageoptions
+I.PostMessageOptions:~HTMLcomms#postmessageoptions
+
+I.CustomElementRegistry:~HEcustom#customelementregistry
+
+E.SyntaxError:~WEBIDL#syntaxerror
+
+m.alert:~HTMLGAPI#dom-window-alert
+m.applicationCache:~HTMLLS/offline.html#dom-applicationcache
+m.blur:~HTMLinteraction#dom-window-blur
+m.close:#dom-window-close
+m.closed:#dom-window-closed
+m.confirm:~HTMLGAPI#dom-window-confirm
+m.customElements:~HEcustom#dom-window-customelements
+m.defaultView:#dom-document-defaultview
+m.document:#dom-window-document
+m.focus:~HTMLinteraction#dom-window-focus
+m.frameElement:~BROWSERS#dom-window-frameelement
+m.frames:#dom-window-frames
+m.getter:#dom-window-nameditem
+m.history:~HISTORY#dom-window-history
+m.href:~HISTORY#dom-location-href
+m.length:#dom-window-length
+m.location:~HISTORY#dom-window-location
+m.locationbar:#dom-window-locationbar
+m.menubar:#dom-window-menubar
+m.name:#dom-window-name
+m.navigator:~HTMLnavigator#dom-window-navigator
+m.open:#dom-window-open
+m.window.open:#dom-window-open
+m.opener:~BROWSERS#dom-window-opener
+m.originIsolated:~ORIGIN#dom-originisolated
+m.parent:~BROWSERS#dom-window-parent
+m.personalbar:#dom-window-personalbar
+m.postMessage:~HTMLcomms#dom-window-postmessage
+m.~postMessageO:~HTMLcomms#dom-window-postmessage-options
+m.print:~HTMLGAPI#dom-window-print
+m.prompt:~HTMLGAPI#dom-window-prompt
+m.scrollbars:#dom-window-scrollbars
+m.self:#dom-window-self
+m.status:#dom-window-status
+m.statusbar:#dom-window-statusbar
+m.stop:#dom-window-stop
+m.targetOrigin:#dom-windowpostmessageoptions-targetorigin
+m.toolbar:#dom-window-toolbar
+m.top:~BROWSERS#dom-window-top
+m.visible:#dom-barprop-visible
+m.window:#dom-window-window
+
+l.HTMLDocument:#htmldocument
+l.cross-origin-isolated:~HTMLINFRA#cross-origin-isolated-feature
+
+	●event
+et.load:~HTMLindex#event-load
+
+	●要素
+e.a:~HEtextlevel#the-a-element
+e.area:~HEimages#the-area-element
+e.img:~HEimages#the-img-element
+e.iframe:~HEembed#the-iframe-element
+e.embed:~HEembed#the-embed-element
+e.object:~HEembed#the-object-element
+e.form:~HEforms#the-form-element
+
+	●内容属性
+a.id:~HTMLdom#the-id-attribute
+
+	●code
+	m.onclick
+sc.~about_blank:~HTMLdep#about:blank
+
+sl.Window:#concept-windowproxy-window
+sl.GetOwnProperty:~HTMLWPROXY#windowproxy-getownproperty
+
+	●
+~window:#the-window-object
+文書:~HTMLdom#the-document-object
+doc.埋込元~施策:~HTMLdom#concept-document-embedder-policy
+
+~window~open手続き:#window-open-steps
+有名~obj:#dom-window-nameditem-filter
+有名~要素:#_named-element
+要素~名:#_element-name
+文書~treeに属する子~閲覧文脈~名~prop集合:#document-tree-child-browsing-context-name-property-set
+
+閲覧文脈を破棄する:#a-browsing-context-is-discarded
+破棄-:#a-browsing-context-is-discarded
+~scriptから閉じれる:#script-closable
+閲覧文脈を閉じる:#close-a-browsing-context
+~window用に環境~設定群~objを設定しておく:#set-up-a-window-environment-settings-object
+
+真偽-特能を構文解析する:#concept-window-open-features-parse-boolean
+
+	●閲覧文脈
+閲覧文脈:~BROWSERS#browsing-context
+開いた閲覧文脈:~BROWSERS#opener-browsing-context
+閲覧文脈~名:~BROWSERS#browsing-context-name
+名前:~BROWSERS#browsing-context-name
+閉中~flag:~BROWSERS#is-closing
+属する閲覧文脈:~BROWSERS#concept-document-bc
+~top-level閲覧文脈:~BROWSERS#top-level-browsing-context
+閲覧文脈~容器:~BROWSERS#browsing-context-container
+bc.容器:~BROWSERS#bc-container
+容器~文書:~BROWSERS#bc-container-document
+子~閲覧文脈:~BROWSERS#child-browsing-context
+文書~treeに属する子~閲覧文脈:~BROWSERS#document-tree-child-browsing-context
+補助~閲覧文脈:~BROWSERS#auxiliary-browsing-context
+閲覧文脈を選ぶ規則:~BROWSERS#the-rules-for-choosing-a-browsing-context-given-a-browsing-context-name
+近しい:~BROWSERS#familiar-with
+~navigateすることは許容されて:~BROWSERS#allowed-to-navigate
+新たな補助~閲覧文脈を作成する:~BROWSERS#creating-a-new-auxiliary-browsing-context
+閲覧文脈~groupから除去する:~BROWSERS#bcg-remove
+作動中の~window:~BROWSERS#active-window
+
+生成元:~ORIGIN#concept-origin
+同一-生成元:~ORIGIN#same-origin
+
+	●nav
+~navigate:~NAVI#navigate
+~navi:~NAVI#navigate
+~source閲覧文脈:~NAVI#source-browsing-context
+V.例外を可能化する:~NAVI#exceptions-enabled
+V.履歴~取扱い:~NAVI#navigation-hh
+i.既定:~NAVI#hh-default
+i.置換-:~NAVI#hh-replace
+
+文書を~unloadする:~NAVI#unload-a-document
+文書の~unloadを~promptする:~NAVI#prompt-to-unload-a-document
+~unloadは利用者から拒否された:~NAVI#refused-to-allow-the-document-to-be-unloaded
+文書~unload時の片付け手続き:~NAVI#unloading-document-cleanup-steps
+文書を中止する:~NAVI#abort-a-document
+新たな文書を作成する:~NAVI#initialise-the-document-object
+回復-可能~状態:~NAVI#concept-document-salvageable
+文書の読込ngを停止する:~NAVI#stop-document-loading
+終了入子~level:~NAVI#termination-nesting-level
+
+	●文書
+結付けられている文書:#concept-document-window
+結付けている~window:#concept-document-window
+文書を破棄する:#discard-a-document
+対応する閲覧文脈:#window-bc
+作動中の文書:~BROWSERS#active-document
+
+	●~session履歴
+~session履歴:~HISTORY#session-history
+~session履歴~entry:~HISTORY#session-history-entry
+
+	●BarProp
+bP.~location-bar:#the-location-bar-barprop-object
+bP.~menu-bar:#the-menu-bar-barprop-object
+bP.~personal-bar:#the-personal-bar-barprop-object
+bP.~scrollbar:#the-scrollbar-barprop-object
+bP.~status-bar:#the-status-bar-barprop-object
+bP.~toolbar:#the-toolbar-barprop-object
+
+	●features
+特能~区切子:#feature-separator
+特能~名として正規化する:#normalizing-the-feature-name
+特能として~token化:#concept-window-open-features-tokenize
+
+
+
+	●INFRA
+符号位置~並びを収集する:~INFRA#collect-a-sequence-of-code-points
+~ASCII小文字~化する:~INFRA#ascii-lowercase
+~ASCII空白:~INFRA#ascii-whitespace
+有順序~map:~INFRA#ordered-map
+位置~変数:~INFRA#string-position-variable
+除去する:~INFRA#list-remove
+	~INFRA#list-contain
+	~INFRA#map-exists
+	~INFRA#iteration-while
+	~INFRA#iteration-break
+
+	●HTMLINFRA
+~HTML要素:~HTMLINFRA#html-elements
+適用-可能な仕様:~HTMLINFRA#other-applicable-specifications
+
+整数として構文解析する:~HTMLcms#rules-for-parsing-integers
+
+相対的に構文解析-:~HTMLurl#parse-a-url
+結果の~URL~record:~HTMLurl#resulting-url-record
+doc.基底~URL:~HTMLurl#document-base-url
+
+	●WAPI
+入口~設定群~obj:~WAPI#entry-settings-object
+現在の設定群~obj:~WAPI#current-settings-object
+現任の設定群~obj:~WAPI#incumbent-settings-object
+関連な設定群~obj:~WAPI#relevant-settings-object
+関連な大域~obj:~WAPI#concept-relevant-global
+入口~大域~obj:~WAPI#entry-global-object
+現任の大域~obj:~WAPI#concept-incumbent-global
+関連な~Realm:~WAPI#concept-relevant-realm
+relem.大域~obj:~WAPI#concept-realm-global
+~task:~WAPI#concept-task
+~taskを~queueする:~WAPI#queue-a-task
+大域~taskを~queueする:~WAPI#queue-a-global-task
+~task源:~WAPI#task-source
+~network用~task源:~WAPI#networking-task-source
+~DOM操作~task源:~WAPI#dom-manipulation-task-source
+~event~loop:~WAPI#event-loop
+
+非同一-生成元~隔離-済み:~WAPI#cross-origin-isolated
+環境:~WAPI#environment
+enV.~id:~WAPI#concept-environment-id
+enV.作成時の~URL:~WAPI#concept-environment-creation-url
+enV.~top-level生成元:~WAPI#concept-environment-top-level-origin
+enV.~top-level作成時の~URL:~WAPI#concept-environment-top-level-creation-url
+enV.~target閲覧文脈:~WAPI#concept-environment-target-browsing-context
+enV.作動中の~sw:~WAPI#concept-environment-active-service-worker
+環境~設定群~obj:~WAPI#environment-settings-object
+enV.~realm実行~文脈:~WAPI#realm-execution-context
+enV.~API用~基底~URL:~WAPI#api-base-url
+enV.~API用~URL文字~符号化法:~WAPI#api-url-character-encoding
+enV.担当の文書:~WAPI#responsible-document
+enV.生成元:~WAPI#concept-settings-object-origin
+enV.~top-level生成元:~WAPI#concept-environment-top-level-origin
+enV.~module~map:~WAPI#concept-settings-object-module-map
+enV.~referrer施策:~WAPI#concept-settings-object-referrer-policy
+enV.埋込元~施策:~WAPI#concept-settings-object-embedder-policy
+enV.非同一-生成元~隔離-済み能力:~WAPI#concept-settings-object-cross-origin-isolated-capability
+
+	●外
+~URL:~URL1#concept-url
+
+要請:~FETCH#concept-request
+rq.~URL:~FETCH#concept-request-url
+rq.~referrer:~FETCH#concept-request-referrer
+
+~JS実行~文脈:~TC39#sec-execution-contexts
+~agent~cluster:~TC39#sec-agent-clusters
+js.EnvironmentRecord:~TC39#sec-lexical-environments
+
+~iframe-srcdoc文書:~HEembed#an-iframe-srcdoc-document
+利用は許容されて:~HEembed#allowed-to-use
+
+所有者~集合:~WORKERS#concept-WorkerGlobalScope-owner-set
+
+doc.~module~map:~HTMLdom#concept-document-module-map
+doc.~referrer施策:~HTMLdom#concept-document-referrer-policy
+
+doc.文字~符号化法:~DOM4#concept-document-encoding
+doc.~URL:~DOM4#concept-document-url
+~eventを発火する:~DOM4#concept-event-fire
+文書~tree内:~DOM4#in-a-document-tree
+~tree順序:~DOM4#tree-order
+根:~DOM4#concept-tree-root
+
+~interface~obj:~WEBIDLjs#dfn-interface-object
+有名~propを~supportする:~WEBIDL#dfn-support-named-properties
+有名~propの値を決定する:~WEBIDL#dfn-determine-the-value-of-a-named-property
+~supportする~prop名:~WEBIDL#dfn-supported-property-names
+
+閲覧文脈の特能を設定しておく:~CSSOMVIEW#set-up-browsing-context-features
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる HTML 仕様の
+<a href="~SPEC_URL">§ Window Object, § WindowProxy exotic object</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+
+
+<body>
+
+<header>
+	<hgroup>
+<h1>Window, WindowProxy</h1>
+
+	</hgroup>
+
+</header>
+
+<main id="MAIN" hidden>
+
+	<section id="_conventions">
+<h2>【この訳に固有の表記規約】</h2>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, ~IF, ε, コレ, ~THROW 等々）の意味や定義の詳細は，~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+		</section>
+		<section id="the-window-object">
+<h2 title="The Window object">7.3. `Window^I ~obj</h2>
+
+<p class="trans-note">【
+以下，この訳では、
+`Window$I ~interfaceを実装する~objを単に
+<dfn>~window</dfn>
+とも略記する。
+この略記は、この~pageに限らず，この仕様の他の~pageの和訳でも利用される
+— この節を指す~linkが付与された “`~window$” は、 `Window$I ~objを表すとする。
+】</p>
+
+<pre class="idl">
+[Global=Window,
+ Exposed=Window,
+ `LegacyUnenumerableNamedProperties$]
+interface `Window@I : `EventTarget$I {
+  /* <span class="comment">
+現在の閲覧文脈
+◎
+the current browsing context
+</span> */
+  [`LegacyUnforgeable$] readonly attribute `WindowProxy$I `window$m;
+  [Replaceable] readonly attribute `WindowProxy$I `self$m;
+  [`LegacyUnforgeable$] readonly attribute `Document$I `document$m;
+  attribute DOMString `name$m; 
+  [PutForwards=`href$m, `LegacyUnforgeable$] readonly attribute `Location$I `location$m;
+  readonly attribute `History$I `history$m;
+  readonly attribute `CustomElementRegistry$I `customElements$m;
+  [Replaceable] readonly attribute `BarProp$I `locationbar$m;
+  [Replaceable] readonly attribute `BarProp$I `menubar$m;
+  [Replaceable] readonly attribute `BarProp$I `personalbar$m;
+  [Replaceable] readonly attribute `BarProp$I `scrollbars$m;
+  [Replaceable] readonly attribute `BarProp$I `statusbar$m;
+  [Replaceable] readonly attribute `BarProp$I `toolbar$m;
+  attribute DOMString `status$m;
+  undefined `close$m();
+  readonly attribute boolean `closed$m;
+  undefined `stop$m();
+  undefined `focus$m();
+  undefined `blur$m();
+
+  /* <span class="comment">
+他の閲覧文脈
+◎
+other browsing contexts
+</span> */
+  [Replaceable] readonly attribute `WindowProxy$I `frames$m;
+  [Replaceable] readonly attribute unsigned long `length$m;
+  [`LegacyUnforgeable$] readonly attribute `WindowProxy$I? `top$m;
+  attribute any `opener$m;
+  [Replaceable] readonly attribute `WindowProxy$I? `parent$m;
+  readonly attribute `Element$I? `frameElement$m;
+  `WindowProxy$I? `open$m(
+      optional USVString %url = "",
+      optional DOMString %target = "_blank",
+      optional [`LegacyNullToEmptyString$] DOMString %features = ""
+  );
+  `getter$m `object$ (DOMString %name);  /* <span class="comment">
+これは大域~objなので、 IDL 有名~prop取得子は，~prototype-chain上に `NamedPropertiesObject^I ~exotic~objを追加する。
+~~実際、これが大域~objを~exotic~objにすることはない。
+~indexによる~accessは `WindowProxy$I ~exotic~objが引き受ける。
+◎
+Since this is the global object, the IDL named getter adds a NamedPropertiesObject exotic object on the prototype chain. Indeed, this does not make the global object an exotic object. Indexed access is taken care of by the WindowProxy exotic object.
+</span> */
+
+  /* <span class="comment">
+~UA
+◎
+the user agent
+</span> */
+  readonly attribute `Navigator$I `navigator$m; 
+  [SecureContext] readonly attribute `ApplicationCache$I `applicationCache$m;
+  readonly attribute boolean `originIsolated$m;
+  /* <span class="comment">
+利用者~向けの~prompt
+◎
+user prompts
+</span> */
+  undefined `alert$m();
+  undefined `alert$m(DOMString %message);
+  boolean `confirm$m(optional DOMString %message = "");
+  DOMString? `prompt$m(optional DOMString %message = "", optional DOMString %default = "");
+  undefined `print$m();
+
+  undefined `postMessage$m(any %message, USVString %targetOrigin, optional sequence&lt;`object$&gt; %transfer = []);
+  undefined `~postMessageO$m(any %message, optional `WindowPostMessageOptions$I %options = {});
+
+  // `Window$obsMb
+};
+`Window$I includes `GlobalEventHandlers$I;
+`Window$I includes `WindowEventHandlers$I;
+
+dictionary `WindowPostMessageOptions@I : `PostMessageOptions$I {
+  USVString `targetOrigin@m = "/";
+};
+</pre>
+
+<!-- `Window@I -->
+
+<dl class="domintro">
+	<dt>%window . `window$m</dt>
+	<dt>%window . `frames$m</dt>
+	<dt>%window . `self$m</dt>
+	<dd>
+これらの属性はいずれも %window を返す。
+◎
+These attributes all return window.
+</dd>
+
+	<dt>%window . `document$m</dt>
+	<dd>
+%window に`結付けられている文書$を返す。
+◎
+Returns the Document associated with window.
+</dd>
+
+	<dt>%document . `defaultView$m</dt>
+	<dd>
+`作動中の文書$を`結付けている~window$を返す。
+◎
+Returns the Window object of the active document.
+</dd>
+</dl>
+
+<p>
+各`~window$には、それに
+`結付けられている文書@
+と呼ばれる，ある`文書$が結付けられる。
+それは、`~window$の作成-時に初期 `~about_blank$sc `文書$に設定され、`~navi$の間に限り，そこから変化する。
+◎
+The Window object has an associated Document, which is a Document object. It is set when the Window object is created, and only ever changed during navigation from the initial about:blank Document.
+</p>
+
+<p>
+`~window$に
+`対応する閲覧文脈@
+とは、その~windowに`結付けられている文書$が`属する閲覧文脈$を指す（これは、 ~NULL または`閲覧文脈$になる）。
+◎
+The Window object's browsing context is the Window object's associated Document's browsing context. It is either null or a browsing context.
+</p>
+
+<div class="algo">
+［
+`window@m
+／
+`frames@m
+／
+`self@m
+］取得子~手続きは、いずれも
+⇒
+~RET コレに`関連な~Realm$ . `GlobalEnv^sl の `EnvironmentRecord$js の `GlobalThisValue^sl
+◎
+The window, frames, and self attributes' getters must return this Window object's relevant Realm.[[GlobalEnv]]'s EnvironmentRecord's [[GlobalThisValue]].
+</div>
+
+<div class="algo">
+<p>
+`document@m
+取得子~手続きは
+⇒
+~RET コレに`結付けられている文書$
+◎
+The document IDL attribute, on getting, must return this Window object's associated Document.
+</p>
+
+<p class="note">注記：
+`~window$に`結付けられている文書$が変化し得る事例は、唯一，［
+`~navigate$ ~algoが，`閲覧文脈$内に最初の~pageを読込むために`新たな文書を作成する$
+］ときに限られる。
+その事例では、元の `~about_blank$sc ~pageの `~window$が再利用され，新たな`文書$を取得する。
+◎
+The Document object associated with a Window object can change in exactly one case: when the navigate algorithm creates a new Document object for the first page loaded in a browsing context. In that specific case, the Window object of the original about:blank page is reused and gets a new Document object.
+</p>
+</div>
+
+<div class="algo">
+`Document$I の
+`defaultView@m
+取得子~手続きは
+⇒
+~RET コレが`属する閲覧文脈$ %B に応じて
+⇒＃
+~NULL ならば ~NULL ／
+~ELSE_ %B の `WindowProxy$I ~obj
+◎
+The defaultView attribute's getter, when invoked, must run these steps:
+• If this Document object's browsing context is null, then return null.
+• Return this Document object's browsing context's WindowProxy object.
+</div>
+
+<hr>
+
+<div class="p">
+<p>
+歴史的な理由から、各`~window$は、次の特徴を備える~propを持つモノトスル：
+</p>
+
+<ul ><li>writable, configurable, 非 enumerable
+</li><li>名前： `HTMLDocument@l
+</li><li>値： `Document$I interface object
+</li></ul>
+◎
+For historical reasons, Window objects must also have a writable, configurable, non-enumerable property named HTMLDocument whose value is the Document interface object.
+</div>
+
+			<section id="apis-for-creating-and-navigating-browsing-contexts-by-name">
+<h3 title="APIs for creating and navigating browsing contexts by name">7.3.1. 閲覧文脈を名前で作成-／~navigateするための~API</h3>
+
+<dl class="domintro">
+	<dt>%window = %window . `open$m( [ %url [, %target [, %features ] ] ] )</dt>
+	<dd>
+~windowを開いて %url （省略時は `~about_blank$sc ）を示した上で、それを返す。
+%target 引数には，新たな~windowの名前を与える。
+その名前の~windowがすでに存在する場合、それが再利用される。
+%features 引数を利用すれば、新たな~windowの描画に波及させられる。
+◎
+Opens a window to show url (defaults to about:blank), and returns it. The target argument gives the name of the new window. If a window exists with that name already, it is reused. The features argument can be used to influence the rendering of the new window.
+</dd>
+
+	<dt>%window . `name$m [ = %value ]</dt>
+	<dd>
+この~windowの名前を返す。
+◎
+Returns the name of the window.
+</dd>
+	<dd>
+設定して，名前を変更できる。
+◎
+Can be set, to change the name.
+</dd>
+
+	<dt>%window . `close$m()</dt>
+	<dd>
+この~windowを閉じる。
+◎
+Closes the window.
+</dd>
+
+	<dt>%window . `closed$m</dt>
+	<dd>
+この~windowは［
+すでに閉じられたなら ~T ／
+~ELSE_ ~F
+］を返す。
+◎
+Returns true if the window has been closed, false otherwise.
+</dd>
+
+	<dt>%window . `stop$m()</dt>
+	<dd>
+文書の読込nを取消す。
+◎
+Cancels the document load.
+</dd>
+</dl>
+
+<div class="algorithm">
+<p>
+`~window~open手続き@
+は、所与の
+( 文字列 %url, 文字列 %target, 文字列 %features )
+に対し，次を走らす：
+◎
+The window open steps, given a string url, a string target, and a string features, are as follows:
+</p>
+<ol>
+	<li>
+~IF［
+当の`~event~loop$の`終了入子~level$ ~NEQ 0
+］
+⇒
+~RET ~NULL
+◎
+If the event loop's termination nesting level is nonzero, return null.
+</li>
+	<li>
+%~source閲覧文脈 ~LET `入口~大域~obj$に`対応する閲覧文脈$
+◎
+Let source browsing context be the entry global object's browsing context.
+</li>
+	<li>
+~IF［
+%target ~EQ 空~文字列
+］
+⇒
+%target ~SET `_blank^l
+◎
+If target is the empty string, then set target to "_blank".
+</li>
+	<li>
+%特能~map ~LET %features を`特能として~token化$した結果
+◎
+Let tokenizedFeatures be the result of tokenizing features.
+</li>
+	<li>
+( %noopener, %noreferrer ) ~LET ( ~F, ~F )
+◎
+Let noopener and noreferrer be false.
+</li>
+	<li>
+~IF［
+%特能~map[ `noopener^l ] ~NEQ ε
+］
+⇒＃
+%noopener ~SET `真偽-特能を構文解析する$( %特能~map[ `noopener^l ] )；
+%特能~map[ `noopener^l ] ~SET ε
+◎
+If tokenizedFeatures["noopener"] exists, then:
+• Set noopener to the result of parsing tokenizedFeatures["noopener"] as a boolean feature.
+• Remove tokenizedFeatures["noopener"].
+</li>
+	<li>
+~IF［
+%特能~map[ `noreferrer^l ] ~NEQ ε
+］
+⇒＃
+%noreferrer ~SET `真偽-特能を構文解析する$( %特能~map[ `noreferrer^l ] )；
+%特能~map[ `noreferrer^l ] ~SET ε
+◎
+If tokenizedFeatures["noreferrer"] exists, then:
+• Set noreferrer to the result of parsing tokenizedFeatures["noreferrer"] as a boolean feature.
+• Remove tokenizedFeatures["noreferrer"].
+</li>
+	<li>
+~IF［
+%noreferrer ~EQ ~T
+］
+⇒
+%noopener ~SET ~T
+◎
+If noreferrer is true, then set noopener to true.
+</li>
+	<li>
+<p>
+( %~target閲覧文脈, %~window種別 ) ~LET
+`閲覧文脈を選ぶ規則$を適用する( %target, %~source閲覧文脈, %noopener )
+◎
+Let target browsing context and windowType be the result of applying the rules for choosing a browsing context given target, source browsing context, and noopener.
+</p>
+
+<p class="example">
+例えば~UAが、 <kbd>control</kbd>＋~clickにより，~linkを新たな~tabに開くことを~supportしていて，利用者が要素に対し それを行ったとき、対する `onclick^m ~handlerは `iframe$e 内に~pageを開くために `window.open()$m ~APIを利用していた場合、~UAは，~target閲覧文脈の選定を上書きして，新たな~tabを~targetにすることもできる。
+◎
+If there is a user agent that supports control-clicking a link to open it in a new tab, and the user control-clicks on an element whose onclick handler uses the window.open() API to open a page in an iframe element, the user agent could override the selection of the target browsing context to instead target a new tab.
+</p>
+	</li>
+	<li>
+%新- ~LET ［
+%~window種別 ~IN { `制約されない新たな^i, `~openerが無い新たな^i } ならば ~T ／
+~ELSE_ ~F
+］
+◎
+Let new be true if windowType is either "new and unrestricted" or "new with no opener", and false otherwise.
+</li>
+	<li>
+~IF［
+%~target閲覧文脈 ~EQ ~NULL
+］
+⇒
+~RET ~NULL
+◎
+If target browsing context is null, then return null.
+</li>
+	<li>
+~IF［
+%新- ~EQ ~T
+］
+⇒
+`閲覧文脈の特能を設定しておく$( %~target閲覧文脈, %特能~map )
+`CSSOMVIEW$r
+◎
+If new is true, then set up browsing context features for target browsing context given tokenizedFeatures. [CSSOMVIEW]
+</li>
+	<li>
+%~URL~record ~LET "`~about_blank$sc"
+◎
+Let urlRecord be the URL "about:blank".
+</li>
+	<li>
+<p>
+~IF［
+%url ~NEQ 空~文字列
+］~OR［
+%新- ~EQ ~T
+］：
+◎
+If url is not the empty string or new is true, then:
+</p>
+		<ol>
+			<li>
+<p>
+~IF［
+%url ~NEQ 空~文字列
+］：
+◎
+If url is not the empty string, then＼
+</p>
+				<ol>
+					<li>
+%~URL~record ~LET %url を`入口~設定群~obj$に`相対的に構文解析-$した`結果の~URL~record$
+◎
+parse url relative to the entry settings object, and set urlRecord to the resulting URL record, if any.＼
+</li>
+					<li>
+~IF［
+%~URL~record ~EQ `失敗^i
+］
+⇒
+~THROW `SyntaxError$E
+◎
+If the parse a URL algorithm failed, then throw a "SyntaxError" DOMException.
+</li>
+				</ol>
+			</li>
+			<li>
+%要請 ~LET 次のようにされた新たな`要請$
+⇒
+`~URL$rq ~SET %~URL~record
+◎
+Let request be a new request whose URL is urlRecord.
+</li>
+			<li>
+~IF［
+%noreferrer ~EQ ~T
+］
+⇒
+%要請 の`~referrer$rq ~SET `noreferrer^l
+◎
+If noreferrer is true, then set request's referrer to "noreferrer".
+</li>
+			<li>
+%~window ~LET %~target閲覧文脈 にて`作動中の~window$
+◎
+Let window be target browsing context's active window.
+</li>
+			<li>
+~IF［
+%~URL~record ~EQ "`~about_blank$sc"
+【<a href="~URL1#concept-url-equals">同等な~URL</a>？】
+］~AND［
+%新- ~EQ ~T
+］
+⇒
+次を走らす`大域~taskを~queueする$( `~network用~task源$, %~window )
+⇒
+%~window に向けて，名前 `load$et の`~eventを発火する$( `~targetを上書きする^i )
+◎
+If urlRecord is "about:blank" and new is true, then queue a global task on the networking task source given window to fire an event named load at window, with the legacy target override flag set.
+</li>
+			<li>
+<p>
+~ELSE：
+◎
+Otherwise:
+</p>
+				<ol>
+					<li>
+%履歴~取扱い ~LET %新- に応じて
+⇒＃
+~T ならば `置換-$i ／
+~F ならば `既定$i
+◎
+Let historyHandling be "replace" if new is true; otherwise "default".
+</li>
+					<li>
+%~target閲覧文脈 を %要請 へ`~navigate$する
+— 次を与える下で
+⇒＃
+`例外を可能化する$V ~SET ~T,
+`履歴~取扱い$V ~SET %履歴~取扱い,
+`~source閲覧文脈$ ~SET %~source閲覧文脈
+◎
+Navigate target browsing context to request, with exceptionsEnabled set to true, historyHandling set to historyHandling, and the source browsing context set to source browsing context.
+</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+	<li>
+~IF［
+%noopener ~EQ ~T
+］~OR［
+%~window種別 ~EQ `~openerが無い新たな^i
+］
+⇒
+~RET ~NULL
+◎
+If noopener is true or windowType is "new with no opener", then return null.
+</li>
+	<li>
+<p>
+~IF［
+%新- ~EQ ~F
+］
+⇒
+%~target閲覧文脈 を`開いた閲覧文脈$ ~SET %~source閲覧文脈
+◎
+Otherwise, if new is false, set target browsing context's opener browsing context to source browsing context.
+</p>
+
+<p class="note">注記：
+%新- ~EQ ~T の場合、これは`新たな補助~閲覧文脈を作成する$一部として行われる。
+◎
+If new is true this is done as part of creating a new auxiliary browsing context.
+</p>
+	</li>
+	<li>
+~RET %~target閲覧文脈 の `WindowProxy$I ~obj
+◎
+Return target browsing context's WindowProxy object.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`open(url, target, features)@m
+~methodは、［
+既存の`閲覧文脈$を`~navigate$する ／
+`補助~閲覧文脈$を開いて~navigateする
+］ための仕組みを供する。
+その~method~手続きは
+⇒
+`~window~open手続き$( %url, %target, %features )
+◎
+The open(url, target, features) method on Window objects provides a mechanism for navigating an existing browsing context or opening and navigating an auxiliary browsing context.
+◎
+When the method is invoked, the user agent must run the window open steps with url, target, and features.
+</div>
+
+<hr>
+
+<div class="algorithm">
+<p>
+%features 引数を
+`特能として~token化@
+するときは、次を走らす：
+◎
+To tokenize the features argument:
+</p>
+<ol>
+	<li>
+%特能~map ~LET 新たな`有順序~map$
+◎
+Let tokenizedFeatures be a new ordered map.
+</li>
+	<li>
+%位置 ~LET %features の最初の符号位置を指している`位置~変数$
+◎
+Let position point at the first code point of features.
+</li>
+	<li>
+<p>
+~WHILE［
+%位置↗ ~NEQ ε
+］：
+◎
+While position is not past the end of features:
+</p>
+		<ol>
+			<li>
+%名前 ~LET 空~文字列
+◎
+Let name be the empty string.
+</li>
+			<li>
+%値 ~LET 空~文字列
+◎
+Let value be the empty string.
+</li>
+			<li>
+%features 内の %位置 から，`特能~区切子$である`符号位置~並びを収集する$
+— これは、特能~名より前に現れる区切子を読飛ばす
+◎
+Collect a sequence of code points that are feature separators from features given position. This skips past leading separators before the name.
+</li>
+			<li>
+%名前 ~SET %features 内の %位置 から，`特能~区切子$でない`符号位置~並びを収集する$
+◎
+Collect a sequence of code points that are not feature separators from features given position.＼
+</li>
+			<li>
+%名前 ~SET `~ASCII小文字~化する$( %名前 )
+◎
+Set name to the collected characters, converted to ASCII lowercase.
+</li>
+			<li>
+%名前 ~SET `特能~名として正規化する$( %名前 )
+◎
+Set name to the result of normalizing the feature name name.
+</li>
+			<li>
+<p>
+~WHILE［
+%位置↗ ~NIN { ε, `003D^U `=^smb }
+］
+◎
+While position is not past the end of features and the code point at position in features is not U+003D (=):
+</p>
+				<ol>
+					<li>
+~IF［
+%位置↗ ~EQ `002C^U `,^smb
+］~OR［
+%位置↗ ~NIN { `特能~区切子$ }
+］
+⇒
+~BREAK
+◎
+If the code point at position in features is U+002C (,), or if it is not a feature separator, then break.
+</li>
+					<li>
+%位置 ~INCBY 1
+◎
+Advance position by 1.
+</li>
+				</ol>
+
+<p class="note">注記：
+これは、最初の `003D^U `=^smb まで, かつ［
+`002C^U `,^smb ／ 非~区切子
+］を過ぎない所まで読飛ばす
+◎
+This skips to the first U+003D (=) but does not skip past a U+002C (,) or a non-separator.
+</p>
+			</li>
+			<li>
+<p>
+~IF［
+%位置↗ ~IN { `特能~区切子$ }
+］：
+◎
+If the code point at position in features is a feature separator:
+</p>
+
+				<ol>
+					<li>
+<p>
+~WHILE［
+%位置↗ ~IN { `特能~区切子$ }
+］：
+◎
+While position is not past the end of features and the code point at position in features is a feature separator:
+</p>
+
+						<ol>
+							<li>
+~IF［
+%位置↗ ~EQ `002C^U `,^smb
+］
+⇒
+~BREAK
+◎
+If the code point at position in features is U+002C (,), then break.
+</li>
+							<li>
+%位置 ~INCBY 1
+◎
+Advance position by 1.
+</li>
+						</ol>
+
+<p class="note">注記：
+これは、最初の非~区切子まで, かつ `002C^U `,^smb を過ぎない所まで読飛ばす
+◎
+This skips to the first non-separator but does not skip past a U+002C (,).
+</p>
+					</li>
+					<li>
+%値 ~SET %features 内の %位置 から，`特能~区切子$でない`符号位置~並びを収集する$
+◎
+Collect a sequence of code points that are not feature separators code points from features given position.＼
+</li>
+					<li>
+%値 ~SET `~ASCII小文字~化する$( %値 )
+◎
+Set value to the collected code points, converted to ASCII lowercase.
+</li>
+				</ol>
+			</li>
+			<li>
+~IF［
+%名前 ~NEQ 空~文字列
+］
+⇒
+%特能~map[ %名前 ] ~SET %値
+◎
+If name is not the empty string, then set tokenizedFeatures[name] to value.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %特能~map
+◎
+Return tokenizedFeatures.
+</li>
+</ol>
+</div>
+
+<p>
+次に挙げる符号位置は、
+`特能~区切子@
+とされる
+⇒＃
+`~ASCII空白$,
+`003D^U `=^smb,
+`002C^U `,^smb
+◎
+A code point is a feature separator if it is ASCII whitespace, U+003D (=), or U+002C (,).
+</p>
+
+<div class="algorithm">
+<p>
+旧来の理由から、一部の特能~名には別名がある。
+所与の %名前 を
+`特能~名として正規化する@
+ときは、 %名前 に応じて，次の表の 2 列目に与える結果を返す：
+</p>
+
+<table>
+<thead><tr><th>%名前
+<th>結果
+</thead><tbody>
+
+<tr><td>`screenx^l
+<td>`left^l
+<tr><td>`screeny^l
+<td>`top^l
+<tr><td>`innerwidth^l
+<td>`width^l
+<tr><td>`innerheight^l
+<td>`height^l
+<tr><td>その他
+<td>%名前
+</tbody></table>
+
+◎
+For legacy reasons, there are some aliases of some feature names. To normalize a feature name name, switch on name:
+◎
+"screenx"
+• Return "left".
+"screeny"
+• Return "top".
+"innerwidth"
+• Return "width".
+"innerheight"
+• Return "height".
+Anything else
+• Return name.
+</div>
+
+<div class="algorithm">
+<p>
+`真偽-特能を構文解析する@
+ときは、所与の
+( 文字列 %値 )
+に対し，［
+次のいずれかが満たされるならば ~T ／
+~ELSE_ ~F
+］を返す：
+◎
+To parse a boolean feature given a string value:
+</p>
+
+<ul>
+	<li>
+%値 ~IN【！identical】 { 空~文字列, `yes^l }
+◎
+If value is the empty string, then return true.
+◎
+If value is "yes", then return true.
+</li>
+	<li>
+次の結果 ~NIN { `失敗^i, 0 }
+⇒
+`整数として構文解析する$( %値 )
+◎
+Let parsed be the result of parsing value as an integer.
+◎
+If parsed is an error, then set it to 0.
+◎
+Return false if parsed is 0, and true otherwise.
+</li>
+</ul>
+</div>
+
+<div class="algo">
+`name@m
+取得子~手続きは
+⇒
+~RET コレに`対応する閲覧文脈$ %B に応じて
+⇒＃
+~NULL ならば 空~文字列 ／
+~ELSE_ %B の`名前$
+◎
+The name attribute's getter must run these steps:
+• If this Window object's browsing context is null, then return the empty string.
+• Return this Window object's browsing context's name.
+</div>
+
+<div class="algo">
+<p>
+`name$m 設定子~手続きは
+⇒
+~IF［
+コレに`対応する閲覧文脈$ %B ~NEQ ~NULL
+］
+⇒
+%B の`名前$ ~SET 所与の値
+◎
+The name attribute's setter must run these steps:
+• If this Window object's browsing context is null, then return.
+• Set this Window object's browsing context's name to the given value.
+</p>
+
+<p class="note">注記：
+`名前$は、閲覧文脈が別の`生成元$へ`~navigate$されたときは，
+<a href="~NAVI#resetBCName">設定し直される</a>
+。
+◎
+The name gets reset when the browsing context is navigated to another origin.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`close()@m
+~method~手続きは：
+◎
+The close() method must run these steps:
+</p>
+<ol>
+	<li>
+%B ~LET コレに`対応する閲覧文脈$
+◎
+Let current be this Window object's browsing context.
+</li>
+	<li>
+［
+%B ~EQ ~NULL
+］~OR［
+%B の`閉中~flag$ ~EQ ~T
+］
+⇒
+~RET
+◎
+If current is null or its is closing is true, then return.
+</li>
+	<li>
+%A ~LET `現任の大域~obj$に`対応する閲覧文脈$
+◎
+↓</li>
+	<li>
+<p>
+~IF［
+%B は`~scriptから閉じれる$
+］~AND［
+%A は %B に`近しい$
+］~AND［
+%A には %B を`~navigateすることは許容されて$いる
+］：
+◎
+If all the following are true
+• current is script-closable
+• the incumbent global object's browsing context is familiar with current
+• the incumbent global object's browsing context is allowed to navigate current
+then:
+</p>
+		<ol>
+			<li>
+%B の`閉中~flag$ ~SET ~T
+◎
+Set current's is closing to true.
+</li>
+			<li>
+`~DOM操作~task源$から，次を走らす`~taskを~queueする$
+⇒
+`閲覧文脈を閉じる$( %B )
+◎
+Queue a task on the DOM manipulation task source to close current.
+</li>
+		</ol>
+	</li>
+</ol>
+
+<div>
+<p>
+次のいずれかを満たす`閲覧文脈$は、
+`~scriptから閉じれる@
+とされる：
+</p>
+<ul>
+	<li>
+~scriptが作成した`補助~閲覧文脈$である（利用者による動作ではなく）
+</li>
+	<li>
+［
+`~top-level閲覧文脈$である
+］~AND［
+その`~session履歴$に含まれる`文書$は 1 つだけである
+］
+</li>
+</ul>
+◎
+A browsing context is script-closable if it is an auxiliary browsing context that was created by a script (as opposed to by an action of the user), or if it is a top-level browsing context whose session history contains only one Document.
+</div>
+
+</div>
+
+<div class="algo">
+`closed@m
+取得子~手続きは
+⇒
+~RET ［
+コレに`対応する閲覧文脈$ %B が次を満たすならば ~T ／
+~ELSE_ ~F
+］
+⇒
+［
+%B ~EQ ~NULL
+］~OR［
+%B の`閉中~flag$ ~EQ ~T
+］
+◎
+The closed attribute's getter must return true if this Window object's browsing context is null or its is closing is true, and false otherwise.
+</div>
+
+<div class="algo">
+`stop()@m
+~method~手続きは
+⇒
+`文書の読込ngを停止する$( コレに`結付けられている文書$ )
+◎
+The stop() method must stop document loading given this Window object's associated Document.
+</div>
+
+			</section>
+			<section id="accessing-other-browsing-contexts">
+<h3 title="Accessing other browsing contexts">7.3.2. 他の閲覧文脈への~access法</h3>
+
+<dl class="domintro">
+	<dt>%window . `length$m</dt>
+	<dd>
+`文書~treeに属する子~閲覧文脈$の個数を返す。
+◎
+Returns the number of document-tree child browsing contexts.
+</dd>
+
+	<dt>%window[%index]</dt>
+	<dd>
+`文書~treeに属する子~閲覧文脈$のうち，
+%index で指示されるものを返す。
+◎
+Returns the indicated document-tree child browsing context.
+</dd>
+</dl>
+
+<div class="algo">
+<p id="number-of-document-tree-child-browsing-contexts">
+`length@m
+取得子~手続きは
+⇒
+~RET コレに`対応する閲覧文脈$ %B に応じて
+⇒＃
+~NULL ならば 0 ／
+~ELSE_ %B の`文書~treeに属する子~閲覧文脈$たちの個数
+◎
+The number of document-tree child browsing contexts of a Window object W is the result of running these steps:
+• If W's browsing context is null, then return 0.
+• Return the number of document-tree child browsing contexts of W's browsing context.
+◎
+The length IDL attribute's getter must return the number of document-tree child browsing contexts of this Window object.
+</p>
+
+<p class="note">注記：
+~indexによる`文書~treeに属する子~閲覧文脈$への~accessは、
+`WindowProxy$I ~objの `GetOwnProperty$sl 内部~methodを通して定義される。
+◎
+Indexed access to document-tree child browsing contexts is defined through the [[GetOwnProperty]] internal method of the WindowProxy object.
+</p>
+</div>
+
+			</section>
+			<section id="named-access-on-the-window-object">
+<h3 title="Named access on the Window object">7.3.3. `Window^I ~objに対する名前による~access</h3>
+
+<dl class="domintro">
+	<dt>%window[%name]</dt>
+	<dd>
+指示された要素（たち）の~collectionを返す。
+◎
+Returns the indicated element or collection of elements.
+</dd>
+	<dd>
+一般に、これに依拠すると，~codeは壊れやすくなる。
+例えば、~web~platformに新たな特能が追加されるに伴い，どの ID がこの~APIに対応付けられるかは時を経れば変わり得るので。
+代わりに，
+`document.getElementById()^m ／
+`document.querySelector()^m
+を利用すること。
+◎
+As a general rule, relying on this will lead to brittle code. Which IDs end up mapping to this API can vary over time, as new features are added to the web platform, for example. Instead of this, use document.getElementById() or document.querySelector().
+</dd>
+</dl>
+
+<div class="algorithm">
+<p>
+所与の`~window$ %~window の
+`文書~treeに属する子~閲覧文脈~名~prop集合@
+は、次の手続きの結果で与えられる：
+◎
+The document-tree child browsing context name property set of a Window object window is the return value of running these steps:
+</p>
+<ol>
+	<li>
+~IF［
+%~window に`対応する閲覧文脈$ ~EQ ~NULL
+］
+⇒
+~RET 空~list
+◎
+If window's browsing context is null, then return the empty list.
+</li>
+	<li>
+%名前~list ~LET 空~list
+◎
+↓</li>
+	<li>
+%子~閲覧文脈~list ~LET %~window に`対応する閲覧文脈$の`文書~treeに属する子~閲覧文脈$たちからなる~list
+◎
+Let childBrowsingContexts be all document-tree child browsing contexts of window's browsing context whose＼
+</li>
+	<li>
+<p>
+%子~閲覧文脈~list 内の
+~EACH( %B )
+に対し：
+</p>
+		<ol>
+			<li>
+%名前 ~LET %B の`閲覧文脈~名$
+</li>
+			<li>
+~IF［
+%名前 ~EQ 空~文字列
+］~OR［
+%名前 ~IN %名前~list
+］
+⇒
+~CONTINUE
+</li>
+			<li>
+~IF［
+%名前 ~NEQ %B の`容器$bcの `name^a 内容~属性~値
+］~AND［
+( %B にて`作動中の文書$の`生成元$, %~window に`関連な設定群~obj$の`生成元$enV )
+は`同一-生成元$でない
+］
+⇒
+~CONTINUE
+</li>
+			<li>
+%名前~list に %名前 を付加する
+</li>
+		</ol>
+◎
+browsing context name is not the empty string, in order, and including only the first document-tree child browsing context with a given name if multiple document-tree child browsing contexts have the same one.
+◎
+Remove each browsing context from childBrowsingContexts whose active document's origin is not same origin with window's relevant settings object's origin and whose browsing context name does not match the name of its container's name content attribute value.
+</li>
+	<li>
+~RET %名前~list
+◎
+Return the browsing context names of childBrowsingContexts, in the same order.
+</li>
+</ol>
+</div>
+
+<div class="example">
+
+<p>
+例えば次の~pageが
+`https://example.org/^c
+にて~hostされていて，
+`https://elsewhere.example/^c
+の `iframe^e の `name$m が `spices^l に設定されたとするとき、すべてが読込まれた後に `window.spices^c を評価した結果は undefined【！＊】になる：
+◎
+This means that in the following example, hosted on https://example.org/, assuming https://elsewhere.example/ sets window.name to "spices", evaluating window.spices after everything has loaded will yield undefined:
+</p>
+
+<pre class="lang-html">
+&lt;iframe src=https://elsewhere.example.com/&gt;&lt;/iframe&gt;
+&lt;iframe name=spices&gt;&lt;/iframe&gt;
+</pre>
+
+</div>
+
+<p>
+各`~window$は、`有名~propを~supportする$。
+所与の任意の時点における`~window$ %~window が`~supportする~prop名$は、次のものからなる：
+◎
+The Window object supports named properties. The supported property names of a Window object window at any moment consist of the following, in tree order according to the element that contributed them, ignoring later duplicates:
+</p>
+
+<ul>
+	<li>
+%~window の`文書~treeに属する子~閲覧文脈~名~prop集合$
+◎
+window's document-tree child browsing context name property set;
+</li>
+	<li>
+<p>
+%~window 内にある`有名~要素$の`要素~名$
+— `要素~名$が同じものが複数あるときは、`~tree順序$で最初のもの以外は無視する。
+</p>
+
+<p>
+%~window 内にある
+`有名~要素@,
+およびその
+`要素~名@
+は、
+%~window に`結付けられている文書$を`根$とする`文書~tree内$にある`~HTML要素$のうち，次のいずれかに該当する要素, および 対応する名前である：
+</p>
+		<ul>
+			<li>
+［
+`embed$e, `form$e, `img$e, `object$e
+］要素のうち，［
+`name^a 内容~属性を有していて，その値 ~NEQ 空~文字列
+］なるもの
+— その属性~値が`要素~名$を与える
+</li>
+			<li>
+［
+`id$a 内容~属性を有していて，その値 ~NEQ 空~文字列
+］なるもの
+— その属性~値が`要素~名$を与える
+</li>
+		</ul>
+
+<p class="trans-note">【
+`有名~要素$, `要素~名$は、記述を論理的に集約するためにこの訳に導入した用語であり，この節でしか利用されない。
+】</p>
+
+◎
+the value of the name content attribute for all embed, form, img, and object elements that have a non-empty name content attribute and are in a document tree with window's associated Document as their root; and
+◎
+the value of the id content attribute for all HTML elements that have a non-empty id content attribute and are in a document tree with window's associated Document as their root.
+</li>
+</ul>
+
+<div class="algorithm">
+<p id="dom-window-nameditem">
+`~window$ %~window において，所与の %名前 に対し`有名~propの値を決定する$ときは、次の手続きの結果を返すモノトスル：
+◎
+To determine the value of a named property name in a Window object window, the user agent must return the value obtained using the following steps:
+</p>
+<ol>
+	<li>
+~Assert：
+%名前 は %~window が`~supportする~prop名$である
+【この段は、この訳による補完。】
+</li>
+	<li>
+<p>
+%~obj~list ~LET %~window の［
+名前 %名前 を伴う`有名~obj$
+］からなる~list
+◎
+Let objects be the list of named objects of window with the name name.
+</p>
+
+<p class="note">注記：
+定義により、 %~obj~list は空でない。
+◎
+There will be at least one such object, by definition.
+</p>
+	</li>
+	<li>
+~IF［
+%~obj~list 内に`閲覧文脈$はある
+］
+⇒
+~RET［
+それらのうち，その`容器$bcが`~tree順序$で最初に来るもの
+］の `WindowProxy$I ~obj
+◎
+If objects contains a browsing context, then return the WindowProxy object of the nested browsing context of the first browsing context container in tree order whose nested browsing context is in objects.
+</li>
+	<li>
+~Assert：
+%~obj~list は要素のみからなる
+◎
+↓</li>
+	<li>
+~IF［
+%~obj~list は 1 個の要素のみからなる
+］
+⇒
+~RET その要素
+◎
+Otherwise, if objects has only one element, return that element.
+</li>
+	<li>
+~RET 次のようにされた `HTMLCollection$I
+⇒＃
+根： %~window に`結付けられている文書$,
+~filter： %~obj~list 内にある要素のみに合致する
+◎
+Otherwise return an HTMLCollection rooted at window's associated Document, whose filter matches only named objects of window with the name name. (By definition, these will all be elements.)
+</li>
+</ol>
+</div>
+
+<p>
+`~window$ %~window の［
+名前 %名前 を伴う
+`有名~obj@
+］は、次に挙げるものからなる：
+◎
+Named objects of Window object window with the name name, for the purposes of the above algorithm, consist of the following:
+</p>
+
+<ul>
+	<li>
+%~window に`対応する閲覧文脈$の`文書~treeに属する子~閲覧文脈$のうち，［
+その`閲覧文脈~名$ ~EQ %名前
+］なるもの
+◎
+document-tree child browsing contexts of window's associated Document whose name is name;
+</li>
+	<li>
+%~window 内にある`有名~要素$のうち，［
+その`要素~名$ ~EQ %名前
+］なるもの
+◎
+embed, form, img, or object elements that have a name content attribute whose value is name and are in a document tree with window's associated Document as their root; and
+◎
+HTML elements that have an id content attribute whose value is name and are in a document tree with window's associated Document as their root.
+</li>
+</ul>
+
+			</section>
+			<section id="garbage-collection-and-browsing-contexts">
+<h3 title="Discarding browsing contexts">7.3.4. 閲覧文脈の破棄-法</h3>
+
+<div class="algorithm">
+<p>
+`文書を破棄する@
+ときは、所与の
+( `文書$ %文書 )
+に対し，次を走らすモノトスル：
+◎
+To discard a Document document:
+</p>
+<ol>
+	<li>
+【~Assert： %文書 が`属する閲覧文脈$ ~NEQ ~NULL 】
+</li>
+	<li>
+%文書 の`回復-可能~状態$ ~SET ~F
+◎
+Set document's salvageable state to false.
+</li>
+	<li>
+この仕様も含む`適用-可能な仕様$に定義される`文書~unload時の片付け手続き$があれば、それらの各~手続きを
+%文書 を渡して走らす
+◎
+Run any unloading document cleanup steps for document that are defined by this specification and other applicable specifications.
+</li>
+	<li>
+`文書を中止する$( %文書 )
+◎
+Abort document.
+</li>
+	<li>
+~queueされた`~task$のうち，［
+それに結付けられている`文書$ ~EQ %文書
+］なるものは、どの`~task源$からの~taskであれ，走らすことなく除去する
+◎
+Remove any tasks associated with document in any task source, without running those tasks.
+</li>
+	<li>
+%文書 を`容器~文書$とする
+~EACH( `子~閲覧文脈$ %B )
+に対し
+⇒
+`閲覧文脈を破棄する$( %B )
+◎
+Discard all the child browsing contexts of document.
+</li>
+	<li>
+【 %文書 が`属する閲覧文脈$の`~session履歴$を成す】
+~EACH( `~session履歴~entry$ %~entry )
+に対し
+⇒
+~IF［
+%~entry の`文書$ ~EQ %文書
+］
+⇒
+%~entry から`文書$を除去する
+◎
+For each session history entry entry with a Document object equal to document, remove entry's Document object.
+</li>
+	<li>
+%文書 が`属する閲覧文脈$ ~SET ~NULL
+◎
+Set document's browsing context to null.
+</li>
+	<li>
+~EACH( `WorkerGlobalScope$I ~obj %G )
+に対し
+⇒
+%G の`所有者~集合$から（ %文書 を包含していれば） %文書 を`除去する$
+◎
+Remove document from the owner set of each WorkerGlobalScope object whose set contains document.
+</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+`閲覧文脈を破棄する@
+ときは、所与の
+( `閲覧文脈$ %B )
+に対し，次を走らすモノトスル：
+◎
+To discard a browsing context browsingContext, run these steps:
+</p>
+<ol>
+	<li>
+［
+`属する閲覧文脈$ ~EQ %B
+］を満たす
+~EACH( %文書 )
+に対し
+⇒
+`文書を破棄する$( %文書 )
+◎
+Discard all Document objects for all the entries in browsingContext's session history.
+</li>
+	<li>
+~IF［
+%B は`~top-level閲覧文脈$である
+］
+⇒
+`閲覧文脈~groupから除去する$( %B )
+◎
+If browsingContext is a top-level browsing context, then remove browsingContext.
+</li>
+</ol>
+</div>
+
+<p>
+~UAは：
+◎
+↓</p>
+
+<ul>
+	<li>
+`~top-level閲覧文脈$をいつでも`破棄-$してヨイ（概して，利用者からの要請に呼応して
+— 例えば、利用者が，`~top-level閲覧文脈$たちを包含している~UIwindowを強制的に閉じたとき）。
+◎
+User agents may discard top-level browsing contexts at any time (typically, in response to user requests, e.g., when a user force-closes a window containing one or more top-level browsing contexts).＼
+</li>
+	<li>
+<p>
+他の`閲覧文脈$に対しては、次のときには`破棄-$するモノトスル：
+◎
+Other browsing contexts must be discarded＼
+</p>
+		<ul>
+			<li>
+その`WindowProxy$I ~objが~garbage収集に適格になったとき
+◎
+once their WindowProxy object is eligible for garbage collection,＼
+</li>
+			<li>
+この仕様が他所にて破棄するよう要求する所
+◎
+in addition to the other places where this specification requires them to be discarded.
+</li>
+		</ul>
+	</li>
+</ul>
+
+			</section>
+			<section id="closing-browsing-contexts">
+<h3 title="Closing browsing contexts">7.3.5. 閲覧文脈を閉じるとき</h3>
+
+<div class="algorithm">
+<p>
+`閲覧文脈を閉じる@
+ときは、所与の
+( `閲覧文脈$ %B )
+に対し，次を走らす：
+◎
+To close a browsing context browsingContext, run these steps:
+</p>
+<ol>
+	<li>
+%文書 ~LET %B にて`作動中の文書$
+◎
+↓</li>
+	<li>
+`文書の~unloadを~promptする$( %文書 )
+⇒
+~IF［
+%文書 の`~unloadは利用者から拒否された$
+］
+⇒
+~RET
+◎
+Prompt to unload browsingContext's active document. If the user refused to allow the document to be unloaded, then return.
+</li>
+	<li>
+`文書を~unloadする$( %文書 )
+◎
+Unload browsingContext's active document.
+</li>
+	<li>
+~UIから %B を除去する
+（例： ~tab付き~browserにて当の~tabを閉じる／隠すなど。）
+◎
+Remove browsingContext from the user interface (e.g., close or hide its tab in a tabbed browser).
+</li>
+	<li>
+`閲覧文脈を破棄する$( %B )
+◎
+Discard browsingContext.
+</li>
+</ol>
+</div>
+
+<p>
+~UAは、どの`~top-level閲覧文脈$に対しても，利用者が任意に`閲覧文脈を閉じる$能を提供するべきである。
+◎
+User agents should offer users the ability to arbitrarily close any top-level browsing context.
+</p>
+
+			</section>
+			<section id="browser-interface-elements">
+<h3 title="Browser interface elements">7.3.6. ~browser~UI要素</h3>
+
+<p>
+~web~pageを~web~browserに統合できるようにするため、ある種の~web~browser~UI要素は，~web~page内の~scriptに対し制限された仕方で公開される。
+◎
+To allow web pages to integrate with web browsers, certain web browser interface elements are exposed in a limited way to scripts in web pages.
+</p>
+
+<p>
+各~UI要素は、 `BarProp$I ~objにより表現される：
+◎
+Each interface element is represented by a BarProp object:
+</p>
+
+<pre class="idl">
+[Exposed=Window]
+interface `BarProp@I {
+  readonly attribute boolean `visible$m;
+};
+</pre>
+
+<!-- `Window@I -->
+
+<div>
+<dl class="domintro">
+	<dt>%window . `locationbar$m . `visible$m</dt>
+	<dt>%window . `menubar$m . `visible$m</dt>
+	<dt>%window . `personalbar$m . `visible$m</dt>
+	<dt>%window . `scrollbars$m . `visible$m</dt>
+	<dt>%window . `statusbar$m . `visible$m</dt>
+	<dt>%window . `toolbar$m . `visible$m</dt>
+	<dd>
+順に，［
+location-, menu-, personal-, scroll-, status-, tool-
+］bar が［
+可視ならば ~T ／ 可視でないならば ~F
+］を返す。
+</dd>
+</dl>
+
+◎
+window . locationbar . visible
+• Returns true if the location bar is visible; otherwise, returns false.
+window . menubar . visible
+• Returns true if the menu bar is visible; otherwise, returns false.
+window . personalbar . visible
+• Returns true if the personal bar is visible; otherwise, returns false.
+window . scrollbars . visible
+• Returns true if the scrollbars are visible; otherwise, returns false.
+window . statusbar . visible
+• Returns true if the status bar is visible; otherwise, returns false.
+window . toolbar . visible
+• Returns true if the toolbar is visible; otherwise, returns false.
+</div>
+
+<div class="algo">
+<p>
+`visible@m
+取得子~手続きは：
+◎
+The visible attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+~IF［
+コレに`関連な大域~obj$に`対応する閲覧文脈$ ~EQ ~NULL
+］
+⇒
+~RET ~F
+◎
+If this BarProp object's relevant global object's browsing context is null, then return false.
+</li>
+	<li>
+~IF［
+~UAは［
+下に述べる，コレが表現する~UI要素
+］を備えている
+］
+⇒
+~RET ~T または［
+その~UI要素の可視性~状態を最も正確aに表現する，~UAにより決定される値
+］
+◎
+If the user agent does not have a user interface element that the object represents, as described below, then return true.
+◎
+Return true or a value determined by the user agent to most accurately represent the visibility state of the user interface element that the object represents, as described below.
+</li>
+	<li>
+~RET ~T
+◎
+↑</li>
+</ol>
+</div>
+
+<p>
+以下に挙げる各種 `BarProp$I ~objは、各 `Window$I ~obj用に存在するモノトスル：
+◎
+The following BarProp objects must exist for each Window object:
+</p>
+<dl class="def-list">
+	<dt>`~location-bar@bP
+◎
+The location bar BarProp object
+</dt>
+	<dd>
+［
+`作動中の文書$の`~URL$を表示する~control
+］を包含するような~UI要素に類するものを表現する。
+◎
+Represents the user interface element that contains a control that displays the URL of the active document, or some similar interface concept.
+</dd>
+
+	<dt>`~menu-bar@bP
+◎
+The menu bar BarProp object
+</dt>
+	<dd>
+［
+~menu~form内の~commandの~list
+］を包含するような~UI要素に類するものを表現する。
+◎
+Represents the user interface element that contains a list of commands in menu form, or some similar interface concept.
+</dd>
+
+	<dt>`~personal-bar@bP
+◎
+The personal bar BarProp object
+</dt>
+	<dd>
+［
+利用者の “お気に入り（ `favorite^en ）” ~pageを指す~link
+］を包含するような~UI要素に類するものを表現する。
+◎
+Represents the user interface element that contains links to the user's favorite pages, or some similar interface concept.
+</dd>
+
+	<dt>`~scrollbar@bP
+◎
+The scrollbar BarProp object
+</dt>
+	<dd>
+［
+~scrollするための仕組み
+］を包含するような~UI要素に類するものを表現する。
+◎
+Represents the user interface element that contains a scrolling mechanism, or some similar interface concept.
+</dd>
+
+	<dt>`~status-bar@bP
+◎
+The status bar BarProp object
+</dt>
+	<dd>
+利用者の媒体に応じて適切に，文書の直上／直下に見出される~UI要素を表現する。
+それは概して，［
+進行中の~network活動や, 利用者の~pointing装置が現在の指示している要素
+］についての情報を供する。
+そのような~UI要素を持たない~UAは、~objに対応する~UI要素は無いかのように動作してもヨイ（すなわち，その `visible$m 属性は ~F を返してもヨイ）。
+◎
+Represents a user interface element found immediately below or after the document, as appropriate for the user's media, which typically provides information about ongoing network activity or information about elements that the user's pointing device is current indicating. If the user agent has no such user interface element, then the object may act as if the corresponding user interface element was absent (i.e. its visible attribute may return false).
+</dd>
+
+	<dt>`~toolbar@bP
+◎
+The toolbar BarProp object
+</dt>
+	<dd>
+利用者の媒体に応じて適切に，文書の直上／直下に見出される~UI要素を表現する。
+それは概して，`~session履歴$の走査~control（戻る／進む／読込直す, 等々の~button）を供する。
+そのような~UI要素を持たない~UAは、~objに対応する~UI要素は無いかのように動作してもヨイ（すなわち，その `visible$m 属性は ~F を返してもヨイ）。
+◎
+Represents the user interface element found immediately above or before the document, as appropriate for the user's media, which typically provides session history traversal controls (back and forward buttons, reload buttons, etc). If the user agent has no such user interface element, then the object may act as if the corresponding user interface element was absent (i.e. its visible attribute may return false).
+</dd>
+</dl>
+
+<div class="algo">
+`locationbar@m
+取得子~手続きは、コレの`~location-bar$bPを返す。
+◎
+The locationbar attribute must return the location bar BarProp object.
+</div>
+
+<div class="algo">
+`menubar@m
+取得子~手続きは、コレの`~menu-bar$bPを返す。
+◎
+The menubar attribute must return the menu bar BarProp object.
+</div>
+
+<div class="algo">
+`personalbar@m
+取得子~手続きは、コレの`~personal-bar$bPを返す。
+◎
+The personalbar attribute must return the personal bar BarProp object.
+</div>
+
+<div class="algo">
+`scrollbars@m
+取得子~手続きは、コレの`~scrollbar$bPを返す。
+◎
+The scrollbars attribute must return the scrollbar BarProp object.
+</div>
+
+<div class="algo">
+`statusbar@m
+取得子~手続きは、コレの`~status-bar$bPを返す。
+◎
+The statusbar attribute must return the status bar BarProp object.
+</div>
+
+<div class="algo">
+`toolbar@m
+取得子~手続きは、コレの`~toolbar$bPを返す。
+◎
+The toolbar attribute must return the toolbar BarProp object.
+</div>
+
+<div class="p">
+<p>
+`status@m
+属性は、歴史的な理由から存在する
+— 次に従うモノトスル：
+</p>
+<ul>
+	<li>
+取得子は、最後に設定された文字列を返す。
+</li>
+	<li>
+設定子は、自身を所与の値に設定する。
+</li>
+	<li>
+`~window$の作成-時には、空~文字列に設定する。
+</li>
+</ul>
+<p>
+この属性は、他には何もしない。
+</p>
+◎
+For historical reasons, the status attribute on the Window object must, on getting, return the last string it was set to, and on setting, must set itself to the new value. When the Window object is created, the attribute must be set to the empty string. It does not do anything else.
+</div>
+
+			</section>
+			<section id="script-settings-for-window-objects">
+<h3 title="Script settings for Window objects">7.3.7. `Window^I ~obj用の~script設定群</h3>
+
+<div class="algorithm">
+<p>
+`~window用に環境~設定群~objを設定しておく@
+ときは、所与の
+(
+`~JS実行~文脈$ %実行~文脈,
+~NULL または`環境$ %予約-済み環境,
+`~URL$ %~top-level作成時の~URL,
+`生成元$ %~top-level生成元
+)
+に対し，次を走らす：
+◎
+To set up a window environment settings object, given a JavaScript execution context execution context, null or an environment reservedEnvironment, a URL topLevelCreationURL, and an origin topLevelOrigin, run these steps:
+</p>
+<ol>
+	<li>
+%realm ~LET %実行~文脈 の Realm 成分の値
+◎
+Let realm be the value of execution context's Realm component.
+</li>
+	<li>
+%~window ~LET %realm の`大域~obj$relem
+◎
+Let window be realm's global object.
+</li>
+	<li>
+%url ~LET %~window に`結付けられている文書$の`~URL$docの複製
+◎
+Let url be a copy of the URL of window's associated Document.
+</li>
+	<li>
+<p>
+%設定群~obj ~LET
+各種~algoが次のように定義される，新たな`環境~設定群~obj$
+— 以下における %現~文書 とは、~algoが呼出された時点で
+%~window に`結付けられている文書$を表すとする：
+◎
+Let settings object be a new environment settings object whose algorithms are defined as follows:
+</p>
+
+		<ul>
+			<li>
+`~realm実行~文脈$enV
+⇒
+~RET %実行~文脈
+◎
+The realm execution context
+• Return execution context.
+</li>
+			<li>
+`~module~map$enV
+⇒
+~RET 
+%現~文書 の`~module~map$doc
+◎
+The module map
+• Return the module map of window's associated Document.
+</li>
+			<li>
+`担当の文書$enV
+⇒
+~RET %現~文書
+◎
+The responsible document
+• Return window's associated Document.
+</li>
+			<li>
+`~API用~URL文字~符号化法$enV
+⇒
+~RET %現~文書 の現在の`文字~符号化法$doc
+◎
+The API URL character encoding
+• Return the current character encoding of window's associated Document.
+</li>
+			<li>
+`~API用~基底~URL$enV
+⇒
+~RET %現~文書 の現在の`基底~URL$doc
+◎
+The API base URL
+• Return the current base URL of window's associated Document.
+</li>
+			<li>
+`生成元$enV
+⇒
+~RET %現~文書 の`生成元$
+◎
+The origin
+• Return the origin of window's associated Document.
+</li>
+			<li>
+<p>
+`~referrer施策$enV：
+◎
+The referrer policy
+</p>
+				<ol>
+					<li>
+%文書 ~LET %現~文書
+◎
+Let document be window's associated Document.
+</li>
+					<li>
+~WHILE［
+%文書 は`~iframe-srcdoc文書$である
+］~AND［
+%文書 の`~referrer施策$doc ~EQ 空~文字列
+］
+⇒
+%文書 ~SET %文書 が`属する閲覧文脈$の`容器~文書$
+◎
+While document is an iframe srcdoc document and document's referrer policy is the empty string, set document to document's browsing context's container document.
+</li>
+					<li>
+~RET %文書 の`~referrer施策$doc
+◎
+Return document's referrer policy.
+</li>
+				</ol>
+			</li>
+			<li>
+`埋込元~施策$enV
+⇒
+~RET %現~文書 の`埋込元~施策$doc
+◎
+The embedder policy
+• Return window's associated Document's embedder policy.
+</li>
+			<li>
+`非同一-生成元~隔離-済み能力$enV
+⇒
+~RET ［
+次が満たされるならば ~T ／
+~ELSE_ ~F
+］
+⇒
+［
+%~realm の`~agent~cluster$の`非同一-生成元~隔離-済み$
+］~AND［
+%文書 には `cross-origin-isolated$l 特能の`利用は許容されて$いる
+］
+◎
+The cross-origin isolated capability
+• Return the logical conjunction of realm's agent cluster's cross-origin isolated and whether window's associated Document is allowed to use the "cross-origin-isolated" feature.
+</li>
+		</ul>
+	</li>
+	<li>
+<p>
+~IF［
+%予約-済み環境 ~NEQ ~NULL
+］：
+◎
+If reservedEnvironment is non-null, then:
+</p>
+		<ol>
+			<li>
+%設定群~obj の
+⇒＃
+`~id$enV ~SET %予約-済み環境 の`~id$enV,
+`~target閲覧文脈$enV ~SET %予約-済み環境 の`~target閲覧文脈$enV,
+`作動中の~sw$enV ~SET %予約-済み環境 の`作動中の~sw$enV
+◎
+Set settings object's id to reservedEnvironment's id, settings object's target browsing context to reservedEnvironment's target browsing context, and settings object's active service worker to reservedEnvironment's active service worker.
+</li>
+			<li>
+<p>
+%予約-済み環境 の`~id$enV ~SET 空~文字列
+◎
+Set reservedEnvironment's id to the empty string.
+</p>
+
+<p class="note">注記：
+この時点から、 %予約-済み環境 の~id（ `identity^en ）は %設定群~obj に全部的に転送されたものと見なされ、`環境$の`~id$enVにより探索し得なくなる。
+◎
+The identity of the reserved environment is considered to be fully transferred to the created environment settings object. The reserved environment is not searchable by the environment’s id from this point on.
+</p>
+ 			</li>
+		</ol>
+	</li>
+	<li>
+~ELSE
+⇒
+%設定群~obj の
+⇒＃
+`~id$enV ~SET 新たな一意かつ不透明な文字列,
+`~target閲覧文脈$enV ~SET ~NULL,
+`作動中の~sw$enV ~SET ~NULL
+◎
+Otherwise, set settings object's id to a new unique opaque string, settings object's target browsing context to null, and settings object's active service worker to null.
+</li>
+	<li>
+%設定群~obj の
+⇒＃
+`作成時の~URL$enV ~SET %~url,
+`~top-level作成時の~URL$enV ~SET %~top-level作成時の~URL,
+`~top-level生成元$enV ~SET %~top-level生成元
+◎
+Set settings object's creation URL to url, settings object's top-level creation URL to topLevelCreationURL, and settings object's top-level origin to topLevelOrigin.
+</li>
+	<li>
+%realm の `HostDefined^sl ~field ~SET %設定群~obj
+◎
+Set realm's [[HostDefined]] field to settings object.
+</li>
+	<li>
+~RET %設定群~obj
+◎
+Return settings object.
+</li>
+</ol>
+</div>
+
+			</section>
+		</section>
+		<section id="the-windowproxy-exotic-object">
+<h2 title="The WindowProxy exotic object">7.4. `WindowProxy^I ~exotic~obj</h2>
+
+<p>
+各 `閲覧文脈$ %B には、
+`WindowProxy@I
+~obj %P が結付けられる。
+それは、普通の~objである `Window$I ~obj %W を，次のように包装する~exotic~objである：
+</p>
+
+<ul ><li>%P 上のほとんどの演算は、 %W へ指し向けられる。
+</li><li>%B が`~navigate$されたときは、 %W も別の `Window$I ~objに変更される。
+</li><li>%P の
+`Window@sl
+内部~slotが， %W を表現する。
+【すなわち、 %B にて`作動中の~window$になる。】
+</li><li>%P に対応する`~interface~obj$は無い。
+</li></ul>
+
+<p class="trans-note">【
+以下，この節と その各 下位節の内容は、
+<a href="~HTMLWPROXY#the-windowproxy-exotic-object">別~page</a>
+にて。
+上述は、便宜のため，その冒頭部のみを再掲したものである。
+】</p>
+
+		</section>
+</main>

@@ -1,0 +1,2653 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8" />
+<title>CSS Transitions — CSS 遷移効果（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+<style>
+
+div.prod::before {
+	color: gray;
+	content: "文法：";
+}
+
+
+/* DOM (CSSOM) interface */
+.dom {
+	font-family: monospace0, monospace;
+}
+
+#_ex-transition1 {
+	min-width: 35em;
+}
+#_ex-transition1 > div {
+	display: inline-block;
+	position: relative;
+	width: 10em;
+	height: 7.5em;
+	margin-right: 0.5em;
+	border: thin solid black;
+}
+#_ex-transition1 > div > div {
+	position: absolute;
+	width: 3em;
+	height: 3em;
+	top: 1em;
+}
+#_ex-transition1 > div > span {
+	position: absolute;
+	display: block;
+	text-align: center;
+	top: auto;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	white-space: pre-line;
+	font-size: smaller;
+}
+
+#_ex-transition1-demo {
+	background: red;
+	left: 1em;
+	transition-property: background, left;
+	transition-duration: 1s;
+}
+
+#_ex-transition1:hover > div:first-child {
+	background: yellow;
+}
+#_ex-transition1:hover #_ex-transition1-demo {
+	left: 6em;
+	background: blue;
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r': // ref
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 't': // typedef
+	text = `&lt;${key}&gt;`;
+	break;
+case 'p': // property
+	break;
+case 'ps': // pseudo-class
+	text = `:${key}`;
+	break;
+case 'pe': // pseudo-element
+	text = `::${key}`;
+	break;
+case 'cd': // 条件
+	text = `［<i>${key}</i>］`;
+	break;
+case 'm': // IDL member
+	let n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+default:
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Transitions
+spec_date:2019-09-30
+trans_update:2019-10-01
+source_checked:180705
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-transitions-1/
+	abbr_url:TRANSITION
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:css-anim,css
+conformance:css
+copyright:2019,permissive
+trans_1st_pub:2013-09-08
+
+
+●●class_map
+p:property
+ps:pseudo
+pe:pseudo
+t:type
+css:css
+f:func
+v:value
+et:event-type
+e:element
+op:op
+
+●●tag_map
+p:code
+pe:code
+ps:code
+t:var
+css:code
+f:code
+d:code
+et:code
+e:code
+I:code
+m:code
+mb:code
+v:code
+V:var
+op:span
+em:em
+
+●●original_id_map
+
+
+delay:
+duration:
+
+●●mdn_urls
+propdef-transition:CSS/transition
+propdef-transition-delay:CSS/transition-delay
+propdef-transition-duration:CSS/transition-duration
+propdef-transition-property:CSS/transition-property
+propdef-transition-timing-function:CSS/transition-timing-function
+
+transitionevent:API/TransitionEvent
+	dictdef-transitioneventinit:API/TransitionEventInit
+
+transitionend:API/HTMLElement/transitionend_event
+transitionrun:API/HTMLElement/transitionrun_event
+transitionstart:API/HTMLElement/transitionstart_event
+transitioncancel:API/HTMLElement/transitioncancel_event
+
+●●link_map
+
+p.transition:#propdef-transition
+p.transition-delay:#propdef-transition-delay
+p.transition-duration:#propdef-transition-duration
+p.transition-property:#propdef-transition-property
+p.transition-timing-function:#propdef-transition-timing-function
+
+p.all:~CASCADE#propdef-all
+	~CASCADE#all-shorthand
+p.animation-*:~CSSANIM#_animation-properties
+p.background-color:~CSSBG#propdef-background-color
+p.background-image:~CSSBG#propdef-background-image
+p.box-shadow:~CSSBG#propdef-box-shadow
+p.left:~CSSPOS#propdef-left
+p.opacity:~CSSCOLOR#propdef-opacity
+p.top:~CSSPOS#propdef-top
+p.transform:~TRANSFORM#propdef-transform
+p.width:~CSS2VISUDET#propdef-width
+
+
+
+t.single-transition:#single-transition
+t.single-transition-property:#single-transition-property
+t.easing-function:~CSSEASING#typedef-easing-function
+
+t.custom-ident:~CSSVAL#identifier-value
+t.time:~CSSVAL#time-value
+
+f.calc():~CSSVAL#funcdef-calc
+
+	timing function＊
+
+v.ease:~CSSEASING#valdef-cubic-bezier-easing-function-ease
+
+v.none:#valdef-transition-property-none
+v.all:#valdef-transition-property-all
+v.inherit:~CASCADE#valdef-all-inherit
+v.initial:~CASCADE#valdef-all-initial
+v.transparent:~CSSWG/css-color-3/#transparent
+v.inset:~CSSBG#shadow-inset
+	v.green:~CSSWG/css-color-3/#html4
+
+pe.before:~CSSPSEUDO#selectordef-before
+pe.after:~CSSPSEUDO#selectordef-after
+
+et.transitionend:#transitionend
+et.transitionrun:#transitionrun
+et.transitionstart:#transitionstart
+et.transitioncancel:#transitioncancel
+
+	●IDL
+Exposed:~WEBIDLjs#Exposed
+
+CSSOMString:~CSSOM1#cssomstring
+I.Document:~HTMLdom#document
+	~DOM4#document
+I.Window:~WINDOW#window
+I.GlobalEventHandlers:~WAPI#globaleventhandlers
+I.EventHandler:~WAPI#eventhandler
+I.TransitionEvent:#transitionevent
+I.TransitionEventInit:#dictdef-transitioneventinit
+I.EventInit:~DOM4#dictdef-eventinit
+I.Event:~DOM4#event
+
+m.propertyName:#Events-TransitionEvent-propertyName
+m.elapsedTime:#Events-TransitionEvent-elapsedTime
+	css-animations-1/#dom-animationevent-elapsedtime？
+m.pseudoElement:#Events-TransitionEvent-pseudoElement
+m.TransitionEvent:#dom-transitionevent-transitionevent
+
+
+
+m.ontransitionrun:#dom-globaleventhandlers-ontransitionrun
+m.ontransitionstart:#dom-globaleventhandlers-ontransitionstart
+m.ontransitionend:#dom-globaleventhandlers-ontransitionend
+m.ontransitioncancel:#dom-globaleventhandlers-ontransitioncancel
+
+m.target:~DOM4#dom-event-target
+
+mb.propertyName:#dom-transitioneventinit-propertyname
+mb.elapsedTime:#dom-transitioneventinit-elapsedtime
+mb.pseudoElement:#dom-transitioneventinit-pseudoelement
+
+	●TODO
+	Constructor:dom-transitionevent-transitionevent
+	V.type:dom-transitionevent-transitioneventtype-transitioneventinitdict-type
+	V.transitionEventInitDict:dom-transitionevent-transitionevent-type-transitioneventinitdict-transitioneventinitdict
+
+
+遷移-可能:#transitionable
+
+所要時間:#duration
+遅延:#delay
+遷移~event:#transition-events
+開始~時刻:#transition-start-time
+終止~時刻:#transition-end-time
+開始~値:#transition-start-value
+終止~値:#transition-end-value
+逆再生調整後の開始~値:#transition-reversing-adjusted-start-value
+逆再生 時短係数:#transition-reversing-shortening-factor
+§ 遷移の逆再生:#reversing
+取消:#transition-cancel
+取消した:#transition-cancel
+取消す:#transition-cancel
+取消され:#transition-cancel
+遷移を開始-:#_start-a-transition
+~style変化~event:#style-change-event
+変化前~style:#before-change-style
+変化後~style:#after-change-style
+合致する~transition-property値:#matching-transition-property-value
+
+稼働中の遷移:#running-transition
+稼働中の遷移たちの集合:#running-transition
+完了した遷移:#completed-transition
+完了した遷移たちの集合:#completed-transition
+
+V.所要時間:#matching-transition-duration
+V.遅延:#matching-transition-delay
+V.計時~関数:#matching-transition-easing-function
+
+合計の所要時間:#transition-combined-duration
+現在-値:#current-value
+完了:#dfn-complete
+完了-:#dfn-complete
+
+	●外部
+補間-:~CSSVAL#interpolation
+補間:~CSSVAL#interpolation
+~animation型:~WANIM#animation-type
+~animate不可:~WANIM#not-animatable
+離散的:~WANIM#discrete
+
+入力~進捗~値:~CSSEASING#input-progress-value
+出力~進捗~値:~CSSEASING#output-progress-value
+計時~関数:~CSSEASING#easing-function
+
+
+DOM Event:~DOM4#interface-event
+~event構築子:~DOM4#constructing-events
+配送-:~DOM4#concept-event-dispatch
+
+使用~値:~CASCADE#used-value
+算出d値:~CASCADE#computed-value
+指定d値:~CASCADE#specified-value
+略式~prop:~CASCADE#shorthand-property
+下位prop:~CASCADE#longhand
+~cascade:~CASCADE#cascade
+
+
+~HTML要素:~HTMLINFRA#html-elements
+~event~handler~IDL属性:~WAPI#event-handler-idl-attributes
+~event~handler内容~属性:~WAPI#event-handler-content-attributes
+~event~handler:~WAPI#event-handlers
+~event~handler~event型:~WAPI#event-handler-event-type
+
+
+●●words_table1
+
+●●words_table
+
+
+
+	●IDL／event
+文脈情報:context info::~
+	contextual information
+	属性~値:member
+
+
+	●構造／内容／data操作
+	~~成分
+
+
+
+結合-:combine:~
+
+
+
+
+作用-:act:~
+
+	●呈示／UI
+hover:
+	呈示~上の:presentational
+非対称:asymmetric:~
+速度:speed:~
+ジャンプ:jump:~
+背景:background:~
+色:color:~
+赤色:red:~
+青色:blue:~
+滑らか:smooth:~
+
+	●CSS
+継承ng:inheriting::継承
+	~cascade法:cascading
+
+	●構文
+comma::::カンマ
+colon::::コロン
+区切りの:-separated:~
+
+	●遷移
+値a:<var>V</var><sub>a</sub>
+値b:<var>V</var><sub>b</sub>
+
+	~animate可能:animatable
+transition-property:
+easing:
+	遷移効果:transitions
+	遷移-中:transitioning
+	遷移~prop:transition-property
+
+変化後:after-change::~
+変化前:before-change::~
+
+相:phase:~
+開始:start::~
+	始動
+	開始-法:starting
+	開始-時:starting
+終止:end::~
+	相を終え:end
+	終える:expire
+中途の:intermediate:~
+	途中:part-way
+	中途:middle
+	現在-時刻:current time
+	現在-値:current value
+
+時刻:time::~
+時間:time:~
+時機:timing::~
+開始値:starting value:start 値:~
+
+時間差:offset::~
+古い:old:~
+順方向:forward::~
+逆方向:reverse::~
+反転:reversal::~
+逆再生:reversing::~
+逆再生調整後の:reversing-adjusted::~
+時短係数:shortening factor::~
+再生期間:play cycle:~
+更新頻度:refresh rate:~
+短縮-:shorten:~
+瞬時:instant:~
+同時的:simultaneous:~
+合計の:combined:~
+停止:stop::~
+
+	completing
+未完了の:incomplete::~
+
+稼働-:run::~
+稼働:running::~
+稼働中:running::~
+稼働中の:running::~
+	取消~不可:not cancelable
+	取消~可能:cancelable
+進行中:undergoing:~
+
+合致:match::~::マッチ
+割合:percentage::~
+瞬間:moment::~
+
+	半分を過ぎた:crosses its midpoint
+	outgoing and incoming:中断された遷移と後から来る遷移
+	等距離:halfway between
+	量:amount
+	部位／占める区間:portion
+	秒:second
+	かかる／:take
+	し続け:continue
+
+	●保安他
+graphics::::グラフィックス
+memory::::メモリ
+	不足:out-of-memory
+割振り:allocation:割り振り
+更新率:rate:~
+利用度:usage:~
+障碍:disability:~
+private::::プライベート
+
+動き:movement:~
+過敏:sensitive:~
+変形-:transform:~
+低速化:slow down:~
+main::::メイン
+process::::プロセス
+motion::::モーション
+
+	読んだり理解する:read or understand
+	光過敏性発作:seizures
+	覆う:cover する
+	満たす:meet
+	~~主要な:major categories
+	高価な:high-value
+	注意を払う:take care
+	以前
+	広い／多数:large
+	保つ:keep／:kept
+	引き換え:tradeoff
+
+	●仕様
+解決策:resolution:~
+目障りな:jarring:~
+	序論:intoroduction
+原理:rationale:~
+必要性:needs:~
+拙い:poorな:~
+
+	note
+	対照的に:as opposed
+	相似:analogous
+	通常の:normal/Normally
+	予想に反して:distractingly
+	可能性:possibilities／
+	同様に:likewise
+	~~主要な:substantive
+
+	●仕様（動詞
+直面-:face:~
+	unrecognized
+	名が改めら:rename
+	導く:lead to
+	導かな:lead
+	-:examin
+	~~求めた:asked
+	欲され:desirable
+	~~費やされ:spent
+	say
+	とする:suppose
+	多くの箇所に分かれ:split in many parts
+
+	●未分類（動詞
+log::::ログ
+	-:reach
+辿られ:traverseされ:~
+現れる:appearする:~
+
+	〜間で異なり:varies
+	呼び出す:call
+	入-:enter
+	出-:exits
+	脱し:leave
+	相違-:differ
+	taken
+	making
+	include
+	including
+	say
+	leading
+	edit
+	cancelable
+
+	●未分類
+組成器:compositor::~
+手続き:procedure:~
+切詰めた:clampした:切り詰めた
+切詰ng:clamping:切り詰め
+切捨て:truncation:切り捨て
+繰返n:repetition:繰り返し
+算定-:calculate:~
+最新の:up-to-date:~
+影:shadow::~
+
+	欄:line
+	互いに関連付けられ:match up:
+	対応する~index:respective indices
+	対応~付け／対応する:matching
+
+	●指示語
+現在-:current:~
+
+	回目:first／:second
+	右:right:
+	左:left:
+	始まり:beginning
+	始まる:begin:
+	片割れ:half
+	短い方の:shorter:
+	長い方のlonger
+	種々の:various
+	場所:location
+	より大きい:greater
+	超える:excess
+	-:neither
+	いくぶん:somewhat
+	-:no longer
+	indices:
+	和:sum
+	かけて:period
+	数:number
+	illustrates
+	how long
+	own
+	follow
+	一覧:table:
+	sized
+	とする:assumes
+	対象にする:covers
+	全部:full
+	contain
+	map
+	making
+	taking
+	target
+	微小な:small amount of
+	と同時に:as soon as
+	part
+	max
+	once
+	sum
+	time
+	run
+	likely
+	previous
+	greater
+	turn
+	その後:later
+	prior
+
+
+●●ref_normative
+
+[CSS-CASCADE-4]
+    Elika Etemad; Tab Atkins Jr.. CSS Cascading and Inheritance Level 4. 28 August 2018. CR. URL: https://www.w3.org/TR/css-cascade-4/ 
+[CSS-COLOR-3]
+    Tantek Çelik; Chris Lilley; David Baron. CSS Color Module Level 3. 19 June 2018. REC. URL: https://www.w3.org/TR/css-color-3/ 
+[CSS-EASING-1]
+    Brian Birtles; Dean Jackson; Matt Rakow. CSS Easing Functions Level 1. 30 April 2019. CR. URL: https://www.w3.org/TR/css-easing-1/ 
+[CSS-TRANSFORMS-1]
+    Simon Fraser; et al. CSS Transforms Module Level 1. 14 February 2019. CR. URL: https://www.w3.org/TR/css-transforms-1/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS2]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[CSS3-ANIMATIONS]
+    Dean Jackson; et al. CSS Animations Level 1. 11 October 2018. WD. URL: https://www.w3.org/TR/css-animations-1/ 
+[CSS3CASCADE]
+    Elika Etemad; Tab Atkins Jr.. CSS Cascading and Inheritance Level 3. 28 August 2018. CR. URL: https://www.w3.org/TR/css-cascade-3/ 
+[CSSOM-1]
+    Simon Pieters; Glenn Adams. CSS Object Model (CSSOM). 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-1/ 
+[DOM]
+    Anne van Kesteren. DOM Standard. Living Standard. URL: https://dom.spec.whatwg.org/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[WEB-ANIMATIONS-1]
+    Brian Birtles; et al. Web Animations. 11 October 2018. WD. URL: https://www.w3.org/TR/web-animations-1/ 
+[WebIDL]
+    Boris Zbarsky. Web IDL. 15 December 2016. ED. URL: https://heycam.github.io/webidl/ 
+
+●●ref_informative
+
+[CSS-BACKGROUNDS-3]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. 17 October 2017. CR. URL: https://www.w3.org/TR/css-backgrounds-3/ 
+[SMIL-ANIMATION]
+    Patrick Schmitz; Aaron Cohen. SMIL Animation. 4 September 2001. REC. URL: https://www.w3.org/TR/smil-animation/ 
+[SVG11]
+    Erik Dahlström; et al. Scalable Vector Graphics (SVG) 1.1 (Second Edition). 16 August 2011. REC. URL: https://www.w3.org/TR/SVG11/ 
+[WCAG20]
+    Ben Caldwell; et al. Web Content Accessibility Guidelines (WCAG) 2.0. 11 December 2008. REC. URL: https://www.w3.org/TR/WCAG20/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Transitions</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/css-transitions-1/
+
+以前のバージョン
+	https://www.w3.org/TR/2018/WD-css-transitions-1-20181011/
+	https://www.w3.org/TR/2017/WD-css-transitions-1-20171130/
+	https://www.w3.org/TR/2013/WD-css3-transitions-20131119/
+
+テスト一式
+	http://test.csswg.org/suites/css-transitions-1_dev/nightly-unstable/
+
+最新の課題
+    <a href="https://www.w3.org/Bugs/Public/buglist.cgi?query_format=advanced&amp;product=CSS&amp;component=Transitions&amp;resolution=---&amp;status_whiteboard=defer%20to%20level%202&amp;status_whiteboard_type=notregexp">Bugzilla bugs for this level</a>
+	<a href="https://www.w3.org/Bugs/Public/buglist.cgi?query_format=advanced&amp;product=CSS&amp;component=Transitions&amp;resolution=---">Bugzilla bugs for all levels</a>
+	<a href="https://github.com/w3c/csswg-drafts/labels/css-transitions-1">GitHub Issues</a>
+
+編集
+	<a href="https://dbaron.org/">L. David Baron</a> (Mozilla)
+	<a href="mailto:dino@apple.com">Dean Jackson</a> (Apple Inc)
+	<a href="bbirtles@mozilla.com">Brian Birtles</a> (Mozilla) 
+
+前任編集者
+	<a href="mailto:hyatt@apple.com">David Hyatt</a> (Apple Inc)
+	<a href="mailto:cmarrin@apple.com">Chris Marrin</a> (Apple Inc)
+
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-transitions-1/Overview.bs">GitHub Editor</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-transitions-1
+
+</script>
+
+</head>
+
+<body>
+
+<header>
+	<hgroup>
+<h1>CSS 遷移効果 — CSS Transitions</h1>
+	</hgroup>
+</header>
+
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+CSS Transitions は、~CSS~prop値における変化を，指定された所要時間にわたり滑らかに生じさせることを可能にする。
+◎
+CSS Transitions allows property changes in CSS values to occur smoothly over a specified duration.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+`この節では、発行時点における…^em
+【以下，この節の他の内容は <a href="css-common-ja.html#status">CSS 日本語訳 共通ページ</a>に委譲。】
+</p>
+
+<p>
+<strong>この文書</strong>は、比較的 最終草案（ `last call^en ）に近い物と予期されています。
+顕在化している一部の課題は取組まれる必要がありますが、この~levelにおける新たな特能は，まずあり得ないと見られています。
+◎
+This document is expected to be relatively close to last call. While some issues raised have yet to be addressed, new features are extremely unlikely to be considered for this level.
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="introduction">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+この文書は、`暗黙的な遷移^emを可能化する，新たな~CSS特能を導入する。
+それは、与えられた時間をかけて~CSS~propをある値から別の値へ滑らかに変化させる方法を述べる。
+◎
+This document introduces new CSS features to enable implicit transitions, which describe how CSS properties can be made to change smoothly from one value to another over a given duration.
+</p>
+
+<p class="trans-note">【
+暗黙的（ `implicit^en ）な遷移
+— ~propの値を能動的／明示的（ `explicit^en ）に変化させる~animationとは対照的に，下層の~prop値の変化に応じて受動的（自動的）に遷移させる（変化過程を時間的に引き延ばして呈示させる）効果。
+】</p>
+
+	</section>
+	<section id="transitions">
+<h2 title="Transitions">2. 遷移</h2>
+
+<p>
+通常は、~CSS~propの値が変化するとき、影響される要素の~propは古い値から新たな値へ即時に変化し，結果の描画は瞬時に更新される。
+この節では、新たな~CSS~propを利用して遷移を指定する仕方を述べる。
+これらの~propは、古い状態から新たな状態へ時間とともに滑らかに~animateさせるために利用される。
+◎
+Normally when the value of a CSS property changes, the rendered result is instantly updated, with the affected elements immediately changing from the old property value to the new property value. This section describes a way to specify transitions using new CSS properties. These properties are used to animate smoothly from the old state to the new state over time.
+</p>
+
+<p>
+例えば、［
+`left$p, `background-color$p
+］~propに対し 1 秒間の遷移が定義されたとする。
+次の図式に，要素~上のそれらの~propが更新されるときの効果を示す
+—
+ここでは、要素は右へ移動し, 背景は赤色から青色に変化するとする。
+他の遷移~parameterについては，既定の値のままにされるとする。
+◎
+For example, suppose that transitions of one second have been defined on the left and background-color properties. The following diagram illustrates the effect of updating those properties on an element, in this case moving it to the right and changing the background from red to blue. This assumes other transition parameters still have their default values.
+</p>
+
+<figure>
+<!-- transition1.png -->
+
+<div
+	id="_ex-transition1"
+	title="色と位置が補間される~boxの［初期, 中間, 最終］状態を示す例"
+><div>
+	<div id="_ex-transition1-demo"></div>
+	<span>開始値
+時刻 = 0.0 秒</span>
+
+</div><div>
+	<div style="background: purple; left: 3.5em;"></div>
+	<span>中途の値
+時刻 = 0.5 秒</span>
+
+</div><div>
+	<div style="background: blue; left: 6em;"></div>
+	<span>終止~値
+時刻 = 1.0 秒</span>
+
+</div></div>
+
+<figcaption><b>図 1.</b>
+`left$p および `background-color$p の遷移
+◎
+Example showing the initial, intermediate, and final states of a box whose color and position is interpolated
+◎
+Transitions of left and background-color
+</figcaption>
+
+</figure>
+
+<p>
+遷移は呈示~上の効果である。
+~propの`算出d値$は、
+【`指定d値$の変化に応じて】
+古い値から新たな値へ時間とともに遷移する。
+したがって、遷移-中における~propに対し，~scriptから`算出d値$（または，それに依存する他の~data）が~queryされたときは、~animateされている~propの現在の値を表現する，中途の値が得られることになる。
+◎
+Transitions are a presentational effect. The computed value of a property transitions over time from the old value to the new value. Therefore if a script queries the computed value of a property (or other data depending on it) as it is transitioning, it will see an intermediate value that represents the current animated value of the property.
+</p>
+
+<p>
+~propの遷移は、いくつかの新たな~propを利用して定義される。
+例えば：
+◎
+The transition for a property is defined using a number of new properties. For example:
+</p>
+
+<div class="example">
+<p style="display:none">Example(s):</p>
+
+<pre class="lang-css">
+div {
+  transition-property: opacity;
+  transition-duration: 2s;
+}</pre>
+
+<p>
+上の例は、 `opacity$p ~propに新たな値がアテガわれたとき，古い値から新たな値へ, 2 秒かけて滑らかに変化するような、遷移を定義する。
+◎
+The above example defines a transition on the opacity property that, when a new value is assigned to it, will cause a smooth change between the old value and the new value over a period of two seconds.
+</p></div>
+
+<p>
+各種 遷移~propには、~comma区切りの~listも受容される。
+これにより、それぞれが異なる~propに作用するような複数の遷移を，一括して定義できるようになる。
+この場合、個々の遷移の~parameterたちは、これらの~list内の，同じ~indexに~~位置する所からとられる。
+例えば：
+◎
+Each of the transition properties accepts a comma-separated list, allowing multiple transitions to be defined, each acting on a different property. In this case, the individual transitions take their parameters from the same index in all the lists. For example:
+</p>
+
+<div class="example">
+<p style="display:none">Example(s):</p>
+
+<pre class="lang-css">
+div {
+  transition-property: opacity, left;
+  transition-duration: 2s, 4s;
+}</pre>
+
+<p>
+は、［
+`opacity$p,
+`left$p
+］~propを，それぞれ［
+2 秒, 4 秒
+］かけて遷移させることになる。
+◎
+This will cause the opacity property to transition over a period of two seconds and the left property to transition over a period of four seconds.
+</p></div>
+
+<p id="list-matching">
+一連の遷移~propに与えられた値の個数が不揃いの場合、
+`transition-property$p の値の個数（ %n とする）が，遷移の開始-時における 他の遷移~propの値の個数を決定する。
+それぞれの値~listは先頭の値から互いに関連付けられ、 %n を超える部分の値は利用されない。
+<!-- 合致するに十分な~comma区切りの -->
+値の個数が %n に満たない遷移~propに対しては、~UAは，その~propに与えられた値~listを，値の個数が十分になるまで繰返すことにより、その`使用~値$を算定するモノトスル。
+この切捨て／繰返nは、`算出d値$には影響しない。
+<span class="note">
+注記：
+これは `background-*^p ~propの挙動に相似する（
+`background-image$p が `transition-property$p の役割に相似する）。
+【<a href="~CSSBG#layering">~~参照</a>】
+</span>
+◎
+In the case where the lists of values in transition properties do not have the same length, the length of the transition-property list determines the number of items in each list examined when starting transitions. The lists are matched up from the first value: excess values at the end are not used. If one of the other properties doesn’t have enough comma-separated values to match the number of values of transition-property, the user agent must calculate its used value by repeating the list of values until there are enough. This truncation or repetition does not affect the computed value. Note: This is analogous to the behavior of the background-* properties, with background-image analogous to transition-property.
+</p>
+
+<div class="example">
+<p style="display:none">Example(s):</p>
+
+<pre class="lang-css">
+div {
+  transition-property: opacity, left, top, width;
+  transition-duration: 2s, 1s;
+}</pre>
+
+<p>
+上の例は，［
+`opacity$p／
+`left$p ／
+`top$p ／
+`width$p
+］~prop上にそれぞれ所要時間［
+2 秒 ／ 1 秒 ／ 2 秒 ／ 1 秒
+］の遷移を定義する。
+◎
+The above example defines a transition on the opacity property of 2 seconds duration, a transition on the left property of 1 second duration, a transition on the top property of 2 seconds duration and a transition on the width property of 1 second duration.
+</p></div>
+
+<p>
+遷移は 内容を動的に変化させるものであり，一部の利用者には光過敏性発作（ `seizure^en ）を導く可能性がある。
+光過敏性発作を導き得る内容を避ける方法については
+<a href="https://www.w3.org/TR/WCAG20/#seizure">指針 2.3 : 光過敏性発作へ導かないように内容を設計すること</a>
+(`WCAG20$r)
+を見よ。
+◎
+While authors can use transitions to create dynamically changing content, dynamically changing content can lead to seizures in some users. For information on how to avoid content that can lead to seizures, see Guideline 2.3: Seizures: Do not design content in a way that is known to cause seizures ([WCAG20]).
+</p>
+
+		<section id="transition-property-property">
+<h3 title="The transition-property Property">2.1. `transition-property^p ~prop</h3>
+
+<p>
+`transition-property$p
+~propは、遷移が適用される~CSS~propの名前を指定する。
+◎
+The transition-property property specifies the name of the CSS property to which the transition is applied.
+</p>
+
+◎名 `transition-property@p
+◎値 `none$v | `single-transition-property$t#
+◎初 `all$v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 ~keyword `none^v ならばそれ／~ELSE_ 識別子の~list
+◎
+the keyword none else a list of identifiers
+◎ア ~animate不可
+◎順 文法に従う
+◎表終
+
+
+<div class="prod">
+`single-transition-property@t = `all$v | `custom-ident$t
+</div>
+
+
+<p>
+値
+`none@v
+は、
+【宣言が適用される［要素／疑似要素］上の】
+どの~propも遷移されないことを意味する。
+他の場合、 1 個以上の［
+遷移~対象になる~prop名, または
+~keyword `all$v 
+］からなる~listを値にとる。
+`all@v
+は、すべての~propを遷移~対象にすることを指示する。
+◎
+A value of none means that no property will transition. Otherwise, a list of properties to be transitioned, or the keyword all which indicates that all properties are to be transitioned, is given.
+</p>
+
+<p>
+実装は，~listされた識別子に自身が認識しない~prop名がある場合でも、~list内の他の~animate可能な~propについては，［［
+`transition-duration$p ／
+`transition-delay$p ／
+`transition-timing-function$p
+］~propが与える~list内の，対応する~indexに~~位置する［
+`所要時間$／`遅延$／`計時~関数$
+］］を利用して，遷移を開始させるモノトスル。
+言い換えれば、~listどうしの~index対応を保全するため，認識しない~propも保つモノトスル。
+◎
+If one of the identifiers listed is not a recognized property name, the implementation must still start transitions on the animatable properties in the list using the duration, delay, and timing function at their respective indices in the lists for transition-duration, transition-delay, and transition-timing-function. In other words, unrecognized properties must be kept in the list to preserve the matching of indices.
+</p>
+
+<p>
+`single-transition-property$t 内の `custom-ident$t 生成規則では、
+`custom-ident$t から常に除外される~keywordに加えて，~keyword `none$v も除外される。
+すなわち，~keyword
+`none$v, `inherit$v, `initial$v
+は、複数個の識別子からなる~listの中では，許可されない。
+◎
+The &lt;custom-ident&gt; production in &lt;single-transition-property&gt; also excludes the keyword none, in addition to the keywords always excluded from &lt;custom-ident&gt;. This means that none, inherit, and initial are not permitted as items within a list of more that one identifier; any list that uses them is syntactically invalid.
+</p>
+
+<p>
+~keyword `all$v に対しては、~animate可能な~propすべてが遷移の対象になる。
+`略式~prop$の識別子に対しては、その`下位prop$すべてが遷移の対象になる。
+すなわち実装は、それらの~propに対し，その~itemに対応する~indexに~~位置する［
+`所要時間$, `遅延$, `計時~関数$
+］を利用して 遷移を開始させるモノトスル。
+◎
+For the keyword all, or if one of the identifiers listed is a shorthand property, implementations must start transitions for all its longhand sub-properties (or, for all, all properties), using the duration, delay, and timing function at the index corresponding to the shorthand.
+</p>
+
+<p>
+`transition-property$p
+の値の中に，同じ~propが複数回 指定された場合（［
+それを下位propに持つ略式~propや `all$v
+］を通して指定されるものも含め）、それらのうち`最後の~itemのみ^emが有効になる。
+<!-- 
+に対応する~indexに~~位置する
+所要時間, 遅延, 計時~関数
+を用いてその~propの~animationを呼び出す遷移を開始させる。
+ -->
+◎
+If a property is specified multiple times in the value of transition-property (either on its own, via a shorthand that contains it, or via the all value), then the transition that starts uses the duration, delay, and timing function at the index corresponding to the last item in the value of transition-property that calls for animating that property.
+</p>
+
+<p class="note">注記：
+値 `all$v は、すべての~propを対象にする略式~prop `all$p と類似な仕方で働く。
+◎
+Note: The all value and all shorthand property work in similar ways, so the all value is just like a shorthand that covers all properties.
+</p>
+
+
+		</section>
+		<section id="transition-duration-property">
+<h3 title="The transition-duration Property">2.2. `transition-duration^p ~prop</h3>
+
+<p>
+`transition-duration$p
+~propは、
+`所要時間@
+— 遷移にかかる時間の長さ —
+を定義する。
+◎
+The transition-duration property defines the length of time that a transition takes.
+</p>
+
+◎名 `transition-duration@p
+◎値 `time$t#
+◎初 `0s^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算
+各~itemが所要時間を与える~list
+◎
+list, each item a duration
+◎順 文法に従う
+◎ア ~animate不可
+◎表終
+
+<p>
+この~propは、古い値から新たな値への遷移にかけられるべき時間を指定する。
+既定の値 `0s^v は、遷移が即時に行われることを意味する（すなわち，~animationは生じない）。
+`transition-duration$p
+に対する負な値は、宣言を無効にする。
+◎
+This property specifies how long the transition from the old value to the new value should take. By default the value is 0s, meaning that the transition is immediate (i.e. there will be no animation). A negative value for transition-duration renders the declaration invalid.
+</p>
+
+
+		</section>
+		<section id="transition-timing-function-property">
+<h3 title="The transition-timing-function Property">2.3. `transition-timing-function^p ~prop</h3>
+
+<p>
+`transition-timing-function$p
+~propは、遷移の間の中途の値がどの時点で利用されるかを算出する方法を述べる。
+これにより，その間の遷移の速度を変化させられるようになる。
+これらの効果は、共通的に `~easing^em 関数と呼ばれる。
+【 “~easing関数” は、計時~関数の別称（より汎化した呼称）。】
+◎
+The transition-timing-function property describes how the intermediate values used during a transition will be calculated. It allows for a transition to change speed over its duration. These effects are commonly called easing functions.
+</p>
+
+<p>
+`計時~関数$は、 `CSS-EASING-1$r にて別に定義される。
+その`入力~進捗~値$には、`所要時間$に対する経過した時間の割合が利用される。
+`出力~進捗~値$は、当の~prop値を`補間-$するときの %p 値を与える（
+<a href="#application">§ 遷移の適用</a>
+を見よ）。
+◎
+Timing functions are defined in the separate CSS Easing Functions module [css-easing-1]. The input progress value used is the percentage of the transition duration, and the output progress value is used as the p value when interpolating the property value (see § 4 Application of transitions).
+</p>
+
+◎名 `transition-timing-function@p
+◎値 `easing-function$t#
+◎初 `ease$v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 指定d値
+◎順 文法に従う
+◎ア ~animate不可
+◎表終
+
+		</section>
+		<section id="transition-delay-property">
+<h3 title="The transition-delay Property">2.4. `transition-delay^p ~prop</h3>
+
+<p>
+`transition-delay$p ~propは、
+`遅延@
+— 遷移がいつ開始されるか —
+を定義する。
+それは、［
+遷移の実行を，適用される時点から一定~時間たってから始める
+］ようにすることを許容する。
+`transition-delay$p に対する値 `0s^v は、対象の~propが変化すると同時に遷移を実行させることを意味する。
+他の場合、~propが変化した瞬間からの時間差を指定し，遷移の実行はその時間差だけ遅延されることになる。
+◎
+The transition-delay property defines when the transition will start. It allows a transition to begin execution some some period of time from when it is applied. A transition-delay value of 0s means the transition will execute as soon as the property is changed. Otherwise, the value specifies an offset from the moment the property is changed, and the transition will delay execution by that offset.
+</p>
+
+<p>
+`transition-delay$p 値に負な時間差が指定された場合、~propが変化すると同時に遷移を実行させつつ，［
+指定された負な時間差だけ早くから実行し始めた
+］かのように現れるようにする。
+すなわち、遷移はその再生期間の途中から始まるように現れることになる。
+`transition-delay$p 負にされている下で，遷移が暗黙の開始値を持つ場合、開始値は~propが変化した瞬間の値からとられる。
+◎
+If the value for transition-delay is a negative time offset then the transition will execute the moment the property is changed, but will appear to have begun execution at the specified offset. That is, the transition will appear to begin part-way through its play cycle. In the case where a transition has implied starting values and a negative transition-delay, the starting values are taken from the moment the property is changed.
+</p>
+
+◎名 `transition-delay@p
+◎値 `time$t#
+◎初 `0s^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算
+各~itemが所要時間を与える~list
+◎
+list, each item a duration
+◎順 文法に従う
+◎ア ~animate不可
+◎表終
+
+		</section>
+		<section id="transition-shorthand-property">
+<h3 title="The transition Shorthand Property">2.5. `transition^p 略式~prop</h3>
+
+<p>
+`transition$p `略式~prop$は、上述の 4 種の~propを単独の~propに結合する。
+◎
+The transition shorthand property combines the four properties described above into a single property.
+</p>
+
+◎名 `transition@p
+◎値 `single-transition$t#
+◎初 個々の~propを見よ
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 個々の~propを見よ
+◎順 文法に従う
+◎ア ~animate不可
+◎表終
+
+<pre class="prod">
+`single-transition@t =
+    [ `none$v | `single-transition-property$t ]
+    || `time$t
+    || `easing-function$t
+    || `time$t
+</pre>
+
+<p>
+この~prop値の中の~itemの順序は重要であることに注意：
+`time$t として構文解析し得る 1 個目の~itemが，
+`transition-duration$p
+（遷移の`所要時間$）にアテガわれ、
+`time$t として構文解析し得る 2 個目の~itemが，
+`transition-delay$p
+（遷移の`遅延$）にアテガわれる。
+◎
+Note that order is important within the items in this property: the first value that can be parsed as a time is assigned to the transition-duration, and the second value that can be parsed as a time is assigned to transition-delay.
+</p>
+
+<p>
+この略式~propに複数個の `single-transition$t が与えられていて, その中のいずれかの遷移に `single-transition-property$t として `none$v をとるものがある場合、その宣言~全体が無効になる。
+◎
+If there is more than one &lt;single-transition&gt; in the shorthand, and any of the transitions has none as the &lt;single-transition-property&gt;, then the declaration is invalid.
+</p>
+
+		</section>
+	</section>
+	<section id="starting">
+<h2 title="Starting of transitions">3. 遷移の開始-法</h2>
+
+<div class="p">
+<p>
+実装は、
+`稼働中の遷移たちの集合@
+を，保守するモノトスル。
+この集合に属する各 遷移は、［
+特定の［
+要素, および 略式でない~prop
+］の組を適用-対象にし、次の値を持つ：
+</p>
+
+<ul >
+	<li>`開始~時刻@</li>
+	<li>`終止~時刻@</li>
+	<li>`開始~値@</li>
+	<li>`終止~値@</li>
+	<li>`逆再生調整後の開始~値@</li>
+	<li>`逆再生 時短係数@</li>
+</ul>
+
+<p>
+遷移は、この節にて述べるように
+`この集合^em
+に追加され、`完了-$したとき, あるいは
+実装にその
+`取消@
+が要求されたときには、
+`この集合^em 
+から除去される。
+<span class="note">
+`逆再生調整後の開始~値$と`逆再生 時短係数$の背後にある原理については、`§ 遷移の逆再生$を見よ。
+</span>
+</p>
+
+<p class="trans-note">【
+以下における，
+`遷移を開始-@
+するという句は、その遷移を`稼働中の遷移たちの集合$に追加することも意味する。
+】</p>
+
+◎
+Implementations must maintain a set of running transitions, each of which applies to a specific element and non-shorthand property. Each of these transitions also has a start time, end time, start value, end value, reversing-adjusted start value, and reversing shortening factor. Transitions are added to this set as described in this section, and are removed from this set when they complete or when implementations are required to cancel them. For the rationale behind the reversing-adjusted start value and reversing shortening factor, see § 3.1 Faster reversing of interrupted transitions.
+</div>
+
+<p>
+実装は、`完了-$した遷移からなる
+`完了した遷移たちの集合@
+も保守するモノトスル。
+これらの遷移のそれぞれは、（`稼働中の遷移$と同様に）特定の［
+要素と略式でない~prop
+］の組に適用される。
+<span class="note">
+この仕様では、同じ［
+( ~prop, 要素 ) の組
+］に対し，［
+`稼働中の遷移$と`完了した遷移$が同時に~~存在することは，決してない
+］とする不変則を保守する。
+</span>
+◎
+Implementations must also maintain a set of completed transitions, each of which (like running transitions) applies to a specific element and non-shorthand property. This specification maintains the invariant that there is never both a running transition and a completed transition for the same property and element.
+</p>
+
+<p>
+要素が文書~内から除かれたときは、実装は，［
+`稼働中の遷移$／`完了した遷移$
+］のうち要素~上の遷移すべてを、`取消した$上で, 除去するモノトスル。
+◎
+If an element is no longer in the document, implementations must cancel any running transitions on it and remove transitions on it from the completed transitions.
+</p>
+
+<div class="note">
+
+<p>
+この，完了した遷移たちの集合は、ある種の事例で遷移が繰返されないようにするために必要になる。
+すなわち、この仕様は，［
+無関係な~style変化による遷移は誘発されない
+］とする不変則を保守する。
+◎
+This set of completed transitions needs to be maintained in order to prevent transitions from repeating themselves in certain cases, i.e., to maintain the invariant that this specification tries to maintain that unrelated style changes do not trigger transitions.
+</p>
+
+<p class="example">
+完了した遷移たちの集合の保守-が必要とされる例として，継承d~prop上での遷移がある
+— 親と子に，同じ~propに対する遷移が指定されていて，親に指定される遷移の`所要時間$が子のそれより長い場合、完了した遷移たちの集合を保守しなければ、実装は，子における遷移が完了した後に，子に対し追加的な`遷移を開始-$させ得ることになる。
+◎
+An example where maintaining the set of completed transitions is necessary would be a transition on an inherited property, where the parent specifies a transition of that property for a longer duration (say, transition: 4s text-indent) and a child element that inherits the parent’s value specifies a transition of the same property for a shorter duration (say, transition: 1s text-indent). Without the maintenance of this set of completed transitions, implementations could start additional transitions on the child after the initial 1 second transition on the child completes.
+</p>
+
+</div>
+
+<div class="p">
+
+<p>
+要素~上の~propの`算出d値$は、次に挙げるものも含む，種々の~~要因により変化する：
+</p>
+
+<ul>
+	<li>
+要素を文書~tree
+に挿入する／から除去する
+こと（いずれも，要素が`算出d値$を持つかどうか を変化させ, 選択子の照合を通して他の要素の~styleも変化させ得る）
+</li>
+	<li>
+要素の選択子への合致を変化させるような，文書~treeの変化
+</li>
+	<li>
+~stylesheetや style 属性における変化
+</li>
+</ul>
+◎
+Various things can cause the computed values of properties on an element to change. These include insertion and removal of elements from the document tree (which both changes whether those elements have computed values and can change the styles of other elements through selector matching), changes to the document tree that cause changes to which selectors match elements, changes to style sheets or style attributes, and other things.＼
+</div>
+
+<p>
+実装は、`算出d値$を更新することなく，~CSSによる［
+~cascade法, 値の算出, 継承~過程
+］ `CSS3CASCADE$r
+］の結果による何かを［
+利用-／呈示-／表示-
+］してはならない
+— この仕様は、`算出d値$がいつ更新されるかについて，このこと以上の要件は定義しない（すなわち，実装は、単に，~style変化の取扱いの一部として`算出d値$を更新していないと主張することで、この仕様の要件を満たすことになる）。
+◎
+This specification does not define when computed values are updated, beyond saying that implementations must not use, present, or display something resulting from the CSS cascading, value computation, and inheritance process [CSS3CASCADE] without updating the computed value (which means merely that implementations cannot avoid meeting requirements of this specification by claiming not to have updated the computed value as part of handling a style change).＼
+</p>
+
+<p>
+しかしながら、実装が，［
+これらの変化のいずれかを反映するために，要素~上の~propの`算出d値$を更新するとき
+］，あるいは［
+文書に新たに追加された要素~上の~propの`算出d値$を算出するとき
+］には、これらの変化すべてを反映するように，すべての要素~上の`算出d値$を同時に（あるいは少なくとも，同時でないことが検出され得ない様に）更新するモノトスル。
+
+この，同時的~style変化の処理は、
+`~style変化~event@
+と呼ばれる。
+（実装は 概して，`~style変化~event$を［
+欲される~screenの更新頻度
+］, あるいは［
+変化に依存する~script~API用に`算出d値$／~layout情報の更新が必要になる時機
+］に対応~付ける。）
+◎
+However, when an implementation updates the computed value of a property on an element to reflect one of these changes, or computes the computed value of a property on an element newly added to the document, it must update the computed value for all properties and elements to reflect all of these changes at the same time (or at least it must be undetectable that it was done at a different time).＼
+
+This processing of a set of simultaneous style changes is called a style change event. (Implementations typically have a style change event to correspond with their desired screen refresh rate, and when up-to-date computed style or layout information is needed for a script API that depends on it.)
+</p>
+
+
+<p>
+この仕様は，`~style変化~event$がいつ生じるかについては定義しないので、`算出d値$に対するどの変化が 同時的と見なされるかも，定義しない。
+作者は、遷移を生じさせ得る変化から微小な時間~後の，遷移~propに対する変化による結果の挙動が、実装~間で異なり得ることに自覚するべきである。
+ある実装で同時的と見なされる変化が，別の実装でそうなるとは限らないので。
+◎
+Since this specification does not define when a style change event occurs, and thus what changes to computed values are considered simultaneous, authors should be aware that changing any of the transition properties a small amount of time after making a change that might transition can result in behavior that varies between implementations, since the changes might be considered simultaneous in some implementations but not others.
+</p>
+
+
+<p>
+`~style変化~event$が生じた際には、実装は，その~eventで変化した`算出d値$に基づいて，`遷移を開始-$させるモノトスル。
+その~style変化~eventの間に, または
+前回の`~style変化~event$の間に，要素が文書~内になかった場合、その要素における遷移は，この`~style変化~event$の下では開始されない。
+そうでなければ、要素~上のすべての~propに対し，次が定義される：
+◎
+When a style change event occurs, implementations must start transitions based on the computed values that changed in that event. If an element is not in the document during that style change event or was not in the document during the previous style change event, then transitions are not started for that element in that style change event.＼
+</p>
+<dl>
+	<dt>`変化前~style@</dt>
+	<dd>
+<p>
+前回の`~style変化~event$による`算出d値$として定義される
+— ただし：
+</p>
+		<ul>
+			<li>
+［
+CSS Transitions,
+CSS Animations (`CSS3-ANIMATIONS$r),
+SMIL Animations (`SMIL-ANIMATION$r, `SVG11$r)
+などの宣言的~animation
+］から導出され，現在-時刻に更新された~styleは除く。
+</li>
+		</ul>
+◎
+Otherwise, define the before-change style as the computed values of all properties on the element as of the previous style change event, except with any styles derived from declarative animations such as CSS Transitions, CSS Animations ([CSS3-ANIMATIONS]), and SMIL Animations ([SMIL-ANIMATION], [SVG11]) updated to the current time.＼
+	</dd>
+
+	<dt>`変化後~style@</dt>
+	<dd>
+<p>
+`~style変化~event$の開始-時にて既知な情報に基づく，`算出d値$として定義される
+— ただし，その算出においては：
+</p>
+		<ul>
+			<li>
+`変化前~style$における，各種 `animation-*$p ~propの算出d値を利用する。
+</li>
+			<li>
+CSS Transitions からの~styleは、除外する。
+</li>
+			<li>
+親の`変化後~style$からの継承ngは、含める。
+</li>
+		</ul>
+◎
+Likewise, define the after-change style as the computed values of all properties on the element based on the information known at the start of that style change event, but using the computed values of the animation-* properties from the before-change style, excluding any styles from CSS Transitions in the computation, and inheriting from the after-change style of the parent.＼
+</dd>
+</dl>
+
+<p>
+上述は、［
+~CSS~animationが［
+新たに作成される／取消される
+］ことに因り，`変化後~style$が`変化前~style$から相違する
+］ことはないことを意味するのに注意。
+◎
+Note that this means the after-change style does not differ from the before-change style due to newly created or canceled CSS Animations. 
+</p>
+
+<div class="note">
+
+<p>
+この`変化後~style$の定義は、単独の変化により，先祖とその子孫の両 要素において，同じ~propの遷移が開始され得ることを意味する。
+これは、その~propの遷移を指示する
+`transition-*^p
+~propを伴うような 2 個の要素がある下で、一方から他方へ，~prop変化が継承されるときに生じる。
+◎
+Note that this definition of the after-change style means that a single change can start a transition on the same property on both an ancestor element and its descendant element. This can happen when a property change is inherited from one element with transition-* properties that say to animate the changing property to another element with transition-* properties that also say to animate the changing property.
+</p>
+
+<p>
+これが生じた場合、いずれの遷移も稼働し，通常の~CSS~cascade法と継承の規則に従って,
+子孫~上の遷移が先祖~上の遷移を上書きすることになる（`CSS3CASCADE$r）。
+◎
+When this happens, both transitions will run, and the transition on the descendant will override the transition on the ancestor because of the normal CSS cascading and inheritance rules ([CSS3CASCADE]).
+</p>
+
+<p>
+子孫~上の遷移が先祖~上の遷移より早く完了した場合、子孫はその親からの（まだ遷移-中の）値の継承ngを再開することになる。
+この効果は，おそらく望ましくないであろうが、本質的には作者が~~求めたものになる。
+◎
+If the transition on the descendant completes before the transition on the ancestor, the descendant will then resume inheriting the (still transitioning) value from its parent. This effect is likely not a desirable effect, but it is essentially doing what the author asked for.
+</p>
+</div>
+
+
+<p>
+［
+`変化前~style$, `変化後~style$
+］を伴う各 %要素, および %要素 上の（`略式~prop$でない【かつ`~animate不可$でない】）各 %~prop に対しては、次が定義される：
+◎
+For each element with a before-change style and an after-change style, and each property (other than shorthands),＼
+</p>
+
+<ul>
+	<li>
+<p>
+`合致する~transition-property値@
+は、［
+%要素 の`変化後~style$ における `transition-property$p の値
+］を成す~~成分たちに %~prop に合致するものが在るならば，それらのうち最後のものとして定義される
+— 在るならば、それに対応して，次も定義される：
+◎
+define the matching transition-property value as the last value in the transition-property in the element’s after-change style that matches the property, as described in § 2.1 The transition-property Property. If there is such a value, then corresponding to it,＼
+</p>
+		<ul>
+			<li>
+［
+`所要時間@V,
+`遅延@V,
+`計時~関数@V
+］は、`変化後~style$における［
+`transition-duration$p,
+`transition-delay$p,
+`transition-timing-function$p
+］（同順）の値を成す，対応する~~成分~値で与えられる（
+<a href="#list-matching">値の~listの対応~付け規則</a>
+を見よ）。
+<!-- ＊
+matching transition ( duration/delay/timing function )
+-->
+◎
+there is a matching transition duration, a matching transition delay, and a matching transition timing function in the values in the after-change style of transition-duration, transition-delay, and transition-timing-function (see the rules on matching lists).＼
+</li>
+			<li>
+`合計の所要時間@
+は、次で与えられる
+⇒
+`max^op( `所要時間$V, `0s^v ) ~PLUS `遅延$V
+◎
+Define the combined duration of the transition as the sum of max(matching transition duration, 0s) and the matching transition delay.＼
+</li>
+		</ul>
+	</li>
+	<li>
+<p>
+%~prop 用の所与の 2 つの値［
+%始~値, %終~値
+］は、 %~prop の`~animation型$が［
+`~animate不可$でも`離散的$でもない
+］とき，【そのときに限り】
+%始~値 から %終~値 へ
+`遷移-可能@
+とされる。
+◎
+When comparing the before-change style and after-change style for a given property, the property values are transitionable if they have an animation type that is neither not animatable nor discrete.
+</p>
+
+<p class="note">注記：
+ある~propの`~animation型$が【定義表の中で】`離散的$でないものと定義されていても、その~prop用の特定0の値~pairに対する~animation型は，`離散的$になり得る。
+例えば， `box-shadow$p ~propの~animation型は
+<a href="~WANIM#combining-shadow-lists">影~list</a>
+であり、一方の値に `inset$v ~keywordは在って他方には無い場合には，離散的な~animationを利用するものと定義されている。
+その結果、 `0px 0px black^v から `inset 10px 10px black^v へは`遷移-可能$でない。
+◎
+Note: Even if a property is defined to have an animation type that is not discrete, for a particular pair of property values the animation type may be discrete. For example, the animation type of the box-shadow property is shadow list, which defines that when the inset keyword is absent in one value but present in the other, discrete animation is used. As a result 0px 0px black and inset 10px 10px black are not transitionable.
+</p>
+	<li>
+以下における［
+%変化前~値, %変化後~値
+］は、順に， %要素 の［
+`変化前~style$, `変化後~style$
+］における %~prop の値とする。
+◎
+↓</li>
+	<li>
+<p>
+次に挙げる各種 条件は、以下から引用される：
+</p>
+
+		<ul>
+			<li>`稼働中^cd：
+%要素 上の %~prop に対する`稼働中の遷移$がある
+</li>
+			<li>`稼働中+^cd：
+`稼働中^cd
+~AND［
+その遷移の`終止~値$ ~NEQ %変化後~値
+］
+</li>
+			<li>`完了-^cd：
+%要素 上の %~prop に対する`完了した遷移$がある（ `稼働中^cd と排他的）
+</li>
+			<li>`完了-+^cd：
+`完了-^cd
+~AND［
+その遷移の`終止~値$  ~NEQ %変化後~値
+］
+</li>
+			<li>`合致^cd：
+`合致する~transition-property値$がある
+</li>
+			<li>`合致+^cd：
+`合致^cd
+~AND［
+`合計の所要時間$ ~GT `0s^v
+］
+</li>
+			<li>`遷移~可^cd：
+`合致+^cd
+~AND［
+%変化前~値 ~NEQ %変化後~値
+］~AND［
+%変化前~値 から %変化後~値 へは`遷移-可能$である
+］
+</li>
+		</ul>
+<p class="trans-note">【
+これらの条件は、この訳により，原文の以降の記述を整理集約したものである。
+】</p>
+
+◎
+＼
+</li>
+</ul>
+
+<p>
+【~style変化~eventが生じたときは，】
+実装は、各［
+%要素 上の %~prop
+］に対し，これらが満たす条件に応じて，以下に従って動作するモノトスル：
+◎
+For each element and property, the implementation must act as follows:
+</p>
+
+<dl class="switch">
+	<dt>
+非`稼働中^cd ~AND 非`完了-^cd ~AND `遷移~可^cd
+◎
+↓</dt>
+	<dt>
+`完了-+^cd ~AND `遷移~可^cd
+◎
+If all of the following are true:
+
+• the element does not have a running transition for the property,
+• the before-change style is different from the after-change style for that property, and the values for the property are transitionable,
+• the element does not have a completed transition for the property or the end value of the completed transition is different from the after-change style for the property,
+• there is a matching transition-property value, and
+• the combined duration is greater than 0s,
+</dt>
+	<dd>
+		<ol>
+			<li>
+~IF
+`完了-^cd
+⇒
+`完了-$した遷移を`完了した遷移たちの集合$から除去する
+◎
+↓</li>
+			<li>
+<p>
+次を伴う`遷移を開始-$する：
+◎
+then implementations must remove the completed transition (if present) from the set of completed transitions and start a transition whose:
+</p>
+
+				<ul>
+					<li>
+`開始~時刻$ ~SET `~style変化~event$の時刻 ~PLUS `遅延$V
+◎
+start time is the time of the style change event plus the matching transition delay,
+</li>
+					<li>
+`終止~時刻$ ~SET `開始~時刻$ ~PLUS `所要時間$V
+◎
+end time is the start time plus the matching transition duration,
+</li>
+					<li>
+`開始~値$ ~SET %変化前~値
+◎
+start value is the value of the transitioning property in the before-change style,
+</li>
+					<li>
+`終止~値$ ~SET %変化後~値
+◎
+end value is the value of the transitioning property in the after-change style,
+</li>
+					<li>
+`逆再生調整後の開始~値$ ~SET %変化前~値
+◎
+reversing-adjusted start value is the same as the start value, and
+</li>
+					<li>
+`逆再生 時短係数$ ~SET 1
+◎
+reversing shortening factor is 1.
+</li>
+				</ul>
+			</li>
+		</ol>
+	</dd>
+	<dt>
+`完了-+^cd ~AND 非`遷移~可^cd
+◎
+Otherwise, if the element has a completed transition for the property and the end value of the completed transition is different from the after-change style for the property, then implementations must remove the completed transition from the set of completed transitions.
+</dt>
+	<dt>
+`完了-^cd ~AND 非`合致^cd
+<!-- 
+ ［
+稼働中の遷移$を持つ／
+完了した遷移$を持つ
+］, かつ
+合致する~transition-property値 は無いならば
+-->
+◎
+↓</dt>
+	<dd>
+		<ol>
+			<li>
+`完了-$した遷移を`完了した遷移たちの集合$から除去する
+</li>
+		</ol>
+	</dd>
+
+	<dt>
+`稼働中^cd ~AND 非`合致^cd
+◎
+If the element has a running transition or completed transition for the property, and there is not a matching transition-property value, then implementations must cancel the running transition or remove the completed transition from the set of completed transitions.
+</dt>
+	<dd>
+		<ol>
+			<li>
+`稼働中の遷移$を`取消す$
+</li>
+		</ol>
+	</dd>
+
+	<dt>
+`稼働中+^cd ~AND `合致^cd
+<!-- 
+要素 が ~prop に対する
+稼働中の遷移$を持つ, かつ
+合致する~transition-property値$ は在る, かつ
+( 稼働中の遷移$の終止~値$ ) ≠
+( 変化後~style$における ~prop の値 )
+ -->
+◎
+If the element has a running transition for the property, there is a matching transition-property value, and the end value of the running transition is not equal to the value of the property in the after-change style, then:
+</dt>
+	<dd>
+		<ol>
+			<li>
+`稼働中の遷移$を`取消す$
+◎
+↓</li>
+			<li>
+~IF
+非`合致+^cd
+⇒
+~RET
+◎
+↓</li>
+			<li>
+%現在-値 ~LET `稼働中の遷移$における %~prop の`現在-値$
+◎
+↓</li>
+			<li>
+~IF［
+%現在-値 ~EQ %変化後~値 
+］~OR［
+%現在-値 から %変化後~値 へは`遷移-可能$でない
+］
+⇒
+~RET
+◎
+If the current value of the property in the running transition is equal to the value of the property in the after-change style, or if these two values are not transitionable, then implementations must cancel the running transition.
+◎
+Otherwise, if the combined duration is less than or equal to 0s, or if the current value of the property in the running transition is not transitionable with the value of the property in the after-change style, then implementations must cancel the running transition.
+<!-- 原文は無為に冗長？ -->
+</li>
+			<li>
+<div class="p">
+<p>
+~IF［
+`稼働中の遷移$の`逆再生調整後の開始~値$ ~EQ %変化後~値
+］
+⇒
+次の様にされた新たな`遷移を開始-$する：
+</p>
+
+<p class="note">注記：
+この事例が存在するわけについては、`§ 遷移の逆再生$を見よ。
+</p>
+◎
+Otherwise, if the reversing-adjusted start value of the running transition is the same as the value of the property in the after-change style (see the section on reversing of transitions for why these case exists), implementations must cancel the running transition and start a new transition whose:
+</div>
+
+				<ul>
+					<li>
+<p>
+`逆再生調整後の開始~値$ ~SET `稼働中の遷移$の`終止~値$
+</p>
+<p class="note">注記：
+これは、遷移の論理的な開始の状態を表現する
+— その状態に達する前に開始された遷移を無視するための計算を可能にし，同じ遷移の反転の繰返nが正しく働くようにする。
+</p>
+◎
+reversing-adjusted start value is the end value of the running transition (Note: This represents the logical start state of the transition, and allows some calculations to ignore that the transition started before that state was reached, which in turn allows repeated reversals of the same transition to work correctly),
+</li>
+					<li>
+<p>
+`逆再生 時短係数$ ~SET 次の和の絶対~値を範囲 [0, 1] に切詰めた結果：
+◎
+reversing shortening factor is the absolute value, clamped to the range [0, 1], of the sum of:
+</p>
+						<ol>
+							<li>
+( `~style変化~event$の時点における古い遷移の`計時~関数$の出力)
+~MUL
+( 古い遷移の`逆再生 時短係数$ )
+◎
+the output of the timing function of the old transition at the time of the style change event, times the reversing shortening factor of the old transition
+</li>
+							<li>
+1 ~MINUS ( 古い遷移の`逆再生 時短係数$ )
+◎
+1 minus the reversing shortening factor of the old transition.
+</li>
+								</ol>
+<p class="note">注記：
+これは、古い遷移において，`逆再生調整後の開始~値$から`終止~値$まで辿られた値~空間の部位を表現する（時間の長さではなく） — ただし，［
+%y1, %y2 のいずれかが [0, 1] 区間の外にあるとき
+］の`計時~関数$を取扱う際における，絶対~値と切詰ngによる部分は除外される。
+◎
+Note: This represents the portion of the space between the reversing-adjusted start value and the end value that the old transition has traversed (in amounts of the value, not time), except with the absolute value and clamping to handle timing functions that have y1 or y2 outside the range [0, 1].
+</p>
+
+					</li>
+					<li>
+<p>
+`開始~時刻$ ~SET
+( `~style変化~event$の時刻 ) ~PLUS 次に与える値
+⇒＃
+`遅延$V ~GTE 0 ならば `遅延$V ／
+`遅延$V ~LT 0 ならば ( ( 新たな遷移の `逆再生 時短係数$ ) ~MUL `遅延$V )
+◎
+start time is the time of the style change event plus:
+• if the matching transition delay is nonnegative, the matching transition delay, or
+• if the matching transition delay is negative, the product of the new transition’s reversing shortening factor and the matching transition delay,
+</li>
+					<li>
+`終止~時刻$ ~SET `開始~時刻$ ~PLUS
+( `所要時間$V ~MUL ( 新たな遷移の`逆再生 時短係数$ ) )
+◎
+end time is the start time plus the product of the matching transition duration and the new transition’s reversing shortening factor,
+</li>
+					<li>
+`開始~値$ ~SET %現在-値
+◎
+start value is the current value of the property in the running transition,
+</li>
+					<li>
+`終止~値$ ~SET %変化後~値
+◎
+end value is the value of the property in the after-change style,
+</li>
+				</ul>
+			</li>
+			<li>
+<p>
+~ELSE
+⇒
+次の様にされた新たな`遷移を開始-$する：
+◎
+Otherwise, implementations must cancel the running transition and start a new transition whose:
+</p>
+
+				<ul>
+					<li>
+`開始~時刻$ ~SET ( `~style変化~event$ の時刻 ) ~PLUS `遅延$V
+◎
+start time is the time of the style change event plus the matching transition delay,
+</li>
+					<li>
+`終止~時刻$ ~SET `開始~時刻$ ~PLUS `所要時間$V
+◎
+end time is the start time plus the matching transition duration,
+</li>
+					<li>
+`開始~値$ ~SET %現在-値
+◎
+start value is the current value of the property in the running transition,
+</li>
+					<li>
+`終止~値$ ~SET %変化後~値
+◎
+end value is the value of the property in the after-change style,
+</li>
+					<li>
+`逆再生調整後の開始~値$ ~SET %現在-値
+◎
+reversing-adjusted start value is the same as the start value, and
+</li>
+					<li>
+`逆再生 時短係数$ ~SET 1
+◎
+reversing shortening factor is 1.
+</li>
+				</ul>
+			</li>
+		</ol>
+	</dd>
+
+	<dt>他の場合</dt>
+	<dd class="trans-note">
+<p>【
+原文には言及されていないが、次の場合が残されている：
+】</p>
+
+<ul ><li>`稼働中^cd ~AND 非`稼働中+^cd ~AND `合致^cd 
+</li><li>`完了-^cd ~AND 非`完了-+^cd ~AND `合致^cd 
+</li><li>非`稼働中^cd ~AND 非`完了-^cd ~AND 非`遷移~可^cd
+</li></ul>
+
+<p>
+最後の事例は、 %要素 上の %~prop は，遷移に関わらない（起こり得ない）ことを意味する。
+1, 2 番目の事例も起こり得ない？
+</p>
+
+	</dd>
+
+<!-- 
+	<dd>【何もしない（~style変化は，遷移を伴わずに即時に反映される）？】</dd>
+ -->
+</dl>
+
+<div class="note">
+
+<p>注記：
+上の規則は：
+~animate可能な~propの`算出d値$が変化するときに，開始する遷移たちは、［
+その~prop対する新たな算出d値が最初に算出される時点での［
+`transition-property$p,
+`transition-duration$p,
+`transition-timing-function$p,
+`transition-delay$p
+］~propの値
+］に基づくことを意味する。
+従って、遷移を生じさせ得る~propの変化が生じると同時に，これらのいずれかの
+`transition-*^p
+~propが変化した場合、その変化後の`新たな値^emが，その遷移を制御することになる。
+◎
+Note that the above rules mean that when the computed value of an animatable property changes, the transitions that start are based on the values of the transition-property, transition-duration, transition-timing-function, and transition-delay properties at the time the animatable property would first have its new computed value. This means that when one of these transition-* properties changes at the same time as a property whose change might transition, it is the new values of the transition-* properties that control the transition.
+</p>
+
+
+
+<div class="example" id="manual-reversing-example">
+<p style="display:none">Example(s):</p>
+
+<p>
+これにより，作者は、二つの状態を行き来するような遷移に対しては，
+“順方向” と “逆方向”
+の遷移~用に異なる値を， `transition-*^p ~propに指定できるようになる（ただし，`未完了の遷移^emが中断されたときの特別な逆再生の挙動については、`§ 遷移の逆再生$を見よ）。
+作者は［
+`transition-duration$p ／
+`transition-timing-function$p ／
+`transition-delay$p
+］の値を，遷移を誘発させる値を指定するときと同じ規則に従って、指定できる。
+あるいは，それらの~propの変化による遷移の誘発-と同時に、これらの~propを変更できる。
+これらが，遷移に影響する［
+`transition-*^p ~propの新たな値
+］になり，結付けられている`~~目的の^em（ “to” ）遷移~値に利用されることになる。
+例えば：
+◎
+This provides a way for authors to specify different values of the transition-* properties for the “forward” and “reverse” transitions, when the transitions are between two states (but see below for special reversing behavior when an incomplete transition is interrupted). Authors can specify the value of transition-duration, transition-timing-function, or transition-delay in the same rule where they specify the value that triggers the transition, or can change these properties at the same time as they change the property that triggers the transition. Since it’s the new values of these transition-* properties that affect the transition, these values will be used for the transitions to the associated transitioning values. For example:
+</p>
+
+
+<pre class="lang-css">
+li {
+  transition: background-color linear 1s;
+  background: blue;
+}
+li:hover {
+  background-color: green;
+  transition-duration: 2s; /* <span class="comment">
+`hover^ps 状態へ *向かう* 遷移に適用される
+◎
+applies to the transition *to* the :hover state
+</span> */
+}</pre>
+
+<p>
+これらの~style規則を伴う~list~item（ `li^e ）が `hover^ps 状態になったとき、
+`background-color$p がその新たな値（ `green^v ）になる時点の `transition-duration$p の算出d値は `2s^v になるので，
+`blue^v から `green^v への遷移には 2 秒かかることになる。
+一方で、~list~itemが `hover^ps 状態から脱したときの
+`green^v から `blue^v への遷移には 1 秒かかることになる。
+◎
+When a list item with these style rules enters the :hover state, the computed transition-duration at the time that background-color would have its new value (green) is 2s, so the transition from blue to green takes 2 seconds. However, when the list item leaves the :hover state, the transition from green to blue takes 1 second.
+</p>
+</div>
+</div>
+
+<p class="note">注記：
+~propの遷移がいったん開始されたなら（その遅延~相も含む），その遷移が完了する前に［
+`transition-timing-function$p,
+`transition-duration$p,
+`transition-delay$p
+］~propが変化したとしても、遷移は，元の［
+`計時~関数$, `所要時間$, `遅延$
+］に基づいて稼働し続ける。
+一方で， `transition-property$p ~propに対しては、［
+仮にその変化が遷移が生じる前に起きたなら，遷移は開始されなくなるような値
+］に変化した場合，遷移は停止される（加えて，~propは即時にその最終的な値に変化する）。
+◎
+Note that once the transition of a property has started (including being in its delay phase), it continues running based on the original timing function, duration, and delay, even if the transition-timing-function, transition-duration, or transition-delay property changes before the transition is complete. However, if the transition-property property changes such that the transition would not have started, the transition stops (and the property immediately changes to its final value).
+</p>
+
+<p class="note">注記：
+上の規則は、宣言的~animationの結果として~propの算出d値が変化するときには，（~scriptによる~animationとは対照的に）遷移は開始されないことを意味する。
+これは、`変化前~style$が［
+宣言的~animation用の最新の~style
+］を含むために起こる。
+◎
+Note that above rules mean that transitions do not start when the computed value of a property changes as a result of declarative animation (as opposed to scripted animation). This happens because the before-change style includes up-to-date style for declarative animations.
+</p>
+
+		<section id="reversing">
+<h3 title="Faster reversing of interrupted transitions">3.1. 中断された遷移の速やかな逆再生</h3>
+
+<div class="note">
+<p>
+共通的な遷移~効果の多くは， 2 つの状態の間の遷移を孕んでいる
+— 例えば、~mouse~pointerが［
+~UI要素へ移動したときと，その後 要素の外へ移動したとき
+］に生じる遷移など。
+これらの効果が稼働中の遷移が完了する前に中断され，~propが遷移の開始~値に設定し直されることは、共通してある。
+例えば、要素~上の~hover効果において，~mouse~pointerが要素に入ったときに遷移が開始され，効果が完了する前に要素から出たときなど。
+中断された遷移と後から来る遷移が，同じ`所要時間$と`計時~関数$を利用して実行される場合、後者の遷移は，短縮された距離を 指定された時間~全部をかけて移動するので、結果の効果は 予想に反して非対称になり得る。
+この仕様では、代わりに， 2 回目の遷移にかける時間を短縮する。
+◎
+Many common transitions effects involve transitions between two states, such as the transition that occurs when the mouse pointer moves over a user interface element, and then later moves out of that element. With these effects, it is common for a running transition to be interrupted before it completes, and the property reset to the starting value of that transition. An example is a hover effect on an element, where a transition starts when the pointer enters the element, and then the pointer exits the element before the effect has completed. If the outgoing and incoming transitions are executed using their specified durations and timing functions, the resulting effect can be distractingly asymmetric because the second transition takes the full specified time to move a shortened distance. Instead, this specification makes second transition shorter.
+</p>
+
+<p>
+上の規則により これを生じさせる仕組みは、
+`逆再生 時短係数$, および
+`逆再生調整後の開始~値$を孕む。
+特に，`逆再生 時短係数$ ≤ 1 のときには必ず、この逆再生の挙動がある。
+◎
+The mechanism the above rules use to cause this involves the reversing shortening factor and the reversing-adjusted start value. In particular, the reversing behavior is present whenever the reversing shortening factor is less than 1.
+</p>
+
+<p class="note">注記：
+これらの規則は、 2 個より多い状態を孕む遷移~patternにおける問題に，全部的に取組むものではない。
+◎
+Note that these rules do not fully address the problem for transition patterns that involve more than two states.
+</p>
+
+<p class="note">注記：
+これらの規則により、新たな遷移の`計時~関数$は，その全体（の定義域）が利用される
+— 計時~関数の中途にジャンプするのではなく（その場合，目障りな効果が生じ得る）。
+◎
+Note that these rules lead to the entire timing function of the new transition being used, rather than jumping into the middle of a timing function, which can create a jarring effect.
+</p>
+
+<p class="note">注記：
+これは、 Working Group が考えている，いくつかの可能性の一つである。
+それらのいくつかは、
+Working Group による 2013-06-07 の解決策に 2013-11-11 による編集を加えたものも含め，
+<a href="~CSSWG/css-transitions/transition-reversing-demo">逆再生デモ</a>
+にて見られる。
+◎
+This was one of several possibilities that was considered by the working group. See the reversing demo demonstrating a number of them, leading to a working group resolution made on 2013-06-07 and edits made on 2013-11-11.
+</p>
+
+
+</div>
+
+		</section>
+	</section>
+	<section id="application">
+
+<h2 title="Application of transitions">4. 遷移の適用</h2>
+
+<p>
+要素~上の~propにて，遷移が進行中の間（すなわち，遷移が開始 以後から その`終止~時刻$前まで）、その遷移により，~CSS~cascadeの［
+`CSS3CASCADE$r にて定義される
+<a href="~CASCADE#cascading-origins">CSS Transitions 用の~level</a>
+］に
+`現在-値@
+と呼ばれる~styleが取り込まれる。
+◎
+When a property on an element is undergoing a transition (that is, when or after the transition has started and before the end time of the transition) the transition adds a style called the current value to the CSS cascade at the level defined for CSS Transitions in [CSS3CASCADE].
+</p>
+
+<p class="note">注記：
+これは，~CSS遷移の結果による`算出d値$が、他の算出d値と同様に，子孫にも継承されることを意味する。
+通常の事例では、継承d~propの遷移が，（作者から期待されるとおりに）子孫~要素にも適用されることを意味する。
+◎
+Note that this means that computed values resulting from CSS transitions can inherit to descendants just like any other computed values. In the normal case, this means that a transition of an inherited property applies to descendant elements just as an author would expect.
+</p>
+
+<p>
+実装は、この値を，同じ要素~上の同じ~prop上で
+CSS Animation (`CSS3-ANIMATIONS$r)
+が現在 進行中でないとき, そのときに限り、~cascadeに取り込むモノトスル。
+◎
+Implementations must add this value to the cascade if and only if that property is not currently undergoing a CSS Animation ([CSS3-ANIMATIONS]) on the same element.
+</p>
+
+<p class="note">注記：
+この，［
+同じ要素~上の同じ~prop上で~animationが稼働中のときには，~cascadeに適用されない
+］とされる遷移の挙動は、遷移が［
+開始されたかどうか／終止したかどうか
+］には影響しない。
+遷移が稼働中かどうかを公開する~API（`遷移~event$など）は、依然として，遷移が稼働中であることを報告する。
+◎
+Note that this behavior of transitions not applying to the cascade when an animation on the same element and property is running does not affect whether the transition has started or ended. APIs that expose whether transitions are running (such as transition events) still report that a transition is running.
+</p>
+
+<p>
+現在-時刻が遷移の`開始~時刻$より前である場合（すなわち，現在-時刻は遷移の`遅延$ 相）、この`現在-値$は，［
+遷移の`開始~値$に算出されることになる，指定d~style
+【 specified style — `指定d値$】
+］である。
+◎
+If the current time is at or before the start time of the transition (that is, during the delay phase of the transition), the current value is a specified style that will compute to the start value of the transition.
+</p>
+
+<p>
+現在-時刻が遷移の`開始~時刻$より後である場合（すなわち，現在-時刻は遷移の`所要時間$ 相）、`現在-値$は，指定d~styleであり，次に与える値を利用して~propを`補間-$した結果に算出されることになる。
+◎
+If the current time is after the start time of the transition (that is, during the duration phase of the transition), the current value is a specified style that will compute to the result of interpolating the property using the following values:
+</p>
+
+<ul>
+	<li>
+値a ~SET 遷移の`開始~値$
+◎
+Va: start value of the transition
+</li>
+	<li>
+値b ~SET 遷移の`終止~値$
+◎
+Vb: end value of the transition
+</li>
+	<li>
+%p ~SET ( 現在-時刻 ~MINUS 開始~時刻 ) ~DIV ( 終止~時刻 ~MINUS 開始~時刻 )
+◎
+p: the output of the timing function for input ()
+</li>
+</ul>
+
+<p>
+`補間$に利用される特定の手続きは、当の~propの`~animation型$により定義される。
+◎
+The specific interpolation procedure to be used is defined by the property’s animation type.
+</p>
+
+	</section>
+	<section id="complete">
+
+<h2 title="Completion of transitions">5. 遷移の完了</h2>
+
+<p>
+`稼働中の遷移$は、その`終止~時刻$以降のある時点に, かつ
+`終止~時刻$以降の最初の`~style変化~event$より早い時点に
+`完了-@
+する。
+遷移が完了するとき，実装は、その時点に完了した すべての遷移を，`稼働中の遷移たちの集合$から`完了した遷移たちの集合$へ移動してから、それらの完了に対し`遷移~event$を発火するモノトスル。
+<span class="note">（注記：
+そうしなければ
+— すなわち、遷移すべてが移動される前に，いずれかの完了に対し~eventが発火された場合 —
+それ用の~event~handlerが最新の［
+算出d~style／~layout~data
+］を要請した場合、必要な遷移が完了する前に，`~style変化~event$が起こり得るので。
+）</span>
+◎
+Running transitions complete at a time that is equal to or after their end time, but prior to to the first style change event whose time is equal to or after their end time. When a transition completes, implementations must move all transitions that complete at that time from the set of running transitions to the set of completed transitions and then fire the events for those completions.＼
+
+(Note that doing otherwise, that is, firing some of the events before doing all of the moving from running transitions to completed transitions, could allow a style change event to happen without the necessary transitions completing, since firing the event could cause a style change event, if an event handler requests up-to-date computed style or layout data.)
+</p>
+
+	</section>
+	<section id="transition-events">
+<h2 title="Transition Events">6. 遷移~event</h2>
+
+<p>
+~CSS遷移の［
+作成- ／ 開始- ／ 完了- ／ 取消
+］時には、対応する `DOM Event$ が生成される。
+~eventは、遷移される要素~上の各~propごとに，その要素へ`配送-$される。
+これにより、内容~開発者は，遷移の変化に同期する動作を遂行できるようになる。
+◎
+The creation, beginning, completion, and cancellation of CSS transitions generate corresponding DOM Events. An event is dispatched to the element for each property that undergoes a transition on that element. This allows a content developer to perform actions that synchronize with changes to transitions.
+</p>
+
+<p>
+各~eventは、遷移が結付けられている~propの名前と遷移の`所要時間$を供する。
+◎
+Each event provides the name of the property the transition is associated with as well as the duration of the transition.
+</p>
+
+
+<h3 title="Interface TransitionEvent">6.1. ~interface `TransitionEvent^I</h3>
+
+<p>
+`TransitionEvent$I ~interfaceは、遷移に結付けられている特定の文脈情報を供する。
+◎
+The TransitionEvent interface provides specific contextual information associated with transitions.
+</p>
+
+<!-- 
+<h4 title="IDL Definition">6.1.1. ~IDL定義</h4>
+ -->
+
+<pre class="idl" id="interface-transitionevent-idl">
+[`Exposed$=Window]
+interface `TransitionEvent@I : `Event$I {
+  <a href="#dom-transitionevent-transitionevent">constructor</a>(`CSSOMString$ %type, optional `TransitionEventInit$I %transitionEventInitDict = {});
+  readonly attribute `CSSOMString$ `propertyName$m;
+  readonly attribute double `elapsedTime$m;
+  readonly attribute `CSSOMString$ `pseudoElement$m;
+};
+
+dictionary `TransitionEventInit@I : `EventInit$I {
+  `CSSOMString$ `propertyName@mb = "";
+  double `elapsedTime@mb = 0.0;
+  `CSSOMString$ `pseudoElement@mb = "";
+};
+</pre>
+
+<!-- 
+<h4 id="interface-transitionevent-attributes">6.1.2. Attributes</h4>
+-->
+
+<dl class="idl-def" id="interface-transitionevent-attributes">
+	<dt>`propertyName@m</dt>
+	<dd>
+遷移に結付けられている~CSS~propの名前。
+◎
+propertyName, of type CSSOMString, readonly
+◎
+The name of the CSS property associated with the transition.
+</dd>
+	<dd class="note">注記：
+これは常に下位propの名前になる。
+略式~propを指定したときに その下位propに生じる遷移については、
+`transition-property$p を見よ。
+◎
+Note: This is always the name of a longhand property. See transition-property for how specifying shorthand properties causes transitions on longhands.
+</dd>
+
+	<dt>`elapsedTime@m</dt>
+	<dd>
+秒単位による，この~eventが発火された時点での，遷移の稼働にかけられた時間の長さ
+— 遅延~相に~~費やされた時間は含まれない。
+この属性~値の計算は、各~event型ごとに定義される。
+◎
+elapsedTime, of type double, readonly
+◎
+The amount of time the transition has been running, in seconds, when this event fired not including any time spent in the delay phase. The calculation for of this member is defined along with each event type.
+</dd>
+
+	<dt>`pseudoElement@m</dt>
+	<dd>
+遷移が~CSS疑似要素に対して生じた場合、その疑似要素の名前になる（先頭の  2 個の~colonも名前に含まれる）（この場合、~eventの `target$m はその疑似要素に対応している要素になる）。
+他の場合、すなわち，遷移が要素に対して生じた場合は空~文字列になる（この場合，~eventの `target$m はその要素になる）。
+◎
+pseudoElement, of type CSSOMString, readonly
+◎
+The name (beginning with two colons) of the CSS pseudo-element on which the transition occurred (in which case the target of the event is that pseudo-element’s corresponding element), or the empty string if the transition occurred on an element (which means the target of the event is that element).
+</dd>
+
+	<dt>`TransitionEvent(type, transitionEventInitDict)@m</dt>
+	<dd>
+`~event構築子$。
+◎
+TransitionEvent(type, transitionEventInitDict) is an event constructor.
+</dd>
+</dl>
+
+		</section>
+		<section id="event-transitionevent">
+<h3 title="Types of TransitionEvent">6.2. 各種 `TransitionEvent^I 型</h3>
+
+<p>
+生じ得る遷移~eventには、以下に挙げるものがある：
+◎
+The different types of transition events that can occur are:
+</p>
+
+<dl>
+	<dt>`transitionrun@et</dt>
+	<dd>
+`transitionrun$et ~eventは、遷移の作成-時（すなわち `稼働中の遷移たちの集合$に追加されたとき）に生じる。
+◎
+The transitionrun event occurs when a transition is created (i.e., when it is added to the set of running transitions).
+</dd>
+	<dd>
+この~event用の `elapsedTime$m 値は、
+`min^op( `max^op( ~MINUS `transition-delay$p , 0), `transition-duration$p )
+に等しくなる（ `transition-delay$p が負でなければ 0 ）。
+◎
+A negative transition-delay will cause the event to fire with an elapsedTime equal to the absolute value of the delay capped to the transition-duration of the animation. That is, the elapsed time is equal to min(max(-transition-delay, 0), transition-duration).
+</dd>
+	<dd>
+<ul><li>浮上する
+</li><li>取消~不可
+</li><li>文脈情報： `propertyName$m, `elapsedTime$m, `pseudoElement$m
+</li></ul>
+◎
+Bubbles: Yes
+◎
+Cancelable: No
+◎
+Context Info: propertyName, elapsedTime, pseudoElement
+</dd>
+
+	<dt>`transitionstart@et</dt>
+	<dd>
+`transitionstart$et ~eventは、遷移が遅延~相を終えたときに生じる。
+◎
+The transitionstart event occurs when a transition’s delay phase ends.
+</dd>
+	<dd>
+この~event用の `elapsedTime$m 値は、
+`transitionrun$et ~event用のそれと同じになる。
+◎
+The value of elapsedTime for transitionstart events is the same as the value used for transitionrun events.
+</dd>
+	<dd>
+<ul><li>浮上する
+</li><li>取消~不可
+</li><li>文脈情報： `propertyName$m, `elapsedTime$m, `pseudoElement$m
+</li></ul>
+◎
+Bubbles: Yes
+◎
+Cancelable: No
+◎
+Context Info: propertyName, elapsedTime, pseudoElement
+</dd>
+
+	<dt>`transitionend@et</dt>
+	<dd>
+`transitionend$et ~eventは、遷移が完了したときに生じる。
+`transition-property$p が除去されるなど，完了する前に遷移が除去された場合、この~eventは発火されない。
+◎
+The transitionend event occurs at the completion of the transition. In the case where a transition is removed before completion, such as if the transition-property is removed, then the event will not fire.
+</dd>
+	<dd>
+この~event用の `elapsedTime$m 値は、
+`transition-duration$p の値に等しくなる。
+◎
+The value of elapsedTime for this event is equal to the value of transition-duration.
+</dd>
+	<dd>
+<ul><li>浮上する
+</li><li>取消~不可
+</li><li>文脈情報： `propertyName$m, `elapsedTime$m, `pseudoElement$m
+</li></ul>
+◎
+Bubbles: Yes
+◎
+Cancelable: No
+◎
+Context Info: propertyName, elapsedTime, pseudoElement
+</dd>
+
+	<dt>`transitioncancel@et</dt>
+	<dd>
+`transitioncancel$et ~eventは、遷移が`取消され$たときに生じる。
+◎
+The transitioncancel event occurs when a transition is canceled.
+</dd>
+	<dd>
+この~event用の `elapsedTime$m 値は、遷移が その遅延~相を終えた時点から取消された時点までの秒数になる。
+遷移の `transition-delay$p が負である場合、遷移の始まりは，遷移が実際に誘発された時点から `transition-delay$p  の絶対~値（秒数）だけ前の時点とする。
+対して，遷移の `transition-delay$p が正である場合に，~eventが遅延~相を終える前に発火された場合、 `elapsedTime$m は 0 になる。
+◎
+The elapsedTime for transitioncancel events is the number of seconds from the end of the transition’s delay to the moment when the transition was canceled. If the transition had a negative transition-delay, the beginning of the transition is the moment equal to the absolute value of transition-delay seconds prior to when the transition was actually triggered. Alternatively, if the transition had a positive transition-delay and the event is fired before the transition’s delay has expired, the elapsedTime will be zero.
+</dd>
+	<dd>
+<ul><li>浮上する
+</li><li>取消~不可
+</li><li>文脈情報： `propertyName$m, `elapsedTime$m, `pseudoElement$m
+</li></ul>
+◎
+Bubbles: Yes
+◎
+Cancelable: No
+◎
+Context Info: propertyName, elapsedTime, pseudoElement
+</dd>
+</dl>
+
+
+		</section>
+		<section id="event-handlers-on-elements-document-objects-and-window-objects">
+<h3 title="Event handlers on elements, Document objects, and Window objects">6.3. 要素および `Document^I ／ `Window^I ~obj上の~event~handler</h3>
+
+
+<div class="p">
+<p>
+以下に挙げる各種`~event~handler$, および
+対応する各種`~event~handler~event型$は：
+</p>
+
+<ul>
+	<li>
+`~HTML要素$においては、［
+`~event~handler内容~属性$,
+`~event~handler~IDL属性$
+］の両者として，~supportされるモノトスル。
+</li>
+	<li>
+［
+`Document$I ／ `Window$I
+］~objにおいては、`~event~handler~IDL属性$として，~supportされるモノトスル。
+</li>
+</ul>
+
+◎
+The following are the event handlers (and their corresponding event handler event types) that must be supported by all HTML elements, as both event handler content attributes and event handler IDL attributes; and that must be supported by all Document and Window objects, as event handler IDL attributes:
+</div>
+
+<table class="event-handlers">
+<thead><tr><th>`~event~handler$
+<th>`~event~handler~event型$
+</thead>
+
+<tbody><tr><td>`ontransitionrun$m
+<td>`transitionrun$et
+
+
+<tr><td>`ontransitionstart$m
+<td>`transitionstart$et
+
+
+<tr><td>`ontransitionend$m
+<td>`transitionend$et
+
+
+<tr><td>`ontransitioncancel$m
+<td>`transitioncancel$et
+</tbody></table>
+
+	</section>
+	<section id="interface-dom">
+<h2 title="DOM Interfaces">7. ~DOM~interface</h2>
+
+
+<p>
+この仕様は、`遷移~event$用に`~event~handler~IDL属性$を追加して，
+~HTMLの `GlobalEventHandlers$I ~interface~mixinを拡張する
+—
+<a href="#event-handlers-on-elements-document-objects-and-window-objects">§ 要素および `Document^I ／ `Window^I ~obj上の~event~handler</a>
+に定義されるように。
+◎
+This specification extends the GlobalEventHandlers interface mixin from HTML to add event handler IDL attributes for transition events as defined in § 6.3 Event handlers on elements, Document objects, and Window objects.
+</p>
+
+
+		<section id="interface-globaleventhandlers-idl">
+<h3 title="IDL Definition">7.1. ~IDL定義</h3>
+
+<pre class="idl">
+partial interface mixin `GlobalEventHandlers$I {
+  attribute `EventHandler$I `ontransitionrun@m;
+  attribute `EventHandler$I `ontransitionstart@m;
+  attribute `EventHandler$I `ontransitionend@m;
+  attribute `EventHandler$I `ontransitioncancel@m;
+};
+</pre>
+
+
+		</section>
+	</section>
+	<section id="security">
+<h2 title="Security Considerations">8. ~securityの考慮点</h2>
+
+~INFORMATIVE
+
+<p>
+この仕様による~security上の含意は限定的である
+— ~Web内容がこれまで行えなかったことを許容するものではないので。
+むしろそれは、以前までは~scriptで行われていたものを宣言的に行えるようにして，実装が（ ~frame更新率, CPU 利用度において）最適化できる仕方を与える。
+◎
+The security implications of this specification are limited because it doesn’t allow Web content to do things that it could not do before. Rather, it allows things that could previously be done with script to be done declaratively, and it ways that implementations can optimize (for frame rate and CPU usage).
+</p>
+
+<p>
+実装が行える~~主要な最適化には、最新の~style~dataが必要にならない限り，~Web内容の~main~thread内で~styleや~layoutを更新することなく，ある種の高価な~prop（ `transform$p や `opacity$p など）の~animationを，~browserの組成器［
+~thread／~process
+］上で稼働するように実装することが挙げられる。
+この最適化には、~animateされている要素の内容を表示するために，~graphics~memoryの割振りを要することが多い。
+実装は、~Web内容が多数の~animationや 広い区画を覆うような要素~上の~animationを利用することにより，安全でない~memory不足の取扱いが誘発され得ないことを確保するよう注意を払うべきである（ここでの，多数／広い は、変形-前後の~sizeを通して定義し得るであろう）。
+◎
+One of the major categories of optimizations that implementations can make is implementing animation of certain high-value properties (such as transform and opacity) run on a browser’s compositor thread or process without updating style or layout on the main Web content thread unless up-to-date style data are needed. This optimization often requires allocations of graphics memory to display the contents of the element being animated. Implementations should take care to ensure that Web content cannot trigger unsafe out-of-memory handling by using large numbers of animations or animations on elements covering large areas (where large may be defined in terms of pre-transform or post-transform size).
+</p>
+
+
+	</section>
+	<section id="privacy">
+<h2 title="Privacy Considerations">9. ~privacyの考慮点</h2>
+
+~INFORMATIVE
+
+<p>
+この仕様は~Web内容がこれまで行えなかったことを許容するものではないので、上述の~securityと同様に，この仕様による~privacy上の考慮点も限定的になる。
+◎
+As for security, the privacy considerations of this specification are limited because it does not allow Web content to do things that it could not do before.
+</p>
+
+<p>
+この仕様は、利用者の
+~hardware／~software
+の特徴を決定し易くし得るような仕組みを追加的に供する。
+しかしながら、利用者の
+~hardware／~software
+の処理能に関する特徴を決定する能は，多くの~Web技術に共通してある。
+この仕様は、新たな能力を導入するものではない。
+◎
+This specification may provide additional mechanisms that help to determine characteristics of the user’s hardware or software. However, ability to determine performance characteristics of the user’s hardware or software is common to many Web technologies, and this specification does not introduce new capabilities.
+</p>
+
+<p>
+<a href="#accessibility">§ ~accessibilityの考慮点</a>
+に述べるように、実装は，障碍を有する利用者を補助する軽減策を供してもヨイ。
+これらの軽減策は，~Web内容から検出-可能になる~~可能性が高いため、便益を得る利用者は，自身の障碍を~Web内容から~privateに保つことと, 軽減策からの便益を受けることとの引き換えに直面し得ることになる。
+◎
+As described in § 10 Accessibility Considerations, implementations may provide mitigations to help users with disabilities. These mitigations are likely to be detectable by Web content, which means that users who would benefit from these mitigations may face a tradeoff between keeping their disability private from the Web content or benefiting from the mitigation.
+</p>
+
+
+	</section>
+	<section id="accessibility">
+<h2 title="Accessibility Considerations">10. ~accessibilityの考慮点</h2>
+
+
+~INFORMATIVE
+
+
+		<section id="accessibility-motion">
+<h3 title="Motion">10.1. ~motion</h3>
+<p>
+この仕様は、以前までは~scriptを利用して行う必要があった~animation用に，宣言的な仕組みを供する。
+そうすることには、複数の効果がある：
+それは、そのような~animationをより作り易くする結果，更に~~普及させるであろう。
+一方で、~UAにとっても，利用者の~accessibilityの必要性を満たすため必要なだけ~animationを改変するのがより容易になる。
+◎
+This specification provides declarative mechanisms for animations that previously needed to be done using script. Providing a declarative mechanism has multiple effects: it makes such animations easier to make and thus likely to be more common, but it also makes it easier for user agents to modify those animations if such modifications are needed to meet a user’s accessibility needs.
+</p>
+
+<p>
+したがって、動きに過敏な利用者や, 内容を読んだり理解するのにより~~時間を要する利用者は、~animationを不能化したり低速化できるような ~UA特能から，便益を得られるようになるであろう。
+（ただし、そのような軽減策による~privacy上の含意もある
+— <a href="#privacy">§ ~privacyの考慮点</a>を見よ。）
+◎
+Thus, users who are sensitive to movement, or who require additional time to read or understand content, may benefit from user agent features that allow animations to be disabled or slowed down. (But see § 9 Privacy Considerations for information on the privacy implications of such mitigations.)
+</p>
+
+<p>
+~UAの実装者は、~Web内容は`遷移~event$の発火に依存し得るので、そのような軽減策の実装は，遷移が~animationとして継続的に稼働していなくとも，遷移~eventを発火しようと望むことがあることに自覚するべきである。
+しかしながら、そのような~eventに依存しないと正しく~~機能しないような~Web内容は、おそらく拙い実践である。
+◎
+User agent implementors should be aware that Web content may depend on the firing of transition events, so implementations of such mitigations may wish to fire transition events even if the transitions were not run as continuous animations. However, it is probably poor practice for Web content to depend on such events to function correctly.
+</p>
+
+
+		</section>
+		<section id="accessibility-cascade">
+<h3 title="Cascade">10.2. ~cascade</h3>
+<p>
+~CSS`~cascade$は、必要がある利用者が 作者~styleとヤリトリできるようにするための，~CSSにおける一般的な仕組みである。
+この仕様は，~cascadeと相互作用するが、許容するのは，既存の~cascade規則による結果の各~値の間における~animationに限られるので、利用者が~CSS~propを特定0の値に強制することに対し干渉することはない。
+◎
+The CSS cascade is a general mechanism in CSS that allows user needs to interact with author styles. This specification interacts with the cascade, but since it only allows animation between values that result from the existing cascade rules, it does not interfere with the user’s ability to force CSS properties to have particular values.
+</p>
+
+<p>
+利用者はまた、~cascadeを利用して遷移~propを上書きすることで，遷移をまるごと不能化することもできる。
+◎
+The cascade also allows users to disable transitions entirely by overriding the transition properties.
+</p>
+
+
+		</section>
+	</section>
+	<section id="changes">
+<h2 title="Changes since Working Draft of 30 November 2017">11. 変更点</h2>
+
+<p>
+<a href="~TR/2018/WD-css-transitions-1-20181011/">2018年 10月 11日 作業草案</a>
+からの~~主要な変更点は：
+<!-- ＊原文リンク逆 -->
+◎
+The following are the substantive changes made since the Working Draft dated 11 October 2018:
+</p>
+
+<ul>
+	<li>
+（まだ無い）
+◎
+(Nothing yet)
+</li>
+</ul>
+
+<p>
+以上の変更点についての詳細は、~version~control
+<a href="https://github.com/w3c/csswg-drafts/commits/master/css-transitions-1/Overview.bs">変更~log</a>
+を見よ。
+◎
+For more details on these changes, see the version control change log.
+</p>
+
+<p>
+以前の作業草案からの変更点については、次に挙げるものを見よ
+⇒＃
+<a href="~TR/2017/WD-css-transitions-1-20171130/#changes">§ 2017年 11月 30日 作業草案からの変更点</a>,
+<a href="~TR/2017/WD-css-transitions-1-20171130/#changes">§ 2017年 11月 30日 作業草案からの変更点</a>,
+<a href="~TR/2013/WD-css3-transitions-20131119/#changes">§ 2013年 11月 19日 作業草案の変更点</a>,
+<a href="~TR/2013/WD-css3-transitions-20130212/ChangeLog">§ 以前の作業草案からの変更~log</a>
+◎
+For changes in earlier working drafts:
+• See the changes section in the 30 November 2017 Working Draft.
+• See the changes section in the 19 November 2013 Working Draft.
+• See the the ChangeLog for changes in previous working drafts.
+</p>
+
+<p>
+以上の変更点についての詳細は、次に挙げる~version~control変更~logを見よ（~file名が~~改められたため，多くの箇所に分かれている）
+⇒＃
+<a href="https://github.com/w3c/csswg-drafts/commits/master/css-transitions-1/Overview.bs">2017年 10月 12日 以降</a>,
+<a href="https://hg.csswg.org/drafts/log/tip/css-transitions/Overview.bs">2015年 1月 26日から 2017年 10月 12日 まで</a>,
+<a href="https://hg.csswg.org/drafts/log/tip/css-transitions/Overview.src.html">2013年 3月 28日から 2015年 1月 26日まで</a>,
+<a href="https://hg.csswg.org/drafts/log/tip/css3-transitions/Overview.src.html">2013年 3月 28日より前</a>
+◎
+For more details on these changes, see the version control change logs, which are split in many parts because of file renaming:
+• change log since 2017 October 12,
+• change log from 2015 January 26 to 2017 October 12,
+• change log from 2013 March 28 to 2015 January 26,
+• change log before 2013 March 28.
+</p>
+
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p>
+次の方々, および
+<a href="https://lists.w3.org/Archives/Public/www-style/">www-style</a>
+~communityからの~feedbackに感謝する：
+</p>
+
+<p lang="en-x-a0">
+Thanks especially to the feedback from Tab Atkins, Carine Bournez, Aryeh Gregor, Vincent Hardy, Anne van Kesteren, Cameron McCormack, Alex Mogilevsky, Jasper St. Pierre, Estelle Weyl, and all the rest of the www-style community.
+</p>
+
+	</section>
+</main></div>
+

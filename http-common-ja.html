@@ -1,0 +1,1085 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTTP — 日本語訳</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="http-common.css" type="text/css" />
+<script src="common0.js" ></script>
+<script src="http-common.js"></script>
+<script src="common1.js" async></script>
+
+<script>
+
+source_data.init = function(){
+	this.persisted_parts = {
+		_ref1: E('references'),
+		_note1: E('translation-notes')
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+	trans_update:2019-
+page_state_key:HTTP
+	original_url:
+	spec_status:
+abbr_url:HTTPcommon
+	ref_id_prefix:ref-
+	trans_1st_pub:2019-
+no_index:true
+ref_rfc:true
+
+●●original_urls
+documentations:https://httpwg.org/specs/
+
+●●link_map
+
+~protocol要素:#protocol-element
+Semantics/5.5:~HTTPsem#abnf.extension
+RFC7230/2.5:~RFC7230#conformance
+RFC7230/2:~RFC7230#architecture
+RFC7230/7:~RFC7230#abnf.extension
+RFC5234/B.1:~RFCx/rfc5234#appendix-B.1
+
+r.RFC6919:~RFCx/rfc6919
+
+●●section_map
+
+●●ref_data
+	RFC7238=主         ~/http-status-code-308-ja.html
+
+●●words_table1
+HTTPWG:https://httpwg.org/specs
+RFC6585:http-status-code-428-429-431-511-ja.html
+RFC7725:http-status-code-451-ja.html
+RFC7615:http-authentication-info-header-ja.html
+RFC7694:http-accept-encoding-response-header-ja.html
+RFC8246:http-immutable-response-ja.html
+RFC8297:http-status-code-103-ja.html
+RFC723Xabnf:RFC723X-ABNF-ja.html
+723X:RFC723X-ja.html
+RFC7232:RFC7232-ja.html
+RFC7233:RFC7233-ja.html
+RFC7235:RFC7235-ja.html
+MDNHTTPja:https://developer.mozilla.org/ja/docs/Web/HTTP
+HTTPcookie-ext:http-cookie-ext-ja.html
+
+●●words_table
+	●仕様
+HTTP2:HTTP/2
+Internet-Draft:
+成果物:product:~
+メモ:memo:~
+著作権の:copyright:~
+告知:notice:~
+無保証:without warranty:~
+許諾:licence:~
+権利:right:~
+派生物:derivative works:~
+素材:material:~
+資料:material:~
+引用-:cite:~
+配布-:distribute:~
+	草案~化:drafting
+入念:careful:~
+機能:function:~
+規制-:regulate:~
+告知:notice:~
+英語:English:~
+	作業-中の:working
+	~~規定される:provisions
+	に注意:It’s important to note that
+	限り:as long as
+	~~提起:bring up
+	各種~文書:documentation
+	許可-可能:permissible
+
+	●未分類
+WebSocket:
+bootstrap:
+外側:outside:外部
+改行:newline:~
+水平tab:horizontal tab:水平タブ
+制御文字:controls:~
+space:::スペース
+directory:::ディレクトリ
+	接頭-:prefix:~
+変異不能:immutable::~
+法的障壁:legal obstacles:~
+	スタイル:style:~
+	先行する:preceding
+	一部:part of
+	内容に:content-:
+	多数の:large number of
+
+●●ref_normative
+
+[RFC2119]
+    Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, ~RFC2119, March 1997.
+[RFC5234]
+    Crocker, D., Ed. and P. Overell, "Augmented BNF for Syntax Specifications: ABNF", STD 68, ~RFC5234, January 2008.
+[RFC6365]
+    Hoffman, P. and J. Klensin, "Terminology Used in Internationalization in the IETF", BCP 166, ~RFC6365, September 2011.
+[RFC7405]
+    Kyzivat, P., “Case-Sensitive String Support in ABNF”, ~RFC7405, December 2014.
+[RFC8174]
+    Leiba, B., “Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words”, BCP 14, ~RFC8174, May 2017.
+[USASCII]
+    American National Standards Institute, "Coded Character Set -- 7-bit American Standard Code for Information Interchange", ANSI X3.4, 1986.
+
+●●ref_informative
+
+[RFC5988]
+    Nottingham, M., "Web Linking", ~RFC5988, October 2010.
+[RFC7238]
+    Reschke, J., "The Hypertext Transfer Protocol (HTTP) Status Code 308 (Permanent Redirect)", ~RFC7238, June 2014.
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、 IETF による
+<a href="https://httpwg.org/specs/">各種 HTTP 仕様の目録</a>とともに、それらの仕様を日本語訳するにあたり，共通な内容を抜き出したものです
+</p>
+
+</script>
+
+</head>
+
+<body>
+
+	<header>
+<h1>Hypertext Transfer Protocol（ HTTP ）</h1>
+	</header>
+
+<div id="MAIN" hidden>
+
+	<section id="documentations">
+<h2 title="HTTP Documentation">~HTTPを定義する各種~文書</h2>
+
+<p>
+~HTTPは、分散型の協調的な~hypertext情報~system用の，~statelessな応用~levelの~protocolである。
+◎
+The Hypertext Transfer Protocol (HTTP) is a stateless application-level protocol for distributed, collaborative, hypertext information systems.
+</p>
+
+<p>
+~HTTPは、以下に挙げる［
+<a href="https://ietf.org/">IETF</a>
+<strong>~RFC</strong>,
+<a href="https://www.iana.org/">IANA</a>
+<strong>~registry</strong>
+］により定義される。
+◎
+HTTP is defined by these IETF RFCs and IANA registries.
+</p>
+
+<p class="trans-note">【
+以下における各項の先頭の “RFC…” に付与された~linkは，原文を指し、後続の~textに付与された~linkは，（もしあれば）日本語訳を指す。
+一部の仕様には、便利~用に，外部~siteによる［
+日本語訳（ “外部~site” と付記される）／日本語情報（ “参考情報” と記される）
+］も挙げている。
+】</p>
+
+		<section id="core-specifications">
+<h3 title="Core Specifications">中核~仕様</h3>
+
+<p>
+~HTTP~protocolの “中核” を成す意味論は、次の仕様により定義される：
+◎
+The “core” semantics of the HTTP protocol are defined by this specification:
+</p>
+
+<ul>
+	<li>
+<a href="~HTTPWG/rfc7231.html">RFC7231</a>：
+<a href="~RFC7231">~HTTPの意味論と内容</a>
+【意味論は、 RFC 7230 の一部, 主に `RFC7230/2$sec においても定義される。】
+◎
+RFC7231: HTTP Semantics and Content
+</li>
+</ul>
+
+<p>
+そのような意味論を “伝送路~上” に表出する仕方には、
+~HTTP11, ~HTTP2
+の 2 つがある：
+◎
+Those semantics are expressed “on the wire” in two different ways:
+</p>
+
+<ul>
+	<li>
+<a href="~HTTPWG/rfc7230.html">RFC7230</a>：
+<a href="~RFC7230">~HTTP11</a>
+◎
+RFC7230: HTTP/1.1
+</li>
+	<li>
+<a href="~HTTPWG/rfc7540.html">RFC7540</a>：
+<a href="https://summerwind.jp/docs/rfc7540/">~HTTP2</a>（外部~site）
+◎
+RFC7540: HTTP/2
+</li>
+	<li>
+<a href="~HTTPWG/rfc8740.html">RFC8740</a>：
+HTTP/2 with TLS 1.3
+◎
+RFC8740: HTTP/2 with TLS 1.3
+</li>
+</ul>
+
+<p>
+~HTTP2は、次も利用する：
+◎
+HTTP/2 also uses:
+</p>
+
+<ul>
+	<li>
+<a href="~HTTPWG/rfc7541.html">RFC7541</a>：
+<a href="http://syucream.github.io/hpack-spec-ja/rfc7541-ja.html">HPACK: ~HTTP2用の~header圧縮</a>（外部~site）
+◎
+RFC7541: HPACK Header Compression for HTTP/2
+</li>
+</ul>
+
+<p>
+次に挙げる~HTTP機能を実装するのは任意選択~であるが、広範に利用されている：
+◎
+These HTTP functions are optional to implement, but widely used:
+</p>
+
+<ul>
+	<li>
+<a href="~HTTPWG/rfc7232.html">RFC7232</a>：
+<a href="~RFC7232">~HTTP条件付き要請</a>
+◎
+RFC7232: HTTP Conditional Requests
+</li>
+	<li>
+<a href="~HTTPWG/rfc7233.html">RFC7233</a>：
+<a href="~RFC7233">~HTTP範囲~要請</a>
+◎
+RFC7233: HTTP Range Requests
+</li>
+	<li>
+<a href="~HTTPWG/rfc7234.html">RFC7234</a>：
+<a href="~RFC7234">~HTTP~caching</a>
+◎
+RFC7234: HTTP Caching
+</li>
+	<li>
+<a href="~HTTPWG/rfc7235.html">RFC7235</a>：
+<a href="~RFC7235">~HTTP認証</a>
+◎
+RFC7235: HTTP Authentication
+</li>
+</ul>
+
+<p>
+これらの~RFCは、総集的に，~HTTPを定義している先行する~RFCすべてを
+— RFC1945, RFC2068, RFC2616, RFC2617 を含め —
+廃用にする。
+◎
+These RFCs collectively obsolete all preceding RFCs defining HTTP, including RFC1945, RFC2068, RFC2616 and RFC2617.
+</p>
+
+<p class="trans-note">【
+~HTTP11を成す中核~仕様~全体の正誤表は、
+<a href="https://httpwg.org/http-core/httpbis-errata-status.html">RFC723* Errata Status</a>
+にて追跡されている。
+】【
+以前まで，この~pageの以降にあった
+RFC7230 〜 RFC7235
+に共通な内容（参照文献, 謝辞, その他）は、
+<a href="~723X">別~pageに分離した</a>。
+】</p>
+
+			<section>
+
+<p>
+<em>
+中核~仕様は、現在，
+<a href="https://github.com/httpwg/http-core">改訂~下にある</a>
+— 課題を見出された方は、そこへ~~提起されたし。
+</em>
+【改訂~下にある仕様, それらの和訳を次に挙げる：】
+◎
+The core specifications are currently under revision. If you find issues, please bring them up there!
+</p>
+
+<ul>
+	<li>
+<a href="https://httpwg.org/http-core/draft-ietf-httpbis-semantics-latest.html">Semantics</a>：
+<a href="~HTTPsem">意味論</a>（および，
+<a href="~HTTPrq">要請~methodと要請~header</a>／
+<a href="~HTTPrs">応答~状態s~codeと応答~header</a>
+）
+— これは、中核~仕様（ Messaging, Caching が受持つ部分は除く）, および一部の~HTTP拡張に取って代わることになる。
+</li>
+	<li>
+<a href="https://httpwg.org/http-core/draft-ietf-httpbis-cache-latest.html">Caching</a>：
+<a href="~HTTPcache">~cache法</a>
+— これは、 RFC7234 に取って代わることになる。
+</li>
+	<li>
+<a href="https://httpwg.org/http-core/draft-ietf-httpbis-messaging-latest.html">Messaging</a>：
+<a href="~HTTPmsg">~message法</a>
+— これは、 RFC7230 の大部分（~HTTP11に特有な部分）に取って代わることになる。
+</li>
+</ul>
+
+			</section>
+		</section>
+		<section id="extension-registries">
+<h3 title="Extension Registries">拡張~registry</h3>
+
+<p>
+~HTTPには、［
+~method, 状態s~code, ~header
+］を含め，多数の拡張がある。
+それらはすべて
+— 適切な~registryに挙げられる限り —
+~HTTPの “一部を成す” ことに注意：
+◎
+There are a large number of HTTP extensions, including methods, status codes and headers. It’s important to note that they are all “part of” HTTP, as long as they’re listed in the appropriate registries:
+</p>
+
+<ul>
+	<li>
+<a href="~IANA-a/http-methods/">~HTTP~method~registry</a>
+— <a href="~RFC7231#method.registry">詳細情報</a>
+◎
+HTTP Method Registry — more info
+</li>
+	<li>
+<a href="~IANA-a/http-status-codes/">~HTTP状態s~code~registry</a>
+— <a href="~RFC7231#status.code.registry">詳細情報</a>
+◎
+HTTP Status Code Registry — more info
+</li>
+	<li>
+<em>~protocolが `http^c の下での</em>
+<a href="~IANA-a/message-headers/">~message~header~registry</a>
+— <a href="https://tools.ietf.org/html/rfc3864">詳細情報</a>
+◎
+Message Header Registry where protocol is ‘http’ — more info
+</li>
+	<li>
+<a href="~IANA-a/http2-parameters/http2-parameters.xhtml">~HTTP2の各種~parameter</a>
+— <em>~frame種別, 設定群, ~error~code</em>
+◎
+HTTP/2 Parameters — Frame types, settings, error codes
+</li>
+</ul>
+
+<p>
+個々の~headerには、許可-可能な値を規制する，自前の~registryがある
+— 次に挙げるものを含め：
+◎
+Individual headers have their own registries that regulate permissible values, including:
+</p>
+
+<ul>
+	<li>
+<a href="~IANA-a/http-authschemes/">~HTTP認証~scheme~registry</a>
+（ `HTTP Authentication Scheme Registry^en ）
+— <a href="~RFC7235#authentication.scheme.registry">詳細情報</a>
+◎
+HTTP Authentication Scheme Registry — more info
+</li>
+	<li>
+<a href="~IANA-a/http-cache-directives/">~HTTP~cache指令~registry</a>
+（ `HTTP Cache Directive Registry^en ）
+— <a href="~RFC7234#cache.directive.registry">詳細情報</a>
+◎
+HTTP Cache Directive Registry — more info
+</li>
+	<li>
+<a href="~IANA-a/http-parameters/">~HTTPの各種~parameter</a>
+— 
+内容~符号法, 転送~符号法,
+`Forwarded^h ~header,
+`Prefer^h ~header,
+`Range^h に関係する~header
+◎
+HTTP Parameters — Content-codings, transfer-codings, Forwarded, Prefer, and Range-related headers
+</li>
+</ul>
+
+		</section>
+		<section id="related-specifications">
+<h3 title="Related Specifications">関係する仕様</h3>
+
+<p>
+以下に挙げるものは、~HTTPに関連な仕様を成す<strong>部分的</strong>な~listであり，便利~用にここに挙げられる。
+~HTTP拡張の完全な~listは、関連な~registryを見よ。
+◎
+This is a partial list of HTTP-relevant specifications, here for convenience. For the complete list of HTTP extensions, see the relevant registry.
+</p>
+
+			<section id="methods">
+<h4 title="Methods">~method</h4>
+
+<ul>
+	<li>
+<a href="~HTTPWG/rfc5789.html">RFC5789</a>：
+<a href="~HTTPpatch">`PATCH^m ~method</a>
+【<a href="~MDNHTTPja/Methods/PATCH">参考情報（MDN）</a>】
+◎
+RFC5789: PATCH Method
+</li>
+</ul>
+
+			</section>
+			<section id="status-codes">
+<h4 title="Status Codes">状態s~code</h4>
+
+<ul>
+	<li>
+<a href="~HTTPWG/rfc6585.html">RFC6585</a>：
+<a href="~RFC6585">追加的な~HTTP状態s~code： `428^st0, `429^st0, `431^st0, `511^st0</a>
+【参考情報（MDN）：<a href="~MDNHTTPja/Status/428">428</a>, <a href="~MDNHTTPja/Status/429">429</a>, <a href="~MDNHTTPja/Status/431">431</a>, <a href="~MDNHTTPja/Status/511">511</a> 】
+◎
+RFC6585: Status Codes 428, 429, 431 and 511 (Precondition Required, Too Many Requests, Request Header Fields Too Large, Network Authentication Required)
+</li>
+	<li>
+<a href="~HTTPWG/rfc7538.html">RFC7538</a>：
+<a href="~RFC7538">恒久的な~redirect：状態s~code `308^st0</a>
+【旧 `RFC7238$r の後継。】
+【これは、改訂~下にある~HTTPにおいては， § `308$st0 に取り込まれている。】
+【<a href="~MDNHTTPja/Status/308">参考情報（MDN）</a>】
+◎
+Status Code 308 (Permanent Redirect)
+◎
+</li>
+	<li>
+<a href="~HTTPWG/rfc7725.html">RFC7725</a>：
+<a href="~RFC7725">法的障壁を報告するための状態s~code： `451^st</a>
+【<a href="~MDNHTTPja/Status/451">参考情報（MDN）</a>】
+◎
+Status Code 451 (Unavailable For Legal Reasons)
+</li>
+	<li>
+<a href="~HTTPWG/rfc8297.html">RFC8297</a>：
+<a href="~RFC8297">~hintを指示するための状態s~code： `103^st</a>
+【<a href="~MDNHTTPja/Status/103">参考情報（MDN）</a>】
+◎
+Status Code 103 (Early Hints)
+</li>
+</ul>
+
+			</section>
+			<section id="connection-extensions">
+<h4 title="Connection Extensions">接続~拡張</h4>
+
+<ul>
+	<li>
+<a href="~HTTPWG/rfc7639.html">RFC7639</a>：
+`ALPN^h ~header（ “`Application-Layer Protocol Negotiation^en” ）
+【<a href="https://wiki.suikawiki.org/n/ALPN">参考情報</a>】
+◎
+RFC7639: ALPN Header Field
+</li>
+	<li>
+<a href="~HTTPWG/rfc7838.html">RFC7838</a>：
+代替~service
+（ `Alternative Services^en ）
+【<a href="https://wiki.suikawiki.org/n/RFC%207838">参考情報</a>】
+◎
+RFC7838: Alternative Services
+</li>
+	<li>
+<a href="~HTTPWG/rfc8164.html">RFC8164</a>：
+~HTTP2用の日和見（ `opportunistic^en ）~security
+【<a href="https://wiki.suikawiki.org/n/RFC%208164$24240">参考情報</a>】
+◎
+RFC8164: Opportunistic Security for HTTP/2
+</li>
+	<li>
+<a href="~HTTPWG/rfc8336.html">RFC8336</a>：
+`ORIGIN^c ~HTTP2~frame
+◎
+RFC8336: ORIGIN HTTP/2 Frame
+</li>
+	<li>
+<a href="~HTTPWG/rfc8441.html">RFC8441</a>：
+~HTTP2による~WebSocketの~bootstrap法
+◎
+RFC8441: Bootstrapping WebSockets with HTTP/2
+</li>
+</ul>
+
+			</section>
+			<section id="caching-extensions">
+<h4 title="Caching Extensions">~caching拡張</h4>
+
+<ul>
+	<li>
+<a href="~HTTPWG/rfc5861.html">RFC5861</a>：
+`Cache-Control^h 用の［
+`stale-while-revalidate^dir, `stale-if-error^dir
+］指令
+◎
+RFC5861: Cache-Control: stale-while-revalidate and stale-if-error
+</li>
+	<li>
+<a href="~HTTPWG/rfc8246.html">RFC8246</a>：
+<a href="~RFC8246">変異不能な応答</a>
+◎
+RFC8246: Cache-Control: immutable
+</li>
+</ul>
+
+			</section>
+			<section id="content-related-extensions">
+<h4 title="Content-Related Extensions">内容に関係する拡張</h4>
+
+<ul>
+	<li>
+<a href="~HTTPWG/rfc6265.html">RFC6265</a>：
+<a href="~HTTPcookie">~cookie</a>
+（ `Cookies^en ）
+【改訂~下にある <a href="~HTTPcookie-ext">~cookie</a>（ Same-Site 拡張）】
+【<a href="~MDNHTTPja/Headers/Cookie">参考情報（MDN）</a>】
+◎
+RFC6265: Cookies
+</li>
+	<li>
+<a href="~HTTPWG/rfc6266.html">RFC6266</a>：
+`Content-Disposition^h ~header
+【<a href="~MDNHTTPja/Headers/Content-Disposition">参考情報（MDN）</a>／<a href="https://wiki.suikawiki.org/n/content-disposition">参考情報（他）</a>】
+◎
+RFC6266: Content-Disposition
+</li>
+	<li>
+<a href="~HTTPWG/rfc7694.html">RFC7694</a>：
+<a href="~RFC7694">~clientから起動される内容~符号法</a>
+【これは、改訂~下にある~HTTPにおいては， <a href="~HTTPrq#_response.accept-encoding">§ 応答~内の `Accept-Encoding^h</a> に取り込まれている。】
+◎
+RFC7694: Client Initiated Content-Encoding
+</li>
+	<li>
+<a href="~HTTPWG/rfc7240.html">RFC7240</a>：
+`Prefer^h ~header
+【！原文には “<a href="~RFCx/rfc8144">RFC8144</a>” と記されているが、実際の~link先は RFC7240 】
+◎
+RFC8144: Prefer Header
+</li>
+	<li>
+<a href="~HTTPWG/rfc8288.html">RFC8288</a>：
+<a href="~HTTPweblink">~Web~link法</a>
+（ `Web Linking — link relations^en）
+【旧 `RFC5988$r の後継】
+◎
+RFC8288: Web Linking — link relations
+</li>
+</ul>
+
+			</section>
+			<section id="security-related-extensions">
+<h4 title="Security-Related Extensions">~securityに関係する拡張</h4>
+
+<ul>
+	<li>
+<a href="~HTTPWG/rfc2818.html">RFC2818</a>：
+~TLS越しの~HTTP
+◎
+RFC2818: HTTP Over TLS
+</li>
+	<li>
+<a href="~HTTPWG/rfc7616.html">RFC7616</a>：
+~HTTP Digest Access 認証
+◎
+RFC7616: HTTP Digest Access Authentication
+</li>
+	<li>
+<a href="~HTTPWG/rfc7617.html">RFC7617</a>：
+~HTTP Basic 認証
+【<a href="~MDNHTTPja/Authentication#Basic_authentication_scheme">参考情報（MDN）</a>】
+◎
+RFC7617: HTTP Basic Authentication
+</li>
+	<li>
+<a href="~HTTPWG/rfc7615.html">RFC7615</a>：
+§ `Authentication-Info$h,
+§ `Proxy-Authentication-Info$h
+（改訂~下にある~HTTP仕様~内）
+◎
+RFC7615: Authentication-Info and Proxy-Authentication-Info
+</li>
+	<li>
+<a href="~HTTPWG/rfc8188.html">RFC8188</a>：
+内容を暗号化する符号化法を与える `Content-Encoding^h 値
+◎
+RFC8188: Encrypted Content-Encoding
+</li>
+	<li>
+<a href="~HTTPWG/rfc8470.html">RFC8470</a>：
+~HTTPにおける Early Data の利用-法
+【<a href="~MDNHTTPja/Status/425">参考情報（MDN）</a>】
+◎
+RFC8470: Using Early Data in HTTP
+</li>
+</ul>
+
+			</section>
+		</section>
+	</section>
+
+<hr>
+
+<p>
+この~pageの以降では、上に挙げた［
+中核~仕様, その他の文書のうちいくつか
+］に共通する部分を集約する。
+以下における
+“この仕様”, “この文書”,
+等々は、当の節を参照している それを指す。
+</p>
+
+<main id="MAIN0">
+
+	<section id="status">
+<h2 title="Status of This Mamo">このメモの位置付け（ Standards Track ）</h2>
+
+<p>
+これは、 Internet Standards Track 文書です。
+◎
+This is an Internet Standards Track document.
+</p>
+
+<p>
+この文書は、 IETF （ `Internet Engineering Task Force^en ）よる成果物であり， IETF ~communityの合意を表現するものです。
+それは、公な考査を受け， IESG から発行が認可されたものです。
+Internet 標準についての更なる情報は `RFC7841/2$sec 【旧 `RFC5741/2$sec 】に見られます。
+◎
+This document is a product of the Internet Engineering Task Force (IETF). It represents the consensus of the IETF community. It has received public review and has been approved for publication by the Internet Engineering Steering Group (IESG). Further information on Internet Standards is available in Section 2 of RFC 5741.
+</p>
+
+<p>
+この文書の［
+現在の位置付け, 正誤表, ~feedbackの方法
+］についての情報は、各 文書の冒頭にある “仕様~metadata” から得られます。
+◎
+Information about the current status of this document, any errata, and how to provide feedback on it may be obtained at http://www.rfc-editor.org/info/rfc&lt;XXXX&gt;.
+</p>
+
+	</section>
+	<section id="status-draft">
+<h2 title="Status of This Mamo">このメモの位置付け（ ~Internet-Draft ）</h2>
+
+<p>
+この~Internet-Draftは、
+BCP 78, BCP 79
+に~~規定される適合性に全部的に従う下で提出されています。
+◎
+This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.
+</p>
+
+<p>
+~Internet-Draftは、
+<abbr title="Internet Engineering Task Force">IETF</abbr>
+による作業-中の文書です。
+他の~groupも，作業-中の文書を~Internet-Draftとして配布し得ることに注意。
+現在の~Internet-Draftの~listは、
+<a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a>
+にあります。
+◎
+Internet-Drafts are working documents of the Internet Engineering Task Force (IETF). Note that other groups may also distribute working documents as Internet-Drafts. The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.
+</p>
+
+<p>
+~Internet-Draftは、その発行-日から最長 6ヶ月まで有効な草案~文書であり，いつでも他の文書により［
+更新され／置換され／廃用にされ
+］得ます。
+~Internet-Draftを［
+参照~資料として利用する／
+“進捗-中の作業” でないものとして引用する
+］ことは不適切です。
+◎
+Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time. It is inappropriate to use Internet-Drafts as reference material or to cite them other than as “work in progress”.
+◎
+This Internet-Draft will expire on XXX XX, 20XX.
+</p>
+
+	</section>
+	<section id="copyright-notice">
+<h2 title="Copyright Notice">著作権の告知</h2>
+
+<p lang="en-x-a0">
+Copyright (c) 20XX IETF Trust and the persons identified as the document authors. All rights reserved.
+</p>
+
+<p>
+この文書は、その発行の日付から~~有効な、
+<a href="https://tools.ietf.org/html/bcp78">BCP 78</a>,
+および `IETF Trust^en の `IETF Documents^en に対する `Legal Provisions Relating^en の対象になります（
+<a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a>
+）。
+これらの文書には，この文書に関する あなたの権利と制約が述べらているので、入念に考査されたし。
+この文書から取り出された `Code Components^en は、 `Trust Legal Provisions^en の Section 4.e に述べられるように， `Simplified BSD License^en ~textを含んでいなければならず、 `Simplified BSD License^en に述べられるように，無保証で供されます。
+◎
+This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document. Please review these documents carefully, as they describe your rights and restrictions with respect to this document. Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.
+</p>
+
+<p>
+この文書には、 2008 年 11 月 10 日より前に発行された または公に可用にされた, `IETF Documents^en や `IETF Contributions^en からの素材が包含されているかもしれません。
+その素材の一部分について、その著作権の管理者（たち）は， `IETF Standards Process^en の外側における改変を許容する権利を `IETF Trust^en には是認していないかもしれません。
+~RFCとして発行するために整形する，または英語~以外の言語に翻訳する場合を除き、
+`IETF Standards Process^en
+の外側において，この文書を改変したり派生物を作成するためには、その著作権の管理者（たち）から，必要十分な許諾を得する必要があります。
+◎
+This document may contain material from IETF Documents or IETF Contributions published or made publicly available before November 10, 2008. The person(s) controlling the copyright in some of this material may not have granted the IETF Trust the right to allow modifications of such material outside the IETF Standards Process. Without obtaining an adequate license from the person(s) controlling the copyright in such materials, this document may not be modified outside the IETF Standards Process, and derivative works of it may not be created outside the IETF Standards Process, except to format it for publication as an RFC or to translate it into languages other than English.
+</p>
+
+	</section>
+	<section id="_conventions">
+<h3>【この訳に固有の表記規約】</h3>
+
+<p>
+~HTTPの日本語訳では、次の~styleが用いられる：
+</p>
+
+<ul>
+	<li>
+~HTTP~header名：
+`Example-Header^h
+</li>
+	<li>
+要請~method：
+`EXAMPLE-METHOD^m
+</li>
+	<li>
+応答~状態s~code（および，その事由~句）：
+`123^st0 <code class="phrase">(Example Phrase)</code>
+</li>
+	<li>
+~cache制御~指令：
+`example-directive^dir
+</li>
+	<li>
+`~protocol要素$（~ABNFの生成規則）：
+`example-protocol-element^p
+</li>
+<!-- 
+	<li>
+警告~text：
+Example text^ph
+</li>
+	<li>
+警告~code（ warn-code$p ）：
+987^wc
+</li>
+-->
+	<li>
+他の~code類：
+`example_keyword^c, "`example_literal^c"
+（`~protocol要素$の定数~値や~keyword, HTTP ~messageを構成する他の~codeなど）
+</li>
+	<li>
+定義語句：
+`定義語句 例^dfn
+</li>
+	<li id="instance-notaton">
+変数： `変数例^V
+— 同じ~styleは、同一の~instance（ “個” ）を指していることを明示するためにも用いられる：
+例えば、複数の文に渡る語 “応答” が同じ応答の~instanceを指しているとき、（例えば他の応答と区別するために） `応答^V と記して，そのことを明示する（それらの文を互いに関連付ける）。
+</li>
+</ul>
+
+<!-- ＊
+<p>
+その他、〜などの~styleは、
+<a href="index.html#common-wording" >共通の~style</a>
+に準じる。
+</p>
+ -->
+
+	</section>
+
+	<section id="requirements-notation">
+<h3 title="Requirements Notation">要件の表記法</h3>
+
+<div class="p">
+<p>
+この文書に現れる次の~~句は、 `RFC2119$r に則って解釈するものとする
+— 下に示すように，すべて~~大文字で現れるとき, そのときに限り【和訳においては，`~mark-upされたもの^2119に限り】 `RFC8174$r ：
+</p>
+
+<table>
+<thead><tr><th>原文での表記
+<th>日本語訳での表記
+</thead><tbody>
+
+<tr><td>`MUST^en
+<td>〜しなければナラナイ
+
+<tr><td>`MUST NOT^en
+<td>〜してはナラナイ
+
+<tr><td>`REQUIRED^en
+<td>`要求される^2119
+
+<tr><td>`SHOULD^en†
+<td>〜するベキである
+
+<tr><td>`SHOULD NOT^en
+<td>〜するベキでない
+
+<tr><td>`RECOMMENDED^en
+<td>`推奨される^2119
+
+<tr><td>`MAY^en
+<td>〜してもヨイ
+
+<tr><td>`OPTIONAL^en
+<td><em class="rfc2119">任意選択</em>
+
+</tbody></table>
+
+◎
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC2119].
+◎
+[RFC8174] when, and only when, they appear in all capitals, as shown here.
+</div>
+
+<p class="trans-note">【
+RFC 8174 による規約（ “すべて~~大文字…” ）は、それ以前に発行された RFC には無いが、遡及的に適用されると見なすべきかもしれない（ “そのときに限り” も含めて）。
+】【†
+原文には， “SHOULD” とよく~~似た意味で “ought to” も多用されている — それらはマークアップされずに， “〜する~OUGHT” と記される。
+<small>
+（大文字では記されていないが，
+`RFC6919$r
+の “OUGHT TO （そうするのが<em>当然</em>である）” を意味しているのかもしれない。
+その仕様には、他にもこの仕様に実際に（ただし小文字で）現れる諸々の句も掲載されているが、日本語的に困難な部分もあるので，すべてを忠実に反映してはいない。）
+</small>
+<!-- 
+（この語が多用される理由は、 HTTP が分散型の協調的な~system用の~protocolである所に因る？）
+（ “wish“ ＝ ”望む” など，専用の語をあてがっている所も一部あるが）
+-->
+】</p>
+
+<p>
+適合性の判定基準, および
+~errorの取扱いに関する考慮点は、
+`RFC7230/2.5$sec
+（改訂~下にある~HTTPにおいては、`適合性$sec）にて定義される。
+◎
+Conformance criteria and considerations regarding error handling are defined in Section 2.5 of [RFC7230].
+</p>
+
+	</section>
+	<section id="syntax-notation">
+<h3 title="Syntax Notation">構文の表記法</h3>
+
+<p>
+この仕様は、
+`RFC5234$r による~ABNF（ `Augmented Backus-Naur Form^en ）表記法を利用する。
+◎
+This specification uses the Augmented Backus-Naur Form (ABNF) notation of [RFC5234],＼
+</p>
+
+<p>
+加えて，この表記法は、
+`RFC7405$r に定義される［
+文字列による表記法, その文字大小が区別されるかどうかを指示する表記法
+］で拡張して利用される。
+◎
+extended with the notation for case-sensitivity in strings defined in [RFC7405].
+</p>
+
+<p class="trans-note">【
+`%s^c が接頭されていれば文字大小は区別され, `%i^c が接頭されていれば区別されない。
+この拡張を利用する仕様は、一部の~RFC／~Internet-Draftに限られる（特に `RFC7405^r 以前のものには利用されない）。
+】</p>
+
+<p>
+また、
+`RFC7230/7$sec（改訂~下にある~HTTPにおいては `Semantics/5.5$sec ）にて定義される，~list拡張を利用する
+— それは、（ "`*^c" 演算子が指示する繰返しに類似な）~list演算子（ "`#^c" ）を利用して，~comma区切りの~listを簡潔に定義できるようにする。
+◎
+with a list extension, defined in Section 7 of [RFC7230], that allows for compact definition of comma-separated lists using a '#' operator (similar to how the '*' operator indicates repetition).
+</p>
+
+<p>
+規約として、［
+接頭辞に "`obs-^p" が付与された~ABNF規則~名
+］が［
+歴史的な理由で出現する “廃用にされた” 文法~規則
+］を記すために用いられる。
+◎
+As a convention, ABNF rule names prefixed with "obs-" denote "obsolete" grammar rules that appear for historical reasons.
+</p>
+
+<p>
+この仕様にて利用される用語：
+“文字”,
+“文字~符号化~scheme”,
+“~charset”,
+“`~protocol要素@†”
+は、`RFC6365$rにて定義される。
+◎
+This specification uses the terms "character", "character encoding scheme", "charset", and "protocol element" as they are defined in [RFC6365].
+</p>
+
+<p class="trans-note">【†
+単に “要素” とも記される。
+`RFC6365/6$sec から定義を引用：
+<q>
+`~protocol要素$
+とは、一意に命名された，~protocolの部品である。
+◎
+Protocol elements are uniquely named parts of a protocol.
+</q>
+】</p>
+
+<div class="p" id="core-rules">
+
+<p>
+次に挙げる中核~規則は、
+`RFC5234/B.1$sec
+による定義を参照する
+【ここでは、原文より~~詳細に， RFC 5234 の記述を引用する】
+：
+◎
+The following core rules are included by reference, as defined in [RFC5234], Appendix B.1:
+</p>
+
+<pre class="bnf">
+`ALPHA@P          =  %x41-5A / %x61-7A
+                       ; `英字（ A-Z / a-z ）^com
+`CR@P             =  %x0D
+                       ; `carriage return^com
+`CRLF@P           =  `CR$P `LF$P
+                       ; `~Internet標準の改行^com
+`CTL@P            =  %x00-1F / %x7F
+                       ; `制御文字^com
+`DIGIT@P          =  %x30-39
+                       ; `~decimal数字（ 0-9 ）^com
+`DQUOTE@P         =  %x22
+                       ; `二重引用符（ " ）^com
+`HEXDIG@P         =  `DIGIT$P / "A" / "B" / "C" / "D" / "E" / "F"
+                       ; `~hex数字^com
+`HTAB@P           =  %x09
+                       ; `水平tab^com
+`LF@P             =  %x0A
+                       ; `line feed^com
+`OCTET@P          =  %x00-FF
+                       ; `任意の 8-bit ~data単位（~octet）^com
+`SP@P             =  %x20
+                       ; `~space^com
+`VCHAR@P          =  %x21-7E
+                       ; <span class="comment">任意の可視 `USASCII$r 文字</span>
+</pre>
+
+◎
+The following core rules are included by reference, as defined in [RFC5234], Appendix B.1: ALPHA (letters), CR (carriage return), CRLF (CR LF), CTL (controls), DIGIT (decimal 0-9), DQUOTE (double quote), HEXDIG (hexadecimal 0-9/A-F/a-f), HTAB (horizontal tab), LF (line feed), OCTET (any 8-bit sequence of data), SP (space), and VCHAR (any visible [USASCII] character).
+</div>
+
+	</section>
+
+<a id="_ref1"></a>
+<a id="_note1"></a>
+
+</main></div>
+
+
+<div hidden>
+	<section id="references">
+<h2 title="References">参照文献</h2>
+	</section>
+	<section id="translation-notes">
+<h2>日本語への翻訳に関する注記</h2>
+
+<p>
+RFC 原文は，ほぼ素のテキストであり、この日本語訳では、
+HTML マークアップ ／ CSS スタイル
+の利用により，記述が等価になる所では、一部の対訳を省略している。
+例えば：
+</p>
+
+<ul >
+	<li>
+用語の定義箇所を示す，節 番号への参照の多くは、代わりに用語そのものにリンクをあてがった上で，節 番号の記述を省略している。
+</li>
+	<li>
+リンク先の説明で代用になるときには、記述を省くことがある。
+</li>
+	<li>
+一部の語 — 例えば “状態°コード（ status code ）” は、コード番号が記されている所では、（その番号に専用のスタイルがあてがわれるため，）自明なので省略することもある。
+</li>
+</ul>
+
+<p>
+また、見通しを良くするため、原文のかなりの割合の段落は，マークアップを利用してより明示的な文脈階層に細分化している。
+例えば：
+</p>
+
+<ul>
+	<li>
+構造を細分化すると同時に，複数の文から共有されている語句（例えば主語）, あるいは文脈を指示している記述を一箇所に集約している所もある。
+</li>
+	<li>
+同じ文脈に属する複数の段落を，リスト化などにより一つのブロック階層にまとめている所もある。
+</li>
+	<li>
+文や語句の互いの論理的なつながりや関係性［
+を文脈から推し量る必要がある ／
+がそのまま日本語訳すると不明瞭になる
+］所では、階層化により明確化している。
+</li>
+</ul>
+
+<p>
+原文には、（特に同じ段落内で，）同じ対象を，異なる［
+言い回し, または語句
+］により言及している箇所も多数見られる。
+紛らわしいので、細分化に際しては，そのような言及もなるべく一つに［
+集約, あるいは結合
+］している（例えば、
+<a href="#instance-notaton" >明示的な<var>指示代名詞</var>マークアップ</a>
+などを用いて — 日本語には “the” が無い）。
+</p>
+
+<p>
+以上に述べたようなマークアップは，訳者による解釈も含むので、解釈に誤りがあれば，それを反映することになる（例えば、原文の語句（例えば “host” ）が、<a href="#protocol-element">構文の構成子</a>か, 用語か, 意味の記述か, いずれを表すのか、あるいはそれらを兼ねているとしても（多くの場合，そうである），いずれが主として 意図されている／念頭に置かれているかは、必ずしも自明ではない）。
+</p>
+
+<p>
+一部の語の対訳は，“忠実さに欠く” 語, あるいは一般に見受けられる語と異なる語に代えている。
+例えば：
+</p>
+<ul>
+	<li>
+原文の語 “media type” （媒体型, Internet media type の略称）は、
+RFC 以外の Web 標準に共通して利用されている用語 “MIME 型” に一律に置換している。
+</li>
+	<li>
+“回送（ forward ）” ： “転送” あるいは “自動転送” という対訳もあるが、前者は “transfer” の対訳と衝突し，後者は長い（また， “automatic な transfer” と誤解され易くもなる）ので。
+</li>
+	<li>
+“条態（ condition ）” ：
+これは、訳者による造語（条件＋状態）である。
+“状況／状態” , あるいは “条件” と訳されることが多いが、前者は
+“situation”, “circumstance” ／ “state”
+などの対訳と衝突し，後者は文脈にそぐわないことが多々あるので（無論、 “コンディション” とも訳せるが，用語 “条件付き（ conditional ）” との関連性もあるので）。
+</li>
+	<li>
+“全部的（ full ）” — “完全（ complete ）” との区別を要するため。
+また、 “部分的（ partial ）” との対比も兼ねるため。
+</li>
+	<li>
+“検証°（ verify ）” （正しく作られたかどうかを検証）— “検証（ validate ）” （作られたものが正しいかどうかを検証）と区別するため。
+</li>
+	<li>
+“状態°（ status ）” （状態の集合／状態を［指示する／識別する］もの） — “状態（ state ）” （ある特定の状態）と区別するため。
+</li>
+</ul>
+
+	</section>
+</div>

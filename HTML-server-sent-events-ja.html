@@ -1,0 +1,2076 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Server-sent events（日本語訳）</title>
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'server-sent-events',
+		collectParts: Util.collectParts,
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+	return;
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'bl': // byte literal
+	text = `\`<code class="literal">${key}</code>\``;
+	break;
+case 'h':
+	text = `\`<code class="header">${key}</code>\``;
+	break;
+case 'P': // production
+	href = `#_p.${key}`;
+	break;
+case 'mc':
+	text = 'constructor';
+	href = `#dom-${key.toLowerCase()}`;
+	break;
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case '0x': // escape '%'
+	return `%x${key}`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-08-18
+trans_update:2020-08-19
+source_checked:191126
+page_state_key:HTML
+original_url:https://html.spec.whatwg.org/multipage/server-sent-events.html
+spec_status:LS
+site_nav:comms,network,html
+nav_prev:HTMLnavigator
+nav_next:WEBSOCKET
+trans_1st_pub:2016-12-06
+
+
+●●class_map
+e:element
+E:error
+P:production
+et:event-type
+st:attr-state
+jA:abstract
+v:value
+
+●●tag_map
+I:code
+m:code
+E:code
+c:code
+e:code
+et:code
+st:span
+jA:span
+P:code
+i:i
+
+●●original_id_map
+
+●●mdn_urls
+eventsource:API/EventSource
+	eventsourceinit:API/EventSourceInit
+
+●●link_map
+
+	●IDL
+E.SyntaxError:~WEBIDL#syntaxerror
+I.Document:~HTMLdom#document
+I.EventHandler:~WAPI#eventhandler
+I.EventSource:#eventsource
+I.EventSourceInit:#eventsourceinit
+I.EventTarget:~DOM4#interface-eventtarget
+I.MessageEvent:~HTMLcomms#messageevent
+I.Window:~WINDOW#window
+I.WorkerGlobalScope:~WORKERS#workerglobalscope
+I.XMLHttpRequest:~XHR#xmlhttprequest
+
+	9.2.X
+m.new EventSource:#dom-eventsource
+m.CLOSED:#dom-eventsource-closed
+m.CONNECTING:#dom-eventsource-connecting
+m.OPEN:#dom-eventsource-open
+m.close:#dom-eventsource-close
+m.withCredentials:#dom-eventsource-withcredentials
+m.readyState:#dom-eventsource-readystate
+m.url:#dom-eventsource-url
+m.onmessage:#handler-eventsource-onmessage
+m.onerror:#handler-eventsource-onerror
+m.onopen:#handler-eventsource-onopen
+
+m.~withCredentials0:#dom-eventsourceinit-withcredentials
+m.lastEventId:~HTMLcomms#dom-messageevent-lasteventid
+m.origin:~HTMLcomms#dom-messageevent-origin
+m.data:~HTMLcomms#dom-messageevent-data
+m.window.stop:~WINDOW#dom-window-stop
+m.type:~DOM4#dom-event-type
+
+
+bl.text/event-stream:~HTMLiana#text/event-stream
+c.text/event-stream:~HTMLiana#text/event-stream
+
+e.iframe:~HEembed#the-iframe-element
+
+et.error:~HTMLindex#event-error
+et.message:~HTMLindex#event-message
+et.open:~HTMLindex#event-open
+
+h.Last-Event-ID:~HTMLiana#last-event-id
+h.Accept:~HTTPrq#field.accept
+	h.Accept:~RFC7231#section-5.3.2
+h.Content-Type:~HTMLurl#content-type
+
+
+	●用語
+
+~eventを配送-:#dispatchMessage
+強制的に~closeする:#concept-eventsource-forcibly-close
+~fieldを処理する:#processField
+
+~event~streamを供している~URL:#concept-eventsource-url
+eS.~url:#concept-eventsource-url
+eS.再接続~時間:#concept-event-stream-reconnection-time
+eS.最後の~event~ID文字列:#concept-event-stream-last-event-id
+eS.要請:#concept-event-stream-request
+
+~remote~event~task源:#remote-event-task-source
+	§:#eventsource-push
+接続を公告する:#announce-the-connection
+接続を確立し直す:#reestablish-the-connection
+接続を失敗させ:#fail-the-connection
+
+	§:#event-stream-interpretation
+
+	●用語（HTML
+並列的:~HTMLINFRA#in-parallel
+適用-可能な仕様:~HTMLINFRA#other-applicable-specifications
+		:~HTMLINFRA#case-sensitive
+
+st.Anonymous:~HTMLurl#attr-crossorigin-anonymous
+st.Use Credentials:~HTMLurl#attr-crossorigin-use-credentials
+~CORSになり得る要請を作成する:~HTMLurl#create-a-potential-cors-request
+
+enV.~API用~基底~URL:~WAPI#api-base-url
+enV.~API用~URL文字~符号化法:~WAPI#api-url-character-encoding
+
+~event~handler:~WAPI#event-handlers
+~event~handler~IDL属性:~WAPI#event-handler-idl-attributes
+~event~handler~event型:~WAPI#event-handler-event-type
+~task:~WAPI#concept-task
+~network用~task源:~WAPI#networking-task-source
+~taskを~queueする:~WAPI#queue-a-task
+~queueされ:~WAPI#queue-a-task
+~task~queue:~WAPI#task-queue
+~task源:~WAPI#task-source
+関連な~Realm:~WAPI#concept-relevant-realm
+関連な設定群~obj:~WAPI#relevant-settings-object
+
+生成元を直列化する:~ORIGIN#ascii-serialisation-of-an-origin
+
+共用~worker内:~WORKERS#sharedworkerglobalscope
+
+
+	●用語（外部
+実装定義:~INFRA#implementation-defined
+
+~ASCII数字:~INFRA#ascii-digit
+~scalar値:~INFRA#scalar-value
+
+~MIME型:~MIMESNIFF#mime-type
+
+~eventを作成する:~DOM4#concept-event-create
+~eventを発火する:~DOM4#concept-event-fire
+配送-:~DOM4#concept-event-dispatch
+	
+rq.~cache~mode:~FETCH#concept-request-cache-mode
+rq.資格証~mode:~FETCH#concept-request-credentials-mode
+rq.~client:~FETCH#concept-request-client
+rq.~header~list:~FETCH#concept-request-header-list
+
+~headerを設定する:~FETCH#concept-header-list-set
+~fetch:~FETCH#concept-fetch
+要請:~FETCH#concept-request
+	
+url.生成元:~URL1#concept-url-origin
+~URL~record:~URL1#concept-url
+~URLを直列化する:~URL1#concept-url-serializer
+~URL構文解析する:~URL1#concept-url-parser
+
+~UTF-8復号する:~ENCODING#utf-8-decode
+~UTF-8符号化する:~ENCODING#utf-8-encode
+
+●●words_table1
+
+withCredentials0:withCredentials
+
+●●words_table
+
+
+	●仕様（動詞
+協調-:coordinate:~
+切替える:switchする:切り替える
+運用者:operator:~
+模倣-:emulate:~
+	予期されずに:unexpected
+	using:
+	consist:
+	told:
+	know:
+	警戒:cautioned
+	導いた:lead
+
+	●仕様
+advice::::アドバイス
+panel::::パネル
+条態:condition:~
+診断:diagnostic:~
+無益:futile:~
+
+	呼応:in response to／
+	~~等価:
+	十分:enough
+	するに足るだけ:only enough to
+	渡-:pass
+	最小限，:at a minimum
+	束ねられ:tied
+	抗して:against
+	〜に因り:due
+	少ししか:little to no
+	より高度に:advance
+	~~相当:considerable
+	amongst:
+	potentially
+	あるいは:alternatively
+	無論:of course
+	司る:take over
+	困らされる:run into trouble
+	関知しない:unaware
+	経過を辿る:timeline
+
+	●network / messaging
+DNS:
+TCP:
+chunk::::チャンク
+	chunk法:chunking
+	url~record:urlRecord
+
+IP:
+	~serverから送信される:server-sent
+	server-push
+	server側:server-side
+	server単位の:per-server
+
+close::::
+
+open::::
+remote::::リモート
+切断-:disconnect::~
+再接続-:reconnect::~
+再接続:reconnection::~
+	接続できない:no network connectivity
+無接続:connectionless::~
+	確立し直す:reestablish
+伝送路:wire::~
+	切れた:died
+	負荷を加える:overloading
+負荷移譲:offload::~
+	~frame法:framing
+過負荷に:overloaded:~
+活動:activity:~
+接触-:contact:~
+運ぶ:conveyする:~
+消去っ:go awayし:消え去っ
+
+	●保安
+上品:graceful:~
+信頼性:reliability:~
+
+
+	●処理model
+
+公告-:announce::~
+	cancelation
+強制的:forcible:~
+致命的:fatal:~
+永続的:permanent:~
+設置-:place:~
+不定期:occasional:~
+分散的:distributed:~
+遊休:idle:~
+timing::::タイミング
+sleep::::スリープ
+時間:time:~
+timeout::::タイムアウト
+milli::::ミリ
+	milli秒:millisecond
+	数秒:few seconds
+	秒単位
+
+	短い:short
+	最初の~~段階:in the first place
+	~~寿命:life
+	長く生き残る:long-lived
+	中途:in the middle of
+	残り続ける:remain
+	最終的:final
+	最終:final
+
+
+	●構造／
+
+
+	●構文／stream
+	LF:
+	CR:
+	COLON
+	space
+	BOM
+scalar::::スカラー
+buffering:::buffer 方式:バッファ方式
+空行:blank line:~
+	serialization
+
+改行文字:newline:~
+	改行
+	剥ぎ取る:strip する
+基数:base:~
+数字:digit:~
+先行-:precede:~
+後続-:follow:~
+	終端-:end
+	終端-法:ending
+	先頭:leading:
+読取る:readする:読み取る
+
+	●未分類（動詞
+	~~分類:separate
+節約-:save:~
+	~~要請:ask
+
+	●未分類
+OMA:
+	落とす:drop
+
+	target::::ターゲット
+	time:
+
+電力:power:~
+battery::::バッテリ
+carrier::::キャリア
+	携帯機:mobile handset ／ mobile device ／ portable device
+側:side:~
+	直ぐには明らかに:immediately obvious
+	より:relatively
+	-:equal
+carrier::::キャリア
+	様に:look like
+
+	同様
+	必要
+	方法
+	注意
+	注記
+	を超えない~~範囲-:region
+	-:newly
+	起こる:happen
+	始-:begin
+	対応:corresponding
+	note
+	starting
+	aforementioned
+	-:fashion
+	pending
+	数値
+	規定
+	~~回復
+	総~data使用量:total data usage
+	~~見出された:seen
+
+	~CORS属性~状態:corsAttributeState
+	eventSourceInitDict
+
+	●指示語
+	-:identical
+	:earlier
+	nothing
+	以下
+	以外
+	以降
+	以上
+	以前
+	一部:part of
+	一方
+	一連
+	各種
+	現れるすべて:everything
+	今度:now
+	時点
+	次:next
+	次回:next time
+	次第
+	自体
+	前回:the previous
+	第一／第二／第三
+	同じ:single
+	直後
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる HTML 仕様の
+<a href="~SPEC_URL">§ Server-sent events</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+</head>
+<body>
+
+
+<header id="head">
+	<hgroup>
+<h1>サーバから送信されるイベント — Server-sent events</h1>
+
+	</hgroup>
+</header>
+
+<main id="MAIN" hidden>
+
+		<section id="server-sent-events">
+<h2 title="Server-sent events">9.2. ~serverから送信される~event</h2>
+
+			<section id="_conventions">
+<h3>【この訳に固有の表記規約】</h3>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, コレ, ~IF, ~THROW, 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+			</section>
+			<section id="server-sent-events-intro">
+<h3 title="Introduction">9.2.1. 序論</h3>
+
+~INFORMATIVE
+
+<p>
+~serverが~web~pageに向けて，~HTTP越しに, あるいは
+専用の［
+“server-push” ~protocol
+］を利用して
+~dataを~pushできるようにするため、この仕様は
+`EventSource$I ~interfaceを導入する。
+◎
+To enable servers to push data to web pages over HTTP or using dedicated server-push protocols, this specification introduces the EventSource interface.
+</p>
+
+<p>
+この~APIの利用-法は、 `EventSource$I ~objを作成して，~event~listenerを登録するだけである。
+◎
+Using this API consists of creating an EventSource object and registering an event listener.
+</p>
+
+<pre class="lang-js">
+var %source = new EventSource('updates.cgi');
+%source.onmessage = function (%event) {
+  alert(%event.data);
+};
+</pre>
+
+<p>
+~server側の~script（この事例では `updates.cgi^l ）は、~MIME型に `text/event-stream$c を伴う~messageを，次の形で送信する：
+◎
+On the server-side, the script ("updates.cgi" in this case) sends messages in the following form, with the text/event-stream MIME type:
+</p>
+
+<pre class="presentation">
+data: 第一~message
+
+data: 第二~message
+data: この~messageは 2 行lからなる
+
+data: 第三~message
+</pre>
+<!-- 
+data: This is the first message.
+
+data: This is the second message, it
+data: has two lines.
+
+data: This is the third message.
+ -->
+
+<p class="trans-note">【
+各~messageは、空行（言い換えれば，連続する 2 個以上の改行（ `end-of-line$P ））で終端する。
+】【
+このページの各~stream例は、特に断らない限り，暗黙的に空行で終端されている。
+】</p>
+
+<hr>
+
+<p>
+作者は、異なる~event型を利用することにより，各~eventを~~分類できる。
+ここに  2 種の~event型,  `add^l, `remove^l が含まれた~streamがあるとする：
+◎
+Authors can separate events by using different event types. Here is a stream that has two event types, "add" and "remove":
+</p>
+
+<pre class="presentation">
+event: add
+data: 73857293
+
+event: remove
+data: 2153
+
+event: add
+data: 113411
+</pre>
+
+<p>
+そのような~streamを取扱う~scriptは、次の様になるであろう（
+%addHandler, %removeHandler
+は、 1 個の~event引数をとる関数とする）：
+◎
+The script to handle such a stream would look like this (where addHandler and removeHandler are functions that take one argument, the event):
+</p>
+
+<pre class="lang-js">
+var %source = new EventSource('updates.cgi');
+source.addEventListener('add', %addHandler, false);
+source.addEventListener('remove', %removeHandler, false);
+</pre>
+
+<p>
+既定の~event型は `message^l である。
+【すなわち、最初の例のように "event:" 行lが省略されている場合】
+◎
+The default event type is "message".
+</p>
+
+<p>
+~event~streamは、常に~UTF-8として復号される。
+別の文字~符号化法を指定する仕方はない。
+◎
+Event streams are always decoded as UTF-8. There is no way to specify another character encoding.
+</p>
+
+<hr>
+
+<p>
+~event~stream要請は、通常の~HTTP要請と同様に，~HTTP `301^st／ `307^st 応答~codeにより~redirectされ得る（できる）。
+接続が~closeされた場合、~clientは 再接続することになる。
+~serverは、~HTTP `204^st  "No Content" 応答~codeを利用して，~clientにこの再接続を停止するよう伝えれる。
+◎
+Event stream requests can be redirected using HTTP 301 and 307 redirects as with normal HTTP requests. Clients will reconnect if the connection is closed; a client can be told to stop reconnecting using the HTTP 204 No Content response code.
+</p>
+
+<p>
+この~APIを利用すれば
+— `XMLHttpRequest$I や `iframe$e を利用してそれを模倣せずに —
+~UAは、~UAの実装者と~network運用者が より高度に協調できる事例においては，~network資源をより良く利用できるようになる。
+これには、携帯機の~battery~~寿命を有意に節約できる便益もある
+— それについては、
+<a href="#eventsource-push">無接続~push節</a>
+にて更に論じられる。
+◎
+Using this API rather than emulating it using XMLHttpRequest or an iframe allows the user agent to make better use of network resources in cases where the user agent implementer and the network operator are able to coordinate in advance. Amongst other benefits, this can result in significant savings in battery life on portable devices. This is discussed further in the section below on connectionless push.
+</p>
+
+			</section>
+			<section id="the-eventsource-interface">
+<h3 title="The EventSource interface">9.2.2. `EventSource^I ~interface</h3>
+
+<pre class="idl">
+[Exposed=(Window,Worker)]
+interface `EventSource@I : `EventTarget$I {
+  `EventSource$mc(USVString %url, optional `EventSourceInit$I %eventSourceInitDict = {});
+
+  readonly attribute USVString `url$m;
+  readonly attribute boolean `withCredentials$m;
+
+  // ready state
+  const unsigned short `CONNECTING$m = 0;
+  const unsigned short `OPEN$m = 1;
+  const unsigned short `CLOSED$m = 2;
+  readonly attribute unsigned short `readyState$m;
+
+  // networking
+  attribute `EventHandler$I `onopen$m;
+  attribute `EventHandler$I `onmessage$m;
+  attribute `EventHandler$I `onerror$m;
+  undefined `close$m();
+};
+
+dictionary `EventSourceInit@I {
+  boolean `~withCredentials0@m = false;
+};
+</pre>
+
+<p>
+各 `EventSource$I ~objには、次のものが結付けられる：
+◎
+Each EventSource object has the following associated with it:
+</p>
+
+<dl class="def-list">
+	<dt>`~url@eS</dt>
+	<dd>
+`~URL~record$。
+構築-時に設定される。
+◎
+A url (a URL record). Set during construction.
+</dd>
+
+	<dt>`要請@eS</dt>
+	<dd>
+初期~時には ~NULL になるモノトスル。
+◎
+A request. This must initially be null.
+</dd>
+	<dd class="trans-note">【
+これもまた、構築-時に`要請$に設定される。
+】</dd>
+
+	<dt>`再接続~時間@eS</dt>
+	<dd>
+~milli秒単位。
+初期~時には`実装定義$な値
+— おそらく，数秒を超えない~~範囲 —
+になるモノトスル。
+◎
+A reconnection time, in milliseconds. This must initially be an implementation-defined value, probably in the region of a few seconds.
+</dd>
+
+	<dt>`最後の~event~ID文字列@eS</dt>
+	<dd>
+初期~時には空~文字列になるモノトスル。
+◎
+A last event ID string. This must initially be the empty string.
+</dd>
+
+</dl>
+
+<p>
+`~url$eS を除き，これらは、現時点では `EventSource$I ~objに公開されていない。
+◎
+Apart from url these are not currently exposed on the EventSource object.
+</p>
+
+<dl class="domintro">
+	<dt>%source = `new EventSource$m( %url [, { `~withCredentials0$m:  true } ])</dt>
+	<dd>
+新たな `EventSource$I ~objを作成する。
+◎
+Creates a new EventSource object.
+</dd>
+	<dd>
+%url は、~event~streamを供することになる`~URL~record$を与える文字列。
+◎
+url is a string giving the URL that will provide the event stream.
+</dd>
+	<dd>
+`~withCredentials0$m を ~T に設定すれば、
+%url への接続~要請~用の`資格証~mode$rq は `include^l に設定されることになる。
+◎
+Setting withCredentials to true will set the credentials mode for connection requests to url to "include".
+</dd>
+
+	<dt>%source . `close()$m</dt>
+	<dd>
+この `EventSource$I ~obj用に開始された`~fetch$~algoの~instanceがあれば中止した上で、
+`readyState$m 属性を `CLOSED$m に設定する。
+◎
+Aborts any instances of the fetch algorithm started for this EventSource object, and sets the readyState attribute to CLOSED.
+</dd>
+
+	<dt>%source . `url$m</dt>
+	<dd>
+`~event~streamを供している~URL$を返す。
+◎
+Returns the URL providing the event stream.
+</dd>
+
+	<dt>%source . `withCredentials$m</dt>
+	<dd>
+`~event~streamを供している~URL$への接続~要請~用の`資格証~mode$rqに応じて［
+`include^l ならば ~T ／
+~ELSE_ ~F
+］を返す。
+◎
+Returns true if the credentials mode for connection requests to the URL providing the event stream is set to "include", and false otherwise.
+</dd>
+
+	<dt>%source . `readyState$m</dt>
+	<dd>
+この `EventSource$I ~objの接続の状態を返す。
+とり得る値は、下に述べる。
+◎
+Returns the state of this EventSource object's connection. It can have the values described below.
+</dd>
+</dl>
+
+<div class="algo">
+<p>
+`new EventSource(url, eventSourceInitDict)@m
+構築子~手続きは：
+◎
+The EventSource(url, eventSourceInitDict) constructor, when invoked, must run these steps:
+</p>
+<ol>
+	<li>
+%設定群 ~LET コレに`関連な設定群~obj$
+◎
+Let ev be a new EventSource object.
+◎
+Let settings be ev's relevant settings object.
+</li>
+	<li>
+%~url~record ~LET `~URL構文解析する$( %~url, %設定群 の`~API用~基底~URL$enV, %設定群 の`~API用~URL文字~符号化法$enV )
+◎
+Let urlRecord be the result of parsing url with settings's API base URL and settings's API URL character encoding.
+</li>
+	<li>
+~IF［
+%~url~record ~EQ 失敗
+］
+⇒
+~THROW `SyntaxError$E
+◎
+If urlRecord is failure, then throw a "SyntaxError" DOMException.
+</li>
+	<li>
+コレの`~url$eS ~SET %~url~record
+◎
+Set ev's url to urlRecord.
+</li>
+	<li>
+%~CORS属性~状態 ~LET `Anonymous$st
+◎
+Let corsAttributeState be Anonymous.
+</li>
+	<li>
+~IF［
+%evententSourceInitDict[ "`~withCredentials0$m" ] ~EQ ~T
+］
+⇒＃
+%~CORS属性~状態 ~SET `Use Credentials$st；
+コレの `withCredentials$m 属性  ~SET ~T
+◎
+If the value of eventSourceInitDict's withCredentials member is true, then set corsAttributeState to Use Credentials and set ev's withCredentials attribute to true.
+</li>
+	<li>
+%要請 ~LET
+`~CORSになり得る要請を作成する$( %~url~record, 空~文字列, %~CORS属性~状態 )
+◎
+Let request be the result of creating a potential-CORS request given urlRecord, the empty string, and corsAttributeState.
+</li>
+	<li>
+%要請 の`~client$rq ~SET %設定群
+◎
+Set request's client to settings.
+</li>
+	<li>
+任意選択で
+⇒
+%要請 の`~header~list$rq内で`~headerを設定する$( `Accept$h / `text/event-stream$bl )
+◎
+User agents may set `Accept`/`text/event-stream` in request's header list.
+</li>
+	<li>
+%要請 の`~cache~mode$rq ~SET `no-store^l
+◎
+Set request's cache mode to "no-store".
+</li>
+	<li>
+コレの`要請$eS ~SET %要請
+◎
+Set ev's request to request.
+</li>
+	<li>
+この段は`並列的$に走らす
+⇒
+%要請 を`~fetch$する
+◎
+Run this step in parallel:
+• Fetch request.
+</li>
+	<li>
+~RET %event
+◎
+Return ev.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`url@m
+取得子~手続きは
+⇒
+~RET `~URLを直列化する$( コレの`~url$eS )
+◎
+The url attribute's getter must return the serialization of this EventSource object's url.
+</div>
+
+<div class="algo">
+<p>
+`withCredentials@m
+属性は：
+</p>
+<ul>
+	<li>
+取得子~手続きは、最後に初期化された値を返す。
+</li>
+	<li>
+コレの作成-時には、 ~F に初期化されるモノトスル。
+</li>
+</ul>
+◎
+The withCredentials attribute must return the value to which it was last initialized. When the object is created, it must be initialized to false.
+</div>
+
+<p>
+`readyState@m
+属性は、当の接続の状態を表現する：
+◎
+The readyState attribute represents the state of the connection.＼
+</p>
+<ul>
+	<li>
+取得子~手続きは【この項は、この訳による補完】
+⇒
+~RET 最後に設定された値
+</li>
+	<li>
+<p>
+次のいずれかの値をとり得る：
+◎
+It can have the following values:
+</p>
+		<dl>
+			<dt>`CONNECTING@m （数値 0 ）</dt>
+			<dd>
+接続は、まだ確立されていないか，または
+~closeされていて~UAは再接続している。
+◎
+The connection has not yet been established, or it was closed and the user agent is reconnecting.
+</dd>
+
+			<dt>`OPEN@m （数値 1 ）</dt>
+			<dd>
+~UAは，~open接続を有していて、~eventが受信され次第 それを配送している。
+◎
+The user agent has an open connection and is dispatching events as it receives them.
+</dd>
+
+			<dt>`CLOSED@m （数値 2 ）</dt>
+			<dd>
+接続は~openしておらず，~UAは再接続しようと試行していない。
+何らかの致命的~errorがあったか， `close()$m ~methodが呼出された。
+◎
+The connection is not open, and the user agent is not trying to reconnect. Either there was a fatal error or the close() method was invoked.
+</dd>
+		</dl>
+	</li>
+	<li>
+コレの作成-時には、
+`CONNECTING$m （ 0 ）に設定するモノトスル。
+値がいつ変化するかは、下に与える，接続を取扱うための規則にて定義される。
+◎
+When the object is created its readyState must be set to CONNECTING (0). The rules given below for handling the connection define when the value changes.
+</li>
+</ul>
+
+<div class="algo">
+`close()@m
+~method~手続きは
+⇒
+コレ用に開始された`~fetch$ ~algoがあれば すべて中止した上で、
+コレの `readyState$m 属性を `CLOSED$m に設定する。
+◎
+The close() method must abort any instances of the fetch algorithm started for this EventSource object, and must set the readyState attribute to CLOSED.
+</div>
+
+<p>
+`EventSource$I ~interfaceを実装している~すべての~objは、以下に挙げる各種`~event~handler$, および対応する各種`~event~handler~event型$を，`~event~handler~IDL属性$として~supportするモノトスル：
+◎
+The following are the event handlers (and their corresponding event handler event types) that must be supported, as event handler IDL attributes, by all objects implementing the EventSource interface:
+</p>
+
+<table><thead><tr><th>`~event~handler$
+<th>`~event~handler~event型$
+</thead>
+
+<tbody><tr><td>`onopen@m
+<td>`open$et
+<tr><td>`onmessage@m
+<td>`message$et
+<tr><td>`onerror@m
+<td>`error$et
+
+</tbody></table>
+
+			</section>
+			<section id="sse-processing-model">
+<h3 title="Processing model">9.2.3. 処理~model</h3>
+
+<span id="processing-model-9"></span>
+<p>
+`new EventSource()$m 構築子の引数にて指示される資源は、その構築子が走るときに~fetchされる。
+◎
+The resource indicated in the argument to the EventSource constructor is fetched when the constructor is run.
+</p>
+
+<p>
+~dataが受信されるに伴い，それを取扱うために `~network用~task源$から~queueされる`~task$は、以下に従って動作するモノトスル：
+◎
+As data is received, the tasks queued by the networking task source to handle the data must act as follows.
+</p>
+
+<p>
+~HTTP `200^st "OK" 応答に対しては、
+`Content-Type$h ~header値は 型 `text/event-stream$bl を指定している
+— `~MIME型$ ~parameterは無視して —
+ならば，
+<a href="~HTMLsse#event-stream-interpretation">~event~streamの解釈-法</a>
+に従って 行lごとに処理するモノトスル。
+◎
+HTTP 200 OK responses with a `Content-Type` header specifying the type `text/event-stream`, ignoring any MIME type parameters, must be processed line by line as described below.
+</p>
+
+<p>
+~UAは、自身が~supportする`~MIME型$を伴う応答が成功裡に受信されたときは、~streamの内容を構文解析し始めるときに，`接続を公告する$モノトスル。
+◎
+When a successful response with a supported MIME type is received, such that the user agent begins parsing the contents of the stream, the user agent must announce the connection.
+</p>
+
+<p>
+`~network用~task源$から`~task~queue$に設置した`~task$が，そのような（正しい`~MIME型$を伴う）資源に対する~fetchingを完了したなら、~UAは，`並列的$に`接続を確立し直す$モノトスル。
+これは、接続が上品に~closeされようが 予期せず~closeされようが，適用される（が、~UAが ~fetchingを取消したとき（例えば `window.stop()$m に呼応して）には適用されない
+— そのような事例では `~task$は最終的に実際に破棄されるので）。
+ただし、下に挙げる~error条態に対しては、明示的に指定されない限り，適用されない。
+◎
+The task that the networking task source places on the task queue once fetching for such a resource (with the correct MIME type) has completed must cause the user agent to reestablish the connection in parallel. This applies whether the connection is closed gracefully or unexpectedly (but does not apply when fetching is canceled by the user agent, e.g., in response to window.stop(), since in those cases the final task is actually discarded). It doesn't apply for the error conditions listed below except where explicitly specified.
+</p>
+
+<p>
+~HTTP `200^st "OK" 応答に対しては、応答の `Content-Type$h が［
+伴われていない ／ 未~supportな型を指定している
+］場合、~UAは`接続を失敗させ$るモノトスル。
+◎
+HTTP 200 OK responses that have a Content-Type specifying an unsupported type, or that have no Content-Type at all, must cause the user agent to fail the connection.
+</p> 
+
+<p id="event-source-network-errors-reconnect">
+最初の~~段階で接続を確立できなくするような，~network~error（例： ~DNS~error）に対しては、~UAは`並列的$に`接続を確立し直す$べきである
+— ただし，~UAは、そうしても無益なことを知っている場合は，`接続を失敗させ$てもヨイ。
+◎
+Network errors that prevents the connection from being established in the first place (e.g. DNS errors), should cause the user agent to reestablish the connection in parallel, unless the user agent knows that to be futile, in which case the user agent may fail the connection.
+</p>
+
+<p id="event-source-fail-reasons">
+ここに挙げなかった他の~HTTP応答~codeに対しては, および
+~UAが~fetch~algoを取消した場合は（例えば `window.stop()$m に呼応して, あるいは 利用者が~network接続を手動で取消した）、~UAは`接続を失敗させ$るモノトスル。
+◎
+Any other HTTP response code not listed here, as well as the cancelation of the fetch algorithm by the user agent (e.g. in response to window.stop() or the user canceling the network connection manually) must cause the user agent to fail the connection.
+</p>
+
+<hr>
+
+<div class="algorithm">
+<p>
+~UAは，
+`接続を公告する@
+ときは、次を走らす`~taskを~queueする$モノトスル：
+</p>
+
+<ol>
+	<li>
+%O ~LET 当の `EventSource$I ~obj
+</li>
+	<li>
+~IF［
+%O の `readyState$m 属性~値 ~EQ `CLOSED$m
+］
+⇒
+~RET
+</li>
+	<li>
+%O の `readyState$m 属性 ~SET `OPEN$m
+</li>
+	<li>
+%O に向けて，名前 `open$et の`~eventを発火する$
+</li>
+</ol>
+
+◎
+When a user agent is to announce the connection, the user agent must queue a task which, if the readyState attribute is set to a value other than CLOSED, sets the readyState attribute to OPEN and fires an event named open at the EventSource object.
+</div>
+
+<div class="algorithm">
+<p>
+~UAは、
+`接続を確立し直す@
+ときは、次の手続きを走らすモノトスル：
+◎
+When a user agent is to reestablish the connection, the user agent must run the following steps. These steps are run in parallel, not as part of a task. (The tasks that it queues, of course, are run like normal tasks and not themselves in parallel.)
+</p>
+
+<ol>
+	<li>
+~RET
+— ただし、以降の手続きは`並列的$に継続する
+◎
+↑</li>
+	<li>
+%O ~LET 当の `EventSource$I ~obj
+◎
+↓</li>
+	<li>
+<p>
+次の手続きを走らす`~taskを~queueする$：
+◎
+Queue a task to run the following steps:
+</p>
+		<ol>
+			<li>
+~IF［
+%O の `readyState$m 属性 ~NEQ `CLOSED$m
+］
+⇒
+~RET
+◎
+If the readyState attribute is set to CLOSED, abort the task.
+</li>
+			<li>
+%O の `readyState$m 属性 ~SET `CONNECTING$m
+◎
+Set the readyState attribute to CONNECTING.
+</li>
+			<li>
+%O に向けて，名前 `error$et の`~eventを発火する$
+◎
+Fire an event named error at the EventSource object.
+</li>
+		</ol>
+	</li>
+	<li>
+%O の`再接続~時間$eSだけ待機する
+◎
+Wait a delay equal to the reconnection time of the event source.
+</li>
+	<li>
+任意選択で
+⇒
+更にいくばくか待機する。
+特に、前回の試みが失敗した場合，~serverはすでに過負荷にあるかもしれないので、~UAは ベキ乗打ち切り待機法（ exponential backoff ）による遅延を導入することもできる。
+あるいは，~OSから~network接続できないと報告された場合には、~OSから その~~回復が公告されるまで待機する。
+◎
+Optionally, wait some more. In particular, if the previous attempt failed, then user agents might introduce an exponential backoff delay to avoid overloading a potentially already overloaded server. Alternatively, if the operating system has reported that there is no network connectivity, user agents might wait for the operating system to announce that the network connection has returned before retrying.
+</li>
+			<li>
+上で~queueした~taskがまだ走っていないならば，走るまで待機する
+<!-- 走り終える？ -->
+◎
+Wait until the aforementioned task has run, if it has not yet run.
+</li>
+			<li>
+<p>
+次の手続きを走らす`~taskを~queueする$：
+◎
+Queue a task to run the following steps:
+</p>
+				<ol>
+					<li>
+~IF［
+%O の `readyState$m 属性 ~NEQ `CONNECTING$m
+］
+⇒
+~RET
+◎
+If the EventSource object's readyState attribute is not set to CONNECTING, return.
+</li>
+			<li>
+%要請 ~LET %O の`要請$eS
+◎
+Let request be the EventSource object's request.
+</li>
+			<li>
+~IF［
+%O の`最後の~event~ID文字列$eS ~NEQ 空~文字列
+］
+⇒
+%要請 の`~header~list$rq内で`~headerを設定する$( `Last-Event-ID$h / `~UTF-8符号化する$( `最後の~event~ID文字列$eS ) )
+◎
+If the EventSource object's last event ID string is not the empty string, set `Last-Event-ID`/last event ID string, encoded as UTF-8, in request's header list.
+</li>
+			<li>
+%要請 を`~fetch$する
+⇒
+この~fetchに対し得された応答は、この節の最初あたりで述べたように処理する
+◎
+Fetch request and process the response obtained in this fashion, if any, as described earlier in this section.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+~UAは，
+`接続を失敗させ@
+るときは、次を走らす`~taskを~queueする$モノトスル：
+◎
+When a user agent is to fail the connection, the user agent must queue a task which,＼
+</p>
+
+<ol>
+	<li>
+%O ~LET 当の `EventSource$I ~obj
+◎
+＼
+</li>
+	<li>
+<p>
+~IF［
+%O の `readyState$m 属性 ~NEQ `CLOSED$m
+］：
+◎
+if the readyState attribute is set to a value other than CLOSED,＼
+</p>
+		<ol>
+			<li>
+%O の `readyState$m 属性 ~SET `CLOSED$m
+◎
+sets the readyState attribute to CLOSED and＼
+</li>
+			<li>
+%O に向けて，名前 `error$et の`~eventを発火する$
+◎
+fires an event named error at the EventSource object.＼
+</li>
+		</ol>
+	</li>
+</ol>
+
+<p>
+<strong>
+~UAは、`接続を失敗させ$たときは，再接続しようと <em>試みないこと</em>。
+</strong>
+◎
+Once the user agent has failed the connection, it does not attempt to reconnect!
+</p>
+</div>
+
+<hr>
+
+<p>
+`EventSource$I ~objにより`~queueされ$るどの`~task$に対しても，その`~task源$は
+`~remote~event~task源@
+とする。
+◎
+The task source for any tasks that are queued by EventSource objects is the remote event task source.
+</p>
+
+			</section>
+			<section id="parsing-an-event-stream">
+<h3 title="Parsing an event stream">9.2.4. ~event~streamの構文解析</h3>
+
+<p>
+この~event~stream形式の`~MIME型$は、
+`text/event-stream$c
+である。
+◎
+This event stream format's MIME type is text/event-stream.
+</p>
+
+<p>
+~event~stream形式は、次の `ABNF$r における `stream$P 生成規則で与えられる
+— この~ABNFの文字~集合は~Unicodeとする：
+◎
+The event stream format is as described by the stream production of the following ABNF, the character set for which is Unicode. [ABNF]
+</p>
+
+<pre class="bnf">
+`stream@P        = [ `bom$P ] *`event$P
+`event@P         = *( `comment$P / `field$P ) `end-of-line$P
+`comment@P       = `colon$P *`any-char$P `end-of-line$P
+`field@P         = 1*`name-char$P [ `colon$P [ `space$P ] *`any-char$P ] `end-of-line$P
+`end-of-line@P   = ( `cr$P `lf$P / `cr$P / `lf$P )
+
+; <span class="comment">各種~文字</span>
+`lf@P            = `000A^0x ; U+000A LINE FEED (LF)
+`cr@P            = `000D^0x ; U+000D CARRIAGE RETURN (CR)
+`space@P         = `0020^0x ; U+0020 SPACE
+`colon@P         = `003A^0x ; U+003A COLON (:)
+`bom@P           = `FEFF^0x ; U+FEFF BYTE ORDER MARK
+`name-char@P     = `0000-0009^0x / `000B-000C^0x / `000E-0039^0x / `003B-10FFFF^0x
+                ; <span class="comment">
+`lf$P, `cr$P, `colon$P 以外の`~scalar値$
+◎
+; a scalar value other than U+000A LINE FEED (LF), U+000D CARRIAGE RETURN (CR), or U+003A COLON (:)
+</span>
+`any-char@P      = `0000-0009^0x / `000B-000C^0x / `000E-10FFFF^0x
+                ; <span class="comment">
+`lf$P, `cr$P 以外の`~scalar値$
+◎
+; a scalar value other than U+000A LINE FEED (LF) or U+000D CARRIAGE RETURN (CR)
+</span>
+</pre>
+
+<p>
+この形式による~event~streamは、常に ~UTF-8に符号化されなければナラナイ。
+`ENCODING$r
+◎
+Event streams in this format must always be encoded as UTF-8. [ENCODING]
+</p>
+
+<p>
+各 行lどうしは、 `end-of-line$P（
+`cr$P +`lf$P, `lf$P, `cr$P
+のいずれか）で分離されなければナラナイ。
+◎
+Lines must be separated by either a U+000D CARRIAGE RETURN U+000A LINE FEED (CRLF) character pair, a single U+000A LINE FEED (LF) character, or a single U+000D CARRIAGE RETURN (CR) character.
+</p>
+
+<p>
+そのような資源~用に確立された~remote~serverへの接続は，長く生き残るものと予期されるので、~UAは
+適切な~bufferingが利用されることを確保するべきである。
+特に，各 行lが 1 個の `lf$P で終端するように定義される~bufferingは安全である一方で、~block~bufferingや, 異なる行l終端-法を期待する行l~bufferingは，~event配送-を遅延させ得る。
+◎
+Since connections established to remote servers for such resources are expected to be long-lived, UAs should ensure that appropriate buffering is used. In particular, while line buffering with lines are defined to end with a single U+000A LINE FEED (LF) character is safe, block buffering or line buffering with different expected line endings can cause delays in event dispatch.
+</p>
+
+
+
+			</section>
+			<section id="event-stream-interpretation">
+<h3 title="Interpreting an event stream">9.2.5. ~event~streamの解釈-法</h3>
+
+<p>
+~streamは、`~UTF-8復号する$~algoで復号するモノトスル。
+◎
+Streams must be decoded using the UTF-8 decode algorithm.
+</p>
+
+<p class="note">注記：
+`~UTF-8復号する$~algoは、先頭に~UTF-8 Byte Order Mark （ `bom$P ）があれば それを剥ぎ取る。
+◎
+The UTF-8 decode algorithm strips one leading UTF-8 Byte Order Mark (BOM), if any.
+</p>
+
+<div class="p">
+<p>
+~streamは、行lごとに そこに現れるすべてを読取ることにより，構文解析するモノトスル。
+行lが終端するのは、次のいずれか（ “改行” ）が現れる所に限られるとする：
+</p>
+
+<ul ><li>`cr$P + `lf$P 文字~pair
+</li><li>`cr$P が先行しない 1 個の `lf$P
+</li><li>`lf$P が後続しない 1 個の `cr$P
+</li></ul>
+
+【改行~自身は行lには含まれない。】
+
+◎
+The stream must then be parsed by reading everything line by line, with a U+000D CARRIAGE RETURN U+000A LINE FEED (CRLF) character pair, a single U+000A LINE FEED (LF) character not preceded by a U+000D CARRIAGE RETURN (CR) character, and a single U+000D CARRIAGE RETURN (CR) character not followed by a U+000A LINE FEED (LF) character being the ways in which a line can end.
+</div>
+
+<p>
+~streamを構文解析する~algoの各~instanceには，［
+%~data~buffer,
+%~event型~buffer,
+%最後の~event~ID~buffer
+］が結付けられ、いずれも空~文字列に初期化されるモノトスル。
+◎
+When a stream is parsed, a data buffer, an event type buffer, and a last event ID buffer must be associated with it. They must be initialized to the empty string
+</p>
+
+<p>
+それは、~EACH ( 行l %行l ) に対し，受信された順序で、次を走らす：
+◎
+Lines must be processed, in the order they are received, as follows:
+</p>
+
+<ol>
+	<li>
+~IF［
+%行l は空である（空行）
+］
+⇒
+下に定義されるように`~eventを配送-$する
+◎
+If the line is empty (a blank line)
+◎
+• Dispatch the event, as defined below.
+</li>
+	<li>
+~ELIF［
+%行l の先頭の文字 ~EQ `colon$P
+］
+⇒
+~CONTINUE
+◎
+If the line starts with a U+003A COLON character (:)
+◎
+• Ignore the line.
+</li>
+	<li>
+<p>
+~IF［
+%行l は `colon$P を包含する
+］：
+◎
+If the line contains a U+003A COLON character (:)
+</p>
+		<ol>
+			<li>
+( %名, %値 ) ~LET  %行l 内の最初の `colon$P より
+( 前の部分の文字列, 後の部分の文字列 )
+◎
+Collect the characters on the line before the first U+003A COLON character (:), and let field be that string.
+◎
+Collect the characters on the line after the first U+003A COLON character (:), and let value be that string. If value starts with a U+0020 SPACE character, remove it from value.
+</li>
+			<li>
+~IF［
+%値 の先頭の文字 ~EQ `space$P
+］
+⇒
+%値 から先頭の文字を除去する
+◎
+↑</li>
+			<li>
+`~fieldを処理する$( %名, %値 )
+◎
+Process the field using the steps described below, using field as the field name and value as the field value.
+</li>
+		</ol>
+	</li>
+	<li>
+~ELSE（文字列は空でないが `colon$P を包含しない）
+⇒
+`~fieldを処理する$( %行l, 空~文字列 )
+◎
+Otherwise, the string is not empty but does not contain a U+003A COLON character (:)
+
+◎
+Process the field using the steps described below, using the whole line as the field name, and the empty string as the field value.
+</li>
+</ol>
+
+<p>
+~streamの終端-に達したときの最後の~blockが，空行で終端されていない場合、その~blockの~dataは破棄するモノトスル。
+（そのような~blockに対しては、~eventは配送されない。）
+（~blockとは、空行で互いに分離されていない，一連の行lを意味する。）
+◎
+Once the end of the file is reached, any pending data must be discarded. (If the file ends in the middle of an event, before the final empty line, the incomplete event is not dispatched.)
+</p>
+
+<hr>
+
+<div class="algorithm">
+<p>
+`~fieldを処理する@
+ときは、所与の
+( %名, %値 )
+に対し，
+%名 に応じて：
+<!-- 
+Field names must be compared literally, with no case folding performed.
+ -->
+◎
+The steps to process the field given a field name and a field value depend on the field name, as given in the following list. Field names must be compared literally, with no case folding performed.
+</p>
+
+<dl class="switch">
+	<dt>`event^l
+◎
+If the field name is "event"
+</dt>
+	<dd>
+%~event型~buffer ~SET %値
+◎
+Set the event type buffer to field value.
+</dd>
+
+	<dt>`data^l
+◎
+If the field name is "data"
+</dt>
+	<dd>
+%~data~buffer に［
+%値, 1 個の `lf$P
+］を順に付加する
+◎
+Append the field value to the data buffer, then append a single U+000A LINE FEED (LF) character to the data buffer.
+</dd>
+
+	<dt>`id^l
+◎
+If the field name is "id"
+</dt>
+	<dd>
+<p>
+~IF［
+%値 は
+<span class="code-point">U+0000</span> <span class="cp-name">NULL</span>
+を包含しない
+］
+⇒
+%最後の~event~ID~buffer ~SET %値
+</p>
+<p>
+（他の場合、この~fieldは無視する。）
+</p>
+◎
+If the field value does not contain U+0000 NULL, then set the last event ID buffer to the field value. Otherwise, ignore the field.
+</dd>
+
+	<dt>`retry^l
+◎
+If the field name is "retry"
+</dt>
+	<dd>
+<p>
+~IF［
+%値 は`~ASCII数字$のみからなる
+］
+⇒
+~event~streamの`再接続~時間$eS ~SET %値 を基数 10 の整数に解釈した結果
+</p>
+<p>
+（他の場合、この~fieldは無視する。）
+</p>
+◎
+If the field value consists of only ASCII digits, then interpret the field value as an integer in base ten, and set the event stream's reconnection time to that integer. Otherwise, ignore the field.
+</dd>
+
+	<dt>
+他の場合
+◎
+Otherwise
+</dt>
+	<dd>
+何もしない（この~fieldは無視する。）
+◎
+The field is ignored.
+</dd>
+</dl>
+</div>
+
+<div class="example">
+【この例は、訳者による補足。】
+
+<p>
+したがって、次の例の様に，同じ~block内に複数の `event^l 行lが含まれている場合、最後に現れたものが、他を上書きすることになる（ `id^l についても同様になる）：
+</p>
+
+<pre class="presentation">
+event: add
+event: remove
+data: 1234
+</pre>
+
+<p>
+対照的に， `data^l 行lは、行lごとに~data + `lf$P を付加する。
+ただし，~block内の最後の `lf$P は除かれる（下に述べる~eventを配送する手続きの中で除去される）。
+</p>
+
+</div>
+
+<p>
+~UAは、
+`~eventを配送-@
+するよう要求されたときは、
+( %~data~buffer, %~event型~buffer, %最後の~event~ID~buffer )
+を~UAに適切な手続きを利用して処理するモノトスル。
+◎
+When the user agent is required to dispatch the event, the user agent must process the data buffer, the event type buffer, and the last event ID buffer using steps appropriate for the user agent.
+</p>
+
+<div class="algorithm">
+<p>
+~web~browserに対しては、`~eventを配送-$する適切な手続きは，次に従うとする：
+◎
+For web browsers, the appropriate steps to dispatch the event are as follows:
+</p>
+
+<ol>
+	<li>
+%O ~LET 当の `EventSource$I ~obj
+◎
+↓</li>
+	<li>
+<p>
+%O の`最後の~event~ID文字列$eS ~SET %最後の~event~ID~buffer
+◎
+Set the last event ID string of the event source to the value of the last event ID buffer.＼
+</p>
+
+<p>
+この~bufferは，
+【他の~bufferと違って ~eventが生じるごとに】
+再設定されないので、
+%O の`最後の~event~ID文字列$eSは，この~bufferが次回に~serverにより設定されるまで残り続ける。
+◎
+The buffer does not get reset, so the last event ID string of the event source remains set to this value until the next time it is set by the server.
+</p>
+	</li>
+	<li>
+~IF［
+%~data~buffer ~EQ 空~文字列
+］
+⇒＃
+( %~data~buffer, %~event型~buffer ) ~SET ( 空~文字列, 空~文字列 )；
+~RET
+◎
+If the data buffer is an empty string, set the data buffer and the event type buffer to the empty string and return.
+</li>
+	<li>
+~IF［
+%~data~buffer の最後の文字 ~EQ `lf$P
+］
+⇒
+%~data~buffer から最後の文字を除去する
+◎
+If the data buffer's last character is a U+000A LINE FEED (LF) character, then remove the last character from the data buffer.
+</li>
+	<li>
+%~event ~LET `~eventを作成する$( `MessageEvent$I ~interface, %O に`関連な~Realm$ )
+◎
+Let event be the result of creating an event using MessageEvent, in the relevant Realm of the EventSource object.
+</li>
+	<li>
+%~event の各種~属性を次のように初期化する
+⇒＃
+`type$m ~SET `message$et,
+`data$m ~SET %~data,
+`origin$m ~SET `生成元を直列化する$( 当の~event~streamの最終的な~URL（すなわち，~redirect後の~URL）の`生成元$url ),
+`lastEventId$m ~SET %O の`最後の~event~ID文字列$eS
+◎
+Initialize event's type attribute to message, its data attribute to data, its origin attribute to the serialization of the origin of the event stream's final URL (i.e., the URL after redirects), and its lastEventId attribute to the last event ID string of the event source.
+</li>
+	<li>
+~IF［
+%~event型~buffer ~NEQ 空~文字列
+］
+⇒
+%~event の `type$m ~SET %~event型~buffer
+◎
+If the event type buffer has a value other than the empty string, change the type of the newly created event to equal the value of the event type buffer.
+</li>
+	<li>
+( %~data~buffer, %~event型~buffer ) ~SET ( 空~文字列, 空~文字列 )
+◎
+Set the data buffer and the event type buffer to the empty string.
+</li>
+	<li>
+<p>
+次を走らす`~taskを~queueする$：
+</p>
+		<ol>
+			<li>
+~IF［
+%O の `readyState$m 属性~値 ~NEQ `CLOSED$m
+］
+⇒
+%O に向けて %~event を`配送-$する
+</li>
+		</ol>
+◎
+Queue a task which, if the readyState attribute is set to a value other than CLOSED, dispatches the newly created event at the EventSource object.
+</li>
+</ol>
+</div>
+
+<p class="note">注記：
+~event（ `event$P ）に `id^l ~fieldが伴われていない場合、その~eventから生じる `MessageEvent$I ~event の `lastEventId$m ~fieldは、最後に~~見出された `id^l ~fieldの値
+— すなわち，その前の~eventにより設定された`最後の~event~ID文字列$eS
+【 `id^l がまだ見出されていなければ，空~文字列（ %最後の~event~ID~buffer の初期~値）】
+—
+に設定されることになる。
+◎
+If an event doesn't have an "id" field, but an earlier event did set the event source's last event ID string, then the event's lastEventId field will be set to the value of whatever the last seen "id" field was.
+</p>
+
+<p>
+他の~UAに対しては、`~eventを配送-$する適切な手続きは 実装に依存するが、最小限，手続きを終える前に［
+%~data~buffer, %~event型~buffer
+］を空~文字列に設定するモノトスル。
+◎
+For other user agents, the appropriate steps to dispatch the event are implementation dependent, but at a minimum they must set the data and event type buffers to the empty string before returning.
+</p>
+
+<div class="example">
+
+<p>
+次の~event~stream（空行で終端されている）に対しては：
+◎
+The following event stream, once followed by a blank line:
+</p>
+
+<pre class="presentation">
+data: YHOO
+data: +2
+data: 10
+</pre>
+
+<p>
+`EventSource$I ~objに向けて，
+`MessageEvent$I ~interfaceを利用する `message$et ~eventを配送させることになる。
+~eventの `data$m 属性は、文字列
+`YHOO\n+2\n10^l
+を包含することになる（ `\n^l は改行文字（ `lf$P ）を表現する）。
+◎
+...would cause an event message with the interface MessageEvent to be dispatched on the EventSource object. The event's data attribute would contain the string "YHOO\n+2\n10" (where "\n" represents a newline).
+</p>
+
+<p>
+これは、次のように利用できる：
+◎
+This could be used as follows:
+</p>
+
+<pre class="lang-js">
+var %stocks = new EventSource("https://stocks.example.com/ticker.php");
+stocks.onmessage = function (%event) {
+  var %data = %event.data.split('\n');
+  updateStocks(%data[0], %data[1], %data[2]);
+};
+</pre>
+
+<p>
+（ `updateStocks()^c は、~data処理用の何らかの関数。）
+◎
+...where updateStocks() is a function defined as:
+◎
+function updateStocks(symbol, delta, value) { ... }
+◎
+...or some such.
+</p>
+
+</div>
+
+<div class="example">
+
+<p>
+次の~streamは、 4 個の~blockを包含する。
+1 個目の~blockは、~commentなので，~eventは発火されない。
+2 個目の~blockに対しては、~eventが発火されることになる
+— そこには、名前 `data^l の~field（値に `first event^l を伴う）に加え，名前
+`id^l の~fieldもあり、`最後の~event~ID文字列$eS を `1^l に設定することになる。
+この~blockと次の~blockの合間で接続が切れた場合、再接続-時に，~serverに向けて値 `1^l を伴う `Last-Event-ID$h ~headerが送信されることになる。
+3 個目の~blockも~eventを発火し， `data^l の値に `second event^l を伴うが、
+`id^l ~fieldには値は伴われていない
+— それは、`最後の~event~ID文字列$eS を空~文字列に再設定する（今度は、再接続が試みられる場合には， `Last-Event-ID$h ~headerは送信されないことを意味する）。
+最後の 4 個目の~blockは、単に~dataに ` third event^l （先頭の文字は `space$P ）を伴わせた~eventを発火する。
+最後の~blockであっても，空行で終端させる必要があることに注意
+— ~streamが終端するだけでは，最後の~blockに対する~event配送を誘発するには十分でない。
+◎
+The following stream contains four blocks. The first block has just a comment, and will fire nothing. The second block has two fields with names "data" and "id" respectively; an event will be fired for this block, with the data "first event", and will then set the last event ID to "1" so that if the connection died between this block and the next, the server would be sent a `Last-Event-ID` header with the value "1". The third block fires an event with data "second event", and also has an "id" field, this time with no value, which resets the last event ID to the empty string (meaning no `Last-Event-ID` header will now be sent in the event of a reconnection being attempted). Finally, the last block just fires an event with the data " third event" (with a single leading space character). Note that the last still has to end with a blank line, the end of the stream is not enough to trigger the dispatch of the last event.
+</p>
+
+<pre class="presentation">
+: test stream
+
+data: first event
+id: 1
+
+data:second event
+id
+
+data:&nbsp;&nbsp;third event
+</pre>
+
+</div>
+
+<div class="example">
+
+<p>
+次の~streamは、最後の~blockは空行で終端されていないならば， 2 個の~eventを発火する：
+◎
+The following stream fires two events:
+</p>
+
+<pre class="presentation">
+data
+
+data
+data
+
+data:
+</pre>
+
+<p>
+1 個目の~blockは、~data が空~文字列にされた~eventを発火する。
+2 個目の~blockは、~dataを 1 個の改行文字に設定した上で，~eventを発火する。
+3 個目の~blockは、空行が後続していないので，破棄される。
+◎
+The first block fires events with the data set to the empty string, as would the last block if it was followed by a blank line. The middle block fires an event with the data set to a single newline character. The last block is discarded because it is not followed by a blank line.
+</p>
+
+</div>
+
+<div class="example">
+
+<p>
+次の~streamは、 2 個の~~等価な~eventを発火する：
+◎
+The following stream fires two identical events:
+</p>
+
+<pre class="presentation">
+data:test
+
+data:&nbsp;test
+</pre>
+
+<p>
+`colon$P の直後にある 1 個の `space$P は、無視されるので。
+◎
+This is because the space after the colon is ignored if present.
+</p>
+
+</div>
+
+
+
+			</section>
+			<section id="authoring-notes">
+<h3 title="Authoring notes">9.2.6. 著作~上の注記</h3>
+
+<p>
+旧来の~proxy~serverは、ある種の事例では、短い~timeout後に~HTTP接続を落とすことが知られている。
+作者は、およそ毎 15 秒ごとに，~comment行l（`colon$P から開始される行l）を含ませることにより，そのような~proxy~serverに抗して保護できる。
+◎
+Legacy proxy servers are known to, in certain cases, drop HTTP connections after a short timeout. To protect against such proxy servers, authors can include a comment line (one starting with a ':' character) every 15 seconds or so.
+</p>
+
+<p>
+~event~source接続を［
+互いに, あるいは以前に~serveされた特定の文書
+］に関係させたいと望む作者は、~IP~addressに依拠するのでは，うまく働かないことを見出すであろう
+— （複数の~proxy~serverを通すことに因り）同じ~clientが 複数の~IP~addressから接続することもあれば、（~proxy~serverを共有していることに因り）複数の~clientが 同じ~IP~addressから接続することもあるので。
+文書を~serveするときに，その文書~内に一意な識別子を含ませておいて、接続の確立-時に その識別子を~URLの一部として渡す方が良い。
+◎
+Authors wishing to relate event source connections to each other or to specific documents previously served might find that relying on IP addresses doesn't work, as individual clients can have multiple IP addresses (due to having multiple proxy servers) and individual IP addresses can have multiple clients (due to sharing a proxy server). It is better to include a unique identifier in the document when it is served and then pass that identifier as part of the URL when the connection is established.
+</p>
+
+<p>
+作者は，また、~HTTP~chunk法
+【おそらく，<a href="~HTTPmsg#chunked.encoding">chunked transfer coding</a> を指す】
+は，この~protocolの信頼性に 予期されない負な効果をもたらし得ることにも警戒すること
+— 特に、~chunkingが~timing要件に関知しない層で行われている場合には。
+これが問題になる場合、~event~streamの~serveに対しては，~chunkingを不能化できる。
+◎
+Authors are also cautioned that HTTP chunking can have unexpected negative effects on the reliability of this protocol, in particular if the chunking is done by a different layer unaware of the timing requirements. If this is a problem, chunking can be disabled for serving event streams.
+</p> 
+
+<div class="p">
+<p>
+~HTTPによる~server単位の接続~数~制限
+【おそらく，<a href="~HTTPmsg#persistent.concurrency">HTTP Messaging § Concurrency</a> を指す】
+を~supportする~clientは、ある~siteから複数の~pageを~openしたとき，その各~pageに同じ~domainへの `EventSource$I がある場合に 困らされることもある。
+作者がこれを避ける方法には、次が挙げられる：
+</p>
+
+<ul><li>より複階的な仕組みを利用する
+</li><li>接続ごとに一意な~domain名を利用する
+</li><li>利用者が~pageごとに `EventSource$I の機能性を可能化したり不能化できるようにする
+</li><li>単独の `EventSource$I ~objを`共用~worker内$で共有する
+</li></ul>
+
+◎
+Clients that support HTTP's per-server connection limitation might run into trouble when opening multiple pages from a site if each page has an EventSource to the same domain. Authors can avoid this using the relatively complex mechanism of using unique domain names per connection, or by allowing the user to enable or disable the EventSource functionality on a per-page basis, or by sharing a single EventSource object using a shared worker.
+</div>
+
+			</section>
+			<section id="eventsource-push">
+<h3 title="Connectionless push and other features">9.2.7. 無接続~pushと他の特能</h3>
+
+<p>
+制御~下にある環境で走っている~UA
+— 例えば，特定の~carrierに束ねられている携帯機の~browser —
+は、接続の管理を~network上の~proxyに負荷移譲してもヨイ。
+適合性の目的においては、そのような状況における~UAは，その携帯機~softwareと~network~proxyの両者を含むものと見なされる。
+◎
+User agents running in controlled environments, e.g. browsers on mobile handsets tied to specific carriers, may offload the management of the connection to a proxy on the network. In such a situation, the user agent for the purposes of conformance is considered to include both the handset software and the network proxy.
+</p>
+
+<div class="example">
+
+<p>
+例えば，携帯機の~browserは、接続を確立した後に、その接続は 【~proxyが】
+~supportしている~networkであることを検出して，その~network上の~proxy~serverに接続の管理を司るよう要請するかもしれない。
+そのような状況においては、次のような経過を辿ることになる：
+◎
+For example, a browser on a mobile device, after having established a connection, might detect that it is on a supporting network and request that a proxy server on the network take over the management of the connection. The timeline for such a situation might be as follows:
+</p>
+
+<ol>
+	<li>
+~browserは、作者が `new EventSource()$m 構築子にて指定した資源を，~remote~HTTP~serverへ接続して要請する。
+◎
+Browser connects to a remote HTTP server and requests the resource specified by the author in the EventSource constructor.
+</li>
+	<li>
+~serverは、各~messageを不定期に送信する。
+◎
+The server sends occasional messages.
+</li>
+	<li>
+~browserは、ある 2 つの~messageの合間に，［
+~TCP接続を~~維持し続けるための~network活動を除き，自身は遊休~中にある
+］ことを検出したので、電力を節約するため，~sleep~modeへ切替えるものと裁定した。
+◎
+In between two messages, the browser detects that it is idle except for the network activity involved in keeping the TCP connection alive, and decides to switch to sleep mode to save power.
+</li>
+	<li>
+~browserは、~serverから切断される。
+◎
+The browser disconnects from the server.
+</li>
+	<li>
+~browserは、当の接続を保守する代わりに，上述した~network上の~serviceに接触して “~push~proxy” ~serviceを要請する。
+◎
+The browser contacts a service on the network, and requests that the service, a "push proxy", maintain the connection instead.
+</li>
+	<li>
+“~push~proxy” ~serviceは、~remote~HTTP~serverに接触して，作者が `new EventSource()$m 構築子にて指定した資源を要請する（場合によっては， `Last-Event-ID$h ~HTTP~header, 等々が含まれる）。
+◎
+The "push proxy" service contacts the remote HTTP server and requests the resource specified by the author in the EventSource constructor (possibly including a `Last-Event-ID` HTTP header, etc).
+</li>
+	<li>
+~browserは、携帯機に~sleepすることを許容する。
+◎
+The browser allows the mobile device to go to sleep.
+</li>
+	<li>
+~serverは、別の~messageを送信する。
+◎
+The server sends another message.
+</li>
+	<li>
+“~push~proxy” ~serviceは、~eventを携帯機に運ぶため，~OMA~pushなどの技術を利用する
+— それは、~eventを処理するに足るだけ携帯機を目覚めさせてから，~sleepに戻す。
+【OMA = おそらく、 Open Mobile Alliance（携帯電話の規格を策定する組織）を指す。】
+◎
+The "push proxy" service uses a technology such as OMA push to convey the event to the mobile device, which wakes only enough to process the event and then returns to sleep.
+</li>
+</ol>
+
+</div>
+
+<p>
+これは，総~data使用量を抑制する結果、~~相当に電力を節約する。
+◎
+This can reduce the total data usage, and can therefore result in considerable power savings.
+</p>
+
+<p>
+［
+既存の~API, および
+`text/event-stream$c 伝送路~形式
+］を［
+この仕様により定義されるように, および
+上に述べたような より分散的な仕方
+］で実装することに加え、`適用-可能な仕様$により定義される［
+~event~frame法の形式
+］も~supportされてヨイ。
+この仕様は、それがどう構文解析され, 処理されるかは，定義しない。
+◎
+As well as implementing the existing API and text/event-stream wire format as defined by this specification and in more distributed ways as described above, formats of event framing defined by other applicable specifications may be supported. This specification does not define how they are to be parsed or processed.
+</p>
+
+			</section>
+			<section id="garbage-collection">
+<h3 title="Garbage collection">9.2.8. ~garbage収集</h3>
+
+<p>
+［
+`Window$I ／ `WorkerGlobalScope$I
+］~obj %G 内の構築子を呼出して作成された `EventSource$I ~obj %O
+に対しては、次のいずれかが満たされている間は，
+%G から %O への強い参照-があるモノトスル：
+◎
+↓</p>
+
+<ul>
+	<li>
+［
+%O の `readyState$m ~EQ `CONNECTING$m
+］~AND［
+%O には［
+`open$et ／ `message$et ／`error$et
+］~eventに対する~event~listenerが 1 個~以上~登録されている
+］
+◎
+While an EventSource object's readyState is CONNECTING, and the object has one or more event listeners registered for open, message or error events, there must be a strong reference from the Window or WorkerGlobalScope object that the EventSource object's constructor was invoked from to the EventSource object itself.
+</li>
+	<li>
+［
+%O の `readyState$m ~EQ `OPEN$m
+］~AND［
+%O には［
+`message$et ／ `error$et
+］~eventに対する~event~listenerが 1 個~以上~登録されている
+］
+◎
+While an EventSource object's readyState is OPEN, and the object has one or more event listeners registered for message or error events, there must be a strong reference from the Window or WorkerGlobalScope object that the EventSource object's constructor was invoked from to the EventSource object itself.
+</li>
+	<li>
+%O により`~remote~event~task源$から~queueされた~taskがある
+◎
+While there is a task queued by an EventSource object on the remote event task source, there must be a strong reference from the Window or WorkerGlobalScope object that the EventSource object's constructor was invoked from to that EventSource object.
+</li>
+</ul>
+
+<div class="algorithm">
+<p>
+~UAは、 `EventSource$I ~obj %O を
+`強制的に~closeする@
+ときは（これは `Document$I ~objが永続的に消去ったときに起こる），次を走らすモノトスル：
+</p> 
+
+<ol>
+	<li>
+%O 用に開始された すべての`~fetch$~algoを中止する
+</li>
+	<li>
+%O の `readyState$m 属性 ~SET `CLOSED$m 
+</li>
+</ol>
+
+◎
+If a user agent is to forcibly close an EventSource object (this happens when a Document object goes away permanently), the user agent must abort any instances of the fetch algorithm started for this EventSource object, and must set the readyState attribute to CLOSED.
+</div>
+
+<p>
+`EventSource$I ~obj %O が，接続が依然として~openしている間に~garbage収集された場合、
+~UAは， %O 用に開始された すべての`~fetch$~algoを中止するモノトスル。
+◎
+If an EventSource object is garbage collected while its connection is still open, the user agent must abort any instance of the fetch algorithm opened by this EventSource.
+</p> 
+
+			</section>
+			<section id="implementation-advice">
+<h3 title="Implementation advice">9.2.9. 実装への~advice</h3>
+
+~INFORMATIVE
+
+<p>
+この~APIを利用している作者による~codeの~debugを援助するため、~UAには，［
+`EventSource$I ~obj, および それに関係する~network接続
+］についての詳細な診断~情報を，開発~console内に供することが強く督促される。
+◎
+User agents are strongly urged to provide detailed diagnostic information about EventSource objects and their related network connections in their development consoles, to aid authors in debugging code using this API.
+</p>
+
+<p>
+例えば~UAは、~pageが作成した すべての `EventSource$I ~objのそれぞれについて 次を表示するような~panelを備えることもできる：
+◎
+For example, a user agent could have a panel displaying all the EventSource objects a page has created, each listing＼
+</p>
+
+<div>
+<ul><li >構築子の引数
+</li><li>~network~errorが生じたかどうか
+</li><li>接続の~CORS状態sは何であるか
+</li><li>その状態sに導いた（~clientが送信した／ ~serverから受信された）~headerたち
+</li><li>受信された~message
+</li><li>その~messageはどう構文解析されたか
+</li></ul>
+◎
+the constructor's arguments, whether there was a network error, what the CORS status of the connection is and what headers were sent by the client and received from the server to lead to that status, the messages that were received and how they were parsed, and so forth.
+</div>
+
+<p>
+等々。
+とりわけ， `error$et ~eventが発火されたときには、実装には，詳細な情報を自身の開発~consoleに報告することが奨励される
+— ~event自体から可用になる情報は少ししかないので。
+◎
+Implementations are especially encouraged to report detailed information to their development consoles whenever an error event is fired, since little to no information can be made available in the events themselves.
+</p>
+
+			</section>
+		</section>
+</main>

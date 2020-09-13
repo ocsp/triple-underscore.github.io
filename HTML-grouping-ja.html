@@ -1,0 +1,4356 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Grouping content（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		persisted_parts: Util.collectHtmlCodeList(),
+		toc_main: 'grouping-content',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'U':
+	text = `U+${key}`
+	break;
+case 'xCode':
+	return `<a id="_ex-${key}">＊</a>`;
+	break;
+case 'AA':
+	return `<a href="~HTMLARIA#el-${key}">作者~向け</a>／<a href="~HTMLAAM#el-${key}">実装者~向け</a>`;
+	break;
+case 'obsMb':
+	text = '廃用にされた~memberもある';
+	href= `~HTMLLS/obsolete.html#${key}-partial`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-09-02
+trans_update:2020-06-09
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/grouping-content.html
+	abbr_url:HEgrouping
+nav_prev:HEsections
+nav_next:HEtextlevel
+trans_1st_pub:2016-08-10
+
+
+●●class_map
+e:element
+a:attr
+p:property
+st:attr-state
+v:value
+E:error
+U:code-point
+obsMb:comment
+
+●●tag_map
+I:code
+m:code
+E:code
+c:code
+e:code
+a:code
+st:span
+p:code
+v:code
+i:i
+U:span
+obsMb:span
+
+●●original_id_map
+
+●●mdn_urls
+the-blockquote-element:HTML/Element/blockquote
+the-div-element:HTML/Element/div
+the-dl-element:HTML/Element/dl
+the-dd-element:HTML/Element/dd
+the-dt-element:HTML/Element/dt
+the-figure-element:HTML/Element/figure
+the-figcaption-element:HTML/Element/figcaption
+the-hr-element:HTML/Element/hr
+the-li-element:HTML/Element/li
+the-main-element:HTML/Element/main
+the-menu-element:HTML/Element/menu
+the-ol-element:HTML/Element/ol
+the-p-element:HTML/Element/p
+the-pre-element:HTML/Element/pre
+the-ul-element:HTML/Element/ul
+
+htmldlistelement:API/HTMLDListElement
+htmldivelement:API/HTMLDivElement
+htmlhrelement:API/HTMLHRElement
+htmllielement:API/HTMLLIElement
+htmlolistelement:API/HTMLOListElement
+htmlparagraphelement:API/HTMLParagraphElement
+htmlpreelement:API/HTMLPreElement
+htmlquoteelement:API/HTMLQuoteElement
+htmlulistelement:API/HTMLUListElement
+htmlmenuelement:API/HTMLMenuElement
+
+●●link_map
+
+
+	●IDL
+CEReactions:~HEcustom#cereactions
+HTMLConstructor:~HTMLdom#htmlconstructor
+
+I.HTMLDListElement:#htmldlistelement
+I.HTMLDivElement:#htmldivelement
+I.HTMLHRElement:#htmlhrelement
+I.HTMLLIElement:#htmllielement
+I.HTMLOListElement:#htmlolistelement
+I.HTMLParagraphElement:#htmlparagraphelement
+I.HTMLPreElement:#htmlpreelement
+I.HTMLQuoteElement:#htmlquoteelement
+I.HTMLUListElement:#htmlulistelement
+I.HTMLMenuElement:#htmlmenuelement
+I.HTMLElement:~HTMLdom#htmlelement
+I.Text:~DOM4#interface-text
+
+m.cite:#dom-quote-cite
+m.reversed:#dom-ol-reversed
+m.start:#dom-ol-start
+m.type:#dom-ol-type
+m.value:#dom-li-value
+
+
+	●要素／属性／属性値／状態
+e.blockquote:#the-blockquote-element
+e.dd:#the-dd-element
+e.main:#the-main-element
+e.div:#the-div-element
+e.dl:#the-dl-element
+e.dt:#the-dt-element
+e.figcaption:#the-figcaption-element
+e.figure:#the-figure-element
+e.hr:#the-hr-element
+e.li:#the-li-element
+e.ol:#the-ol-element
+e.p:#the-p-element
+e.pre:#the-pre-element
+e.ul:#the-ul-element
+
+e.a:~HEtextlevel#the-a-element
+e.cite:~HEtextlevel#the-cite-element
+e.code:~HEtextlevel#the-code-element
+e.dfn:~HEtextlevel#the-dfn-element
+e.kbd:~HEtextlevel#the-kbd-element
+e.q:~HEtextlevel#the-q-element
+e.samp:~HEtextlevel#the-samp-element
+
+e.del:~HEedits#the-del-element
+e.ins:~HEedits#the-ins-element
+
+e.html:~HEmetadata#the-html-element
+e.body:~HEsections#the-body-element
+e.address:~HEsections#the-address-element
+e.article:~HEsections#the-article-element
+e.aside:~HEsections#the-aside-element
+e.header:~HEsections#the-header-element
+e.hgroup:~HEsections#the-hgroup-element
+e.nav:~HEsections#the-nav-element
+e.section:~HEsections#the-section-element
+e.footer:~HEsections#the-footer-element
+e.h1:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h2:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h3:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h4:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h5:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h6:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+
+e.fieldset:~HEforms#the-fieldset-element
+e.form:~HEforms#the-form-element
+
+e.details:~HEinteractive#the-details-element
+e.map:~HEimages#the-map-element
+e.menu:~HEinteractive#the-menu-element
+e.noscript:~HEscripting#the-noscript-element
+e.table:~HEtables#the-table-element
+
+e.audio:~HEmedia#the-audio-element
+e.video:~HEmedia#the-video-element
+
+
+a.cite:#attr-blockquote-cite
+a.reversed:#attr-ol-reversed
+a.start:#attr-ol-start
+a.type:#attr-ol-type
+a.value:#attr-li-value
+
+a.hidden:~HTMLinteraction#the-hidden-attribute
+a.lang:~HTMLdom#attr-lang
+a.title:~HTMLdom#attr-title
+a.class:~HTMLdom#classes
+a.itemref:~HTMLLS/microdata.html#attr-itemref
+
+st.decimal:#attr-ol-type-state-decimal
+st.lower-alpha:#attr-ol-type-state-lower-alpha
+st.lower-roman:#attr-ol-type-state-lower-roman
+st.upper-alpha:#attr-ol-type-state-upper-alpha
+st.upper-roman:#attr-ol-type-state-upper-roman
+
+v.1:#attr-ol-type-keyword-decimal
+v.A:#attr-ol-type-keyword-upper-alpha
+v.I:#attr-ol-type-keyword-upper-roman
+v.i:#attr-ol-type-keyword-lower-roman
+v.a:#attr-ol-type-keyword-lower-alpha
+
+p.list-style-type:~CSSLIST#propdef-list-style-type
+
+	●用語
+
+開始~値:#concept-ol-start
+序数~値:#ordinal-value
+~list所有者:#list-owner
+階層的に正しく:#hierarchically-correct-main-element
+
+
+~sectioning根:~HEsections#sectioning-root
+~outline:~HEsections#outline
+
+~HTML要素:~HTMLINFRA#html-elements
+
+相対的に構文解析-:~HTMLurl#parse-a-url
+前後~空白~可の妥当な~URL:~HTMLurl#valid-url-potentially-surrounded-by-spaces
+
+整数として構文解析する:~HTMLcms#rules-for-parsing-integers
+真偽-属性:~HTMLcms#boolean-attribute
+妥当な整数:~HTMLcms#valid-integer
+
+反映する:~HTMLcdom#reflect
+
+分類:~HTMLdom#concept-element-categories
+内容~属性:~HTMLdom#concept-element-attributes
+内容~model:~HTMLdom#concept-element-content-model
+この要素を利用できる文脈:~HTMLdom#concept-element-contexts
+text/html における~tag省略:~HTMLdom#concept-element-tag-omission
+~accessibilityの考慮点:~HTMLdom#concept-element-accessibility-considerations
+~DOM~interface:~HTMLdom#concept-element-dom
+~flow内容:~HTMLdom#flow-content-2
+大域~属性:~HTMLdom#global-attributes
+なし:~HTMLdom#concept-content-nothing
+可触~内容:~HTMLdom#palpable-content-2
+句ng内容:~HTMLdom#phrasing-content-2
+	双向algoを孕むような具現化~要件が課される:~HTMLdom#bidireq
+見出し内容:~HTMLdom#heading-content-2
+段落:~HTMLdom#paragraph
+表現-:~HTMLdom#represents
+参照-:~HTMLdom#referenced
+~scriptを~supportする要素:~HTMLdom#script-supporting-elements-2
+~sectioning内容:~HTMLdom#sectioning-content-2
+要素間~空白:~HTMLdom#inter-element-whitespace
+
+自律的~custom要素:~HEcustom#autonomous-custom-element
+
+	§ 具現化:~HTMLrendering#decohints
+終了tag:~HTMLwriting#syntax-end-tag
+~HTML構文:~HTMLwriting#syntax
+
+~microdata:~HTMLLS/microdata.html#microdata
+
+具現化されて:~HTMLrendering#being-rendered
+	rendering.html#being-rendered
+
+	●外部
+一致-:~INFRA#string-is
+
+~node文書:~DOM4#concept-node-document
+~tree順序:~DOM4#concept-tree-order
+文書~要素:~DOM4#document-element
+
+算出d値:~CASCADE#computed-value
+p.display:~CSSDISP#propdef-display
+	p.display:~CSS2VISUREN#display-prop
+~CSS~box:~CSSDISP#box
+
+~access可能な名前:~ARIA1#dfn-accessible-name
+
+	~HTMLLS/semantics-other.html#conversations
+
+	＊未利用
+	次の同胞:~DOM4#concept-tree-next-sibling
+	最初の子:~DOM4#concept-tree-first-child
+	dt-or-dd を処理する:#process-dt-or-dd
+
+
+●●words_table1
+
+
+●●words_table
+
+
+
+
+	●内容
+footer::::フッタ
+section::::セクション
+sectioning::::セクショニング
+outline::::アウトライン
+bar::::バー
+microdata:
+threading::::スレッド
+sidebar::::サイドバー
+省略不可:omissibleでない:~
+省略:omission:~
+引用:quotation::~
+引用-:quote::~
+引用元:citation:~
+	引用元をあてがう:cite
+句ng:phrasing::句::フレージング
+可触:palpable::~
+
+分類:categories:~
+	子たち:children
+
+
+帰属:attribution:~
+序数:ordinal:~
+支配的:dominant:~
+文0:sentence:文
+要素間:inter-element:~
+見出し:heading:~
+blog::::ブログ
+章:chapter:~
+ASCII-art:ASCII art:::ASCII アート
+投稿:post::~
+forum::::フォーラム
+返信-:reply:~
+混在-:mix:~
+
+
+会話:conversation/dialogue:~
+figure:
+写真:photo:~
+	photograph
+単語:word:~
+映画:movie:~
+展示:gallery:~
+
+凡例:legend:~
+挿絵:illustration:~
+場面:scene:~
+用語集:glossary:~
+論題:topic:論点
+thema::::テーマ
+	thema的:thematic
+manual::::マニュアル
+story::::ストーリー
+質問:question:~
+回答:answer:~
+主要な:main:~
+境目:break:~
+
+	●呈示
+	-:bullet
+pilcrow:
+typograph::::タイポグラフ
+	typograph上の:typographic
+marker::::マーカ
+roman-numerals:roman numerals::roman 数字:ローマ数字
+	-:prefix
+
+整形済みの:preformatted:~
+	~~降順:backward
+発話:speech::~::スピーチ
+合成器:synthesizer::~::シンセサイザ
+点字:braille:~
+視覚媒体:visual media::~:視覚メディア
+	付番:numbering
+間隙:gap:~
+強調-:highlight:~
+見かけ:look:~
+空行:blank lines:~
+	目を引く:entice
+	脇:side
+	行:line
+	中央に星印を並べた:solitary centered star
+
+
+	●構文
+剥がさ:stripさ:~
+	latin
+改行文字:newline character:~
+終了tag:end tag::終了 tag:終了タグ
+開始tag:start tag::開始 tag:開始タグ
+	一致:identical／:match
+
+	●仕様
+私的:private:~
+普遍的:universal:~
+慣例の:conventionalな:~
+慣行:conventional manner:~
+
+	適切になる:would be fitting
+	~~実際:indeed,
+	通例的でない:unusual
+	類似な:similar
+	~~本質的:material
+	due
+	~~補助
+	~~主要な:key
+	~~向上:better
+	~~手段:resort
+	答え:solution
+
+	●仕様（動詞
+
+自己完結的:self-contained:~
+	relate
+正当化-:justify:~
+読者:reader:~
+助言-:advise:~
+	maintainability
+	疑問が浮かぶ:wonder
+	思い起こ:realize
+	~~対照的にas opposed to
+	~~伝える:convey
+	~~指摘-:spot
+	~~違える:disrupt
+	~~果たす:serve
+	用例を示す:illustrate
+	用語とその記述:term-description
+	~~簡潔:succinct
+	併用:used in conjunction with
+	かかわらず:regardless
+
+	●未分類（動詞
+開始:starting:~
+編集用:editing:~
+往来:roundtrip:~
+分割-:split:~
+
+	-:process
+	-:enable
+	moving
+	association
+	repetition
+
+	●未分類
+email::::メール
+alphabet::::アルファベット
+	alphabetical
+toolbar::::ツールバー
+command::::コマンド
+
+名値:name-value:名-値
+自律的:autonomous:~
+角括弧:square brackets:~
+統計:statistics:~
+	~primarily
+英語:English:~
+単位:unit:~
+双方向-:bidirectional:~
+共有:sharing:~
+印刷本:printed book:~
+指示書き:instruction:~
+架空の:fictionalな:~
+
+	-:literal
+	-:pair
+	-:size
+	~style上の:stylistic
+	~~再構成:restyle
+	~~誤記:mistake
+	失われ:lost
+	辿れる:follow
+	10 進:decimal#2
+	:top#1
+	~code片:snippet
+	場所:place
+	書-:write
+	部分的に~~省略-:abbreviate
+	取り出して:pull
+	対応して:link
+	より大きい:larger
+	短い:short
+	文献:reference book
+	-:fantastic
+	-:relating
+	become
+	book
+	-:project
+	likely
+	alternative
+	編纂:edit
+	alongside
+	belong
+	missing
+	cell
+	straightforward
+	respective
+	note
+	birthplace
+	least
+	account
+	balance
+	whatsoever
+	list-related
+	ten
+	spanning
+	made
+	away
+	本線から逸れた:tangential
+	we
+	~~著作:work
+	previous
+	sometime
+	rest
+	see
+	view
+
+	●指示語
+	~~対象
+	-:current
+	その逆:vice versa
+	の類:of sorts
+	取り巻く:surround
+	種々の:various
+	主な:primarily
+	一節:section
+	後続-:follow
+	前, 後:precede 〜 follows
+	part
+	逆:reverse
+	前後:intermix
+	連続する:consecutive
+	followed
+	consist
+	-:subsequent
+	~~記号:letter
+	指す:refer
+	一部:part of
+	次:next
+	片:listing
+	later
+	~~側面:parts
+	末尾:end
+
+
+●●html_code_list
+
+
+
+■p-1
+<p>The little kitten gently seated herself on a piece of carpet. Later in her life, this would be referred to as the time the cat sat on the mat.</p>
+
+■p-2
+<fieldset>
+ <legend>個人情報</legend>
+ <p>
+   <label>名前： <input name="n"></label>
+   <label><input name="anon" type="checkbox"> 他の利用者から隠す</label>
+ </p>
+ <p><label>住所： <textarea name="a"></textarea></label></p>
+</fieldset>
+
+<fieldset>
+ <legend>Personal information</legend>
+ <p>
+   <label>Name: <input name="n"></label>
+   <label><input name="anon" type="checkbox"> Hide from other users</label>
+ </p>
+ <p><label>Address: <textarea name="a"></textarea></label></p>
+</fieldset>
+
+
+■p-3
+<p>そこにはもう一つ例があったが、<br>
+そのマークアップは出来損ないだった。<br>
+検証器は文句を付け、<br>
+作者は困ったので、<br>
+そのエラーを韻に置き換えた。</p>
+
+<p>There was once an example from Femley,<br>
+Whose markup was of dubious quality.<br>
+The validator complained,<br>
+So the author was pained,<br>
+To move the error from the markup to the rhyming.</p>
+
+■p-4
+<section>
+ <!-- ... -->
+ <p>最終更新： 2001-04-23</p>
+ <p>作者： fred@example.com</p>
+</section>
+
+ <p>Last modified: 2001-04-23</p>
+ <p>Author: fred@example.com</p>
+
+
+■p-5
+<section>
+ <!-- ... -->
+ <footer>最終更新： 2001-04-23</footer>
+ <address>作者： fred@example.com</address>
+</section>
+
+ <footer>Last modified: 2001-04-23</footer>
+ <address>Author: fred@example.com</address>
+
+■p-6
+<section>
+ <!-- ... -->
+ <footer>
+  <p>最終更新： 2001-04-23</p>
+  <address>作者： fred@example.com</address>
+ </footer>
+</section>
+
+ <footer>
+  <p>Last modified: 2001-04-23</p>
+  <address>Author: fred@example.com</address>
+ </footer>
+
+■p-7
+<p>以下に詳しく述べるが、燃焼には次の 3 つ</p>
+<ul>
+ <li>可燃物
+ <li>酸素供給源（支燃物）
+ <li>温度（点火源）
+</ul>
+<p>が必要とされる。</p>
+
+
+For instance, this fantastic sentence has bullets relating to
+％
+    wizards,
+    faster-than-light travel, and
+    telepathy, 
+％
+and is further discussed below.
+
+
+■p-8
+<div>以下に詳しく述べるが、燃焼には次の 3 つ
+<ul>
+ <li>可燃物
+ <li>酸素供給源（支燃物）
+ <li>温度（点火源）
+</ul>
+が必要とされる。</div>
+
+■hr-1
+<section>
+ <h1>通信</h1>
+ <p>通信手段にはいくつかある。この節では、そのうち少数の、本プロジェクトで利用される重要な手段について述べる。</p>
+ ＜<hr>＞
+ <p>通信石は、対で現れるらしく、不思議な性質を備える：</p>
+ <ul>
+  <li>単独で作動化された場合、双方向に思考を転送できる。</li>
+  <li>別のデバイスと利用した場合、一方の意識を他方の体に転送できる。</li>
+  <li>両方の石が別のデバイスと利用された場合、互いの意識を交換できる。</li>
+ </ul>
+ ＜<hr>＞
+ <p>電波はメートル単位以上の範囲の電磁スペクトルを利用する。</p>
+ ＜<hr>＞
+ <p>光はナノメートル単位の電磁スペクトルを利用する。</p>
+</section>
+<section>
+ <h1>食料</h1>
+ <p>本プロジェクトにおけるすべての食料は、配給制である：</p>
+ <dl>
+  <dt>じゃがいも</dt>
+  <dd>1 日 2 個</dd>
+  <dt>スープ</dt>
+  <dd>1 日 1 杯</dd>
+ </dl>
+ ＜<hr>＞
+ <p>料理は料理人が当番制で行う。</p>
+</section>
+
+
+<section>
+ <h1>Communication</h1>
+ <p>There are various methods of communication. This section covers a few of the important ones used by the project.</p>
+ <hr>
+<p>Communication stones seem to come in pairs and have mysterious properties:</p>
+ <ul>
+  <li>They can transfer thoughts in two directions once activated if used alone.</li>
+  <li>If used with another device, they can transfer one's consciousness to another body.</li>
+  <li>If both stones are used with another device, the consciousnesses switch bodies.</li>
+ </ul>
+ <hr>
+<p>Radios use the electromagnetic spectrum in the meter range and longer.</p>
+ <hr>
+<p>Signal flares use the electromagnetic spectrum in the nanometer range.</p>
+</section>
+<section>
+ <h1>Food</h1>
+ <p>All food at the project is rationed:</p>
+ <dl>
+  <dt>Potatoes</dt>
+  <dd>Two per day</dd>
+  <dt>Soup</dt>
+  <dd>One bowl per day</dd>
+ </dl>
+ <hr>
+<p>Cooking is done by the chefs on a set rotation.</p>
+</section>
+
+'
+
+■hr-2
+<p>Dudley was ninety-two, in his second life, and fast approaching time for another rejuvenation. Despite his body having the physical age of a standard fifty-year-old, the prospect of a long degrading campaign within academia was one he regarded with dread. For a supposedly advanced civilization, the Intersolar Commonwealth could be appallingly backward at times, not to mention cruel.</p>
+<p><i>Maybe it won't be that bad</i>, he told himself. The lie was comforting enough to get him through the rest of the night's shift.</p>
+＜<hr>＞
+<p>The Carlton AllLander drove Dudley home just after dawn. Like the astronomer, the vehicle was old and worn, but perfectly capable of doing its job. It had a cheap diesel engine, common enough on a semi-frontier world like Gralmond, although its drive array was a thoroughly modern photoneural processor. With its high suspension and deep-tread tyres it could plough along the dirt track to the observatory in all weather and seasons, including the metre-deep snow of Gralmond's winters.</p>
+
+'
+
+■pre-1
+<p><code>Panel</code> 構築子は、次で与えられる：</p>
+<pre><code>function Panel(element, canClose, closeHandler) {
+  this.element = element;
+  this.canClose = canClose;
+  this.closeHandler = function () { if (closeHandler) closeHandler() };
+}</code></pre>
+
+<p>This is the <code>Panel</code> constructor:</p>
+...
+
+■pre-2
+<pre><samp>あなたは今、西の平原にある白い大きな家の門扉の前に居る。そこには小さな郵便受けがある。</samp>
+％
+<kbd>郵便受けを開く</kbd>
+％
+<samp>郵便受けの中が露わになった：小さな冊子がある。</samp>
+</pre>
+
+<pre><samp>You are in an open field west of a big white house with a boarded front door. There is a small mailbox here.</samp>
+
+<kbd>open mailbox</kbd>
+
+<samp>Opening the mailbox reveals: A leaflet.</samp>
+</pre>
+
+■pre-3
+<pre>                maxling
+％
+it is with a          heart
+               heavy
+％
+that i admit loss of a feline
+        so           loved
+％
+a friend lost to the
+        unknown
+                                (night）
+％
+~cdr 11dec07</pre>
+
+■blockquote-1
+<blockquote>
+ <p>[Jane] then said she liked [...] fish.</p>
+</blockquote>
+
+■blockquote-2
+<blockquote>
+ <p>私は、私もあなたも無神論者であると主張する。私はあなたよりちょうど一つ少ない神を信じている。あなたが、信じる可能性のある他の神すべてを あなた自身が抹消したわけを理解できるなら、私があなたの神を抹消したわけも理解できるはずだ。</p>
+</blockquote>
+<p>— Stephen Roberts</p>
+
+
+<blockquote>
+ <p>I contend that we are both atheists. I just believe in one fewer god than you do. When you understand why you dismiss all the other possible gods, you will understand why I dismiss yours.</p>
+</blockquote>
+<p>— Stephen Roberts</p>
+
+■blockquote-3
+<figure>
+ <blockquote>
+  <p>真実は得てして当惑させられるものである。取り組むにはそれなりの労を要するであろう。それは直感に反したり、深く根ざした先入観に矛盾することもある。それは、真であれと強く求めているものと調和しないこともある。しかし、何が真かは好みが決定するわけではない。人間は、真実に近づくための手法は持っているが、絶対的な真実に到達することは決してない — 次第に近づいていくだけであり、常に膨大な未発見の海への可能性を見出していくことになる。実験を巧みにデザインすることが重要である。</p>
+ </blockquote>
+ <figcaption>カール・セーガン, "<cite>Wonder and Skepticism</cite>", <cite>Skeptical Inquirer</cite> Volume 19, Issue 1 (January-February 1995) より</figcaption>
+</figure>
+
+
+<figure>
+ <blockquote>
+  <p>The truth may be puzzling. It may take some work to grapple with. It may be counterintuitive. It may contradict deeply held prejudices. It may not be consonant with what we desperately want to be true. But our preferences do not determine what's true. We have a method, and that method helps us to reach not absolute truth, only asymptotic approaches to the truth — never there, just closer and closer, always finding vast new oceans of undiscovered possibilities. Cleverly designed experiments are the key.</p>
+ </blockquote>
+ <figcaption>Carl Sagan, in "<cite>Wonder and Skepticism</cite>", from the <cite>Skeptical Inquirer</cite> Volume 19, Issue 1 (January-February 1995)</figcaption>
+</figure>
+
+'
+
+■blockquote-4
+<p>シェイクスピアの次の作品は <cite>ソネット 130</cite> と呼ばれている：</p>
+<blockquote cite="https://quotes.example.org/s/sonnet130.html">
+  <p>私の恋人 — その瞳は太陽の足元にも及ばない。<br>
+  唇の赤も珊瑚の方がずっと深い。<br>
+  ...
+
+<p>His next piece was the aptly named <cite>Sonnet 130</cite>:</p>
+<blockquote cite="https://quotes.example.org/s/sonnet130.html">
+  <p>My mistress' eyes are nothing like the sun,<br>
+  Coral is far more red, than her lips red,<br>
+  ...
+
+'
+
+■blockquote-5
+<article>
+ <h1><a href="https://bacon.example.com/?blog=109431">焼いたベーコン</a></h1>
+ <article>
+  <header><strong>t3yw</strong> 1 時間 12 分前</header>
+  <p>イッカクはベーコンを好むはず。</p>
+  <footer><a href="?pid=29578">permalink</a></footer>
+  <article>
+   <header><strong>greg</strong> 1 時間 8 分前</header>
+   <blockquote><p>イッカクはベーコンを好むはず。</p></blockquote>
+   <p>オスのイッカクはベーコン食べないぞ。</p>
+   <footer><a href="?pid=29579">permalink</a></footer>
+   <article>
+    <header><strong>t3yw</strong> 1 時間 15 分前</header>
+    <blockquote>
+     <blockquote><p>イッカクはベーコンを好むはず。</p></blockquote>
+     <p>オスのイッカクはベーコン食べないぞ。</p>
+    </blockquote>
+    <p>次はイッカクはケープもウィザード帽もゲットしないとでも言うつもりか。</p>
+    <footer><a href="?pid=29580">permalink</a></footer>
+    <article>
+     <article>
+      <header><strong>boing</strong> 55 分前</header>
+      <p>イッカクは天井ネコほどではないな。</p>
+      <footer><a href="?pid=29581">permalink</a></footer>
+     </article>
+    </article>
+   </article>
+  </article>
+  <article>
+   <header><strong>fred</strong> 23 分 分前</header>
+   <blockquote><p>イッカクはベーコンを好むはず。</p></blockquote>
+   <p>イッカクはバナナの皮むきも好むはず。</p>
+   <footer><a href="?pid=29582">permalink</a></footer>
+  </article>
+ </article>
+</article>
+
+<article>
+ <h1><a href="https://bacon.example.com/?blog=109431">Bacon on a crowbar</a></h1>
+ <article>
+  <header><strong>t3yw</strong> 12 points 1 hour ago</header>
+  <p>I bet a narwhal would love that.</p>
+  <footer><a href="?pid=29578">permalink</a></footer>
+  <article>
+   <header><strong>greg</strong> 8 points 1 hour ago</header>
+   <blockquote><p>I bet a narwhal would love that.</p></blockquote>
+   <p>Dude narwhals don't eat bacon.</p>
+   <footer><a href="?pid=29579">permalink</a></footer>
+   <article>
+    <header><strong>t3yw</strong> 15 points 1 hour ago</header>
+    <blockquote>
+     <blockquote><p>I bet a narwhal would love that.</p></blockquote>
+     <p>Dude narwhals don't eat bacon.</p>
+    </blockquote>
+    <p>Next thing you'll be saying they don't get capes and wizard hats either!</p>
+    <footer><a href="?pid=29580">permalink</a></footer>
+    <article>
+     <article>
+      <header><strong>boing</strong> -5 points 1 hour ago</header>
+      <p>narwhals are worse than ceiling cat</p>
+      <footer><a href="?pid=29581">permalink</a></footer>
+     </article>
+    </article>
+   </article>
+  </article>
+  <article>
+   <header><strong>fred</strong> 1 points 23 minutes ago</header>
+   <blockquote><p>I bet a narwhal would love that.</p></blockquote>
+   <p>I bet they'd love to peel a banana too.</p>
+   <footer><a href="?pid=29582">permalink</a></footer>
+  </article>
+ </article>
+</article>
+
+'
+
+■blockquote-6
+<p>彼は、一連の「レッスン」を始めた：</p>
+<blockquote>こちら側の問題は、決して相手側から認識されると見なすべきではない。それどころか、交渉する利点すら認められないこともある。</blockquote>
+％
+<p>彼は同様の点をいくつか挙げた上で、次で締めくくった：</p>
+<blockquote>最後に、交渉はいつでも打ち切られるおそれがあり、再開の余地すらないことに備えておくべきである。</blockquote>
+％
+<p>さて、これらの点について論じるとしよう...
+
+<p>He began his list of "lessons" with the following:</p>
+<blockquote>One should never assume that his side of the issue will be recognized, let alone that it will be conceded to have merits.</blockquote>
+％
+<p>He continued with a number of similar points, ending with:</p>
+<blockquote>Finally, one should be prepared for the threat of breakdown in negotiations at any given moment and not be cowed by the possibility.</blockquote>
+<p>We shall now discuss these points...
+
+■ol-1
+<p>今回の旅の訪問先（訪れた順）：</p>
+<ol>
+ <li>スイス
+ <li>オーストリア
+ <li>デンマーク
+ <li>ノルウェイ
+</ol>
+
+<p>I have lived in the following countries (given in the order of when I first lived there):</p>
+<ol>
+ <li>Switzerland
+ <li>United Kingdom
+ <li>United States
+ <li>Norway
+</ol>
+
+■ol-2
+<p>今回の旅の訪問先（訪れた順）：</p>
+<ol>
+ <li>オーストリア
+ <li>スイス
+ <li>デンマーク
+ <li>ノルウェイ
+</ol>
+
+<p>I have lived in the following countries (given in the order of when I first lived there):</p>
+<ol>
+ <li>United Kingdom
+ <li>Switzerland
+ <li>United States
+ <li>Norway
+</ol>
+
+■ul-1
+<p>今回の旅の訪問先：</p>
+<ul>
+ <li>オーストリア
+ <li>スイス
+ <li>デンマーク
+ <li>ノルウェイ
+</ul>
+
+<p>I have lived in the following countries:</p>
+<ul>
+ <li>Norway
+ <li>Switzerland
+ <li>United Kingdom
+ <li>United States
+</ul>
+
+
+■ul-2
+<p>今回の旅の訪問先：</p>
+<ul>
+ <li>スイス
+ <li>ノルウェイ
+ <li>オーストリア
+ <li>デンマーク
+</ul>
+
+■menu-1
+<menu>
+ <li><button onclick="copy()"><img src="copy.svg" alt="Copy"></button></li>
+ <li><button onclick="cut()"><img src="cut.svg" alt="Cut"></button></li>
+ <li><button onclick="paste()"><img src="paste.svg" alt="Paste"></button></li>
+</menu>
+
+■li-1
+<ol>
+ <li>アイテム 1
+ <li value="3">アイテム 3
+ <li>アイテム 4
+</ol>
+
+<ol>
+ <li>Item 1
+ <li value="3">Item 3
+ <li>Item 4
+</ol>
+
+
+■li-2
+<figure>
+ <figcaption>The top 10 movies of all time</figcaption>
+ <ol>
+  <li value="10"><cite>Josie and the Pussycats</cite>, 2001</li>
+  <li value="9"><cite lang="sh">Црна мачка, бели мачор</cite>, 1998</li>
+  <li value="8"><cite>A Bug's Life</cite>, 1998</li>
+  <li value="7"><cite>Toy Story</cite>, 1995</li>
+  <li value="6"><cite>Monsters, Inc</cite>, 2001</li>
+  <li value="5"><cite>Cars</cite>, 2006</li>
+  <li value="4"><cite>Toy Story 2</cite>, 1999</li>
+  <li value="3"><cite>Finding Nemo</cite>, 2003</li>
+  <li value="2"><cite>The Incredibles</cite>, 2004</li>
+  <li value="1"><cite>Ratatouille</cite>, 2007</li>
+ </ol>
+</figure>
+
+'
+
+■li-3
+<figure>
+ <figcaption>The top 10 movies of all time</figcaption>
+ <ol reversed>
+  <li><cite>Josie and the Pussycats</cite>, 2001</li>
+  <li><cite lang="sh">Црна мачка, бели мачор</cite>, 1998</li>
+  <li><cite>A Bug's Life</cite>, 1998</li>
+  <li><cite>Toy Story</cite>, 1995</li>
+  <li><cite>Monsters, Inc</cite>, 2001</li>
+  <li><cite>Cars</cite>, 2006</li>
+  <li><cite>Toy Story 2</cite>, 1999</li>
+  <li><cite>Finding Nemo</cite>, 2003</li>
+  <li><cite>The Incredibles</cite>, 2004</li>
+  <li><cite>Ratatouille</cite>, 2007</li>
+ </ol>
+</figure>
+
+'
+
+■dl-1
+<dl>
+ <dt> 著者
+ <dd> John
+ <dd> Luke
+％
+ <dt> 編集
+ <dd> Frank
+</dl>
+
+<dl>
+ <dt> Authors
+ <dd> John
+ <dd> Luke
+％
+ <dt> Editor
+ <dd> Frank
+</dl>
+
+
+■dl-2
+<dl>
+ <dt lang="en-US"> <dfn>color</dfn> </dt>
+ <dt lang="en-GB"> <dfn>colour</dfn> </dt>
+ <dd>色は、可視光の組成の差によって感覚質の差が認められる視知覚である色知覚、および、色知覚を起こす刺激である色刺激を指す。</dd>
+</dl>
+
+
+<dl>
+ <dt lang="en-US"> <dfn>color</dfn> </dt>
+ <dt lang="en-GB"> <dfn>colour</dfn> </dt>
+ <dd> A sensation which (in humans) derives from the ability of the fine structure of the eye to distinguish three differently filtered analyses of a view. </dd>
+</dl>
+
+
+■dl-3
+<dl>
+ <div>
+  <dt> 最終更新日時 </dt>
+  <dd> 2004-12-23T23:33Z </dd>
+ </div>
+ <div>
+  <dt> 推奨更新間隔 </dt>
+  <dd> 60 秒 </dd>
+ </div>
+ <div>
+  <dt> 著者 </dt>
+  <dt> 編集 </dt>
+  <dd> Robert Rothman </dd>
+  <dd> Daniel Jackson </dd>
+ </div>
+</dl>
+
+<dl>
+ <div>
+  <dt> Last modified time </dt>
+  <dd> 2004-12-23T23:33Z </dd>
+ </div>
+ <div>
+  <dt> Recommended update interval </dt>
+  <dd> 60s </dd>
+ </div>
+ <div>
+  <dt> Authors </dt>
+  <dt> Editors </dt>
+  <dd> Robert Rothman </dd>
+  <dd> Daniel Jackson </dd>
+ </div>
+</dl>
+
+
+■dl-4
+<p>得点は、次に従って決定されます（最初に該当する項目に従うものとします）：</p>
+<dl>
+ <dt> 金貨をちょうど 5 枚獲得していた場合： </dt>
+ <dd> 5 点。 </dd>
+％
+ <dt> 金貨, 銀貨ともに 1 枚以上獲得していた場合： </dt>
+ <dd> 2 点。 </dd>
+％
+ <dt> 銀貨を 1 枚以上獲得していた場合： </dt>
+ <dd> 1 点。 </dd>
+％
+ <dt> 他の場合： </dt>
+ <dd> 0 点。 </dd>
+</dl>
+
+<p>Determine the victory points as follows (use the first matching case):</p>
+<dl>
+ <dt> If you have exactly five gold coins </dt>
+ <dd> You get five victory points </dd>
+ <dt> If you have one or more gold coins, and you have one or more silver coins </dt>
+ <dd> You get two victory points </dd>
+ <dt> If you have one or more silver coins </dt>
+ <dd> You get one victory point </dd>
+ <dt> Otherwise </dt>
+ <dd> You get no victory points </dd>
+</dl>
+
+
+■dl-5
+<dl>
+ <dt><dfn>反射関係</dfn></dt>
+ <dd>集合 X における関係 R が反射的であるとは、 X に属する任意の a について、 aRa が成り立つことをいう。</dd>
+％
+ <dt><dfn>対称関係</dfn></dt>
+ <dd>集合 X における関係 R が対称的であるとは、 X に属する任意の a, b について、 aRb が成り立つならば bRa も成り立つことをいう。/dd>
+％
+ <dt><dfn>推移関係</dfn></dt>
+ <dd>集合 X における関係 R が推移的であるとは、 X に属する任意の a, b, c について、 aRb, bRc がともに成り立つならば aRc も成り立つことをいう。</dd>
+</dl>
+
+<dl>
+ <dt><dfn>Apartment</dfn>, n.</dt>
+ <dd>An execution context grouping one or more threads with one or more COM objects.</dd>
+ <dt><dfn>Flat</dfn>, n.</dt>
+ <dd>A deflated tire.</dd>
+ <dt><dfn>Home</dfn>, n.</dt>
+ <dd>The user's login directory.</dd>
+</dl>
+'
+
+
+■dl-6
+<dl>
+ <div itemscope itemtype="http://schema.org/Product">
+  <dt itemprop="name">Café ou Chocolat Liégeois
+  <dd itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+   <span itemprop="price">3.50</span>
+   <data itemprop="priceCurrency" value="EUR">€</data>
+  <dd itemprop="description">
+   2 boules Café ou Chocolat, 1 boule Vanille, sause café ou chocolat, chantilly
+ </div>
+％
+ <div itemscope itemtype="http://schema.org/Product">
+  <dt itemprop="name">Américaine
+  <dd itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+   <span itemprop="price">3.50</span>
+   <data itemprop="priceCurrency" value="EUR">€</data>
+  <dd itemprop="description">
+   1 boule Crème brûlée, 1 boule Vanille, 1 boule Caramel, chantilly
+ </div>
+</dl>
+
+
+■dl-7
+<dl>
+ <dt itemscope itemtype="http://schema.org/Product" itemref="1-offer 1-description">
+  <span itemprop="name">Café ou Chocolat Liégeois</span>
+ <dd id="1-offer" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+  <span itemprop="price">3.50</span>
+  <data itemprop="priceCurrency" value="EUR">€</data>
+ <dd id="1-description" itemprop="description">
+  2 boules Café ou Chocolat, 1 boule Vanille, sause café ou chocolat, chantilly
+％
+ <dt itemscope itemtype="http://schema.org/Product" itemref="2-offer 2-description">
+  <span itemprop="name">Américaine</span>
+ <dd id="2-offer" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+  <span itemprop="price">3.50</span>
+  <data itemprop="priceCurrency" value="EUR">€</data>
+ <dd id="2-description" itemprop="description">
+  1 boule Crème brûlée, 1 boule Vanille, 1 boule Caramel, chantilly
+</dl>
+
+
+■dt-1
+<article>
+ <h1>よくある質問</h1>
+ <dl>
+  <dt>何を得ようとしているのですか？</dt>
+  <dd>データです。</dd>
+％
+  <dt>いつ得るのですか？</dt>
+  <dd>今です。</dd>
+％
+  <dt>どこで得られるのですか？</dt>
+  <dd>不明です。</dd>
+ </dl>
+</article>
+
+<article>
+ <h1>FAQ</h1>
+ <dl>
+  <dt>What do we want?</dt>
+  <dd>Our data.</dd>
+  <dt>When do we want it?</dt>
+  <dd>Now.</dd>
+  <dt>Where is it?</dt>
+  <dd>We are not sure.</dd>
+ </dl>
+</article>
+
+■dd-1
+<dl>
+ <dt><dfn>甘い</dfn></dt>
+ <dd class="読み">あま・い</dd>
+ <dd class="品詞"><i><abbr>形</abbr></i></dd>
+ <dd>砂糖のような味がすること。</dd>
+ <dd>誘惑されそうであること。<q><b>甘い</b>響きに誘われる</q></dd>
+ <dd>心構えがぬるく、厳しさに欠くこと。<q>見通しが<b>甘い</b></q>, <q>女に<b>甘い</b></q></dd>
+％
+ <dt><dfn>辛い</dfn></dt>
+ <dd class="読み">から・い</dd>
+ <dd class="品詞"><i><abbr>形</abbr></i></dd>
+ <dd>塩味が強いこと。</dd>
+ <dd>香辛料のような刺激的な味がすること。</dd>
+ <dd>容赦がないこと。<q>採点が<b>辛い</b></q></dd>
+</dl>
+
+<dl>
+ <dt><dfn>happiness</dfn></dt>
+ <dd class="pronunciation">/'hæ p. nes/</dd>
+ <dd class="part-of-speech"><i><abbr>n.</abbr></i></dd>
+ <dd>The state of being happy.</dd>
+ <dd>Good fortune; success. <q>Oh <b>happiness</b>! It worked!</q></dd>
+％
+ <dt><dfn>rejoice</dfn></dt>
+ <dd class="pronunciation">/ri jois'/</dd>
+ <dd><i class="part-of-speech"><abbr>v.intr.</abbr></i> To be delighted oneself.</dd>
+ <dd><i class="part-of-speech"><abbr>v.tr.</abbr></i> To cause one to be delighted.</dd>
+</dl>
+
+
+■figure-1
+<p><a href="#l4">リスト 4</a> に 中核インタフェース API 宣言を示す。 </p>
+<figure id="l4">
+ <figcaption>リスト 4. 中核インタフェース API 宣言</figcaption>
+ <pre><code>interface PrimaryCore {
+ boolean verifyDataLine();
+ undefined sendData(sequence<byte> data);
+ undefined initSelfDestruct();
+}</code></pre>
+</figure>
+<p>この API は、 UTF-8 の利用を前提に設計されている。</p>
+
+<p>In <a href="#l4">listing 4</a> we see the primary core interface API declaration.</p>
+<figure id="l4">
+ <figcaption>Listing 4. The primary core interface API declaration.</figcaption>
+ <pre><code>interface PrimaryCore {
+ boolean verifyDataLine();
+ undefined sendData(sequence<byte> data);
+ undefined initSelfDestruct();
+}</code></pre>
+</figure>
+<p>The API is designed to use UTF-8.</p>
+
+
+■figure-2
+<!DOCTYPE HTML>
+<html lang="en">
+<title>仕事中のバブルズ — 私の画廊™</title>
+<figure>
+ <img src="bubbles-work.jpeg"
+      alt="事務椅子に座りながら仕事に励むバブルズ。">
+ <figcaption>仕事中のバブルズ</figcaption>
+</figure>
+<nav><a href="19414.html">前へ</a> — <a href="19416.html">次へ</a></nav>
+
+
+<!DOCTYPE HTML>
+<html lang="en">
+<title>Bubbles at work — My Gallery™</title>
+<figure>
+ <img src="bubbles-work.jpeg"
+      alt="Bubbles, sitting in his office chair, works on his latest project intently.">
+ <figcaption>Bubbles at work</figcaption>
+</figure>
+<nav><a href="19414.html">Prev</a> — <a href="19416.html">Next</a></nav>
+
+■figure-3
+％<h2>Malinko のコミック</h2>
+％
+<p>この事件は、あるコミック（物件 A を見よ）に関わる “知的財産権” に対する侵害に類するものである。訴訟は、次の単語で締めくくられる予告編：
+％
+<blockquote>
+ <img src="promblem-packed-action.png" alt="訴訟対象の写し">
+</blockquote>
+％
+<p>が放映された後に開始された。ノートパソコンで武装した法律家が先制攻撃を仕掛けてきた。物件 B に、予告編の完全な複製を示す。
+％
+<figure>
+ <img src="ex-a.png" alt="2 枚の素描">
+ <figcaption>物件 A. 申し立てられたコミックの<cite>写し</cite></figcaption>
+</figure>
+％
+<figure>
+ <video src="ex-b.mov"></video>
+ <figcaption>物件 B. 予告編の<cite>写し</cite> </figcaption>
+</figure>
+％
+<p>この事件は法廷の外で解決された。
+
+
+％<h2>Malinko's comics</h2>
+％
+<p>This case centered on some sort of "intellectual property" infringement related to a comic (see Exhibit A). The suit started after a trailer ending with these words:
+％
+<blockquote>
+ <img src="promblem-packed-action.png" alt="ROUGH COPY! Promblem-Packed Action!">
+</blockquote>
+％
+<p>...was aired. A lawyer, armed with a Bigger Notebook, launched a preemptive strike using snowballs. A complete copy of the trailer is included with Exhibit B.
+％
+<figure>
+ <img src="ex-a.png" alt="Two squiggles on a dirty piece of paper.">
+ <figcaption>Exhibit A. The alleged <cite>rough copy</cite> comic.</figcaption>
+</figure>
+％
+<figure>
+ <video src="ex-b.mov"></video>
+ <figcaption>Exhibit B. The <cite>Rough Copy</cite> trailer.</figcaption>
+</figure>
+％
+<p>The case was resolved out of court.
+
+'
+
+■figure-4
+<figure>
+ <p>夕火の刻、粘滑なるトーヴ<br>
+ 遥場にありて回儀い錐穿つ。<br>
+ 総て弱ぼらしきはボロゴーヴ、<br>
+ かくて郷遠しラースのうずめき叫ばん。</p>
+ <figcaption><cite>ジャバウォックの詩</cite> （最初の一節） ルイス・キャロル, 1832-98</figcaption>
+</figure>
+
+<figure>
+ <p>'Twas brillig, and the slithy toves<br>
+ Did gyre and gimble in the wabe;<br>
+ All mimsy were the borogoves,<br>
+ And the mome raths outgrabe.</p>
+ <figcaption><cite>Jabberwocky</cite> (first verse). Lewis Carroll, 1832-98</figcaption>
+</figure>
+
+'
+
+■figure-5
+<figure>
+ <figcaption>各時代の城の様子：順に 1423 年, 1858 年, 1999 年。</figcaption>
+ <figure>
+  <figcaption>エッチング。 1423 年頃, 作者不詳</figcaption>
+  <img
+    src="castle1423.jpeg"
+    alt="この頃の城には塔が 1 本あり、周囲に高い壁がある。"
+  >
+ </figure>
+ <figure>
+  <figcaption>油絵。 1858 年, Maria Towle 作</figcaption>
+  <img
+    src="castle1858.jpeg"
+    alt="この当時の城には 2 本の塔と 2 枚の壁がある。"
+  >
+ </figure>
+ <figure>
+  <figcaption>写真。 1999 年, Peter Jankle 撮影</figcaption>
+  <img
+    src="castle1999.jpeg"
+    alt="現代の城 — 崩落して、元からある塔は 1 本だけ残っている。"
+  >
+ </figure>
+</figure>
+
+<figure>
+ <figcaption>The castle through the ages: 1423, 1858, and 1999 respectively.</figcaption>
+ <figure>
+  <figcaption>Etching. Anonymous, ca. 1423.</figcaption>
+  <img
+    src="castle1423.jpeg"
+    alt="The castle has one tower, and a tall wall around it."
+  >
+ </figure>
+ <figure>
+  <figcaption>Oil-based paint on canvas. Maria Towle, 1858.</figcaption>
+  <img
+    src="castle1858.jpeg"
+    alt="The castle now has two towers and two walls."
+  >
+ </figure>
+ <figure>
+  <figcaption>Film photograph. Peter Jankle, 1999.</figcaption>
+  <img
+    src="castle1999.jpeg"
+    alt="The castle lies in ruins, the original tower all that remains in one piece."
+  >
+ </figure>
+</figure>
+
+■figure-6
+<figure>
+ <img
+    src="castle1423.jpeg"
+    title="エッチング。 1423 年頃, 作者不詳"
+    alt="この頃の城には塔が 1 本あり、周囲に高い壁がある。"
+ >
+ <img
+    src="castle1858.jpeg"
+    title="油絵。 1858 年, Maria Towle 作"
+    alt="この当時の城には 2 本の塔と 2 枚の壁がある。"
+ >
+ <img
+    src="castle1999.jpeg"
+    title="写真。 1999 年, Peter Jankle 撮影"
+    alt="現代の城 — 崩落して、元からある塔は 1 本だけ残っている。"
+ >
+ <figcaption>各時代の城の様子：順に 1423 年, 1858 年, 1999 年。</figcaption>
+</figure>
+
+■figure-7
+<article>
+ <h1>期限が迫る中、議会での財政折衝は難局を迎える</h1>
+ <figure>
+  <img
+    src="obama-reid.jpeg"
+    alt="大統領執務室でにこやかに対面するオバマとリード。"
+  >
+  <figcaption>バラク・オバマとハリー・リードの写真。ホワイトハウスプレス。</figcaption>
+ </figure>
+ <p>予算案を成立するための議会での折衝は、木曜日の期限が迫る中、火曜日に激しく対立した。上下両院で政府機関を再開して、国の債務上限を引き上げる道は未だに見えない。</p>
+ ...
+</article>
+
+
+<article>
+ <h1>Fiscal negotiations stumble in Congress as deadline nears</h1>
+ <figure>
+  <img
+    src="obama-reid.jpeg"
+    alt="Obama and Reid sit together smiling in the Oval Office."
+  >
+  <figcaption>Barack Obama and Harry Reid. White House press photograph.</figcaption>
+ </figure>
+ <p>Negotiations in Congress to end the fiscal impasse sputtered on Tuesday, leaving both chambers grasping for a way to reopen the government and raise the country's borrowing authority with a Thursday deadline drawing near.</p>
+ ...
+</article>
+
+'
+
+■figcaption-1
+<figcaption>
+ <p>アヒル。</p>
+ <p><small>写真提供： 🌟 ニュース</small></p>
+</figcaption>
+％
+<figcaption>
+ <p>3 室アパートの平均賃料（非営利は除く）</p>
+ <p>チューリッヒ統計局 — <time datetime=2017-11-14>2017 年 11 月 14 日</time></p>
+</figcaption>
+
+<figcaption>
+ <p>A duck.</p>
+ <p><small>Photograph courtesy of 🌟 News.</small></p>
+</figcaption>
+％
+<figcaption>
+ <p>Average rent for 3-room apartments, excluding non-profit apartments</p>
+ <p>Zürich’s Statistics Office — <time datetime=2017-11-14>14 November 2017</time></p>
+</figcaption>
+
+
+■main-1
+<!DOCTYPE html>
+<html lang="en">
+<title>RPG システム 17</title>
+<style>
+ header, nav, aside, main, footer {
+   margin: 0.5em; border: thin solid; padding: 0.5em;
+   background: #EFF; color: black; box-shadow: 0 0 0.25em #033;
+ }
+ h1, h2, p { margin: 0; }
+ nav, main { float: left; }
+ aside { float: right; }
+ footer { clear: both; }
+</style>
+<header>
+ <h1>システム 18</h1>
+</header>
+<nav>
+ <a href="../16/">← システム 16</a>
+ <a href="../18/">システム 18 →</a>
+</nav>
+<aside>
+ <p>このシステムには HP は無いので、回復もありません。
+</aside>
+ ＜<main>＞
+ <h2>キャラクタの作成</h2>
+ <p>属性（魔法, 強さ, 敏捷さ）は、レベルごとに 1 点のコストで購入できます。 </p>
+ <h2>交戦</h2>
+ <p>敵に遭遇したときは、各スキルごとにサイを振ります。敵が出した目の合計より多ければ勝利です。</p>
+ ＜</main>＞
+<footer>
+ <p>Copyright © 2013
+</footer>
+</html>
+
+
+<title>RPG System 17</title>
+...
+<header>
+ <h1>System Eighteen</h1>
+</header>
+<nav>
+ <a href="../16/">← System 17</a>
+ <a href="../18/">RPXIX →</a>
+</nav>
+<aside>
+ <p>This system has no HP mechanic, so there's no healing.
+</aside>
+<main>
+ <h2>Character creation</h2>
+ <p>Attributes (magic, strength, agility) are purchased at the cost of one point per level.</p>
+ <h2>Rolls</h2>
+ <p>Each encounter, roll the dice for all your skills. If you roll more than the opponent, you win.</p>
+</main>
+<footer>
+ <p>Copyright © 2013
+</footer>
+
+'
+
+■main-2
+<!doctype html>
+<html lang=en-CA>
+<meta charset=utf-8>
+<title> … </title>
+<link rel=stylesheet href=spa.css>
+<％script src=spa.js async></％script>
+<nav>
+ <a href=/>Home</a>
+ <a href=/about>About</a>
+ <a href=/contact>Contact</a>
+</nav>
+<main>
+ <h1>Home</h1>
+ …
+</main>
+<main ＜hidden＞>
+ <h1>About</h1>
+ …
+</main>
+<main ＜hidden＞>
+ <h1>Contact</h1>
+ …
+</main>
+<footer>Made with ❤️ by <a href=https://example.com/>Example 👻</a>.</footer>
+
+
+■div-1
+<article lang="en-US">
+ <h1>My use of language and my cats</h1>
+ <p>My cat's behavior hasn't changed much since her absence, except that she plays her new physique to the neighbors regularly, in an attempt to get pets.</p>
+ <div lang="en-GB">
+  <p>My other cat, coloured black and white, is a sweetie. He followed us to the pool today, walking down the pavement with us. Yesterday he apparently visited our neighbours. I wonder if he recognises that their flat is a mirror image of ours.</p>
+  <p>Hm, I just noticed that in the last paragraph I used British English. But I'm supposed to write in American English. So I shouldn't say "pavement" or "flat" or "colour"...</p>
+ </div>
+ <p>I should say "sidewalk" and "apartment" and "color"!</p>
+</article>
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる HTML 仕様の
+<a href="~SPEC_URL">§ Grouping content</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+<body>
+
+<header id="head">
+	<hgroup>
+<h1>内容をグループ化する内容 — Grouping content</h1>
+
+	</hgroup>
+</header>
+
+<main id="MAIN" hidden>
+
+		<section id="grouping-content">
+<h2 title="Grouping content">4.4 内容を~group化する内容</h2>
+
+			<section id="_conventions">
+<h3>【この訳に固有の表記規約】</h3>
+
+<p>
+この訳の，~algoの記述に利用されている各種記号（ ~LET, ~IF, ~RET, 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+			</section>
+			<section id="the-p-element">
+<h3 title="The p element">4.4.1. `p^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+`~flow内容$／`可触~内容$
+◎
+Flow content.
+◎
+Palpable content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`~flow内容$が期待される所。
+◎
+Where flow content is expected.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`句ng内容$。
+◎
+Phrasing content.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+<p>
+次のいずれかに該当する場合、`終了tag$を省略できる：
+◎
+A p element's end tag can be omitted＼
+</p>
+		<ul>
+			<li>
+直後に次に挙げるいずれかの要素が在る
+⇒
+`address$e, `article$e, `aside$e, `blockquote$e, `details$e, `div$e, `dl$e, `fieldset$e, `figcaption$e, `figure$e, `footer$e, `form$e, `h1$e, `h2$e, `h3$e, `h4$e, `h5$e, `h6$e, `header$e, `hgroup$e, `hr$e, `main$e, `menu$e, `nav$e, `ol$e, `p$e, `pre$e, `section$e, `table$e, `ul$e
+◎
+if the p element is immediately followed by an address, article, aside, blockquote, details, div, dl, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, main, menu, nav, ol, p, pre, section, table, or ul element, or＼
+</li>
+			<li>
+［
+親~要素~内に，この要素に後続する内容は無い
+］~AND［
+親~要素は`~HTML要素$である
+］~AND［
+親~要素は次に挙げるものでない
+］
+⇒
+`a$e, `audio$e, `del$e, `ins$e, `map$e, `noscript$e, `video$e,
+`自律的~custom要素$
+◎
+if there is no more content in the parent element and the parent element is an HTML element that is not an a, audio, del, ins, map, noscript, or video element, or an autonomous custom element.
+</li>
+		</ul>
+	</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`p$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLParagraphElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  // `HTMLParagraphElement$obsMb
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`p$e 要素は `段落$を`表現-$する。
+◎
+The p element represents a paragraph.
+</p>
+
+<p class="note">注記：
+段落は、視覚媒体においては，通例的に［
+隣接する~blockから空行で物理的に分離されるような~textの~block
+］により表現されるが、~stylesheetや~UAが異なる方式で
+— 一例として~inline~pilcrow（ ¶ ）を利用して —
+段落の境目を呈示することも，等しく正当化される。
+◎
+While paragraphs are usually represented in visual media by blocks of text that are physically separated from adjacent blocks through blank lines, a style sheet or user agent would be equally justified in presenting paragraph breaks in a different manner, for instance using inline pilcrows (¶).
+</p>
+
+<div class="example">
+
+<p>
+次の例は、適合~HTML片になる：
+◎
+The following examples are conforming HTML fragments:
+</p>
+
+`p-1^xCode
+`p-2^xCode
+`p-3^xCode
+</div>
+
+<p>
+`p$e 要素は、より特定な要素の方が適切になるときは，利用するベキでない。
+◎
+The p element should not be used when a more specific element is more appropriate.
+</p>
+
+<div class="example">
+
+<p>
+次は、形上では正しい例だが：
+◎
+The following example is technically correct:
+</p>
+
+`p-4^xCode
+
+<p>
+次のように~mark-upされる方が良い：
+◎
+However, it would be better marked-up as:
+</p>
+
+`p-5^xCode
+
+<p>
+あるいは：
+◎
+Or:
+</p>
+
+`p-6^xCode
+
+</div>
+
+<div class="note">注記：
+
+<p>
+~list要素（特に， `ol$e ／ `ul$e 要素）は、 `p$e 要素の子にはなれない
+— したがって、次のような箇条書き~listを包含するような文0は，どう~mark-upすべきか疑問が浮かぶかもしれない：
+◎
+List elements (in particular, ol and ul elements) cannot be children of p elements. When a sentence contains a bulleted list, therefore, one might wonder how it should be marked up.
+</p>
+
+<div class="example">
+
+<p>
+以下に詳しく~~述べるが、燃焼には次の 3 つ
+</p>
+
+<ul><li>可燃物
+</li><li>酸素供給源（支燃物）
+</li><li>温度（点火源）
+</li></ul>
+
+<p>
+が必要とされる。
+</p>
+
+<!-- 
+For instance, this fantastic sentence has bullets relating to
+
+    wizards,
+    faster-than-light travel, and
+    telepathy, 
+
+and is further discussed below.
+-->
+</div>
+
+<p>
+その答えは、 ~HTML用語としての <i>`段落$</i> が，論理的な概念ではなく構造上のそれであることを思い起こせば、導かれる。
+すなわち，この仕様の定義によれば、上の例には 実際には <em>5 個の</em> `段落$
+— ~listの前, 後にある 1 + 1 個, 各~箇条ごとに 1 個 —
+がある。
+◎
+The solution is to realize that a paragraph, in HTML terms, is not a logical concept, but a structural one. In the fantastic example above, there are actually five paragraphs as defined by this specification: one before the list, one for each bullet, and one after the list.
+</p>
+
+<div class="example">
+
+<p>
+よって、上の例に対する~markupは，次の形もとれる：
+◎
+The markup for the above example could therefore be:
+</p>
+
+`p-7^xCode
+
+</div>
+
+<p>
+作者は、複数の “構造上の” 段落からなる “論理的” 段落を簡便に~styleしたいと望むならば、 `p$e 要素に代わって `div$e 要素を利用できる。
+◎
+Authors wishing to conveniently style such "logical" paragraphs consisting of multiple "structural" paragraphs can use the div element instead of the p element.
+</p>
+
+<div class="example">
+
+<p>
+よって、上の例は，次の形にすることもできる：
+◎
+Thus for instance the above example could become the following:
+</p>
+
+`p-8^xCode
+
+<p>
+この例は，依然として構造上の段落を 5 個~有するが、作者は，今やこの例の各部を別々に考慮せずとも， `div$e にだけ~styleをあてがえば~~十分になる。
+◎
+This example still has five structural paragraphs, but now the author can style just the div instead of having to consider each part of the example separately.
+</p>
+
+	</div>
+</div>
+
+			</section>
+			<section id="the-hr-element">
+<h3 title="The hr element">4.4.2. `hr^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+`~flow内容$
+◎
+Flow content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`~flow内容$が期待される所。
+◎
+Where flow content is expected.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`なし$。
+◎
+Nothing.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+`終了tag$はない。
+◎
+No end tag.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`hr$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLHRElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  // `HTMLHRElement$obsMb
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`hr$e 要素は、`段落$~levelの~thema的な境目を`表現-$する
+— 例：~storyにおける場面の変化や 文献の~sectionの中での別の論題への遷移など。
+◎
+The hr element represents a paragraph-level thematic break, e.g. a scene change in a story, or a transition to another topic within a section of a reference book.
+</p>
+
+<div class="example">
+
+<p>
+次の架空の~manualには， 2 個の `section$e があり、
+`section^e の中で論題を分離するために `hr$e 要素を利用している：
+◎
+The following fictional extract from a project manual shows two sections that use the hr element to separate topics within the section.
+</p>
+
+`hr-1^xCode
+
+<p>
+`section^e どうしの合間には `hr$e 要素は必要ない
+— ［
+`section$e ／ `h1$e
+］要素は、それ自体が~thema的な変化を含意するので。
+◎
+There is no need for an hr element between the sections themselves, since the section elements and the h1 elements imply thematic changes themselves.
+</p>
+
+</div>
+
+<div class="example">
+
+<p>
+次のものは
+Peter F. Hamilton 作
+<cite>Pandora's Star</cite>
+から抽出されたものであり、 2 個目と 3 個目の段落の合間に，場面~変化がある。
+場面~変化は、印刷本の中では中央に星印を並べた間隙により表現されているが，ここでは `hr$e 要素を利用して表現される。
+◎
+The following extract from Pandora's Star by Peter F. Hamilton shows two paragraphs that precede a scene change and the paragraph that follows it. The scene change, represented in the printed book by a gap containing a solitary centered star between the second and third paragraphs, is here represented using the hr element.
+</p>
+
+`hr-2^xCode
+
+</div>
+
+<p class="note">注記：
+`hr$e 要素は文書の`~outline$には影響しない。
+◎
+The hr element does not affect the document's outline.
+</p>
+
+			</section>
+			<section id="the-pre-element">
+<h3 title="The pre element">4.4.3. `pre^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+`~flow内容$／`可触~内容$
+◎
+Flow content.
+◎
+Palpable content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`~flow内容$が期待される所。
+◎
+Where flow content is expected.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`句ng内容$。
+◎
+Phrasing content.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`pre$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLPreElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  // `HTMLPreElement$obsMb
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`pre$e 要素は、整形済みの~textの~blockを`表現-$する
+— そこでの構造は、要素でなく~typograph上の規約により表現される。
+◎
+The pre element represents a block of preformatted text, in which structure is represented by typographic conventions rather than by elements.
+</p>
+
+<p class="note">注記：
+`~HTML構文$においては、
+`pre$e 要素の開始tagの直後にある改行文字は剥がされる。
+◎
+In the HTML syntax, a leading newline character immediately following the pre element start tag is stripped.
+</p>
+
+<p>
+`pre$e 要素を利用できる事例には、次が挙げられる：
+◎
+Some examples of cases where the pre element could be used:
+</p>
+
+<ul>
+	<li>
+段落の区切りが空行で指示されたり，箇条書きで~listが指示されるような~email, 等々
+◎
+Including an email, with paragraphs indicated by blank lines, lists indicated by lines prefixed with a bullet, and so on.
+</li>
+	<li>
+~computer~code片
+— 当の言語の規約に則って，構造が指示されるような。
+◎
+Including fragments of computer code, with structure indicated according to the conventions of that language.
+</li>
+	<li>
+~ASCII-artを表示するとき。
+◎
+Displaying ASCII art.
+</li>
+</ul>
+
+<p class="note">注記：
+作者には、整形済みの~textから整形が失われたときにも，利用者
+— 特に発話~合成器や点字~表示の利用者 —
+にとって，どう体験されるかについて考慮することが奨励される。
+~ASCII-artの様な事例に対しては、~textな記述などの代替による呈示が，文書の読者にとって，より普遍的に~access可能になるであろう。
+◎
+Authors are encouraged to consider how preformatted text will be experienced when the formatting is lost, as will be the case for users of speech synthesizers, braille displays, and the like. For cases like ASCII art, it is likely that an alternative presentation, such as a textual description, would be more universally accessible to the readers of the document.
+</p>
+
+<p>
+`pre$e 要素に `code$e 要素を併用すれば、~computer~codeの~blockを表現できる。
+`pre$e 要素に `samp$e 要素を併用すれば、~computer出力の~blockを表現できる。
+同様に， `pre$e 要素の中で `kbd$e 要素を併用すれば、利用者が手入力する~textを指示できる。
+◎
+To represent a block of computer code, the pre element can be used with a code element; to represent a block of computer output the pre element can be used with a samp element. Similarly, the kbd element can be used within a pre element to indicate text that the user is to enter.
+</p>
+
+<p class="note">注記：
+この要素には、
+<a href="~HTMLdom#bidireq">双方向-~algoを孕む具現化~要件</a>
+がある。
+◎
+This element has rendering requirements involving the bidirectional algorithm.
+</p>
+
+<div class="example">
+
+<p>
+次の~code片に、~computer~codeの見本を呈示する：
+◎
+In the following snippet, a sample of computer code is presented.
+</p>
+
+`pre-1^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+次の~code片では、Zork I 【インタラクティブフィクションの一種】
+の~sessionを示すため、
+`pre$e 要素の内容~内に `samp$e, `kbd$e 要素が混在されている：
+◎
+In the following snippet, samp and kbd elements are mixed in the contents of a pre element to show a session of Zork I.
+</p>
+
+`pre-2^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+次のものは、現代詩の内在的~部分を形成する，通例的でない整形を保全するためとして、 `pre$e 要素を利用している：
+◎
+The following shows a contemporary poem that uses the pre element to preserve its unusual formatting, which forms an intrinsic part of the poem itself.
+</p>
+
+`pre-3^xCode
+
+</div>
+
+			</section>
+			<section id="the-blockquote-element">
+<h3 title="The blockquote element">4.4.4. `blockquote^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+`~flow内容$／`~sectioning根$／`可触~内容$
+◎
+Flow content.
+◎
+Sectioning root.
+◎
+Palpable content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`~flow内容$が期待される所。
+◎
+Where flow content is expected.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`~flow内容$。
+◎
+Flow content.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+`cite$a
+— 引用の~source または 編纂（ `edit^en ）についての更なる情報への~link
+◎
+cite — Link to the source of the quotation or more information about the edit
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`blockquote$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLQuoteElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [`CEReactions$] attribute USVString `cite$m;
+};
+</pre>
+	</dd>
+	<dd class="note">注記：
+`HTMLQuoteElement$I ~interfaceは、 `q$e 要素にも利用される。
+◎
+The HTMLQuoteElement interface is also used by the q element.
+</dd>
+</dl>
+
+<p>
+`blockquote$e 要素は、別の~sourceから引用された一節を`表現-$する。
+◎
+The blockquote element represents a section that is quoted from another source.
+</p>
+
+<p>
+`blockquote$e の内容は、別の~sourceから引用されなければナラナイ。
+その引用元~addressがあれば，それを
+`cite@a
+属性にあてがってもヨイ。
+◎
+Content inside a blockquote must be quoted from another source, whose address, if it has one, may be cited in the cite attribute.
+</p>
+
+<p>
+`cite$a 属性が在る場合、その値は`前後~空白~可の妥当な~URL$でなければナラナイ。
+対応する引用元~linkを得するときは、この属性の値は，要素の`~node文書$に`相対的に構文解析-$されるモノトスル。
+~UAは、利用者がそのような引用元~linkを辿れるようにしてもヨイが、それらが意図される主な利用は，読者~向けではなく 私的である（例： ~siteにおける引用の利用について統計を収集している~server側~script）。
+◎
+If the cite attribute is present, it must be a valid URL potentially surrounded by spaces. To obtain the corresponding citation link, the value of the attribute must be parsed relative to the element's node document. User agents may allow users to follow such citation links, but they are primarily intended for private use (e.g., by server-side scripts collecting statistics about a site's use of quotations), not for readers.
+</p>
+
+<p>
+`blockquote$e の内容は、~~部分的に~~省略されたり，当の~textの言語の慣行にしたがって文脈が追加されてもヨイ。
+◎
+The content of a blockquote may be abbreviated or may have context added in the conventional manner for the text's language.
+</p>
+
+<div class="example">
+
+<p>
+例えば，英語では、この~~省略は，伝統的に角括弧を利用して行われる。
+文0
+"Jane ate the cracker. She then said she liked apples and fish."
+は、次のようにも引用できる：
+◎
+For example, in English this is traditionally done using square brackets. Consider a page with the sentence "Jane ate the cracker. She then said she liked apples and fish."; it could be quoted as follows:
+</p>
+
+`blockquote-1^xCode
+
+</div>
+
+<p>
+引用に対する帰属（ `attribution^en ）は、 `blockquote$e 要素の外側に配置されなければナラナイ。
+◎
+Attribution for the quotation, if any, must be placed outside the blockquote element.
+</p>
+
+<div class="example">
+
+<p>
+例えば，次では、帰属は，引用に後続する段落で与えられている：
+◎
+For example, here the attribution is given in a paragraph after the quote:
+</p>
+
+`blockquote-2^xCode
+
+<p>
+次の例に，帰属を示す他の仕方を示す。
+◎
+The other examples below show other ways of showing attribution.
+</p>
+
+</div>
+
+<p>
+`cite@m
+~IDL属性は、
+`cite$a 内容~属性を`反映する$モノトスル。
+◎
+The cite IDL attribute must reflect the element's cite content attribute.
+</p>
+
+<div class="example">
+
+<p>
+次の例では、 `figure$e 要素の中で `blockquote$e 要素と `figcaption$e 要素を併用して、引用とその帰属との関係を明瞭にしている（後者は引用の一部でないので `blockquote$e 自身の内側には属さない）：
+◎
+Here a blockquote element is used in conjunction with a figure element and its figcaption to clearly relate a quote to its attribution (which is not part of the quote and therefore doesn't belong inside the blockquote itself):
+</p>
+
+`blockquote-3^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+`blockquote$e 要素に `cite$e 要素を併用する例：
+◎
+This next example shows the use of cite alongside blockquote:
+</p>
+
+`blockquote-4^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+~forumの中で利用者がどの投稿に返信しているかを示すために `blockquote$e を利用する例を次に示す。
+各~threadingを~mark-upするため、各~投稿には `article$e 要素が利用されている：
+◎
+This example shows how a forum post could use blockquote to show what post a user is replying to. The article element is used for each post, to mark up the threading.
+</p>
+
+`blockquote-5^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+短い~code片に対する `blockquote$e の利用をデモる例
+— `blockquote$e 要素の内側に `p$e 要素を利用する必要はない：
+◎
+This example shows the use of a blockquote for short snippets, demonstrating that one does not have to use p elements inside blockquote elements:
+</p>
+
+`blockquote-6^xCode
+
+</div>
+
+<p class="note">注記：
+後の節にて，
+<a href="~HTMLLS/semantics-other.html#conversations">会話を表現する方法の例</a>
+を示す
+— ［
+`cite$e, `blockquote$e
+］要素をこの目的に利用するのは、適切でない。
+◎
+Examples of how to represent a conversation are shown in a later section; it is not appropriate to use the cite and blockquote elements for this purpose.
+</p>
+
+			</section>
+			<section id="the-ol-element">
+<h3 title="The ol element">4.4.5. `ol^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+`~flow内容$
+◎
+Flow content.
+</dd>
+	<dd>
+`可触~内容$
+— 要素が 1 個~以上の `li$e 要素を子として含むならば。
+◎
+If the element's children include at least one li element: Palpable content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`~flow内容$が期待される所。
+◎
+Where flow content is expected.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+0 個~以上の［
+`li$e 要素 ／
+`~scriptを~supportする要素$
+］。
+◎
+Zero or more li and script-supporting elements.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+`reversed$a
+— ~listを~~降順に付番することを指示する。
+◎
+reversed — Number the list backwards
+</dd>
+	<dd>
+`start$a
+— ~listの`開始~値$を与える。
+◎
+start — Starting value of the list
+</dd>
+	<dd>
+`type$a
+— ~list~markerの種類を与える。
+◎
+type — Kind of list marker
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`ol$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLOListElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [`CEReactions$] attribute boolean `reversed$m;
+  [`CEReactions$] attribute long `start$m;
+  [`CEReactions$] attribute DOMString `type$m;
+
+  // `HTMLOListElement$obsMb
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`ol$e 要素は、いくつかの~itemからなる，有順序~listを`表現-$する
+— 各~itemの順序が意図的であり、それを変更すると文書の意味も変化するような。
+◎
+The ol element represents a list of items, where the items have been intentionally ordered, such that changing the order would change the meaning of the document.
+</p>
+
+<p>
+~listは， `ol$e 要素の子~nodeである `li$e 要素たちからなり、それらの順序は，`~tree順序$に従う。
+◎
+The items of the list are the li element child nodes of the ol element, in tree order.
+</p>
+
+<p>
+`reversed@a
+属性は`真偽-属性$であり、在るならば~listは降順になり（ ..., 3, 2, 1 ），無いならば、昇順になる（ 1, 2, 3, ... ）ことを指示する。
+◎
+The reversed attribute is a boolean attribute. If present, it indicates that the list is a descending list (..., 3, 2, 1). If the attribute is omitted, the list is an ascending list (1, 2, 3, ...).
+</p>
+
+<p>
+`start@a
+属性は、~listの`開始~値$を決定する
+— 在るならば，その値は`妥当な整数$でなければナラナイ。
+◎
+The start attribute, if present, must be a valid integer. It is used to determine the starting value of the list.
+</p>
+
+<div class="algorithm">
+<p>
+各 `ol$e 要素 %要素 は
+`開始~値@
+を持つ
+— それは、次に従って決定される整数である：
+◎
+An ol element has a starting value, which is an integer determined as follows:
+</p>
+
+<ol>
+	<li>
+<p>
+~IF［
+%要素 は `start$a 属性 %A を有する
+］：
+◎
+If the ol element has a start attribute, then:
+</p>
+		<ol>
+			<li>
+%V ~LET `整数として構文解析する$( %A の値 )
+◎
+Let parsed be the result of parsing the value of the attribute as an integer.
+</li>
+			<li>
+~IF［
+%V ~NEQ `失敗^i
+］
+⇒
+~RET %V
+◎
+If parsed is not an error, then return parsed.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET［
+%要素 は `reversed$a 属性を有するならば［
+%要素 を`~list所有者$とする `li$e 要素
+］の個数 ／
+~ELSE_ 1
+］
+◎
+If the ol element has a reversed attribute, then return the number of owned li elements.
+◎
+Return 1.
+</li>
+</ol>
+</div>
+
+<p>
+`type@a
+属性を利用すれば、~list内で利用する~markerの種類を指定できる（例： 各~itemを数や~~記号で`参照-$するためなど）。
+この属性を指定する場合、その値は［
+次の表の 1 列目に与える いずれかの文字
+］に`一致-$しなければナラナイ。
+`type$a 属性は、［
+同じ行の 2 列目に与える状態／
+どの文字にも一致しないか属性は省略されている場合は `decimal$st 状態
+］を表現する。
+◎
+The type attribute can be used to specify the kind of marker to use in the list, in the cases where that matters (e.g. because items are to be referenced by their number/letter). The attribute, if specified, must have a value that is identical to one of the characters given in the first cell of one of the rows of the following table. The type attribute represents the state given in the cell in the second column of the row whose first cell matches the attribute's value; if none of the cells match, or if the attribute is omitted, then the attribute represents the decimal state.
+</p>
+
+<!--
+
+Keyword 	State 	Description 	Examples for values 1-3 and 3999-4001
+-->
+
+<div style="overflow: auto;">
+
+<table><thead><tr><th>~keyword
+<th>状態
+<th>~~説明
+<th colspan="8">値 1 〜 3,  3999 〜 4001 に対する例
+</thead>
+
+<tbody><tr><td>`1@v （ `0031^U ）
+<td>`decimal@st
+<td>10 進~数字◎ Decimal numbers
+<td>`1.^s
+<td>`2.^s
+<td>`3.^s
+<td>...
+<td>`3999.^s
+<td>`4000.^s
+<td>`4001.^s
+<td>...
+
+<tr><td>`a@v （ `0061^U ）
+<td>`lower-alpha@st
+<td>小文字~alphabet◎ Lowercase latin alphabet
+<td>`a.^s
+<td>`b.^s
+<td>`c.^s
+<td>...
+<td>`ewu.^s
+<td>`ewv.^s
+<td>`eww.^s
+<td>...
+
+<tr><td>`A@v （ `0041^U ）
+<td>`upper-alpha@st
+<td>大文字~alphabet◎ Uppercase latin alphabet
+<td>`A.^s
+<td>`B.^s
+<td>`C.^s
+<td>...
+<td>`EWU.^s
+<td>`EWV.^s
+<td>`EWW.^s
+<td>...
+
+<tr><td>`i@v （ `0069^U ）
+<td>`lower-roman@st
+<td>小文字~roman-numerals◎ Lowercase roman numerals
+<td>`i.^s
+<td>`ii.^s
+<td>`iii.^s
+<td>...
+<td>`mmmcmxcix.^s
+<td>`i̅v̅.^s
+<td>`i̅v̅i.^s
+<td>...
+
+<tr><td>`I@v （ `0049^U ）
+<td>`upper-roman@st
+<td>大文字~roman-numerals◎ Uppercase roman numerals
+<td>`I.^s
+<td>`II.^s
+<td>`III.^s
+<td>...
+<td>`MMMCMXCIX.^s
+<td>`I̅V̅.^s
+<td>`I̅V̅I.^s
+<td>...
+
+</tbody></table>
+
+</div>
+
+<p>
+~UAは、~listの各~itemを `ol$e 要素の `type$a 属性の状態に整合な方式で具現化するベキである。
+0 以下の数に対しては、 `type$a 属性にかかわらず，常に 10 進~systemを利用するベキである。
+◎
+User agents should render the items of the list in a manner consistent with the state of the type attribute of the ol element. Numbers less than or equal to zero should always use the decimal system regardless of the type attribute.
+</p>
+
+<p class="note">注記：
+~CSS~UAに対しては、この属性から `list-style-type$p ~CSS~propへの対応付けは，
+<a href="~HTMLrendering#decohints">§ 具現化</a>
+にて与えられる（上の各~状態の名前が，そのまま~CSS値に対応する）。
+◎
+For CSS user agents, a mapping for this attribute to the 'list-style-type' CSS property is given in the rendering section (the mapping is straightforward: the states above have the same names as their corresponding CSS values).
+</p>
+
+<p class="note">注記：
+~CSS~UAにおいては、この属性の実装-時に利用される既定の~CSS~list~styleを定義し直すこともアリになる
+— そうすることは、~listの各~itemがどう具現化されるかに影響することになる。
+◎
+It is possible to redefine the default CSS list styles used to implement this attribute in CSS user agents; doing so will affect how list items are rendered.
+</p>
+
+<div>
+<p>
+`reversed@m
+~IDL属性は、
+`reversed$a 内容~属性を`反映する$モノトスル。
+</p>
+
+<p>
+`type@m
+~IDL属性は、
+`type$a 内容~属性を`反映する$モノトスル。
+</p>
+◎
+The reversed and type IDL attributes must reflect the respective content attributes of the same name.
+</div>
+
+<p>
+`start@m
+~IDL属性は、既定の値は 1 とする下で，
+`start$a 内容~属性を`反映する$モノトスル。
+◎
+The start IDL attribute must reflect the content attribute of the same name, with a default value of 1.
+</p>
+
+<p class="note">注記：
+したがって，［
+`start$a 内容~属性は省略されていて，
+`reversed$a 内容~属性は指定されている
+］場合、
+`start$m ~IDL属性は 当の~listの`開始~値$に合致するとは限らない。
+◎
+This means that the start IDL attribute does not necessarily match the list's starting value, in cases where the start content attribute is omitted and the reversed content attribute is specified.
+</p>
+
+<div class="example">
+
+<p>
+次の~markupに、順序が~~有意になる~listを示す
+— したがって `ol$e 要素が適切になる。
+この~listと, § `ul$e における 同じ~itemたちからなる等価な~listの例とを比較してみよ。
+◎
+The following markup shows a list where the order matters, and where the ol element is therefore appropriate. Compare this list to the equivalent list in the ul section to see an example of the same items using the ul element.
+</p>
+
+`ol-1^xCode
+
+<p>
+~listの順序を変更した場合，文書の意味も変化することに注意。
+次の例で、~listの最初の~itemと別の~itemとを入れ替えた場合，最初の訪問先は変化することになる:
+◎
+Note how changing the order of the list changes the meaning of the document. In the following example, changing the relative order of the first two items has changed the birthplace of the author:
+</p>
+
+`ol-2^xCode
+
+</div>
+
+			</section>
+			<section id="the-ul-element">
+<h3 title="The ul element">4.4.6. `ul^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+`~flow内容$
+◎
+Flow content.
+</dd>
+	<dd>
+`可触~内容$
+— 要素が 1 個~以上の `li$e 要素を子に含む場合に限り。
+◎
+If the element's children include at least one li element: Palpable content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`~flow内容$が期待される所。
+◎
+Where flow content is expected.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+0 個~以上の［
+`li$e 要素 ／
+`~scriptを~supportする要素$
+］。
+◎
+Zero or more li and script-supporting elements.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`ul$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLUListElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  // `HTMLUListElement$obsMb
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`ul$e 要素は、各~itemの順序は重要でないような，~itemたちの~listを`表現-$する
+— すなわち、順序を変更しても，文書の意味は~~本質的に変化しない。
+◎
+The ul element represents a list of items, where the order of the items is not important — that is, where changing the order would not materially change the meaning of the document.
+</p>
+
+<p>
+~listは `ul$e 要素の子~nodeである `li$e 要素からなる。
+◎
+The items of the list are the li element child nodes of the ul element.
+</p>
+
+<div class="example">
+
+<p>
+次の~markupは、順序は~~有意でない~listを示す
+— したがって `ul$e 要素が適切になる。
+この~listと，§ `ol$e に示した `ol$e 要素を利用する同じ~itemたちからなる等価な~listの例とを比較してみよ。
+◎
+The following markup shows a list where the order does not matter, and where the ul element is therefore appropriate. Compare this list to the equivalent list in the ol section to see an example of the same items using the ol element.
+</p>
+
+`ul-1^xCode
+
+<p>
+上の~listはアイウエオ順になっているが、~listの順序を変更しても 文書の意味は変化しないことに注意：
+◎
+Note that changing the order of the list does not change the meaning of the document. The items in the snippet above are given in alphabetical order, but in the snippet below they are given in order of the size of their current account balance in 2007, without changing the meaning of the document whatsoever:
+</p>
+
+`ul-2^xCode
+
+<!-- 
+<p>I have lived in the following countries:</p>
+<ul>
+ <li>Switzerland
+ <li>Norway
+ <li>United Kingdom
+ <li>United States
+</ul>
+-->
+</div>
+
+			</section>
+			<section id="the-menu-element">
+<h3 title="The menu element">4.4.7. `menu^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+`~flow内容$／
+◎
+Flow content.
+</dd>
+	<dd>
+`可触~内容$
+— 要素が 1 個~以上の `li$e 要素を子に含む場合に限り。
+◎
+If the element's children include at least one li element: Palpable content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`~flow内容$が期待される所。
+◎
+Where flow content is expected.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+0 個~以上の［
+`li$e 要素 ／
+`~scriptを~supportする要素$
+］。
+◎
+Zero or more li and script-supporting elements.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`menu$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLMenuElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  // `HTMLMenuElement$obsMb
+};
+</pre>
+
+</dd>
+</dl>
+
+<p>
+`menu$e 要素は、その内容からなる~toolbarを`表現-$し，一連の~item（ `li$e 要素により表現される）からなる無順序~listの形をとる。
+各~itemは、利用者が［
+遂行-／作動化-
+］できる~commandを表現する。
+◎
+The menu element represents a toolbar consisting of its contents, in the form of an unordered list of items (represented by li elements), each of which represents a command that the user can perform or activate.
+</p>
+
+<p class="note">注記：
+`menu$e 要素は、単純に `ul$e に対する意味論上の代替であり、一連の~command（ “~toolbar” ）が成す無順序~listを表出する。
+◎
+The menu element is simply a semantic alternative to ul to express an unordered list of commands (a "toolbar").
+</p>
+
+<div class="example">
+<p>
+`menu$e 要素を利用して，一連の編集用~commandを供する，~text編集用~appの例：
+◎
+In this example, a text-editing application uses a menu element to provide a series of editing commands:
+</p>
+
+`menu-1^xCode
+
+<p>
+これに~styleをあてがって，慣例の~toolbar~menuに似た見かけにすることは、~appに委ねられることに注意。
+◎
+Note that the styling to make this look like a conventional toolbar menu is up to the application.
+</p>
+
+</div>
+
+			</section>
+			<section id="the-li-element">
+<h3 title="The li element">4.4.8. `li^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+なし
+◎
+None.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`ol$e ／ `ul$e ／ `menu$e
+要素の内側。
+◎
+Inside ol elements.
+◎
+Inside ul elements.
+◎
+Inside menu elements.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`~flow内容$。
+◎
+Flow content.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+<p>
+次のいずれかに該当する場合、`終了tag$を省略できる：
+</p>
+		<ul>
+			<li>
+直後に別の `li$e 要素が在る
+</li>
+			<li>
+親~要素~内に，この要素に後続する内容は無い
+</li>
+		</ul>
+◎
+An li element's end tag can be omitted if the li element is immediately followed by another li element or if there is no more content in the parent element.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+この要素が `ol$e 要素の子である場合に限り， `value$a
+— これは、この~list~itemの`序数~値$を与える。
+◎
+If the element is not a child of an ul or menu element: value — Ordinal value of the list item
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`li$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLLIElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [`CEReactions$] attribute long `value$m;
+
+  // `HTMLLIElement$obsMb
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`li$e 要素は、 1 個の~list~itemを`表現-$する。
+その親~要素が［
+`ol$e ／ `ul$e ／ `menu$e
+］要素である場合、それらの要素に対し定義されるように，
+`li$e 要素は親~要素の~listの~itemになる。
+他の場合、この~list~itemには，~listによる他の `li$e 要素との関係性は定義されない。
+◎
+The li element represents a list item. If its parent element is an ol, ul, or menu element, then the element is an item of the parent element's list, as defined for those elements. Otherwise, the list item has no defined list-related relationship to any other li element.
+</p>
+
+<p>
+`value@a
+属性に指定する値は、`妥当な整数$でなければナラナイ。
+それは、要素の`~list所有者$が `ol$e 要素であるときに，要素が表現する~list~itemの`序数~値$を決定するために利用される。
+◎
+The value attribute, if present, must be a valid integer. It is used to determine the ordinal value of the list item, when the li's list owner is an ol element.
+</p>
+
+<hr>
+
+<div class="algorithm">
+<p>
+［
+`display$p の`算出d値$ ~EQ `list-item^v
+］なる要素 %要素 の
+`~list所有者@
+は、次に従って決定される：
+◎
+Any element whose computed value of 'display' is 'list-item' has a list owner, which is determined as follows:
+</p>
+
+<ol>
+	<li>
+~IF［
+%要素 は`具現化されて$いない
+］
+⇒
+~RET ~NULL （ %要素 は どの要素にも所有されていない）
+◎
+If the element is not being rendered, return null; the element has no list owner.
+</li>
+	<li>
+%先祖 ~LET %要素 の親
+◎
+Let ancestor be the element's parent.
+</li>
+	<li>
+~IF［
+%要素 の先祖に［
+`ol$e ／ `ul$e ／ `menu$e
+］要素がある
+］
+⇒
+%先祖 ~SET それらの先祖うち， %要素 に最も近いもの
+◎
+If the element has an ol, ul, or menu ancestor, set ancestor to the closest such ancestor element.
+</li>
+	<li>
+<p>
+~RET［［
+%先祖, または %先祖 の先祖
+］のうち，`~CSS~box$を生産するもの
+］のうち， %先祖 に最も近いもの
+◎
+Return the closest inclusive ancestor of ancestor that produces a CSS box.
+</p>
+
+<p class="note">注記：
+そのような要素は常に存在する
+— 少なくとも`文書~要素$は常に`~CSS~box$を生産するので。
+◎
+Such an element will always exist, as at the very least the document element will always produce a CSS box.
+</p>
+	</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+所与の %所有者 を`~list所有者$とする各 要素の
+`序数~値@
+を決定するときは、次の手続きを遂行する：
+◎
+To determine the ordinal value of each element owned by a given list owner owner, perform the following steps:
+</p>
+
+<ol>
+	<li>
+( %付番, %増分 ) ~LET ( 1, 1 )
+◎
+Let i be 1.
+◎
+↓</li>
+	<li>
+<p>
+~IF［
+%所有者 は `ol$e 要素である
+］：
+</p>
+		<ol>
+			<li>
+%付番 ~SET %所有者 の`開始~値$
+</li>
+			<li>
+%増分 ~SET［
+%所有者 は `reversed$a 属性を有するならば −1 ／
+~ELSE_ 1
+］
+</li>
+		</ol>
+◎
+If owner is an ol element, let numbering be owner's starting value. Otherwise, let numbering be 1.
+◎
+↓</li>
+	<li>
+<p>
+%所有者 を`~list所有者$とする ~EACH( ~list~item %~item ) に対し，`~tree順序$で：
+◎
+Loop: If i is greater than the number of list items that owner owns, then return; all of owner's owned list items have been assigned ordinal values.
+◎
+Let item be the ith of owner's owned list items, in tree order.
+</p>
+		<ol>
+			<li>
+~IF［
+%~item は `li$e 要素である
+］~AND［
+%~item は `value$a 属性 %A を有する 
+］~AND［
+`整数として構文解析する$( %A の値 ) の結果 %N ~NEQ `失敗^i
+］
+⇒
+%付番 ~SET %N
+◎
+If item is an li element that has a value attribute, then:
+◎
+• Let parsed be the result of parsing the value of the attribute as an integer.
+◎
+• If parsed is not an error, then set numbering to parsed.
+</li>
+			<li>
+%~item の`序数~値$ ~SET %付番
+◎
+The ordinal value of item is numbering.
+</li>
+			<li>
+%付番 ~INCBY %増分
+◎
+If owner is an ol element, and owner has a reversed attribute, decrement numbering by 1; otherwise, increment numbering by 1.
+◎
+Increment i by 1.
+◎
+Go to the step labeled loop.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<hr>
+
+<p>
+`value@m
+~IDL属性は、
+`value$a 内容~属性を`反映する$モノトスル。
+◎
+The value IDL attribute must reflect the value of the value content attribute.
+</p>
+
+<div class="example">
+<p>
+要素の `value$m ~IDL属性は、その`序数~値$に直に対応するものではない
+— それは単純に，内容~属性を`反映する$だけである。
+例えば次の~listが与えられたとき：
+◎
+The element's value IDL attribute does not directly correspond to its ordinal value; it simply reflects the content attribute. For example, given this list:
+</p>
+
+`li-1^xCode
+
+<p>
+`序数~値$は順に［
+1, 3, 4
+］になる一方で、 `value$m ~IDL属性を取得した結果は，順に［
+0, 3, 0
+］になる。
+◎
+The ordinal values are 1, 3, and 4, whereas the value IDL attributes return 0, 3, 0 on getting.
+</p>
+
+</div>
+
+<div class="example">
+
+<p>
+次の例では、上位 10 位までの映画が（逆順に）~listされている。
+この~listには、 `figure$e 要素と `figcaption$e 要素を利用して，~titleも与えられている。
+◎
+The following example, the top ten movies are listed (in reverse order). Note the way the list is given a title by using a figure element and its figcaption element.
+</p>
+
+`li-2^xCode
+
+<p>
+`ol$e 要素~上に `reversed$a 属性を利用すれば、上の~markupは，次のようにも書ける：
+◎
+The markup could also be written as follows, using the reversed attribute on the ol element:
+</p>
+
+`li-3^xCode
+
+</div>
+
+<p class="note">注記：
+`li$e 要素の内側に見出し要素（例えば `h1$e ）を含んでも適合ではあるが、作者が意図した意味論を~~伝えるものにはならないであろう。
+見出しは，新たな~sectionを開始するので、~list内の見出しは，~listを暗黙的に複数の~sectionに分割することになる。
+◎
+While it is conforming to include heading elements (e.g. h1) inside li elements, it likely does not convey the semantics that the author intended. A heading starts a new section, so a heading in a list implicitly splits the list into spanning multiple sections.
+</p>
+
+			</section>
+			<section id="the-dl-element">
+<h3 title="The dl element">4.4.9. `dl^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+`~flow内容$／
+◎
+Flow content.
+</dd>
+	<dd>
+`可触~内容$
+— 要素が 1 個~以上の名値~groupを子として含む場合に限る。
+◎
+If the element's children include at least one name-value group: Palpable content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`~flow内容$が期待される所。
+◎
+Where flow content is expected.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+<p>
+次のいずれか：
+</p>
+		<ul>
+			<li>
+それぞれが次の順の並びを成すような， 0 個~以上の~group
+⇒
+1 個~以上の `dt$e 要素,
+1 個~以上の `dd$e 要素
+</li>
+			<li>
+1 個~以上の `div$e 要素
+</li>
+		</ul>
+<p>
+加えて、これらの要素の前後には，任意個数の`~scriptを~supportする要素$があってもよい。
+</p>
+◎
+Either: Zero or more groups each consisting of one or more dt elements followed by one or more dd elements, optionally intermixed with script-supporting elements.
+◎
+Or: One or more div elements, optionally intermixed with script-supporting elements.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`dl$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLDListElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  // `HTMLDListElement$obsMb
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`dl$e 要素は、各~groupが何個かの名を何個かの値に結付けるような， 0 個~以上の名値~groupからなる~list（記述~list, `description list^en ）を`表現-$する。
+各 名値~groupは、
+`dt$e, `dd$e 要素~以外の~nodeは無視して，［
+1 個~以上の名前（ `dt$e 要素）
+1 個~以上の値（ `dd$e 要素）
+］の並びからなる
+— この~groupは、 `dl$e 要素の子である `div$e 要素で包装されていてもよい。
+同じ `dl$e 要素の中では、複数個の `dt$e 要素が同じ名前を与えるベキでない。
+◎
+The dl element represents an association list consisting of zero or more name-value groups (a description list). A name-value group consists of one or more names (dt elements, possibly as children of a div element child) followed by one or more values (dd elements, possibly as children of a div element child), ignoring any nodes other than dt and dd element children, and dt and dd elements that are children of div element children. Within a single dl element, there should not be more than one dt element for each name.
+</p>
+
+<p>
+名値~groupの例としては、次が挙げられる
+⇒
+用語と その定義 ／
+~metadataを与える 名前と値 ／
+質問と 対する回答 ／
+その他の名値~dataが成す~group。
+◎
+Name-value groups may be terms and definitions, metadata topics and values, questions and answers, or any other groups of name-value data.
+</p>
+
+<p>
+~groupの中の各~値は、各 代替を与える
+— 同じ値の一部を形成するような複数の段落は、同じ `dd$e 要素の中に与えられなければナラナイ。
+◎
+The values within a group are alternatives; multiple paragraphs forming part of the same value must all be given within the same dd element.
+</p>
+
+<p>
+~groupたちの順序，同じ~groupの中での［
+名たちの順序, 値たちの順序
+］は、有意になり得る。
+◎
+The order of the list of groups, and of the names and values within each group, may be significant.
+</p>
+
+<p>
+`dl$e 要素~内の各~groupを `div$e 要素で包装することにより，当の~groupに［
+各種`~microdata$属性や 他の`大域~属性$で注釈する, あるいは
+単に~styleを適用する
+］ことができる。
+これにより、 `dl$e 要素の意味論が変化することはない。
+◎
+In order to annotate groups with microdata attributes, or other global attributes that apply to whole groups, or just for styling purposes, each group in a dl element can be wrapped in a div element. This does not change the semantics of the dl element.
+</p>
+
+<div class="algorithm">
+<p>
+`dl$e 要素 %dl の各 名値~groupは、次の~algoにより決定される。
+以下における各 名値~groupは、
+名~list（ `dt$e 要素の~list, 初期~時は空）,
+値~list（ `dd$e 要素の~list, 初期~時は空）からなるとする：
+◎
+The name-value groups of a dl element dl are determined using the following algorithm. A name-value group has a name (a list of dt elements, initially empty) and a value (a list of dd elements, initially empty).
+</p>
+
+<div>
+
+<ol>
+	<li>
+%~group~list ~LET 空~list
+</li>
+	<li>
+%現~group ~LET 新たな名値~group
+</li>
+	<li>
+%ddあり ~LET ~F
+</li>
+	<li id="process-dt-or-dd">
+<p>
+［
+%dl または［
+%dl の子である `div$e 要素
+］］の子である ~EACH( %~node ) に対し，`~tree順序$で：
+</p>
+		<ol>
+			<li>
+<p>
+~IF［
+%~node は `dt$e 要素である
+］：
+</p>
+
+				<ol>
+					<li>
+<p>
+~IF［
+%ddあり ~EQ ~T
+］：
+</p>
+
+<ol><li>%~group~list に %現~group を付加する
+</li><li>%現~group ~SET 新たな名値~group
+</li><li>%ddあり ~SET ~F
+</li></ol>
+					</li>
+					<li>
+%現~group の名~listに %~node を付加する
+</li>
+				</ol>
+			</li>
+			<li>
+<p>
+~ELIF［
+%~node は `dd$e 要素である
+］：
+</p>
+
+<ol><li>%現~group の値~listに %~node を付加する
+</li><li>%ddあり ~SET ~T
+</li></ol>
+</li>
+		</ol>
+	</li>
+	<li>
+~IF［
+%現~group は空でない
+］
+⇒
+%~group~list に %現~group を付加する
+</li>
+	<li>
+~RET %~group~list
+</li>
+</ol>
+
+<p class="trans-note">【
+内容~modelに違反している~markupにおいては、子である `div$e 要素は，論理的な~groupの境界を成すとは限らない。
+例えば `div^e の最後の子が `dt^e である場合、その `dt^e は， `div^e に後続する`dt^e や `dd^e
+と一緒に~groupを成すことになる。
+（この訳では、そのことが明白になるよう，原文の 2 つの~algoを~~統合している。）
+】</p>
+
+◎
+• Let groups be an empty list of name-value groups.
+• Let current be a new name-value group.
+• Let seenDd be false.
+• Let child be dl's first child.
+• Let grandchild be null.
+• While child is not null:
+•• If child is a div element, then:
+••• Let grandchild be child's first child.
+••• While grandchild is not null:
+•••• Process dt or dd for grandchild.
+•••• Set grandchild to grandchild's next sibling.
+•• Otherwise, process dt or dd for child.
+•• Set child to child's next sibling.
+• If current is not empty, then append current to groups.
+• Return groups.
+
+To process dt or dd for a node node means to follow these steps:
+
+• Let groups, current, and seenDd be the same variables as those of the same name in the algorithm that invoked these steps.
+• If node is a dt element, then:
+•• If seenDd is true, then append current to groups, set current to a new name-value group, and set seenDd to false.
+•• Append node to current's name.
+• Otherwise, if node is a dd element, then append node to current's value and set seenDd to true.
+</div>
+
+<p class="note">注記：
+名値~groupの名前または値が空~listになる場合の多くは、
+`dt$e 要素の所に~~誤って `dd$e 要素を利用すること（あるいはその逆）に起因する。
+適合性~検査器は、そのような~~誤記を~~指摘して，~markupの正しい用-法を作者に助言できる。
+◎
+When a name-value group has an empty list as name or value, it is often due to accidentally using dd elements in the place of dt elements and vice versa. Conformance checkers can spot such mistakes and might be able to advise authors how to correctly use the markup.
+</p>
+</div>
+
+<div class="example">
+<p>
+次の例では、 1 個の名 （ "~~著者" ）に 2 個の値が（ "John", "Luke" ）対応している。
+◎
+In the following example, one entry ("Authors") is linked to two values ("John" and "Luke").
+</p>
+
+`dl-1^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+次の例では、 2 個の用語に 1 個の定義が対応している。
+◎
+In the following example, one definition is linked to two terms.
+</p>
+
+`dl-2^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+次の例では、`dl$e 要素により~metadataの類を~mark-upする用例を示す。
+末尾の~groupは、
+2 個の~metadata~label （ "~~著者" , "~~編集" ）と,
+2 個の値（ "Robert Rothman" , "Daniel Jackson" ）を有する。
+この例ではまた、 `dt$e, `dd$e 要素が成す各~groupを `div$e 要素で包装して，~styleをあてがい易くしている。
+◎
+The following example illustrates the use of the dl element to mark up metadata of sorts. At the end of the example, one group has two metadata labels ("Authors" and "Editors") and two values ("Robert Rothman" and "Daniel Jackson"). This example also uses the div element around the groups of dt and dd element, to aid with styling.
+</p>
+
+`dl-3^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+`dl$e 要素を利用して一連の指示書きを与える例を次に示す。
+ここでは、各 指示書きの順序も重要になる（他の例では，順序は重要でなかった）。
+◎
+The following example shows the dl element used to give a set of instructions. The order of the instructions here is important (in the other examples, the order of the blocks was not important).
+</p>
+
+`dl-4^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+`dl$e 要素を用語集として利用する例を次の~code片に示す。
+`dfn$e を利用して，定義される単語を指示していることに注意。
+◎
+The following snippet shows a dl element being used as a glossary. Note the use of dfn to indicate the word being defined.
+</p>
+
+`dl-5^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+次の例では、 `dl$e 要素~内で `~microdata$属性と `div$e 要素を併用して，フランス料理店のデザートを注釈している：
+◎
+This example uses microdata attributes in a dl element, together with the div element, to annotate the ice cream desserts at a French restaurant.
+</p>
+
+`dl-6^xCode
+
+<p>
+`div$e 要素を用いない場合、~markupでは，次のように
+`itemref$a 属性を利用して
+`dd$e 要素~内の~dataと当の~itemとを~linkする必要がある：
+◎
+Without the div element the markup would need to use the itemref attribute to link the data in the dd elements with the item, as follows.
+</p>
+
+`dl-7^xCode
+
+</div>
+
+<p class="note">注記：
+`dl$e 要素は、会話を~mark-upするときは不適切になる。
+<a href="~HTMLLS/semantics-other.html#conversations">会話を~mark-upする方法の例</a>
+を見よ。
+◎
+The dl element is inappropriate for marking up dialogue. See some examples of how to mark up dialogue.
+</p>
+
+			</section>
+			<section id="the-dt-element">
+<h3 title="The dt element">4.4.10. `dt^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+なし
+◎
+None.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+［
+`dl$e 要素, または その子である `div$e 要素
+］の内側, かつ［
+`dd$e ／ `dt$e
+］要素の前。
+◎
+Before dd or dt elements inside dl elements.
+◎
+Before dd or dt elements inside div elements that are children of a dl element.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`~flow内容$
+— ただし，子孫に次に挙げるものは無いとする
+⇒
+`header$e, `footer$e, `~sectioning内容$, `見出し内容$
+◎
+Flow content, but with no header, footer, sectioning content, or heading content descendants.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+直後に次に挙げるいずれかの要素が在る場合、`終了tag$を省略できる
+⇒
+別の `dt$e 要素, `dd$e 要素
+◎
+A dt element's end tag can be omitted if the dt element is immediately followed by another dt element or a dd element.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`dt$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+`HTMLElement$I を利用する。
+◎
+Uses HTMLElement.
+</dd>
+</dl>
+
+<p>
+`dt$e 要素は、用語または名前を`表現-$する
+— 記述~list（ `dl$e 要素 ）内の，用語とその記述からなる ある~groupの一部を成すような。
+◎
+The dt element represents the term, or name, part of a term-description group in a description list (dl element).
+</p>
+
+<p class="note">注記：
+`dl$e 要素~内で利用される `dt$e 要素~自体は、その内容が定義される用語であることを指示しないが、そのことは `dfn$e 要素を利用して指示できる。
+◎
+The dt element itself, when used in a dl element, does not indicate that its contents are a term being defined, but this can be indicated using the dfn element.
+</p>
+
+<div class="example">
+
+<p>
+次の例に、 FAQ ~listを示す。
+質問には `dt$e 要素, 回答には `dd$e 要素を利用して~mark-upされている。
+◎
+This example shows a list of frequently asked questions (a FAQ) marked up using the dt element for questions and the dd element for answers.
+</p>
+
+`dt-1^xCode
+
+</div>
+
+			</section>
+			<section id="the-dd-element">
+<h3 title="The dd element">4.4.11. `dd^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+なし
+◎
+None.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+［
+`dl$e 要素, または その子である `div$e 要素
+］の内側, かつ［
+`dt$e または `dd$e
+］要素の後。
+◎
+After dt or dd elements inside dl elements.
+◎
+After dt or dd elements inside div elements that are children of a dl element.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`~flow内容$。
+◎
+Flow content.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+<p>
+次のいずれかに該当する場合、`終了tag$を省略できる：
+</p>
+		<ul>
+			<li>
+直後に次に挙げるいずれかの要素が在る
+⇒
+別の `dd$e 要素, `dt$e 要素
+</li>
+			<li>
+親~要素~内に，この要素に後続する内容は無いとき
+</li>
+		</ul>
+◎
+A dd element's end tag can be omitted if the dd element is immediately followed by another dd element or a dt element, or if there is no more content in the parent element.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`dd$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+`HTMLElement$I を利用する。
+◎
+Uses HTMLElement.
+</dd>
+</dl>
+
+<p>
+`dd$e 要素は、［
+記述 ／ 定義 ／ 値
+］を`表現-$する。
+— 記述~list（ `dl$e 要素）内の，用語とその記述からなる ある~groupの一部を成すような。
+◎
+The dd element represents the description, definition, or value, part of a term-description group in a description list (dl element).
+</p>
+
+<div class="example">
+
+<p>
+`dl$e は、辞書の様な語彙~listを定義するために利用できる。
+次の例では、各~entryは， `dt$e に `dfn$e を伴わせて与えられ、いくつかの，それぞれが定義のある~~側面を示すような `dd$e を有している。
+◎
+A dl can be used to define a vocabulary list, like in a dictionary. In the following example, each entry, given by a dt with a dfn, has several dds, showing the various parts of the definition.
+</p>
+
+`dd-1^xCode
+
+</div>
+
+			</section>
+			<section id="the-figure-element">
+<h3 title="The figure element">4.4.12. `figure^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+`~flow内容$／`~sectioning根$／`可触~内容$
+◎
+Flow content.
+◎
+Sectioning root.
+◎
+Palpable content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`~flow内容$が期待される所。
+◎
+Where flow content is expected.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+<p>
+次のいずれか：
+</p>
+		<ul>
+			<li>
+次の並び
+⇒
+1 個の `figcaption$e 要素, `~flow内容$
+◎
+Either: one figcaption element followed by flow content.
+</li>
+			<li>
+次の並び
+⇒
+`~flow内容$, 1 個の `figcaption$e 要素
+◎
+Or: flow content followed by one figcaption element.
+</li>
+			<li>
+`~flow内容$
+◎
+Or: flow content.
+</li>
+		</ul>
+	</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`figure$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+`HTMLElement$I を利用する。
+◎
+Uses HTMLElement.
+</dd>
+</dl>
+
+<p>
+`figure$e 要素は、任意選択で~captionも伴う，自己完結的な（ 完全な文0の様な）何らかの`~flow内容$を`表現-$する。
+それは概して、単独の単位として，文書の主要な~flowから`参照-$される。
+◎
+The figure element represents some flow content, optionally with a caption, that is self-contained (like a complete sentence) and is typically referenced as a single unit from the main flow of the document.
+</p>
+
+<p class="note">注記：
+この文脈における “自己完結的” とは、必ずしも独立を意味するわけではない。
+例えば、段落~内の各~文0は，自己完結的になる
+— 文0の一部を成す画像に `figure$e を用いるのは 不適切になるが、画像を含む文0全体に用いるなら適切になるであろう。
+◎
+"Self-contained" in this context does not necessarily mean independent. For example, each sentence in a paragraph is self-contained; an image that is part of a sentence would be inappropriate for figure, but an entire sentence made of images would be fitting.
+</p>
+
+<p>
+したがって，この要素は、［
+挿絵, 図式, 写真, ~code片, 等々
+］を注釈するときに利用できる。
+◎
+The element can thus be used to annotate illustrations, diagrams, photos, code listings, etc.
+</p>
+
+<div class="note" id="figure-note-about-references">
+
+<p>注記：
+文書の主要な内容から指される `figure$e の~captionに それを識別するものを与えておけば（例： ~figure番号）、文書の~flowに影響することなく，その内容を首な内容から他所
+— 例えば， ~pageの脇 ／ 専用の~page ／ 付録 —
+へ移動するのも容易になる。
+◎
+When a figure is referred to from the main content of the document by identifying it by its caption (e.g., by figure number), it enables such content to be easily moved away from that primary content, e.g., to the side of the page, to dedicated pages, or to an appendix, without affecting the flow of the document.
+</p>
+
+<p>
+`figure$e 要素が相対~位置で`参照-$されている場合
+— 例： “上の写真は…”, “次の~figureに…”, 等々 —
+それを移動すると，~pageの意味も~~違えることになる。
+作者には、~pageの意味に影響させずに~pageを容易に~~再構成したいなら、そのような相対~参照-ではなく，~labelを利用して~figureを指すようにすることを考慮することが奨励される。
+◎
+If a figure element is referenced by its relative position, e.g., "in the photograph above" or "as the next figure shows", then moving the figure would disrupt the page's meaning. Authors are encouraged to consider using labels to refer to figures, rather than using such relative references, so that the page can easily be restyled without affecting the page's meaning.
+</p>
+
+</div>
+
+<p>
+`figure$e 要素の子に `figcaption$e 要素があれば，それらのうち最初のものが，要素の内容の~captionを表現する。
+子に `figcaption$e 要素がなければ、~captionはない。
+◎
+The first figcaption element child of the element, if any, represents the caption of the figure element's contents. If there is no child figcaption element, then there is no caption.
+</p>
+
+<p>
+`figure$e 要素の内容は、周囲の~flowの一部を成す。
+~pageの目的が~figureを表示することにある場合
+— 例えば 画像~共有~siteの写真など —
+`figure$e と `figcaption$e 要素を利用して，その~figureに対する~captionを明示的に供せる。
+本線から逸れている内容や，周囲の~flowとは別の目的を~~果たす内容に対しては、 `aside$e 要素を利用するベキである（それ自体は `figure$e を包装できる）。
+例えば、 `article$e から内容を取り出して繰返すような引用は、
+`figure$e 内ではなく `aside$e 内に置く方がより適切になる
+— 内容を繰返す目的は，読者の目を引いたり~~主要な論題を強調することにあり，内容の一部でないので。
+◎
+A figure element's contents are part of the surrounding flow. If the purpose of the page is to display the figure, for example a photograph on an image sharing site, the figure and figcaption elements can be used to explicitly provide a caption for that figure. For content that is only tangentially related, or that serves a separate purpose than the surrounding flow, the aside element should be used (and can itself wrap a figure). For example, a pull quote that repeats content from an article would be more appropriate in an aside than in a figure, because it isn't part of the content, it's a repetition of the content for the purposes of enticing readers or highlighting key topics.
+</p>
+
+<div class="example">
+
+<p>
+`figure$e 要素で~code片を~mark-upする例：
+◎
+This example shows the figure element to mark up a code listing.
+</p>
+
+`figure-1^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+~pageの主要な内容である写真を `figure$e 要素で~mark-upする例（展示など）：
+◎
+Here we see a figure element to mark up a photo that is the main content of the page (as in a gallery).
+</p>
+
+`figure-2^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+次の例には、~figure<em>でない</em> 画像（ `img^e ）と,
+~figureである画像や動画（ `video^e ）がある。
+最初の画像は、 2 個目の文0の一部を成し，自己完結的な単位ではないので、 `figure$e は不適切になる。
+◎
+In this example, we see an image that is not a figure, as well as an image and a video that are. The first image is literally part of the example's second sentence, so it's not a self-contained unit, and thus figure would be inappropriate.
+</p>
+
+`figure-3^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+次の例では、
+`figure$e を利用して，詩の一部を~mark-upしている：
+◎
+Here, a part of a poem is marked up using figure.
+</p>
+
+`figure-4^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+次の例は，城について論じている~~著作の一部を成し、入子の `figure$e 要素を利用して， ~group全体の~captionと，~group内の個々の~figureに対する~captionを供している：
+◎
+In this example, which could be part of a much larger work discussing a castle, nested figure elements are used to provide both a group caption and individual captions for each figure in the group:
+</p>
+
+`figure-5^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+前の例は、次のように より~~簡潔にも書ける
+— 入子の `figure$e ／ `figcaption$e に代わって， `title$a 属性を利用して：
+◎
+The previous example could also be more succinctly written as follows (using title attributes in place of the nested figure/figcaption pairs):
+</p>
+
+`figure-6^xCode
+
+</div>
+
+<div class="example">
+
+<p>
+~figureは、内容から暗黙的に`参照-$されることもある：
+◎
+The figure is sometimes referenced only implicitly from the content:
+</p>
+
+`figure-7^xCode
+
+</div>
+
+			</section>
+			<section id="the-figcaption-element">
+<h3 title="The figcaption element">4.4.13. `figcaption^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+なし
+◎
+None.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`figure$e 要素の最初または最後の子として。
+◎
+As the first or last child of a figure element.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`~flow内容$。
+◎
+Flow content.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`figcaption$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+`HTMLElement$I を利用する。
+◎
+Uses HTMLElement.
+</dd>
+</dl>
+
+<p>
+`figcaption$e 要素は、もしあれば，その親である `figure$e 要素の他の内容に対する~captionや凡例を`表現-$する。
+◎
+The figcaption element represents a caption or legend for the rest of the contents of the figcaption element's parent figure element, if any.
+</p>
+
+<div class="example">
+<p>
+要素は、~sourceについて追加的な情報を包含できる：
+◎
+The element can contain additional information about the source:
+</p>
+
+`figcaption-1^xCode
+
+</div>
+
+			</section>
+			<section id="the-main-element">
+<h3 title="The main element">4.4.14. `main^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+`~flow内容$／`可触~内容$
+◎
+Flow content.
+◎
+Palpable content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+この要素が`階層的に正しく$なる場合に限り，`~flow内容$が期待される所。
+◎
+Where flow content is expected, but only if it is a hierarchically correct main element.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`~flow内容$。
+◎
+Flow content.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`main$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+`HTMLElement$I を利用する。
+◎
+Uses HTMLElement.
+</dd>
+</dl>
+
+<p>
+`main$e 要素は、文書の支配的な内容を`表現-$する。
+◎
+The main element represents the dominant contents of the document.
+</p>
+
+<p>
+文書に複数の `main$e 要素がある場合、
+1 つを除く他のすべてに， `hidden$a 属性を指定しなければナラナイ。
+◎
+A document must not have more than one main element that does not have the hidden attribute specified.
+</p>
+
+<p>
+`main$e 要素は、
+`階層的に正しく@
+なっていなければナラナイ
+— すなわち、どの先祖~要素も，次のいずれかでなければナラナイ
+⇒＃
+`html$e,
+`body$e,
+`div$e,
+`~access可能な名前$は伴わない `form$e,
+`自律的~custom要素$
+◎
+A hierarchically correct main element is one whose ancestor elements are limited to html, body, div, form without an accessible name, and autonomous custom elements. Each main element must be a hierarchically correct main element.
+</p>
+
+<div class="example">
+
+<p>
+次の例では、作者は，~pageを成す各~~部品が ある~box内に描画されるような呈示を利用している。
+~pageの主要な内容を包装するため（
+~header ／ ~footer ／ ~navi~bar ／ ~sidebar
+とは~~対照的に）、 `main$e 要素が利用されている：
+◎
+In this example, the author has used a presentation where each component of the page is rendered in a box. To wrap the main content of the page (as opposed to the header, the footer, the navigation bar, and a sidebar), the main element is used.
+</p>
+
+`main-1^xCode
+
+<p>
+次の例は，複数の `main$e 要素を利用した上で、［
+現在の~~対象でないものには、~scriptを利用して `hidden$a 属性を設定する
+］ことで，~naviが~serverとの往来なしに働くようにしている：
+◎
+In the following example, multiple main elements are used and script is used to make navigation work without a server roundtrip and to set the hidden attribute on those that are not current:
+</p>
+
+`main-2^xCode
+
+</div>
+
+			</section>
+			<section id="the-div-element">
+<h3 title="The div element">4.4.15. `div^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+`~flow内容$／`可触~内容$
+◎
+Flow content.
+◎
+Palpable content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`~flow内容$が期待される所。
+◎
+Where flow content is expected.
+</dd>
+	<dd>
+`dl$e 要素の子として。
+◎
+As a child of a dl element.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+<p>
+この要素が `dl$e 要素の子である場合に限り：
+</p>
+		<ul>
+			<li>
+それぞれが次の順の並びを成すような， 0 個~以上の~group
+⇒
+1 個~以上の `dt$e 要素,
+1 個~以上の `dd$e 要素
+</li>
+			<li>
+加えて、これらの要素の前後には，任意個数の`~scriptを~supportする要素$があってもよい。
+</li>
+		</ul>
+◎
+If the element is a child of a dl element: one or more dt elements followed by one or more dd elements, optionally intermixed with script-supporting elements.
+</dd>
+	<dd>
+この要素が `dl$e 要素の子でない場合に限り
+⇒
+`~flow内容$
+◎
+If the element is not a child of a dl element: flow content.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`div$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLDivElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  // `HTMLDivElement$obsMb
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`div$e 要素は，特殊な意味を全く有さない。
+それは、自身の子たちを`表現-$する。
+この要素に［
+`class$a, `lang$a, `title$a
+］属性を伴わせて利用すれば，連続する要素たちが成す~groupに共通な意味論を~mark-upできる。
+また、 `dl$e 要素の中で［
+`dt$e, `dd$e
+］要素たちが成す各~groupを包装するためにも利用できる。
+◎
+The div element has no special meaning at all. It represents its children. It can be used with the class, lang, and title attributes to mark up semantics common to a group of consecutive elements. It can also be used in a dl element, wrapping groups of dt and dd elements.
+</p>
+
+<p class="note">注記：
+作者には、 `div$e 要素を，他のどの要素も相応でないときの最後の~~手段と~~見なすことが強く奨励される。
+より適切な要素があれば `div$e 要素に代えてそれ利用する方が、読者にとっては~accessibilityが~~向上し、
+作者にとっては保守し易くなる。
+◎
+Authors are strongly encouraged to view the div element as an element of last resort, for when no other element is suitable. Use of more appropriate elements instead of the div element leads to better accessibility for readers and easier maintainability for authors.
+</p>
+
+<div class="example">
+
+<p>
+例えば、
+~blog投稿には `article$e を利用し,
+章には `section$e を利用し,
+~pageの~navi援助には `nav$e を利用し,
+~form~controlの~groupには `fieldset$e を利用して~mark-upするなど。
+◎
+For example, a blog post would be marked up using article, a chapter using section, a page's navigation aids using nav, and a group of form controls using fieldset.
+</p>
+
+<p>
+他方， `div$e 要素は、~style上の目的や，すべてが類似な仕方で注釈されるような複数の段落を一節に包装するときに有用になり得る。
+次の例では、各~段落~要素ごとに言語を設定する代わりに， `div$e 要素を利用して各~段落の言語を一括して設定している：
+◎
+On the other hand, div elements can be useful for stylistic purposes or to wrap multiple paragraphs within a section that are all to be annotated in a similar way. In the following example, we see div elements used as a way to set the language of two paragraphs at once, instead of setting the language on the two paragraph elements separately:
+</p>
+
+`div-1^xCode
+
+</div>
+
+			</section>
+		</section>
+</main>

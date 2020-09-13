@@ -1,0 +1,1817 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — URL／Fetching resources （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'I':
+	break;
+case 'm':
+case 'sL': 
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'sc': // url scheme
+	text = key.replace(/_/, ':');
+	break;
+case 'ps':
+	text = `:${key}`;
+	break;
+case 'h':
+	text = `\`<code class="header">${text}</code>\``;
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'jI':
+	text = `%${key}%`;
+	break;
+case 'U':
+	text = `U+${key}`;
+	break;
+case 'smb':
+	text = `(<span class="char-symbol">${text}</span>)`;
+	break;
+case 'sl':
+	text = `[[${key}]]`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-07-14
+trans_update:2020-07-16
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/urls-and-fetching.html
+	abbr_url:HTMLurl
+nav_prev:HTMLcms
+nav_next:HTMLcdom
+trans_1st_pub:2016-01-28
+
+
+●●class_map
+e:element
+a:attr
+st:attr-state
+et:event-type
+sc:scheme
+ps:pseudo
+p:production
+v:value
+E:error
+t:type
+U:code-point
+sl:js-slot
+
+●●tag_map
+I:code
+m:code
+sL:code
+E:code
+c:code
+e:code
+a:code
+st:span
+sc:code
+et:code
+v:code
+p:code
+ps:code
+sl:span
+V:var
+t:var
+i:i
+U:span
+cite:cite
+
+●●original_id_map
+
+●●mdn_urls
+attr-nonce:HTML/Global_attributes/nonce
+
+●●link_map
+
+		●idl
+I.HTMLOrSVGElement:~HTMLdom#htmlorsvgelement
+
+I.IntersectionObserver:~INTERSECTIONOBSERVER#intersectionobserver
+I.IntersectionObserverInit:~INTERSECTIONOBSERVER#dictdef-intersectionobserverinit
+I.IntersectionObserverCallback:~INTERSECTIONOBSERVER#callbackdef-intersectionobservercallback
+
+m.new IntersectionObserver:~INTERSECTIONOBSERVER#dom-intersectionobserver-intersectionobserver
+
+m.src:~HEimages#dom-img-src
+m.nonce:#dom-noncedelement-nonce
+
+m.observe:~INTERSECTIONOBSERVER#dom-intersectionobserver-observe
+m.unobserve:~INTERSECTIONOBSERVER#dom-intersectionobserver-unobserve
+m.isIntersecting:~INTERSECTIONOBSERVER#dom-intersectionobserverentry-isintersecting
+m.target:~INTERSECTIONOBSERVER#dom-intersectionobserverentry-target
+
+		●element
+e.del:~HEedits#the-del-element
+e.ins:~HEedits#the-ins-element
+
+e.base:~HEmetadata#the-base-element
+e.blockquote:~HEgrouping#the-blockquote-element
+e.meta:~HEmetadata#the-meta-element
+e.q:~HEtextlevel#the-q-element
+e.img:~HEimages#the-img-element
+e.iframe:~HEembed#the-iframe-element
+
+		●attr
+a.href:~HTMLlinks#attr-hyperlink-href
+a.~hrefM:~HEmetadata#attr-base-href
+a.~nameM:~HEmetadata#attr-meta-name
+a.ping:~HTMLlinks#ping
+a.nonce:#attr-nonce
+
+	●keywords, etc.
+
+sc.about_:~HTMLdep#about-protocol
+sc.about_blank:~HTMLdep#about:blank
+sc.about_legacy-compat:#about:legacy-compat
+sc.about_html-kind:#about:html-kind
+sc.about_srcdoc:#about:srcdoc
+
+st.Anonymous:#attr-crossorigin-anonymous
+st.Use Credentials:#attr-crossorigin-use-credentials
+st.No CORS:#attr-crossorigin-none
+
+st.Lazy:#attr-loading-lazy-state
+st.Eager:#attr-loading-eager-state
+
+v.anonymous:#attr-crossorigin-anonymous-keyword
+v.use-credentials:#attr-crossorigin-use-credentials-keyword
+v.noreferrer:~HTMLlinks#link-type-noreferrer
+v.referrer:~HEmetadata#meta-referrer
+
+v.lazy:#attr-loading-lazy
+v.eager:#attr-loading-eager
+
+h.Referrer-Policy:~REFERRER-POLICY#referrer-policy-header-dfn
+
+ps.link:~HTMLselectors#selector-link
+ps.visited:~HTMLselectors#selector-visited
+
+sl.CryptographicNonce:#cryptographicnonce
+
+
+	●用語
+
+~lazy読込ng属性:#lazy-loading-attribute
+文書:~HTMLdom#document
+	I.Document:~HTMLdom#document
+doc.~CSP~list:~HTMLdom#concept-document-csp-list
+
+正準的な~keyword:~HTMLcdom#canonical-keyword
+文字~符号化法:~HTMLINFRA#encoding
+
+基底~URL変更-手続き:~HTMLdep#base-url-change-steps
+基底~URLの変化により影響される:~HTMLdep#affected-by-a-base-url-change
+~CORS設定群~属性の資格証~mode:#cors-settings-attribute-credentials-mode
+
+~lazy読込n交差~観測器:#lazy-load-intersection-observer
+~lazy読込n再開~手続き:#lazy-load-resumption-steps
+~lazyに読込んでいる要素の交差~観測を開始する:#start-intersection-observing-a-lazy-loading-element
+~lazyに読込んでいる要素の交差~観測を停止する:#stop-intersection-observing-a-lazy-loading-element
+~lazyに読込むことになる:#will-lazy-load-element-steps
+
+
+	●HTML
+反映-:~HTMLcdom#reflect
+反映:~HTMLcdom#reflect
+
+閲覧文脈に接続された:~HTMLINFRA#becomes-browsing-context-connected
+
+作成元の基底~URL:~BROWSERS#creator-base-url
+属する閲覧文脈:~BROWSERS#concept-document-bc
+容器~文書:~BROWSERS#bc-container-document
+
+文書を作成して初期化する:~NAVI#initialise-the-document-object
+
+enV.~API用~URL文字~符号化法:~WAPI#api-url-character-encoding
+enV.~API用~基底~URL:~WAPI#api-base-url
+環境~設定群~obj:~WAPI#environment-settings-object
+用の~scriptingは不能化されて:~WAPI#concept-n-noscript
+
+DOCTYPE:~HTMLwriting#syntax-doctype
+
+凍結d基底~URL:~HEmetadata#frozen-base-url
+~hyperlink:~HTMLlinks#hyperlink
+~iframe-srcdoc文書:~HEembed#an-iframe-srcdoc-document
+
+	●Encoding
+~labelから符号化法を取得する:~ENCODING#concept-encoding-get
+
+
+	●Fetch
+~fetch:~FETCH#concept-fetch
+応答:~FETCH#concept-response
+rs.種別:~FETCH#concept-response-type
+rs.内部~応答:~FETCH#concept-internal-response
+要請:~FETCH#concept-request
+rq.~URL:~FETCH#concept-request-url
+rq.行先:~FETCH#concept-request-destination
+rq.~mode:~FETCH#concept-request-mode
+rq.資格証~mode:~FETCH#concept-request-credentials-mode
+rq.~URL資格証~利用~mode:~FETCH#concept-request-use-url-credentials-flag
+	＊rq.~referrer:~FETCH#concept-request-referrer
+
+	●DOM
+doc.~URL:~DOM4#concept-document-url
+文書~符号化法:~DOM4#concept-document-encoding
+~tree順序:~DOM4#concept-tree-order
+~node文書:~DOM4#concept-node-document
+~HTML文書:~DOM4#html-document
+~shadowも含む根:~DOM4#concept-shadow-including-root
+属性~値を設定する:~DOM4#concept-element-attributes-set-value
+~clone時の手続き:~DOM4#concept-node-clone-ext
+属性~変更-時の手続き:~DOM4#concept-element-attributes-change-ext
+
+	●INFRA
+実装定義:~INFRA#implementation-defined
+
+~ASCII大小無視:~INFRA#ascii-case-insensitive
+~ASCII空白:~INFRA#ascii-whitespace
+~ASCII空白を読飛ばす:~INFRA#skip-ascii-whitespace
+位置~変数:~INFRA#string-position-variable
+前後の~ASCII空白~列を剥ぐ:~INFRA#strip-leading-and-trailing-ascii-whitespace
+符号位置~並びを収集する:~INFRA#collect-a-sequence-of-code-points
+
+列挙d属性:~HTMLcms#enumerated-attribute
+値なし用の既定:~HTMLcms#missing-value-default
+妥当でない値~用の既定:~HTMLcms#invalid-value-default
+
+	●URL / FETCH
+~URL:~URL1#concept-url
+~URL~record:~URL1#concept-url
+絶対~URL:~URL1#absolute-url-string
+	＊:~URL1#syntax-url-absolute
+~URL構文解析器:~URL1#concept-url-parser
+~URL構文解析する:~URL1#concept-url-parser
+~URLを直列化する:~URL1#concept-url-serializer
+妥当な~URL文字列:~URL1#valid-url-string
+
+妥当かつ空でない~URL:#valid-non-empty-url
+前後~空白~可の妥当な~URL:#valid-url-potentially-surrounded-by-spaces
+前後~空白~可の妥当かつ空でない~URL:#valid-non-empty-url-potentially-surrounded-by-spaces
+~fallback基底~URL:#fallback-base-url
+文書~基底~URL:#document-base-url
+相対的に構文解析-:#parse-a-url
+結果の~URL~record:#resulting-url-record
+結果の~URL文字列:#resulting-url-string
+
+~CORS同一-生成元:#cors-same-origin
+~CORS非同一-生成元:#cors-cross-origin
+非安全~応答:#unsafe-response
+
+Content-Type ~metadata:#content-type
+~CORSになり得る要請を作成する:#create-a-potential-cors-request
+meta 要素から符号化法を抽出する:#algorithm-for-extracting-a-character-encoding-from-a-meta-element
+~CORS設定群~属性:#cors-settings-attribute
+~referrer施策~属性:#referrer-policy-attribute
+
+	●他
+~MIME型:~MIMESNIFF#mime-type
+算出される~MIME型:~MIMESNIFF#computed-mime-type
+画像を特定的に~sniffするための規則:~MIMESNIFF#rules-for-sniffing-images-specifically
+資源は~textか~binaryかを判別する規則:~MIMESNIFF#rules-for-text-or-binary
+音声や動画を特定的に~sniffするための規則:~MIMESNIFF#rules-for-sniffing-audio-and-video-specifically
+
+疑似類:~SELECTORS4#pseudo-class
+~referrer施策:~REFERRER-POLICY#referrer-policy
+
+~headerにより送達された~CSPを包含している:~CSP3#contains-a-header-delivered-content-security-policy
+
+内包して:~WEBIDL#include
+
+●●words_table1
+
+
+nameM:name
+hrefM:href
+
+
+●●words_table
+
+	●network／fetch／URL／保安
+sniff:
+	potential-CORS
+	CORS-cross-origin
+	CORS-same-origin
+	解決-不能:unresolvable
+nonce::::ナンス
+side-channel::::サイドチャネル
+暗号用:cryptographic::~
+不正転送:exfiltration::~
+lazy:
+
+	〜に抗する:anti-
+
+	●構文
+backslash::::バックスラッシュ
+読飛ばす:skipする:読み飛ばす
+剥ぐ:stripする:~
+	一重引用符
+
+	●処理（一般
+続行-:proceed:~
+読取れる:readできる::読み取れる
+復旧-:restore:~
+accessor::::アクセス子:アクセサ
+値なし:missing value:~
+	属性:attr:
+翻訳:translation:~
+情報0:signal:情報
+再開:resumption::~
+	%再開~手続き:resumptionSteps
+	走らす:execute
+	初期化-:initialization
+
+	●仕様
+寄与-:contribute:~
+絶対必要:imperative:~
+転用-:repurpose:~
+指図-:direct:~
+計略的:strategic:~
+保護策:measure:~
+近似的:approximate:~
+強いら:forceさ:~
+意向:intention:~
+現代的:modern:~
+
+	概要:Brief description
+	無条件
+	示-
+	全体を通して:throughout
+
+	●未分類
+wrapper:
+作成元:creator::~
+内包-:include::~
+iframe:
+track::::トラック
+octet::::オクテット
+iframe-srcdoc:iframe srcdoc
+shadow:
+非安全:unsafe:~
+種類:kind:~
+形:form:~
+
+	予約-済み:reserved
+	分岐-
+	含め
+	従う
+	与え
+	対応-
+	指して
+	指す
+	挙げる
+	有する
+	用いる
+	行う
+	生じ
+	省略時
+	具体的
+	匿名
+	大別
+	列目:column
+	表:table
+	局所~名:localName
+	%文書:doc
+
+	●指示語
+	大部分:majority
+	-:wherein
+	属-
+	別個:distinct
+	後続の
+	通-:
+	部分:
+	前後
+	最初
+	最後
+	一つ
+	列目
+	上
+	他
+	他の
+	以下
+	以外
+	以降
+	先ず
+	先頭の
+	内の
+	可の
+	各
+	各種
+	場合
+	対し
+	当の
+	必要
+	応じて
+	時に
+	更なる
+	次
+	法
+	特に
+	直後
+	自身
+	行
+	該当
+
+	-:away
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる
+HTML 仕様の
+<a href="~SPEC_URL">§ URL, § Fetching resources</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+</head>
+<body>
+
+<header id="head">
+	<hgroup>
+<h1>共通基盤 — URL／Fetching resources</h1>
+
+	</hgroup>
+
+</header>
+
+<main id="MAIN" hidden>
+
+		<section id="_conventions">
+<h3>【この訳に固有の表記規約】</h3>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, ε, ~IF, ~THROW 等々）の意味や定義の詳細は，~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+		</section>
+		<section id="urls">
+<h2 title="URLs">2.5. ~URL</h2>
+
+			<section id="terminology-2">
+<h3 title="Terminology">2.5.1. 各種用語</h3>
+
+<p>
+`妥当かつ空でない~URL@
+とは、空~文字列でない，`妥当な~URL文字列$である。
+◎
+A string is a valid non-empty URL if it is a valid URL string but it is not the empty string.
+</p>
+
+<p>
+`前後~空白~可の妥当な~URL@
+とは、次の結果が`妥当な~URL文字列$になる %文字列 である
+⇒
+`前後の~ASCII空白~列を剥ぐ$( %文字列 )
+◎
+A string is a valid URL potentially surrounded by spaces if, after stripping leading and trailing ASCII whitespace from it, it is a valid URL string.
+</p>
+
+<p>
+`前後~空白~可の妥当かつ空でない~URL@
+とは、次の結果が`妥当かつ空でない~URL$になる %文字列 である
+⇒
+`前後の~ASCII空白~列を剥ぐ$( %文字列 )
+◎
+A string is a valid non-empty URL potentially surrounded by spaces if, after stripping leading and trailing ASCII whitespace from it, it is a valid non-empty URL.
+</p>
+
+<p>
+この仕様は、予約-済みかつ解決-不能な `about_$sc ~URL `ABOUT$r として、次の~URLを定義する：
+◎
+↓
+</p>
+
+<dl class="def-list">
+	<dt>`about_legacy-compat@sc</dt>
+	<dd>
+これは、~XML~toolとの互換性に必要なとき，`~HTML文書$内の `DOCTYPE$ にて利用される。
+◎
+This specification defines the URL about:legacy-compat as a reserved, though unresolvable, about: URL, for use in DOCTYPEs in HTML documents when needed for compatibility with XML tools. [ABOUT]
+</dd>
+
+	<dt>`about_html-kind@sc</dt>
+	<dd>
+これは、~media~trackの種類~用の識別子として利用される。
+◎
+This specification defines the URL about:html-kind as a reserved, though unresolvable, about: URL, that is used as an identifier for kinds of media tracks. [ABOUT]
+</dd>
+
+	<dt>`about_srcdoc@sc</dt>
+	<dd>
+これは、`~iframe-srcdoc文書$の`~URL$docに利用される。
+◎
+This specification defines the URL about:srcdoc as a reserved, though unresolvable, about: URL, that is used as the URL of iframe srcdoc documents. [ABOUT]
+</dd>
+</dl>
+
+<div class="algo">
+<p>
+`文書$ %文書 の
+`~fallback基底~URL@
+は、次を走らせて得される`~URL~record$である：
+◎
+The fallback base URL of a Document object document is the URL record obtained by running these steps:
+</p>
+
+<ol>
+	<li>
+%閲覧文脈 ~LET %文書 が`属する閲覧文脈$
+◎
+↓</li>
+	<li>
+~IF［
+%文書 は`~iframe-srcdoc文書$である
+］
+⇒
+~RET %閲覧文脈 の`容器~文書$の`文書~基底~URL$
+◎
+If document is an iframe srcdoc document, then return the document base URL of document's browsing context's container document.
+</li>
+	<li>
+~IF［
+%文書 の`~URL$doc ~EQ `about_blank$sc
+］~AND［
+%閲覧文脈 の`作成元の基底~URL$ ~NEQ ~NULL
+］
+⇒
+~RET %閲覧文脈 の`作成元の基底~URL$
+◎
+If document's URL is about:blank, and document's browsing context's creator base URL is non-null, then return that creator base URL.
+</li>
+	<li>
+~RET %文書 の`~URL$doc
+◎
+Return document's URL.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`文書$ %文書 の
+`文書~基底~URL@
+は、次を走らせて得される`絶対~URL$である：
+◎
+The document base URL of a Document object is the absolute URL obtained by running these steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+%文書 内に `~hrefM$a 属性を有する `base$e 要素は在る
+］
+⇒
+~RET それらのうち`~tree順序$で最初のものの`凍結d基底~URL$
+◎
+↓</li>
+	<li>
+~RET %文書 の`~fallback基底~URL$
+◎
+If there is no base element that has an href attribute in the Document, then return the Document's fallback base URL.
+◎
+Otherwise, return the frozen base URL of the first base element in the Document that has an href attribute, in tree order.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="resolving-urls">
+<h3 title="Parsing URLs">2.5.2. ~URLの構文解析</h3>
+
+<p>
+~URLの構文解析は、文字列を入力に，それが表現する`~URL~record$を得する処理-である。
+この処理は `URL^cite `URL$r 標準にて定義されているが、簡便にするため，~HTML標準では，それに対する~wrapperを定義する。
+◎
+Parsing a URL is the process of taking a string and obtaining the URL record that it represents. While this process is defined in URL, the HTML standard defines a wrapper for convenience. [URL]
+</p>
+
+<p class="note">注記：
+この~wrapperが有用になるのは、`~URL構文解析器$に用いる文字~符号化法を，旧来の理由から［
+文書／環境~設定群~obj
+］に合致させる必要がある場合に限られる。
+該当しない事例では、`~URL構文解析器$を直に利用できる。
+◎
+This wrapper is only useful when the character encoding for the URL parser has to match that of the document or environment settings object for legacy reasons. When that is not the case the URL parser can be used directly.
+</p>
+
+<div class="algo">
+<div class="p">
+<p>
+所与の`~URL$ %~url を，所与の %基底~obj に
+`相対的に構文解析-@
+するときは、以下に与える手続きを利用するモノトスル
+— ここで：
+</p>
+
+<ul>
+	<li>
+%基底~obj は、次のいずれかである
+⇒
+`文書$ ／ `環境~設定群~obj$
+</li>
+	<li>
+`結果の~URL~record@
+は、この手続きの結果として定義され，［
+`失敗^i, または`~URL~record$
+］になる。
+</li>
+	<li>
+`結果の~URL文字列@
+は、この手続きの結果 %結果 が［
+`失敗^i ならば `失敗^i ／
+~ELSE_ `~URLを直列化する$( %結果 )
+］として定義される。
+</li>
+</ul>
+
+◎
+To parse a URL url, relative to either a document or environment settings object, the user agent must use the following steps. Parsing a URL either results in failure or a resulting URL string and resulting URL record.
+</div>
+
+<ol>
+	<li>
+<p>
+( %符号化法, %基底~URL ) ~LET
+%基底~obj に応じて，次で与えられる値：
+</p>
+
+		<dl class="switch">
+			<dt>`文書$</dt>
+			<dd>
+%基底~obj の
+( `文書~符号化法$, `文書~基底~URL$ )
+</dd>
+
+			<dt>`環境~設定群~obj$</dt>
+			<dd>
+%基底~obj により指定される
+( `~API用~URL文字~符号化法$enV, `~API用~基底~URL$enV )
+</dd>
+		</dl>
+
+◎
+Let encoding be document's character encoding, if document was given, and environment settings object's API URL character encoding otherwise.
+◎
+Let baseURL be document's base URL, if document was given, and environment settings object's API base URL otherwise.
+</li>
+	<li>
+~RET `~URL構文解析する$( %~url, %基底~URL, %符号化法 )
+◎
+Let urlRecord be the result of applying the URL parser to url, with baseURL and encoding.
+◎
+If urlRecord is failure, then return failure.
+◎
+Let urlString be the result of applying the URL serializer to urlRecord.
+◎
+Return urlString as the resulting URL string and urlRecord as the resulting URL record.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="dynamic-changes-to-base-urls">
+<h3 title="Dynamic changes to base URLs">2.5.3. 基底~URLに対する動的な変化</h3>
+
+<p>
+文書の
+`文書~基底~URL$
+が変化したとき、その文書~内のすべての要素は，その`基底~URLの変化により影響される$ `DOM$r。
+◎
+When a document's document base URL changes, all elements in that document are affected by a base URL change.
+</p>
+
+<div class="algo">
+<p>
+要素 %要素 が`基底~URLの変化により影響される$ときに走らす`基底~URL変更-手続き$（ `DOM^cite に定義される）は、次で与えられる：
+◎
+The following are base URL change steps, which run when an element is affected by a base URL change (as defined by DOM):
+</p>
+
+<dl class="switch">
+	<dt>
+%要素 は`~hyperlink$を作成するものである場合：
+◎
+If the element creates a hyperlink
+</dt>
+	<dd>
+<p>
+~IF［
+その~hyperlinkにより識別される`~URL$から導出される~dataは表示に影響している（~URLは利用者に示されているなど）
+］
+⇒
+~UAは次を行うべきである
+⇒
+当の `href$a 属性を %要素 の`~node文書$に`相対的に構文解析-$し直した上で，該当する~UIを適切に更新する。
+◎
+If the URL identified by the hyperlink is being shown to the user, or if any data derived from that URL is affecting the display, then the href attribute should be reparsed relative to the element's node document and the UI updated appropriately.
+</p>
+
+<p class="example">
+例えば~CSS
+`link$ps ／ `visited$ps
+`疑似類$は、影響され得る。
+◎
+For example, the CSS :link/:visited pseudo-classes might have been affected.
+</p>
+
+<p>
+~IF［
+その~hyperlinkは `ping$a 属性を有する
+］~AND［
+その`~URL$（たち）は利用者に示されている
+］
+⇒
+~UAは次を行うべきである
+⇒
+当の `ping$a 属性の各~tokenを %要素 の`~node文書$に`相対的に構文解析-$し直した上で，該当する~UIを適切に更新する。
+◎
+If the hyperlink has a ping attribute and its URL(s) are being shown to the user, then the ping attribute's tokens should be reparsed relative to the element's node document and the UI updated appropriately.
+</p>
+	</dd>
+
+	<dt>
+%要素 は `cite^a 属性を有する［
+`q$e ／ `blockquote$e ／ `ins$e ／ `del$e
+］要素である場合：
+◎
+If the element is a q, blockquote, ins, or del element with a cite attribute
+</dt>
+	<dd>
+~IF［
+`cite^a 属性から識別される`~URL$から導出される~dataは表示に影響している（~URLは利用者に示されているなど）
+］
+⇒
+~UAは次を行うべきである
+⇒
+当の`~URL$を %要素 の`~node文書$に`相対的に構文解析-$し直した上で，該当する~UIを適切に更新する。
+◎
+If the URL identified by the cite attribute is being shown to the user, or if any data derived from that URL is affecting the display, then the URL should be reparsed relative to the element's node document and the UI updated appropriately.
+</dd>
+
+	<dt>他の場合：</dt>
+	<dd>
+ %要素 は直に影響されない。
+◎
+The element is not directly affected.
+</dd>
+	<dd class="example">
+具体的には、基底~URLを変更しても，
+`img$e 要素により表示されている画像には影響しない
+— ~scriptからの `src$m ~IDL属性に対する後続の~accessに対しては，新たな`絶対~URL$が返されることになるが、示されている画像には対応しなくなるであろう。
+◎
+For instance, changing the base URL doesn't affect the image displayed by img elements, although subsequent accesses of the src IDL attribute from script will return a new absolute URL that might no longer correspond to the image being shown.
+</dd>
+</dl>
+</div>
+
+			</section>
+		</section>
+		<section id="fetching-resources">
+<h2 title="Fetching resources">2.6. 資源の~fetching</h2>
+
+			<section id="terminology-3">
+<h3 title="Terminology">2.6.1. 各種用語</h3>
+
+<div>
+<p>
+【<a href="~FETCH#concept-network-error">~network~error</a>でない】
+`応答$は、次の 2 つに大別される
+`FETCH$r ：
+</p>
+
+<dl>
+	<dt>`~CORS同一-生成元@</dt>
+	<dd>
+`種別$rs ~IN { `basic^l, `cors^l, `default^l }
+なるもの。
+</dd>
+
+	<dt>`~CORS非同一-生成元@</dt>
+	<dd>
+`種別$rs ~IN
+{ `opaque^l, `opaqueredirect^l }
+なるもの。
+</dd>
+</dl>
+
+◎
+A response whose type is "basic", "cors", or "default" is CORS-same-origin. [FETCH]
+◎
+A response whose type is "opaque" or "opaqueredirect" is CORS-cross-origin.
+</div>
+
+<p>
+`応答$の
+`非安全~応答@
+は、その`内部~応答$rsが［
+在れば それ ／
+無ければ`応答$自身
+］とする。
+◎
+A response's unsafe response is its internal response if it has one, and the response itself otherwise.
+</p>
+
+<div class="algo">
+<p>
+`~CORSになり得る要請を作成する@
+ときは、所与の
+( %~url, %行先, %~CORS属性~状態, %同一-生成元~fallback~flag ~IN { `同一-生成元~fallbackあり^i, ε }（省略時は ε ）)
+に対し，次を走らす：
+◎
+To create a potential-CORS request, given a url, destination, corsAttributeState, and an optional same-origin fallback flag, run these steps:
+</p>
+
+<ol>
+	<li>
+%~mode ~LET ［
+%~CORS属性~状態 ~EQ `No CORS$st ならば `no-cors^l ／
+~ELSE_ `cors^l
+］
+◎
+Let mode be "no-cors" if corsAttributeState is No CORS, and "cors" otherwise.
+</li>
+	<li>
+~IF［
+%同一-生成元~fallback~flag ~NEQ ε
+］~AND［
+%~mode ~EQ `no-cors^l
+］
+⇒
+%~mode ~SET `same-origin^l
+◎
+If same-origin fallback flag is set and mode is "no-cors", set mode to "same-origin".
+</li>
+	<li>
+%資格証~mode ~LET `include^l
+◎
+Let credentialsMode be "include".
+</li>
+	<li>
+~IF［
+%~CORS属性~状態 ~EQ `Anonymous$st
+］
+⇒
+%資格証~mode ~SET `same-origin^l
+◎
+If corsAttributeState is Anonymous, set credentialsMode to "same-origin".
+</li>
+	<li>
+~RET 次のようにされた新たな`要請$
+⇒＃
+`~URL$rq ~SET %~url,
+`行先$rq ~SET %行先,
+`~mode$rq ~SET %~mode,
+`資格証~mode$rq ~SET %資格証~mode,
+`~URL資格証~利用~mode$rq ~SET ~T
+◎
+Let request be a new request whose url is url, destination is destination, mode is mode, credentials mode is credentialsMode, and whose use-URL-credentials flag is set.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="content-type-sniffing">
+<h3 title="Determining the type of a resource">2.6.2. 資源の型の決定-法</h3>
+
+<p>
+資源の
+`Content-Type ~metadata@
+は、
+`MIME Sniffing^cite `MIMESNIFF$r
+による要件に整合な方式で，得する／解釈するモノトスル。
+◎
+The Content-Type metadata of a resource must be obtained and interpreted in a manner consistent with the requirements of MIME Sniffing. [MIMESNIFF]
+</p>
+
+<p id="computed-mime-type">
+資源から`算出される~MIME型$は、
+`MIME Sniffing^cite `MIMESNIFF$r
+に与えられる［
+関連な~octet列から `sniffed media type^i を見出すための要件
+］に整合な方式で，見出すモノトスル。
+◎
+The computed MIME type of a resource must be found in a manner consistent with the requirements given in MIME Sniffing. [MIMESNIFF]
+</p>
+
+<div class="p">
+<p>
+次に挙げる規則も
+`MIME Sniffing^cite `MIMESNIFF$r
+にて定義され、`~MIME型$を返す：
+</p>
+
+<ul ><li id="content-type-sniffing:-image">`画像を特定的に~sniffするための規則$
+</li><li id="content-type-sniffing:-text-or-binary">`資源は~textか~binaryかを判別する規則$
+</li><li id="content-type-sniffing:-video">`音声や動画を特定的に~sniffするための規則$
+</li></ul>
+
+◎
+The rules for sniffing images specifically, the rules for distinguishing if a resource is text or binary, and the rules for sniffing audio and video specifically are also defined in MIME Sniffing. These rules return a MIME type as their result. [MIMESNIFF]
+</div>
+
+<p class="warning">
+`MIME Sniffing^cite による規則には正確に従うことが絶対必要である。
+~UAが内容~型の検出~用に~serverが期待するものと異なる経験則を利用すると、~securityの問題が生じ得る。
+更なる詳細は、その仕様を見よ。
+◎
+It is imperative that the rules in MIME Sniffing be followed exactly. When a user agent uses different heuristics for content type detection than the server expects, security problems can occur. For more details, see MIME Sniffing. [MIMESNIFF]
+</p>
+
+			</section>
+			<section id="extracting-character-encodings-from-meta-elements">
+<h3 title="Extracting character encodings from meta elements">2.6.3. `meta^e 要素から文字~符号化法を抽出する</h3>
+
+<div class="algo">
+<p>
+`meta 要素から符号化法を抽出する@
+~algoは、所与の文字列 %入力 に対し［
+`文字~符号化法$, ε（なし）
+］のいずれかを返す：
+◎
+The algorithm for extracting a character encoding from a meta element, given a string s, is as follows. It either returns a character encoding or nothing.
+</p>
+
+<ol>
+	<li>
+%位置 ~LET %入力 の先頭の文字を指している`位置~変数$
+◎
+Let position be a pointer into s, initially pointing at the start of the string.
+</li>
+	<li>
+<p>
+~WHILE 無条件：
+</p>
+		<ol>
+			<li>
+~IF［
+%入力 の %位置 以降の部分に`~ASCII大小無視$で `charset^l に合致する文字列がある
+］
+⇒
+%位置 ~SET 該当する文字列のうち，最初のものの直後を指す位置
+</li>
+			<li>
+~ELSE
+⇒
+~RET ε
+</li>
+			<li>
+%入力 内の %位置 から`~ASCII空白を読飛ばす$
+</li>
+			<li>
+~IF［
+%位置↗ ~EQ `003D^U `=^smb
+］
+⇒
+~BREAK
+</li>
+		</ol>
+◎
+Loop: Find the first seven characters in s after position that are an ASCII case-insensitive match for the word "charset". If no such match is found, return nothing.
+◎
+Skip any ASCII whitespace that immediately follow the word "charset" (there might not be any).
+◎
+If the next character is not a U+003D EQUALS SIGN (=), then move position to point just before that next character, and jump back to the step labeled loop.
+</li>
+	<li>
+%入力 内の %位置 から`~ASCII空白を読飛ばす$
+◎
+Skip any ASCII whitespace that immediately follow the equals sign (there might not be any).
+</li>
+	<li>
+~IF［
+%位置↗ ~EQ ε
+］
+⇒
+~RET ε
+◎
+↓</li>
+	<li>
+%符号化法 ~LET ε
+◎
+↓</li>
+	<li>
+<p>
+~IF［
+%位置↗ ~IN { `0022^U `"^smb, `0027^U `'^smb }
+］：
+</p>
+		<ol>
+			<li>
+%引用符 ~LET %位置↗
+</li>
+			<li>
+%位置 ~INCBY 1
+</li>
+			<li>
+%符号化法 ~SET
+%入力 内の %位置 から
+%引用符 以外の`符号位置~並びを収集する$
+</li>
+			<li>
+~IF［
+%位置↗ ~NEQ %引用符
+］
+⇒
+~RET ε
+</li>
+		</ol>
+◎
+Process the next character as follows:
+• If it is a U+0022 QUOTATION MARK character (") and there is a later U+0022 QUOTATION MARK character (") in s
+• If it is a U+0027 APOSTROPHE character (') and there is a later U+0027 APOSTROPHE character (') in s
+•• Return the result of getting an encoding from the substring that is between this character and the next earliest occurrence of this character.
+• If it is an unmatched U+0022 QUOTATION MARK character (")
+• If it is an unmatched U+0027 APOSTROPHE character (')
+• If there is no next character
+•• Return nothing.
+</li>
+	<li>
+~ELSE
+⇒
+%符号化法 ~SET 
+%入力 内の %位置 から
+{ `~ASCII空白$, `003B^U `;^smb }
+以外の`符号位置~並びを収集する$
+◎
+• Otherwise
+•• Return the result of getting an encoding from the substring that consists of this character up to but not including the first ASCII whitespace or U+003B SEMICOLON character (;), or the end of s, whichever comes first.
+</li>
+	<li>
+~RET ［
+`~labelから符号化法を取得する$( %符号化法 ) の結果 ~NEQ `失敗^i ならば その結果 ／
+~ELSE_ ε
+］
+◎
+↑</li>
+</ol>
+
+<p class="note">
+この~algoは、~HTTP仕様のものとは別個な形をとる（例えば、~HTTPでは，一重引用符（ `0027^U `'^smb ）の利用は許容されず、また，この~algoが~supportしない ~backslashによる~escapeの仕組みを~supportすることが要求されている）。
+この~algoは，歴史的に~HTTPに関係する文脈で利用されていたが、実装により~supportされる構文は，あるときから分岐した。
+`HTTP$r
+◎
+This algorithm is distinct from those in the HTTP specifications (for example, HTTP doesn't allow the use of single quotes and requires supporting a backslash-escape mechanism that is not supported by this algorithm). While the algorithm is used in contexts that, historically, were related to HTTP, the syntax as supported by implementations diverged some time ago. [HTTP]
+</p>
+</div>
+
+			</section>
+			<section id="cors-settings-attributes">
+<h3 title="CORS settings attributes">2.6.4. ~CORS設定群~属性</h3>
+
+<p>
+内容~属性には、
+`~CORS設定群~属性@
+とされるものもある。
+それは，次の表の 1 列目に挙げる~keywordをとる`列挙d属性$であり、同じ行の 2 列目に与える状態に対応付けられる：
+◎
+A CORS settings attribute is an enumerated attribute. The following table lists the keywords and states for the attribute — the states given in the first cell of the rows with keywords give the states to which those keywords map.
+</p>
+
+<div>
+<table><thead><tr><th>~keyword
+<th>状態
+<th>概要
+</thead><tbody>
+
+<tr><td>
+`anonymous@v
+<td rowspan="2">
+`Anonymous@st
+【 “匿名” 】
+<td rowspan="2">
+要素による`要請$の［
+`~mode$rqは `cors^l ／
+`資格証~mode$rqは `same-origin^l
+］に設定する。
+
+<tr><td>空~文字列
+
+<tr><td>
+`use-credentials@v
+<td>
+`Use Credentials@st
+【 “資格証を利用する” 】
+<td>
+要素による`要請$の［
+`~mode$rqは `cors^l ／
+`資格証~mode$rqは `include^l
+］に設定する。
+
+</tbody></table>
+
+◎
+State | Keywords | Brief description
+◎
+Anonymous | anonymous | Requests for the element will have their mode set to "cors" and their credentials mode set to "same-origin".
+↑ | (the empty string) | ↑
+◎
+Use Credentials | use-credentials | Requests for the element will have their mode set to "cors" and their credentials mode set to "include".
+</div>
+
+<p>
+この属性の［
+`妥当でない値~用の既定$は `Anonymous$st 状態／
+`値なし用の既定$は
+`No CORS@st
+状態
+］とする。
+`反映$の目的においては、
+`Anonymous$st 状態~用の`正準的な~keyword$は `anonymous$v とする。
+◎
+The attribute's invalid value default is the Anonymous state, and its missing value default is the No CORS state. For the purposes of reflection, the canonical keyword for the Anonymous state is the anonymous keyword.
+</p>
+
+<p>
+~fetchにおいて`~CORS設定群~属性$が統治する大部分は、`~CORSになり得る要請を作成する$~algoを介して行われることになる。
+◎
+The majority of fetches governed by CORS settings attributes will be done via the create a potential-CORS request algorithm.
+</p>
+
+<p>
+`要請$の`~mode$rqは常に `cors^l になるような，より現代的な特能~用には、ある種の`~CORS設定群~属性$は，少し異なる意味に転用され、`要請$の`資格証~mode$rqに限り，影響iするようになる。
+この翻訳を遂行するため、所与の`~CORS設定群~属性$に対しては，
+`~CORS設定群~属性の資格証~mode@
+が定義される
+— それは、属性の状態に応じて，次で決定される
+⇒＃
+`No CORS$st ならば `same-origin^l ／
+`Anonymous$st ならば `same-origin^l ／
+`Use Credentials$st ならば `include^l
+◎
+For more modern features, where the request's mode is always "cors", certain CORS settings attributes have been repurposed to have a slightly different meaning, wherein they only impact the request's credentials mode. To perform this translation, we define the CORS settings attribute credentials mode for a given CORS settings attribute to be determined by switching on the attribute's state:
+◎
+No CORS
+Anonymous
+• "same-origin"
+Use Credentials
+• "include"
+</p>
+
+			</section>
+			<section id="referrer-policy-attributes">
+<h3 title="Referrer policy attributes">2.6.5. ~referrer施策~属性</h3>
+
+<p>
+内容~属性には、
+`~referrer施策~属性@
+とされるものもある。
+それは、`列挙d属性$である。
+各 `~referrer施策$
+— 空~文字列も含む —
+は、この属性~用の~keywordを与え，同じ名前の状態に対応付けられる。
+◎
+A referrer policy attribute is an enumerated attribute. Each referrer policy, including the empty string, is a keyword for this attribute, mapping to a state of the same name.
+</p>
+
+<p>
+［
+`妥当でない値~用の既定$ ／ `値なし用の既定$
+］は、空~文字列~状態とする。
+◎
+The attribute's invalid value default and missing value default are both the empty string state.
+</p>
+
+<p>
+これらの状態による各種`~fetch$の処理~modelへの影響iについては、この仕様を通して, および
+`Fetch^cite `FETCH$r,
+`Referrer Policy^cite `REFERRERPOLICY$r
+にて，より詳細に定義される。
+◎
+The impact of these states on the processing model of various fetches is defined in more detail throughout this specification, in Fetch, and in Referrer Policy. [FETCH] [REFERRERPOLICY]
+</p>
+
+<div class="note">
+<p>注記：
+［
+所与の`~fetch$がどの処理~modelを利用するか
+］に寄与し得る情報0には，いくつかあり、`~referrer施策~属性$は その一つである。
+一般に、これらの情報0は，次の順序で処理される：
+◎
+Several signals can contribute to which processing model is used for a given fetch; a referrer policy attribute is only one of them. In general, the order in which these signals are processed are:
+</p>
+
+<ol>
+	<li>
+最初に、~link型 `noreferrer$v の有無。
+◎
+First, the presence of a noreferrer link type;
+</li>
+	<li>
+`~referrer施策~属性$の値。
+◎
+Then, the value of a referrer policy attribute;
+</li>
+	<li>
+`~nameM$a 属性が `referrer$v に設定された `meta$e 要素の有無。
+◎
+Then, the presence of any meta element with name attribute set to referrer.
+</li>
+	<li>
+最後に、
+`Referrer-Policy$h ~header。
+◎
+Finally, the `Referrer-Policy` HTTP header.
+</li>
+</ol>
+
+</div>
+
+			</section>
+			<section id="nonce-attributes">
+<h3 title="Nonce attributes">2.6.6. `nonce^a 属性</h3>
+
+<p>
+`nonce@a
+内容~属性は、暗号用~nonce （ “`number used once^en” 【使い捨ての番号】 ）を表現する。
+それは、 `CSP$r により利用され，［
+所与の~fetchを続行するのを許容する
+］かどうかを決定する。
+値は~textである。
+◎
+A nonce content attribute represents a cryptographic nonce ("number used once") which can be used by Content Security Policy to determine whether or not a given fetch will be allowed to proceed. The value is text. [CSP]
+</p>
+
+<p>
+要素が `nonce$a 内容~属性を有するとき、その暗号用~nonceは，~scriptのみに公開される（および，~CSS属性~選択子の様な~side-channelには公開されない）ことを確保する
+— 内容~属性から値をとって，
+`CryptographicNonce@sl
+内部~slotに移動して，
+`HTMLOrSVGElement$I ~interface~mixinを介して~scriptに公開して，
+内容~属性を空~文字列に設定することにより。
+他が指定されない限り、この~slotの値は，空~文字列になるとする。
+◎
+Elements that have a nonce content attribute ensure that the crytographic nonce is only exposed to script (and not to side-channels like CSS attribute selectors) by taking the value from the content attribute, moving it into an internal slot named [[CryptographicNonce]], exposing it to script via the HTMLOrSVGElement interface mixin, and setting the content attribute to the empty string. Unless otherwise specified, the slot's value is the empty string.
+</p>
+
+<dl class="domintro">
+	<dt>%element . `nonce$m</dt>
+	<dd>
+要素の `CryptographicNonce$sl 内部~slotの値を返す。
+◎
+Returns the value of the element's [[CryptographicNonce]] internal slot.
+</dd>
+	<dd>
+設定して，その~slotの値を更新できる。
+◎
+Can be set, to update that slot's value.
+</dd>
+</dl>
+
+<div class="algo">
+<p>
+`nonce@m
+取得子~手続きは
+⇒
+~RET コレの `CryptographicNonce$sl ~slotの値
+</div>
+
+<div class="algo">
+<p>
+`nonce$m 設定子~手続きは
+⇒
+コレの `CryptographicNonce$sl ~slot ~SET 所与の値
+◎
+The nonce IDL attribute must, on getting, return the value of this element's [[CryptographicNonce]]; and on setting, set this element's [[CryptographicNonce]] to the given value.
+</p>
+
+<p id="nonce-does-not-update-dom" class="note">注記：
+`nonce$m 設定子は、対応する内容~属性を更新しないことに注意。
+このこと, および［
+要素が`閲覧文脈に接続された$とき，
+`nonce$a 内容~属性を空~文字列に設定すること
+］（下に述べる）は、［
+内容~属性を容易に読取れる仕組み（選択子など）による，~nonce値の不正転送
+］を防止することが意味されている。
+この挙動が導入された~~経緯は、
+<a href="~HTMLissue/2369">課題 #2369</a>
+にて学べる。
+◎
+Note how the setter for the nonce IDL attribute does not update the corresponding content attribute. This, as well as the below setting of the nonce content attribute to the empty string when an element becomes browsing-context connected, is meant to prevent exfiltration of the nonce value through mechanisms that can easily read content attributes, such as selectors. Learn more in issue #2369, where this behavior was introduced.
+</p>
+</div>
+
+<div class="algo">
+<p>
+%要素 上の `nonce$a 内容~属性~用に利用される
+`属性~変更-時の手続き$は、所与の
+( %局所~名, %旧~値, %値, %名前空間 )
+に対し：
+◎
+The following attribute change steps are used for the nonce content attribute:
+</p>
+<ol>
+	<li>
+~IF［
+%要素 は `HTMLOrSVGElement$I を`内包して$いない
+］
+⇒
+~RET
+◎
+If element does not include HTMLOrSVGElement, then return.
+</li>
+	<li>
+~IF［
+%局所~名 ~NEQ `nonce^l
+］~OR［
+%名前空間 ~NEQ ~NULL
+］
+⇒
+~RET
+◎
+If localName is not nonce or namespace is not null, then return.
+</li>
+	<li>
+%要素 の `CryptographicNonce$sl ~SET %値 に応じて
+⇒＃
+~NULL ならば 空~文字列 ／
+~ELSE_ %値
+◎
+If value is null, then set element's [[CryptographicNonce]] to the empty string.
+◎
+Otherwise, set element's [[CryptographicNonce]] to value.
+</li>
+</ol>
+</div>
+
+
+<div class="algo">
+
+<p>
+`HTMLOrSVGElement$I を`内包して$いる %要素 が`閲覧文脈に接続された$ときは、次を走らすモノトスル：
+◎
+Whenever an element including HTMLOrSVGElement becomes browsing-context connected, the user agent must execute the following steps on the element:
+</p>
+<ol>
+	<li>
+%~CSP~list ~LET %要素 の
+`~shadowも含む根$の`~CSP~list$doc
+◎
+Let CSP list be element's shadow-including root's CSP list.
+</li>
+	<li>
+<p>
+~IF［
+%~CSP~list は`~headerにより送達された~CSPを包含している$
+］~AND［
+%要素 は `nonce$a 内容~属性 %属性 を有する
+］~AND［
+%属性 の値 ~NEQ 空~文字列
+］：
+◎
+If CSP list contains a header-delivered Content Security Policy, and element has a nonce content attribute attr whose value is not the empty string, then:
+</p>
+		<ol>
+			<li>
+%nonce ~LET %要素 の `CryptographicNonce$sl
+◎
+Let nonce be element's [[CryptographicNonce]].
+</li>
+			<li>
+%要素 の`属性~値を設定する$( `nonce^l, 空~文字列 )
+◎
+Set an attribute value for element using "nonce" and the empty string.
+</li>
+			<li>
+%要素 の `CryptographicNonce$sl ~SET %nonce
+◎
+Set element's [[CryptographicNonce]] to nonce.
+</li>
+		</ol>
+
+<p class="note">注記：
+%要素 の `CryptographicNonce^sl は、復旧しないと空~文字列になる。
+◎
+If element's [[CryptographicNonce]] were not restored it would be the empty string at this point.
+</p>
+	</li>
+</ol>
+
+<p class="note">注記：
+各`文書$の`~CSP~list$docは，付加されるのみなので、~UAは，それが`~headerにより送達された~CSPを包含している$かどうか検査するのを最適化できる
+— 例えば、`文書$上に~flagを保持して，`文書を作成して初期化する$間に設定することにより。
+◎
+As each Document's CSP list is append-only, user agents can optimize away the contains a header-delivered Content Security Policy check by, for example, holding a flag on the Document, set during Document creation and initialization.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`HTMLOrSVGElement$I を`内包して$いる %要素 用の`~clone時の手続き$は、所与の
+( %複製, %要素, … )
+に対し，次を走らすモノトスル
+⇒
+%複製 の `CryptographicNonce$sl ~slot ~SET %要素 の `CryptographicNonce$sl ~slotの値
+◎
+The cloning steps for elements that include HTMLOrSVGElement must set the [[CryptographicNonce]] slot on the copy to the value of the slot on the element being cloned.
+</p>
+</div>
+
+			</section>
+			<section id="lazy-loading-attributes">
+<h3 title="Lazy loading attributes">2.6.7. ~lazy読込ng属性</h3>
+
+<p>
+内容~属性には、
+`~lazy読込ng属性@
+【 “読込ngを後回しにする” 】
+とされるものもある。
+それは，次の表の 1 列目に挙げる~keywordをとる`列挙d属性$であり、同じ行の 2 列目に与える状態に対応付けられる：
+◎
+A lazy loading attribute is an enumerated attribute. The following table lists the keywords and states for the attribute — the keywords in the left column map to the states in the cell in the second column on the same row as the keyword.
+</p>
+
+<p>
+属性は、その現在の状態に則って，次のいずれかを~UAに指図する
+⇒＃
+資源を即時に~fetchする／
+当の要素に結付けられた何らかの条件が満たされるまで，資源の~fetchingを先送りする
+◎
+The attribute directs the user agent to fetch a resource immediately or to defer fetching until some conditions associated with the element are met, according to the attribute's current state.
+</p>
+
+<table><thead><tr><th>~keyword
+<th>状態
+<th>記述
+</thead><tbody>
+
+<tr><td>`lazy@v
+<td>`Lazy@st （後回し）
+<td>
+何らかの条件が満たされるまで資源の~fetchingを先送りするために利用される。
+◎
+Used to defer fetching a resource until some conditions are met.
+<tr><td>`eager@v
+<td>`Eager@st （早急）
+<td>
+資源を即時に~fetchするために利用される
+— 既定ではこの状態になる。
+◎
+Used to fetch a resource immediately; the default state.
+</tbody></table>
+
+<p>
+属性の［
+`値なし用の既定$／`妥当でない値~用の既定$
+］は、 `Eager$st 状態とする。
+◎
+The attribute's missing value default and invalid value default are both the Eager state.
+</p>
+
+<hr>
+
+<div class="algo">
+<p>
+所与の要素 %要素 は
+`~lazyに読込むことになる@
+かどうかは、次に従う：
+◎
+The will lazy load element steps, given an element element, are as follows:
+</p>
+<ol>
+	<li>
+<p>
+~IF［
+%要素 `用の~scriptingは不能化されて$いる
+］
+⇒
+~RET ~F
+◎
+If scripting is disabled for element, then return false.
+</p>
+
+<p class="note">注記：
+これは、追跡に抗する保護策である
+— ~UAの~scriptingが不能化されている下で~lazy読込ngを~supportした場合、~pageの~markup内に画像を計略的に配置すれば，~serverはそれらの画像がいつ, どれだけ要請されたか追跡でき、~session全体を通して利用者の~scroll位置を近似的に追跡することが，~siteにとって依然としてアリになるので。
+◎
+This is an anti-tracking measure, because if a user agent supported lazy loading when scripting is disabled, it would still be possible for a site to track a user's approximate scroll position throughout a session, by strategically placing images in a page's markup such that a server can track how many images are requested and when.
+</p>
+	</li>
+	<li>
+~IF［
+%要素 の`~lazy読込ng属性$は `Lazy$st 状態にある
+］
+⇒
+~RET ~T
+◎
+If element's lazy loading attribute is in the Lazy state, then return true.
+</li>
+	<li>
+~RET ~F
+◎
+Return false.
+</li>
+</ol>
+</div>
+
+<p>
+各［
+`img$e ／ `iframe$e
+］要素には
+`~lazy読込n再開~手続き@
+が結付けられ，初期~時には ~NULL をとるとする。
+◎
+Each img and iframe element has associated lazy load resumption steps, initially null.
+</p>
+
+<p class="note">注記：
+この手続きは、［
+それらの要素のうち，`~lazyに読込むことになる$もの
+］用にあり，［
+`~lazy読込n交差~観測器$の~callback内から／
+要素の`~lazy読込ng属性$が `Eager$st 状態に変化した【！設定された】とき
+］走らすことになる。
+これは、当の要素の読込ngを継続させる。
+◎
+For img and iframe elements that will lazy load, these steps are run from the lazy load intersection observer's callback or when their lazy loading attribute is set to the Eager state. This causes the element to continue loading.
+</p>
+
+<p>
+各 `文書$には、
+`~lazy読込n交差~観測器@
+があり、初期~時には ~NULL に設定されるが，後に `IntersectionObserver$I ~instanceに設定され得る。
+◎
+Each Document has a lazy load intersection observer, initially set to null but can be set to an IntersectionObserver instance.
+</p>
+
+<div class="algo">
+<p>
+`~lazyに読込んでいる要素の交差~観測を開始する@
+ときは、所与の
+( %要素 )
+に対し，次の手続きを走らす：
+◎
+To start intersection-observing a lazy loading element element, run these steps:
+</p>
+
+<ol>
+	<li>
+%文書 ~LET %要素 の`~node文書$
+◎
+Let doc be element's node document.
+</li>
+	<li>
+<p>
+~IF［
+%文書 の`~lazy読込n交差~観測器$ ~EQ ~NULL
+］：
+◎
+If doc's lazy load intersection observer is null,＼
+</p>
+		<ol>
+			<li>
+%文書 の`~lazy読込n交差~観測器$ ~SET 新たな `IntersectionObserver$I ~obj
+◎
+set it to a new IntersectionObserver instance, initialized as follows:
+</li>
+			<li>
+<p>
+%文書 の`~lazy読込n交差~観測器$上で
+`new IntersectionObserver$m 構築子~手続き( %callback, %options )
+を遂行する※【この節の末尾（以下同様）】
+— ここで：
+◎
+The intention is to use the original value of the IntersectionObserver constructor. However, we're forced to use the JavaScript-exposed constructor in this specification, until Intersection Observer exposes low-level hooks for use in specifications. See bug w3c/IntersectionObserver#427 which tracks this. [INTERSECTIONOBSERVER]
+</p>
+				<ul>
+					<li>
+<p>
+`IntersectionObserverCallback$I ~callback %callback は、引数
+( %~entry~list, %観測器 )
+に対し，次の手続きを走らす：
+◎
+The callback is these steps, with arguments entries and observer:
+</p>
+						<ol>
+							<li>
+<p>
+%~entry~list 内の
+~EACH( %~entry )
+に対し
+<span class="XXX">，開発者が改変-可能な［
+配列~accessorや反復~hook
+］は誘発しない反復~手法を利用して</span>：
+</p>
+								<ol>
+									<li>
+~IF［
+%~entry 上の `isIntersecting$m 取得子~手続き()※ ~EQ ~F
+］
+⇒
+~CONTINUE
+</li>
+									<li>
+%~target ~LET %~entry 上の `target$m 取得子~手続き()※
+</li>
+									<li>
+%再開~手続き ~LET %~target の`~lazy読込n再開~手続き$
+</li>
+									<li>
+~IF［
+%再開~手続き ~EQ ~NULL
+］
+⇒
+~RET
+</li>
+									<li>
+`~lazyに読込んでいる要素の交差~観測を停止する$( %~target )
+</li>
+									<li>
+%~target の`~lazy読込n再開~手続き$ ~SET ~NULL
+</li>
+									<li>
+%再開~手続き を呼出す
+</li>
+								</ol>
+◎
+For each entry in entries using a method of iteration which does not trigger developer-modifiable array accessors or iteration hooks:
+• Let resumptionSteps be null.
+• If entry.isIntersecting is true, then set resumptionSteps to entry.target's lazy load resumption steps.
+• If resumptionSteps is null, then return.
+• Stop intersection-observing a lazy loading element for entry.target.
+• Set entry.target's lazy load resumption steps to null.
+• Invoke resumptionSteps.
+◎
+The intention is to use the original value of the isIntersecting and target getters. See w3c/IntersectionObserver#427. [INTERSECTIONOBSERVER]
+</li>
+						</ol>
+					</li>
+					<li>
+<p>
+`IntersectionObserverInit$I 辞書 %options は、次の~memberを伴う
+⇒
+«[ "`rootMargin^c" → `実装定義$な値 ]»
+◎
+The options is an IntersectionObserverInit dictionary with the following dictionary members: «[ "rootMargin" → an implementation-defined value ]»
+</p>
+
+<p class="XXX">
+<a href="~HTMLissue/5408">課題 #5408</a> を見よ。
+◎
+See issue #5408.
+</p>
+
+<p class="note">注記：
+これは、画像が まだ表示域に交差していなくても，~scrollしている間に そうなりつつあるとき、画像を~fetchすることを許容する。
+◎
+This allows for fetching the image during scrolling, when it does not yet — but is about to — intersect the viewport.
+</p>
+					</li>
+				</ul>
+			</li>
+		</ol>
+	</li>
+	<li>
+<p>
+%文書 の`~lazy読込n交差~観測器$ の`observe$m ~method手続き( %要素 )※
+◎
+Call doc's lazy load intersection observer's observe method with element as the argument.
+◎
+The intention is to use the original value of the observe method. See w3c/IntersectionObserver#427. [INTERSECTIONOBSERVER]
+</p>
+	</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`~lazyに読込んでいる要素の交差~観測を停止する@
+ときは、所与の
+( %要素 )
+に対し，次の手続きを走らす：
+◎
+To stop intersection-observing a lazy loading element element, run these steps:
+</p>
+
+<ol>
+	<li>
+%文書 ~LET %要素 の`~node文書$
+◎
+Let doc be element's node document.
+</li>
+	<li>
+~Assert：
+%文書 の`~lazy読込n交差~観測器$ ~NEQ ~NULL
+◎
+Assert: doc's lazy load intersection observer is not null.
+</li>
+	<li>
+%文書 の`~lazy読込n交差~観測器$の `unobserve$m ~method手続き( %要素 )※
+◎
+Call doc's lazy load intersection observer unobserve method with element as the argument.
+◎
+The intention is to use the original value of the unobserve method. See w3c/IntersectionObserver#427. [INTERSECTIONOBSERVER]
+</li>
+</ol>
+</div>
+
+<p class="XXX">※
+`Intersection Observer^cite 仕様に定義される これらの~interface~member（ `new IntersectionObserver()$m 構築子, 等々）には、それぞれの元の【~JSにより改変されていない】値を利用して~accessすることが意向にある
+【そのように解釈されるよう、この訳では “構築子~手続き” 等々を利用しているが】
+。
+しかしながら，その仕様が他の仕様における利用-用に低~levelな~hookを公開するまでは、この仕様は，~JSに公開される それらを利用するよう強いられる。
+これを追跡する~bug
+<a href="https://github.com/w3c/IntersectionObserver/issues/427">w3c/IntersectionObserver#427</a>
+を見よ。
+`INTERSECTIONOBSERVER$r
+◎
+↑↑</p>
+
+			</section>
+		</section>
+</main>

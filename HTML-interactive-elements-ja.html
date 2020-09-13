@@ -1,0 +1,2314 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Interactive elements（日本語訳）</title>
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'interactive-elements',
+		persisted_parts: Util.collectHtmlCodeList(),
+		collectParts: Util.collectParts,
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	let context = '';
+
+	return this.html.replace(
+		/%[\w\-~一-鿆]+|``?(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'dgm':
+	return `<a id="_dgm-${key}"></a>`;
+	break;
+case 'xCode':
+	return `<a id="_ex-${key}">＊</a>`
+	break;
+case 'AA':
+	return `<a href="~HTMLARIA#el-${key}">作者~向け</a>／<a href="~HTMLAAM#el-${key}">実装者~向け</a>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(match[1] === '`') {
+	if(indicator === '^'){
+		context = key;
+	} else {
+		klass = `${klass}!${context}`;
+	}
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-08-18
+trans_update:2020-08-19
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/interactive-elements.html
+	abbr_url:HEinteractive
+site_nav:uievents,html
+nav_prev:HTMLforms
+nav_next:HEscripting
+trans_1st_pub:2016-10-08
+
+
+●●class_map
+e:element
+a:attr
+p:property
+E:error
+et:event-type
+st:attr-state
+v:value
+M:method
+
+●●tag_map
+I:code
+m:code
+E:code
+c:code
+e:code
+a:code
+M:code
+et:code
+st:span
+p:code
+v:code
+t:var
+i:i
+
+
+●●words_table1
+
+●●words_table
+
+	●構文
+省略:omission:~
+省略不可:omissibleでない:~
+剥いで:stripして:~
+
+	●UI
+locale::::ロケール
+modal::::モーダル
+pan::::パン
+inspector::::インスペクタ
+bar::::バー
+command::::コマンド
+toggle::::トグル
+affordance:
+被focus:focused::被 focus:被フォーカス
+縮約-:collapse:~
+	計算し直:recalculating
+選択-:select:~
+開閉式:disclosure:~
+
+facet:::側面
+不活:inert::~
+隠d:hidden::隠され
+隠され:hideされ::~
+隠す:hideする::~
+示され:showされ::~
+示す:showする::~
+示して:showして::~
+閉じる:closeする::~
+閉じれ:closeでき::~
+	畳まれ:close
+
+移譲先:delegatee::~
+移譲-:delegate::~
+自動focus:autofocus::自動 focus:自動フォーカス
+
+	●呈示／CSS
+色:color:~
+中央寄せ:centered:~
+整列:alignment:~
+
+	●構造
+shadow:
+top::::トップ
+上端層:top layer::~
+最上端の:top-most:~
+	部位:part
+	一部:part of
+	各部品:parts
+
+	●内容
+details:
+summary:
+脚注:footnote::~
+legend:
+分類:category:~
+句ng:phrasing::句::フレージング
+可触:palpable::~
+見出し:heading::~
+sectioning::::セクショニング
+none::なし
+	~~混在-:intermix
+
+
+	●処理一般
+結果値:returnValue:~
+候補:candidate:~
+修復:fixup::~
+指名-:designate::~
+	作成し直す:recreate
+	効き始める:kick in
+	今は:for now
+	数~段~先で:In a couple steps
+	先の:earlier
+	~~集約:coalesce
+	-:throw
+	その後に:subsequently
+	その後に，:Subsequently
+
+	●仕様
+背後:behind:~
+理想:ideal:~
+奇異:strange:~
+告知-:advertise:~
+寄与-:contribute:~
+見出そ:findしよ:~
+
+	-:possible
+	結果も伴われる:additional consequences
+	できるようにする:allow
+	ごく:very
+	-:scope
+	-:share
+	より大きい:larger
+	-:immediately
+	欠落して:missing
+	注目:attention
+	併用する:use this in conjunction with
+	はっきりしない:not entirely clear
+	通常の規則に代わって:rather than whatever it would otherwise compute to
+	考える:consider
+	理想とは言えない:less than ideal
+
+	●未分類
+
+	~close
+	~drop
+	-:リテラル
+	open::::
+	~script:による:scripted
+	-:pixel
+	●
+	:previous
+	:respective
+	labeled
+	followed
+	-:generated
+	~~反映するように:respecting
+	連続する複数の:two or more adjacent
+	-:imagine
+	-:called
+	様々になる:vary
+	u:#1
+	-:measured
+	有する:identified
+	-:annotating
+	複数箇所:many 〜 points
+	引く:draw
+	伸びる:extend
+	%~top文書:topDocument
+
+	●指示語
+	先行／:earlier
+	rest:#1
+	だけ:really just
+	-:follow
+	より長く／longer
+	残りの:the rest of
+	何回か続けて:several times in succession
+
+●●original_id_map
+
+●●mdn_urls
+the-details-element:HTML/Element/details
+the-dialog-element:HTML/Element/dialog
+the-summary-element:HTML/Element/summary
+
+htmldialogelement:API/HTMLDialogElement
+htmldetailselement:API/HTMLDetailsElement
+
+●●link_map
+
+	●IDL／event
+
+CEReactions:~HEcustom#cereactions
+HTMLConstructor:~HTMLdom#htmlconstructor
+
+E.InvalidStateError:~WEBIDL#invalidstateerror
+
+	I.DOMException:~WEBIDL#idl-DOMException
+I.HTMLDialogElement:#htmldialogelement
+I.HTMLDetailsElement:#htmldetailselement
+I.Document:~HTMLdom#document
+文書:~HTMLdom#the-document-object
+I.Element:~DOM4#interface-element
+I.HTMLElement:~HTMLdom#htmlelement
+
+m!details.open:#dom-details-open
+
+m!dialog.close:#dom-dialog-close
+m!dialog.open:#dom-dialog-open
+m!dialog.show:#dom-dialog-show
+m!dialog.showModal:#dom-dialog-showmodal
+m!dialog.returnValue:#dom-dialog-returnvalue
+
+m.cancelable:~DOM4#dom-event-cancelable
+
+et.cancel:~HTMLindex#event-cancel
+et.click:~UIEVENTS#event-type-click
+et.close:~HTMLindex#event-close
+et.toggle:~HTMLindex#event-toggle
+
+
+	●要素／属性／値
+e.a:~HEtextlevel#the-a-element
+e.button:~HEforms#the-button-element
+e.details:#the-details-element
+e.dialog:#the-dialog-element
+e.fieldset:~HEforms#the-fieldset-element
+e.input:~HEinput#the-input-element
+e.label:~HEforms#the-label-element
+e.legend:~HEforms#the-legend-element
+e.option:~HEforms#the-option-element
+e.select:~HEforms#the-select-element
+e.summary:#the-summary-element
+e.small:~HEtextlevel#the-small-element
+e.strong:~HEtextlevel#the-strong-element
+
+a.autofocus:~HTMLinteraction#attr-fe-autofocus
+a.hidden:~HTMLinteraction#the-hidden-attribute
+a.href:~HTMLlinks#attr-hyperlink-href
+a.multiple:~HEforms#attr-select-multiple
+a.tabindex:~HTMLinteraction#attr-tabindex
+a.accesskey:~HTMLinteraction#the-accesskey-attribute
+
+
+a!details.open:#attr-details-open
+a!dialog.open:#attr-dialog-open
+
+a!input.type:~HEinput#attr-input-type
+a!input.alt:~HEinput#attr-input-alt
+a!input.value:~HEinput#attr-input-value
+a!option.label:~HEforms#attr-option-label
+a!option.value:~HEforms#attr-option-value
+
+st!input.Button:~HEinput#button-state-(type=button)
+st!input.Checkbox:~HEinput#checkbox-state-(type=checkbox)
+st!input.Image:~HEinput#image-button-state-(type=image)
+st!input.Radio:~HEinput#radio-button-state-(type=radio)
+st!input.Reset:~HEinput#reset-button-state-(type=reset)
+st!input.Submit:~HEinput#submit-button-state-(type=submit)
+
+
+	●用語
+
+~command:#concept-command
+~commandを定義する:#concept-command
+~facet:#concept-facet
+cF.~label:#command-facet-label
+cF.~access~Key:#command-facet-accesskey
+cF.隠d状態:#command-facet-hiddenstate
+cF.不能化~状態:#command-facet-disabledstate
+cF.動作:#command-facet-action
+	as for a elements:#using-the-a-element-to-define-a-command
+
+通常の整列:#normal-alignment
+中央寄せ整列:#centered-alignment
+
+	magically aligned:#magic-alignment
+
+結果値:#_return-value
+
+~dialogを閉じる:#close-the-dialog
+~dialogを~focusする:#dialog-focusing-steps
+
+~details通知~task手続き:#details-notification-task-steps
+親~details用の~summary:#summary-for-its-parent-details
+
+~access~Key移譲先:#the-legend-element's-accesskey-delegatee
+
+	the section on footnotes:~HTMLLS/scripting.html#footnotes
+
+
+分離子:#concept-separator
+分離子:separator:~
+
+	rendering section:rendering.html#rendering
+
+
+	●用語（HTML
+不能化され:~HTMLforms#concept-fe-disabled
+
+opt.不能化され:~HEforms#concept-option-disabled
+選ぶ:~HEforms#concept-select-pick
+~toggleする:~HEforms#concept-select-toggle
+~label先~control:~HEforms#labeled-control
+
+~objを~focusする:~HTMLinteraction#focusing-steps
+不活:~HTMLinteraction#inert
+アテガわれている~access~Key:~HTMLinteraction#assigned-access-key
+阻んでいる~modal~dialog:~HTMLinteraction#blocked-by-a-modal-dialog
+~focusされ:~HTMLinteraction#focused
+自動focus候補たち:~HTMLinteraction#autofocus-candidates
+自動focus処理-済み~flag:~HTMLinteraction#autofocus-processed-flag
+指名する被focus区画:~HTMLinteraction#focused-area-of-the-document
+~focus可能:~HTMLinteraction#focusable
+~focus修復~規則:~HTMLinteraction#focus-fixup-rule
+
+示唆される既定の具現化を~support:~HTMLINFRA#renderingUA
+から除去され:~HTMLINFRA#remove-an-element-from-a-document
+反映する:~HTMLcdom#reflect
+
+真偽-属性:~HTMLcms#boolean-attribute
+
+分類:~HTMLdom#concept-element-categories
+内容~属性:~HTMLdom#concept-element-attributes
+内容~model:~HTMLdom#concept-element-content-model
+この要素を利用できる文脈:~HTMLdom#concept-element-contexts
+~accessibilityの考慮点:~HTMLdom#concept-element-accessibility-considerations
+~DOM~interface:~HTMLdom#concept-element-dom
+~flow内容:~HTMLdom#flow-content-2
+大域~属性:~HTMLdom#global-attributes
+対話的~内容:~HTMLdom#interactive-content-2
+なし:~HTMLdom#concept-content-nothing
+可触~内容:~HTMLdom#palpable-content-2
+句ng内容:~HTMLdom#phrasing-content-2
+text/html における~tag省略:~HTMLdom#concept-element-tag-omission
+見出し内容:~HTMLdom#heading-content-2
+表現-:~HTMLdom#represents
+
+~DOM操作~task源:~WAPI#dom-manipulation-task-source
+利用者~対話~task源:~WAPI#user-interaction-task-source
+~click~eventを発火する:~WAPI#fire-a-click-event
+~task:~WAPI#concept-task
+要素~taskを~queueする:~WAPI#queue-an-element-task
+~queueされ:~WAPI#queue-an-element-task
+
+生成元:~ORIGIN#concept-origin
+同一-生成元:~ORIGIN#same-origin
+
+属する閲覧文脈:~BROWSERS#concept-document-bc
+作動中の文書:~BROWSERS#active-document
+~top-level閲覧文脈:~BROWSERS#top-level-browsing-context
+
+~navigate:~NAVI#navigate
+
+~sectioning根:~HEsections#sectioning-root
+具現化されて:~HTMLrendering#being-rendered
+
+	●用語（外部
+除去する:~INFRA#list-remove
+空にする:~INFRA#list-empty
+~ASCII空白:~INFRA#ascii-whitespace
+~ASCII空白を剥いで縮約する:~INFRA#strip-and-collapse-ascii-whitespace
+
+文書~内:~DOM4#in-a-document
+~node文書:~DOM4#concept-node-document
+~tree順序:~DOM4#concept-tree-order
+最初の子:~DOM4#concept-tree-first-child
+~eventを発火する:~DOM4#concept-event-fire
+作動化の挙動:~DOM4#eventtarget-activation-behavior
+接続されて:~DOM4#connected
+属性~値を設定する:~DOM4#concept-element-attributes-set-value
+属性を除去する:~DOM4#concept-element-attributes-remove
+子孫~text内容:~DOM4#concept-descendant-text-content
+~shadowも含む子孫:~DOM4#concept-shadow-including-descendant
+
+~URL:~URL1#concept-url
+
+上端層:~FULLSCREEN#top-layer
+tL.追加する:~FULLSCREEN#top-layer-add
+
+	●CSS
+~border~box:~CSSBOX#border-box
+~margin辺:~CSSBOX#margin-edge
+表示域:~CSS2VISUREN#viewport
+使用~値:~CASCADE#used-value
+始端:~CSSWM#css-start
+終端:~CSSWM#css-end
+	塊~始端:~CSSWM#block-start
+塊~flow方向:~CSSWM#block-flow-direction
+	塊~size:~CSSWM#block-size
+~CSS~pixel:~CSSVAL#px
+
+p.width:~CSS2VISUDET#the-width-property
+p.height:~CSS2VISUDET#the-height-property
+p.overflow:~CSSOVERFLOW3#propdef-overflow
+p.position:~CSSPOS#propdef-position
+v.static:~CSSPOS#valdef-position-static
+
+静的~位置:~CSSPOS#_static-position
+~inset~prop:~CSSPOS#inset-properties
+	~box~offset~prop:~CSS2VISUREN#position-props
+	p.top:~CSSPOS#propdef-top
+	p.right:~CSSPOS#propdef-right
+	p.bottom:~CSSPOS#propdef-bottom
+	p.left:~CSSPOS#propdef-left
+
+
+●●html_code_list
+
+
+
+■details-1
+<section class="progress window">
+ <h1>"Really Achieving Your Childhood Dreams" を複製しています</h1>
+ <details>
+  <summary>複製中... <progress max="375505392" value="97543282"></progress> 25%</summary>
+  <dl>
+   <dt>転送レート： </dt> <dd>452KB/s</dd>
+   <dt>保存先： </dt> <dd>/home/rpausch/raycd.m4v</dd>
+   <dt>転送元： </dt> <dd>/var/www/lectures/raycd.m4v</dd>
+   <dt>経過時間： </dt> <dd>01:16:27</dd>
+   <dt>色プロファイル： </dt> <dd>SD (6-1-6)</dd>
+   <dt>サイズ： </dt> <dd>320×240</dd>
+  </dl>
+ </details>
+</section>
+
+<section class="progress window">
+ <h1>Copying "Really Achieving Your Childhood Dreams"</h1>
+ <details>
+  <summary>Copying... <progress max="375505392" value="97543282"></progress> 25%</summary>
+  <dl>
+   <dt>Transfer rate:</dt> <dd>452KB/s</dd>
+   <dt>Local filename:</dt> <dd>/home/rpausch/raycd.m4v</dd>
+   <dt>Remote filename:</dt> <dd>/var/www/lectures/raycd.m4v</dd>
+   <dt>Duration:</dt> <dd>01:16:27</dd>
+   <dt>Color profile:</dt> <dd>SD (6-1-6)</dd>
+   <dt>Dimensions:</dt> <dd>320×240</dd>
+  </dl>
+ </details>
+</section>
+
+■details-2
+<details>
+ <summary><label for=fn>名前と拡張子：</label></summary>
+ <p><input type=text id=fn name=fn value="Pillar Magazine.pdf">
+ <p><label><input type=checkbox name=ext checked>拡張子を隠す</label>
+</details>
+
+<details>
+ <summary><label for=fn>Name & Extension:</label></summary>
+ <p><input type=text id=fn name=fn value="Pillar Magazine.pdf">
+ <p><label><input type=checkbox name=ext checked> Hide extension</label>
+</details>
+
+
+■details-3
+<style>
+ details > summary { transition: color 1s; color: black; }
+ details[open] > summary { color: red; }
+</style>
+<details>
+ <summary>自動運転： 作動中</summary>
+ <p>速度： 12m/s</p>
+ <p>方向： 北</p>
+</details>
+
+<style>
+ details > summary { transition: color 1s; color: black; }
+ details[open] > summary { color: red; }
+</style>
+<details>
+ <summary>Automated Status: Operational</summary>
+ <p>Velocity: 12m/s</p>
+ <p>Direction: North</p>
+</details>
+
+
+■dialog-1
+<dialog>
+ <h1>財布に追加する</h1>
+ <p><strong><label for=amt>何枚のコインを追加しますか？</label></strong></p>
+ <p><input id=amt name=amt type=number min=0 step=0.01 value=100></p>
+ <p><small>コインの追加は、ご自身の責任で行なってください。</small></p>
+ <p><label><input name=round type=checkbox>端数は丸める</label></p>
+ <p><input type=button onclick="submit()" value="追加する"></p>
+</dialog>
+
+<dialog>
+ <h1>Add to Wallet</h1>
+ <p><strong><label for=amt>How many gold coins do you want to add to your wallet?</label></strong></p>
+ <p><input id=amt name=amt type=number min=0 step=0.01 value=100></p>
+ <p><small>You add coins at your own risk.</small></p>
+ <p><label><input name=round type=checkbox> Only add perfectly round coins </label></p>
+ <p><input type=button onclick="submit()" value="Add Coins"></p>
+</dialog>
+
+■legend-1
+<fieldset>
+ <legend accesskey=p>
+  <label><input name=pizza type=number step=1 value=1 min=0>
+3 種のトッピング付きのピザを希望します
+  </label>
+ </legend>
+ <label><input name=pizza-cheese type=checkbox checked>チーズ</label>
+ <label><input name=pizza-ham type=checkbox checked>ハム</label>
+ <label><input name=pizza-pineapple type=checkbox> パイナップル</label>
+</fieldset>
+
+<fieldset>
+ <legend accesskey=p>
+  <label>I want <input name=pizza type=number step=1 value=1 min=0>
+   pizza(s) with these toppings</label>
+ </legend>
+ <label><input name=pizza-cheese type=checkbox checked> Cheese</label>
+ <label><input name=pizza-ham type=checkbox checked> Ham</label>
+ <label><input name=pizza-pineapple type=checkbox> Pineapple</label>
+</fieldset>
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる HTML 仕様の
+<a href="~SPEC_URL">§ Interactive elements</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+</head>
+<body>
+
+
+<div id="_persisted_parts" hidden>
+<img id="_dgm-sample-details-1"
+	src="HTML-resources/sample-details-1.png"
+	alt=""
+	width="265" height="531"
+	style="box-shadow:0px 10px 10px 10px silver; margin: 20px;"
+>
+<img id="_dgm-sample-details-2"
+	src="HTML-resources/sample-details-2.png"
+	alt=""
+	width="265" height="586"
+	style="box-shadow:0px 10px 10px 10px silver; margin: 20px;"
+>
+
+</div>
+
+<header id="head">
+	<hgroup>
+<h1>対話的な要素 — Interactive elements</h1>
+
+	</hgroup>
+</header>
+
+<main id="MAIN" hidden>
+
+		<section id="interactive-elements">
+<h2 title="Interactive elements">4.11 対話的~要素</h2>
+
+			<section id="_conventions">
+<h3>【この訳に固有の表記規約】</h3>
+
+<p>
+この訳の，~algoの記述に利用されている各種記号（ ~LET, ~IF, ~RET, 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+			</section>
+			<section id="the-details-element">
+<h3 title="The details element">4.11.1. ``details^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+`~flow内容$／`~sectioning根$／`対話的~内容$／`可触~内容$
+◎
+Flow content.
+◎
+Sectioning root.
+◎
+Interactive content.
+◎
+Palpable content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`~flow内容$が期待される所。
+◎
+Where flow content is expected.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+［
+1 個の `summary$e 要素, `~flow内容$
+］からなる並び
+◎
+One summary element followed by flow content.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+``open$a
+— 詳細は可視であるかどうか
+◎
+open — Whether the details are visible
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`details$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLDetailsElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [`CEReactions$] attribute boolean ``open$m;
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`details$e 要素は、利用者が追加的な情報や~controlを得せるような，開閉式~widgetを`表現-$する。
+◎
+The details element represents a disclosure widget from which the user can obtain additional information or controls.
+</p>
+
+<p class="note">注記：
+`details$e 要素は、脚注~等（ footnote ）には適切でない。
+脚注を~mark-upする方法の詳細は、
+<a href="~HTMLLS/semantics-other.html#footnotes">脚注に関する節</a>
+を見られたし。
+◎
+The details element is not appropriate for footnotes. Please see the section on footnotes for details on how to mark up footnotes.
+</p>
+
+<p>
+要素の最初の子が `summary$e 要素であるならば、それが詳細の［
+要約（ summary ） ／ ~legend
+］を`表現-$する。
+そのような子がなければ、~UAは，自前の~legend（例： “詳細” ）を供するべきである。
+◎
+The first summary element child of the element, if any, represents the summary or legend of the details. If there is no child summary element, the user agent should provide its own legend (e.g. "Details").
+</p>
+
+<p>
+要素の残りの内容は、追加的な［
+情報や~controlたち
+］を`表現-$する。
+◎
+The rest of the element's contents represents the additional information or controls.
+</p>
+
+<p>
+``open@a
+内容~属性は`真偽-属性$である。
+在る場合、要約, 追加的な情報の両者とも利用者に示すことを指示する。
+無い場合、要約のみが示される。
+◎
+The open content attribute is a boolean attribute. If present, it indicates that both the summary and the additional information is to be shown to the user. If the attribute is absent, only the summary is to be shown.
+</p>
+
+<p>
+追加的な情報は、要素の作成-時には，この属性が［
+無いならば 隠される ／
+在るならば 示される
+］べきである。
+その後に，属性が［
+除去された ／ 追加された
+］場合、情報は［
+隠される ／ 示される
+］べきである。
+◎
+When the element is created, if the attribute is absent, the additional information should be hidden; if the attribute is present, that information should be shown. Subsequently, if the attribute is removed, then the information should be hidden; if the attribute is added, the information should be shown.
+</p>
+
+<div class="algo">
+<p>
+~UAは、利用者が，要素 %要素 に対し追加的な情報を［
+示す ／ 隠す
+］よう要請できるようにするべきである。
+そのような要請を尊守するときは、~UAは，次を走らすモノトスル：
+</p>
+
+<ul>
+	<li>
+示す場合
+⇒
+%要素 の`属性~値を設定する$( `open^l, 空~文字列 )
+</li>
+	<li>
+隠す場合
+⇒
+%要素 から ``open$a `属性を除去する$
+</li>
+</ul>
+
+◎
+The user agent should allow the user to request that the additional information be shown or hidden. To honor a request for the details to be shown, the user agent must set the open attribute on the element to the empty string. To honor a request for the information to be hidden, the user agent must remove the open attribute from the element.
+</div>
+
+<p class="note">
+この，追加的な情報を示す／隠す能は、適切な `summary$e 要素が存在するならば，単純に その`作動化の挙動$になり得る。
+しかしながら，そのような要素が存在しない場合でも、~UAは依然として，何らかの他の~UI~affordanceを通して この能を供せる。
+◎
+This ability to request that additional information be shown or hidden may simply be the activation behavior of the appropriate summary element, in the case such an element exists. However, if no such element exists, user agents can still provide this ability through some other user interface affordance.
+</p>
+
+<div class="algo">
+<p>
+~UAは、 ``open$a 属性が `details$e 要素 %details［
+に追加される ／ から除去される
+］度に，次を行うモノトスル
+⇒
+`要素~taskを~queueする$( `~DOM操作~task源$, %details, `~details通知~task手続き$ )
+◎
+Whenever the open attribute is added to or removed from a details element, the user agent must queue an element task on the DOM manipulation task source given then details element that runs the following steps,＼
+</p>
+
+<p>
+`~details通知~task手続き@
+は、所与の %details に対し次を走らす：
+◎
+which are known as the details notification task steps, for this details element:
+</p>
+
+<ol>
+	<li>
+<p>
+~IF［
+%details に対し`~details通知~task手続き$を走らす別の`~task$が`~queueされ$ている
+］
+⇒
+~RET
+◎
+If another task has been queued to run the details notification task steps for this details element, then return.
+</p>
+
+<p class="note">注記：
+``open$a 属性が何回か続けて~toggleされたときは、この段は，本質的に ~eventが 1 回だけ発火されるように~~集約する。
+◎
+When the open attribute is toggled several times in succession, these steps essentially get coalesced so that only one event is fired.
+</p>
+	</li>
+	<li>
+%details に向けて，名前 `toggle$et の`~eventを発火する$
+◎
+Fire an event named toggle at the details element.
+</li>
+</ol>
+</div>
+
+<p>
+``open@m
+~IDL属性は、
+``open$a 内容~属性を`反映する$モノトスル。
+◎
+The open IDL attribute must reflect the open content attribute.
+</p>
+
+<div class="example">
+
+<p>
+`details$e 要素を利用して，進捗~報告-内の技術的な詳細を隠す例：
+◎
+The following example shows the details element being used to hide technical details in a progress report.
+</p>
+
+`details-1^xCode
+</div>
+
+<div class="example">
+<p>
+`details$e 要素を利用して，~controlを既定で隠す例：
+◎
+The following shows how a details element can be used to hide some controls by default:
+</p>
+
+`details-2^xCode
+
+<p>
+これを ~list内で他の `details$e と併用すれば、［
+それぞれが~~展開する能を伴う~fieldの集合を，利用者が小さい見出しの集合に縮約できるようにする
+］こともできる。
+◎
+One could use this in conjunction with other details in a list to allow the user to collapse a set of fields down to a small set of headings, with the ability to open each one.
+</p>
+
+<figure>
+`sample-details-1^dgm
+`sample-details-2^dgm
+</figure>
+
+<p>
+これらの例における `summary^e （要約）が要約-（ summarize ）するのは，~controlが何を変更できるかだけであり、実際の値まで~~示すのは，理想とは言えない。
+◎
+In these examples, the summary really just summarizes what the controls can change, and not the actual values, which is less than ideal.
+</p>
+
+</div>
+
+<div class="example">
+
+<p>
+``open$a 属性は、利用者が~controlとヤリトリするに伴って，自動的に［
+追加-／除去-
+］されるので、その状態に基づいて，~CSSを用いて要素に異なる~styleをあてがうことに利用できる。
+ここでは、要素が~~展開されたり~~畳まれたときに，要約の色を~animateする~stylesheetの例を~~示す：
+◎
+Because the open attribute is added and removed automatically as the user interacts with the control, it can be used in CSS to style the element differently based on its state. Here, a style sheet is used to animate the color of the summary when the element is opened or closed:
+</p>
+
+`details-3^xCode
+
+</div>
+
+			</section>
+			<section id="the-summary-element">
+<h3 title="The summary element">4.11.2. `summary^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+~none。
+◎
+None.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`details$e 要素の`最初の子$として。
+◎
+As the first child of a details element.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`句ng内容$。
+加えて，`見出し内容$が~~混在していてもよい。
+◎
+Phrasing content, optionally intermixed with heading content.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`summary$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+`HTMLElement$I を利用する。
+◎
+Uses HTMLElement.
+</dd>
+</dl>
+
+<p>
+`summary$e 要素は、その親が `details$e 要素であれば，親の他の内容に対する［
+要約 ／ ~caption ／~legend
+］を`表現-$する。
+◎
+The summary element represents a summary, caption, or legend for the rest of the contents of the summary element's parent details element, if any.
+</p>
+
+<div class="algo">
+<p>
+次を満たす要素は
+`親~details用の~summary@
+であるとされる
+⇒
+［
+`summary$e 要素である
+］~AND［
+親は `details$e 要素である
+］~AND［
+先行する同胞に別の `summary$e 要素は無い
+］
+◎
+A summary element is a summary for its parent details if the following algorithm returns true:
+• If this summary element has no parent, then return false.
+• Let parent be this summary element's parent.
+• If parent is not a details element, then return false.
+• If parent's first summary element child is not this summary element, then return false.
+• Return true.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`summary$e 要素 %要素 の`作動化の挙動$は、次の手続きを走らす：
+◎
+The activation behavior of summary elements is to run the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%要素 は`親~details用の~summary$でない
+］
+⇒
+~RET
+◎
+If this summary element is not the summary for its parent details, then return.
+</li>
+	<li>
+%親 ~LET %要素 の親
+◎
+Let parent be this summary element's parent.
+</li>
+	<li>
+~IF［
+%親 は ``open$a 属性を有する
+］
+⇒
+%親 から ``open$a `属性を除去する$†
+◎
+If the open attribute is present on parent, then remove it.＼
+</li>
+	<li>
+~ELSE
+⇒
+%親 の`属性~値を設定する$( `open^l, 空~文字列 )†
+◎
+Otherwise, set parent's open attribute to the empty string.
+</li>
+</ol>
+
+<p class="note">注記†：
+これは、`~details通知~task手続き$を走らすことになる。
+◎
+This will then run the details notification task steps.
+</p>
+</div>
+
+			</section>
+			<section id="commands">
+<h3 title="Commands">4.11.3. ~command</h3>
+
+				<section id="facets-2">
+<h4 title="Facets">4.11.3.1. ~facet</h4>
+
+<p>
+`~command@
+とは、［
+~menu~item ／ ~button ／ ~link
+］の背後にある抽象-化である。
+~commandが定義されたなら、~UIの他の各部品は，同じ~commandを指せるようになる。
+それにより、`不能化~状態$cFなどの各種~facetからなる単独の特能に，複数箇所から~accessできるようになる。
+◎
+A command is the abstraction behind menu items, buttons, and links. Once a command is defined, other parts of the interface can refer to the same command, allowing many access points to a single feature to share facets such as the Disabled State.
+</p>
+
+<p id="facets">
+各~commandは、次の各種
+`~facet@
+（ facet ）を持つように定義される：
+◎
+Commands are defined to have the following facets:
+</p>
+
+<dl class="def-list">
+	<dt>`~label@cF</dt>
+	<dd>
+この~commandの，利用者から見える名前。
+◎
+The name of the command as seen by the user.
+</dd>
+
+	<dt>`~access~Key@cF</dt>
+	<dd>
+この~commandを誘発する~Keyの組合nであって，~UAにより選択される。
+ない場合は ε とする。
+◎
+A key combination selected by the user agent that triggers the command. A command might not have an Access Key.
+</dd>
+
+	<dt>`隠d状態@cF</dt>
+	<dd>
+~T または ~F 。
+この~commandは隠される（ ~T のとき）かどうかを表す（基本的に，~menu内に示されるべきかどうか）。
+◎
+Whether the command is hidden or not (basically, whether it should be shown in menus).
+</dd>
+
+	<dt>`不能化~状態@cF</dt>
+	<dd>
+~T または ~F 。
+この~commandは、関連していて誘発できる（ ~T のとき）かどうかを表す。
+◎
+Whether the command is relevant and can be triggered or not.
+</dd>
+
+	<dt>`動作@cF</dt>
+	<dd>
+この~commandを誘発したときに実際に生じる効果。
+これは、［
+~scriptによる~event~handler ／
+`~navigate$先の`~URL$ ／
+~form提出
+］のいずれにもなり得る。
+◎
+The actual effect that triggering the command will have. This could be a scripted event handler, a URL to which to navigate, or a form submission.
+</dd>
+</dl>
+
+<p id="expose-commands-in-ui">
+~UAは、次の判定基準すべてが満たされるならば，要素が定義する`~command$を公開してもヨイ ：
+◎
+User agents may expose the commands that match the following criteria:
+</p>
+
+<ul>
+	<li>
+~commandの`隠d状態$cF ~EQ ~F（要素は可視）
+◎
+The Hidden State facet is false (visible)
+</li>
+	<li>
+次を満たすような`文書$がある
+⇒
+［
+要素は`文書~内$にある
+］~AND［
+文書が`属する閲覧文脈$ ~NEQ ~NULL
+］
+◎
+The element is in a document with a non-null browsing context.
+</li>
+	<li>
+要素, および その どの先祖にも， `hidden$a 属性は指定されていない
+◎
+Neither the element nor any of its ancestors has a hidden attribute specified.
+</li>
+</ul>
+
+<p>
+~UAには、これを行うことが奨励される
+— とりわけ`~access~Key$cFを有する~commandに対し、利用者にそれらの~Keyを告知する仕方として。
+◎
+User agents are encouraged to do this especially for commands that have Access Keys, as a way to advertise those keys to the user.
+</p>
+
+<p class="example">
+例えば、そのような~commandを~UAの~menu~bar内に~listすることもできる。
+◎
+For example, such commands could be listed in the user agent's menu bar.
+</p>
+
+				</section>
+				<section id="using-the-a-element-to-define-a-command">
+<h4 title="Using the a element to define a command">4.11.3.2. `a^e 要素を用いて~commandを定義する</h4>
+
+<p>
+`a$e 要素は、
+`href$a 属性を有するならば，`~commandを定義する$。
+この~commandの各種`~facet$は、次で与えられる：
+◎
+An a element with an href attribute defines a command.
+</p>
+
+<dl>
+	<dt>`~label$cF</dt>
+	<dd>
+要素の`子孫~text内容$になる。
+◎
+The Label of the command is the element's descendant text content.
+</dd>
+
+	<dt>`~access~Key$cF</dt>
+	<dd>
+要素に`アテガわれている~access~Key$があれば それになる。
+◎
+The Access Key of the command is the element's assigned access key, if any.
+</dd>
+
+	<dt>`隠d状態$cF</dt>
+	<dd>
+要素が `hidden$a 属性を有するならば ~T ／
+~ELSE_ ~F
+になる。
+◎
+The Hidden State of the command is true (hidden) if the element has a hidden attribute, and false otherwise.
+</dd>
+
+	<dt>`不能化~状態$cF</dt>
+	<dd>
+要素, または その いずれかの先祖が`不活$ならば ~T ／
+~ELSE_ ~F
+になる。
+◎
+The Disabled State facet of the command is true if the element or one of its ancestors is inert, and false otherwise.
+</dd>
+
+	<dt>`動作$cF</dt>
+	<dd>
+要素に向けて`~click~eventを発火する$。
+◎
+The Action of the command is to fire a click event at the element.
+</dd>
+</dl>
+
+				</section>
+				<section id="using-the-button-element-to-define-a-command">
+<h4 title="Using the button element to define a command">4.11.3.3. `button^e 要素を用いて~commandを定義する</h4>
+
+<p>
+`button$e 要素は、常に`~commandを定義する$。
+この~commandの各種`~facet$は、次で与えられる：
+◎
+A button element always defines a command.
+</p>
+
+<dl>
+	<dt>`~label$cF</dt>
+	<dt>`~access~Key$cF</dt>
+	<dt>`隠d状態$cF</dt>
+	<dt>`動作$cF</dt>
+	<dd>
+これらは、
+<a href="#using-the-a-element-to-define-a-command">`a^e 要素に対するとき</a>
+と同様に決定される（前~節を見よ）。
+◎
+The Label, Access Key, Hidden State, and Action facets of the command are determined as for a elements (see the previous section).
+</dd>
+
+	<dt>`不能化~状態$cF</dt>
+	<dd>
+<p>
+要素が次のいずれかを満たすならば ~T ／
+~ELSE_ ~F
+になる：
+</p>
+
+<ul><li>自身またはそのいずれかの先祖は`不活$である
+</li><li>`不能化され$ている
+</li></ul>
+
+◎
+The Disabled State of the command is true if the element or one of its ancestors is inert, or if the element's disabled state is set, and false otherwise.
+</dd>
+</dl>
+
+				</section>
+				<section id="using-the-input-element-to-define-a-command">
+<h4 title="Using the input element to define a command">4.11.3.4. ``input^e 要素を用いて~commandを定義する</h4>
+
+  
+<p>
+`input$e 要素 %E は、［
+``type$a 属性の状態 ~IN
+{ ``Submit$st, ``Reset$st, ``Image$st, ``Button$st, ``Radio$st, ``Checkbox$st }
+］ならば，`~commandを定義する$。
+この~commandの各種`~facet$は、次で与えられる：
+◎
+An input element whose type attribute is in one of the Submit Button, Reset Button, Image Button, Button, Radio Button, or Checkbox states defines a command.
+</p>
+
+<dl>
+	<dt>`~label$cF</dt>
+	<dd>
+<p>
+次に従って決定される：
+◎
+The Label of the command is determined as follows:
+</p>
+		<ol>
+			<li>
+~IF［
+%E の ``type$a 属性の状態 ~IN { ``Submit$st, ``Reset$st, ``Image$st, ``Button$st }
+］
+⇒
+~RET ［ 
+%E は ``value$a 属性を有するならば その値 ／
+~ELSE_ ~UAが~buttonに既定の~labelをあてがうときに利用する値
+— 値は~UA, および~localeに依存する
+］
+◎
+If the type attribute is in one of the Submit Button, Reset Button, Image Button, or Button states, then the Label is the string given by the value attribute, if any, and a UA-dependent, locale-dependent value that the UA uses to label the button itself if the attribute is absent.
+</li>
+			<li>
+~IF［
+%E を`~label先~control$とする `label$e 要素はある
+］
+⇒
+~RET 該当するもののうち，`~tree順序$で最初のものの`子孫~text内容$（~JSで言えば， %E`.labels[0].textContent^c ）
+◎
+Otherwise, if the element is a labeled control, then the Label is the descendant text content of the first label element in tree order whose labeled control is the element in question. (In JavaScript terms, this is given by element.labels[0].textContent.)
+</li>
+			<li>
+~RET ［
+%E は ``value$a 属性を有するならば その値 ／
+~ELSE_ 空~文字列
+］
+◎
+Otherwise, if the value attribute is present, then the Label is the value of that attribute.
+◎
+Otherwise, the Label is the empty string.
+</li>
+		</ol>
+	</dd>
+	<dd class="note">注記：
+``Image$st 状態にある `input$e 要素~上では， ``value$a 属性は適合tでないが、要素に ``alt$a 属性が欠落している場合には，依然として`~label$cFの決定に寄与する。
+◎
+Even though the value attribute on input elements in the Image Button state is non-conformant, the attribute can still contribute to the Label determination, if it is present and the Image Button's alt attribute is missing.
+</dd>
+
+	<dt>`~access~Key$cF</dt>
+	<dd>
+要素に`アテガわれている~access~Key$があれば それになる。
+◎
+The Access Key of the command is the element's assigned access key, if any.
+</dd>
+
+	<dt>`隠d状態$cF</dt>
+	<dd>
+要素は `hidden$a 属性を有するならば ~T ／
+~ELSE_ ~F
+になる。
+◎
+The Hidden State of the command is true (hidden) if the element has a hidden attribute, and false otherwise.
+</dd>
+
+	<dt>`不能化~状態$cF</dt>
+	<dd>
+<p>
+要素が次のいずれかを満たすならば ~T ／
+~ELSE_ ~F
+になる：
+</p>
+
+<ul><li>自身またはそのいずれかの先祖は`不活$である
+</li><li>`不能化され$ている
+</li></ul>
+
+◎
+The Disabled State of the command is true if the element or one of its ancestors is inert, or if the element's disabled state is set, and false otherwise.
+</dd>
+
+	<dt>`動作$cF</dt>
+	<dd>
+要素に向けて`~click~eventを発火する$。
+◎
+The Action of the command is to fire a click event at the element.
+</dd>
+</dl>
+
+				</section>
+				<section id="using-the-option-element-to-define-a-command">
+<h4 title="Using the option element to define a command">4.11.3.5. ``option^e 要素を用いて~commandを定義する</h4>
+
+<div >
+<p>
+`option$e 要素は、次をいずれも満たすならば，`~commandを定義する$：
+</p>
+
+<ul>
+	<li>
+先祖に `select$e 要素がある
+</li>
+	<li>
+［
+``value$a 属性を有さない 
+］~OR［
+``value$a 属性を有していて その値 ~NEQ 空~文字列
+］
+</li>
+</ul>
+
+<p>
+この~commandの各種`~facet$は、次で与えられる：
+</p>
+◎
+An option element with an ancestor select element and either no value attribute or a value attribute that is not the empty string defines a command.
+</div>
+
+<dl>
+	<dt>`~label$cF</dt>
+	<dd>
+要素は ``label$a 属性を有するならば その値になる。
+~ELSE_ 次の結果になる
+⇒
+`~ASCII空白を剥いで縮約する$( 要素の`子孫~text内容$ )
+◎
+The Label of the command is the value of the option element's label attribute, if there is one, or else the option element's descendant text content, with ASCII whitespace stripped and collapsed.
+</dd>
+
+	<dt>`~access~Key$cF</dt>
+	<dd>
+要素に`アテガわれている~access~Key$があれば それになる。
+◎
+The Access Key of the command is the element's assigned access key, if any.
+</dd>
+
+	<dt>`隠d状態$cF</dt>
+	<dd>
+要素は `hidden$a 属性を有するならば ~T ／
+~ELSE_ ~F
+になる。
+◎
+The Hidden State of the command is true (hidden) if the element has a hidden attribute, and false otherwise.
+</dd>
+
+	<dt>`不能化~状態$cF</dt>
+	<dd>
+<p>
+要素が次のいずれかを満たすならば ~T ／
+~ELSE_ ~F
+になる。
+</p>
+
+<ul ><li>`不能化され$optている
+</li><li>最も近い先祖 `select$e 要素は`不能化され$ている
+</li><li>自身またはいずれかの先祖は `不活$である
+</li></ul>
+
+◎
+The Disabled State of the command is true if the element is disabled, or if its nearest ancestor select element is disabled, or if it or one of its ancestors is inert, and false otherwise.
+</dd>
+
+	<dt>`動作$cF</dt>
+	<dd>
+要素に最も近い先祖 `select$e 要素は、
+`multiple$a 属性を有するならば，要素を`~toggleする$。
+他の場合、要素を`選ぶ$。
+◎
+If the option's nearest ancestor select element has a multiple attribute, the Action of the command is to toggle the option element. Otherwise, the Action is to pick the option element.
+</dd>
+</dl>
+
+				</section>
+				<section id="using-the-accesskey-attribute-on-a-legend-element-to-define-a-command">
+<h4 title="Using the accesskey attribute on a legend element to define a command">4.11.3.6. `legend^e 要素の `accesskey^a 属性を用いて~commandを定義する</h4>
+
+<p>
+次をすべて満たす `legend$e 要素は、`~commandを定義する$：
+◎
+A legend element defines a command if all of the following are true:
+</p>
+
+<ul>
+	<li>
+`アテガわれている~access~Key$はある
+◎
+It has an assigned access key.
+</li>
+	<li>
+その親 %F は `fieldset$e 要素である
+◎
+It is a child of a fieldset element.
+</li>
+	<li>
+<div class="p">
+<p>
+次をすべて満たす要素は在る：
+</p>
+
+<ul><li>%F の子孫である
+</li><li>`~commandを定義する$
+</li><li>`label$e 要素でない
+</li><li>`legend$e 要素でない
+</li></ul>
+
+◎
+Its parent has a descendant that defines a command that is neither a label element nor a legend element.＼
+</div>
+
+<p>
+該当する要素を指して、 `legend$e 要素の
+`~access~Key移譲先@
+という。
+◎
+This element, if it exists, is the legend element's accesskey delegatee.
+</p>
+
+<p class="trans-note">【
+該当する要素が複数あるときは、`~tree順序$で最初のもの？
+（以下の記述は、 1 つに定まることを前提に記されている。
+<a href="https://github.com/whatwg/html/commit/aa374be03beebf25ed33022846c2d03d3ea03484">この節が更新される</a>
+前も、 “~tree順序で最初” と記されていた。）
+】</p>
+
+	</li>
+</ul>
+
+<p>
+この~commandの各種`~facet$は、次で与えられる：
+◎
+↓</p>
+
+<dl>
+	<dt>`~label$cF</dt>
+	<dd>
+要素の`子孫~text内容$になる。
+◎
+The Label of the command is the element's descendant text content.
+</dd>
+
+	<dt>`~access~Key$cF</dt>
+	<dd>
+要素に`アテガわれている~access~Key$になる。
+◎
+The Access Key of the command is the element's assigned access key.
+</dd>
+
+	<dt>`隠d状態$cF</dt>
+	<dt>`不能化~状態$cF</dt>
+	<dt>`動作$cF</dt>
+	<dd>
+それぞれ、 `legend$e 要素の`~access~Key移譲先$の対応する~facetと同じになる。
+◎
+The Hidden State, Disabled State, and Action facets of the command are the same as the respective facets of the legend element's accesskey delegatee.
+</dd>
+</dl>
+
+<div class="example">
+
+<p>
+この例では、 `legend$e 要素に `accesskey$a が指定されている
+— 要素が作動化されたときは、その内側にある `input$e 要素に移譲することになる。
+◎
+In this example, the legend element specifies an accesskey, which, when activated, will delegate to the input element inside the legend element.
+</p>
+
+`legend-1^xCode
+
+</div>
+
+				</section>
+				<section id="using-the-accesskey-attribute-to-define-a-command-on-other-elements">
+<h4 title="Using the accesskey attribute to define a command on other elements">4.11.3.7. 他の要素~上で `accesskey^a 属性を用いて~commandを定義する</h4>
+
+<p>
+要素は、`アテガわれている~access~Key$があるならば，`~commandを定義する$
+— ただし
+⇒
+そのような要素に対し，これまでのいずれかの節にて［
+要素は`~commandを定義する$ものと定義される
+］ならば、その節の規則が要素に適用される。
+この節が適用されるのは、他の場合に限られる。
+◎
+An element that has an assigned access key defines a command.
+◎
+If one of the earlier sections that define elements that define commands define that this element defines a command, then that section applies to this element, and this section does not. Otherwise, this section applies to that element.
+</p>
+
+<p>
+この~commandの各種`~facet$は、次で与えられる：
+</p>
+
+<dl>
+	<dt>`~label$cF</dt>
+	<dd>
+要素を`~label先~control$とする `label$e 要素はあるならば、該当するもののうち，`~tree順序$で最初のものの`子孫~text内容$になる（~JSで言えば，要素`.labels[0].textContent^c ）。
+◎
+The Label of the command depends on the element. If the element is a labeled control, the descendant text content of the first label element in tree order whose labeled control is the element in question is the Label (in JavaScript terms, this is given by element.labels[0].textContent).＼
+</dd>
+	<dd>
+他の場合、要素の`子孫~text内容$になる。
+◎
+Otherwise, the Label is the element's descendant text content.
+</dd>
+
+	<dt>`~access~Key$cF</dt>
+	<dd>
+要素に`アテガわれている~access~Key$になる。
+◎
+The Access Key of the command is the element's assigned access key.
+</dd>
+
+	<dt>`隠d状態$cF</dt>
+	<dd>
+要素は `hidden$a 属性を有するならば ~T／
+~ELSE_ ~F
+になる。
+◎
+The Hidden State of the command is true (hidden) if the element has a hidden attribute, and false otherwise.
+</dd>
+
+	<dt>`不能化~状態$cF</dt>
+	<dd>
+要素または，そのいずれかの先祖が`不活$であるならば ~T ／
+~ELSE_ ~F
+になる。
+◎
+The Disabled State of the command is true if the element or one of its ancestors is inert, and false otherwise.
+</dd>
+
+	<dt>`動作$cF</dt>
+	<dd>
+<p>
+次の手続きを走らす：
+◎
+The Action of the command is to run the following steps:
+</p>
+		<ol>
+			<li>
+`~objを~focusする$( 要素 )
+◎
+Run the focusing steps for the element.
+</li>
+			<li>
+要素に向けて`~click~eventを発火する$
+◎
+Fire a click event at the element.
+</li>
+		</ol>
+	</dd>
+</dl> 
+
+				</section>
+			</section>
+			<section id="the-dialog-element">
+<h3 title="The dialog element">4.11.4. ``dialog^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$</dt>
+	<dd>
+`~flow内容$ ／ `~sectioning根$。
+◎
+Flow content.
+◎
+Sectioning root.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`~flow内容$が期待される所。
+◎
+Where flow content is expected.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`~flow内容$
+◎
+Flow content.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+``open$a
+— ~dialog~boxを示しているかどうか
+◎
+open — Whether the dialog box is showing
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`dialog$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLDialogElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [`CEReactions$] attribute boolean ``open$m;
+  attribute DOMString ``returnValue$m;
+  [`CEReactions$] undefined ``show$m();
+  [`CEReactions$] undefined ``showModal$m();
+  [`CEReactions$] undefined ``close$m(optional DOMString %returnValue);
+};
+</pre>
+
+	</dd>
+</dl>
+
+<p>
+`dialog$e 要素は、利用者がある~taskを遂行するためにヤリトリする ~appの一部を表現する
+— 例えば
+~dialog~box ／ ~inspector ／ ~UIwindow
+など。
+◎
+The dialog element represents a part of an application that a user interacts with to perform a task, for example a dialog box, inspector, or window.
+</p>
+
+<p>
+`dialog$e 要素の
+``open@a
+属性は、`真偽-属性$であり、指定された場合，［
+要素は 作動中であり，利用者は それとヤリトリできる
+］ことを指示する。
+◎
+The open attribute is a boolean attribute. When specified, it indicates that the dialog element is active and that the user can interact with it.
+</p>
+
+<p>
+``open$a 属性を有さない
+`dialog$e
+要素は、利用者に示されるべきでない。
+この要件は、~style層を通して間接的に実装されてもヨイ。
+例えば，`示唆される既定の具現化を~support$する~UAは、この要件を
+<a href="~HTMLrendering#rendering">具現化~節</a>
+に述べられる~CSS規則を用いて実装する。
+◎
+A dialog element without an open attribute specified should not be shown to the user. This requirement may be implemented indirectly through the style layer. For example, user agents that support the suggested default rendering implement this requirement using the CSS rules described in the rendering section.
+</p>
+
+<div class="note">
+<p>
+~dialogから ``open$a 属性を除去した場合，通例的にそれを隠すことになるが、そうすると，いくつか奇異な結果も伴われる：
+◎
+Removing the open attribute will usually hide the dialog. However, doing so has a number of strange additional consequences:
+</p>
+
+<ul>
+	<li>
+`close$et ~eventは発火されない。
+◎
+The close event will not be fired.
+</li>
+	<li>
+``close()$m ~methodも，<a href="#canceling-dialogs">~UAが供する ~dialogを取消す~UI</a>も、それ以降~dialogを閉じれなくなる。
+◎
+The close() method, and any user-agent provided cancelation interface, will no longer be able to close the dialog.
+</li>
+	<li>
+~dialogが ``showModal()$m ~methodを用いて示されていた場合、`文書$を`阻んでいる~modal~dialog$になる。
+◎
+If the dialog was shown using its showModal() method, the Document will still be blocked.
+</li>
+</ul>
+
+<p>
+これらの理由から、一般に， ``open$a 属性は 決して手動で除去しないほうが良い。
+代わりに、~dialogを ``close()$m ~methodで閉じるか， `hidden$a 属性で隠すこと。
+◎
+For these reasons, it is generally better to never remove the open attribute manually. Instead, use the close() method to close the dialog, or the hidden attribute to hide it.
+</p>
+</div>
+
+<p>
+`dialog$e 要素には、 `tabindex$a 属性は 指定されてはナラナイ。
+◎
+The tabindex attribute must not be specified on dialog elements.
+</p>
+
+<dl class="domintro">
+	<dt>%dialog . ``show()$m</dt>
+	<dd>
+`dialog$e 要素を表示する。
+◎
+Displays the dialog element.
+</dd>
+
+	<dt>%dialog . ``showModal()$m</dt>
+	<dd>
+`dialog$e 要素を表示して，それを最上端の~modal~dialogにする。
+◎
+Displays the dialog element and makes it the top-most modal dialog.
+</dd>
+	<dd>
+この~methodは `autofocus$a 属性を尊守する。
+◎
+This method honors the autofocus attribute.
+</dd>
+
+	<dt>%dialog . ``close$m( [ %result ] )</dt>
+	<dd>
+`dialog$e 要素を閉じる。
+◎
+Closes the dialog element.
+</dd>
+	<dd>
+%result 引数は、 `dialog$e の`結果値$を与える。
+◎
+The argument, if provided, provides a return value.
+</dd>
+
+	<dt>%dialog . ``returnValue$m [ = %result ]</dt>
+	<dd>
+`dialog$e の`結果値$を返す。
+◎
+Returns the dialog's return value.
+</dd>
+	<dd>
+設定して，`結果値$を更新できる。
+◎
+Can be set, to update the return value.
+</dd>
+</dl>
+
+<div class="algo">
+<p>
+``show()@m
+~method~手続きは：
+◎
+When the show() method is invoked, the user agent must run the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+コレは ``open$a 属性を有する
+］
+⇒
+~RET
+◎
+If the element already has an open attribute, then return.
+</li>
+	<li>
+コレの ``open$a 属性 ~SET 空~文字列
+◎
+Add an open attribute to the dialog element, whose value is the empty string.
+</li>
+	<li>
+コレを`通常の整列$~modeにする
+◎
+Set the dialog to the normal alignment mode.
+</li>
+	<li>
+`~dialogを~focusする$( コレ )
+◎
+Run the dialog focusing steps for the dialog element.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+``showModal()@m
+~method~手続きは：
+◎
+When the showModal() method is invoked, the user agent must run the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+コレは ``open$a 属性を有する
+］
+⇒
+~THROW `InvalidStateError$E
+◎
+Let subject be the dialog element on which the method was invoked.
+◎
+If subject already has an open attribute, then throw an "InvalidStateError" DOMException.
+</li>
+	<li>
+~IF［
+コレは`接続されて$いない
+］
+⇒
+~THROW `InvalidStateError$E
+◎
+If subject is not connected, then throw an "InvalidStateError" DOMException.
+</li>
+	<li>
+コレの ``open$a 属性 ~SET 空~文字列
+◎
+Add an open attribute to subject, whose value is the empty string.
+</li>
+	<li>
+コレを`中央寄せ整列$~modeにする
+◎
+Set the dialog to the centered alignment mode.
+</li>
+	<li>
+%文書 ~LET コレの`~node文書$
+◎
+↓</li>
+	<li>
+<p>
+コレを %文書 を`阻んでいる~modal~dialog$にする
+◎
+Let subject's node document be blocked by the modal dialog subject.
+</p>
+
+<p class="note" id="note-dialog-plus-focus-fixup">注記：
+これは、 %文書 が`指名する被focus区画$を`不活$にする（現在の被focus区画がコレの`~shadowも含む子孫$でない限り）。
+そのような事例では、`~focus修復~規則$が効き始めるので，
+%文書 が`指名する被focus区画$を
+— 今は —
+`表示域$に設定し直すことになるが、数~段~先で，~focusする もっと良い候補を見出そうと試みることになる。
+◎
+This will cause the focused area of the document to become inert (unless that currently focused area is a shadow-including descendant of subject). In such cases, the focus fixup rule will kick in and reset the focused area of the document to the viewport for now. In a couple steps we will attempt to find a better candidate to focus.
+</p>
+	</li>
+	<li>
+~IF［
+コレ ~NIN %文書 の`上端層$
+］
+⇒
+コレを %文書 の`上端層$に`追加する$tL
+◎
+If subject's node document's top layer does not already contain subject, then add subject to subject's node document's top layer.
+</li>
+	<li>
+`~dialogを~focusする$( コレ )
+◎
+Run the dialog focusing steps for subject.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`~dialogを~focusする@
+ときは、所与の
+( `dialog$e 要素 %dialog )
+に対し，次を走らす：
+◎
+The dialog focusing steps for a dialog element subject are as follows:
+</p>
+
+<ol>
+	<li>
+~IF［
+%dialog は`不活$である
+］
+⇒
+~RET
+◎
+If subject is inert, return.
+</li>
+	<li>
+%L ~LET ［
+%dialog の子孫~要素のうち`不活$でないもの
+］からなる `~tree順序$による~list
+◎
+↓</li>
+	<li>
+%~control ~SET ［
+%L 内に `autofocus$a 属性を有するものは在るならば それらのうち最初のもの ／
+~ELSE_ %L は空でないならば %L の最初の要素 ／
+~ELSE_ %dialog
+］
+◎
+Let control be the first descendant element of subject, in tree order, that is not inert and has the autofocus attribute specified.
+◎
+If there isn't one, then let control be the first non-inert descendant element of subject, in tree order.
+◎
+If there isn't one of those either, then let control be subject.
+</li>
+	<li>
+<p>
+`~objを~focusする$( %~control )
+◎
+Run the focusing steps for control.
+</p>
+
+<p class="note">注記：
+%~control は`~focus可能$でない場合、これは何もしない。
+~modal~dialog用には、これは，文書が`指名する被focus区画$に
+<a href="#note-dialog-plus-focus-fixup">先の改変</a>
+を適用することを意味する。
+◎
+If control is not focusable, this will do nothing. For modal dialogs, this means that any earlier modifications to the focused area of the document will apply.
+</p>
+	</li>
+	<li>
+%~top文書 ~LET %~control の`~node文書$が`属する閲覧文脈$の`~top-level閲覧文脈$にて`作動中の文書$
+◎
+Let topDocument be the active document of control's node document's browsing context's top-level browsing context.
+</li>
+	<li>
+~IF［
+( %~control の`~node文書$の`生成元$, %~top文書 の`生成元$ )
+は`同一-生成元$でない
+］
+⇒
+~RET
+◎
+If control's node document's origin is not the same as the origin of topDocument, then return.
+</li>
+	<li>
+%~top文書 の`自動focus候補たち$を`空にする$
+◎
+Empty topDocument's autofocus candidates.
+</li>
+	<li>
+%~top文書 の`自動focus処理-済み~flag$ ~SET ~T
+◎
+Set topDocument's autofocus processed flag to true.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`dialog$e 要素 %dialog が`文書$ %文書 `から除去され$たときは、
+%dialog を %文書 の`上端層$からも`除去する$モノトスル。
+◎
+If at any time a dialog element is removed from a Document, then if that dialog is in that Document's top layer, it must be removed from it.
+</p>
+</div>
+
+<div class="algo">
+``close(returnValue)@m
+~method~手続きは
+⇒
+`~dialogを閉じる$( コレ, %returnValue )
+◎
+When the close() method is invoked, the user agent must close the dialog that the method was invoked on. If the method was invoked with an argument, that argument must be used as the return value; otherwise, there is no return value.
+</div>
+
+<div class="algo">
+<p>
+`~dialogを閉じる@
+ときは、所与の
+( `dialog$e 要素 %dialog, 結果値 %結果 （省略時は ε ）)
+に対し，次の手続きを走らす：
+◎
+When a dialog element subject is to be closed, optionally with a return value result, the user agent must run the following steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+%dialog は ``open$a 属性を有さない
+］
+⇒
+~RET
+◎
+If subject does not have an open attribute, then return.
+</li>
+	<li>
+%dialog から ``open$a `属性を除去する$
+◎
+Remove subject's open attribute.
+</li>
+	<li>
+~IF［
+%結果 ~NEQ ε
+］
+⇒
+%dialog の `結果値$ ~SET %結果
+◎
+If the argument result was provided, then set the returnValue attribute to the value of result.
+</li>
+	<li>
+%dialog を，その`~node文書$の`上端層$から`除去する$
+◎
+If subject is in its Document's top layer, then remove it.
+</li>
+	<li>
+次を走らす`要素~taskを~queueする$( `利用者~対話~task源$, %dialog )
+⇒
+%dialog に向けて，名前 `close$et の`~eventを発火する$
+◎
+Queue an element task on the user interaction task source given the subject element to fire an event named close at subject.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+``returnValue@m
+取得子~手続きは
+⇒
+~RET コレの`結果値$
+◎
+The returnValue IDL attribute, on getting, must return the last value to which it was set.＼
+</div>
+
+<div class="algo">
+``returnValue$m 設定子~手続きは
+⇒
+コレの`結果値$ ~SET 所与の値
+◎
+On setting, it must be set to the new value. When the element is created, it must be set to the empty string.
+</div>
+
+<p>
+各 `dialog$e 要素には，文字列である
+`結果値@
+が結付けられ、要素の作成-時には，空~文字列になるモノトスル。
+</p>
+
+<p class="trans-note">【
+（ `dialog^e の） “結果値” は、この訳で導入した用語。
+原文では、（~markupなしに） “return value” と記されていて， （~methodの） “返り値” と紛らわしいので。
+それに伴い， 空~文字列の要件も ``returnValue$m ~IDL属性の記述からここに移している。
+】</p>
+
+<hr>
+
+<p id="canceling-dialogs"><strong>~dialogを取消すとき</strong>：
+［
+`文書$を`阻んでいる~modal~dialog$ %dialog がある
+］ときは、~UAは，作動化-時に次を行う~UIを供してもヨイ：
+◎
+Canceling dialogs: When Document is blocked by a modal dialog dialog, user agents may provide a user interface that, upon activation,＼
+</p>
+
+<ol>
+	<li>
+<p>
+次を走らす`要素~taskを~queueする$( `利用者~対話~task源$, %dialog )：
+◎
+queues an element task on the user interaction task source given the dialog element to run these steps:
+</p>
+		<ol>
+			<li>
+%close ~LET %dialog に向けて，名前 `cancel$et の`~eventを発火する$
+— 次のように初期化して
+⇒
+`cancelable$m 属性 ~SET ~T
+◎
+Let close be the result of firing an event named cancel at dialog, with the cancelable attribute initialized to true.
+</li>
+			<li>
+~IF［
+%close ~EQ ~T
+］~AND［
+%dialog は ``open$a 属性を有する
+］
+⇒
+`~dialogを閉じる$( %dialog ) 
+◎
+If close is true and dialog has an open attribute, then close the dialog with no return value.
+</li>
+		</ol>
+	</li>
+</ol>
+
+<p class="note">注記：
+そのような仕組みを成す~UIの例として、利用者が <kbd>Escape</kbd> ~Keyを押下げることが挙げられる。
+◎
+An example of such a UI mechanism would be the user pressing the "Escape" key.
+</p>
+
+<hr>
+
+<p>
+どの `dialog$e 要素も、［
+`通常の整列@,
+`中央寄せ整列@
+］いずれかの~modeで配置される。
+`dialog$e 要素の作成-時には、~modeは`通常の整列$になるモノトスル。
+この~modeにおいては、要素には通常の~CSS要件が適用される。
+`中央寄せ整列$が利用されるのは、`上端層$内にある `dialog$e 要素に限られる。
+`FULLSCREEN$r
+`CSS$r
+◎
+A dialog element is in one of two modes: normal alignment or centered alignment. When a dialog element is created, it must be placed in the normal alignment mode. In this mode, normal CSS requirements apply to the element. The centered alignment mode is only used for dialog elements that are in the top layer. [FULLSCREEN] [CSS]
+</p>
+
+<p>
+~UAは、`中央寄せ整列$~modeの `dialog$e 要素に対しては：
+◎
+When an element subject is placed in centered alignment mode,＼
+</p>
+<ul>
+	<li>
+以下の各項における，`塊~flow方向$, および［
+寸法, 始端, 終端
+］は、［
+要素~自身ではなく，要素の親
+］の
+【内容の~layoutにおける】
+`塊~flow方向$, およびその方向の［
+寸法, `始端$, `終端$
+］を指すとする。
+◎
+↓</li>
+	<li>
+<p>
+要素の描画~boxを新たに作成するときは、［［［
+要素の`~inset~prop$（ `top^p 等々）のうち，`塊~flow方向$に対応するもの
+］の`使用~値$を計算する目的
+］に用いる，要素の~boxの`静的~位置$
+］を，［
+~boxが次を満たすように配置される値
+］に設定しておくモノトスル：
+</p>
+
+		<ul class="switch">
+			<li>
+［
+要素の寸法（ `width$p ／ `height$p） ~LT `表示域$の寸法
+］の場合
+⇒
+［
+`表示域$の始端~辺から~boxの始端`~margin辺$までの~~距離
+］~EQ［
+`表示域$の終端~辺から~boxの終端`~margin辺$までの~~距離
+］
+</li>
+			<li>
+他の場合
+⇒
+~boxの始端`~margin辺$と`表示域$の始端~辺は、一致する
+</li>
+		</ul>
+
+◎
+and when it is in that mode and has new rendering boxes created, the user agent must set up the element such that its static position of the edge that corresponds to subject's parent's block-start edge, for the purposes of calculating the used value of the appropriate box offset property ('top', 'right', 'bottom', or 'left'), is the value that would place the element's margin edge on the side that corresponds to subject's parent's block-start side as far from the same-side edge of the viewport as the element's opposing side margin edge from that same-side edge of the viewport, if the element's dimension ('width' or 'height') in subject's parent's block flow direction is less than the same-axis dimension of the viewport, and otherwise is the value that would place the element's margin edge on the side that corresponds to subject's parent's block-start side at the same-side edge of the viewport.
+</li>
+	<li>
+要素が`具現化されて$いる下で，次のいずれかが生じたときは、前項に従って静的~位置を計算し直して，要素の~boxを作成し直すモノトスル
+⇒＃
+`表示域$の寸法が変化した【！不要 browsing context／(as measured in CSS pixels)】 ／
+要素の親の`塊~flow方向$が変化した
+◎
+If there is a dialog element with centered alignment and that is being rendered when its browsing context changes viewport dimensions (as measured in CSS pixels), or when this dialog element's parent changes block flow direction, then the user agent must recreate the element's boxes, recalculating its edge that corresponds to this dialog element's parent's block-start edge as in the previous paragraph.
+</li>
+	<li>
+<p>
+上述した静的~位置は、要素の~boxが作成し直されるまで，保たれるモノトスル。
+◎
+This static position of a dialog element's edge with centered alignment must remain the element's static position of that edge until its boxes are recreated.＼
+</p>
+
+<p class="note">注記：
+要素の`静的~位置$は、［
+ある種の状況で，要素の`~inset~prop$の`使用~値$を計算するとき
+］に限り，利用される
+— 一例として、 `position$p ~propが `static^v に設定された要素を位置するときには，利用されない。
+◎
+(The element's static position is only used in calculating the used value of the appropriate box offset property ('top', 'right', 'bottom', or 'left') in certain situations; it's not used, for instance, to position the element if its 'position' property is set to 'static'.)
+</p>
+	</li>
+</ul>
+
+<p>
+視覚的かつ対話的な媒体の~UAは、利用者が `表示域$を~panして `dialog$e 要素の`~border~box$内のすべての部位に~accessできるようにするべきである
+— 要素が `表示域$より大きく，`表示域$に~scrollの仕組みがないときでも（例：`表示域$の `overflow$p ~propが `hidden^v に設定されている）。
+◎
+User agents in visual interactive media should allow the user to pan the viewport to access all parts of a dialog element's border box, even if the element is larger than the viewport and the viewport would otherwise not have a scroll mechanism (e.g. because the viewport's 'overflow' property is set to 'hidden').
+</p>
+
+<hr>
+
+<p>
+``open@m
+~IDL属性は、
+``open$a 内容~属性を`反映する$モノトスル。
+◎
+The open IDL attribute must reflect the open content attribute.
+</p>
+
+<div class="example">
+<p>
+次の~dialog~boxには、細則事項（ `small$e ）がある。
+より重要な部位へ利用者の注目を引くため， `strong$e 要素が利用されている：
+◎
+This dialog box has some small print. The strong element is used to draw the user's attention to the more important part.
+</p>
+
+`dialog-1^xCode
+
+</div>
+			</section>
+		</section>
+</main>

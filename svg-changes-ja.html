@@ -1,0 +1,3534 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>SVG 2 — Changes from SVG 1.1 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-svg.css" type="text/css" />
+
+<style>
+
+.changed-since-cr1 {
+	background: #FBFBB6;
+}
+
+.changed-since-cr1::before {
+	display: block;
+	content: "2016 年 9 月 15 日 勧告候補からの変更点";
+	background: orange;
+}
+
+.cr2::before {
+	content: "2018 年 8 月 7 日 勧告候補からの変更点";
+}
+
+.cr3::before {
+	content: "2018 年 8 月 7 日より後の日付【不明】の勧告候補からの変更点";
+}
+
+.sec::before {
+	content: '§ ';
+	color: gray;
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="svg-common.js"></script>
+<script src="common1.js" async></script>
+
+<script>
+
+
+source_data.generate = function(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	let context_sec = '';
+	return this.html.replace(
+		/`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r': // ref
+	text = `[${key}]`;
+	href = `svg-refs.html#ref-${key.toLowerCase()}`;
+	break;
+case 'pe': 
+	text = `::${key}`;
+	break;
+case 'ps': 
+	text = `:${key}`;
+	break;
+case 'at': 
+	text = `@${key}`;
+	break;
+case 't': // typedef
+	text = `&lt;${key}&gt;`;
+	break;
+case 'V': // variables
+	break;
+case 'l': // literal
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'U':
+	text = `U+${key}`
+	break;
+case 'en': // english words
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+case 'issue':
+	href = `~SVGissue/${key}`;
+	text = '課題~論点';
+	break;
+case 'pull':
+	href = `https://github.com/w3c/svgwg/pull/${key}`;
+	text = '編集点';
+	break;
+case 'sec':
+	context_sec = text;
+	break;
+case '11':
+	text = '~SVG-11';
+	key = context_sec;
+	break;
+case '2':
+	text = '~SVG-2';
+	key = context_sec;
+	break;
+default:
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:SVG 2 — Changes from SVG 1.1
+spec_date:2019-08-31
+trans_update:2019-09-01
+source_checked:180820
+page_state_key:SVG
+original_url:https://svgwg.org/svg2-draft/changes.html
+	https://www.w3.org/TR/SVG2/changes.html
+spec_status:ED
+copyright:2019,use
+site_nav:svg,css
+trans_1st_pub:2016-09-22
+
+
+●●class_map
+
+●●tag_map
+sec:span
+
+●●original_id_map
+
+applies-to:
+appied-to:
+
+
+●●words_table1
+	SVG2:https://www.w3.org/TR/SVG2
+
+SVGeltindex:svg-eltindex-ja.html
+SVGattindex:svg-attindex-ja.html
+SVGpropidx:svg-propindex-ja.html
+SVGidl:svg-idl-ja.html
+SVGidlindex:svg-idlindex-ja.html
+SVGrefs:svg-refs.html
+
+●●words_table
+
+CSSOM:
+LS:
+	LS:living standard
+
+	●幾何／layout
+焦点円:focal circle::~
+計測-:measure::~
+閉な:closed::閉じた
+閉じて:closeして::~
+開いて:openして::~
+弧:arc::~
+
+	位置が既知であるが妥当でない:known-but-invalidly-positioned
+
+	●SVG
+tight:
+自動:auto-:~
+mesh::::メッシュ
+	~graphic上の:graphical
+	~animate化:animated
+	~animate可能:animatable
+	~animate不能:non-animatable
+	高-精度:high-precision
+	^en:markable:
+	^en:Elliptical Arc
+
+	●IDL／event／data型
+言語束縛:language bindings::~
+拡張属性:extended attribute::~
+	空でない:non-empty
+書込可能な:read/write::書き込み可能な
+	~targetし直す:retargetting
+
+	●仕様
+章:chapter:~
+節:section:~
+下位節:subsection:~
+主要:substantial:~
+	作業草案:working draft
+今や:now:~
+最新の:latest:~
+索引:index:~
+最低限の:minimumな:~
+	支持を受けて:in favor of
+同義な:synonymousな:~
+欠如:lack:~
+
+	見かけ:look
+	albeit
+	そのままに:as-is
+	対応する:match
+	主な:main
+	~~適する:fit
+
+
+	●仕様（動詞
+
+併合-:merge:~
+分割-:split:~
+統一-:unify:~
+編成-:organize:~
+	編成し直した:re-organize／:reorganize
+
+書直した:rewriteした:書き直した
+書直して:rewriteして:書き直して
+	予め定義-済みな:pre-defined
+復旧-:restore:~
+編集点:edits:~
+調和-:harmonize:~
+参照文献:references:~
+編集-:edit:~
+	配列し直:rearrange
+適応-:adapt:~
+復帰-:revert:~
+	最小~化:minimizing
+	~~補完する:complementary
+	欠落:missing
+	揃える:synchronize
+	整理-:clean-up／:tidy up
+	柔らげた:soften
+	指す:refer
+	放置された:abandoned
+	元に戻した:roll-back
+	一覧表:table
+	数えられ:count され
+	〜以外の:keep
+	外した:Lifted
+
+	unspecified
+	先立って:preparation
+	定義し直-:re-define／:redefine
+	実装されていない:un-implemented
+	意図せず:unintended
+	規範的でない:not normative
+
+
+	●未分類（動詞
+転換-:turn:~
+繋げる:connectする:~
+稼働-:run:~
+	-:additional
+切詰ng:clamping::切り詰め
+並替えら:reorderさ::並び替えら
+
+	●未分類
+role:
+cursor::::カーソル
+clipboard::::クリップボード
+関数形:functional form:~
+cloning::::クローン処理
+template::::テンプレート
+私用:private::~::プライベート
+空間的:spatial:~
+命令:command::~
+循環:circular:~
+環:circle:~
+分岐:branch:~
+透明度:transparency::~
+
+	~access可能:accessible
+	~focus可能:focusable
+	~scrollbar:scroll bar
+	~link法:linking
+	table::::テーブル
+	tight:::
+	~address可能:addressable
+	視野に入れる:scoping
+	範囲~外の:out-of-range
+	限界域~外の:out-of-bounds
+
+	●指示語
+	put
+	use-element
+	SMIL-style
+	Document
+	等しくなる:equate
+	co-ordinate
+	ある種の:certain sets of
+	加えられ:extra
+	以前の:former
+	以前まで:formerly
+	main
+	final
+	previous
+	後に:later
+	非:non-
+	について:re
+	次の:next
+	全体を通して:throughout
+	ついて:re
+	指す:refer
+	各部:parts
+
+
+●●link_map
+
+	●IDL
+I.SVGMatrix:~GEOMETRY#svgmatrix
+	I.SVGMatrix:~TR/geometry-1/#dom-dommatrix
+I.SVGPoint:~GEOMETRY#svgpoint
+	I.SVGPoint:~TR/geometry-1/#dom-dompoint
+I.SVGRect:~GEOMETRY#svgrect
+	I.SVGRect:~TR/geometry-1/#dom-domrect
+
+m.activeElement:~SVGstruct#__svg__SVGDocument__activeElement
+m.animatedPoints:~SVGshapes#__svg__SVGAnimatedPoints__animatedPoints
+m.className:~SVGtypes#__svg__SVGElement__className
+m.currentScale:~SVGstruct#__svg__SVGSVGElement__currentScale
+m.currentTranslate:~SVGstruct#__svg__SVGSVGElement__currentTranslate
+m.deselectAll():~SVGstruct#__svg__SVGSVGElement__deselectAll
+m.forceRedraw():~SVGstruct#__svg__SVGSVGElement__forceRedraw
+m.getBBox():~SVGtypes#__svg__SVGGraphicsElement__getBBox
+m.getEnclosureList():~SVGstruct#__svg__SVGSVGElement__getEnclosureList
+m.getIntersectionList():~SVGstruct#__svg__SVGSVGElement__getIntersectionList
+m.getNumberOfChars:~SVGtext#__svg__SVGTextContentElement__getNumberOfChars
+m.getPointAtLength():~SVGtypes#__svg__SVGGeometryElement__getPointAtLength
+m.getTotalLength():~SVGtypes#__svg__SVGGeometryElement__getTotalLength
+m.pathLength:~SVGtypes#__svg__SVGGeometryElement__pathLength
+m.points:~SVGshapes#__svg__SVGAnimatedPoints__points
+m.selectSubString:~SVGtext#__svg__SVGTextContentElement__selectSubString
+m.rootElement:~SVGstruct#__svg__SVGDocument__rootElement
+m.textLength:~SVGtext#__svg__SVGTextContentElement__textLength
+
+	●要素／属性
+a.autofocus:~SVGstruct#SVGElementAutofocusAttribute
+a.dx:~SVGtext#TextElementDXAttribute
+a.dy:~SVGtext#TextElementDYAttribute
+a.fr:~SVGpservers#RadialGradientElementFRAttribute
+a.id:~SVGstruct#IDAttribute
+a.lang:~SVGstruct#LangAttribute
+a.orient:~SVGpainting#OrientAttribute
+a.pathLength:~SVGpaths#PathLengthAttribute
+a.preserveAspectRatio:~SVGcoords#PreserveAspectRatioAttribute
+a.refX:~SVGstruct#SymbolElementRefXAttribute
+a.refY:~SVGstruct#SymbolElementRefYAttribute
+a.side:~SVGtext#TextPathElementSideAttribute
+a.startOffset:~SVGtext#TextPathElementStartOffsetAttribute
+a.systemLanguage:~SVGstruct#SystemLanguageAttribute
+a.~xlink_href:~SVGlinking#XLinkHrefAttribute
+a.~xlink_title:~SVGlinking#XLinkTitleAttribute
+a.~xml_space:~SVGstruct#XMLSpaceAttribute
+
+a.transform:~SVGcoords#TransformProperty
+a.patternTransform:~SVGpservers#PatternElementPatternTransformAttribute,
+a.gradientTransform:~SVGpservers#LinearGradientElementGradientTransformAttribute
+
+a.href:~SVGlinking#AElementHrefAttribute
+a.target:~SVGlinking#AElementTargetAttribute
+a.ping:~SVGlinking#AElementPingAttribute
+a.referrerpolicy:~SVGlinking#AElementReferrerpolicyAttribute
+a.download:~SVGlinking#AElementDownloadAttribute
+
+a.textLength:~SVGtext#TextElementTextLengthAttribute
+
+
+	●prop／値
+
+
+
+		p.cursor:~CSSUI#cursor
+	p.clip:~MASKING1#propdef-clip
+	p.color-interpolation-filters:~FILTERS#propdef-color-interpolation-filters
+	p.display:~SVGrender#VisibilityControl
+	p.fill:~SVGpainting#FillProperty
+	p.overflow:~SVGrender#OverflowAndClipProperties
+	p.paint-order:~SVGpainting#PaintOrderProperty
+	p.pointer-events:~SVGinteract#PointerEventsProperty
+	p.stroke-linecap:~SVGpainting#StrokeLinecapProperty
+	p.stroke-linejoin:~SVGpainting#StrokeLinejoinProperty
+	p.text-anchor:~SVGtext#TextAnchorProperty
+	p.text-decoration:~SVGtext#TextDecorationProperties
+	p.transform:~SVGcoords#TransformProperty
+	p.vector-effect:~SVGcoords#VectorEffectProperty
+	p.visibility:~SVGrender#VisibilityControl
+
+
+
+	廃
+	p.z-index:~SVGrender#ZIndexProperty
+	p.solid-color:~SVGpservers#SolidcolorProperty
+	p.solid-opacity:~SVGpservers#SolidOpacityProperty
+
+
+p.shape-outside:~TR/css-shapes/#shape-outside-property
+	p.solid-color:~SVGpservers#SolidcolorProperty
+	p.solid-opacity:~SVGpservers#SolidOpacityProperty
+	p.z-index:~SVGrender#ZIndexProperty
+
+
+	t.angle:https://www.w3.org/TR/2012/WD-css3-values-20120308/#angles
+
+
+	●用語
+
+~custom~data属性:~SVGstruct#DataAttributes
+~address可能な文字:~SVGtext#TermAddressableCharacter
+
+~3D描画~文脈:~TRANSFORM2#3d-rendering-context
+文書~時列線:~WANIM#document-timeline
+
+	●章／節
+2.文書~構造:~SVGstruct
+2.埋込d内容:~SVGembedded
+2.幾何~prop:~SVGgeometry
+2.~link法:~SVGlinking
+2.~path:~SVGpaths
+2.~scriptingと対話性:~SVGinteract
+2.~style付け:~SVGstyling
+2.~text:~SVGtext
+2.基本~data型と基本~interface:~SVGtypes
+2.基本~図形:~SVGshapes
+2.塗ng:~SVGpainting
+2.塗り~server:~SVGpservers
+2.幾何~prop:~SVGgeometry
+2.座標系, 変形n, 単位:~SVGcoords
+2.描画~model:~SVGrender
+2.適合性の判定基準:~SVGconform
+
+2.要素~索引:~SVGeltindex
+2.~prop索引:~SVGpropidx
+2.属性~索引:~SVGattindex
+2.~IDL定義:~SVGidl
+2.~IDL索引:~SVGidlindex
+2.~SVG文書の~animate法:~SVGmisc#animate
+2.~accessibilityの~support:~SVGmisc#access
+2.参照文献:~SVGrefs
+2.実装~注記:~SVG2/implnote.html
+
+11.描画~model:~SVG11/render.html
+11.基本~data型と基本~interface:~SVG11/types.html
+11.~style付け:~SVG11/styling.html
+11.~link法:~SVG11/linking.html
+11.~animation:~SVG11/animate.html
+11.~filter効果:~SVG11/filters.html
+11.~font:~SVG11/fonts.html
+11.~metadata:~SVG11/metadata.html
+11.~path:~SVG11/paths.html
+11.~scripting:~SVG11/script.html
+11.切抜き, ~masking, 組成:~SVG11/masking.html
+11.~text:~SVG11/text.html
+11.基本~図形:~SVG11/shapes.html
+11.塗ng:~SVG11/painting.html
+11.対話性:~SVG11/interact.html
+11.後方-互換性:~SVG11/backward.html
+11.拡張能:~SVG11/extend.html
+11.文書~構造:~SVG11/struct.html
+11.概念:~SVG11/concepts.html
+11.色:~SVG11/color.html
+11.座標系, 変形n, 単位:~SVG11/coords.html
+11.~gradientと~pattern:pservers.html
+
+11.~IDL定義:~SVG11/idl.html
+11.~SVG~DOM:~SVG11/svgdom.html
+11.適合性の判定基準:~SVG11/conform.html
+11.文書~型~定義:~SVG11/svgdtd.html
+11.ECMAScript 言語束縛:~SVG11/escript.html
+11.Java 言語束縛:~SVG11/java.html
+11.~SVG~file~sizeの最小~化:~SVG11/minimize.html
+11.国際-化~support:~SVG11/i18n.html
+11.特能~文字列:~SVG11/feature.html
+11.実装~要件:~SVG11/implnote.html
+11.~accessibilityの~support:~SVG11/access.html
+11.参照文献:~SVG11/refs.html
+11.要素~索引:~SVG11/eltindex.html
+11.~prop索引:~SVG11/propidx.html
+11.属性~索引:~SVG11/attindex.html
+
+sec.外来の名前空間と私用~data:~SVGstruct#ForeignNamespaces
+
+~filter効果~仕様:~FILTERS
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="https://svgwg.org/svg2-draft/Overview.html">SVG 2 仕様</a>
+の
+<a href="~SPEC_URL">Changes from SVG 1.1</a>
+付録を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+
+</head>
+
+<body>
+
+<header>
+	<hgroup>
+<h1>付録 K. SVG 1.1 からの変更点 — Changes from SVG 1.1</h1>
+	</hgroup>
+</header>
+
+
+<main id="MAIN" hidden>
+
+<p>
+この付録は、参考であり，規範的ではない。
+◎
+This appendix is informative, not normative.
+</p>
+
+<p>
+この付録は、
+<a href="https://www.w3.org/TR/2011/REC-SVG11-20110816/">~SVG-11第２版 仕様</a>
+から~SVG-2仕様に加えられた変更点を要約したものである。
+初期
+<a href="https://www.w3.org/TR/2016/CR-SVG2-20160915/">~SVG-2勧告候補</a>
+からの変更点は、強調して示される。
+◎
+This appendix summarizes the changes that have been made since the SVG 1.1 Second Edition Recommendation. Changes made since the initial SVG 2 Candidate Recommendation are highlighted. 
+</p>
+
+	<section id="editorial">
+<h2 title="Editorial changes">K.1. 編集上の変更点</h2>
+
+
+<p>
+仕様を読み易くするため、いくつもの~style上の変更が加えられた：
+◎
+A number of stylistic changes have been made to the specification to make it more readable. These include the following:
+</p>
+
+<ul>
+	<li>
+現今の~CSS仕様の~styleに類似な~styleを利用するように変更して，
+XSL-FO の言及を除去した。
+◎
+A change towards using styling similar to contemporary CSS specifications, removing mention of XSL-FO.
+</li>
+	<li>
+Working Group ~memberに進行が委任され，取り込みについて解決された特能を反映するように，仕様に注釈を追加した。
+◎
+Annotations have been added to the specification to reflect features that the Working Group has resolved on including and for which a member of the group has committed to drive that feature.
+</li>
+	<li>
+~XMLのみならず~HTML内でも~SVGを利用できることを強調するよう変更した。
+◎
+Changes to highlight that SVG can be used in HTML as well as in XML.
+</li>
+	<li>
+次に挙げる章は、除去した
+— その規範的~内容は、他の仕様に移動されたか非推奨にされたので
+⇒＃
+`~filter効果^sec,
+`切抜き, ~masking^sec,
+`~animation^sec,
+`~font^sec,
+`色^sec
+◎
+Removed chapters whose normative content has either been moved to other specifications or deprecated: Filters, Clipping and Masking, Animation, Fonts, Color.
+</li>
+	<li>
+`概念^sec（参考, 章：`•$11 ）, `後方-互換性^sec（章：`•$11 ）, および 複数の付録を除去した。
+◎
+Removed the (informative) Concepts and Backwards Compatibility chapters, as well as multiple appendices.
+</li>
+	<li>
+<p>
+複数の章を併合して編成し直した：
+◎
+Merged and re-organized multiple chapters:
+</p>
+		<ul>
+			<li>
+（規範的な付録であった）`適合性の判定基準^sec（ `•$11 ）は、章（ `•$2 ）にした。
+◎
+Made the (normative) Conformance appendix a chapter.
+</li>
+			<li>
+`display^p, `visibility^p ~propに関する節を`塗ng^sec（章：`•$11 ）から`描画~model^sec（章：`•$2 ）に移動した。
+◎
+Moved sections on 'display' and 'visibility' properties from the Painting chapter to the Rendering Model chapter.
+</li>
+			<li>
+`切抜き, ~masking, 組成^sec（章：`•$11 ）からの残りの節を`描画~model^sec（章：`•$2 ）の中へ移動した。
+◎
+Moved remaining sections from Clipping, Masking, and Compositing chapter into the Rendering Model chapter.
+</li>
+			<li>
+`~metadata^sec（章：`•$11 ）を`文書~構造^sec（章：`•$2 ）の中へ併合した。
+◎
+Merged the SVG 1.1 Metadata chapter into the Document Structure chapter.
+</li>
+			<li>
+`image^e 要素の定義を`文書~構造^sec（章：`•$11 ）から新たな`埋込d内容^sec（章：`•$2 ）へ移動した。
+◎
+Moved the 'image' element definition from the Document Structure chapter to the new Embedded Content chapter.
+</li>
+			<li>
+`外来の名前空間と私用~data$secを`拡張能^sec（章：`•$11 ）から`文書~構造^sec（章：`•$2 ）へ移動した。
+◎
+Moved Foreign namespaces and private data section from the SVG 1.1 Extensibility chapter to Document Structure chapter.
+</li>
+			<li>
+`幾何~prop^sec（章：`•$2 ）を作成し、関連な定義を［
+`基本~図形^sec（章：`•$11 ）, `~path^sec（章：`•$11 ）
+］から そこへ移動した。
+◎
+Created the Geometry Properties chapter, and moved relevant definitions to it from the Basic Shapes and Paths chapters.
+</li>
+			<li>
+`埋込d内容^sec（章：`•$2 ）を作成し、`拡張能^sec（章：`•$11 ）を成すすべての内容を そこへ併合した。
+◎
+Created the Embedded Content chapter, and merged all content from the SVG 1 Extensibility chapter into it.
+</li>
+			<li>
+`~scripting^sec（章：`•$11 ）, `対話性^sec（章：`•$11 ）を
+`~scriptingと対話性^sec（章：`•$2 ）に併合した。
+◎
+Merged the SVG 1.1 Scripting and Interactivity chapters.
+</li>
+		</ul>
+	</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2">
+	<li>
+変更点~listを整理した：
+欠落していた変更点を追加して，初期~勧告候補からの変更点~用の課題~論点への~linkたちを追加した。
+（ `521$pull ）
+◎
+Tidied up the changes list, adding missing changes, and adding links to issue discussion for changes since the initial Candidate Recommendation. Edits
+</li>
+	<li>
+一貫して，用語
+“利用元~座標系”
+を利用するようにした（以前までは、同義な用語として “局所~座標系” も利用されていた）。
+（ `519$issue, `552$pull ）
+◎
+Consistently use the term "user coordinate system" (previously, the synonymous term "local coordinate system" was also used). Issue discussion Edits
+</li>
+</ul>
+
+
+	</section>
+	<section id="substantial">
+<h2 title="Substantial changes">K.2. 主要な変更点</h2>
+
+<p>
+上に挙げられた編集上の変更点に加え、以下の主要な追加, 変更, 除去が行われた。
+◎
+In additional to the editorial changes listed above, the following substantial additions, changes and removals have been made.
+</p>
+
+		</section>
+		<section id="whole">
+<h3 title="Across the whole document">K.2.1. 文書~全体に渡るもの</h3>
+
+<ul>
+	<li>
+~SVG~DTDへの参照を除去した。
+◎
+References to the SVG DTD have been removed.
+</li>
+	<li>
+~IDLは、~Web~IDL構文を利用するよう更新した。
+◎
+IDL has been updated to use Web IDL syntax.
+</li>
+	<li>
+すべての~list型~interfaceに `length^m 属性と有index~prop~accessを追加した。
+◎
+Added "length" attribute and indexed property access to all list interfaces.
+</li>
+	<li>
+`angle$t 型の定義を除去して、
+`CSS Values and Units^cite
+仕様を参照するようにした。
+◎
+Remove definition of &lt;angle&gt; type and reference CSS3-values.
+</li>
+	<li>
+`CSS Values and Units^cite
+仕様を参照するに先立って、すべての座標~型を `length$t に変更した。
+◎
+Change all coordinate types to &lt;length&gt; in preparation for referencing css3-values.
+</li>
+	<li>
+すべての要素の内容~modelに `script$e 要素を追加した。
+◎
+Add the ‘script’ element to the content model of all elements.
+</li>
+	<li>
+各種~list~obj上の［
+`initialize()^m,
+`appendItem()^m,
+`replaceItem()^m,
+`insertItemBefore()^m
+］~methodを，［
+挿入されようとしている~list~itemが すでに別の~list内にあるときは，複製する
+］ように変更した。
+◎
+Changed the initialize, appendItem, replaceItem and insertItemBefore methods on list objects to make a copy of any list item being inserted that is already in another list.
+</li>
+	<li>
+`image$e, `script$e
+要素に、
+<em>CORS-enabled fetch</em>
+~algoと併用するための `crossorigin^a 属性が加えられた。
+◎
+The ‘image’ and ‘script’ elements have gained a crossorigin attribute, for use with the CORS-enabled fetch algorithm.
+</li>
+</ul>
+
+<ul class="changed-since-cr1">
+	<li>
+可能な限り， [NoInterfaceObject] 拡張属性に代えて ~mixinを利用するようにした。
+（ `353$issue, `376$pull ）
+◎
+Use mixins over NoInterfaceObject. Issue discussion Edits
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2">
+	<li>
+全体を通して~HTML~LSを指すようにした
+`514$issue
+`544$pull
+◎
+Refer to HTML LS throughout. Issue discussion Edits
+</li>
+</ul>
+
+		</section>
+		<section id="concepts">
+<h3 title="Concepts chapter (SVG 1.1 only)">K.2.2. `概念^sec（章：`•$11 のみ）</h3>
+
+<ul>
+	<li>
+この章は除去した。
+◎
+Removed this chapter.
+</li>
+</ul>
+
+		</section>
+		<section id="conform">
+<h3 title="Conformance Criteria chapter (Appendix in SVG 1.1)">K.2.3. `適合性の判定基準^sec（章：`•$2, 付録：`•$11 ）</h3>
+
+<ul>
+	<li>
+~animationは、資源~文書として処理される文書~内では稼働しないようにした。
+◎
+Animations do not run in documents processed as resource documents.
+</li>
+	<li>
+この付録は章にした。
+◎
+Made the appendix a chapter.
+</li>
+	<li>
+`SVG Integration^cite 仕様から処理~modeの内容を統合した。
+◎
+Integrate content on processing modes from the SVG Integration specification.
+</li>
+	<li>
+各 種別の~SVG域外参照に対し，要求される処理~modeを定義した。
+また，~HTML／~CSSからの類似な参照に対しても，示唆される処理~modeを定義した。
+（これは、 `SVG Integration^cite の “参照ng~mode” 節を置換する。）
+◎
+Define required processing modes for different types of SVG cross-references, with suggested processing modes for similar references from HTML/CSS. (Replaces the "referencing modes" section from SVG Integration.)
+</li>
+	<li>
+［
+この仕様の他所の変更点 ／ 他の仕様の変更点
+］に整合するよう，すべての適合性~classを更新して, 編成し直した。
+◎
+Update and re-organize all the conformance classes, to be consistent with changes to other parts of this specification and changes to other specifications.
+</li>
+	<li>
+適合性の目的における`~SVG~viewer$は、この仕様~内のいたる所に示される`~UA$（ `~SVG~UA$ ）であることを明瞭にした上で、`文書~構造^sec（章：`•$11 ）にあった対応する定義をここに移動した。
+◎
+Make clear that a SVG viewer for conformance purposes is the user agent / SVG user agent mentioned everywhere else in the spec; move the corresponding definitions from the Document structure chapter to here.
+</li>
+	<li>
+［
+高-精度な~graphicsを生成するために示唆される~method
+］についての，規範的でない節を、
+<a href="~SVG2/implnote.html#NumericPrecisionImplementationNotes">実装~注記（付録）</a>
+に移動した。
+◎
+Move the non-normative section on suggested methods for generating high-precision graphics to the Implementation Notes appendix.
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2">
+	<li>
+`ICC^cite, `CSS Color 4^cite への参照（参考）を追加した。
+（ `532$issue, `549$pull ）
+◎
+Add informative references to ICC and to CSS Color 4 Issue discussion Edits
+</li>
+</ul>
+
+		</section>
+		<section id="rendering">
+<h3 title="Rendering Model chapter">K.2.4. `描画~model^sec（章：`•$2, `•$11 ）</h3>
+<ul>
+	<li>
+描画~modelは，<a href="~COMPOSITING">組成＆混色 仕様</a>を参照するように更新した。
+◎
+Update rendering model to refer to Compositing and Blending Specification.
+</li>
+	<li>
+［
+描画される要素／描画-可能な要素
+］に関する新たな定義を追加した。
+◎
+Added new definitions regarding rendered and renderable elements.
+</li>
+	<li>
+<a href="~SVGrender#VisibilityControl">`display^p ／ `visibility^p 節</a>
+をこの章に移動した。
+◎
+Moved the section on display and visibility to this chapter.
+</li>
+	<li>
+`z-index^p をこの章に移動した。
+例~以外の規範的でない~textを除去した。
+◎
+Moved z-index to this chapter. Removed non-normative text, keeping examples.
+</li>
+	<li>
+課題 2 を解決した
+— `knock-out^p への参照を除去した。
+◎
+Resolve issue 2 - removed reference to knock-out.
+</li>
+	<li>
+課題 3 を解決した
+— 要素と~groupがどう描画するかについての記述を書直した。
+◎
+Resolve issue 3 - rewrote description of how elements and groups are rendered.
+</li>
+	<li>
+課題 4 を解決した
+— 各種 塗り~server型は明示的に示さないようにした。
+◎
+Resolve issue 4 - Don't mention each paint server type explicity.
+</li>
+	<li>
+課題 6 を解決した
+— 要求される変更点はない。
+◎
+Resolve issue 6 - No changes required.
+</li>
+	<li>
+`切抜き, ~masking, 組成^sec（章：`•$11 ）は、この章に併合した（それに伴い，課題 7 は解決された）。
+◎
+Merge Clipping, Masking and Compositing chapter into this chapter (resolved issue 7 in process).
+</li>
+	<li>
+`親への組成^sec（ `Parent Compositing^en ）節は、各 参照ng~modeにおける組成-法を明示的に示すように更新した。
+◎
+Update 'Parent Compositing' section to explicitly mention how each referencing mode composites.
+</li>
+	<li>
+~UA~stylesheetにおいては、［
+~SVG根, `foreignObject$e 要素
+］に対しては，最早 `overflow:hidden^p とされなくなった。
+◎
+SVG root and foreignObject are no longer overflow:hidden in User Agent style sheet.
+</li>
+	<li>
+一部の事例では、 `overflow:auto^css に対し，内容が切取られて~scrollbarが示されるようになる。
+◎
+overflow:auto may clip and show scroll bars in some cases.
+</li>
+	<li>
+`svg$e 要素に対する `overflow:scroll^css では、~scrollbarが示され得る。
+◎
+overflow:scroll may show scroll bars on svg elements.
+</li>
+	<li>
+初期~切抜き~pathの定義を除去した。
+◎
+Removed definition of initial clipping path.
+</li>
+	<li>
+描画~要件は、
+`use$e 要素に対する~shadow~DOM~modelを反映するように更新した。
+◎
+Updated rendering requirements to reflect shadow DOM model for use elements.
+</li>
+	<li class="changed-since-cr1">
+`z-index^p の~supportは、~SVGの将来~versionへ先送りした。
+（ `483$issue, `489$pull ）
+◎
+Deferred z-index support to a future version of SVG. Issue discussion Edits
+</li>
+	<li class="changed-since-cr1 cr3">
+`foreignObject$e, その内容は、接触判定の~targetにされてヨイことを明確化した。
+◎
+Clarify that ‘foreignObject’ is, and its content may be, hit-testing target.
+</li>
+	<li class="changed-since-cr1 cr2">
+`visibility$p ~propが直に影響する要素の~listから`use$e 要素を除去した。
+（ `405$issue, `430$pull ）
+◎
+Removed the use element from list of elements that the visibility property directly affects. Issue discussion Edits
+</li>
+</ul>
+
+		</section>
+		<section id="types">
+<h3 title="Basic Data Types and Interfaces chapter">K.2.5. `基本~data型と基本~interface^sec（章：`•$2, `•$11 ）</h3>
+
+<ul>
+	<li>
+すべての `SVGMatrix$I を［
+`DOMMatrix$I ／ `DOMMatrixReadOnly$I
+］に置換した。
+◎
+All appearance of SVGMatrix were replaced by DOMMatrix or DOMMatrixReadOnly.
+</li>
+	<li>
+すべての `SVGRect$I を［
+`DOMRect$I ／ `DOMRectReadOnly$I
+］に置換した。
+◎
+All appearance of SVGRect were replaced by DOMRect or DOMRectReadOnly.
+</li>
+	<li>
+すべての `SVGPoint$I を［
+`DOMPoint$I ／ `DOMPointReadOnly$I
+］に置換した。
+◎
+All appearance of SVGPoint were replaced by DOMPoint or DOMPointReadOnly.
+</li>
+	<li>
+［
+`SVGStylable^I, `SVGLangSpace^I
+］~interfaceを除去して、それらの~memberすべてを `SVGElement$I へ移動した。
+◎
+Removed the SVGStylable and SVGLangSpace interfaces and moved all of their members on to SVGElement.
+</li>
+	<li>
+［
+`SVGLocatable^I, `SVGTransformable^I
+］を `SVGElement$I を直に継承する `SVGGraphicsElement$I に転換した。
+◎
+Turned SVGLocatable and SVGTransformable into SVGGraphicsElement, which directly inherits from SVGElement.
+</li>
+	<li>
+`SVGGraphicsElement$I ~interfaceを追加した。
+◎
+Added an SVGGraphicsElement interface.
+</li>
+	<li>
+`isPointInFill()^m,
+`isPointInStroke()^m
+~methodを伴う `SVGGeometryElement$I ~interfaceを追加した。
+◎
+Added an SVGGeometryElement interface with isPointInFill and isPointInStroke methods.
+</li>
+	<li>
+`SVGExternalResourcesRequired^I ~interfaceを除去した。
+◎
+Removed the SVGExternalResourcesRequired interface.
+</li>
+	<li>
+`SVGGraphicsElement$I に［
+~tightな~stroke限界~boxを取得するための `getStrokeBBox()^m
+］を追加した。
+◎
+Added getStrokeBBox on SVGGraphicsElement to get the tight stroke bounding box.
+</li>
+	<li>
+`SVGElement$I の［
+`viewportElement^m, `ownerSVGElement^m
+］は、~nullableにした。
+◎
+Make viewportElement and ownerSVGElement on SVGElement nullable.
+</li>
+	<li>
+［
+`SVGElement$I, `SVGColor^I, `SVGICCColor^I
+］~interfaceから `getPresentationAttribute()^m 演算を除去した。
+◎
+Removed the getPresentationAttribute operation on SVGElement and the SVGColor and SVGICCColor interfaces.
+</li>
+	<li>
+`SVGElement$I に［
+`focus()^m, `blur()^m 演算と `tabIndex^m 属性
+］を追加した。
+◎
+Added focus and blur operations and tabIndex attribute to SVGElement.
+</li>
+	<li>
+`Document$I に `activeElement$m 属性を追加した。
+◎
+Added activeElement attribute to Document.
+</li>
+	<li>
+`SVGElement$I は、~HTMLの `GlobalEventHandlers$I ~interfaceを内包するようにした。
+◎
+Made SVGElement include the GlobalEventHandlers interface from HTML.
+</li>
+	<li>
+`SVGGraphicsElement$I から `getStrokeBBox()^m を除去した。
+`getBBox()$m
+は、［
+返される限界~boxに要素のどの部分が含まれるかを制御する，辞書~引数
+］も伴うように拡張された。
+◎
+Removed getStrokeBBox from SVGGraphicsElement and extended getBBox with a dictionary argument that controls which parts of the element are included in the returned bounding box.
+</li>
+	<li>
+［
+`length$t,
+`angle$t,
+`number$t,
+`integer$t
+］においては、［
+頭部／尾部
+］に空白を許容することにした。
+◎
+Allow leading and trailing whitespace in &lt;length&gt;, &lt;angle&gt;, &lt;number&gt; and &lt;integer&gt;.
+</li>
+	<li>
+~CSS ／ ~HTML
+に揃えるため、 form feed（ `000C^U ）も空白に含められた。
+◎
+Make whitespace include form feed (U+000C) to align with CSS and HTML.
+</li>
+	<li>
+基本~data型のうち，すでに
+`CSS Values and Units^cite
+仕様に定義されているものは除去した。
+◎
+Remove basic data types already defined by CSS Values and Units.
+</li>
+	<li>
+色~keywordの~listを除去した。
+その~listは、規範として参照する `CSS Colors 3^cite 勧告の一部にされたので。
+◎
+Remove list of color keywords. The list is part of CSS Colors 3 which is referenced normatively and a REC.
+</li>
+	<li>
+種々の~list型の属性において，値の末尾における単独の
+`comma-wsp^P
+も許容するようにした。
+◎
+Allow a single trailing comma-wsp in various list-typed attributes.
+</li>
+	<li>
+`SVGElement$I ~interface上の［
+`xmlbase^m, `xmllang^m, `xmlspace^m
+］属性を除去した。
+◎
+Removed the xmlbase, xmllang and xmlspace attributes from the SVGElement interface.
+</li>
+	<li>
+`SVGViewSpec^I ~interfaceを除去した。
+◎
+Removed the SVGViewSpec interface.
+</li>
+	<li>
+`SVGElement$I の `style^m ~IDL属性を除去した
+— それは CSSOM に定義されているので。
+◎
+Removed the style IDL attribute from SVGElement, since CSSOM defines that for us.
+</li>
+	<li>
+`SVGGraphicsElement$I 上の `getTransformToElement()^m ~methodを除去した。
+◎
+Removed the getTransformToElement method on SVGGraphicsElement.
+</li>
+	<li>
+`最外縁の~svg要素$上であっても，
+`getCTM()^m は機能するべきと定義した上で、それが含むべき変形-を~listした。
+◎
+Defined that getCTM on an outermost svg element should work, and listed which transforms it should include.
+</li>
+	<li>
+属性への反映について、~SVG~DOM~objが “生きているかどうか（ `liveness^en ）” に及ぼす効果も含め，より深く定義した。
+◎
+Defined attribute reflection in more depth, including the effect it has on SVG DOM object liveness.
+</li>
+	<li>
+すべての~interface上の `animVal^m ~IDL属性は、今や `baseVal^m の別名とされた。
+◎
+animVal IDL attributes on all interfaces now alias baseVal.
+</li>
+	<li>
+`SVGElement$I に `dataset^m ~IDL属性を追加した。
+◎
+Added the dataset IDL attribute to SVGElement.
+</li>
+	<li>
+`SVGPathElement$I の［
+`pathLength$m,
+`getTotalLength()$m,
+`getPointAtLength()$m
+］~memberは、 `SVGGeometryElement^I 上に移動した。
+◎
+Moved the pathLength attribute, getTotalLength(), and getPointAtLength() methods from SVGPathElement onto SVGGeometryElement.
+</li>
+	<li>
+~path文法の［
+`wsp^P, `comma-wsp^P 
+］の定義を移動した。
+— それらは仕様~内の唯一の EBNF 文法なので。
+◎
+Move definition of wsp and comma-wsp to path grammar since that's the only EBNF grammar in the spec.
+</li>
+</ul>
+
+<ul class="changed-since-cr1">
+	<li>
+`SVGUnitTypes$I は最早 `[NoInterfaceObject]^c でなくなった。
+（ `291$issue, `295$pull ）
+◎
+SVGUnitTypes is no longer NoInterfaceObject. Issue discussion Edits
+</li>
+	<li>
+`SVGElement$I の `className$m は `Element$I の `className^m を上書きすることを明確化した。
+規範的でない。
+（ `298$issue, `301$pull ）
+◎
+Clarified that SVGElement.className overrides Element.className. Not normative. Issue discussion Edits
+</li>
+	<li>
+［
+`isPointInFill()^m, `isPointInStroke()^m
+］の引数~型として，
+`DOMPoint$I に代えて `DOMPointInit$I を指定した。
+［
+`isPointInFill()^m, `isPointInStroke()^m
+］用に利用する~algoを指定した。
+（ `416$issue, `443$pull ）
+◎
+Specify DOMPointInit as argument type for isPointInFill() and isPointInStroke() instead of DOMPoint, and specify algorithm used for isPointInFill() and isPointInStroke(). Issue discussion Edits
+</li>
+	<li>
+［
+`dataset^m, `tabIndex^m, `focus()^m, `blur()^m
+］を，~HTML仕様に定義される共用 `HTMLOrSVGElement$I ~mixinに移動した。
+（ `60$issue, `415$pull ）
+◎
+Moved dataset, tabIndex, focus(), and blur() to a shared HTMLOrSVGElement mixin defined in the HTML specification. Issue discussion Edits
+</li>
+	<li>
+`SVGElement$I は~HTMLの `DocumentAndElementEventHandlers$I ~mixinを内包するようにした。
+（ `395$issue, `413$pull ）
+◎
+Made SVGElement include the DocumentAndElementEventHandlers interface from HTML. Issue discussion Edits
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2">
+	<li>
+以前の規範的な（編集-後の）
+<a href="#svgdom">~SVG~DOM付録</a>
+からの内容を，反映している属性についての節と併合して、~~適するように配列し直した。
+（ `520$issue, `548$pull ）
+◎
+Merged in content from the former normative SVG DOM appendix (after edits), with sections on reflecting attributes re-arranged to fit. Issue discussion Edits
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2 cr3">
+	<li>
+現在の要素は`描画されない要素$である場合に，［
+`getTotalLength()^m,
+`getPointAtLength()^m,
+`getBBox()^m,
+`getCTM()^m,
+`getScreenCTM()^m,
+`isPointInFill()^m,
+`isPointInStroke()^m
+］に対し~UAにアリな挙動を明確化した。
+◎
+Clarify possible UA behavior on getTotalLength, getPointAtLength, getBBox, getCTM, getScreenCTM, isPointInFill and isPointInStroke if the current element is a non-rendered element.
+</li>
+	<li>
+［
+`text-decoration-fill^p,
+`text-decoration-stroke^p
+］~propを除去した。
+【この項は、明らかに，ここではなく<a href="#text">~text章の変更点</a>に加えられるべき。】
+◎
+Removed the text-decoration-fill and text-decoration-stroke properties.
+</li>
+	<li>
+列挙d属性~用の~DOM~propに対し，範囲~外の整数や 0 を設定しようとした場合、
+`TypeError^E を投出するようにした。
+（ `547$issue ）
+◎
+Setting the DOM property for an enumerated attribute to an out-of-range integer or 0 throws a TypeError. Issue discussion 
+</li>
+	<li>
+`zoomAndPan^a 属性と関係する~textを除去した。
+（ `56$issue ）
+◎
+Remove zoomAndPan attribute and related text. Issue discussion
+</li>
+</ul>
+
+		</section>
+		<section id="structure">
+<h3 title="Document Structure chapter">K.2.6. `文書~構造^sec（章：`•$2, `•$11 ）</h3>
+
+<ul>
+	<li>
+`SVGSVGElement$I 上の［
+`getIntersectionList()$m ／ `getEnclosureList()$m
+］における `referenceElement^V 引数は、~nullableになるように~IDLを更新した。
+◎
+Updated IDL for SVGSVGElement marking the referenceElement argument in getIntersectionList and getEnclosureList as nullable.
+</li>
+	<li>
+`SVGSVGElement^I ~interfaceの［
+`suspendRedraw()^m,
+`unsuspendRedraw()^m,
+`unsuspendRedrawAll()^m
+］~methodは、非推奨にした。
+◎
+Deprecated the suspendRedraw, unsuspendRedraw and unsuspendRedrawAll methods on the SVGSVGElement interface.
+</li>
+	<li>
+`externalResourcesRequired^a 属性を除去した。
+◎
+Removed the ‘externalResourcesRequired’ attribute.
+</li>
+	<li>
+`image$e 要素の `width$p, `width$p 属性に `auto^v を利用する能を追加した。
+◎
+Added the ability to use 'auto' for the width and height attributes on ‘image’.
+</li>
+	<li>
+`use$e 要素からは、文書~全体は参照できないとする制約を外した。
+◎
+Lifted the restriction on ‘use’ not being able to reference an entire document.
+</li>
+	<li>
+［
+`desc$e ／ `title$e
+］要素に `lang$a 属性を追加した。
+◎
+Added ‘lang’ attribute on ‘desc’ and ‘title’ elements.
+</li>
+	<li>
+WAI-ARIA 属性の節を追加した。
+◎
+Added section on WAI-ARIA attributes.
+</li>
+	<li>
+`最外縁の~svg要素$上の~CSSによる変形-は［
+`currentScale$m ／ `currentTranslate$m
+］には影響しないことを明確化した。
+最外縁でない `svg$e 要素~上から返される値を定義した。
+◎
+Clarified that CSS transforms on an outermost svg element do not affect currentScale or currentTranslate. Defined the returned values on ‘svg’ elements that are not outermost svg element.
+</li>
+	<li>
+`rootElement$m 属性を非推奨にした。
+◎
+Deprecated the rootElement attribute.
+</li>
+	<li>
+根 `svg$e 要素~上に， `Window$I に向けて発火される~event用の［
+~event~handler内容~属性, ~IDL属性
+］を定義した
+— ~HTML `body^e 上の~event~handler内容~属性と~IDL属性と同様に。
+◎
+Defined event handler content attributes and IDL attributes on the root ‘svg’ element to be for events fired at the Window, like HTML's event handler content attributes and IDL attribute on body.
+</li>
+	<li>
+`image$e 要素を`埋込d内容^sec（章：`•$2 ）に移動した。
+◎
+Moved the ‘image’ element to the Embedded Content chapter.
+</li>
+	<li>
+［
+`SVGElementInstance^I, `SVGElementInstanceList^I
+］~interface, および それらに対応する `SVGUseElement$I ~interface上の属性を除去した。
+◎
+Removed the SVGElementInstance and SVGElementInstanceList interfaces, and the corresponding attributes on the SVGUseElement interface.
+</li>
+	<li>
+`use$e 要素における~event~flowは，
+`Shadow DOM^cite
+仕様に従うように変更した。
+◎
+Changed the ‘use’ element event flow to follow the Shadow DOM spec.
+</li>
+	<li>
+`switch$e 要素は `script$e 要素の処理には影響しないことを明確化した。
+◎
+Clarified that the ‘switch’ element does not affect processing of ‘script’ elements.
+</li>
+	<li>
+`svg$e 要素~上の［
+`width^a, `height^a
+］属性を呈示~属性にした上で，それらの初期~値を `auto^v に変更した。
+◎
+Made the ‘width’ and ‘height’ attributes on the ‘svg’ element presentation attributes, and changed the initial value to auto.
+</li>
+	<li>
+`svg$e 要素から［
+`baseProfile^a, `version^a
+］属性を除去した。
+◎
+Removed the baseProfile and version attributes from the ‘svg’ element.
+</li>
+	<li>
+`SVGSVGElement$I ~interface上の `forceRedraw()$m ~methodは非推奨にした上で、~callされても効果はないものと定義した。
+◎
+Deprecated the forceRedraw method on the SVGSVGElement interface and defined it to have no effect when called.
+</li>
+	<li>
+`SVGSVGElement$I ~interface上の `deselectAll()$m ~methodを、
+`Selection API^cite
+の用語で定義すると同時に，非推奨にした。
+◎
+Defined the deselectAll method on the SVGSVGElement interface in terms of the Selection API and simultaneously deprecated it.
+</li>
+	<li>
+`switch$e 要素は `style$e 要素の処理に影響しないことを明確化した。
+◎
+Clarified that the ‘switch’ element does not affect the processing of ‘style’ elements.
+</li>
+	<li>
+`SVGSVGElement$I ~interface上の［
+`getIntersectionList()$m, `getEnclosureList()$m
+］~methodは、~shadow~treeの要素を返さないことを明確化した。
+◎
+Clarified that the getIntersectionList and getEnclosureList methods on the SVGSVGElement interface do not return shadow tree elements.
+</li>
+	<li>
+`requiredFeatures^a 属性を除去した。
+◎
+Removed the requiredFeatures attribute.
+</li>
+	<li>
+`SVGSVGElement$I から `currentView^p, `useCurrentView^p ~propを除去した。
+◎
+Removed the currentView and useCurrentView properties on SVGSVGElement.
+</li>
+	<li class="changed-since-cr1 cr2 cr3" id="UnknownElement">
+実装の欠如に因り、
+`SVGUnknownElement^I を除去した。
+◎
+Removed SVGUnknownElement due to lack of implementations.
+</li>
+	<li>
+どの名前空間にも属さない `lang$a 属性を追加した。
+◎
+Added the ‘lang’ attribute in no namespace.
+</li>
+	<li>
+`SVGSVGElement$I ~interfaceの `viewport^m 属性を除去した。
+◎
+Removed the viewport attribute from the SVGSVGElement interface.
+</li>
+	<li>
+`xml:base^a 属性を除去した。
+◎
+Removed the xml:base attribute.
+</li>
+	<li>
+`discard$e 要素を、分割された
+`SVG Animations^cite
+~moduleに移動した。
+◎
+Moved the ‘discard’ element to the split-out SVG Animations module.
+</li>
+	<li>
+どの~SVG要素も`~custom~data属性$を許容するようにした。
+◎
+Allowed custom data attributes on all SVG elements.
+</li>
+	<li>
+［
+`desc$e, `title$e
+］の記述を，~ARIAと~accessibility対応付け（ `accessibility mapping^en ）を反映するように書直した。
+◎
+Rewrite ‘desc’ and ‘title’ description to reflect ARIA and accessibility mapping.
+</li>
+	<li>
+~SVG文書の中で~metadata要素を構造化する方法についての推奨を除去した。
+◎
+Remove recommendation on how to structure metadata elements within the SVG document.
+</li>
+	<li>
+`Document^I ~interface~obj上の `SVGDocument^I ~propに対する要件を除去した。
+◎
+Remove requirement for SVGDocument property on the Document interface object.
+</li>
+	<li>
+`switch$e の子孫~要素のうち， `systemLanguage$a 属性を有するものは、~SMIL `allowReorder^a 属性の定義に則って並替えられるべきとした。
+◎
+Descendent elements of ‘switch’ that have the ‘systemLanguage’ attribute should be reordered according to the definition of the SMIL 'allowReorder' attribute.
+</li>
+	<li>
+`~graphics要素$の分類に［
+`tspan$e, `textPath$e
+］を追加した
+— ~filter, ~mask, 等々が適用されるよう。
+◎
+Add ‘tspan’ and ‘textPath’ to the graphics element category. This allows filters, masks, etc to be applied to them.
+</li>
+	<li>
+要素~roleの節を、最新の SVG Accessibility API Mappings 仕様に適合するよう更新した。
+◎
+Update section on element roles to conform to latest SVG Accessibility API Mappings specification.
+</li>
+	<li>
+［
+要求されない場合でも，予め定義-済みな内容は `defs$e 要素~内に置く
+］とする推奨を、柔らげた。
+◎
+Soften recommendation to put pre-defined content in a defs element even if not required.
+</li>
+	<li>
+［
+`defs$e ／ `title$e ／ `desc$e ／ `metadata$e ／ `symbol$e
+］要素の表示-時の挙動を、~UA~styleを利用して定義するよう変更した。
+◎
+Change display behavior of defs, title, desc, metadata, and symbol elements to be defined using user agent styles.
+</li>
+	<li>
+［
+`x^p ／ `y^p ／ `width^p ／ `height^p
+］呈示~属性を `symbol$e にも許容した上で、描画される各~instanceに対する それらによる効果は，入子にされた `svg$e 要素に対するときと同じになるものとした。
+◎
+Allow x, y, width, and height presentation attributes on a symbol, with the same effect on a rendered instance as on a nested svg element.
+</li>
+	<li>
+`symbol$e 上の［
+`refX$a ／ `refY$a
+］用に 後方-互換な既定の挙動を指定した（ `marker$e と異なることになる）
+— 各種~keyword による挙動は `marker$e に対するときと同じになることを，明確化した。
+◎
+Specify a backwards-compatible default behavior for ‘refX’ and ‘refY’ on a symbol (which will be different from marker); clarify that keywords have same behavior as marker.
+</li>
+	<li>
+<p>
+`~use要素の~shadow~tree$を，~shadow~DOM仕様と整合するよう定義し直した
+— ~SVG-2の他の変更点により良く統合するため, および
+次に挙げる もっと関係する挙動を明確化するために：
+◎
+Re-define use-element shadow trees to be consistent with the shadow DOM spec, to integrate better with other SVG 2 changes, and to clarify much related behavior, including:
+</p>
+		<ul>
+			<li>
+［
+`x^p ／ `y^p ／ `width^p ／ `height^p
+］を呈示~属性にした
+`, albeit ones with a unique effect on final layout^en
+【 “最終的な~layoutには一意な効果になるが” ？】
+◎
+x/y/width/height are presentation attributes, albeit ones with a unique effect on final layout
+</li>
+			<li>
+［
+`width^p ／ `height^p 
+］に対する値 `0^v が有意になるのは、~cloneされた［
+`svg$e, `symbol$e
+］の使用~値に対する影響iを通すことに限られ、負な値は構文解析-~errorになるものとした。
+◎
+zero values for width and height are only significant through their impact on the used value of a cloned svg/symbol; negative values are parse errors
+</li>
+			<li>
+`use$e 要素は、~graphics要素のみならず，~SVG容器の妥当な子になれるような どの要素も参照できるようにした。
+◎
+Allow use elements to reference any element that can be a valid child of an SVG container, rather than only graphics elements
+</li>
+			<li>
+`SVGUseElementShadowRoot$I ~interfaceを，
+`ShadowRoot^I ~interfaceの拡張として定義した上で、
+`~use要素の~shadow~tree$には，それを利用することが要求されるものとした。
+◎
+Define the SVGUseElementShadowRoot interface as an extension of the ShadowRoot interface, and require it to be used for use-element shadow trees
+</li>
+			<li>
+~shadow~DOMと `use$e 要素に関係する用語をいくつか定義した
+— 適用-可能な所では~DOM標準~用語を参照しつつ。
+◎
+Define a number of terms related to shadow DOM and use elements, referencing the DOM standard where applicable
+</li>
+			<li>
+［
+`~use要素の~shadow~tree$は、当の要素が［
+条件付き処理の失敗した分岐
+］内にある場合でも，生成される
+］ことを明確化した（ `display: none^css についての，以前の指導と整合する）
+◎
+Clarify that use-element shadow trees are generated even if the element is in a conditional processing failed branch (consistent with previous guidance re display:none)
+</li>
+			<li>
+~shadow~tree内の要素~instanceは、読専のものを除いて，定例の `Element^I ~nodeになるよう現れるモノトスルようにした。
+◎
+Element instances in the shadow tree must appear to be regular Element nodes, except they are read-only.
+</li>
+			<li>
+以前まで `SVGElementInstance^I ~obj上で定義していた各種~propは、今や `SVGElement^I を拡張する ~mixin~interfaceとして定義された。
+◎
+Properties formerly defined on the SVGElementInstance object are now defined as a mixin interface extending SVGElement
+</li>
+			<li>
+~cloneされた内容~内の~URL参照は、~source~fileに相対的に絶対~化されることを明確化した。
+◎
+Clarify that URL references in cloned content are made absolute relative to the source file.
+</li>
+			<li>
+~shadow~treeは、域外参照が変化した場合には
+— 宣言的~animationに因るもの含め —
+破棄されることを，明確化した（元の~shadow~treeと~animateされたそれが、並行して保全されることはない）。
+◎
+Clarify that the shadow tree is discarded if the cross-references change, including due to declarative animation (the original and animated shadow trees are not preserved in parallel).
+</li>
+			<li>
+循環~参照は、その環を繋げるような `use$e 要素
+— その自前の~hostでなく —
+の描画のみを阻止することを明確化した。
+◎
+Clarify that circular references only block the rendering of the use-element that would connect the circle, and not it's own host.
+</li>
+			<li>
+［
+`x^p ／ `y^p
+］は、 `use$e 要素~上の座標系変換として挙動すること, および
+それによる［
+`userSpaceOnUse^v による~graphic上の効果
+］への影響iについての警告を追加した。
+◎
+Added warning about x/y behaving as a transformation on the use element, and the impact on userSpaceOnUse graphical effects.
+</li>
+			<li>
+`use$e 要素~上の［
+`width^p ／ `height^p
+］が［
+`svg$e, `symbol$e
+］要素に影響iする仕方を、幾何~propと `auto^v 値に整合するよう定義し直した。
+◎
+Redefine the way width/height on use elements impact svg/symbol to be consistent with geometry properties and auto values.
+</li>
+			<li>
+他の（ `svg$e ／ `symbol$e 以外の）再利用される~graphicsに対しては、~shadow要素は
+— 百分率~長さの解決も含め —
+`use$e 要素の座標系~内で~lay-outされることを明確化した。
+◎
+Clarify that for other re-used graphics (not svg/symbol), the shadow elements are laid out in the use element's coordinate system, including for the resolution of percentage lengths.
+</li>
+			<li>
+~shadow~treeにおける~styleの~cloningは、~shadow~DOMを視野に入れる~styleと整合するよう定義し直した
+— ~stylesheetは~shadow~DOMの視野の中へ~cloneすることが要求されることも含めて。
+◎
+Redefine style cloning in shadow trees to be consistent with style scoping in shadow DOM, including by requiring style sheets to be cloned into the shadow DOM's scope.
+</li>
+			<li>
+前項の結果が、~SVG-11に適合する~UAと
+異なる~styleになる事例に関する警告と例を追加した。
+◎
+Add warning and example regarding the cases where this results in different styles than an SVG 1.1-conforming user agent.
+</li>
+			<li>
+`visibility^p ~propの挙動は継承されることに関する例を追加した。
+◎
+Add example regarding the inherited behavior of the visibility property.
+</li>
+			<li>
+同じ要素から `use$e 要素により複製された各~instance内の~multimediaは、互いに同期させることが要求されるとした。
+◎
+Require multimedia in use-element copies to be synchronized with all other instances of the same original element.
+</li>
+			<li>
+~shadow~treeとその~host文書は，~animationの`文書~時列線$を共有することを明確化した。
+◎
+Clarify that the shadow tree shares the document timeline for animations with its host document.
+</li>
+			<li>
+`ShadowAnimation^I ~interfaceは、
+`Web Animations^cite
+~API~animationを~cloneすることを表現するものと定義した。
+◎
+Define a ShadowAnimation interface to represent the cloning of Web Animations API animations
+</li>
+			<li>
+`~use要素の~shadow~tree$内の要素~instanceに
+`Web Animations^cite
+~API~animationを直に適用することを，禁制した。
+◎
+Prohibit WAAPI animations from being directly applied to element instances in the use-element shadow tree.
+</li>
+			<li>
+~SMILによる~animationの伝播を、~animation要素を~cloneすることを通して定義した
+— `参照先の~graphic$に影響している~animation要素は、参照先の要素の子孫でなくとも，当の~shadow~treeの中に~cloneすることが要求される。
+◎
+Define the propagation of SMIL-style animations through the cloning of animation elements; require that animations elements affecting the referenced graphic be cloned into the shadow tree, even if they are not descendents of the referenced element.
+</li>
+			<li>
+~eventに基づく~animation要素を誘発する方法を定義した。
+また、［
+異なる~node~tree内に同じ `id$a の複数の要素がある
+］ときの，~animation要素の `href^a 属性の挙動を定義した。
+◎
+Define how event-based animation element triggers and animation element href attributes behave when there are multiple elements with the same ‘id’ in different node trees.
+</li>
+			<li>
+`~use要素の~shadow~tree$における~event取扱いは、［
+`Shadow DOM^cite 仕様による，~eventを~targetし直す規則（ `retargetting^en ）
+］に従うことが要求される。
+◎
+Require event handling in use-element shadow trees to follow the event retargetting rules from the Shadow DOM spec.
+</li>
+			<li>
+［
+~script／~event属性
+］により追加された~event~listenerは，参照先の~graphicから その各~要素~instanceへ複製されることを明確化した。
+◎
+Clarify that the copying of event listeners from referenced graphics to their element instances applies to listeners added by script as well as by event attributes.
+</li>
+			<li>
+~event~listenerを`~use要素の~shadow~tree$内の要素に直に追加することを，禁制した。
+◎
+Prohibit event listeners from being directly added to elements in the use-element shadow tree.
+</li>
+			<li>
+~shadow内容は~access可能になるよう、［
+`use$e 要素 ／ `symbol$e 【の~instance】
+］は，既定で~graphics~objの~roleに対応付けられるとした。
+◎
+Make use elements and symbols map to the graphics-object role by default, so the shadow content will be accessible.
+</li>
+			<li>
+描画される `symbol$e 要素の~instanceが `~graphics要素$の挙動（例えば `getBBox()^m ）すべてを備えるようにするため、
+`SVGSymbolElement^I ~interfaceは， `SVGGraphicsElement^I を拡張するようにした。
+◎
+Make the SVGSymbolElement interface extend from SVGGraphicsElement, so that rendered symbol element instances have all the behavior of graphics elements (e.g., getBBox)
+</li>
+			<li>
+`SVGUseElement$I ~interface上の（~animate化された） `instanceRoot^m ~propを復旧した。
+◎
+Restore the (animated)instanceRoot properties on the SVGUseElement interface.
+</li>
+		</ul>
+	</li>
+	<li>
+`a$e 要素に対する~ARIA~roleの対応付けを、実際に妥当な~linkであるかどうかに依存するよう変更した。
+◎
+Change role mapping for the ‘a’ element to depend on whether it is actually a valid link.
+</li>
+	<li>
+~ARIA［
+状態／~prop
+］属性を~animate可能とした。
+◎
+Mark ARIA state and property attributes as animatable.
+</li>
+	<li>
+`id$a 値に対する要件を，~HTMLと調和するように更新した上で、~XML文書における妥当性の要件についての警告を加えた。
+◎
+Update requirements for ‘id’ values to harmonize with HTML, with extra warning about requirements for validity in an XML document.
+</li>
+	<li>
+`外来の名前空間と私用~data$secをこの章に移動した上で、いくつかの新たな域外参照と注記を追加した。
+◎
+Moved the Foreign namespaces and private data section to this chapter and added some new cross-references and notes.
+</li>
+</ul>
+
+<ul class="changed-since-cr1">
+	<li>
+`SVGUseElementShadowRoot$I の定義における不正な~interface名を正した。
+（ `290$issue, `296$pull ）
+◎
+Corrected incorrect interface name for definition of SVGUseElementShadowRoot. Issue discussion Edits
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2">
+	<li>
+`systemLanguage$a における `language-tag^P は文字大小無視で照合することを明瞭にした,
+— BCP 47 から要求されるので。
+（ `517$issue, `528$pull ）
+◎
+Make it clear that language-tag matching for ‘systemLanguage’ is case-insensitive, as required by BCP 47. Issue discussion Edits
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2 cr3">
+	<li>
+どの名前空間にも属さない `autofocus$a 属性を追加した。
+◎
+Added the ‘autofocus’ attribute in no namespace.
+</li>
+	<li>
+`zoomAndPan^a 属性と関係する~textを除去した。
+（ `56$issue ）
+◎
+Remove zoomAndPan attribute and related text. Issue discussion
+</li>
+</ul>
+
+		</section>
+		<section id="styling">
+<h3 title="Styling chapter">K.2.7. `~style付け^sec（章：`•$2, `•$11 ）</h3>
+
+<ul>
+	<li>
+`contentStyleType^a 属性を除去した。
+◎
+Removed the ‘contentStyleType’ attribute.
+</li>
+	<li>
+`SVGStyleElement$I は、今や `LinkStyle$I を実装する。
+◎
+SVGStyleElement now implements LinkStyle.
+</li>
+	<li>
+~UA~stylesheetを更新した
+— ［
+内縁 `svg$e 要素／ `foreignObject$e 要素
+］上の `overflow^p は、最早 `hidden^v に設定されなくなった。
+◎
+Updated user agent style sheet - inner svg elements and foreignObject elements are no longer set as overflow:hidden.
+</li>
+	<li>
+~UA~stylesheetにおいて `overflow^p が `hidden^v になる要素の~listに， `hatch^e 要素を追加した。
+◎
+Added hatch to list of elements with overflow:hidden in User Agent style sheet.
+</li>
+	<li>
+`transform-origin^p の既定~値を `0 0^v にした
+— 根 `svg$e 要素, および `foreignObject$e 要素の子である `svg$e 要素を除いて。
+◎
+Set the default value of transform-origin to '0 0' for all elements except root svg elements and svg elements that are the child of a foreignObject element.
+</li>
+	<li>
+この章は、より簡潔になるよう，大きく書直した。
+◎
+Substantially rewrote the chapter to be more concise.
+</li>
+	<li>
+~HTML `link^e 要素が読込むのは、外部~stylesheetでなければナラナイものと定義した。
+◎
+Defined that HTML ‘link’ elements must load external style sheets.
+</li>
+	<li>
+次について，~propの集合を正確に指定した
+⇒＃
+呈示~属性を持つもの,
+対応する~propと名前が合致しない呈示~属性の名前,
+どの要素がそれらを許容するか。
+◎
+Specified the exact set of properties that have presentation attributes, their names (when the presentation attribute name does not match the property name), and on which elements they are allowed.
+</li>
+	<li>
+他の仕様に定義される~propのうち，適合~SVG-2~UAが~supportするモノトスル~propの~listを追加した。
+◎
+Added a list of properties defined in other specifications that conforming SVG 2 user agents must support.
+</li>
+	<li>
+非推奨にされた `xml:space^a 属性から `white-space$p ~propへの対応付けを与える~UA~stylesheet規則を追加した。
+◎
+Added User Agent style sheet rule to map the deprecated ‘xml:space’ attribute to the white-space property.
+</li>
+	<li>
+`tspan$e 要素~上では、［
+`font-face^at 規則, および
+`first-letter^pe, `first-line^pe 疑似要素
+］の~supportが要求されるとした。
+◎
+Required that @font-face rules and ::first-letter &amp; ::first-line pseudo-elements on ‘text’ elements must be supported.
+</li>
+	<li>
+~inline~SVG内容を伴う~HTML文書~内の［
+~SVG／~HTML
+］~stylesheetは、文書~内のすべての内容に適用するモノトスルことを要求した。
+◎
+Required that all SVG and HTML style sheets in an HTML document with inline SVG content must apply to all content in the document.
+</li>
+	<li>
+呈示~属性は、~SVG名前空間に属する どの要素にも許容されるとした。
+◎
+Allow presentation attributes on any svg namespaced element.
+</li>
+	<li>
+`style$e 要素の表示-時の挙動は、~UA~styleを利用して定義されるように変更された。
+◎
+Change display behavior of style element to be defined using user agent styles.
+</li>
+	<li>
+`決して描画されない要素$を制御する `!important^css ~UA~style規則を追加した
+— それらの影響iを説明する注記とともに。
+◎
+Add !important user agent style rules controlling never-rendered elements, with a note explaining their impact.
+</li>
+	<li>
+対話的~UAは［
+`focus^ps, `selection^pe
+］~styleを含むことを要求した。
+◎
+Require interactive user agents to include :focus and ::selection styles.
+</li>
+	<li>
+<p >
+この仕様の他の節と整合するよう，呈示~属性の一覧表を整理した：
+</p>
+		<ul>
+			<li>
+［
+`x^a, `y^a, `width^a, `height^a
+］属性を呈示~属性として扱う要素として、
+`mask$e は除去し，
+`use$e, `symbol$e
+を追加した。
+</li>
+			<li>
+`~animation要素$を， `fill$p を呈示~属性として扱うものから除外した。
+</li>
+			<li>
+`textPath$e の呈示~属性から `d$p を除去した。
+</li>
+			<li>
+`gradientTransform^a と `patternTransform^a についての論点を、主~一覧表の中に併合した。
+</li>
+		</ul>
+
+◎
+Clean-up presentation attributes table to be consistent with other sections of the spec: remove ‘mask’ from elements that treat x/y/width/height attributes as presentation attributes, add ‘use’ and ‘symbol’; exclude animation elements from those that treat fill as a presentation attribute; remove d as a presentation attribute for ‘textPath’; merge the discussion of gradientTransform and patternTransform into the main table.
+</li>
+	<li>
+`clip$p ~propの~support要件を除去した。
+◎
+Removed requirement for clip property support.
+</li>
+</ul>
+
+<ul class="changed-since-cr1">
+	<li>
+［
+`transform$a,
+`patternTransform$a,
+`gradientTransform$a
+］は、［
+ある種の［
+~SVG名前空間に属する要素
+］に指定できる `transform$p
+］用の呈示~属性であるものと指定した。
+（ `919$issue, `378$pull ）
+◎
+Specify that transform, ‘patternTransform’ and ‘gradientTransform’ are presentation attributes for transform that can be specified to certain sets of elements in the SVG namespace. Issue discussion Edits
+</li>
+</ul>
+
+
+<ul class="changed-since-cr1 cr2">
+	<li>
+~HTML, ~CSSと一貫させるため、~UA~stylesheetに，~link上の~pointer~cursor用の要件を追加した。
+（ `468$issue, `536$pull ）
+◎
+Add a user-agent stylesheet requirement for a pointer cursor on links, consistent with HTML and CSS. Issue discussion Edits
+</li>
+</ul>
+
+		</section>
+		<section id="geometry">
+<h3 title="Geometry Properties chapter (SVG 2 only)">K.2.8. `幾何~prop^sec（章：`•$2 のみ）</h3>
+
+<ul>
+	<li>
+［
+`x$p, `y$p
+］~propが適用される要素の集合から，［
+`pattern$e, `filter$e
+］を除去した。
+◎
+Removed ‘pattern’ and ‘filter’ from the set of elements that the x and y properties apply to.
+</li>
+	<li>
+［
+`width$p ／ `height$p
+］~prop用の値 `auto^v は、その~propが適用される~SVG要素に対しては， `0^v
+に算出されるものと定義した。
+◎
+Defined that width and height property values of auto are computed to 0 for SVG elements that the properties apply to.
+</li>
+	<li>
+［
+`width^p ／ `height^p
+］用の値 `auto^v は、 `svg$e 要素~上では `100%^v に等しくなり，画像~上では 自動~sizingになるとした。
+◎
+auto equates to 100% for width and height on the ‘svg’ element, and to auto-sizing for images.
+</li>
+	<li>
+［
+`width^p ／ `height^p
+］が~sizing~propになるとされる要素の~listから `mask$e 要素を除去した。
+◎
+Remove ‘mask’ from the list of elements where width and height are sizing properties.
+</li>
+	<li>
+［
+`width^p ／ `height^p
+］~sizing~propは、対応する［
+`max-*^p, `min-*^p
+］~propにより拘束され得ることを明確化した。
+◎
+Clarify that width and height sizing properties can be constrained with the corresponding max/min properties.
+</li>
+</ul>
+
+		</section>
+		<section id="coords">
+<h3 title="Coordinate Systems, Transformations and Units chapter">K.2.9. `座標系, 変形n, 単位^sec（章：`•$2, `•$11 ）</h3>
+
+<ul>
+	<li>
+`SVGMatrix$I の［
+`skewX()^m ／ `skewY()^m
+］~methodは、不良な値に対しては例外を投出するようにした。
+◎
+Make SVGMatrix.skew{X,Y} throw an exception on bad values.
+</li>
+	<li>
+`限界~box$についての SVG Tiny 1.2 による改善された言い回しに加え，要素の限界~boxを算出する~algoを追加した。
+◎
+Added improved wording on bounding box from SVG Tiny 1.2, and an algorithm which can compute a bounding box for an element.
+</li>
+	<li>
+位置を持たない要素~用の限界~boxは、
+( 0, 0 ) に位置するものと定義した。
+◎
+Define bounding box for element with no position to be at (0,0).
+</li>
+	<li>
+`preserveAspectRatio$a から `defer^v ~keywordを除去した。
+◎
+Removed the defer keyword from ‘preserveAspectRatio’.
+</li>
+	<li>
+“現在の表示域（ `current viewport^en ）” 用の定義を追加した。
+`~SVG表示域$を、~SVG要素により作成された任意の表示域を意味するよう変更した。
+◎
+Add definition for 'current viewport'. Change SVG viewport to mean all viewports created by SVG elements.
+</li>
+	<li>
+`vector-effect$p 用の値［
+`non-scaling-size^v, `non-rotation^v, `fixed-position^v
+］を追加した。
+◎
+Add non-scaling-size, non-rotation, and fixed-position values for vector-effect
+</li>
+	<li>
+<!-- co-ordinate system＊？ -->
+座標系~layout用の要件は義務になるものと変更した。
+◎
+Changed requirement for co-ordinate system layout to be mandatory.
+</li>
+	<li>
+`vector-effect$p は、`~3D描画~文脈$の中では効果がないものとした。
+◎
+vector-effect has no effect within a 3d rendering context.
+</li>
+	<li>
+~CSS文脈~下での~SVG~sizingを~CSSによる`既定の~sizing~algo$への参照-として定義した。
+◎
+Define SVG sizing in CSS contexts with reference to the CSS Default Sizing Algorithm.
+</li>
+	<li>
+百分率は `viewBox^a に指定された［
+横幅 ／ 縦幅
+］に相対的になることを明確化した。
+◎
+Clarify that percentages are relative to the width and height of the specified viewBox.
+</li>
+	<li>
+実装されていない `vector-effect$p ~optionは、~risk下にあるとした。
+◎
+Mark unimplemented vector-effect options at-risk.
+</li>
+	<li class="changed-since-cr1 cr2 cr3">
+`vector-effect$p 用の~host座標~空間の定義を，実際に実装されている挙動に適応させた。
+それに伴い，その~propから `screen^v, `viewport^v 値を除去した。
+◎
+Adapt vector-effect host coordinate space definition to actual implemented behavior. Remove screen and viewport values.
+</li>
+	<li>
+限界~box~algoを、 
+`clipped^V ~flagが ~T の下では［
+`overflow^p ／ `clip^p
+］~propによる効果も含むとするよう変更した。
+◎
+Change bounding box algorithm to include the effect of overflow and clip properties when the "clipped" flag is set.
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2 cr3">
+	<li>
+各種~methodの~parameterに `DOMMatrix2DInit$I を利用するようにした。
+◎
+Use DOMMatrix2DInit as parameters for methods
+</li>
+	<li>
+`SVGPreserveAspectRatio$I ~objの列挙d~~定数をとる属性に対し，範囲~外の整数や 0 を設定しようとした場合、
+`TypeError^E を投出するようにした。
+（ `547$issue ）
+◎
+Setting the enumerated parts of an SVGPreserveAspectRatio object to an out-of-range integer or 0 throws a TypeError. Issue discussion
+</li>
+</ul>
+
+		</section>
+		<section id="paths">
+<h3 title="Paths chapter">K.2.10. `~path^sec（章：`•$2, `•$11 ）</h3>
+
+<ul>
+	<li>
+~data集合を伴わない（空または妥当な命令がない）［
+`path$e ／ `polygon$e ／ `polyline$e
+］要素は、描画しないものと定義した。
+◎
+Define ‘path’, ‘polygon’ and ‘polyline’ elements with no data set (empty or zero valid commands) to not render.
+</li>
+
+	<!--
+	<li>Define how <a href="~SVGpaths#__svg__SVGPathElement__getPathSegAtLength">getPathSegAtLength</a> and
+	<a href="~SVGpaths#__svg__SVGPathElement__getPointAtLength">getPointAtLength</a> handle out-of-range input, and what to do in case there's no valid path data.</li>
+	<li>Removed the <code>normalizedPathSegList</code> and <code>animatedNormalizedPathSegList</code> attributes from <a>SVGAnimatedPathData</a>.</li>
+  -->
+	<li>
+［
+`SVGPathSeg*^I, `SVGAnimatedPathData^I
+］~interface, および
+`SVGPathElement$I 上の それらに関係する~methodを除去した。
+◎
+Removed the SVGPathSeg* and SVGAnimatedPathData interfaces and the related methods on SVGPathElement.
+</li>
+	<li>
+`d^a 属性は~propになった。
+◎
+Promoted the ‘d’ attribute to a property.
+</li>
+	<li>
+`SVGPathElement^I から［
+`pathLength$m, `getTotalLength()$m, `getPointAtLength()$m
+］~memberを除去した。
+それらは今や `SVGGeometryElement^I 上にある。
+◎
+Removed the pathLength attribute, getTotalLength(), and getPointAtLength() methods from SVGPathElement, they are now on SVGGeometryElement.
+</li>
+	<li>
+`pathLength$a に対する値 0 は妥当であることを明確化した。
+◎
+Clarified that a value of zero for ‘pathLength’ is valid.
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2">
+	<li>
+`pathLength$a が 0 にされても、百分率による距離は影響されないことを明確化した。
+（ `383$issue, `485$pull ）
+◎
+Clarified that percentage distances are not affected by zero ‘pathLength’. Issue discussion Edits
+	<li>
+実装~注記~節を論理的な下位節の中へ編成し直した（以前まで，実装~注記~付録~内にあった，限界域~外の弧~parameterについての節も含め）。
+`548$pull
+◎
+Reorganized the Implementation Notes section into logical subsections (including the section on out-of-bounds arc parameters, which was formerly in the Implementation Notes appendix). Edits
+</li>
+</ul>
+
+
+		</section>
+		<section id="shapes">
+<h3 title="Basic Shapes chapter">K.2.11. `基本~図形^sec（章：`•$2, `•$11 ）</h3>
+
+<ul>
+	<li>
+`SVGAnimatedPoints$I の `animatedPoints$m ~IDL属性は、今や
+`points$m 属性への別名になった。
+◎
+The animatedPoints IDL attributes of SVGAnimatedPoints now aliases the points attribute.
+</li>
+	<li>
+すべての基本~図形に `pathLength$a 属性を追加した。
+◎
+Added the ‘pathLength’ attribute to all basic shapes.
+</li>
+	<li>
+`ellipse$e 上の［
+`rx$p ／ `ry$p
+］に対する `auto^v による挙動を追加した。
+◎
+Added auto behavior for rx and ry to ‘ellipse’.
+</li>
+</ul>
+
+
+
+		</section>
+		<section id="text">
+<h3 title="Text chapter">K.2.12. `~text^sec（章：`•$2, `•$11 ）</h3>
+
+<ul>
+	<li>
+~WOFF~fontの~supportは要求されるとした。
+◎
+Require support for WOFF fonts.
+</li>
+	<li>
+CSS3 による `text-decoration$p ~propの変更点を採用した。
+◎
+Adopt the CSS3 changes to the text-decoration property.
+</li>
+	<li>
+［
+`tspan$e ／ `textPath$e
+］要素の要約~boxに，欠落していたいくつかの属性を追加した。
+◎
+Added a number of missing attributes to the element summary boxes of the ‘text’ and ‘textPath’ elements.
+</li>
+	<li>
+`tspan$e 要素に `inline-size$p 呈示~属性を追加した。
+◎
+Added inline-size presentation attribute to ‘text’.
+</li>
+	<li>
+`text-overflow$p 処理についての節を追加した。
+◎
+Added a section about text-overflow processing.
+</li>
+	<li>
+`shape-inside$p ~propを追加した。
+◎
+Added shape-inside property.
+</li>
+	<li>
+`shape-subtract$p ~propを追加した（ `shape-outside$p を置換する）。
+◎
+Added shape-subtract property (replaces shape-outside).
+</li>
+	<li>
+`white-space$p ~propを追加した。
+`~xml_space$a 属性を非推奨にした。
+◎
+Added white-space property and deprecated ‘xml:space’ attribute.
+</li>
+	<li>
+`kerning^p ~propを除去した。
+◎
+Removed the ‘kerning’ property.
+</li>
+	<li>
+`textPath$e 要素に `path^a 属性を追加した。
+◎
+Added a ‘path’ attribute to ‘textPath’.
+</li>
+	<li>
+`textPath$e に 基本~図形を参照する能を追加した。
+◎
+Added ability to reference basic shapes to ‘textPath’.
+</li>
+	<li>
+~textを~pathのどちら側にも配置できるようにする `side$a 属性を追加した。
+◎
+Added the ‘side’ attribute to allow placing text on either side of a path.
+</li>
+	<li>
+［
+`startOffset$a 属性 ／ `text-anchor$p ~prop
+］による，閉な~pathによる単独の~loopに文字たちを描画する効果を追加した。
+◎
+Render characters for one loop of a single closed path, effected by the ‘startOffset’ attribute and text-anchor property.
+</li>
+	<li>
+`tref^e 要素を除去した。
+◎
+Removed the 'tref' element.
+</li>
+	<li>
+［
+`altGlyph^e, `altGlyphDef^e, `altGlyphItem^e, `glyphRef^e
+］要素を除去した。
+◎
+Removed the 'altGlyph', 'altGlyphDef', 'altGlyphItem' and 'glyphRef' elements.
+</li>
+	<li>
+`SVGTextContentElement$I ~interfaceの `selectSubString$m ~methodを、
+`Selection API^cite
+の用語を通して定義すると同時に，非推奨にした。
+◎
+Defined the selectSubString method on the SVGTextContentElement interface in terms of the Selection API and simultaneously deprecated it.
+</li>
+	<li>
+`getComputedTextLength()^m は、［
+`dx$a, `dy$a
+］の値を含まないよう変更した。
+◎
+Changed getComputedTextLength() to not include ‘dx’ and ‘dy’ values.
+</li>
+	<li>
+`width$p, `width$p
+~propに関する論点を`幾何~prop^sec（章：`•$2 ）へ移動した。
+◎
+Moved the discussion of width and height properties to the Geometry Properties chapter.
+</li>
+	<li>
+対話的~UAにおいては `selection^pe の~supportが要求される。
+◎
+Require support for ::selection in interactive user agents.
+</li>
+	<li>
+描画されない要素~内の~textは、`~address可能な文字$に含まれないことが要求される。
+したがって，［
+位置決め属性をアテガうとき ／
+`getNumberOfChars$m ~methodにおいて
+］は、数えられない。
+◎
+Require that text in non-rendered elements are not included in addressable characters and therefore are not counted when assigning positioning attributes and in the getNumberOfChars methods.
+</li>
+	<li>
+~text描画-の中の未知な要素は、［
+位置のない~spanとする
+］ものと要求されるが，［
+位置は既知だが，妥当でない要素
+］は そうでないとされる。
+◎
+Require that Unknown elements within text render as unpositioned spans, but that known-but-invalidly-positioned elements do not.
+</li>
+	<li>
+変形された~pathに沿って ~textが位置されるときの~offset距離は、［
+~path要素の座標系でなく，~text要素の座標系において計測されるべきである
+］ことを，明確化した。
+◎
+Clarify that when text is positioned along a transformed path, offset distances should be measured in the text element's coordinate system, not the path element's.
+</li>
+</ul>
+
+<ul class="changed-since-cr1">
+	<li>
+`getCharNumAtPosition()^m の引数~型として，
+`DOMPoint$I に代えて `DOMPointInit$I を指定した。
+（ `389$issue, `414$pull ）
+◎
+Specify DOMPointInit as argument type for getCharNumAtPosition() instead of DOMPoint. Issue discussion Edits
+</li>
+	<li>
+~CSSと整合するよう，
+`inline-size$p ~propから `number^t 値を除去した。
+（ `436$issue, `482$pull ）
+◎
+Remove 'number' value from inline-size property for consistency with CSS. Issue discussion Edits
+</li>
+	<li>
+`startOffset$a の算出-時に、意図せず［
+`pathLength$a 属性は，`図形~要素$でなく `path$e に限り適用されると
+］していた制約を除去した。
+（ `382$issue, `476$pull ）
+◎
+Removed unintended restriction that ‘pathLength’ applied only to paths and not shapes when computing ‘startOffset’. Issue discussion Edits
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2">
+	<li>
+`textLength$a 用の初期~値を明確化した。
+それによる，反映される~IDL属性への影響iについての注記を追加した。
+◎
+Clarify the initial value for ‘textLength’, and add note about its impact on the reflected IDL attribute.
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2 cr3">
+	<li>
+~text位置決め属性の目的における`~address可能な文字$の，~SVG-11による定義を復帰した（例：~Unicode符号位置により数える）。
+◎
+Reverted to SVG 1.1 definition of addressable character for the purposes of text positioning attributes (e.g. counting by Unicode code points).
+</li>
+</ul>
+
+
+		</section>
+		<section id="embedded">
+<h3 title="Embedded Content chapter (SVG 2 only)">K.2.13. `埋込d内容^sec（章：`•$2 のみ）</h3>
+
+<ul>
+	<li class="changed-since-cr1 cr2 cr3" id="HTMLElements">
+実装の欠如に因り、~HTML~multimedia節, および［
+`audio^e, `video^e, `iframe^e, `canvas^e
+］要素の利用を除去した。
+◎
+Removed HTML multimedia section and the use of the audio, video, iframe, canvas elements due to lack of implementations.
+</li>
+	<li>
+この章を追加した。
+それに伴い、~HTMLの等価な要素と ほぼ同じに挙動する，新たな要素［
+`video^e, `audio^e, `iframe^e, `canvas^e, `source^e, `track^e
+］を追加した。
+【が、上により除去された。】
+◎
+Added this chapter, which includes new 'video', 'audio', 'iframe', 'canvas', 'source' and track' elements that behave almost identically to the equivalent HTML elements.
+</li>
+	<li>
+~HTMLの埋込d内容 要素に対応する，~SVGによる複製を除去した。
+代わって、それらの要素は，~SVG容器~要素の中であっても，~HTML名前空間の下で利用できるようにした。
+◎
+Removed the SVG copies of HTML's embedded content elements and instead allowed those elements to be used in the HTML namespace within SVG container elements.
+</li>
+	<li>
+`image$e 要素から参照されている~SVG文書~上の［
+`clip$p ／ `overflow$p
+］は無視するとする要件を除去した。
+◎
+Removed the requirement to ignore clip and overflow on an SVG document when referenced by an ‘image’ element.
+</li>
+	<li>
+画像の［
+`height^p ／ `width^p
+］に対しては `auto^v も許容され、その使用~値は，画像~fileの内在的［
+寸法, 縦横比
+］から決定されるとした。
+◎
+Allow image height and width to be "auto", determined from intrinsic dimensions or aspect ratio of the image file.
+</li>
+	<li>
+［
+`image$e ／ `foreignObject$e
+］の~sizingは~CSSと幾何~propに整合することを，明確化した
+— 埋込d~HTML要素は、［
+`x$p, `y$p, `width$p, `width$p
+］幾何-~propを利用して位置できるようにした。
+◎
+Clarify image and foreignObject sizing to be consistent with CSS and with geometry properties; allow embedded HTML elements to be positioned using x, y, width, and height geometric properties.
+</li>
+	<li>
+埋込d~HTML要素にも［
+`object-fit$p ／ `object-position$p
+］~propは適用されることを明確化した。
+また、それらは `image$e に対しては定義されないとする警告~注記を追加した。
+◎
+Clarify that object-fit and object-position properties apply to embedded HTML elements; add warning note that they are not defined for ‘image’.
+</li>
+	<li>
+`外来の名前空間と私用~data$secを、`文書~構造^sec（章：`•$2 ）に移動した。
+◎
+Moved the "Foreign namespaces and private data" section to the Document Structure chapter.
+</li>
+	<li>
+（放置されている）
+`Resource Priorities^cite
+仕様への参照に代えて，
+<a href="~RESOURCE-HINTS">`Resource Hints^cite</a> 仕様（作業草案）を指すように更新した。
+◎
+Updated the reference to the (abandoned) Resource Priorities spec to instead refer to the (working draft) Resource Hints spec.
+</li>
+	<li>
+すべての埋込d要素~用に，統一された~layout~modelを定義した
+— `image$e 用の
+`object-fit$p, `object-position$p
+~propの挙動も含めて。
+◎
+Define unified layout model for all embedded elements, including behavior of object-fit and object-position properties for ‘image’.
+</li>
+</ul>
+
+
+
+		</section>
+		<section id="painting">
+<h3 title="Painting chapter">K.2.14. `塗ng^sec（章：`•$2, `•$11 ）</h3>
+
+<ul>
+	<li>
+各種~stroke~propについて，より詳細な記述を追加した。
+~strokeが持つモノトスル正確な図形を定義する~algoを追加した。
+◎
+Added more detail to the descriptions of the stroke properties and added algorithms defining the exact shape a stroke must have.
+</li>
+	<li>
+`paint-order$p ~propを追加した。
+◎
+Added the paint-order property.
+</li>
+	<li>
+`color-interpolation-filters$p ~propは、`~filter効果~仕様$へ移動した。
+◎
+Moved the color-interpolation-filters property to the Filter Effects specification.
+</li>
+	<li>
+`paint$t 値として
+`context-fill^v, `context-stroke^v
+を追加した。
+◎
+Added the context-fill and context-stroke paint values.
+</li>
+	<li>
+`paint$t 値と 各種~marker~propは、 ID を利用しない参照を~supportするため，
+`child^v ~keywordと `child-selector^t 値をとれるようにした。
+◎
+Allowed &lt;paint&gt; values and marker properties to take the child keyword and &lt;child-selector&gt; values to support ID-less referencing.
+</li>
+	<li>
+`vector-effect$p ~propに対する `non-scaling^v の規範的な定義は、~SVG-2の中に移動した。
+◎
+Move normative definition of vector-effect property non-scaling into SVG 2.
+</li>
+	<li>
+`stroke-linejoin$p に `arcs^v 値を追加した。
+◎
+Added arcs value on stroke-linejoin.
+</li>
+	<li>
+`marker$e 要素の `orient$a 属性に `auto-start-reverse^v 値を追加した。
+◎
+Added the 'auto-start-reverse' attribute to the ‘orient’ attribute on ‘marker’.
+</li>
+	<li>
+`SVGPaint^I ~interfaceを除去した。
+◎
+Removed the SVGPaint interface.
+</li>
+	<li>
+`z-index^p ~propを追加した（が、後に除去した）。
+◎
+Added the 'z-index' property. (Later removed.)
+</li>
+	<li>
+~marker／~strokeに関係する新たな特能の一部を、
+<a href="https://www.w3.org/TR/2015/WD-svg-markers-20150407/">SVG Markers</a>,
+<a href="https://www.w3.org/TR/2015/WD-svg-strokes-20150407/">SVG Strokes</a>
+仕様に分割した。
+◎
+Split out some new marker and stroke related features into the SVG Markers and SVG Strokes specifications.
+</li>
+	<li>
+`child-selector^t を塗り値から除去した。
+◎
+Removed &lt;child-selector&gt; paint values.
+</li>
+	<li>
+`buffered-rendering^p ~propを除去して，
+`will-change^p ~propについての短い論点に置換した。
+◎
+Removed the 'buffered-rendering' property and replaced it with a short discussion of the 'will-change' property.
+</li>
+	<li>
+`child-selector^t が意図していた利用事例を~supportするため、塗り値として
+<code class="value">child(`integer$t)</code> を追加した。
+◎
+Added a child(&lt;integer&gt;) paint value to support the use cases that &lt;child-selector&gt; was intended for.
+</li>
+	<li>
+長さ 0 のどの下位pathも
+— 開いていようが閉じていようが —
+描画される結果は `stroke-linecap$p 属性に基づくものと明確化した。
+◎
+Clarify that for all zero length subpaths, whether open or closed, the rendered result is based on the stroke-linecap attribute.
+</li>
+	<li>
+~markerは、すべての`図形~要素$に許容される。
+◎
+Allow markers on all shapes.
+</li>
+	<li>
+［
+`context-stroke^v ／ `context-fill^v
+］の記述を明確化した
+— 特に要素~shadow内容の再利用について。
+◎
+Clarify the description of context-stroke and context-fill, particularly re use element shadow content.
+</li>
+	<li>
+`marker$e 要素の表示-時の挙動を、~UA~styleを利用して定義するように変更した。
+◎
+Change display behavior of marker elements to be defined using user agent styles.
+</li>
+	<li>
+（前回の作業草案から）［
+`~fill$ ／ `~stroke$
+］が複数の塗り値をとれるものとしていた変更-を元に戻した。
+◎
+[Since last WD] Roll back the change allowing fill and stroke to take multiple paints.
+</li>
+	<li>
+“`markable^en 要素” の分類を、除去した。
+◎
+Remove the 'markable elements' category.
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2">
+	<li>
+`child^v, `child()^v は除去した
+— これらは、この仕様の次の~levelに先送りされたので。
+（ `533$pull （課題~論点も含む））
+◎
+Remove child, child(&lt;integer&gt;) as they are deferred to the next level of the spec. Edits and discussion
+</li>
+	<li>
+負でないどの値も `stroke-miterlimit$p 用の妥当な値とした。
+（ `545$issue, `551$pull ）
+◎
+Make any non-negative number a valid value for stroke-miterlimit. Issue discussion Edits
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2 cr3">
+	<li>
+`color-rendering^p ~CSS~propを除去した。
+（ `647$issue ）
+◎
+Remove the color-rendering CSS property. Issue discussion
+</li>
+</ul>
+
+		</section>
+		<section id="color">
+<h3 title="Color chapter (SVG 1.1 only)">K.2.15. `色^sec（章：`•$11 のみ）</h3>
+
+<ul>
+	<li>
+この章を除去した上で、
+CSS Color への規範的な参照に置換した。
+◎
+Removed this chapter, replaced with normative reference to CSS Color.
+</li>
+</ul>
+
+
+		</section>
+		<section id="pservers">
+<h3 title="Paint Servers chapter (called Gradients and Patterns in SVG 1.1)">K.2.16. `塗り~server^sec（章：`•$2 ）／ `~gradientと~pattern^sec（章：`•$11 ）</h3>
+
+<ul>
+	<li>
+SVG Tiny 1.2 からの移入により，
+`solidcolor^e 要素とその 2 つの~prop
+`solid-color^p, `solid-opacity^p
+を追加した（ `solidColor^l は `solidcolor^l に改称した）
+【が、除去された（この節の末尾）】
+◎
+Added the solidcolor element and its two properties solid-color and solid-opacity, ported over from SVG Tiny 1.2. (Renamed 'solidColor' to 'solidcolor'.)
+</li>
+	<li>
+`radialGradient$e 要素に， `fr$a 属性を追加して、焦点円の半径を指定できるようにした。
+◎
+Added an ‘fr’ attribute to the ‘radialGradient’ element, which allows specifying the radius of the focal circle.
+</li>
+	<li>
+【この項の記述は、当の要素が将来~versionへ先送りされた（この節の末尾を見よ）ので，和訳は省略する。】
+
+		<ul lang="en-x-a0">
+			<li>
+Added a section for mesh gradients, defining the mesh, meshrow and meshpatch elements. (Renamed 'meshGradient' to 'mesh', 'meshRow' to 'meshrow', and 'meshPatch' to 'meshpatch'.)
+</li>
+			<li>
+Added a section for hatches, defining the hatch and hatchpath elements. (Renamed 'hatchPath' to 'hatchpath'.)
+</li>
+			<li>
+Renamed ‘gradientTransform’ on the 'mesh' element and ‘hatchTransform’ on the 'hatch' element to ‘transform’.
+</li>
+		</ul>
+	</li>
+	<li>
+塗り~server要素の表示-時の挙動を、~UA~styleを利用して定義するように変更した。
+◎
+Change display behavior of paint server elements to be defined using user agent styles.
+</li>
+	<li>
+塗り~server~templateの域外参照に対する共通な取扱いを定義した：
+外部~file参照を許容し，~cloneされた子~内容~用の［
+`use$e 要素の~shadow~DOM~model
+］を利用し，［
+`title$e ／ `desc$e
+］要素が子の~clone時に影響するかどうかに一貫した挙動を定義し，各~要素~用にどの属性が~templateから導出されるかを明示的に定義した
+◎
+Define common handling of paint server template cross-references, allowing external file references, using a use-element shadow DOM model for cloned child content, defining consistent behavior for whether title and desc affect child cloning, and explicitly defining which attributes are derived from the template for each element.
+</li>
+	<li>
+呈示~属性に見かけ上~似ているが そうでない属性についての警告~注記を追加した。
+◎
+Add notes warning about attributes that look like presentation attributes, but aren't.
+</li>
+</ul>
+
+<ul class="changed-since-cr1">
+	<li>
+`SVGGradientElement$I, `SVGPatternElement$I
+は、最早 `SVGUnitTypes$I を実装しなくなった。
+（ `291$issue, `295$pull ）
+◎
+SVGGradientElement and SVGPatternElement no longer implement SVGUnitTypes. Issue discussion Edits
+</li>
+	<li>
+`hatch^e, `hatchpath^e 要素は、~SVGの将来~versionに先送りした。
+（ `449$issue, `451$pull ）
+◎
+Deferred hatch and hatchpath elements to a future version of SVG. Issue discussion Edits
+</li>
+	<li>
+~mesh~gradientは［
+`mesh^e, `meshrow^e, `meshpat^e 
+］要素も含め，~SVGの将来~versionに先送りした。
+（ `449$issue, `452$pull ）
+◎
+Deferred mesh gradients, including mesh, meshrow, and meshpath elements to a future version of SVG. Issue discussion Edits
+</li>
+	<li>
+`solidcolor^e 要素と
+`solid-color^p, `solid-opacity^p
+~propを除去した。
+（ `449$issue, `450$pull ）
+◎
+Removed the solidcolor element and the solid-color and solid-opacity properties. Issue discussion Edits
+</li>
+</ul>
+
+		</section>
+		<section id="masking">
+<h3 title="Clipping, Masking and Compositing chapter (SVG 1.1 only)">K.2.17. `切抜き, ~masking, 組成^sec（章：`•$11 のみ）</h3>
+<ul>
+	<li>
+<p>
+~SVGは、今や
+`CSS Masking^cite `css-masking-1$r
+仕様を参照する。
+◎
+SVG now references CSS Masking [css-masking-1] specification.
+</p>
+		<ul>
+			<li>
+［
+切抜き／~masking
+］用の各種［
+~prop, 要素
+］の定義を除去した。
+◎
+Removed definition of clipping/masking properties and elements.
+</li>
+			<li>
+切抜き／~maskingについての短い序論は残しつつ、
+`CSS Masking^cite
+への参照を追加した。
+◎
+Keep short introduction to clipping/masking and add reference to CSS Masking
+</li>
+		</ul>
+	</li>
+	<li>
+<a href="~COMPOSITING">組成＆混色 仕様</a>への参照を追加した。
+単純~alpha組成の~supportを義務にした。
+◎
+Added reference to Compositing and Blending spec. Simple alpha compositing is mandatory.
+</li>
+	<li>
+~HTMLに~inlineの，最外縁の `svg$e 要素~上では、 `overflow$p ~propは尊重されるべきとした。
+◎
+The overflow property should be respected on the outermost svg elements inline in html.
+</li>
+	<li>
+`切抜き, ~masking, 組成^sec（章：`•$11 ）を，`描画~model^sec（章：`•$2 ）に併合した。
+◎
+Merge Clipping, Masking and Compositing chapter into Rendering Model chapter.
+</li>
+</ul>
+
+
+		</section>
+		<section id="filters">
+<h3 title="Filter Effects chapter (SVG 1.1 only)">K.2.18. `~filter効果^sec（章：`•$11 のみ）</h3>
+
+<ul>
+	<li>
+この章は除去した（ `~filter効果~仕様$ `filter-effects-1$r に置換した）。
+◎
+Removed this chapter (replaced by Filter Effects specification [filter-effects-1]).
+</li>
+</ul>
+
+		</section>
+		<section id="interact">
+<h3 title="Scripting and Interactivity chapter (separate chapters in SVG 1.1)">K.2.19. `~scriptingと対話性^sec（章：`•$2 ）／ `~scripting^sec（章：`•$11 ）, `対話性^sec（章：`•$11 ）</h3>
+
+<ul>
+	<li>
+`tabindex^a 属性を追加した。
+◎
+Added the ‘tabindex’ attribute.
+</li>
+	<li>
+`cursor^e 要素~上の
+<!-- ＊cursor/href -->
+`href^a 属性の定義は、~CSSの様な関数形でない~URLをとるように正した。
+【この記述は、~~意味を成さなくなった（この節の末尾を見よ）。】
+◎
+Corrected the definition of the 'cursor/href' attribute on the 'cursor element' element to take an URL that is not in a CSS-like functional form.
+</li>
+	<li>
+`pointer-events$p に `bounding-box^v ~keywordを追加した。
+◎
+Added the bounding-box keyword to pointer-events.
+</li>
+	<li>
+［
+`SVGLoad^et ／ `SVGAbort^et ／ `SVGError^et ／ `SVGUnload^et
+］を［
+`load^et ／ `abort^et ／ `error^et ／ `unload^et
+］に置換した。
+◎
+Replaced SVGLoad, SVGAbort, SVGError and SVGUnload with load, abort, error and unload respectively.
+</li>
+	<li>
+`load^et ~eventは、［
+`構造的に外部の要素$と, `最外縁の~svg要素$
+］に限り，発火するモノトスル要件を加えた。
+◎
+Required that only structurally external elements and the outermost svg element must fire load events.
+</li>
+	<li>
+［
+`SVGResize^et ／ `SVGScroll^et
+］を［
+`resize^et ／ `scroll^et
+］に置換した。
+◎
+Replaced SVGResize and SVGScroll with resize and scroll respectively.
+</li>
+	<li>
+`DOMActivate^et を除去した。
+◎
+Removed DOMActivate.
+</li>
+	<li>
+［
+`DOMFocusIn^et ／ `DOMFocusOut^et
+］を［
+`focusin^et ／ `focusout^et
+］に置換した。
+`blur^et ~eventを追加した。
+◎
+Replaced DOMFocusIn and DOMFocusOut with focusin and focusout, and added the blur event.
+</li>
+	<li>
+各種 ~keyboard~eventを追加した。
+◎
+Added keyboard events.
+</li>
+	<li>
+各種 変異~eventを除去した。
+◎
+Removed mutation events.
+</li>
+	<li>
+`SVGZoomEvent^et を除去した。
+◎
+Removed SVGZoomEvent.
+</li>
+	<li>
+~shadow~DOM内容は~focus可能かつ対話的であることを明確化した。
+◎
+Clarify that shadow DOM content is focusable and interactive.
+</li>
+	<li>
+~script要素の表示-時の挙動は、~UA~styleを利用して定義するよう変更した。
+◎
+Change display behavior of script elements to be defined using user agent styles.
+</li>
+	<li>
+`cursor^e 要素を非推奨にした。
+`cursor^p の記述を更新した。
+【この記述は、~~意味を成さなくなった（この節の末尾）】
+◎
+Mark cursor element as deprecated, update description of cursor.
+</li>
+</ul>
+
+<ul class="changed-since-cr1">
+	<li>
+`cursor^e 要素, および
+~SVGに特有な `cursor^p 用の定義を除去した。
+（ `449$issue, `455$pull ）
+◎
+Removed the cursor element and the SVG specific definition of the cursor Issue discussion Edits
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2">
+	<li>
+除去された~SVG~DOM付録からの，~eventについての内容を併合した。
+（ `520$issue, `548$pull ）
+◎
+Merged in content on events from the removed SVG DOM appendix. Issue discussion Edits
+</li>
+	<li>
+`pointer-events$p 用に~keyword `auto^v を追加した。
+◎
+Added the auto keyword to pointer-events.
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2 cr3">
+	<li>
+`pointer-events$p において，~raster画像を成す個々の画素の透明度を検査する要件を除去した。
+◎
+Remove requirements on pointer-events for raster images to check individual pixels for transparency.
+</li>
+	<li>
+`zoomAndPan^a 属性と関係する~textを除去した。
+◎
+Remove zoomAndPan attribute and related text.
+</li>
+</ul>
+
+		</section>
+		<section id="linking">
+<h3 title="Linking chapter">K.2.20. `~link法^sec（章：`•$2, `•$11 ）</h3>
+
+<ul>
+	<li>
+`view$e 要素の内容~modelに`~animation要素$を追加した。
+◎
+Added animation elements to the content model of ‘view’.
+</li>
+	<li>
+`Media Fragments^cite
+仕様にて定義される素片~識別子を伴う
+~SVG資源への~linkについての可能性を追加した。
+◎
+Added the possibility to link to SVG resources with fragment identifiers defined by the Media Fragments specification.
+</li>
+	<li>
+`xlink:type^a,
+`xlink:role^a,
+`xlink:arcrole^a,
+`xlink:show^a,
+`xlink:actuate^a
+属性を除去した。
+◎
+Removed the ‘xlink:type’, ‘xlink:role’, ‘xlink:arcrole’, ‘xlink:show’ and ‘xlink:actuate’ attributes.
+</li>
+	<li>
+`~xlink_href$a 属性は、名前空間に属さない `href^a の利用の支持を受けて，非推奨にした。
+◎
+Deprecated the ‘xlink:href’ attribute in favor of using ‘href’ without a namespace.
+</li>
+	<li>
+`~xlink_title$a 属性は、 `title$e 子~要素の利用の支持を受けて，非推奨にした。
+◎
+Deprecated the ‘xlink:title’ attribute in favor of using child ‘title’ elements.
+</li>
+	<li>
+~SVG~view素片では、~space文字も許容されるものとした。
+◎
+Allowed spaces in SVG view fragments.
+</li>
+	<li>
+`pixel:^l, `percent:^l による，空間的~部位を指示する~media素片を解釈する方法を定義した。
+◎
+Defined how "pixel:" and "percent:" spatial media fragments are interpreted.
+</li>
+	<li>
+`view$e 要素への~linkは、［
+~view~boxの座標系により暗黙的に変形して、最も近い先祖の `svg$e 要素を示す
+］ことは，ないようにした。
+◎
+Made linking to ‘view’ elements not cause an implicit view box transformation to show the nearest ancestor ‘svg’ element.
+</li>
+	<li>
+~SVG~view素片~parameterは、対応する属性を初期~値に設定し直さないことを明確化した。
+それまでは指定されてなかった。
+◎
+Clarified that unspecified SVG view fragment parameters do not cause the corresponding attributes to be reset to their initial values.
+</li>
+	<li>
+`view$e 要素の `viewTarget^a 属性と, 対応する~SVG~view素片~parameterを除去した。
+◎
+Removed the ‘viewTarget’ attribute on the ‘view’ element and the corresponding SVG view fragment parameter.
+</li>
+	<li>
+素片のみの~URLは、常に同じ文書を指す。
+◎
+Fragment-only URLs are always same-document.
+</li>
+	<li>
+~HTMLに揃えるため `a$e 要素に属性を追加した。
+◎
+Added additional attributes on ‘a’ element to synchronize with HTML.
+</li>
+	<li>
+~URLと外部~資源~fileを処理するための詳細な指示書きを作成した。
+◎
+Create detailed instructions for processing URLs and external resource files.
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2">
+	<li>
+<p>
+`a$e 要素~上の各種［
+属性, ~IDL属性
+］を~HTMLと調和させた
+— ［
+`href$a, `target$a
+］は除いて（これらは、旧来の理由から，そのままに保守される）。
+特定的には：
+◎
+Harmonized attributes and IDL properties on ‘a’ element with HTML, other than ‘href’ and ‘target’ (which are maintained as-is for legacy reasons). Specifically:
+</p>
+		<ul>
+			<li>
+`ping$a, `referrerpolicy$a
+属性と，それらに対応する~IDL属性を追加した。
+◎
+Added the ‘ping’ and ‘referrerpolicy’ attributes and their matching IDL properties.
+</li>
+			<li>
+`text^m ~IDL属性を追加した。
+◎
+Added the text IDL property.
+</li>
+			<li>
+`download$a 属性~用の空でない値の意味を指定した。
+◎
+Specified the meaning of a non-empty value for ‘download’.
+</li>
+			<li>
+［
+`href$a, `target$a
+］を除く すべての属性を~animate不能にした上で、~IDLにおいては，単純な書込可能な `DOMString^I 表現にした【 `SVGAnimatedString^I 型に代えて】。
+◎
+Made all attributes except ‘href’ and ‘target’ non-animatable, with a simple read/write DOMString representation in the IDL.
+</li>
+		</ul>
+<p>
+（ `315$issue, `409$pull ）
+◎
+Issue discussion Edits
+</p>
+	</li>
+</ul>
+
+		</section>
+		<section id="script">
+<h3 title="Scripting chapter (in SVG 1.1)">K.2.21. `~scripting^sec（章：`•$11 ）</h3>
+
+<ul>
+	<li>
+`contentScriptType^a 属性を除去した。
+◎
+Removed the ‘contentScriptType’ attribute.
+</li>
+	<li>
+AnimationEvents から `onload^m を除去した。
+◎
+Removed ‘onload’ from AnimationEvents.
+</li>
+	<li>
+この章~全体を`~scriptingと対話性^sec（章：`•$2 ）に併合した。
+◎
+Merged this entire chapter into the Interactivity chapter.
+</li>
+</ul>
+
+		</section>
+		<section id="animate">
+<h3 title="Animation chapter (SVG 1.1 only)">K.2.22. `~animation^sec（章：`•$11 のみ）</h3>
+
+<ul>
+	<li>
+この章は、別々の
+<a href="https://svgwg.org/specs/animations/">SVG Animations</a>
+~moduleに移動した。
+◎
+Moved this chapter to a separate SVG Animations module.
+</li>
+	<li>
+一部の参考~textは、新たな Animation 付録に移動した。
+◎
+Some informative text moved to a new Animation appendix.
+</li>
+</ul>
+
+		</section>
+		<section id="fonts">
+<h3 title="Fonts chapter (SVG 1.1 only)">K.2.23. `~font^sec（章：`•$11 のみ）</h3>
+
+<ul>
+	<li>
+WOFF についての要件を追加して，内容を配列し直した。
+◎
+Added WOFF requirement, rearranged content.
+</li>
+	<li>
+この章を除去した。
+そこに含まれていた SVG Fonts 特能
+— 次に挙げる要素, および それらに対応する~IDL~interfaceも含めて（残りの内容は `~text^sec（章：`•$2 ）に併合した）
+⇒＃
+`font^e,
+`glyph^e,
+`missing-glyph^e,
+`hkern^e,
+`vkern^e,
+`font-face^e,
+`font-face-src^e,
+`font-face-uri^e,
+`font-face-format^e,
+`font-face-name^e
+◎
+Removed this chapter and the SVG Fonts feature it contained, including the ‘font’, ‘glyph’, ‘missing-glyph’, ‘hkern’, ‘vkern’, ‘font-face’, ‘font-face-src’, ‘font-face-uri’, ‘font-face-format’ and ‘font-face-name’ elements and their corresponding IDL interfaces. (Remaining content merged into the Text chapter.)
+</li>
+</ul>
+
+		</section>
+		<section id="metadata">
+<h3 title="Metadata chapter (SVG 1.1 only)">K.2.24. `~metadata^sec（章：`•$11 のみ）</h3>
+
+<ul>
+	<li>
+`~metadata^sec（章：`•$11 ）は、`文書~構造^sec（章：`•$2 ）に併合した。
+◎
+Merged the metadata chapter with the document structure chapter.
+</li>
+</ul>
+
+		</section>
+		<section id="backward">
+<h3 title="Backwards Compatibility chapter (SVG 1.1 only)">K.2.25. `後方-互換性^sec（章：`•$11 のみ）</h3>
+
+<ul>
+	<li>
+（実質的に参考であった）この章を除去した。
+◎
+Removed this chapter (which had been effectively informative).
+</li>
+</ul>
+
+		</section>
+		<section id="extend">
+<h3 title="Extensibility chapter (SVG 1.1 only)">K.2.26. `拡張能^sec（章：`•$11 のみ）</h3>
+
+<ul>
+	<li>
+`foreignObject$e を`~graphics要素$にした。
+◎
+Made ‘foreignObject’ a graphics element.
+</li>
+	<li>
+`foreignObject$e 要素の
+`width^a, `height^a
+を呈示~属性にした。
+◎
+Made ‘width’ and ‘height’ presentation attributes on the ‘foreignObject’ element.
+</li>
+	<li>
+この章は、新たな`埋込d内容^sec（章：`•$2 ）に併合した（後に、`文書~構造^sec（章：`•$2 ）の `外来の名前空間と私用~data$sec へ移動した。）
+◎
+Merge this chapter into the new Embedded Content chapter (and then later moved the "Foreign namespaces and private data" section to the Document Structure chapter.)
+</li>
+</ul>
+
+		</section>
+		<section id="svgdtd">
+<h3 title="Document Type Definition appendix (SVG 1.1 only)">K.2.27. `文書~型~定義^sec（付録：`•$11 のみ）</h3>
+
+<ul>
+	<li>
+~SVG-2は~DTDを通して定義されなくなったので、この付録は除去した。
+◎
+Removed this appendix, as SVG 2 is not defined in terms of a DTD.
+</li>
+</ul>
+
+		</section>
+
+		<section id="svgdom">
+<h3 title="SVG Document Object Model (DOM)">K.2.28. `~SVG~DOM^sec（付録：`•$11 のみ）</h3>
+
+<ul>
+	<li>
+［
+DOM4,
+`DOM Level 2 Views^cite,
+`UI Events^cite,
+`DOM Level 2 Style^cite/CSS
+］に対する 中核~DOM~support要件を更新した。
+◎
+Update core DOM support requirement to DOM4, DOM Level 2 Views, UI Events, and DOM Level 2 Style/CSS.
+</li>
+	<li>
+`SVGException^I ~interfaceは除去した。
+◎
+'SVGException' interface is removed.
+</li>
+	<li>
+（非推奨にされた）`hasFeature()^m ~methodの節を除去した。
+◎
+Section on (deprecated) 'hasFeature' method removed.
+</li>
+	<li>
+~eventと~errorの取扱いについての非~SVGに特有な~textを除去した。
+◎
+Non-SVG specific text about event and error handling removed.
+</li>
+	<li>
+`CSSValue^I 型に依拠していた ~interface／~methodを除去した（すでに~SVG-11にて非推奨にされていた）。
+◎
+Interfaces and methods that relied on the 'CSSValue' type removed (they were already deprecated in SVG 1.1).
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2">
+	<li>
+<p>
+他の~DOM仕様への依存関係を以下に従って更新した：
+◎
+Dependencies on other DOM specifications updated as follows:
+</p>
+		<ul>
+			<li>
+DOM 4 を最低限の要件とした
+— ~DOM~LS【 `dom$r 】は “ベキ” として。
+◎
+Make DOM 4 a minimum requirement, with DOM living standard a "should".
+</li>
+			<li>
+廃用にされた
+`DOM View^cite
+仕様の~support要件は除去した。
+◎
+Remove requirement for support of obsolete DOM View spec.
+</li>
+			<li>
+`DOM Level 2 Style^cite
+に対する要件を~CSSOMにも定義されている~interfaceのみを含むよう更新した
+— ~CSSOMの全部的な~supportは “ベキ” として。
+（それに伴い “`DOM Level 2 CSS^cite との関係性” 節は除去した。）
+◎
+Update the requirement on DOM Level 2 Style to only include interfaces also defined in CSSOM, with full support for CSSOM as a "should". (And remove the "Relationship with DOM Level 2 CSS" section.)
+</li>
+			<li>
+`Geometry Interfaces Module Level 1^cite
+を要件として追加した。
+◎
+Add Geometry Interfaces Module Level 1 as a requirement.
+</li>
+			<li>
+`UI Events^cite
+要件を~~補完する規範的な要件として，
+`Clipboard API and events^cite
+を追加した。
+◎
+Add Clipboard API and events as a normative requirement, complementary to the UI Events requirement.
+</li>
+		</ul>
+	</li>
+	<li>
+~SVG~DOM要件は、他の仕様にて定義される要素まで拡張することを明確化した。
+◎
+Clarify that SVG DOM requirements extend to elements defined in other specifications.
+</li>
+	<li>
+~SVG名前空間に属する未知な要素の取扱い用の要件を追加した
+⇒
+~browserが現在~行うように（ `SVGElement^I ~instanceとして）取扱う“モノトスル” ものとして／
+`SVGUnknownElement^I ~interfaceを実装する “ベキである” ものとして（それは~risk下にあるが）
+◎
+Add a requirement for handling unknown elements in the SVG namespace: "must" handle as browsers currently do (as SVGElement instances); "should" implement SVGUnknownElement interface (though that is at risk).
+</li>
+	<li>
+`textLength$m の初期化-用の特別な規則は除去した
+— より明瞭な，その属性の動的な初期~値の定義への支持を受けて。
+◎
+Remove the special rule for initializing textLength, in favor of a clearer definition of the attribute's dynamic initial value.
+</li>
+	<li>
+~objの初期化-法についての規則は、［
+初期~値 “（なし）” を反映するときに限り適用される
+］こと, および［
+他の仕様（例： `Geometry^cite ）に定義される~interfaceにも適用される
+］ことを明確化した。
+◎
+Clarify that rules about initializing objects only apply when reflecting (none) initial values, and also apply to interfaces defined in other specifications (e.g., Geometry).
+</li>
+	<li>
+“`UI Events との関係性^sec” 節を更新した
+— ほとんどの~event~handler属性は、すべての要素~上で可用になり，~clipboard~APIの~eventも可用になることを反映するために。
+~softwareに対する規範的な要件を明確化するよう言い回しを更新した。
+◎
+Update section "Relationship with UI Events" to reflect that most event handler attributes are available on all elements, that clipboard API events are available. Wording is updated to clarify normative requirements on software.
+</li>
+	<li>
+この付録の内容~全体を，`基本~data型と基本~interface^sec（章：`•$2 ）の中へ併合した
+— “UI Events との関係性” 節は`~scriptingと対話性^sec（章：`•$2 ）の中へ併合されたことを除いて。
+◎
+Merge the entire content of this appendix into the Basic Data Types chapter, except for the section "Relationship with UI Events", which is merged into the Interactivity chapter.
+</li>
+	<li>
+（以上の `520$issue, `548$pull ）
+◎
+Issue discussion Edits
+</li>
+</ul>
+
+
+		</section>
+		<section id="idl">
+<h3 title="IDL Definitions appendix">K.2.29. `~IDL定義^sec（付録：`•$2, `•$11 ）</h3>
+
+<ul>
+	<li>
+標準な~Web~IDL形式に変換した。
+◎
+Converted to the standard WebIDL format.
+</li>
+	<li>
+関連な章に定義される他の変更点を~~反映した。
+◎
+Other changes as defined in the relevant chapters.
+</li>
+</ul>
+
+		</section>
+		<section id="java">
+<h3 title="Java Language Binding appendix (SVG 1.1 only)">K.2.30. `Java 言語束縛^sec（付録：`•$11 のみ）</h3>
+
+<ul>
+	<li>
+言語束縛は、今や~Web~IDLにより定義されるので、この付録は除去した。
+◎
+Removed this appendix, as language bindings are now defined by Web IDL.
+</li>
+</ul>
+
+		</section>
+		<section id="escript">
+<h3 title="ECMAScript Language Binding appendix (SVG 1.1 only)">K.2.31. `ECMAScript 言語束縛^sec（付録：`•$11 のみ）</h3>
+
+<ul>
+	<li>
+言語束縛は、今や~Web~IDLにより定義されるので、この付録は除去した。
+◎
+Removed this appendix, as language bindings are now defined by Web IDL.
+</li>
+</ul>
+
+		</section>
+		<section id="impreqs">
+<h3 title="K.2.32. Implementation Notes appendix (was Implementation Requirements in SVG 1.1)">K.2.32. `実装~注記^sec（付録：`•$2）／ `実装~要件^sec（付録：`•$11 ）</h3>
+
+<ul class="changed-since-cr1">
+	<li>
+実装されていない `out-of-range^en ~flag 値に関する注記は、除去した。
+（ `324$issue, `516$pull ）
+◎
+Removed un-implemented out-of-range flag values note. Issue discussion Edits
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2">
+	<li>
+<p>
+規範的な各~節をいくつかの章の中へ移動した上で、その付録を “実装~注記” に改称した：
+◎
+Moved normative sections into chapters, and renamed appendix to Implementation Notes:
+</p>
+		<ul>
+			<li>
+~error処理は、今や，`適合性の判定基準^sec（章：`•$2 ）内に。
+◎
+Error Processing is now in Conformance Criteria.
+</li>
+			<li>
+値の切詰ngは、今や，`基本~data型と基本~interface^sec（章：`•$2 ）内に。
+`color^p と `opacity^p についての節は除去した（これらの~propにおける切詰ngの挙動は `CSS Color^cite にて定義される）。
+◎
+Clamping Values is now in Data Types and Interfaces, and sections re colors and opacity have been removed (clamping behavior of these properties is defined in CSS Color).
+</li>
+			<li>
+`Elliptical Arc^en 実装~注記の規範的な各部は、今や，~path用の他の実装~要件とともに`~path^sec（章：`•$2 ）内に。
+◎
+The normative parts of the Elliptical Arc Implementation Notes are now in the Paths chapter, with other implementation requirements for paths
+</li>
+			<li>
+~text選択~用の実装~注記は、今や，`~text^sec（章：`•$2 ）内に
+— ~text選択の主な節とともに。
+◎
+Text selection implementation notes is now in Text, with the main section on Text Selection.
+</li>
+			<li>
+塗ng用の実装~注記は、今や，`適合性の判定基準^sec（章：`•$2 ）内に。
+◎
+Printing Implementation Notes is now in Conformance Criteria.
+</li>
+		</ul>
+<p>
+（ `520$issue, `548$pull ）
+◎
+Issue discussion Edits
+</p>
+	</li>
+</ul>
+
+
+		</section>
+		<section id="access">
+<h3 title="Accessibility Support appendix">K.2.33. `~accessibilityの~support^sec（付録：`•$2, `•$11 ）</h3>
+
+<ul>
+	<li>
+完全に書直して更新した。
+◎
+Completely re-written and updated.
+</li>
+</ul>
+
+
+		</section>
+		<section id="i18n">
+<h3 title="Internationalization Support appendix (SVG 1.1 only)">K.2.34. `国際-化~support^sec（付録：`•$11 のみ）</h3>
+
+<ul>
+	<li>
+この付録は除去した。
+◎
+Removed this appendix.
+</li>
+</ul>
+
+		</section>
+		<section id="minimize">
+<h3 title="Minimizing SVG File Sizes appendix (SVG 1.1 only)">K.2.35. `~SVG~file~sizeの最小~化^sec（付録：`•$11 のみ）</h3>
+
+<ul>
+	<li>
+この付録は除去した。
+◎
+Removed this appendix.
+</li>
+</ul>
+
+		</section>
+		<section id="animate-appendix">
+<h3 title="Animating SVG Documents appendix (SVG 2 only)">K.2.36. `~SVG文書の~animate法^sec（付録：`•$2 のみ）</h3>
+
+<ul>
+	<li>
+この付録を追加した。
+◎
+Added this appendix.
+</li>
+</ul>
+
+		</section>
+		<section id="refs">
+<h3 title="References appendix">K.2.37. `参照文献^sec（付録：`•$2, `•$11 ）</h3>
+
+<ul>
+	<li>
+`CSS2^cite への参照（規範的）を除去した。
+◎
+Removed normative reference to CSS2.
+</li>
+	<li>
+`DOM Level 3 Core^cite への参照（参考）を除去した。
+◎
+Removed informative reference to DOM Level 3 Core.
+</li>
+	<li>
+`DOM Level 1 Core^cite への参照は規範的から参考に変更した。
+◎
+Changed normative reference to DOM Level 1 Core to be informative.
+</li>
+	<li>
+`DOM Level 2 Core^cite への参照（規範的）は DOM4 に変更した。
+◎
+Changed normative reference from DOM Level 2 Core to DOM4.
+</li>
+	<li>
+`SMIL 3^cite への参照は参考から規範的に変更した。
+◎
+Changed informative reference to SMIL 3 to be normative.
+</li>
+	<li>
+次に挙げる文献への参照（規範的）を追加した
+⇒＃
+`CSS3 Color^cite,
+`CSS3 Fonts^cite,
+`CSS3 Line Box^cite,
+`CSS3 Transforms^cite,
+`CSS3 UI^cite,
+`CSS3 Values and Units^cite,
+`CSS4 Images^cite,
+`Filter Effects^cite,
+`WOFF^cite,
+`Web IDL^cite
+◎
+Added normative references to CSS3 Color, CSS3 Fonts, CSS3 Line Box, CSS3 Transforms, CSS3 UI, CSS3 Values and Units, CSS4 Images, Filter Effects, WOFF, Web IDL.
+</li>
+	<li>
+`CSS Transitions^cite,
+`CSS Animations^cite
+への参照（参考）を追加した。
+◎
+Added informative references to CSS 3 Transitions and Animations.
+</li>
+	<li>
+`DOM Level 2 Events^cite,
+`DOM Level 3 Events^cite
+への参照は、
+`UI Events^cite,
+`DOM 4^cite
+への参照（規範的）に置換した。
+◎
+Replaced references from DOM Level 2 Events and DOM Level 3 Events to normative references to UI Events and DOM 4.
+</li>
+	<li>
+`WAI-ARIA 1.1^cite
+への参照（規範的）を追加した。
+◎
+Added normative reference to WAI-ARIA 1.1.
+</li>
+	<li>
+`Shadow DOM^cite
+への参照（規範的）を追加した。
+◎
+Added normative reference to Shadow DOM.
+</li>
+</ul>
+
+<ul class="changed-since-cr1 cr2">
+	<li>
+`DOM Level 2 Views^cite への参照（規範的）は除去した。
+◎
+Removed normative reference to DOM Level 2 Views.
+</li>
+	<li>
+`Geometry Interfaces^cite への参照（規範的）を追加した。
+◎
+Added normative reference to Geometry Interfaces.
+</li>
+	<li>
+`CSSOM^cite への参照（規範的）を追加した。
+◎
+Added normative reference to CSSOM.
+</li>
+	<li>
+`Clipboard API and events^cite への参照（規範的）を追加した。
+◎
+Added normative reference to Clipboard API and events.
+</li>
+</ul>
+
+
+		</section>
+		<section id="other-appendix">
+<h3 title="Element, Attribute, and Property index appendices">K.2.38. `要素~索引^sec（付録：`•$2, `•$11 ）, `属性~索引^sec（付録：`•$2, `•$11 ）, `~prop索引^sec（付録：`•$2, `•$11 ）</h3>
+
+<ul>
+	<li>
+関連な章にて述べられる変更点を~~反映した。
+◎
+Changes as described in the relevant chapters.
+</li>
+	<li>
+~mouse `wheel^et ~event用の属性の名前を `onwheel^l に~~正した。
+◎
+Mouse wheel event attribute is named "onwheel".
+</li>
+
+</ul>
+
+		</section>
+		<section id="idlindex">
+<h3 title="IDL Index appendix (SVG 2 only)">K.2.39. `~IDL索引^sec（付録：`•$2 のみ）</h3>
+
+<ul>
+	<li>
+この付録を追加した。
+◎
+Added this appendix.
+</li>
+</ul>
+
+		</section>
+		<section id="feature">
+<h3 title="Feature Strings (SVG 1.1 only)">K.2.40. `特能~文字列^sec（付録：`•$11 のみ）</h3>
+
+<ul>
+	<li>
+この付録は除去した。
+◎
+Removed this appendix.
+</li>
+</ul>
+
+		</section>
+</main>

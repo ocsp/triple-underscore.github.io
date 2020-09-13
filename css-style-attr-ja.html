@@ -1,0 +1,451 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Style Attributes</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+	const unicode_map = this.unicode_map;
+
+	return this.html.replace(
+		/`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#ref-${key}`;//.toLowerCase()
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Style Attributes
+spec_date:2015-04-10
+	real:161227
+trans_update:2015-10-10
+source_checked:141125
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-style-attr-1/
+spec_status:ED
+ref_id_prefix:ref-
+	conformance:css
+copyright:2017,permissive
+trans_1st_pub:2015-10-10
+
+
+●●class_map
+prod:production
+css:css
+a:attr
+
+●●tag_map
+prod:code
+css:code
+a:code
+c:code
+
+●●original_id_map
+style-attribute0:
+
+
+●●link_map
+
+
+~CSS~style属性:#style-attribute0
+~style属性:#style-attribute0
+
+作者:~CASCADE#cascade-origin-author
+出自:~CASCADE#cascading-origins
+詳細度:~CASCADE#cascade-specificity
+~cascade:~CASCADE#cascading
+	宣言
+	選択子
+	＊スタイルシート
+
+
+●●words_table1
+
+
+●●words_table
+
+	●仕様
+CSS2:
+
+	●未分類
+解釈器:interpreter::~::インタープリタ
+片:fragment:~
+括弧:brace:~
+不正形の:malformed::不正な形の
+後続-:follow:~
+開始:start:~
+文:statement:~
+区切る:delimitする:~
+開き:open:~
+閉じ:close:~
+終了-:terminate:~
+出自:origin:~
+詳細度:specificity:~
+
+	~cascade法:cascading
+	単に:merely
+	属-:belong
+	高い:higher
+	区切って:delimiting
+
+
+●●ref_normative
+[CSS21]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. W3C Recommendation. URL: http://www.w3.org/TR/2011/REC-CSS2-20110607 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. RFC 2119. URL: https://www.ietf.org/rfc/rfc2119.txt
+
+
+●●ref_informative
+[HTML401]
+    Dave Raggett; Arnaud Le Hors; Ian Jacobs. HTML 4.01 Specification. 24 December 1999. W3C Recommendation. URL: http://www.w3.org/TR/1999/REC-html401-19991224 
+[SVG11]
+    Erik Dahlström; et al. Scalable Vector Graphics (SVG) 1.1 (Second Edition). 16 August 2011. W3C Recommendation. URL: http://www.w3.org/TR/2011/REC-SVG11-20110816/
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Style Attributes</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	http://www.w3.org/TR/css-style-attr/
+編集者草案
+	https://drafts.csswg.org/css-style-attr/
+	(<a href="https://hg.csswg.org/drafts/log/tip/css-style-attr/Overview.src.html">change log</a>)
+以前のバージョン
+	http://www.w3.org/TR/2013/PR-css-style-attr-20131003/
+
+編集
+	<a href="http://tantek.com/" rel="author" lang="tr">Tantek Çelik</a> (<a href="https://mozilla.org/">Mozilla</a>, and formerly at <a href="http://microsoft.com/">Microsoft Corporation</a>) &lt;<a href="mailto:tantek@cs.stanford.edu">tantek@cs.stanford.edu</a>&gt;
+
+	<a href="http://fantasai.inkedblade.net/contact">ElikaJ. Etemad / fantasai</a> (<a href="https://mozilla.org/">Mozilla</a>)
+前任編集者
+	<a href="http://www.w3.org/People/Bos/">Bert Bos</a> (<a href="http://www.w3.org/">W3C</a>), &lt;<a href="mailto:bert@w3.org">bert@w3.org</a>&gt;
+	Marc Attinasi (AOL/Netscape), &lt;<a href="mailto:attinasi@netscape.com">attinasi@netscape.com</a>&gt;
+
+テスト一式
+	http://test.csswg.org/suites/css-style-attr/nightly-unstable/
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-style-attr-1
+
+</script>
+
+</head>
+
+<body>
+
+<header>
+	<hgroup>
+<h1>CSS スタイル属性 — CSS Style Attributes</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+HTML `HTML401$r ／ SVG `SVG11$r
+などの~markup言語は、ほとんどの要素~上にて，［
+その要素に適用される~inline~style情報を保持する
+］ための，`~style属性$を供する。
+この~moduleは、そのような~style属性にて利用し得る CSS 片の構文とその解釈について述べる。
+◎
+Markup languages such as HTML [HTML401] and SVG [SVG11] provide a style attribute on most elements, to hold inline style information that applies to those elements. This module describes the syntax and interpretation of the CSS fragment that can be used in such style attributes.
+</p>
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公の複製です…
+【以下，この節の内容は<a href="css-common-ja.html#status">~CSS日本語訳 共通ページ</a>に委譲】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+<p>
+一部の文書~形式は、作者に［
+文書~内の特定の要素に~style情報を直に適用する
+］ことを許可する
+<dfn id="style-attribute">~style属性</dfn>
+を備えている。
+この仕様は、
+`~CSS~style属性@
+— 値として~CSSを受容する~style属性（
+"`style^c" と命名されるものに限られない） —
+を定義する文書~形式に対し、その構文, およびその値の解釈を定義する。
+◎
+Some document formats have a style attribute to permit the author to directly apply style information to specific elements in documents. If a document format defines a style attribute (whether named ‘style’ or something else) and the attribute accepts CSS as its value, then this specification defines that style attribute’s syntax and interpretation.
+</p>
+
+<div class="example">
+
+<p>
+次の例は、
+HTML `HTML401$r
+における
+`style^a 属性の利用を示すものである：
+◎
+The following example shows the use of the style attribute in HTML [HTML401]:
+</p>
+
+<pre class="lang-html">
+&lt;p style="<mark>color: #090; line-height: 1.2</mark>"&gt;...&lt;/p&gt;
+</pre>
+
+</div>
+
+	</section>
+	<section id="conformance">
+<h2 title="Conformance">2. 適合性</h2>
+
+<p class="trans-note">【
+この節の他の内容は
+<a href="css-common-ja.html#conformance">~CSS日本語訳 共通ページ</a>
+に委譲
+】</p>
+
+<p>
+文書／実装は，この仕様 ~~単独には適合し得ないが、`~CSS~style属性$を備える文書~言語の定義に従って，~style属性の取扱いも含めて~CSSを実装するとき、この仕様における適合性の要件を満たすならば、適合性を主張できる。
+◎
+A document or implementation cannot conform to CSS Style Attributes alone, but can claim conformance to CSS Style Attributes if it satisfies the conformance requirements in this specification when implementing CSS together with style attribute handling as defined in a document language that has one or more CSS style attributes.
+</p>
+
+<p>
+この仕様への適合性は、次の二つの~~主体に定義される：
+◎
+Conformance to CSS Style Attributes is defined for two classes:
+</p>
+
+<dl>
+	<dt>文書（ `document^en ）</dt>
+	<dd>
+何らかの要素に~style属性を定義するような文書~言語で表現される文書。
+◎
+A document represented in a document language that defines a style attribute for one or more of its elements.
+</dd>
+
+	<dt>解釈器（ `interpreter^en ）</dt>
+	<dd>
+文書, および
+それに結付けられている~style情報
+の意味論を解釈するもの（ほとんどの~CSS~UAは，ここに分類される）。
+◎
+Someone or something that interprets the semantics of a document and its associated style information. (Most CSS user agents fall under this category.)
+</dd>
+</dl>
+
+	</section>
+	<section id="syntax">
+<h2 title="Syntax and Parsing">3. 構文と構文解析</h2>
+
+<p>
+`~style属性$の値は、~CSS
+<a href="~CSS22/syndata.html#rule-sets">宣言~block</a>
+の内容（~blockを区切る括弧は除く）の構文に合致しなければナラナイ。
+その正式な文法は
+<a href="~CSS22/syndata.html#syntax">~CSS中核~文法</a>
+の用語と表記規約を通して，以下に与えられる：
+【！term 条項／生成規則／~token？】
+ -->
+◎
+The value of the style attribute must match the syntax of the contents of a CSS declaration block (excluding the delimiting braces), whose formal grammar is given below in the terms and conventions of the CSS core grammar:
+</p>
+
+<pre class="prod">
+style-attribute
+  : S* declaration-list
+  ;
+
+declaration-list
+    : declaration [ ';' S* declaration-list ]?
+    | at-rule declaration-list
+    | /* empty */
+    ;</pre>
+
+<p class="note">注記：
+CSS2.1 の規約に従って、~comment~tokenは，上の規則には示されていない。
+◎
+Note that following the CSS2.1 convention, comment tokens are not shown in the rule above.
+</p>
+
+<p>
+解釈器は、`~style属性$の値を［
+通常の~CSS~stylesheetにおける宣言~block内容の構文解析に適用されるものと同じ，前方-互換 構文解析~規則
+］を利用して，構文解析するモノトスル（
+<a href="~CSS22/syndata.html">CSS2.1 仕様の 4 章</a> `CSS21$r
+を見よ）。
+加えて，~UAは、［
+宣言／~at-rule
+］の開始（すなわち `IDENT^prod ~token, または `ATKEYWORD^prod ~token）を予期する所で，予期されない~tokenを見出したときは、その~tokenは，不正形の宣言の最初の~tokenであると見なされる。
+この場合、どの~tokenを無視するかを決定する際に，不正形の文（ `statement^prod ）ではなく，不正形の宣言（ `declaration^prod ）に対する規則が利用される。
+◎
+The interpreter must parse the style attribute's value using the same forward-compatible parsing rules that apply to parsing declaration block contents in a normal CSS style sheet (see chapter 4 of the CSS2.1 specification [CSS21]), with the following addition: when the UA expects the start of a declaration or at-rule (i.e., an IDENT token or an ATKEYWORD token) but finds an unexpected token instead, that token is considered to be the first token of a malformed declaration. I.e., the rule for malformed declarations, rather than malformed statements, is used to determine which tokens to ignore in that case.
+</p>
+
+<p class="note">注記：
+`~CSS~style属性$の構文には、宣言~listを区切る開き括弧は無いので、~style属性の値における閉じ括弧（ `}^c ）は，~style~dataを終了させない
+— それは単に無効な~tokenになる。
+◎
+Note that because there is no open brace delimiting the declaration list in the CSS style attribute syntax, a close brace (}) in the style attribute's value does not terminate the style data: it is merely an invalid token.
+</p>
+
+<div class="note">
+
+<p>注記：
+文法が許容するとしても、`~style属性$にて妥当な~at-ruleは，現時点では定義されていない。
+構文解析~規則は前方-互換であり、そのような~at-ruleに後続する宣言は，無視されない：
+◎
+Although the grammar allows it, no at-rule valid in style attributes is define at the moment. The forward-compatible parsing rules are such that a declaration following an at-rule is not ignored:
+</p>
+
+<pre class="lang-html">
+&lt;span style="@unsupported { splines: reticulating } color: green"&gt;
+</pre>
+
+【！"@unsupported" の "{}" の中身も無視されることになる】
+
+</div>
+
+	</section>
+	<section id="interpret">
+<h2 title="Cascading and Interpretation">4. ~cascade法と解釈</h2>
+
+<p>
+`~style属性$ 内の宣言は、その属性を有する要素に適用される。
+この宣言は、`~cascade$においては，［
+`出自$は`作者$であって, `詳細度$はどの選択子よりも高い
+］ものと見なされる。
+`~style属性$が~stylesheetと伴にどのように~cascadeされるかについては、
+`CSS21$r にて
+<a href="~CSS22/cascade.html#specificity">定義される</a>。
+属性の値を構文解析する際の ~style~data内の相対~URLは、`~style属性$を有する要素（あるいは，要素ごとの解決が【文書~言語にて】定義されていない場合は，文書【の~URL】）に相対的に解決するモノトスル。
+【！ so dynamic changes to the base URL don't affect the CSS Hixie 】
+◎
+The declarations in a style attribute apply to the element to which the attribute belongs. In the cascade, these declarations are considered to have author origin and a specificity higher than any selector. CSS2.1 defines how style sheets and style attributes are cascaded together. [CSS21] Relative URLs in the style data must be resolved relative to the style attribute's element (or to the document if per-element resolution is not defined) when the attribute's value is parsed.
+</p>
+
+<p>
+~cascade法における相違は別として、`~style属性$内の宣言は，［
+それが，要素に適用される~CSS~style規則にて与えられていたとき
+］と正確に同じに解釈するモノトスル。
+◎
+Aside from the differences in cascading, the declarations in a style attribute must be interpreted exactly as if they were given in a CSS style rule that applies to the element.
+</p>
+
+<p>
+CSS Working Group は、文書~言語が，単独の要素に複数種の`~CSS~style属性$を許容しないことを強く推奨する。
+複数種の`~CSS~style属性$が許容される文書~言語においては、それぞれを独立に構文解析して，別々の~style規則として扱うモノトスル
+— それらの順序付け
+【どの属性による~styleがより優先されるか】
+は、文書~言語が定義するベキである
+— さもなければ未定義とする。
+◎
+The CSS Working Group strongly recommends that document languages do not allow multiple CSS style attributes on a single element. If a document language allows multiple CSS style attributes, each must be parsed independently and treated as a separate style rule, the ordering of which should be defined by the document language, else is undefined.
+</p>
+
+	</section>
+	<section id="changes">
+<h2 title="Changes">5. 変更点</h2>
+
+<p>
+<a href="http://www.w3.org/TR/2013/PR-css-style-attr-20131003/">2013 年 10 月 03 日付 勧告案</a>
+からの変更点は：
+◎
+Changes since the 2013-10-03 Proposed Recommendation are:
+</p>
+
+<ul>
+	<li>
+将来の拡張を許容するため、宣言~list内の ~at-ruleも構文解析するようにされた。
+◎
+Parse at-rules in declaration lists to allow future extension.
+</li>
+</ul>
+
+	</section>
+	<section id="ack">
+<h2 title="Acknowledgments">6. 謝辞</h2>
+
+<p>
+次の方々からの~feedbackに：
+</p>
+
+<p lang="en-x-a0">
+Thanks to feedback from Daniel Glazman, Ian Hickson, Eric A. Meyer, Björn Höhrmann.
+</p>
+
+	</section>
+</main></div>

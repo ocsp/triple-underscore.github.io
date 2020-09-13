@@ -1,0 +1,5991 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Dependencies （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+<style>
+
+.js-method {
+	color: var(--js-color);
+}
+
+.xattr {
+	font-family: monospace0, monospace;
+	color: black;
+}
+
+.baseline {
+	font-family: sans-serif0, sans-serif;
+}
+
+</style>
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	PAGE_DATA.link_map = PAGE_DATA.link_map.replace(
+		/\n#(.+)\n(.+?):/g, '\n$2!:$1\n$2:'
+	);
+	const source_data = {
+//		toc_main: 'MAIN',
+		generate: expand,
+	};
+
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w~一-鿆]+|`(.+?)([$@!\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case '':
+	break;
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'm':
+case 'hd': // event handler
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'sc': // url scheme
+	text = key.replace(/_/, ':');
+	break;
+case 'ps':
+	text = `:${key}`;
+	break;
+case 'h': // http header
+	text = `\`<code class="header">${text}</code>\``;
+	break;
+case 't': // css type
+	text = `&lt;${key}&gt;`;
+	break;
+case 'jS': // JS well-known symbol
+	text = `@@${key}`;
+	break;
+case 'jI': // JS intrinsic objects
+	text = `%${key}%`;
+	break;
+case 'at':
+	text = `@${key}`;
+	break;
+case 'xA': // xattr
+	text = `[${key}]`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	key = klass ? (klass + '.' + key) : key;
+	href = link_map[key] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	case '!':
+		const id = link_map[key + '!'];
+		if(!id){
+			return match;
+		}
+		text = `<dfn id="${id}"><a href="${href}">${text}</a></dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+●●options
+
+spec_date:2020-08-21
+trans_update:2020-08-22
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/infrastructure.html
+	abbr_url:HTMLdep
+trans_1st_pub:2016-02-14
+
+
+●●class_map
+e:element
+a:attr
+et:event-type
+sc:scheme
+ps:pseudo
+css:css
+p:property
+bL:baseline
+at:css
+v:value
+P:production
+dir:directive
+E:error
+xA:xattr
+sl:js-slot
+js:js-other
+jS:js-symbol
+jA:abstract
+jM:js-method
+jC:js-class
+jI:js-intrinsic
+jv:js-value
+t:type
+
+●●tag_map
+I:code
+m:code
+E:code
+xA:code
+hd:code
+c:code
+e:code
+a:code
+sc:code
+et:code
+p:code
+P:code
+ps:code
+css:code
+bL:span
+dir:code
+sl:span
+js:span
+jA:span
+jS:code
+jI:code
+jC:code
+jM:code
+jv:code
+at:code
+v:code
+t:var
+i:i
+cite:cite
+
+
+●●original_id_map
+
+
+●●link_map
+
+
+
+e.dialog:~HEinteractive#the-dialog-element
+
+~HTML構文:~HTMLwriting#syntax
+~XML構文:~HTMLxml#the-xhtml-syntax
+
+文字~符号化法:~HTMLINFRA#encoding
+符号化法:~HTMLINFRA#encoding
+
+
+	●●依存関係
+	形式：#%id（改行）%用語:%link
+
+	●INFRA
+#while
+~WHILE:~INFRA#iteration-while
+#continue
+~CONTINUE:~INFRA#iteration-continue
+#break
+~BREAK:~INFRA#iteration-break
+#implementation-defined
+実装定義:~INFRA#implementation-defined
+#tracking-vector
+追跡~行路:~INFRA#tracking-vector
+#code-point
+符号位置:~INFRA#code-point
+#character
+文字:~INFRA#code-point
+#surrogate
+~surrogate:~INFRA#surrogate
+#scalar-value
+~scalar値:~INFRA#scalar-value
+#noncharacter
+非文字:~INFRA#noncharacter
+#string
+文字列:~INFRA#string
+#code-unit
+符号単位:~INFRA#code-unit
+#length
+長さ:~INFRA#string-length
+#code-point-length
+符号位置~長さ:~INFRA#string-code-point-length
+#case-sensitive
+一致する:~INFRA#string-is
+#scalar-value-string
+~scalar値~文字列:~INFRA#scalar-value-string
+#control-characters
+制御~文字:~INFRA#control
+#space-characters
+~ASCII空白:~INFRA#ascii-whitespace
+#ascii-digits
+~ASCII数字:~INFRA#ascii-digit
+#uppercase-ascii-hex-digits
+~ASCII~hex数字（大文字）:~INFRA#ascii-upper-hex-digit
+#lowercase-ascii-hex-digits
+~ASCII~hex数字（小文字）:~INFRA#ascii-lower-hex-digit
+#ascii-hex-digits
+~ASCII~hex数字:~INFRA#ascii-hex-digit
+#uppercase-ascii-letters
+~ASCII英大文字:~INFRA#ascii-upper-alpha
+#lowercase-ascii-letters
+~ASCII英小文字:~INFRA#ascii-lower-alpha
+#ascii-letters
+~ASCII英字:~INFRA#ascii-alpha
+#alphanumeric-ascii-characters
+~ASCII英数字:~INFRA#ascii-alphanumeric
+#isomorphic-decode
+同型に復号する:~INFRA#isomorphic-decode
+#converted-to-ascii-lowercase
+~ASCII小文字~化する:~INFRA#ascii-lowercase
+#converted-to-ascii-uppercase
+~ASCII大文字~化する:~INFRA#ascii-uppercase
+#ascii-case-insensitive
+~ASCII大小無視:~INFRA#ascii-case-insensitive
+#strip-newlines
+改行文字を剥ぐ:~INFRA#strip-newlines
+#normalize-newlines
+改行文字を正規化する:~INFRA#normalize-newlines
+#strip-leading-and-trailing-ascii-whitespace
+前後の~ASCII空白~列を剥ぐ:~INFRA#strip-leading-and-trailing-ascii-whitespace
+#strip-and-collapse-ascii-whitespace
+~ASCII空白を剥いで縮約する:~INFRA#strip-and-collapse-ascii-whitespace
+#split-a-string-on-spaces
+~ASCII空白で分割する:~INFRA#split-on-ascii-whitespace
+#split-a-string-on-commas
+~commaで分割する:~INFRA#split-on-commas
+#collect-a-sequence-of-code-points
+符号位置~並びを収集する:~INFRA#collect-a-sequence-of-code-points
+#position-variable
+位置~変数:~INFRA#string-position-variable
+#skip-ascii-whitespace
+~ASCII空白を読飛ばす:~INFRA#skip-ascii-whitespace
+#ordered-map
+有順序~map:~INFRA#ordered-map
+#map-value
+~entryの値:~INFRA#map-value
+#map-entry
+~entry:~INFRA#map-entry
+#map-exists
+~map内に存在する:~INFRA#map-exists
+#map-get
+~entryの値を取得する:~INFRA#map-get
+#map-set
+~entryの値を設定する:~INFRA#map-set
+#map-remove
+~entryを除去する:~INFRA#map-remove
+#map-clear
+~mapを~clearする:~INFRA#map-clear
+#map-get-the-keys
+~key~listを取得する:~INFRA#map-getting-the-keys
+#map-size
+~mapの~size:~INFRA#map-size
+#map-iterate
+~mapを反復する:~INFRA#map-iterate
+#list
+~list:~INFRA#list
+#list-append
+~listに付加する:~INFRA#list-append
+#list-extend
+~listを拡張する:~INFRA#list-extend
+#list-replace
+~list内で置換する:~INFRA#list-replace
+#list-remove
+~listから除去する:~INFRA#list-remove
+#list-empty
+~listを空にする:~INFRA#list-empty
+#list-contains
+~list内に包含する:~INFRA#list-contain
+#list-size
+~listの~size:~INFRA#list-size
+#list-is-empty
+~listは空:~INFRA#list-is-empty
+#list-iterate
+~listを反復する:~INFRA#list-iterate
+#list-clone
+~listを~cloneする:~INFRA#list-clone
+#stack
+~stack:~INFRA#stack
+#stack-push
+~stackに~pushする:~INFRA#stack-push
+#stack-pop
+~stackから~popする:~INFRA#stack-pop
+#queue
+~queue:~INFRA#queue
+#enqueue
+~enqueueする:~INFRA#queue-enqueue
+#dequeue
+~dequeueする:~INFRA#queue-dequeue
+#set
+有順序~集合:~INFRA#ordered-set
+#set-append
+有順序~集合に付加する:~INFRA#set-append
+#set-union
+和集合:~INFRA#set-union
+#tuple
+~tuple:~INFRA#tuple
+#struct
+構造体:~INFRA#struct
+#struct-item
+構造体の~item:~INFRA#struct-item
+#forgiving-base64-encode
+~forgiving-base64符号化する:~INFRA#forgiving-base64-encode
+#forgiving-base64-decode
+~forgiving-base64復号する:~INFRA#forgiving-base64-decode
+#html-namespace
+~HTML名前空間:~INFRA#html-namespace
+#mathml-namespace
+~MathML名前空間:~INFRA#mathml-namespace
+#svg-namespace
+~SVG名前空間:~INFRA#svg-namespace
+#xlink-namespace
+~XLink名前空間:~INFRA#xlink-namespace
+#xml-namespace
+~XML名前空間:~INFRA#xml-namespace
+#xmlns-namespace
+~XMLNS名前空間:~INFRA#xmlns-namespace
+
+	●XML
+#xml-name
+P.Name:~TR/xml/#NT-Name
+
+
+	●ENCODING
+#getting-an-encoding
+~labelから符号化法を取得する:~ENCODING#concept-encoding-get
+#get-an-output-encoding
+符号化法から出力~符号化法を取得する:~ENCODING#get-an-output-encoding
+#decode
+~Unicodeに復号する:~ENCODING#decode
+#utf-8-decode
+~UTF-8復号する:~ENCODING#utf-8-decode
+#utf-8-decode-without-bom
+~BOMはそのままに~UTF-8復号する:~ENCODING#utf-8-decode-without-bom
+#encode
+符号化法を利用して符号化する:~ENCODING#encode
+#utf-8-encode
+~UTF-8符号化する:~ENCODING#utf-8-encode
+#bom-sniff
+~BOMを~sniffする:~ENCODING#bom-sniff
+
+
+	●
+#xml-stylesheet
+c.&lt;?xml-stylesheet?&gt;:~TR/xml-stylesheet/#the-xml-stylesheet-processing-instruction
+
+I.XSLTProcessor:#xsltprocessor
+m.transformToFragment:#dom-xsltprocessor-transformtofragment
+m.transformToDocument:#dom-xsltprocessor-transformtodocument
+
+	●URL
+#valid-url-string
+妥当な~URL文字列:~URL1#valid-url-string
+#concept-host
+~host:~URL1#concept-host
+#public-suffix
+公共~接尾辞:~URL1#host-public-suffix
+#concept-domain
+~domain:~URL1#concept-domain
+#registrable-domain
+登録-可能な~domain:~URL1#host-registrable-domain
+#concept-ipv4
+IPv4 ~address:~URL1#concept-ipv4
+#concept-ipv6
+IPv6 ~address:~URL1#concept-ipv6
+#url
+~URL:~URL1#concept-url
+#concept-url-origin
+url.生成元:~URL1#concept-url-origin
+#absolute-url
+絶対~URL:~URL1#absolute-url-string
+#relative-url
+相対~URL:~URL1#relative-url-string
+#url-parser
+~URL構文解析器:~URL1#concept-url-parser
+#basic-url-parser
+基本~URL構文解析器:~URL1#concept-basic-url-parser
+#scheme-start-state
+~scheme開始~state:~URL1#scheme-start-state
+#host-state
+~host~state:~URL1#host-state
+#path-state
+~path~state:~URL1#path-state
+#path-start-state
+~path開始~state:~URL1#path-start-state
+#hostname-state
+~hostname~state:~URL1#hostname-state
+#port-state
+~port~state:~URL1#port-state
+#query-state
+~query~state:~URL1#query-state
+#fragment-state
+素片~state:~URL1#fragment-state
+
+#url-record
+~URL~record:~URL1#concept-url
+#concept-url-scheme
+url.~scheme:~URL1#concept-url-scheme
+#concept-url-username
+url.~username:~URL1#concept-url-username
+#concept-url-password
+url.~password:~URL1#concept-url-password
+#concept-url-host
+url.~host:~URL1#concept-url-host
+#concept-url-port
+url.~port:~URL1#concept-url-port
+#concept-url-path
+url.~path:~URL1#concept-url-path
+#concept-url-query
+url.~query:~URL1#concept-url-query
+#concept-url-fragment
+url.素片:~URL1#concept-url-fragment
+#cannot-be-a-base-url-flag
+~cannot-be-a-base-URL~flag:~URL1#url-cannot-be-a-base-url-flag
+#concept-url-object
+url.~obj:~URL1#concept-url-object
+#cannot-have-a-username/password/port
+~username／~password／~portを持てない:~URL1#cannot-have-a-username-password-port
+
+url.~blob~URL~entry:~URL1#concept-url-blob-entry
+bU.~obj:~FILEAPI#blob-url-entry-object
+
+url.構文解析~error:#concept-url-parse-error
+#concept-url-serializer
+~URL直列化器:~URL1#concept-url-serializer
+#host-parser
+~host構文解析器:~URL1#concept-host-parser
+#host-serializer
+~host直列化器:~URL1#concept-host-serializer
+#host-equals
+同等な~host:~URL1#concept-host-equals
+#concept-url-equals
+同等な~URL:~URL1#concept-url-equals
+
+#serialize-an-integer
+整数を直列化する:~URL1#serialize-an-integer
+#default-encode-set
+~path~percent-符号化-集合:~URL1#path-percent-encode-set
+#component-percent-encode-set
+成分~percent-符号化-集合:~URL1#component-percent-encode-set
+#utf-8-percent-encode
+符号位置を~UTF-8~percent-符号化する:~URL1#utf-8-percent-encode
+#percent-decode
+文字列を~byte列に~percent-復号する:~URL1#string-percent-decode
+#set-the-username
+~URLの~usernameを設定する:~URL1#set-the-username
+#set-the-password
+~URLの~passwordを設定する:~URL1#set-the-password
+#application/x-www-form-urlencoded
+~form_urlencoded形式:~URL1#concept-urlencoded
+#application/x-www-form-urlencoded-serializer
+~form_urlencoded直列化器:~URL1#concept-urlencoded-serializer
+
+	●
+#about-protocol
+sc.about_:~RFCx/rfc6694#section-2
+#blob-protocol
+sc.blob_:~FILEAPI#url
+	廃：~FILEAPI#DefinitionOfScheme
+#data-protocol
+sc.data_:~RFCx/rfc2397#section-2
+#http-protocol
+sc.http_:~RFCx/rfc7230#section-2.7.1
+#https-protocol
+sc.https_:~RFCx/rfc7230#section-2.7.2
+#mailto-protocol
+sc.mailto_:~RFCx/rfc6068#section-2
+#sms-protocol
+sc.sms_:~RFCx/rfc5724#section-2
+#urn-protocol
+sc.urn_:~RFCx/rfc2141#section-2
+
+	●
+#media-fragment-syntax
+媒体~素片~構文:~TR/media-frags/#media-fragment-syntax
+	●
+#http-accept
+h.Accept:~HTTPrq#field.accept
+	h.Accept:~RFC7231#section-5.3.2
+#http-accept-language
+h.Accept-Language:~HTTPrq#field.accept-language
+	h.Accept-Language:~RFC7231#section-5.3.5
+#http-cache-control
+h.Cache-Control:~HTTPcache#field.cache-control
+	h.Cache-Control:~RFC7234#section-5.2
+#http-content-disposition
+h.Content-Disposition:~RFCx/rfc6266
+#http-content-language
+h.Content-Language:~HTTPsem#field.content-language
+	h.Content-Language:~RFC7231#section-3.1.3.2
+#http-last-modified
+h.Last-Modified:~HTTPrs#field.last-modified
+	h.Last-Modified:~RFC7232#section-2.2
+#http-referer
+h.Referer:~HTTPrq#field.referer
+	h.Referer:~RFC7231#section-5.5.2
+
+	●
+P.cookie-string:#cookie-string
+set-cookie-string を受信した:#receives-a-set-cookie-string
+#http-cookie
+h.Cookie:~HTTPcookie#sane-cookie
+
+	●
+#http-link
+h.Link:~HTTPweblink#field.link
+
+	●STRUCTURED-FIELDS
+
+#http-structured-header
+有構造~header:~HEADER-STRUCTURE#structured-header
+#http-structured-header-boolean
+sf.真偽値:~HEADER-STRUCTURE#sf-boolean
+	~HEADER-STRUCTURE#boolean
+#http-structured-header-token
+sf.~token:~HEADER-STRUCTURE#sf-token
+	#token
+#http-structured-header-parameters
+sf.~parameters:~HEADER-STRUCTURE#sf-parameters
+	#param
+
+	●MIMESNIFF
+#mime-type
+~MIME型:~MIMESNIFF#mime-type
+#valid-mime-type-string
+妥当な~MIME型~文字列:~MIMESNIFF#valid-mime-type
+#valid-mime-type-string-with-no-parameters
+~parameterを伴わない妥当な~MIME型~文字列:~MIMESNIFF#valid-mime-type-with-no-parameters
+#html-mime-type
+~HTML~MIME型:~MIMESNIFF#html-mime-type
+#javascript-mime-type
+~JS~MIME型:~MIMESNIFF#javascript-mime-type
+#javascript-mime-type-essence-match
+~JS~MIME型に~essence合致-:~MIMESNIFF#javascript-mime-type-essence-match
+#json-mime-type
+~JSON~MIME型:~MIMESNIFF#json-mime-type
+#xml-mime-type
+~XML~MIME型:~MIMESNIFF#xml-mime-type
+
+	●FETCH
+sc.about_blank:#about:blank
+
+#header-abnf
+~ABNF:~FETCH#abnf
+#http-scheme
+~HTTP_S~scheme:~FETCH#http-scheme
+#local-scheme
+局所~scheme:~FETCH#local-scheme
+#network-scheme
+~network~scheme:~FETCH#network-scheme
+#fetch-scheme
+~fetch~scheme:~FETCH#fetch-scheme
+#cors-protocol
+~CORS~protocol:~FETCH#http-cors-protocol
+#default-user-agent-value
+既定の User-Agent 値:~FETCH#default-user-agent-value
+#extract-a-mime-type
+~header~listから~MIME型を抽出する:~FETCH#concept-header-extract-mime-type
+#concept-fetch
+~fetch:~FETCH#concept-fetch
+#http-redirect-fetch
+~HTTP~redirect~fetch:~FETCH#concept-http-redirect-fetch
+#ok-status
+~ok状態s:~FETCH#ok-status
+#navigation-request
+~navi要請:~FETCH#navigation-request
+#network-error
+~network~error:~FETCH#concept-network-error
+#http-origin
+h.Origin:~FETCH#http-origin
+#cross-origin-resource-policy
+h.Cross-Origin-Resource-Policy:~FETCH#http-cross-origin-resource-policy
+#process-response
+応答を処理する:~FETCH#process-response
+#getting-a-structured-field-value
+有構造~field値を取得する:~FETCH#concept-header-list-get-structured-header
+#concept-header-list-set
+~headerを設定する:~FETCH#concept-header-list-set
+#concept-header-list-get-decode-split
+~header~listから値を取得して復号して分割する:~FETCH#concept-header-list-get-decode-split
+#concept-fetch-terminate
+~fetchを終了させる:~FETCH#concept-fetch-terminate
+#cross-origin-resource-policy-check
+非同一-生成元~資源~施策~検査:~FETCH#cross-origin-resource-policy-check
+#requestcredentials
+I.RequestCredentials:~FETCH#requestcredentials
+#requestdestination
+I.RequestDestination:~FETCH#requestdestination
+#fetch()
+m.fetch:~FETCH#dom-global-fetch
+#serialize-a-response-url-for-reporting
+応答~URLを報告-用に直列化する:~FETCH#serialize-a-response-url-for-reporting
+
+#concept-response
+応答:~FETCH#concept-response
+#concept-response-type
+rs.種別:~FETCH#concept-response-type
+#concept-response-url
+rs.~URL:~FETCH#concept-response-url
+#concept-response-url-list
+rs.~URL~list:~FETCH#concept-response-url-list
+#concept-response-status
+rs.状態s:~FETCH#concept-response-status
+#concept-response-header-list
+rs.~header~list:~FETCH#concept-response-header-list
+#concept-response-body
+rs.本体:~FETCH#concept-response-body
+#concept-internal-response
+rs.内部~応答:~FETCH#concept-internal-response
+#concept-response-csp-list
+rs.~CSP~list:~FETCH#concept-response-csp-list
+#concept-response-location-url
+rs.~Location~header~URL:~FETCH#concept-response-location-url
+
+#concept-request
+要請:~FETCH#concept-request
+#concept-request-url
+rq.~URL:~FETCH#concept-request-url
+#concept-request-method
+rq.~method:~FETCH#concept-request-method
+#concept-request-header-list
+rq.~header~list:~FETCH#concept-request-header-list
+#concept-request-body
+rq.本体:~FETCH#concept-request-body
+#concept-request-client
+rq.~client:~FETCH#concept-request-client
+#concept-request-url-list
+rq.~URL~list:~FETCH#concept-request-url-list
+#concept-request-reserved-client
+rq.現在の~URL:~FETCH#concept-request-current-url
+#concept-request-reserved-client
+rq.予約-済み~client:~FETCH#concept-request-reserved-client
+#concept-request-replaces-client-id
+rq.置換する~client~id:~FETCH#concept-request-replaces-client-id
+#concept-request-initiator
+rq.起動元:~FETCH#concept-request-initiator
+#concept-request-destination
+rq.行先:~FETCH#concept-request-destination
+
+#concept-potential-destination
+行先の素:~FETCH#concept-potential-destination
+#concept-script-like-destination
+~scriptに類する行先:~FETCH#request-destination-script-like
+#concept-potential-destination-translate
+行先に翻訳する:~FETCH#concept-potential-destination-translate
+
+#concept-request-priority
+rq.優先度:~FETCH#concept-request-priority
+#concept-request-origin
+rq.生成元:~FETCH#concept-request-origin
+#concept-request-referrer
+rq.~referrer:~FETCH#concept-request-referrer
+#synchronous-flag
+rq.同期~flag:~FETCH#synchronous-flag
+#concept-request-mode
+rq.~mode:~FETCH#concept-request-mode
+#concept-request-credentials-mode
+rq.資格証~mode:~FETCH#concept-request-credentials-mode
+#use-url-credentials-flag
+rq.~URL資格証~利用~flag:~FETCH#concept-request-use-url-credentials-flag
+#concept-request-cache-mode
+rq.~cache~mode:~FETCH#concept-request-cache-mode
+#unsafe-request-flag
+rq.非安全~要請~flag:~FETCH#unsafe-request-flag
+#concept-request-redirect-mode
+rq.~redirect~mode:~FETCH#concept-request-redirect-mode
+#concept-request-referrer-policy
+rq.~referrer施策:~FETCH#concept-request-referrer-policy
+#concept-request-nonce-metadata
+rq.暗号用~nonce~metadata:~FETCH#concept-request-nonce-metadata
+#concept-request-integrity-metadata
+rq.完全性~metadata:~FETCH#concept-request-integrity-metadata
+#concept-request-parser-metadata
+rq.構文解析器~metadata:~FETCH#concept-request-parser-metadata
+#concept-request-reload-navigation-flag
+rq.~reload~navi~flag:~FETCH#concept-request-reload-navigation-flag
+#concept-request-history-navigation-flag
+rq.履歴~navi~flag:~FETCH#concept-request-history-navigation-flag
+
+	●REFERRERPOLICY
+#referrer-policy
+~referrer施策:~REFERRER-POLICY#referrer-policy
+#http-referrer-policy
+h.Referrer-Policy:~REFERRER-POLICY#referrer-policy-header-dfn
+#parse-referrer-policy-header
+Referrer-Policy ~headerを構文解析する:~REFERRER-POLICY#parse-referrer-policy-from-header
+
+#referrer-policy-no-referrer
+l.no-referrer:~REFERRER-POLICY#referrer-policy-no-referrer
+#referrer-policy-no-referrer-when-downgrade
+l.no-referrer-when-downgrade:~REFERRER-POLICY#referrer-policy-no-referrer-when-downgrade
+#referrer-policy-origin-when-cross-origin
+l.origin-when-cross-origin:~REFERRER-POLICY#referrer-policy-origin-when-cross-origin
+#referrer-policy-unsafe-url
+l.unsafe-url:~REFERRER-POLICY#referrer-policy-unsafe-url
+
+	●MIX
+#a-priori-authenticated-url
+先天的に認証-済み~URL:~MIXED-CONTENT#a-priori-authenticated-url
+
+	●PAINTTIMING
+#mark-paint-timing
+塗り計時を刻む:~PAINTTIMING#mark-paint-timing
+
+	●LONGTASKS
+#report-long-tasks
+長い~taskを報告する:~LONGTASKS#report-long-tasks
+
+	●SECURE-CONTEXT
+#is-url-potentially-trustworthy
+~URLは信用に価し得るか？:~SECURE-CONTEXT#potentially-trustworthy-url
+
+	●PERMISSIONS-POLICY
+#concept-permissions-policy
+許可~施策:~PERMISSIONS-POLICY#permissions-policy
+#concept-policy-controlled-feature
+施策により制御される特能:~PERMISSIONS-POLICY#policy-controlled-feature
+#concept-container-policy
+容器~施策:~PERMISSIONS-POLICY#container-policy
+#concept-serialized-permissions-policy
+直列形の許可~施策:~PERMISSIONS-POLICY#serialized-permissions-policy
+#concept-default-allowlist
+既定の許容list:~PERMISSIONS-POLICY#default-allowlist
+#creating-a-permissions-policy
+閲覧文脈~用の許可~施策を作成する:~PERMISSIONS-POLICY#create-for-browsingcontext
+#creating-a-permissions-policy-from-a-response
+応答から閲覧文脈~用の許可~施策を作成する:~PERMISSIONS-POLICY#create-from-response
+#is-feature-enabled
+文書~内の特能は生成元~用に可能化されるか？:~PERMISSIONS-POLICY#is-feature-enabled
+#process-permissions-policy-attributes
+許可~施策~属性を処理する:~PERMISSIONS-POLICY#process-permissions-policy-attributes
+
+	●PAYMENTREQUEST
+#paymentrequest
+I.PaymentRequest:https://w3c.github.io/payment-request/#dom-paymentrequest
+
+
+	●WEBIDL
+#indexsizeerror
+E.IndexSizeError:~WEBIDL#indexsizeerror
+#hierarchyrequesterror
+E.HierarchyRequestError:~WEBIDL#hierarchyrequesterror
+#invalidcharactererror
+E.InvalidCharacterError:~WEBIDL#invalidcharactererror
+#notfounderror
+E.NotFoundError:~WEBIDL#notfounderror
+#notsupportederror
+E.NotSupportedError:~WEBIDL#notsupportederror
+#invalidstateerror
+E.InvalidStateError:~WEBIDL#invalidstateerror
+#syntaxerror
+E.SyntaxError:~WEBIDL#syntaxerror
+#invalidaccesserror
+E.InvalidAccessError:~WEBIDL#invalidaccesserror
+#securityerror
+E.SecurityError:~WEBIDL#securityerror
+#networkerror
+E.NetworkError:~WEBIDL#networkerror
+#aborterror
+E.AbortError:~WEBIDL#aborterror
+#quotaexceedederror
+E.QuotaExceededError:~WEBIDL#quotaexceedederror
+#datacloneerror
+E.DataCloneError:~WEBIDL#datacloneerror
+#encodingerror
+E.EncodingError:~WEBIDL#encodingerror
+#notallowederror
+E.NotAllowedError:~WEBIDL#notallowederror
+
+#legacyfactoryfunction
+xA.LegacyFactoryFunction:~WEBIDLjs#LegacyFactoryFunction
+#legacylenientthis
+xA.LegacyLenientThis:~WEBIDLjs#LegacyLenientThis
+#legacynulltoemptystring
+xA.LegacyNullToEmptyString:~WEBIDLjs#LegacyNullToEmptyString
+#legacyoverridebuiltins
+xA.LegacyOverrideBuiltIns:~WEBIDLjs#LegacyOverrideBuiltIns
+#legacytreatnonobjectasnull
+xA.LegacyTreatNonObjectAsNull:~WEBIDLjs#LegacyTreatNonObjectAsNull
+#legacyunenumerablenamedproperties
+xA.LegacyUnenumerableNamedProperties:~WEBIDLjs#LegacyUnenumerableNamedProperties
+#legacyunforgeable
+xA.LegacyUnforgeable:~WEBIDLjs#LegacyUnforgeable
+
+#this
+this:~WEBIDL#this
+	コレ:~WEBIDL#this
+#extended-attribute
+拡張属性:~WEBIDL#dfn-extended-attribute
+#named-constructor
+旧来の~factory関数:~WEBIDLjs#dfn-legacy-factory-function
+	廃）有名~構築子:~WEBIDLjs#dfn-named-constructor
+#constructor-operation
+構築子~演算:~WEBIDL#idl-constructors
+#overridden-constructor-steps
+構築子を上書きする手続き:~WEBIDLjs#overridden-constructor-steps
+#internally-create-a-new-object-implementing-the-interface
+~interfaceを実装する新たな~objを内部的に作成する:~WEBIDLjs#internally-create-a-new-object-implementing-the-interface
+#array-index-property-name
+配列~index~prop名:~WEBIDL#dfn-array-index-property-name
+#supported-property-indices
+~supportする~prop~index:~WEBIDL#dfn-supported-property-indices
+#determine-the-value-of-an-indexed-property
+有index~propの値を決定する:~WEBIDL#dfn-determine-the-value-of-an-indexed-property
+#set-the-value-of-an-existing-indexed-property
+既存の有index~propの値を設定する:~WEBIDL#dfn-set-the-value-of-an-existing-indexed-property
+#set-the-value-of-a-new-indexed-property
+新たな有index~propの値を設定する:~WEBIDL#dfn-set-the-value-of-a-new-indexed-property
+
+#support-named-properties
+有名~propを~supportする:~WEBIDL#dfn-support-named-properties
+#supported-property-names
+~supportする~prop名:~WEBIDL#dfn-supported-property-names
+#determine-the-value-of-a-named-property
+有名~propの値を決定する:~WEBIDL#dfn-determine-the-value-of-a-named-property
+#set-the-value-of-an-existing-named-property
+既存の有名~propの値を設定する:~WEBIDL#dfn-set-the-value-of-an-existing-named-property
+#set-the-value-of-a-new-named-property
+新たな有名~propの値を設定する:~WEBIDL#dfn-set-the-value-of-a-new-named-property
+#delete-an-existing-named-property
+既存の有名~propを削除する:~WEBIDL#dfn-delete-an-existing-named-property
+
+#perform-a-security-check
+~security検査を遂行する:~WEBIDLjs#dfn-perform-a-security-check
+#platform-object
+~platform~obj:~WEBIDL#dfn-platform-object
+#legacy-platform-object
+旧来の~platform~obj:~WEBIDL#dfn-legacy-platform-object
+#primary-interface
+首~interface:~WEBIDLjs#dfn-primary-interface
+#interface-object
+~interface~obj:~WEBIDLjs#dfn-interface-object
+#include
+内包する:~WEBIDL#include
+#interface-prototype-object
+~interface~prototype~obj:~WEBIDLjs#dfn-interface-prototype-object
+#realm-field-of-a-platform-object
+sl.Realm:~WEBIDLjs#es-platform-objects
+#callback-context
+~callback文脈:~WEBIDL#dfn-callback-context
+#frozen-array
+凍結d配列:~WEBIDL#dfn-frozen-array-type
+#creating-a-frozen-array
+凍結d配列を作成する:~WEBIDLjs#dfn-create-frozen-array
+#new
+~interfaceを実装する新たな~objを作成する:~WEBIDLjs#new
+#dfn-callback-this-value
+~callback this 値:~WEBIDLjs#dfn-callback-this-value
+#concept-idl-convert
+変換-法:~WEBIDLjs#es-type-mapping
+#es-invoking-callback-functions
+~callback関数を呼出す:~WEBIDLjs#invoke-a-callback-function
+#es-constructing-callback-functions
+~callback関数で構築する:~WEBIDLjs#construct-a-callback-function
+	廃：
+#converting-to-a-sequence-of-unicode-scalar-values
+~Unicode~scalar値~列に変換する:~WEBIDL#dfn-obtain-unicode
+~scalar値~文字列に変換する:~INFRA#javascript-string-convert
+#overload-resolution-algorithm
+多重定義~解決~algo:~WEBIDLjs#dfn-overload-resolution-algorithm
+#idl-exposed
+公開されている:~WEBIDLjs#dfn-exposed
+
+#throw
+投出:~WEBIDL#dfn-throw
+
+Date ~objを作成する:#create-a-date-object
+例外~名:~WEBIDL#idl-DOMException-error-names
+
+	●
+#domexception
+I.DOMException:~WEBIDL#idl-DOMException
+
+#idl-arraybuffer
+I.ArrayBuffer:~WEBIDL#idl-ArrayBuffer
+#idl-arraybufferview
+I.ArrayBufferView:~WEBIDL#ArrayBufferView
+#idl-uint8clampedarray
+I.Uint8ClampedArray:~WEBIDL#idl-Uint8ClampedArray
+
+#idl-boolean
+I.boolean:~WEBIDL#idl-boolean
+#idl-double
+I.double:~WEBIDL#idl-double
+#idl-enumeration
+列挙:~WEBIDL#idl-enums
+#idl-long
+I.long:~WEBIDL#idl-long
+#idl-unsigned-long
+I.unsigned long:~WEBIDL#idl-unsigned-long
+#idl-unrestricted-double
+I.unrestricted double:~WEBIDL#idl-unrestricted-double
+
+#idl-function
+I.Function:~WEBIDL#Function
+#idl-domstring
+I.DOMString:~WEBIDL#idl-DOMString
+#idl-usvstring
+I.USVString:~WEBIDL#idl-USVString
+#idl-voidfunction
+I.VoidFunction:~WEBIDL#VoidFunction
+#idl-error
+I.Error:~WEBIDL#idl-Error
+#idl-object
+I.object:~WEBIDL#idl-object
+
+	●JS
+#active-function-object
+作動中の関数~obj:~TC39#active-function-object
+#agent
+~agent:~TC39#sec-agents
+#agent-cluster
+~agent~cluster:~TC39#sec-agent-clusters
+#automatic-semicolon-insertion
+自動的~semicolon挿入:~TC39#sec-automatic-semicolon-insertion
+#candidate-execution
+実行候補:~TC39#sec-candidate-executions
+#current-realm-record
+現在の~Realm~Record:~TC39#current-realm
+#early-error
+early error:~TC39#early-error-rule
+#forward-progress
+前方-進捗:~TC39#sec-forward-progress
+#invariants-of-the-essential-internal-methods
+~essential内部~methodに対する不変則:~TC39#sec-invariants-of-the-essential-internal-methods
+#javascript-execution-context
+~JS実行~文脈:~TC39#sec-execution-contexts
+#javascript-execution-context-stack
+~JS実行~文脈~stack:~TC39#execution-context-stack
+#javascript-realm
+~JS~realm:~TC39#sec-code-realms
+#environmentrecord
+js.EnvironmentRecord:~TC39#sec-lexical-environments
+#newtarget
+js.NewTarget:~TC39#sec-built-in-function-objects
+#running-javascript-execution-context
+走っている~JS実行~文脈:~TC39#running-execution-context
+#surrounding-agent
+~surrounding~agent:~TC39#surrounding-agent
+#abstract-closure
+抽象-~closure:~TC39#sec-abstract-closure
+#immutable-prototype-exotic-object
+変異-不能な~prototype~exotic~obj:~TC39#immutable-prototype-exotic-object
+#well-known-symbols
+Well-Known Symbols:~TC39#sec-well-known-symbols
+jS.hasInstance:#@@hasinstance
+jS.isConcatSpreadable:#@@isconcatspreadable
+jS.toPrimitive:#@@toprimitive
+jS.toStringTag:#@@tostringtag
+#well-known-intrinsic-objects
+Well-Known Intrinsic Objects:~TC39#sec-well-known-intrinsic-objects
+
+#array.prototype
+jI.Array.prototype:~TC39#sec-properties-of-the-array-prototype-object
+#error.prototype
+jI.Error.prototype:~TC39#sec-properties-of-the-error-prototype-object
+
+jI.EvalError.prototype:#evalerror.prototype
+#function.prototype
+jI.Function.prototype:~TC39#sec-properties-of-the-function-prototype-object
+#json.parse
+jI.JSON.parse:~TC39#sec-json.parse
+#object.prototype
+jI.Object.prototype:~TC39#sec-properties-of-the-object-prototype-object
+#object.prototype.valueof
+jI.Object.prototype.valueOf:~TC39#sec-object.prototype.valueof
+jI.RangeError.prototype:#rangeerror.prototype
+jI.ReferenceError.prototype:#referenceerror.prototype
+jI.SyntaxError.prototype:#syntaxerror.prototype
+jI.TypeError.prototype:#typeerror.prototype
+jI.URIError.prototype:#urierror.prototype
+#js-prod-functionbody
+P.FunctionBody:~TC39#prod-FunctionBody
+#js-prod-module
+P.Module:~TC39#prod-Module
+#js-prod-pattern
+P.Pattern:~TC39#prod-Pattern
+#js-prod-script
+P.Script:~TC39#prod-Script
+
+#abrupt-completion
+完了~record:~TC39#sec-completion-record-specification-type
+#js-type
+Type:~TC39#sec-ecmascript-data-types-and-values
+#js-list
+List:~TC39#sec-list-and-record-specification-type
+#record
+Record:~TC39#sec-list-and-record-specification-type
+
+#propertydescriptor
+Property Descriptor:~TC39#sec-property-descriptor-specification-type
+#script-record
+Script Record:~TC39#sec-script-records
+#cyclic-module-record
+循環な~Module-Record:~TC39#sec-cyclic-module-records
+#source-text-module-record
+~source~text~Module-Record:~TC39#sec-source-text-module-records
+
+#js-evaluate
+jM.Evaluate:~TC39#sec-moduleevaluation
+#js-link
+jM.Link:~TC39#sec-moduledeclarationlinking
+#arraycreate
+jA.ArrayCreate:~TC39#sec-arraycreate
+#call
+jA.Call:~TC39#sec-call
+#construct
+jA.Construct:~TC39#sec-construct
+#copydatablockbytes
+jA.CopyDataBlockBytes:~TC39#sec-copydatablockbytes
+#createbytedatablock
+jA.CreateByteDataBlock:~TC39#sec-createbytedatablock
+#createdataproperty
+jA.CreateDataProperty:~TC39#sec-createdataproperty
+#detacharraybuffer
+jA.DetachArrayBuffer:~TC39#sec-detacharraybuffer
+#js-enqueuejob
+jA.EnqueueJob:~TC39#sec-enqueuejob
+#enumerableownpropertynames
+jA.EnumerableOwnPropertyNames:~TC39#sec-enumerableownpropertynames
+#finishdynamicimport
+jA.FinishDynamicImport:~TC39#sec-finishdynamicimport
+#js-ordinaryfunctioncreate
+jA.OrdinaryFunctionCreate:~TC39#sec-ordinaryfunctioncreate
+#js-get
+jA.Get:~TC39#sec-get-o-p
+#getactivescriptormodule
+jA.GetActiveScriptOrModule:~TC39#sec-getactivescriptormodule
+#hasownproperty
+jA.GetFunctionRealm:~TC39#sec-hasownproperty
+#getfunctionrealm
+jA.HasOwnProperty:~TC39#sec-getfunctionrealm
+#js-hostenqueuepromisejob
+jA.HostEnqueuePromiseJob:~TC39#sec-hostenqueuepromisejob
+#js-hostensurecancompilestrings
+jA.HostEnsureCanCompileStrings:~TC39#sec-hostensurecancompilestrings
+#js-hostimportmoduledynamically
+jA.HostImportModuleDynamically:~JSIMPORT#sec-hostimportmoduledynamically
+#js-hostpromiserejectiontracker
+jA.HostPromiseRejectionTracker:~TC39#sec-host-promise-rejection-tracker
+#js-hostresolveimportedmodule
+jA.HostResolveImportedModule:~TC39#sec-hostresolveimportedmodule
+#js-initializehostdefinedrealm
+jA.InitializeHostDefinedRealm:~TC39#sec-initializehostdefinedrealm
+#isaccessordescriptor
+jA.IsAccessorDescriptor:~TC39#sec-isaccessordescriptor
+#iscallable
+jA.IsCallable:~TC39#sec-iscallable
+#isconstructor
+jA.IsConstructor:~TC39#sec-isconstructor
+#isdatadescriptor
+jA.IsDataDescriptor:~TC39#sec-isdatadescriptor
+#isdetachedbuffer
+jA.IsDetachedBuffer:~TC39#sec-isdetachedbuffer
+#issharedarraybuffer
+jA.IsSharedArrayBuffer:~TC39#sec-issharedarraybuffer
+#js-newobjectenvironment
+jA.NewObjectEnvironment:~TC39#sec-newobjectenvironment
+#normalcompletion
+jA.NormalCompletion:~TC39#sec-normalcompletion
+#ordinarygetprototypeof
+jA.OrdinaryGetPrototypeOf:~TC39#sec-ordinarygetprototypeof
+#ordinarysetprototypeof
+jA.OrdinarySetPrototypeOf:~TC39#sec-ordinarysetprototypeof
+#ordinaryisextensible
+jA.OrdinaryIsExtensible:~TC39#sec-ordinaryisextensible
+#ordinarypreventextensions
+jA.OrdinaryPreventExtensions:~TC39#sec-ordinarypreventextensions
+#ordinarygetownproperty
+jA.OrdinaryGetOwnProperty:~TC39#sec-ordinarygetownproperty
+#ordinarydefineownproperty
+jA.OrdinaryDefineOwnProperty:~TC39#sec-ordinarydefineownproperty
+#ordinaryget
+jA.OrdinaryGet:~TC39#sec-ordinaryget
+#ordinaryset
+jA.OrdinarySet:~TC39#sec-ordinaryset
+#ordinarydelete
+jA.OrdinaryDelete:~TC39#sec-ordinarydelete
+#ordinaryownpropertykeys
+jA.OrdinaryOwnPropertyKeys:~TC39#sec-ordinaryownpropertykeys
+#objectcreate
+jA.ObjectCreate:~TC39#sec-objectcreate
+#js-parsemodule
+jA.ParseModule:~TC39#sec-parsemodule
+#js-parsescript
+jA.ParseScript:~TC39#sec-parse-script
+#newpromisereactionjob
+jA.NewPromiseReactionJob:~TC39#sec-newpromisereactionjob
+#newpromiseresolvethenablejob
+jA.NewPromiseResolveThenableJob:~TC39#sec-newpromiseresolvethenablejob
+
+#promisereactionjob
+jA.PromiseReactionJob:~TC39#sec-promisereactionjob
+#promiseresolvethenablejob
+jA.PromiseResolveThenableJob:~TC39#sec-promiseresolvethenablejob
+
+#regexpbuiltinexec
+jA.RegExpBuiltinExec:~TC39#sec-regexpbuiltinexec
+#regexpcreate
+jA.RegExpCreate:~TC39#sec-regexpcreate
+#runjobs
+jA.RunJobs:~TC39#sec-runjobs
+#samevalue
+jA.SameValue:~TC39#sec-samevalue
+#js-scriptevaluation
+jA.ScriptEvaluation:~TC39#sec-runtime-semantics-scriptevaluation
+#setimmutableprototype
+jA.SetImmutablePrototype:~TC39#sec-set-immutable-prototype
+#js-toboolean
+jA.ToBoolean:~TC39#sec-toboolean
+#tostring
+jA.ToString:~TC39#sec-tostring
+#touint32
+jA.ToUint32:~TC39#sec-touint32
+#typedarraycreate
+jA.TypedArrayCreate:~TC39#typedarray-create
+
+#js-abstract-equality
+Abstract Equality Comparison:~TC39#sec-abstract-equality-comparison
+#js-strict-equality
+Strict Equality Comparison:~TC39#sec-strict-equality-comparison
+
+#atomics
+jC.Atomics:~TC39#sec-atomics-object
+#date
+jC.Date:~TC39#sec-date-objects
+#regexp
+jC.RegExp:~TC39#sec-regexp-regular-expression-objects
+#sharedarraybuffer
+jC.SharedArrayBuffer:~TC39#sec-sharedarraybuffer-objects
+#typeerror
+jC.TypeError:~TC39#sec-native-error-types-used-in-this-standard-typeerror
+#rangeerror
+jC.RangeError:~TC39#sec-native-error-types-used-in-this-standard-rangeerror
+#eval()
+c.eval():~TC39#sec-eval-x
+#ishtmldda
+sl.IsHTMLDDA:~TC39#sec-IsHTMLDDA-internal-slot
+#import()
+c.import():~TC39#sec-import-calls
+#import.meta
+c.import.meta:~TC39#sec-meta-properties
+#js-hostgetimportmetaproperties
+jA.HostGetImportMetaProperties:~TC39#sec-hostgetimportmetaproperties
+#js-typeof
+js.typeof:~TC39#sec-typeof-operator
+#delete
+js.delete:~TC39#sec-delete-operator
+#the-typedarray-constructors
+TypedArray の各種~構築子:~TC39#table-49
+
+	●WebAssembly
+#webassembly.module
+c.WebAssembly.Module:https://webassembly.github.io/spec/js-api/#module
+
+	●DOM
+#attr
+I.Attr:~DOM4#interface-attr
+#childnode
+I.ChildNode:~DOM4#interface-childnode
+#comment-2
+I.Comment:~DOM4#interface-comment
+#domimplementation
+I.DOMImplementation:~DOM4#interface-domimplementation
+#domtokenlist
+I.DOMTokenList:~DOM4#interface-domtokenlist
+#dom-document
+I.Document:~DOM4#interface-document
+#dom-documentorshadowroot
+I.DocumentOrShadowRoot:~DOM4#documentorshadowroot
+#documentfragment
+I.DocumentFragment:~DOM4#interface-documentfragment
+#documenttype
+I.DocumentType:~DOM4#interface-documenttype
+#element
+I.Element:~DOM4#interface-element
+#event
+I.Event:~DOM4#interface-event
+#eventinit
+I.EventInit:~DOM4#dictdef-eventinit
+#dom-eventlistener
+I.EventListener:~DOM4#callbackdef-eventlistener
+#eventtarget
+I.EventTarget:~DOM4#interface-eventtarget
+#htmlcollection
+I.HTMLCollection:~DOM4#interface-htmlcollection
+#mutationobserver
+I.MutationObserver:~DOM4#mutationobserver
+#node
+I.Node:~DOM4#interface-node
+#nodelist
+I.NodeList:~DOM4#interface-nodelist
+#processinginstruction
+I.ProcessingInstruction:~DOM4#interface-processinginstruction
+#shadowroot
+I.ShadowRoot:~DOM4#interface-shadowroot
+#text
+I.Text:~DOM4#interface-text
+
+#dom-eventtarget-addeventlistener
+m.addEventListener:~DOM4#dom-eventtarget-addeventlistener
+#dom-node-appendchild
+m.appendChild:~DOM4#dom-node-appendchild
+#dom-node-clonenode
+m.cloneNode:~DOM4#dom-node-clonenode
+#dom-domimplementation-createdocument
+m.createDocument:~DOM4#dom-domimplementation-createdocument
+#dom-document-createelement
+m.createElement:~DOM4#dom-document-createelement
+#dom-document-createelementns
+m.createElementNS:~DOM4#dom-document-createelementns
+#dom-domimplementation-createhtmldocument
+m.createHTMLDocument:~DOM4#dom-domimplementation-createhtmldocument
+#dom-event-currenttarget
+m.currentTarget:~DOM4#dom-event-currenttarget
+#dom-document-getelementsbyclassname
+m.getElementsByClassName:~DOM4#dom-document-getelementsbyclassname
+#dom-document-getelementbyid
+m.getElementById:~DOM4#dom-nonelementparentnode-getelementbyid
+#dom-element-id
+m.id:~DOM4#dom-element-id
+#dom-document-importnode
+m.importNode:~DOM4#dom-document-importnode
+#dom-event-initevent
+m.initEvent:~DOM4#dom-event-initevent
+#dom-event-type
+m.type:~DOM4#dom-event-type
+#dom-event-bubbles
+m.bubbles:~DOM4#dom-event-bubbles
+#dom-event-cancelable
+m.cancelable:~DOM4#dom-event-cancelable
+#dom-event-composed
+m.composed:~DOM4#dom-event-composed
+#dom-event-istrusted
+m.isTrusted:~DOM4#dom-event-istrusted
+#dom-htmlcollection-item
+m.item:~DOM4#dom-htmlcollection-item
+#dom-htmlcollection-length
+m.length:~DOM4#dom-htmlcollection-length
+#dom-htmlcollection-nameditem
+m.namedItem:~DOM4#dom-htmlcollection-nameditem
+#dom-event-target
+m.target:~DOM4#dom-event-target
+#textcontent
+m.textContent:~DOM4#dom-node-textcontent
+#dom-domtokenlist-value
+m.value:~DOM4#dom-domtokenlist-value
+#dom-event-preventdefault
+m.preventDefault:~DOM4#dom-event-preventdefault
+#dom-element-attachshadow
+m.attachShadow:~DOM4#dom-element-attachshadow
+
+
+#range
+	I.Range:~DOM4#range
+
+
+#concept-collection
+~collection:~DOM4#concept-collection
+#represented-by-the-collection
+~collectionにより表現される:~DOM4#represented-by-the-collection
+
+#node-document
+~node文書:~DOM4#concept-node-document
+#concept-document-type
+doc.種別:~DOM4#concept-document-type
+#concept-documentfragment-host
+dT.~host:~DOM4#concept-documentfragment-host
+
+#tree
+~tree:~DOM4#concept-tree
+#root
+根:~DOM4#concept-tree-root
+#tree-order
+~tree順序:~DOM4#concept-tree-order
+#concept-tree-child
+子:~DOM4#concept-tree-child
+#inclusive-ancestor
+広義先祖:~DOM4#concept-tree-inclusive-ancestor
+#first-child
+最初の子:~DOM4#concept-tree-first-child
+#next-sibling
+次の同胞:~DOM4#concept-tree-next-sibling
+#document-element
+文書~要素:~DOM4#document-element
+#in-a-document-tree
+文書~tree内にある:~DOM4#in-a-document-tree
+#in-a-document
+文書~内にある:~DOM4#in-a-document
+#connected
+接続されて:~DOM4#connected
+
+#shadow-tree
+~shadow~tree:~DOM4#concept-shadow-tree
+#node-tree
+~node~tree:~DOM4#concept-node-tree
+#shadow-root
+~shadow根:~DOM4#concept-shadow-root
+#delegates-focus
+~focusを委譲する:~DOM4#shadowroot-delegates-focus
+#shadow-host
+~shadow~host:~DOM4#element-shadow-host
+#dom-retarget
+~targetし直す:~DOM4#retarget
+#concept-element-shadow-root
+elm.~shadow根:~DOM4#concept-element-shadow-root
+#shadow-including-root
+~shadowも含む根:~DOM4#concept-shadow-including-root
+#shadow-including-tree-order
+~shadowも含む~tree順序:~DOM4#concept-shadow-including-tree-order
+#shadow-including-descendant
+~shadowも含む子孫:~DOM4#concept-shadow-including-descendant
+#shadow-including-inclusive-descendant
+~shadowも含む広義子孫:~DOM4#concept-shadow-including-inclusive-descendant
+#shadow-including-inclusive-ancestor
+~shadowも含む広義先祖:~DOM4#concept-shadow-including-inclusive-ancestor
+#concept-slot
+~slot:~DOM4#concept-slot
+#slot-name
+~slot名:~DOM4#slot-name
+#assigned-nodes
+割当済み~nodeたち:~DOM4#slot-assigned-nodes
+#assigned-slot
+割当先~slot:~DOM4#slotable-assigned-slot
+#finding-flattened-slottables
+平坦~化された~slottableたちを見出す:~DOM4#find-flattened-slotables
+#assign-a-slot
+~slotに割当する:~DOM4#assign-a-slot
+
+#pre-insert
+~nodeを子の前に前挿入する:~DOM4#concept-node-pre-insert
+#concept-node-insert
+~nodeを子の前に挿入する:~DOM4#concept-node-insert
+#concept-node-append
+~nodeを付加する:~DOM4#concept-node-append
+#concept-node-replace
+子を~nodeに置換する:~DOM4#concept-node-replace
+#concept-node-replace-all
+全~内容を~nodeで置換する:~DOM4#concept-node-replace-all
+#string-replace-all
+全~内容を文字列に置換する:~DOM4#string-replace-all
+#concept-node-remove
+~nodeを除去する:~DOM4#concept-node-remove
+#concept-node-adopt
+~nodeを受入する:~DOM4#concept-node-adopt
+
+#concept-node-insert-ext
+挿入-時の手続き:~DOM4#concept-node-insert-ext
+#concept-node-remove-ext
+除去-時の手続き:~DOM4#concept-node-remove-ext
+#concept-node-adopt-ext
+受入-時の手続き:~DOM4#concept-node-adopt-ext
+#children-changed-steps
+子たち変更-時の手続き:~DOM4#concept-node-children-changed-ext
+
+#concept-element-attributes-change
+属性を変更する:~DOM4#concept-element-attributes-change
+#concept-element-attributes-append
+属性を付加する:~DOM4#concept-element-attributes-append
+#concept-element-attributes-remove
+属性を除去する:~DOM4#concept-element-attributes-remove
+#concept-element-attributes-replace
+属性を置換する:~DOM4#concept-element-attributes-replace
+#concept-element-attributes-set-value
+属性~値を設定する:~DOM4#concept-element-attributes-set-value
+
+#concept-element-attributes-change-ext
+属性~変更-時の手続き:~DOM4#concept-element-attributes-change-ext
+
+#attribute-list
+属性~list:~DOM4#concept-element-attribute
+#concept-cd-data
+~text~nodeの~data:~DOM4#concept-cd-data
+#child-text-content
+~nodeの子~text内容:~DOM4#concept-child-text-content
+#descendant-text-content
+~nodeの子孫~text内容:~DOM4#concept-descendant-text-content
+#dom-event-constructor
+~event構築子:~DOM4#concept-event-constructor
+#concept-event-type
+~eventの型:~DOM4#dom-event-type
+#event-listener
+~event~listener:~DOM4#concept-event-listener
+#add-an-event-listener
+~event~listenerを追加する:~DOM4#add-an-event-listener
+#remove-an-event-listener
+~event~listenerを除去する:~DOM4#remove-an-event-listener
+#remove-all-event-listeners
+~event~listenerをすべて除去する:~DOM4#remove-all-event-listeners
+#event-listener-type
+evL.type:~DOM4#event-listener-type
+#event-listener-callback
+evL.callback:~DOM4#event-listener-callback
+#activation-behaviour
+作動化の挙動:~DOM4#eventtarget-activation-behavior
+#legacy-pre-activation-behavior
+旧来の作動化~前の挙動:~DOM4#eventtarget-legacy-pre-activation-behavior
+#legacy-canceled-activation-behavior
+旧来の作動化~取消~時の挙動:~DOM4#eventtarget-legacy-canceled-activation-behavior
+#creating-an-event
+~eventを作成する:~DOM4#concept-event-create
+#concept-event-fire
+~eventを発火する:~DOM4#concept-event-fire
+#canceled-flag
+取消d~flag:~DOM4#canceled-flag
+#composed-flag
+~composed~flag:~DOM4#composed-flag
+#concept-event-dispatch
+~eventを配送する:~DOM4#concept-event-dispatch
+	親~targetを取得-:~DOM4#get-the-parent
+#document's-character-encoding
+文書の符号化法:~DOM4#concept-document-encoding
+	'
+#concept-document-mode
+文書の~mode:~DOM4#concept-document-mode
+#concept-document-content-type
+文書の内容~型:~DOM4#concept-document-content-type
+#html-documents
+~HTML文書:~DOM4#html-document
+#xml-documents
+~XML文書:~DOM4#xml-document
+#limited-quirks-mode
+制限付き過去互換~mode:~DOM4#concept-document-limited-quirks
+#no-quirks-mode
+過去互換なし~mode:~DOM4#concept-document-no-quirks
+#quirks-mode
+過去互換~mode:~DOM4#concept-document-quirks
+#concept-node-clone
+~nodeを~cloneする:~DOM4#concept-node-clone
+#concept-node-clone-ext
+~clone時の手続き:~DOM4#concept-node-clone-ext
+基底~URL変更-手続き:#base-url-change-steps
+要素が基底~URLの変更に影響される:#affected-by-a-base-url-change
+#concept-id
+要素の一意~識別子:~DOM4#concept-id
+#concept-class
+要素の~class列:~DOM4#concept-class
+#concept-supported-tokens
+~supportする~token:~DOM4#concept-supported-tokens
+#concept-range
+~DOM範囲~obj:~DOM4#concept-range
+#concept-range-start
+始端:~DOM4#concept-range-start
+#concept-range-end
+終端:~DOM4#concept-range-end
+#concept-range-bp
+境界点:~DOM4#concept-range-bp
+#create-an-element
+要素を作成する~algo:~DOM4#concept-create-element 
+#element-interface
+要素~interface:~DOM4#concept-element-interface
+#custom-element-state
+~custom要素~状態:~DOM4#concept-element-custom-element-state
+#concept-element-defined
+定義-済み:~DOM4#concept-element-defined
+#concept-element-custom
+~custom要素:~DOM4#concept-element-custom
+#concept-element-namespace
+名前空間:~DOM4#concept-element-namespace
+#concept-element-namespace-prefix
+名前空間~接頭辞:~DOM4#concept-element-namespace-prefix
+#concept-element-local-name
+局所~名:~DOM4#concept-element-local-name
+#concept-element-custom-element-definition
+~custom要素~定義:~DOM4#concept-element-custom-element-definition
+#concept-element-is-value
+~is0値:~DOM4#concept-element-is-value
+#mutation-observers
+変異~observer:~DOM4#mutation-observers
+
+	●UIEVENTS
+#mouseevent
+I.MouseEvent:~UIEVENTS#mouseevent
+#mouseeventinit
+I.MouseEventInit:~UIEVENTS#dictdef-mouseeventinit
+#focusevent
+I.FocusEvent:~UIEVENTS#focusevent
+#uievent
+I.UIEvent:~UIEVENTS#uievent
+#dom-mouseevent-relatedtarget
+m.relatedTarget:~UIEVENTS#dom-mouseevent-relatedtarget
+#dom-focusevent-relatedtarget
+m.~relatedTargetF:~UIEVENTS#dom-focusevent-relatedtarget
+#dom-uievent-view
+m.view:~UIEVENTS#dom-uievent-view
+
+#event-auxclick
+et.auxclick:~UIEVENTS#event-type-auxclick
+#event-click
+et.click:~UIEVENTS#event-type-click
+#event-dblclick
+et.dblclick:~UIEVENTS#event-type-dblclick
+#event-mousedown
+et.mousedown:~UIEVENTS#event-type-mousedown
+#event-mouseenter
+et.mouseenter:~UIEVENTS#event-type-mouseenter
+#event-mouseleave
+et.mouseleave:~UIEVENTS#event-type-mouseleave
+#event-mousemove
+et.mousemove:~UIEVENTS#event-type-mousemove
+#event-mouseout
+et.mouseout:~UIEVENTS#event-type-mouseout
+#event-mouseover
+et.mouseover:~UIEVENTS#event-type-mouseover
+#event-mouseup
+et.mouseup:~UIEVENTS#event-type-mouseup
+#event-wheel
+et.wheel:~UIEVENTS#event-type-wheel
+#event-keydown
+et.keydown:~UIEVENTS#event-type-keydown
+#event-keypress
+et.keypress:uievents-appendix-ja.html#event-type-keypress
+#event-keyup
+et.keyup:~UIEVENTS#event-type-keyup
+
+	●Touch Events
+#touch
+I.Touch:~TOUCHEVENTS#idl-def-Touch
+#touch-point
+~touch点:~TOUCHEVENTS#dfn-touch-point
+#event-touchend
+et.touchend:~TOUCHEVENTS#event-touchend
+
+	●Pointer Events
+#event-pointerup
+et.pointerup:~POINTEREVENTS#the-pointerup-event
+
+	●DOM Parsing and Serialization
+#dom-element-innerhtml
+m.innerHTML:~DOM-Parsing#dom-innerhtml-innerhtml
+#dom-element-outerhtml
+m.outerHTML:~DOM-Parsing#dom-element-outerhtml
+
+
+	●HTML Editing API
+#selection
+I.Selection:~SELECTIONAPI#dom-selection
+#document-selection
+選択:~SELECTIONAPI#dfn-selection
+
+	●FULLSCREEN
+#top-layer
+上端層:~FULLSCREEN#top-layer
+#top-layer-add
+fs.追加する:~FULLSCREEN#top-layer-add
+#dom-element-requestfullscreen
+m.requestFullscreen:~FULLSCREEN#dom-element-requestfullscreen
+#run-the-fullscreen-steps
+全screen手続き:~FULLSCREEN#run-the-fullscreen-steps
+
+	●HRT
+#current-high-resolution-time
+現在の高分解能~時刻:~HRTIME#dfn-current-high-resolution-time
+#dom-domhighrestimestamp
+I.DOMHighResTimeStamp:~HRTIME#dom-domhighrestimestamp
+
+	●File API
+#blob
+I.Blob:~FILEAPI#blob
+#dom-blob-type
+m.~type0:~FILEAPI#dfn-type
+#file
+I.File:~FILEAPI#file
+#dom-file-name
+m.name:~FILEAPI#dfn-name
+#dom-file-lastmodified
+m.lastModified:~FILEAPI#dfn-lastModified
+#filelist
+I.FileList:~FILEAPI#filelist-section
+#snapshot-state
+~snapshot状態:~FILEAPI#snapshot-state
+読取-~error:#file-error-read
+#blob-url-store
+Blob URL Store:~FILEAPI#BlobURLStore
+
+
+	●BATTERY
+#dom-navigator-getbattery
+m.getBattery:~BATTERY#dom-navigator-getbattery
+
+	●IndexedDB
+#cleanup-indexed-database-transactions
+Indexed Database ~transactionを片付ける:~INDEXEDDB#cleanup-indexed-database-transactions
+
+	●Media 
+#mediasource
+I.MediaSource:~GITW3C/media-source/#idl-def-mediasource
+#detaching-from-a-media-element
+媒体~要素から切り離す:~GITW3C/media-source/#mediasource-detach
+
+#mediastream
+I.MediaStream:~GITW3C/mediacapture-main/getusermedia.html#idl-def-mediastream
+
+	●Reporting
+#queue-a-report
+報告を~queueする:~REPORTING#reporting-queue
+	~REPORTING#queue-report
+#report-type
+報告~種別:~REPORTING#report-type
+#visible-to-reportingobservers
+報告用~観測器から可視:~REPORTING#visible-to-reportingobservers
+
+	●XHR
+#xmlhttprequest
+I.XMLHttpRequest:~XHR#xmlhttprequest
+#dom-xmlhttprequest-responsexml
+m.responseXML:~XHR#dom-xmlhttprequest-responsexml
+#progressevent
+I.ProgressEvent:~XHR#interface-progressevent
+#dom-progressevent-lengthcomputable
+m.lengthComputable:~XHR#dom-progressevent-lengthcomputable
+#dom-progressevent-loaded
+m.loaded:~XHR#dom-progressevent-loaded
+#dom-progressevent-total
+m.total:~XHR#dom-progressevent-total
+#formdata
+I.FormData:~XHR#formdata
+#formdataentryvalue
+I.FormDataEntryValue:~XHR#formdataentryvalue
+#formdata-entry
+fD.~entry:~XHR#concept-formdata-entry
+#create-an-entry
+~entryを作成する:~XHR#create-an-entry
+
+
+	●CSS prop, data type, value
+
+#'margin-top'
+p.margin-top:~CSSBOX#propdef-margin-top
+#'margin-bottom'
+p.margin-bottom:~CSSBOX#propdef-margin-bottom
+#'margin-left'
+p.margin-left:~CSSBOX#propdef-margin-left
+#'margin-right'
+p.margin-right:~CSSBOX#propdef-margin-right
+#'padding-top'
+p.padding-top:~CSSBOX#propdef-padding-top
+#'padding-bottom'
+p.padding-bottom:~CSSBOX#propdef-padding-bottom
+#'padding-left'
+p.padding-left:~CSSBOX#propdef-padding-left
+#'padding-right'
+p.padding-right:~CSSBOX#propdef-padding-right
+
+#'top'
+p.top:~CSSPOS#propdef-top
+	p.top:~CSS2VISUREN
+#'bottom'
+p.bottom:~CSSPOS#propdef-bottom
+#'left'
+p.left:~CSSPOS#propdef-left
+#'right'
+p.right:~CSSPOS#propdef-right
+#'float'
+p.float:~CSS2VISUREN#float-position
+#'clear'
+p.clear:~CSS2VISUREN#flow-control
+#'width'
+p.width:~CSS2VISUDET#the-width-property
+#'height'
+p.height:~CSS2VISUDET#the-height-property
+#'line-height'
+p.line-height:~CSS2VISUDET#propdef-line-height
+#'vertical-align'
+p.vertical-align:~CSS2VISUDET#propdef-vertical-align
+#'content'
+p.content:~CSS22/generate.html#content
+#'visibility'
+p.visibility:~CSS2VISUFX#propdef-visibility
+
+#'border-top-width'
+p.border-top-width:~CSSBG#propdef-border-top-width
+#'border-bottom-width'
+p.border-bottom-width:~CSSBG#propdef-border-bottom-width
+#'border-left-width'
+p.border-left-width:~CSSBG#propdef-border-left-width
+#'border-right-width'
+p.border-right-width:~CSSBG#propdef-border-right-width
+#'border-top-style'
+p.border-top-style:~CSSBG#propdef-border-top-style
+#'border-bottom-style'
+p.border-bottom-style:~CSSBG#propdef-border-bottom-style
+#'border-left-style'
+p.border-left-style:~CSSBG#propdef-border-left-style
+#'border-right-style'
+p.border-right-style:~CSSBG#propdef-border-right-style
+#'border-top-color'
+p.border-top-color:~CSSBG#propdef-border-top-color
+#'border-bottom-color'
+p.border-bottom-color:~CSSBG#propdef-border-bottom-color
+#'border-left-color'
+p.border-left-color:~CSSBG#propdef-border-left-color
+#'border-right-color'
+p.border-right-color:~CSSBG#propdef-border-right-color
+#'display'
+p.display:~CSS2VISUREN#display-prop
+
+#'margin-block-start'
+p.margin-block-start:~CSSLOGICAL#propdef-margin-block-start
+#'margin-block-end'
+p.margin-block-end:~CSSLOGICAL#propdef-margin-block-end
+#'margin-inline-start'
+p.margin-inline-start:~CSSLOGICAL#propdef-margin-inline-start
+#'margin-inline-end'
+p.margin-inline-end:~CSSLOGICAL#propdef-margin-inline-end
+#'padding-block-start'
+p.padding-block-start:~CSSLOGICAL#propdef-padding-block-start
+#'padding-block-end'
+p.padding-block-end:~CSSLOGICAL#propdef-padding-block-end
+#'padding-inline-start'
+p.padding-inline-start:~CSSLOGICAL#propdef-padding-inline-start
+#'padding-inline-end'
+p.padding-inline-end:~CSSLOGICAL#propdef-padding-inline-end
+#'border-block-start-width'
+p.border-block-start-width:~CSSLOGICAL#propdef-border-block-start-width
+#'block-size'
+p.block-size:~CSSLOGICAL#propdef-block-size
+#'inline-size'
+p.inline-size:~CSSLOGICAL#propdef-inline-size
+
+#'image-orientation'"
+p.image-orientation:~CSSIMAGE#the-image-orientation
+#'object-fit'
+p.object-fit:~CSSIMAGE#the-object-fit
+#'background-color'
+p.background-color:~CSSBG#propdef-background-color
+#'background-image'
+p.background-image:~CSSBG#propdef-background-image
+#'border-radius'
+p.border-radius:~CSSBG#propdef-border-radius
+#'align-content'
+p.align-content:~CSSALIGN#propdef-align-content
+#'align-items'
+p.align-items:~CSSALIGN#propdef-align-items
+#'align-self'
+p.align-self:~CSSALIGN#propdef-align-self
+#'justify-self'
+p.justify-self:~CSSALIGN#propdef-justify-self
+#'justify-content'
+p.justify-content:~CSSALIGN#propdef-propdef-justify-content
+#'justify-items'
+p.justify-items:~CSSALIGN#propdef-propdef-justify-items
+
+#'flex-direction'
+p.flex-direction:~CSSFLEX#propdef-flex-direction
+#'flex-wrap'
+p.flex-wrap:~CSSFLEX#propdef-flex-wrap
+
+#'font-family'
+p.font-family:~CSSFONT#font-family-prop
+#'font-weight'
+p.font-weight:~CSSFONT#font-weight-prop
+#'font-size'
+p.font-size:~CSSFONT#font-size-prop
+#'font'
+p.font:~CSSFONT#font-prop
+
+#'grid-auto-columns'
+p.grid-auto-columns:~CSSGRID#propdef-grid-auto-columns
+#'grid-auto-flow'
+p.grid-auto-flow:~CSSGRID#propdef-grid-auto-flow
+#'grid-auto-rows'
+p.grid-auto-rows:~CSSGRID#propdef-grid-auto-rows
+#'grid-column-gap'
+p.grid-column-gap:~CSSGRID#propdef-grid-column-gap
+#'grid-row-gap'
+p.grid-row-gap:~CSSGRID#propdef-grid-row-gap
+#'grid-template-areas'
+p.grid-template-areas:~CSSGRID#propdef-grid-template-areas
+#'grid-template-columns'
+p.grid-template-columns:~CSSGRID#propdef-grid-template-columns
+#'grid-template-rows'
+p.grid-template-rows:~CSSGRID#propdef-grid-template-rows
+
+#'list-style-type'
+p.list-style-type:~CSSLIST#propdef-list-style-type
+
+#'overflow'
+p.overflow:~CSSOVERFLOW3#propdef-overflow
+#'hidden'
+v.hidden:~CSSOVERFLOW3#valdef-overflow-hidden
+#'text-overflow'
+p.text-overflow:~CSSOVERFLOW3#propdef-text-overflow
+
+#'position'
+p.position:~CSSPOS#position-property
+#'static'
+v.static:~CSSPOS#valdef-position-static
+
+#'column-count'
+p.column-count:~CSSMCOL#propdef-column-count
+#'column-fill'
+p.column-fill:~CSSMCOL#propdef-column-fill
+#'column-gap'
+p.column-gap:~CSSALIGN#propdef-column-gap
+#'column-rule'
+p.column-rule:~CSSMCOL#propdef-column-rule
+#'column-width'
+p.column-width:~CSSMCOL#propdef-column-width
+
+#'border-spacing'
+p.border-spacing:~CSSTABLE#propdef-border-spacing
+#'border-collapse'
+p.border-collapse:~CSSTABLE#border-collapse-property
+
+#'text-transform'
+p.text-transform:~CSSTEXT#text-transform-property
+#'white-space'
+p.white-space:~CSSTEXT#white-space-property
+#'text-align'
+p.text-align:~CSSTEXT#text-align-property
+#'letter-spacing'
+p.letter-spacing:~CSSTEXT#letter-spacing-property
+
+#'direction'
+p.direction:~CSSWM#direction
+#'unicode-bidi'
+p.unicode-bidi:~CSSWM#unicode-bidi
+#'outline'
+p.outline:~CSSUI#outline
+#'cursor'
+p.cursor:~CSSUI#cursor
+#'appearance'
+p.appearance:~CSSUI#appearance-switching
+
+#'color'
+p.color:~CSSCOLOR#the-color-property
+
+
+#'inline-block'
+v.inline-block:~CSS2VISUREN#valdef-display-inline-block
+	#value-def-inline-block
+
+#'ruby-base'
+v.ruby-base:~CSSRUBY#valdef-display-ruby-base
+#'table-cell'
+v.table-cell:~CSSTABLE#table-cell
+#'table-row'
+v.table-row:~CSSTABLE#table-row
+#'table-caption'
+v.table-caption:~CSSTABLE#table-caption
+#'table'
+v.table:~CSSTABLE#table
+
+
+#currentcolor
+v.currentcolor:~CSSCOLOR#valdef-color-currentcolor
+
+#whitespace-token
+t.whitespace-token:~CSSSYN#typedef-whitespace-token
+#length-2
+t.length:~CSSVAL#lengths
+#color
+t.color:~CSSCOLOR#typedef-color
+#media-condition
+t.media-condition:~MQ4#typedef-media-condition
+
+#'em'
+css.em:~CSSVAL#em
+#'ex'
+css.ex:~CSSVAL#ex
+#'vw'
+css.vw:~CSSVAL#vw
+#'in'
+css.in:~CSSVAL#in
+#'px'
+css.px:~CSSVAL#px
+
+#'attr()'
+css.attr():~CSSVAL#funcdef-attr
+#math-function
+~math関数:~CSSVAL#math-function
+
+	●CSS
+#named-color
+有名~色:~CSSCOLOR#named-color
+#opaque-black
+不透明な黒:~CSSCOLOR#opaque-black
+#transparent-black
+透明な黒:~CSSCOLOR#transparent-black
+#viewport
+表示域:~CSS2VISUREN#viewport
+#line-box
+行l~box:~CSS2VISUREN#line-box
+#out-of-flow
+~flow外:~CSSDISP#out-of-flow
+	~flow外:~CSS2VISUREN#out-of-flow
+#in-flow
+~flow内:~CSSDISP#in-flow
+	~flow内:~CSS2VISUREN#in-flow
+#content-area
+内容~区画:~CSSBOX#content-area
+#content-box
+内容~box:~CSSBOX#content-box
+#border-box
+~border~box:~CSSBOX#border-box
+#margin-box
+~margin~box:~CSSBOX#margin-box
+#border-edge
+~border辺:~CSSBOX#border-edge
+#margin-edge
+~margin辺:~CSSBOX#margin-edge
+#collapsing-margins
+~marginの相殺:~CSS2BOX#collapsing-margins
+#containing-block
+包含塊:~CSSDISP#containing-block
+	包含塊:~CSS2VISUDET#containing-block-details
+#inline-box
+行内~box:~CSS2VISUREN#inline-box
+#block-box
+塊~box:~CSSDISP#block-box
+	塊~box:~CSS2VISUREN#block-boxes①
+
+#outer-display-type
+外縁~表示~型:~CSSDISP#outer-display-type
+#block-level
+塊~level:~CSSDISP#block-level
+#block-container
+塊~容器:~CSSDISP#block-container
+#formatting-context
+整形~文脈:~CSSDISP#formatting-context
+#block-formatting-context
+塊~整形~文脈:~CSSDISP#block-formatting-context
+#inline-formatting-context
+行内~整形~文脈:~CSSDISP#inline-formatting-context
+#absolutely-positioned
+絶対的に位置され:~CSSPOS#absolute-position
+	絶対的に位置され:~CSSDISP#absolutely-positioned
+#replaced-element
+置換d要素:~CSSDISP#replaced-element
+#css-box
+~CSS~box:~CSSDISP#box
+
+#first-available-font
+可用な最初の~font:~CSSFONT#first-available-font
+
+#ascent-metric
+~ascent計量:~CSSINLINE#ascent-metric
+#descent-metric
+~descent計量:~CSSINLINE#descent-metric
+#alphabetic-baseline
+bL.alphabetic:~CSSINLINE#alphabetic-baseline
+#hanging-baseline
+bL.hanging:~CSSINLINE#hanging-baseline
+#ideographic-under-baseline
+bL.ideographic-under:~CSSINLINE#ideographic-under-baseline
+
+#fit-content-inline-size
+内容収納 行内~size:~SIZING#fit-content-inline-size
+
+#default-object-size
+既定の~obj~size:~CSSIMAGE#default-object-size
+#intrinsic-dimensions
+内在的~寸法:~CSSIMAGE#intrinsic-dimensions
+#intrinsic-aspect-ratio
+内在的~縦横比:~CSSIMAGE#intrinsic-aspect-ratio
+#intrinsic-height
+内在的~縦幅:~CSSIMAGE#intrinsic-height
+#intrinsic-width
+内在的~横幅:~CSSIMAGE#intrinsic-width
+
+#paint-source
+塗り~source:~CSSIMAGE4#paint-source
+
+
+	●WebAnim
+#update-animations-and-send-events
+~animationを更新して~eventを送信する:~WANIM#update-animations-and-send-events
+
+	●CSSOM
+#cssstyledeclaration
+I.CSSStyleDeclaration:~CSSOM1#the-cssstyledeclaration-interface
+#linkstyle
+I.LinkStyle:~CSSOM1#the-linkstyle-interface
+#screen
+I.Screen:~CSSOMVIEW#the-screen-interface
+#stylesheet
+I.StyleSheet:~CSSOM1#the-stylesheet-interface
+#dom-cssstyledeclaration-csstext
+m.cssText:~CSSOM1#dom-cssstyledeclaration-csstext
+
+#create-a-css-style-sheet
+~CSS~stylesheetを作成する:~CSSOM1#create-a-css-style-sheet
+#remove-a-css-style-sheet
+~CSS~stylesheetを除去する:~CSSOM1#remove-a-css-style-sheet
+#associated-css-style-sheet
+結付けられている~CSS~stylesheet:~CSSOM1#associated-css-style-sheet
+#css-style-sheet
+~CSS~stylesheet:~CSSOM1#css-style-sheet
+
+#concept-css-style-sheet-origin-clean-flag
+ss.生成元clean~flag:~CSSOM1#concept-css-style-sheet-origin-clean-flag
+#concept-css-style-sheet-css-rules
+ss.~CSS規則:~CSSOM1#concept-css-style-sheet-css-rules
+#concept-css-style-sheet-title
+ss.~title:~CSSOM1#concept-css-style-sheet-title
+#concept-css-style-sheet-disabeld-flag
+ss.不能化~flag:~CSSOM1#concept-css-style-sheet-disabeld-flag
+#concept-css-style-sheet-alternate-flag
+ss.代替-~flag:~CSSOM1#concept-css-style-sheet-alternate-flag
+#concept-css-style-sheet-media
+ss.媒体:~CSSOM1#concept-css-style-sheet-media
+#concept-css-style-sheet-location
+ss.所在:~CSSOM1#concept-css-style-sheet-location
+#concept-css-style-sheet-owner-css-rule
+ss.所有者~CSS規則:~CSSOM1#concept-css-style-sheet-owner-css-rule
+#concept-css-style-sheet-owner-node
+ss.所有者~node:~CSSOM1#concept-css-style-sheet-owner-node
+#concept-css-style-sheet-type
+ss.種別:~CSSOM1#concept-css-style-sheet-type
+#concept-css-style-sheet-parent-css-style-sheet
+ss.親~CSS~stylesheet:~CSSOM1#concept-css-style-sheet-parent-css-style-sheet
+
+
+#css-style-sheet-set
+~CSS~stylesheet集合:~CSSOM1#css-style-sheet-set
+#css-style-sheet-set-name
+~CSS~stylesheet集合~名:~CSSOM1#css-style-sheet-set-name
+#preferred-css-style-sheet-set-name
+選好される~CSS~stylesheet集合~名:~CSSOM1#preferred-css-style-sheet-set-name
+#change-the-preferred-css-style-sheet-set-name
+選好される~CSS~stylesheet集合~名を変更する:~CSSOM1#change-the-preferred-css-style-sheet-set-name
+#serializing-a-css-value
+~CSS値の直列化-法:~CSSOM1#serializing-css-values
+	~CSSOM1#serialize-a-css-value
+
+
+#event-resize
+et.resize:~CSSOMVIEW#eventdef-window-resize
+#event-scroll
+et.scroll:~CSSOMVIEW#eventdef-document-scroll
+
+#run-the-resize-steps
+文書の~resize手続き:~CSSOMVIEW#run-the-resize-steps
+#run-the-scroll-steps
+文書の~scroll手続き:~CSSOMVIEW#run-the-scroll-steps
+#evaluate-media-queries-and-report-changes
+文書~用の媒体~queryを評価して変化を報告する:~CSSOMVIEW#evaluate-media-queries-and-report-changes
+
+#scroll-an-element-into-view
+要素を~viewの中へ~scrollする:~CSSOMVIEW#scroll-an-element-into-view
+#scroll-to-the-beginning-of-the-document
+文書の開始位置に~scrollする:~CSSOMVIEW#scroll-to-the-beginning-of-the-document
+#set-up-browsing-context-features
+閲覧文脈の特能を設定しておく:~CSSOMVIEW#set-up-browsing-context-features
+
+	●CSS SYN
+#conformant-style-sheet
+適合t~stylesheet:~CSSSNAPSHOT#conform-classes
+	~CSSSYN#conform-classes
+#parse-a-comma-separated-list-of-component-values
+~comma区切りの成分~値~listを構文解析する:~CSSSYN#parse-a-comma-separated-list-of-component-values
+#component-value
+成分~値:~CSSSYN#component-value
+#environment-encoding
+環境~符号化法:~CSSSYN#environment-encoding
+
+
+	●CSS
+
+~CSS色~値として構文解析する:#parsed-as-a-css-color-value
+#parse-something-according-to-a-css-grammar
+~CSS文法に則って構文解析-:~CSSSYN#parse-grammar
+#type-selector
+型~選択子:~SELECTORS4#type-selector
+#attribute-selector
+属性~選択子:~SELECTORS4#attribute-selector
+#pseudo-class
+疑似類:~SELECTORS4#pseudo-class
+#css-styling-attribute
+~CSS~style属性:~CSSSTYLEATTR#style-attribute
+#specified-value
+指定d値:~CASCADE#specified-value
+#computed-value
+算出d値:~CASCADE#computed-value
+#used-value
+使用~値:~CASCADE#used-value
+
+	●CSSWM
+#block-flow-direction
+塊~flow方向:~CSSWM#block-flow-direction
+#block-size
+塊~size:~CSSWM#block-size
+#inline-size
+行内~size:~CSSWM#inline-size
+#block-start
+塊-始端:~CSSWM#block-start
+#block-end
+塊-終端:~CSSWM#block-end
+#inline-start
+行内-始端:~CSSWM#inline-start
+#inline-end
+行内-終端:~CSSWM#inline-end
+#line-left
+行-左端:~CSSWM#line-left
+#line-right
+行-右端:~CSSWM#line-right
+
+
+	●CanvasRenderingContext2D
+I.CanvasRenderingContext2D:~HEcanvas#canvasrenderingcontext2d
+I.FontFace:#fontface
+#font-source
+~font~source:~CSSFONTLOADING#font-source
+
+
+	●Geometry Interfaces Module
+#dommatrix
+I.DOMMatrix:~GEOMETRY#dommatrix
+#m11-element
+mat.m11:~GEOMETRY#matrix-m11-element
+#m12-element
+mat.m12:~GEOMETRY#matrix-m12-element
+#m21-element
+mat.m21:~GEOMETRY#matrix-m21-element
+#m22-element
+mat.m22:~GEOMETRY#matrix-m22-element
+#m41-element
+mat.m41:~GEOMETRY#matrix-m41-element
+#m42-element
+mat.m42:~GEOMETRY#matrix-m42-element
+#dommatrix2dinit
+I.DOMMatrix2DInit:~GEOMETRY#dictdef-dommatrix2dinit
+#dommatrixinit
+I.DOMMatrixInit:~GEOMETRY#dictdef-dommatrixinit
+#create-a-dommatrix-from-a-dictionary
+辞書から行列を作成する:~GEOMETRY#create-a-dommatrix-from-the-dictionary
+#create-a-dommatrix-from-a-2d-dictionary
+~2D辞書から行列を作成する:~GEOMETRY#_create-a-matrix-from-the-dictionary-2d
+	~GEOMETRY#create-a-dommatrix-from-the-2d-dictionary
+
+	●CSS Scoping
+#flat-tree
+平坦~tree:~CSSSCOPING#flat-tree
+
+	●Intersection Observer
+#run-the-update-intersection-observations-steps
+交差~観測nを更新する:~INTERSECTIONOBSERVER#run-the-update-intersection-observations-steps
+#intersectionobserver
+I.IntersectionObserver:~INTERSECTIONOBSERVER#intersectionobserver
+#intersectionobserverinit
+I.IntersectionObserverInit:~INTERSECTIONOBSERVER#dictdef-intersectionobserverinit
+#dom-intersectionobserver-observe
+m.observe:~INTERSECTIONOBSERVER#dom-intersectionobserver-observe
+#dom-intersectionobserver-unobserve
+m.unobserve:~INTERSECTIONOBSERVER#dom-intersectionobserver-unobserve
+#dom-intersectionobserverentry-isintersecting
+m.isIntersecting:~INTERSECTIONOBSERVER#dom-intersectionobserverentry-isintersecting
+#dom-intersectionobserverentry-target
+m.~target0:~INTERSECTIONOBSERVER#dom-intersectionobserverentry-target
+
+	●WebGL
+#webglrenderingcontext
+I.WebGLRenderingContext:https://www.khronos.org/registry/webgl/specs/latest/1.0/#WebGLRenderingContext
+#webgl2renderingcontext
+I.WebGL2RenderingContext:https://www.khronos.org/registry/webgl/specs/latest/2.0/#WebGL2RenderingContext
+#webglcontextattributes
+I.WebGLContextAttributes:https://www.khronos.org/registry/webgl/specs/latest/1.0/#WebGLContextAttributes
+
+
+
+	●WebVTT
+#webvtt-file
+~WebVTT~file:~WEBVTT#webvtt-file
+#webvtt-file-using-cue-text
+~cue~textを利用する~WebVTT~file:~WEBVTT#webvtt-file-using-cue-text
+#webvtt-file-using-only-nested-cues
+入子の~cueのみを利用する~WebVTT~file:~WEBVTT#webvtt-file-using-only-nested-cues
+#webvtt-parser
+~WebVTT構文解析器:~WEBVTT#webvtt-parser
+#rules-for-updating-the-display-of-webvtt-text-tracks
+~WebVTT~text~trackの表示を更新する規則:~WEBVTT#rules-for-updating-the-display-of-webvtt-text-tracks
+#text-track-cue-writing-direction
+~WebVTT~text~track~cueの書字方向:~WEBVTT#webvtt-cue-writing-direction
+#vttcue
+I.VTTCue:~WEBVTT#vttcue
+
+
+	●WSP
+
+#concept-websocket-establish
+~WebSocket接続を確立する:~FETCH#concept-websocket-establish
+~WebSocket接続は確立-済み:#concept-websocket-established
+利用-中の拡張:#concept-websockets-active-extensions
+利用-中の下位protocol:#concept-websocket-subprotocol
+handshake-cookies
+~WebSocket~messageを受信した:#concept-websocket-message-received
+~WebSocket~messageを送信する:#concept-websocket-send
+~WebSocket接続に失敗した:#concept-websocket-fail
+~WebSocket接続を~closeする:#concept-websocket-close
+~WebSocket~closing~handshakeを開始する:#concept-websocket-start-closing-handshake
+~WebSocket~closing~handshakeは開始-済み:#concept-websocket-closing-handshake
+~WebSocket接続は~close済み（場合によっては <i>clean に</i> ）:#concept-websocket-closed
+~WebSocket接続~close~code:#concept-websocket-close-code
+~WebSocket接続~close事由:#concept-websocket-close-reason
+h.Sec-WebSocket-Protocol:#http-sec-websocket-protocol
+
+	●ARIA
+a.aria-*:#attr-aria-*
+a.role:#attr-aria-role
+
+#attr-aria-role-button
+v.button:~ARIA1#button
+#attr-aria-role-presentation
+v.presentation:~ARIA1#presentation
+#attr-aria-describedby
+a.aria-describedby:~ARIA1#aria-describedby
+#attr-aria-disabled
+a.aria-disabled:~ARIA1#aria-disabled
+#attr-aria-label
+a.aria-label:~ARIA1#aria-label
+
+#concept-accessible-name
+~access可能な名前:~ARIA1#dfn-accessible-name
+
+	●CSP
+#content-security-policy
+~CSP:~CSP3#content-security-policy-object
+#csp-disposition
+処置先:~CSP3#policy-disposition
+#csp-directive-set
+指令~集合:~CSP3#policy-directive-set
+#content-security-policy-directive
+~CSP指令:~CSP3#directives
+#concept-csp-list
+~CSP~list:~CSP3#csp-list
+#content-security-policy-syntax
+~CSP構文:~CSP3#grammardef-serialized-policy
+#enforce-the-policy
+施策を施行する:~CSP3#enforced
+#parse-a-serialized-content-security-policy
+直列形の~CSPを構文解析する:~CSP3#parse-serialized-policy
+#initialize-a-global-object's-csp-list
+大域~objの~CSP~listを初期化する:~CSP3#initialize-global-object-csp
+#initialize-a-document's-csp-list
+文書の~CSP~listを初期化する:~CSP3#initialize-document-csp
+#should-element's-inline-behavior-be-blocked-by-content-security-policy
+要素の~inlineによる挙動は~CSPにより阻止されるべきか？:~CSP3#should-block-inline
+	'
+#should-navigation-request-of-type-from-source-in-target-be-blocked-by-content-security-policy
+~sourceから~targetを~navigateするある種別の要請は~CSPにより阻止されるべきか？:~CSP3#should-block-navigation-request
+#should-navigation-response-to-navigation-request-of-type-from-source-in-target-be-blocked-by-content-security-policy
+~sourceから~targetを~navigateするある種別の要請に対する応答は~CSPにより阻止されるべきか？:~CSP3#should-block-navigation-response
+#is-base-allowed-for-document
+文書に対する基底~URLは許容されるか？:~CSP3#allow-base-for-document
+#should-element-be-blocked-a-priori-by-content-security-policy
+要素は~CSPにより先天的に阻止されるべきか？:~CSP3#should-plugin-element-be-blocked-a-priori-by-content-security-policy
+#contains-a-header-delivered-content-security-policy
+~headerにより送達された~CSPを包含している:~CSP3#contains-a-header-delivered-content-security-policy
+
+
+#report-uri-directive
+dir.report-uri:~CSP3#report-uri
+#frame-ancestors-directive
+dir.frame-ancestors:~CSP3#frame-ancestors
+#sandbox-directive
+dir.sandbox:~CSP3#sandbox
+
+#csp-ensurecspdoesnotblockstringcompilation
+jA.EnsureCSPDoesNotBlockStringCompilation:~CSP3#can-compile-strings
+
+
+	●Service Workers
+#dfn-active-worker
+作動中の~worker:~SW1#dfn-active-worker
+#dfn-client-message-queue
+~client~message~queue:~SW1#dfn-client-message-queue
+#dfn-control
+制御-:~SW1#dfn-control
+#on-fetch-request-algorithm
+~fetchを取扱う:~SW1#on-fetch-request-algorithm
+#scope-match-algorithm
+合致する~sw登録:~SW1#scope-match-algorithm
+#dfn-service-worker
+~sw:~SW1#dfn-service-worker
+#serviceworkercontainer-service-worker-client
+~sw~client:~SW1#serviceworkercontainer-service-worker-client
+#serviceworker
+I.ServiceWorker:~SW1#serviceworker
+#serviceworkercontainer
+I.ServiceWorkerContainer:~SW1#serviceworkercontainer
+#serviceworkerglobalscope
+I.ServiceWorkerGlobalScope:~SW1#serviceworkerglobalscope
+
+
+	●MathML
+#mathml-annotation-xml
+e.annotation-xml:~MATHML/chapter5.html#mixing.elements.annotation.xml
+#mathml-math
+e.math:~MATHML/chapter2.html#interf.toplevel
+#mathml-merror
+e.merror:~MATHML/chapter3.html#presm.merror
+#mathml-mi
+e.mi:~MATHML/chapter3.html#presm.mi
+#mathml-mn
+e.mn:~MATHML/chapter3.html#presm.mn
+#mathml-mo
+e.mo:~MATHML/chapter3.html#presm.mo
+#mathml-ms
+e.ms:~MATHML/chapter3.html#presm.ms
+#mathml-mtext
+e.mtext:~MATHML/chapter3.html#presm.mtext
+
+
+	●SVG
+#svgelement
+I.SVGElement:~SVGtypes#InterfaceSVGElement
+#svgimageelement
+I.SVGImageElement:~SVGembedded#InterfaceSVGImageElement
+#svgscriptelement
+I.SVGScriptElement:~SVGinteract#InterfaceSVGScriptElement
+#svgsvgelement
+I.SVGSVGElement:~SVGstruct#InterfaceSVGSVGElement
+
+#svg-a
+e.~svg-a:~SVGlinking#AElement
+#svg-desc
+e.desc:~SVGstruct#DescElement
+#svg-foreignobject
+e.foreignObject:~SVGembedded#ForeignObjectElement
+#svg-image
+e.image:~SVGembedded#ImageElement
+#svg-script
+e.~svg-script:~SVGinteract#ScriptElement
+#svg-svg
+e.svg:~SVGstruct#SVGElement
+#svg-title
+e.title:~SVGstruct#TitleElement
+#svg-use
+e.use:~SVGstruct#UseElement
+
+#filter-function-list
+t.filter-function-list:~FILTERS#typedef-filter-function-list
+t.filter-value-list:~FILTERS#typedef-filter-value-list
+
+	●WORKLETS1
+#workletglobalscope
+I.WorkletGlobalScope:~WORKLETS1#workletglobalscope
+#concept-worklet-owner-document
+所有者~文書:~WORKLETS1#workletglobalscope-owner-document
+
+	●REQUESTIDLECALLBACK
+
+#requestidlecallback()
+m.requestIdleCallback:~REQUESTIDLECALLBACK#the-requestidlecallback-method
+#start-an-idle-period-algorithm
+遊休期間を開始する:~REQUESTIDLECALLBACK#start-an-idle-period-algorithm
+
+	●STORAGE
+#obtain-a-local-storage-bottle-map
+局所~storage瓶~mapを得する:~STORAGE#obtain-a-local-storage-bottle-map
+#obtain-a-session-storage-bottle-map
+~session~storage瓶~mapを得する:~STORAGE#obtain-a-session-storage-bottle-map
+#storage-proxy-map
+~storage~proxy~map:~STORAGE#storage-proxy-map
+#legacy-clone-a-browsing-session-storage-shed
+閲覧~session~storage倉を旧来~cloneする:~STORAGE#legacy-clone-a-browsing-session-storage-shed
+
+	●APPMANIFEST
+#application-manifest
+~app~manifest:~APPMANIFEST#dfn-application-manifest
+	~APPMANIFEST#dfn-manifest
+#installed-web-application
+~installした~web~app:~APPMANIFEST#dfn-installed-web-application
+#process-the-manifest
+~manifestを処理する:~APPMANIFEST#dfn-processing-a-manifest
+
+●●words_table1
+
+TOUCHEVENTS:touch-events-ja.html
+POINTEREVENTS:pointerevents-ja.html
+GITW3C:https://w3c.github.io
+MATHML:https://www.w3.org/Math/draft-spec
+JSIMPORT:https://tc39.es/proposal-dynamic-import/
+WEBVTT:https://w3c.github.io/webvtt/
+REQUESTIDLECALLBACK:requestidlecallback-ja.html
+PAINTTIMING:paint-timing-ja.html
+LONGTASKS:longtasks-ja.html
+BATTERY:battery-ja.html
+APPMANIFEST:appmanifest-ja.html
+
+form_urlencoded:<code>application/x-www-form-urlencoded</code> 
+is0:<code class="attr">is</code> 
+type0:type
+relatedTargetF:relatedTarget
+svg-a:a
+svg-script:script
+target0:target
+
+
+●●words_table
+
+	●構造／データ型／演算
+shadow:
+slottable:
+slot:
+平坦:flat:~
+	平坦~化:flatten
+広義先祖:inclusive ancestor::~
+広義子孫:inclusive descendant::~
+和集合:union::~
+surrounding:
+Record:
+Module-Record:Module Record
+循環な:cyclic::循環
+prototype:
+typedef:
+前挿入:pre-insert::~
+受入-:adopt::~
+派生-:derive::~
+瓶:bottle::~::ボトル
+倉:shed::~::シェッド
+clear::::クリア
+
+	●構文解析／文字列
+非文字:noncharacter::~
+
+同等:equal::~
+同等性:equality::~
+comma::::カンマ
+colon::::コロン
+semicolon::::セミコロン
+丸括弧:parenthesis:~
+scalar::::スカラー
+surrogate::::サロゲート
+制御文字:
+数字:
+ASCII 16 進数字:（
+英大文字:upper alpha::~
+英小文字:lower alpha::~
+数字:digit::~
+英字:alpha::~
+英数字:alphanumeric::~
+hex::16 進
+改行文字:newline::~
+
+区切りの:-separated:~
+剥がな:stripしな::~
+剥ぐ:stripする::~
+剥いで:stripして::~
+縮約-:collapse::~
+分割-:split::~
+読飛ばす:skipする:読み飛ばす
+
+forgiving-base64:
+同型:isomorphic::~
+	符号化-集合
+頭部:leading:~
+直列形の:serialized::~::シリアル形の
+	直列化-法:serializing
+
+	●処理一般／event
+開始:start::~
+終了-:terminate::~
+演算子:operator::~
+observer::::オブザーバ
+composed:
+	変換-法:converting
+翻訳-:translate::~
+実行候補:candidate execution:~
+報告用:reporting::~
+処置先:disposition::~
+
+	●保安／環境
+
+agent:
+先天的:a priori::~
+認証-:authenticate::~
+	認証-済み:authenticated
+暗号用:cryptographic::~
+nonce::::ナンス
+	過去互換なし:no-quirks
+制限付き:limited::~
+生成元clean:origin-clean::生成元-clean::オリジン-clean
+閲覧:browsing::~
+
+	●仕様／適合
+mining::::マイニング
+許容list:allowlist::許容 list:許容リスト
+一定の:certain:~
+同義:synonymous:~
+同義語:synonym:~
+偏向-:bias toward:~
+	具体的:For instance
+遭遇-:encounter:~
+
+	言及-
+	~~適正な
+	省略時:optional
+	より前の版:earlier revisions
+
+	●依存関係
+読取-:read:読み取り
+2D:
+行列:matrix::~
+黒:black:~
+close:
+essence:
+blue:
+closing:
+closure:
+exotic:
+cue::::
+id:
+role:
+state:
+	~style付け:styling
+subtitle::::サブタイトル
+touch::::タッチ
+track::::トラック
+transaction::::トランザクション
+factory:
+片付ける:clean upする:~
+	片付ける:cleanup
+essential:
+MathML:
+XLink:
+XMLNS:
+全screen:fullscreen:::全スクリーン
+math:
+時刻:time::~
+高分解能:high resolution::~
+刻む:markする:~
+遊休期間:idle period::~
+manifest::::マニフェスト
+install::::インストール
+
+	●network, fetch, url
+WebSocket:
+HTTP_S:HTTP(S) 
+percent-::: %-
+handshake::::ハンドシェイク
+hostname::::ホスト名
+password::::パスワード
+ok:
+公共:public::~
+Location:
+BOM:
+sniff:
+state:
+username::::ユーザ名
+cannot-be-a-base-URL:::基底 URL 不可用
+snapshot::::スナップショット
+優先度:priority::~
+非安全:unsafe::~
+下位protocol:subprotocol:::下位プロトコル:サブプロトコル
+	予約-済み:reserved
+処理命令:processing instruction:~
+
+	●未分類
+WebVTT:
+blob:
+拡張属性:extended attribute::~
+多重定義:overload::~
+reload::::リロード
+式:expression::~
+首:primary::~
+割当され:assignされ::あてがわれ
+割当する:assignする::あてがう
+割当先:assign 先::あてがい先
+委譲-:delegate:~
+色:color::~
+開始位置:beginning:~
+境界点:boundary point::~
+上端層:top layer::~
+
+	括弧
+	注記
+	秒
+
+
+	●CSS layout
+相殺:collapsing::~
+行-:line-::~
+塗り:paint::~
+縦横比:aspect ratio::~
+内容収納:fit-content::~
+書字方向:writing direction::~
+ascent::::アセント
+descent::::ディセント
+計量:metric:~
+
+	out-of-flow
+	in-flow
+	part
+	始-:begin
+	一方で
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる
+HTML 仕様の
+<a href="~SPEC_URL#dependencies">§ Dependencies</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+</head>
+<body>
+
+<header id="head">
+	<hgroup>
+<h1>依存関係 — Dependencies</h1>
+	</hgroup>
+</header>
+
+<main id="MAIN" hidden>
+
+			<section id="dependencies">
+<h3 title="Dependencies">2.1.9. 依存関係</h3>
+
+<p>
+この仕様は、他のいくつかの下層~仕様に依拠する。
+◎
+This specification relies on several other underlying specifications.
+</p>
+
+<dl>
+<!--% INFRA -->
+	<dt>`Infra^cite `INFRA$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>一般の反復~用語
+⇒＃
+`~WHILE!,
+`~CONTINUE!,
+`~BREAK!
+</li><li>`実装定義!
+</li><li>`追跡~行路!
+</li><li>`符号位置!, その同義語 `文字!
+</li><li>`符号単位!
+</li><li>`文字列!, および その
+⇒＃
+`長さ!,
+`符号位置~長さ!
+</li><li>`文字列$の同等性~演算 `一致する!
+</li><li>`~scalar値~文字列!
+</li><li>次に挙げる各種［
+`符号位置$の集合
+］
+⇒＃
+`~surrogate!,
+`~scalar値!,
+`非文字!,
+`~ASCII空白!,
+`制御~文字!,
+`~ASCII数字!,
+`~ASCII~hex数字（大文字）!,
+`~ASCII~hex数字（小文字）!,
+`~ASCII~hex数字!,
+`~ASCII英大文字!,
+`~ASCII英小文字!,
+`~ASCII英字!,
+`~ASCII英数字!
+</li><li>`同型に復号する!
+</li><li>`~ASCII小文字~化する!
+</li><li>`~ASCII大文字~化する!
+</li><li>`~ASCII大小無視!
+</li><li>`改行文字を剥ぐ!
+</li><li>`改行文字を正規化する!
+</li><li>`前後の~ASCII空白~列を剥ぐ!
+</li><li>`~ASCII空白を剥いで縮約する!
+</li><li>`~ASCII空白で分割する!
+</li><li>`~commaで分割する!
+</li><li>`符号位置~並びを収集する!, および その`位置~変数!
+</li><li>`~ASCII空白を読飛ばす!
+</li><li>`有順序~map! ~data構造, および
+⇒＃
+`~entryの値!,
+`~entry!,
+`~map内に存在する!,
+`~entryの値を取得する!,
+`~entryの値を設定する!,
+`~entryを除去する!,
+`~mapを~clearする!,
+`~key~listを取得する!,
+`~mapの~size!,
+`~mapを反復する!
+</li><li>`~list! ~data構造, および
+⇒＃
+`~listに付加する!,
+`~listを拡張する!,
+`~list内で置換する!,
+`~listから除去する!,
+`~listを空にする!,
+`~list内に包含する!,
+`~listの~size!,
+`~listは空!,
+`~listを反復する!,
+`~listを~cloneする!
+</li><li>`~stack! ~data構造, および
+⇒＃
+`~stackに~pushする!,
+`~stackから~popする!
+</li><li>`~queue! ~data構造, および
+⇒＃
+`~enqueueする!,
+`~dequeueする!
+</li><li>`有順序~集合! ~data構造, および
+⇒＃
+`有順序~集合に付加する!
+`和集合!
+</li><li>`~tuple!
+</li><li>`構造体! 仕様~型, および`構造体の~item!
+</li><li>`~forgiving-base64符号化する! ~algo
+</li><li>`~forgiving-base64復号する! ~algo
+</li><li>次に挙げる各種 名前空間
+⇒＃
+`~HTML名前空間!,
+`~MathML名前空間!,
+`~SVG名前空間!,
+`~XLink名前空間!,
+`~XML名前空間!,
+`~XMLNS名前空間!
+</li></ul>
+
+◎
+The following terms are defined in Infra: [INFRA]
+• The general iteration terms while, continue, and break.
+• tracking vector
+• code point and its synonym character
+• surrogate
+• scalar value
+• tuple
+• noncharacter
+• string, code unit, length, and code point length
+• The string equality operations is and identical to
+• scalar value string
+• ASCII whitespace
+• control
+• ASCII digit
+• ASCII upper hex digit
+• ASCII lower hex digit
+• ASCII hex digit
+• ASCII upper alpha
+• ASCII lower alpha
+• ASCII alpha
+• ASCII alphanumeric
+• isomorphic decode
+• ASCII lowercase
+• ASCII uppercase
+• ASCII case-insensitive
+• strip newlines
+• normalize newlines
+• strip leading and trailing ASCII whitespace
+• strip and collapse ASCII whitespace
+• split a string on ASCII whitespace
+• split a string on commas
+• collect a sequence of code points and its associated position variable
+• skip ASCII whitespace
+• The ordered map data structure and the associated definitions for value, entry, exists, getting the value of an entry, setting the value of an entry, removing an entry, clear, getting the keys, size, and iterate
+• The list data structure and the associated definitions for append, extend, replace, remove, empty, contains, size, is empty, iterate, and clone
+• The stack data structure and the associated definitions for push and pop
+• The queue data structure and the associated definitions for enqueue and dequeue
+• The ordered set data structure and the associated definition for append
+• The struct specification type and the associated definition for item
+• The forgiving-base64 encode and forgiving-base64 decode algorithms
+• HTML namespace
+• MathML namespace
+• SVG namespace
+• XLink namespace
+• XML namespace
+• XMLNS namespace
+</dd>
+
+<!--% ENCODING -->
+	<dt>`Encoding^cite `ENCODING$r</dt>
+	<dd>
+~textな~dataは、~Unicode文字~集合 `UNICODE$r を利用して表現される。
+`Encoding^cite が`符号化法$に関わる要件を定義する。
+◎
+Unicode and Encoding
+◎
+The Unicode character set is used to represent textual data, and Encoding defines requirements around character encodings. [UNICODE]
+</dd>
+	<dd class="note">注記：
+この仕様は、前述したように，これらの仕様に定義される用語に基づいて
+<a href="~HTMLINFRA#encoding-terminology">各種用語を導入する</a>。
+◎
+This specification introduces terminology based on the terms defined in those specifications, as described earlier.
+</dd>
+	<dd>
+<p>
+次に挙げる~algoが定義される：
+</p>
+
+<ul ><li>`~labelから符号化法を取得する!
+</li><li>`符号化法から出力~符号化法を取得する!
+</li><li>汎用な`~Unicodeに復号する!
+⇒
+これは、 ( ~byte~stream, `符号化法$ ) を~~入力にとり，文字~streamを返す。
+</li><li>`~UTF-8復号する!
+⇒
+これは、~byte~streamを~~入力にとり，頭部に~UTF-8~BOM（ Byte Order Mark ）があればそれを剥いだ上で，文字~streamを返す。
+</li><li>`~BOMはそのままに~UTF-8復号する!
+⇒
+これは、頭部の~UTF-8~BOMは剥がないことを除いて， `~UTF-8復号する$のと同じになる。
+</li><li>`符号化法を利用して符号化する!
+⇒
+これは、 ( 文字~stream, `符号化法$ ) を~~入力にとり，~byte~streamを返す。
+</li><li>`~UTF-8符号化する!
+⇒
+これは、文字~streamを~~入力にとり，~byte~streamを返す。
+</li><li>`~BOMを~sniffする!
+⇒
+これは、~byte~streamを~~入力にとり，［
+符号化法／ ~NULL
+］を返す。
+</li></ul>
+
+◎
+The following terms are used as defined in Encoding: [ENCODING]
+• Getting an encoding
+• Get an output encoding
+• The generic decode algorithm which takes a byte stream and an encoding and returns a character stream
+• The UTF-8 decode algorithm which takes a byte stream and returns a character stream, additionally stripping one leading UTF-8 Byte Order Mark (BOM), if any
+• The UTF-8 decode without BOM algorithm which is identical to UTF-8 decode except that it does not strip one leading UTF-8 Byte Order Mark (BOM)
+• The encode algorithm which takes a character stream and an encoding and returns a byte stream
+• The UTF-8 encode algorithm which takes a character stream and returns a byte stream
+• The BOM sniff algorithm which takes a byte stream and returns an encoding or null.
+</dd>
+
+<!--% XML -->
+	<dt>
+~XML, および関係する仕様
+◎
+XML and related specifications
+</dt>
+	<dd>
+~HTML用の`~XML構文$を~supportする実装は、~XMLの何らかの~versionを，それに対応する名前空間~仕様とともに~supportするモノトスル
+— その構文は、名前空間を伴う~XML直列化を利用するので。
+`XML$r `XMLNS$r
+◎
+Implementations that support the XML syntax for HTML must support some version of XML, as well as its corresponding namespaces specification, because that syntax uses an XML serialization with namespaces. [XML] [XMLNS]
+</dd>
+	<dd>
+~data~mining~toolその他の~UAは、［
+~scriptを走らす ／
+~CSSを評価する ／
+XPath 式を伴う ／
+その他 結果の~DOMを任意な内容に公開する
+］ことなく演算を遂行するならば、［
+名前空間~文字列を実際に公開する
+］ことなく［
+単に，［
+その種の~DOM~nodeに相当するものは，ある名前空間に属する
+］ものと表明する
+］ことにより， “名前空間を~support” してもヨイ。
+◎
+Data mining tools and other user agents that perform operations on content without running scripts, evaluating CSS or XPath expressions, or otherwise exposing the resulting DOM to arbitrary content, may "support namespaces" by just asserting that their DOM node analogues are in certain namespaces, without actually exposing the namespace strings.
+</dd>
+	<dd class="note">注記：
+`~HTML構文$における［
+名前空間~接頭辞, 名前空間~宣言
+］による効果は、~XMLにおけるそれと同じでない。
+具体的には、~HTML要素~名における~colonは，特別な意味を持たない。
+◎
+In the HTML syntax, namespace prefixes and namespace declarations do not have the same effect as in XML. For instance, the colon has no special meaning in HTML element names.
+</dd>
+	<dd>
+<p>
+次に挙げるものは、
+`Extensible Markup Language^cite `XML$r
+にて定義される：
+</p>
+
+<ul><li>`~XML名前空間$に属する~tag名
+<dfn id="attr-xml-space">`xml:space^e</dfn>
+を伴う属性
+</li><li>`Name!P 生成規則
+</li></ul>
+◎
+The attribute with the tag name xml:space in the XML namespace is defined by Extensible Markup Language (XML). [XML]
+◎
+The Name production is defined in XML. [XML]
+</dd>
+	<dd>
+この仕様は、
+`Associating Style Sheets with XML documents^cite `XMLSSPI$r
+にて定義される
+`&lt;?xml-stylesheet?&gt;!c
+処理命令も参照する。
+◎
+This specification also references the &lt;?xml-stylesheet?&gt; processing instruction, defined in Associating Style Sheets with XML documents. [XMLSSPI]
+</dd>
+	<dd>
+<p>
+この仕様は、次に挙げるものについても非~規範的に言及する `XSLTP$r：
+</p>
+
+<ul ><li>`XSLTProcessor@I ~interface, および その
+⇒＃
+`transformToFragment()@m ~method,
+`transformToDocument()@m ~method
+</li></ul>
+
+◎
+This specification also non-normatively mentions the XSLTProcessor interface and its transformToFragment() and transformToDocument() methods. [XSLTP]
+</dd>
+
+<!--% URL -->
+	<dt>`URL^cite `URL$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`~host!
+</li><li>`公共~接尾辞!
+</li><li>`~domain!
+</li><li>`登録-可能な~domain!
+</li><li>`IPv4 ~address!
+</li><li>`IPv6 ~address!
+</li><li>`~URL!
+</li><li>~URLの`生成元!url
+</li><li>`絶対~URL!
+</li><li>`相対~URL!
+</li><li>`~URL構文解析器!
+</li><li>`基本~URL構文解析器!, および その各種~state
+⇒＃
+`~scheme開始~state!,
+`~host~state!,
+`~path~state!,
+`~path開始~state!,
+`~hostname~state!,
+`~port~state!,
+`~query~state!,
+`素片~state!
+</li><li>`~URL~record!, および その各種~成分
+⇒＃
+`~scheme!url,
+`~username!url,
+`~password!url,
+`~host!url,
+`~port!url,
+`~path!url,
+`~query!url,
+`素片!url,
+`~cannot-be-a-base-URL~flag!,
+`~obj!url 【`~blob~URL~entry$urlの`~obj$bU】
+</li><li>`妥当な~URL文字列!
+</li><li>`~username／~password／~portを持てない! の概念
+</li><li>`~URL直列化器!
+</li><li>`~host構文解析器!
+</li><li>`~host直列化器!
+</li><li>`同等な~host!
+</li><li>`同等な~URL!
+</li><li>`整数を直列化する!
+</li><li>`~path~percent-符号化-集合!
+</li><li>`成分~percent-符号化-集合!
+</li><li>`符号位置を~UTF-8~percent-符号化する!
+</li><li>`文字列を~byte列に~percent-復号する!
+</li><li>`~URLの~usernameを設定する!
+</li><li>`~URLの~passwordを設定する!
+</li><li>`~form_urlencoded形式!
+</li><li>`~form_urlencoded直列化器!
+</li></ul>
+
+◎
+The following terms are defined in URL: [URL]
+• host
+• public suffix
+• domain
+• IPv4 address
+• IPv6 address
+• URL
+• Origin of URLs
+• Absolute URL
+• Relative URL
+• registrable domain
+• The URL parser and basic URL parser as well as these parser states:
+• 	scheme start state
+• 	host state
+• 	hostname state
+• 	port state
+• 	path start state
+• 	query state
+• 	fragment state
+• URL record, as well as its individual components:
+• 	scheme
+• 	username
+• 	password
+• 	host
+• 	port
+• 	path
+• 	query
+• 	fragment
+• 	cannot-be-a-base-URL flag
+• 	object
+• valid URL string
+• The cannot have a username/password/port concept
+• The URL serializer
+• The host parser
+• The host serializer
+• Host equals
+• URL equals
+• serialize an integer
+• Default encode set
+• component percent-encode set
+• UTF-8 percent-encode
+• String percent-decode
+• set the username
+• set the password
+• The application/x-www-form-urlencoded format
+• The application/x-www-form-urlencoded serializer
+</dd>
+	<dd>
+<p>
+この仕様では、次に挙げる各種
+~scheme, ~protocol
+も参照する
+⇒＃
+`about_!sc `ABOUT$r,
+`blob_!sc `FILEAPI$r,
+`data_!sc `RFC2397$r,
+`http_!sc `HTTP$r,
+`https_!sc `HTTP$r,
+`mailto_!sc `MAILTO$r,
+`sms_!sc `SMS$r,
+`urn_!sc `URN$r
+◎
+A number of schemes and protocols are referenced by this specification also:
+• The about: scheme [ABOUT]
+• The blob: scheme [FILEAPI]
+• The data: scheme [RFC2397]
+• The http: scheme [HTTP]
+• The https: scheme [HTTP]
+• The mailto: scheme [MAILTO]
+• The sms: scheme [SMS]
+• The urn: scheme [URN]
+</dd>
+
+<!--% MEDIAFRAG -->
+	<dt>`Media Fragments URI^cite `MEDIAFRAG$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`媒体~素片~構文! 
+</li></ul>
+
+◎
+Media fragment syntax is defined in Media Fragments URI. [MEDIAFRAG]
+</dd>
+
+<!--% HTTP -->
+	<dt>
+~HTTP, および関係する各~仕様
+◎
+HTTP and related specifications
+</dt>
+	<dd>
+<p>
+次に挙げる各種~headerは、~HTTP仕様にて定義される：
+`HTTP$r
+⇒＃
+`Accept!h,
+`Accept-Language!h,
+`Cache-Control!h,
+`Content-Disposition!h,
+`Content-Language!h,
+`Last-Modified!h,
+`Referer!h
+◎
+The following terms are defined in the HTTP specifications: [HTTP]
+• `Accept` header
+• `Accept-Language` header
+• `Cache-Control` header
+• `Content-Disposition` header
+• `Content-Language` header
+• `Last-Modified` header
+• `Referer` header
+</dd>
+	<dd>
+<p>
+次に挙げる用語は、
+`HTTP State Management Mechanism^cite `COOKIES$r
+にて定義される：
+</p>
+
+<ul ><li>`cookie-string@P
+</li><li>`set-cookie-string を受信した@
+</li><li>`Cookie!h ~header
+</li></ul>
+
+◎
+The following terms are defined in HTTP State Management Mechanism: [COOKIES]
+• cookie-string
+• receives a set-cookie-string
+• `Cookie` header
+</dd>
+	<dd>
+<p>
+次に挙げる用語は、
+`Web Linking^cite `WEBLINK$r
+にて定義される：
+</p>
+
+<ul ><li>`Link!h ~header
+</li></ul>
+
+◎
+The following term is defined in Web Linking: [WEBLINK]
+• `Link` header
+</dd>
+	<dd>
+<p>
+次に挙げる用語は、
+`Structured Field Values for HTTP^cite `STRUCTURED-FIELDS$r
+にて定義される：
+</p>
+
+<ul ><li>`有構造~header! , および その値を成す
+⇒＃
+`真偽値!sf,
+`~token!sf,
+`~parameters!sf
+</li></ul>
+
+◎
+The following terms are defined in Structured Field Values for HTTP: [STRUCTURED-FIELDS]
+• structured header
+• boolean
+• structured header tokens
+• parameters
+</dd>
+	<dd>
+<p>
+次に挙げる用語は、
+`MIME Sniffing^cite `MIMESNIFF$r
+にて定義される：
+</p>
+
+<ul ><li>`~MIME型!
+</li><li>`妥当な~MIME型~文字列!
+</li><li>`~parameterを伴わない妥当な~MIME型~文字列!
+</li><li>`~HTML~MIME型!
+</li><li>`~JS~MIME型!, および`~JS~MIME型に~essence合致-!
+</li><li>`~JSON~MIME型!
+</li><li>`~XML~MIME型!
+</li></ul>
+
+◎
+The following terms are defined in MIME Sniffing: [MIMESNIFF]
+• MIME type
+• valid MIME type string
+• valid MIME type string with no parameters
+• HTML MIME type
+• JavaScript MIME type and JavaScript MIME type essence match
+• JSON MIME type
+• XML MIME type
+</dd>
+
+<!--% FETCH -->
+	<dt>`Fetch^cite `FETCH$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`~ABNF!
+</li><li>`about_blank@sc
+</li><li>`~HTTP_S~scheme!
+</li><li>`局所~scheme!
+</li><li>`~network~scheme!
+</li><li>`~fetch~scheme!
+</li><li>`~CORS~protocol!
+</li><li>`既定の User-Agent 値!
+</li><li>`~header~listから~MIME型を抽出する!
+</li><li>`~fetch!
+</li><li>`~HTTP~redirect~fetch!
+</li><li>`~ok状態s!
+</li><li>`~navi要請!
+</li><li>`~network~error!
+</li><li>`Origin!h ~header
+</li><li>`Cross-Origin-Resource-Policy!h ~header
+</li><li>`応答を処理する!
+</li><li>`有構造~field値を取得する!
+</li><li>`~headerを設定する!
+</li><li>`~header~listから値を取得して復号して分割する!
+</li><li>`~fetchを終了させる!
+</li><li>`非同一-生成元~資源~施策~検査!
+</li><li>`RequestCredentials!I 列挙~型
+</li><li>`RequestDestination!I 列挙~型
+</li><li>`fetch()!m ~method
+</li><li>`応答~URLを報告-用に直列化する!
+</li><li>`応答!, および その
+⇒＃
+`種別!rs,
+`~URL!rs,
+`~URL~list!rs,
+`状態s!rs,
+`~header~list!rs,
+`本体!rs,
+`内部~応答!rs,
+`~CSP~list!rs,
+`~Location~header~URL!rs
+</li><li>`要請!, および その
+⇒＃
+`~URL!rq,
+`~method!rq,
+`~header~list!rq,
+`本体!rq,
+`~client!rq,
+`~URL~list!rq,
+`現在の~URL!rq,
+`予約-済み~client!rq,
+`置換する~client~id!rq,
+`起動元!rq,
+`行先!rq,
+`優先度!rq,
+`生成元!rq,
+`~referrer!rq,
+`同期~flag!rq,
+`~mode!rq,
+`資格証~mode!rq,
+`~URL資格証~利用~flag!rq,
+`~cache~mode!rq,
+`非安全~要請~flag!rq,
+`~redirect~mode!rq,
+`~referrer施策!rq,
+`暗号用~nonce~metadata!rq,
+`完全性~metadata!rq,
+`構文解析器~metadata!rq,
+`~reload~navi~flag!rq,
+`履歴~navi~flag!rq
+</li><li>`行先の素!
+</li><li>`行先の素$を`行先に翻訳する!
+</li><li>`~scriptに類する行先!
+</li></ul>
+
+◎
+The following terms are defined in Fetch: [FETCH]
+• ABNF
+• about:blank
+• An HTTP(S) scheme
+• A local scheme
+• A network scheme
+• A fetch scheme
+• CORS protocol
+• default `User-Agent` value
+• extract a MIME type
+• fetch
+• HTTP-redirect fetch
+• ok status
+• navigation request
+• network error
+• `Origin` header
+• `Cross-Origin-Resource-Policy` header
+• process response
+• set
+• getting a structured field value
+• get, decode, and split
+• terminate
+• cross-origin resource policy check
+• the RequestCredentials enumeration
+• the RequestDestination enumeration
+• the fetch() method
+• serialize a response URL for reporting
+
+• response and its associated:
+• 	type
+• 	url
+• 	url list
+• 	status
+• 	header list
+• 	body
+• 	internal response
+• 	CSP list
+• 	location URL
+
+• request and its associated:
+• 	url
+• 	method
+• 	header list
+• 	body
+• 	client
+• 	URL list
+• 	current URL
+• 	reserved client
+• 	replaces client id
+• 	initiator
+• 	destination
+• 	potential destination
+• 	translating a potential destination
+• 	script-like destinations
+• 	priority
+• 	origin
+• 	referrer
+• 	synchronous flag
+• 	mode
+• 	credentials mode
+• 	use-URL-credentials flag
+• 	unsafe-request flag
+• 	cache mode
+• 	redirect mode
+• 	referrer policy
+• 	cryptographic nonce metadata
+• 	integrity metadata
+• 	parser metadata
+• 	reload-navigation flag
+• 	history-navigation flag
+</dd>
+	<dd>
+<p>
+`Fetch^cite の周辺~仕様：
+</p>
+		<dl>
+<!--% REFERRERPOLICY -->
+			<dt>`Referrer Policy^cite `REFERRERPOLICY$r</dt>
+			<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`~referrer施策!
+</li><li>`Referrer-Policy!h ~HTTP~header
+</li><li>`Referrer-Policy ~headerを構文解析する! ~algo
+</li><li>次に挙げる各種~referrer施策
+⇒＃
+`no-referrer!l,
+`no-referrer-when-downgrade!l,
+`origin-when-cross-origin!l,
+`unsafe-url!l
+</li></ul>
+
+◎
+The following terms are defined in Referrer Policy: [REFERRERPOLICY]
+• referrer policy
+• The `Referrer-Policy` HTTP header
+• The parse a referrer policy from a `Referrer-Policy` header algorithm
+• The "no-referrer", "no-referrer-when-downgrade", "origin-when-cross-origin", and "unsafe-url" referrer policies
+</dd>
+
+<!--% MIX -->
+			<dt>`Mixed Content^cite `MIX$r</dt>
+			<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`先天的に認証-済み~URL!
+</li></ul>
+
+◎
+The following terms are defined in Mixed Content: [MIX]
+• a priori authenticated URL
+</dd>
+		</dl>
+	</dd>
+
+<!--% PAINTTIMING -->
+	<dt>`Paint Timing^cite `PAINTTIMING$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`塗り計時を刻む!
+</li></ul>
+
+◎
+The following terms are defined in Paint Timing: [PAINTTIMING]
+• mark paint timing
+</dd>
+
+	<dt>`Long Tasks^cite `LONGTASKS$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`長い~taskを報告する!
+</li></ul>
+
+◎
+The following terms are defined in Long Tasks: [LONGTASKS]
+• report long tasks
+</dd>
+
+<!--% WEBIDL -->
+	<dt>`Web IDL^cite `WEBIDL$r</dt>
+	<dd>
+この仕様~内の各~IDL片は、
+`Web IDL^cite から要求される適合~IDL片として解釈するモノトスル。
+◎
+The IDL fragments in this specification must be interpreted as required for conforming IDL fragments, as described in Web IDL. [WEBIDL]
+</dd>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`this! 【和訳では コレ 】
+</li><li>`拡張属性!
+</li><li>`旧来の~factory関数!
+</li><li>`構築子~演算!
+</li><li>`構築子を上書きする手続き!
+</li><li>`~interfaceを実装する新たな~objを内部的に作成する!
+</li><li>`配列~index~prop名!
+</li><li>`~supportする~prop~index!
+</li><li>`有index~propの値を決定する!
+</li><li>`既存の有index~propの値を設定する!
+</li><li>`新たな有index~propの値を設定する!
+</li><li>`有名~propを~supportする!
+</li><li>`~supportする~prop名!
+</li><li>`有名~propの値を決定する!
+</li><li>`既存の有名~propの値を設定する!
+</li><li>`新たな有名~propの値を設定する!
+</li><li>`既存の有名~propを削除する!
+</li><li>`~security検査を遂行する!
+</li><li>`~platform~obj!
+</li><li>`旧来の~platform~obj!
+</li><li>`首~interface!
+</li><li>`~interface~obj!
+</li><li>`内包する!
+</li><li>`~interface~prototype~obj!
+</li><li>~platform~objの `Realm!sl ~field
+</li><li>`~callback文脈!
+</li><li>`凍結d配列!
+</li><li>`凍結d配列を作成する!
+</li><li>`~interfaceを実装する新たな~objを作成する!
+</li><li>`~callback this 値!
+</li><li>各種~Web~IDL型と各種~JS型との間の`変換-法!
+</li><li>`~callback関数を呼出す!
+</li><li>`~callback関数で構築する!
+</li><li>~Unicode~scalar値~列に変換する
+【廃された（`~scalar値~文字列に変換する$ `INFRA$r と同義）】
+</li><li>`多重定義~解決~algo!
+</li><li>`公開されている!
+</li><li>次に挙げる拡張属性
+⇒＃
+`LegacyFactoryFunction!xA,
+`LegacyLenientThis!xA,
+`LegacyNullToEmptyString!xA,
+`LegacyOverrideBuiltIns!xA,
+`LegacyTreatNonObjectAsNull!xA,
+`LegacyUnenumerableNamedProperties!xA,
+`LegacyUnforgeable!xA
+</li></ul>
+
+◎
+The following terms are defined in Web IDL:
+• this
+• extended attribute
+• named constructor
+• constructor operation
+• overridden constructor steps
+• internally create a new object implementing the interface
+• array index property name
+• supported property indices
+• determine the value of an indexed property
+• set the value of an existing indexed property
+• set the value of a new indexed property
+• support named properties
+• supported property names
+• determine the value of a named property
+• set the value of an existing named property
+• set the value of a new named property
+• delete an existing named property
+• perform a security check
+• platform object
+• legacy platform object
+• primary interface
+• interface object
+• include
+• interface prototype object
+• [[Realm]] field of a platform object
+• callback context
+• frozen array and creating a frozen array
+• callback this value
+• converting between Web IDL types and JS types
+• invoking and constructing callback functions
+• converting to a sequence of Unicode scalar values
+• overload resolution algorithm
+• exposed
+• [LegacyFactoryFunction]
+• [LegacyLenientThis]
+• [LegacyNullToEmptyString]
+• [LegacyOverrideBuiltIns]
+• [LegacyTreatNonObjectAsNull]
+• [LegacyUnenumerableNamedProperties]
+• [LegacyUnforgeable]
+</dd>
+	<dd>
+次に挙げる型も定義され、この仕様の~Web~IDL片にて利用される
+⇒＃
+`ArrayBuffer!I,
+`ArrayBufferView!I,
+`boolean!I,
+`DOMString!I,
+`double!I,
+`列挙!,
+`Error!I【廃された】,
+`Function!I,
+`long!I,
+`object!I,
+`Uint8ClampedArray!I,
+`unrestricted double!I,
+`unsigned long!I,
+`USVString!I,
+`VoidFunction!I
+◎
+The Web IDL also defines the following types that are used in Web IDL fragments in this specification:
+• ArrayBuffer
+• ArrayBufferView
+• boolean
+• DOMString
+• double
+• enumeration
+• Error
+• Function
+• long
+• object
+• Uint8ClampedArray
+• unrestricted double
+• unsigned long
+• USVString
+• VoidFunction
+</dd>
+	<dd>
+用語
+`投出!
+（ `throw^en ）
+【和訳では、~algo内では ~THROW と表記される】
+に加え，
+`DOMException!I 型, および 次に挙げる`例外~名$も定義され、この仕様で利用される
+⇒＃
+`IndexSizeError!E,
+`HierarchyRequestError!E,
+`InvalidCharacterError!E,
+`NotFoundError!E,
+`NotSupportedError!E,
+`InvalidStateError!E,
+`SyntaxError!E,
+`InvalidAccessError!E,
+`SecurityError!E,
+`NetworkError!E,
+`AbortError!E,
+`QuotaExceededError!E,
+`DataCloneError!E,
+`EncodingError!E,
+`NotAllowedError!E
+◎
+The term throw in this specification is used as defined in Web IDL. The DOMException type and the following exception names are defined by Web IDL and used by this specification:
+• IndexSizeError
+• HierarchyRequestError
+• InvalidCharacterError
+• NotFoundError
+• NotSupportedError
+• InvalidStateError
+• SyntaxError
+• InvalidAccessError
+• SecurityError
+• NetworkError
+• AbortError
+• QuotaExceededError
+• DataCloneError
+• EncodingError
+• NotAllowedError 
+</dd>
+	<dd>
+この仕様が、特定0の時刻を表現するような
+`Date ~objを作成する@
+よう~UAに要求するときは、新たに作成される `Date$jC ~objの時刻~値（特別な値 NaN にもなり得るが，そうでない場合）は、その時刻のミリ秒~成分の小数は切り捨てて整数に丸めた結果の時刻を表現するモノトスル。
+◎
+When this specification requires a user agent to create a Date object representing a particular time (which could be the special value Not-a-Number), the milliseconds component of that time, if any, must be truncated to an integer, and the time value of the newly created Date object must represent the resulting truncated time.
+</dd>
+	<dd class="example">
+具体的には、時刻［
+01:00 UTC on January 1st 2000
+（ 2000 年 1 月 1 日の UTC 時間帯 午前 1 時）
+］から
+( 23045 ÷ 1000 ÷ 1000 )
+秒~後の時刻
+— すなわち <samp>2000-01-01T00:00:00.023045Z</samp> —
+に対し作成される `Date$jC ~objは，それより
+( 45 ÷ 1000 ÷ 1000 )
+秒~早い時刻
+— すなわち <samp>2000-01-01T00:00:00.023Z</samp> —
+に対し作成されるそれと同じ時刻を表現する。
+NaN に対し作成される `Date$jC ~objは、時刻~値 NaN を表現する（これは、特定の時刻を表現しないことを指示する）。
+◎
+For instance, given the time 23045 millionths of a second after 01:00 UTC on January 1st 2000, i.e. the time 2000-01-01T00:00:00.023045Z, then the Date object created representing that time would represent the same time as that created representing the time 2000-01-01T00:00:00.023Z, 45 millionths earlier. If the given time is NaN, then the result is a Date object that represents a time value NaN (indicating that the object does not represent a specific instant of time).
+</dd>
+
+<!--% JS -->
+	<dt>~JS</dt>
+	<dd>
+この仕様が述べる言語の ある部分は、下層の~scripting言語として~JSのみを~supportする。
+`JAVASCRIPT$r
+◎
+Some parts of the language described by this specification only support JavaScript as the underlying scripting language. [JAVASCRIPT]
+</dd>
+	<dd class="note">注記：
+用語 “~JS” は、 ECMA-262 を指す。
+公式的な用語として ECMAScript もあるが、 ~JS の方がより広く知られているなので。
+また， `~MIME型$ `text/javascript^c は、~JSを指す
+— `RFC4329$r により公式的には廃用にされた型である
+<a href="~INFRA#willful-violation">にもかかわらず</a>、それは最も共通的に利用されている型なので。
+◎
+The term "JavaScript" is used to refer to ECMA-262, rather than the official term ECMAScript, since the term JavaScript is more widely known. Similarly, the MIME type used to refer to JavaScript in this specification is text/javascript, since that is the most commonly used type, despite it being an officially obsoleted type according to RFC 4329. [RFC4329]
+</dd>
+	<dd>
+<p>
+この仕様は、~JS仕様にて定義される次に挙げる用語を利用する：
+</p>
+
+<ul ><li>`作動中の関数~obj!
+</li><li>`~agent!
+</li><li>`~agent~cluster!
+</li><li>`自動的~semicolon挿入!
+</li><li>`実行候補!
+</li><li>`現在の~Realm~Record!
+</li><li>`early error!
+</li><li>`前方-進捗!
+</li><li>`~essential内部~methodに対する不変則!
+</li><li>`~JS実行~文脈!
+</li><li>`~JS実行~文脈~stack!
+</li><li>`~JS~realm!
+</li><li>`EnvironmentRecord!js
+</li><li>`NewTarget!js
+</li><li>`走っている~JS実行~文脈!
+</li><li>`~surrounding~agent!
+</li><li>`抽象-~closure!
+</li><li>`変異-不能な~prototype~exotic~obj!
+</li><li>`Well-Known Symbols!
+【周知の記号】
+— 次を含む
+⇒＃
+`hasInstance@jS,
+`isConcatSpreadable@jS,
+`toPrimitive@jS,
+`toStringTag@jS
+</li><li>`Well-Known Intrinsic Objects!
+【周知の内在的~obj】
+— 次を含む
+⇒＃
+`Array.prototype!jI,
+`Error.prototype!jI,
+`EvalError.prototype@jI,
+`Function.prototype!jI,
+`JSON.parse!jI,
+`Object.prototype!jI,
+`Object.prototype.valueOf!jI,
+`RangeError.prototype@jI,
+`ReferenceError.prototype@jI,
+`SyntaxError.prototype@jI,
+`TypeError.prototype@jI,
+`URIError.prototype@jI
+</li><li>次に挙げる各種 生成規則
+⇒＃
+`FunctionBody!P,
+`Module!P,
+`Pattern!P,
+`Script!P
+</li><li>`Type! 記法
+</li><li>`完了~record! 仕様~型【 “仕様~levelの抽象-型” 】
+</li><li>`List! 仕様~型
+</li><li>`Record! 仕様~型 
+</li><li>`Property Descriptor! 仕様~型 
+</li><li>`Script Record! 仕様~型 
+</li><li>`循環な~Module-Record! 仕様~型 
+</li><li>`~source~text~Module-Record! 仕様~型 , および その
+⇒＃
+`Evaluate!jM ~method,
+`Link!jM ~method
+</li><li>次に挙げる各種 抽象-演算
+⇒＃
+`ArrayCreate!jA,
+`Call!jA,
+`Construct!jA,
+`CopyDataBlockBytes!jA,
+`CreateByteDataBlock!jA,
+`CreateDataProperty!jA,
+`DetachArrayBuffer!jA,
+`EnqueueJob!jA,
+`EnumerableOwnPropertyNames!jA,
+`FinishDynamicImport!jA,
+`OrdinaryFunctionCreate!jA,
+`Get!jA,
+`GetActiveScriptOrModule!jA,
+`GetFunctionRealm!jA,
+`HasOwnProperty!jA,
+`HostEnqueuePromiseJob!jA,
+`HostEnsureCanCompileStrings!jA,
+`HostImportModuleDynamically!jA,
+`HostPromiseRejectionTracker!jA,
+`HostResolveImportedModule!jA,
+`InitializeHostDefinedRealm!jA,
+`IsAccessorDescriptor!jA,
+`IsCallable!jA,
+`IsConstructor!jA,
+`IsDataDescriptor!jA,
+`IsDetachedBuffer!jA,
+`IsSharedArrayBuffer!jA,
+`NewObjectEnvironment!jA,
+`NormalCompletion!jA,
+`OrdinaryGetPrototypeOf!jA,
+`OrdinarySetPrototypeOf!jA,
+`OrdinaryIsExtensible!jA,
+`OrdinaryPreventExtensions!jA,
+`OrdinaryGetOwnProperty!jA,
+`OrdinaryDefineOwnProperty!jA,
+`OrdinaryGet!jA,
+`OrdinarySet!jA,
+`OrdinaryDelete!jA,
+`OrdinaryOwnPropertyKeys!jA,
+`ObjectCreate!jA,
+`ParseModule!jA,
+`ParseScript!jA,
+`NewPromiseReactionJob!jA,
+`NewPromiseResolveThenableJob!jA,
+`PromiseReactionJob!jA,
+`PromiseResolveThenableJob!jA,
+`RegExpBuiltinExec!jA,
+`RegExpCreate!jA,
+`RunJobs!jA,
+`SameValue!jA,
+`ScriptEvaluation!jA,
+`SetImmutablePrototype!jA,
+`ToBoolean!jA,
+`ToString!jA,
+`ToUint32!jA,
+`TypedArrayCreate!jA
+</li><li>`Abstract Equality Comparison! ~algo
+</li><li>`Strict Equality Comparison! ~algo
+</li><li>`Atomics!jC ~obj
+</li><li>次に挙げる各種~class
+⇒＃
+`Date!jC,
+`RegExp!jC,
+`SharedArrayBuffer!jC,
+`TypeError!jC,
+`RangeError!jC
+</li><li>`eval()!c 関数
+</li><li>`IsHTMLDDA!sl 内部~slot
+</li><li>`import()!c
+</li><li>`import.meta!c
+</li><li>`HostGetImportMetaProperties!jA 抽象-演算
+</li><li>次に挙げる各種 演算子
+⇒＃
+`typeof!js,
+`delete!js
+</li><li>`TypedArray の各種~構築子!
+</li></ul>
+
+◎
+The following terms are defined in the JavaScript specification and used in this specification:
+• active function object
+• agent and agent cluster
+• automatic semicolon insertion
+• candidate execution
+• The current Realm Record
+• early error
+• forward progress
+• invariants of the essential internal methods
+• JavaScript execution context
+• JavaScript execution context stack
+• JavaScript realm
+• EnvironmentRecord
+• NewTarget
+• running JavaScript execution context
+• surrounding agent
+• abstract closure
+• immutable prototype exotic object
+• Well-Known Symbols, including
+	@@hasInstance,
+	@@isConcatSpreadable,
+	@@toPrimitive, and
+	@@toStringTag
+• Well-Known Intrinsic Objects, including
+	%Array.prototype%,
+	%Error.prototype%,
+	%EvalError.prototype%,
+	%Function.prototype%,
+	%JSON.parse%,
+	%Object.prototype%,
+	%Object.prototype.valueOf%,
+	%RangeError.prototype%,
+	%ReferenceError.prototype%,
+	%SyntaxError.prototype%,
+	%TypeError.prototype%, and
+	%URIError.prototype%
+• The FunctionBody production
+• The Module production
+• The Pattern production
+• The Script production
+• The Type notation
+• The Completion Record specification type
+• The List and Record specification types
+• The Property Descriptor specification type
+• The Script Record specification type
+• The Cyclic Module Record specification type
+• The Source Text Module Record specification type and its Evaluate and Link methods
+• The ArrayCreate abstract operation
+• The Call abstract operation
+• The Construct abstract operation
+• The CopyDataBlockBytes abstract operation
+• The CreateByteDataBlock abstract operation
+• The CreateDataProperty abstract operation
+• The DetachArrayBuffer abstract operation
+• The EnumerableOwnPropertyNames abstract operation
+• The FinishDynamicImport abstract operation
+• The OrdinaryFunctionCreate abstract operation
+• The Get abstract operation
+• The GetActiveScriptOrModule abstract operation
+• The GetFunctionRealm abstract operation
+• The HasOwnProperty abstract operation
+• The HostEnqueuePromiseJob abstract operation
+• The HostEnsureCanCompileStrings abstract operation
+• The HostImportModuleDynamically abstract operation
+• The HostPromiseRejectionTracker abstract operation
+• The HostResolveImportedModule abstract operation
+• The InitializeHostDefinedRealm abstract operation
+• The IsAccessorDescriptor abstract operation
+• The IsCallable abstract operation
+• The IsConstructor abstract operation
+• The IsDataDescriptor abstract operation
+• The IsDetachedBuffer abstract operation
+• The IsSharedArrayBuffer abstract operation
+• The NewObjectEnvironment abstract operation
+• The NormalCompletion abstract operation
+• The OrdinaryGetPrototypeOf abstract operation
+• The OrdinarySetPrototypeOf abstract operation
+• The OrdinaryIsExtensible abstract operation
+• The OrdinaryPreventExtensions abstract operation
+• The OrdinaryGetOwnProperty abstract operation
+• The OrdinaryDefineOwnProperty abstract operation
+• The OrdinaryGet abstract operation
+• The OrdinarySet abstract operation
+• The OrdinaryDelete abstract operation
+• The OrdinaryOwnPropertyKeys abstract operation
+• The ObjectCreate abstract operation
+• The ParseModule abstract operation
+• The ParseScript abstract operation
+• The NewPromiseReactionJob abstract operation
+• The NewPromiseResolveThenableJob abstract operation
+• The PromiseReactionJob abstract operation
+• The PromiseResolveThenableJob abstract operation
+• The RegExpBuiltinExec abstract operation
+• The RegExpCreate abstract operation
+• The RunJobs abstract operation
+• The SameValue abstract operation
+• The ScriptEvaluation abstract operation
+• The SetImmutablePrototype abstract operation
+• The ToBoolean abstract operation
+• The ToString abstract operation
+• The ToUint32 abstract operation
+• The TypedArrayCreate abstract operation
+• The Abstract Equality Comparison algorithm
+• The Strict Equality Comparison algorithm
+• The Atomics object
+• The Date class
+• The RegExp class
+• The SharedArrayBuffer class
+• The TypeError class
+• The RangeError class
+• The eval() function
+• The [[IsHTMLDDA]] internal slot
+• import()
+• import.meta
+• The HostGetImportMetaProperties abstract operation
+• The typeof operator
+• The delete operator
+• The TypedArray Constructors table
+</dd>
+	<dd>
+~JSを~supportする~UAは、
+`ECMAScript Internationalization API^cite `JSINTL$r
+も実装するモノトスル。
+◎
+Users agents that support JavaScript must also implement ECMAScript Internationalization API. [JSINTL]
+</dd>
+
+	<dt>`WebAssembly JavaScript Interface^cite `WASMJS$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+<ul ><li>`WebAssembly.Module!c
+</li></ul>
+◎
+The following term is defined in WebAssembly JavaScript Interface: [WASMJS]
+• WebAssembly.Module
+</dd>
+
+<!--% DOM -->
+	<dt>`DOM^cite （ Document Object Model ） `DOM$r</dt>
+	<dd>
+~DOMは、文書とその内容の表現~modelである。
+~DOMは~APIに留まるものではない
+— この仕様では、~HTML実装の適合性~判定基準は，~DOMに対する演算の用語を通して定義する。
+◎
+The Document Object Model (DOM) is a representation — a model — of a document and its content. The DOM is not just an API; the conformance criteria of HTML implementations are defined, in this specification, in terms of operations on the DOM. [DOM]
+</dd>
+	<dd>
+この仕様にて~DOMの用語で定義される特能のうち一部は，~DOM~interfaceに対する拡張として定義されるので、実装は，［
+~DOMおよび UI Events `UIEVENTS$r
+］に定義される各種~eventを~supportするモノトスル。
+◎
+Implementations must support DOM and the events defined in UI Events, because this specification is defined in terms of the DOM, and some of the features are defined as extensions to the DOM interfaces. [DOM] [UIEVENTS]
+</dd>
+
+	<dd>
+<p>
+特に，次に挙げる特能が定義される：
+</p>
+
+<ul ><li>`Attr!I ~interface
+</li><li>`Comment!I ~interface
+</li><li>`DOMImplementation!I ~interface, および その
+⇒＃
+`createDocument()!m ~method,
+`createHTMLDocument()!m ~method
+</li><li>`Document!I ~interface, および その
+⇒＃
+`createElement()!m ~method,
+`createElementNS()!m ~method,
+`getElementsByClassName()!m ~method,
+`importNode()!m ~method
+</li><li>`DocumentOrShadowRoot!I ~interface~mixin
+</li><li>要素／文書の `getElementById()!m ~method
+</li><li>`DocumentFragment!I ~interface
+</li><li>`DocumentType!I ~interface
+</li><li>`ChildNode!I ~interface
+</li><li>`Element!I ~interface, および その
+⇒＃
+`attachShadow()!m ~method,
+`id!m 属性
+</li><li>`Node!I ~interface, および その
+⇒＃
+`appendChild()!m ~method,
+`cloneNode()!m ~method,
+`textContent!m 属性
+</li><li>`NodeList!I ~interface
+</li><li>`ProcessingInstruction!I ~interface
+</li><li>`ShadowRoot!I ~interface
+</li><li>`Text!I ~interface
+</li><li>`HTMLCollection!I ~interface, および その
+⇒＃
+`length!m 属性,
+`item()!m ~method,
+`namedItem()!m ~method
+</li><li>`DOMTokenList!I ~interface, および その
+⇒
+`value!m 属性
+</li><li>`~collection!
+</li><li>`~collectionにより表現される!
+</li><li>`~node文書! の概念
+</li><li>文書の`種別!doc の概念
+</li><li>`~host!dT の概念
+</li><li>`~tree!, `~shadow~tree!, `~node~tree! の概念
+</li><li>`~shadow根! の概念, および その`~focusを委譲する!
+</li><li>`~shadow~host! の概念
+</li><li>`~targetし直す! ~algo
+</li><li>要素の`~shadow根!elm
+</li><li>`~tree順序!, `~shadowも含む~tree順序! の概念
+</li><li>`子! の概念
+</li><li>`根!, `~shadowも含む根! の概念
+</li><li>`広義先祖!, `~shadowも含む子孫!, `~shadowも含む広義子孫!, `~shadowも含む広義先祖! の概念
+</li><li>`最初の子!, `次の同胞! の概念
+</li><li>`文書~要素! の概念
+</li><li>`文書~tree内にある!, `文書~内にある!（旧来の）, `接続されて!いる の概念
+</li><li>`~slot! の概念, その`~slot名!, `割当済み~nodeたち!
+</li><li>`割当先~slot! の概念
+</li><li>`平坦~化された~slottableたちを見出す! ~algo
+</li><li>`~slotに割当する! ~algo
+</li><li>~node用の次に挙げる~algo：
+	<ul ><li>`~nodeを子の前に前挿入する!
+	</li><li>`~nodeを子の前に挿入する!
+	</li><li>`~nodeを付加する!
+	</li><li>`子を~nodeに置換する!
+	</li><li>`全~内容を~nodeで置換する!
+	</li><li>`全~内容を文字列に置換する!
+	</li><li>`~nodeを除去する!
+	</li><li>`~nodeを受入する!
+	</li></ul>
+</li><li>要素~用の~hook
+	<ul ><li>`挿入-時の手続き!
+	</li><li>`除去-時の手続き!
+	</li><li>`受入-時の手続き!
+	</li><li>`子たち変更-時の手続き!
+	</li></ul>
+</li><li>内容~属性~用の次に挙げる~algo：
+	<ul ><li>`属性を変更する!
+	</li><li>`属性を付加する!
+	</li><li>`属性を除去する!
+	</li><li>`属性を置換する!
+	</li><li>`属性~値を設定する!
+	</li></ul>
+</li><li>属性~用の~hook
+	<ul ><li>`属性~変更-時の手続き!
+	</li></ul>
+</li><li>要素の`属性~list! の概念
+</li><li>`~text~nodeの~data!
+</li><li>`~nodeの子~text内容!
+</li><li>`~nodeの子孫~text内容!
+</li><li>`Event!I ~interface, および その
+⇒＃
+`type!m 属性,
+`target!m 属性,
+`currentTarget!m 属性,
+`bubbles!m 属性,
+`cancelable!m 属性,
+`composed!m 属性,
+`isTrusted!m 属性,
+`initEvent()!m ~method,
+`preventDefault()!m ~method
+</li><li>`~event構築子!（［
+`Event^I ／ `Event^I から派生した
+］~interfaceの構築子の挙動）
+</li><li>`EventTarget!I ~interface, および その
+⇒
+`addEventListener()!m ~method
+</li><li>`EventListener!I ~callback~interface
+</li><li>`作動化の挙動! ~hook
+</li><li>`旧来の作動化~前の挙動! ~hook
+</li><li>`旧来の作動化~取消~時の挙動! ~hook
+</li><li>`~eventを作成する! ~algo
+</li><li>`~eventを発火する! ~algo
+</li><li>`取消d~flag!
+</li><li>`~composed~flag!
+</li><li>`~eventを配送する! ~algo
+</li><li>`EventInit!I 辞書~型
+</li><li>`~eventの型!
+</li><li>`~event~listener!, および その
+⇒＃
+`type!evL,
+`callback!evL
+</li><li>`~event~listenerを追加する! ~algo
+</li><li>`~event~listenerを除去する! ~algo
+</li><li>`~event~listenerをすべて除去する! ~algo
+</li><li>`文書の符号化法!
+</li><li>`文書の~mode!
+</li><li>`文書の内容~型!
+</li><li>`~XML文書!
+</li><li>`~HTML文書!, および XML 文書との区別
+</li><li>`過去互換~mode!
+</li><li>`制限付き過去互換~mode!
+</li><li>`過去互換なし~mode!
+</li><li>`~nodeを~cloneする! ~algo, その~algoから利用される，`~clone時の手続き!
+</li><li>`基底~URL変更-手続き@ の概念
+</li><li>`要素が基底~URLの変更に影響される@ときに何が起きるかの定義
+</li><li>`要素の一意~識別子!（ ID ）の概念
+</li><li>`要素の~class列! の概念
+</li><li>`~supportする~token!
+</li><li>`~DOM範囲~obj! （ `Range^I ）の概念, および その
+⇒＃
+`始端!,
+`終端!,
+`境界点!
+</li><li>`要素を作成する~algo!
+</li><li>`要素~interface!の概念
+</li><li>`~custom要素~状態!, 要素は`定義-済み!, `~custom要素! の概念
+</li><li>要素の
+⇒＃
+`名前空間!,
+`名前空間~接頭辞!,
+`局所~名!,
+`~custom要素~定義!,
+`~is0値!
+</li><li>`MutationObserver!I ~interface
+</li><li>`変異~observer! in general
+</li></ul>
+
+◎
+In particular, the following features are defined in DOM: [DOM]
+• Attr interface
+• Comment interface
+• DOMImplementation interface
+• Document interface
+• DocumentOrShadowRoot interface
+• DocumentFragment interface
+• DocumentType interface
+• ChildNode interface
+• Element interface
+• attachShadow() method
+• An element's shadow root
+• The retargeting algorithm
+• Node interface
+• NodeList interface
+• ProcessingInstruction interface
+• ShadowRoot interface
+• Text interface
+• node document concept
+• document type concept
+• host concept
+• The shadow root concept, and its delegates focus
+• The shadow host concept
+• HTMLCollection interface, its length attribute, and its item() and namedItem() methods
+• The terms collection and represented by the collection
+• DOMTokenList interface, and its value attribute
+• createDocument() method
+• createHTMLDocument() method
+• createElement() method
+• createElementNS() method
+• getElementById() method
+• getElementsByClassName() method
+• appendChild() method
+• cloneNode() method
+• importNode() method
+• preventDefault() method
+• id attribute
+• textContent attribute
+• The tree, shadow tree, and node tree concepts
+• The tree order and shadow-including tree order concepts
+• The child concept
+• The root and shadow-including root concepts
+• The inclusive ancestor, shadow-including descendant, shadow-including inclusive descendant, and shadow-including inclusive ancestor concepts
+• The first child and next sibling concepts
+• The document element concept
+• The in a document tree, in a document (legacy), and connected concepts
+• The slot concept, and its name and assigned nodes
+• The assigned slot concept.
+• The find flattened slottables algorithm
+• The assign a slot algorithm
+• The pre-insert, insert, append, replace, replace all, string replace all, remove, and adopt algorithms for nodes
+• The insertion steps, removing steps, adopting steps, and children changed steps hooks for elements
+• The change, append, remove, replace, and set value algorithms for attributes
+• The attribute change steps hook for attributes
+• The attribute list concept
+• The data of a text node
+• The child text content of a node
+• The descendant text content of a node
+• Event interface
+• Event and derived interfaces constructor behavior
+• EventTarget interface
+• The activation behavior hook
+• The legacy-pre-activation behavior hook
+• The legacy-canceled-activation behavior hook
+• The create an event algorithm
+• The fire an event algorithm
+• The canceled flag
+• The dispatch algorithm
+• EventInit dictionary type
+• type attribute
+• target attribute
+• currentTarget attribute
+• bubbles attribute
+• cancelable attribute
+• composed flag
+• isTrusted attribute
+• initEvent() method
+• add an event listener
+• addEventListener() method
+• The remove an event listener and remove all event listeners algorithms
+• EventListener callback interface
+• The type of an event
+• An event listener and its type and callback
+• The encoding (herein the character encoding), mode, and content type of a Document
+• The distinction between XML documents and HTML documents
+• The terms quirks mode, limited-quirks mode, and no-quirks mode
+• The algorithm to clone a Node, and the concept of cloning steps used by that algorithm
+• The concept of base URL change steps and the definition of what happens when an element is affected by a base URL change
+• The concept of an element's unique identifier (ID)
+• The concept of an element's classes
+• The term supported tokens
+• The concept of a DOM range, and the terms start, end, and boundary point as applied to ranges.
+• The create an element algorithm
+• The element interface concept
+• The concepts of custom element state, and of defined and custom elements
+• An element's namespace, namespace prefix, local name, custom element definition, and is value
+• MutationObserver interface and mutation observers in general
+</dd>
+
+<!--% UIEVENTS -->
+	<dt>`UI Events^cite `UIEVENTS$r</dt>
+	<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>`MouseEvent!I ~interface, および その
+その
+⇒
+`relatedTarget!m 属性
+</li><li>`MouseEventInit!I 辞書~型
+</li><li>`FocusEvent!I ~interface, および その
+⇒
+`~relatedTargetF!m 属性
+</li><li>`UIEvent!I ~interface, および その
+⇒
+`view!m 属性
+</li><li>次に挙げる各種~event
+⇒＃
+`auxclick!et,
+`click!et,
+`dblclick!et,
+`mousedown!et,
+`mouseenter!et,
+`mouseleave!et,
+`mousemove!et,
+`mouseout!et,
+`mouseover!et,
+`mouseup!et,
+`wheel!et,
+`keydown!et,
+`keypress!et,
+`keyup!et
+</li></ul>
+
+◎
+The following features are defined in UI Events: [UIEVENTS]
+• The MouseEvent interface
+• The MouseEvent interface's relatedTarget attribute
+• MouseEventInit dictionary type
+• The FocusEvent interface
+• The FocusEvent interface's relatedTarget attribute
+• The UIEvent interface
+• The UIEvent interface's view attribute
+• auxclick event
+• click event
+• dblclick event
+• mousedown event
+• mouseenter event
+• mouseleave event
+• mousemove event
+• mouseout event
+• mouseover event
+• mouseup event
+• wheel event
+• keydown event
+• keypress event
+• keyup event
+</dd>
+
+<!--% TOUCH/POINTEREVENTS -->
+	<dt>`Touch Events^cite `TOUCH$r</dt>
+	<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>`Touch!I ~interface
+</li><li>`~touch点!
+</li><li>`touchend!et ~event
+</li></ul>
+
+◎
+The following features are defined in Touch Events: [TOUCH]
+• Touch interface
+• Touch point concept
+• touchend event
+</dd>
+
+	<dt>`Pointer Events^cite `POINTEREVENTS$r</dt>
+	<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>`pointerup!et ~event
+</li></ul>
+
+◎
+The following features are defined in Pointer Events: [POINTEREVENTS]
+• pointerup event
+</dd>
+	<dd>
+この仕様は、`~eventの型$を指して，次のように
+<dfn>名前</dfn>
+と称することもある：
+“名前 `click^et の~event”,
+“~event名は `keypress^et ならば…”,
+等々。
+~eventに対する用語 “名前” と “型” は、同義である。
+◎
+This specification sometimes uses the term name to refer to the event's type; as in, "an event named click" or "if the event name is keypress". The terms "name" and "type" for events are synonymous.
+</dd>
+
+<!--% DOMPARSING -->
+	<dt>`DOM Parsing and Serialization^cite `DOMPARSING$r</dt>
+	<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>`innerHTML!m
+</li><li>`outerHTML!m
+</li></ul>
+
+◎
+The following features are defined in DOM Parsing and Serialization: [DOMPARSING]
+• innerHTML
+• outerHTML
+</dd>
+
+<!--% SELECTION -->
+	<dt>`Selection API^cite `SELECTION$r</dt>
+	<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>`選択!
+</li><li>`Selection!I
+</li></ul>
+◎
+The following features are defined in Selection API: [SELECTION]
+• selection
+• Selection
+</dd>
+	<dd class="note">注記：
+~UAには、
+`execCommand^cite `EXECCOMMAND$r
+に述べられる各種~特能を実装することが奨励される
+◎
+User agents are encouraged to implement the features described in execCommand. [EXECCOMMAND]
+</dd>
+
+<!--% FULLSCREEN -->
+	<dt>`Fullscreen API^cite `FULLSCREEN$r</dt>
+	<dd>
+<p>
+この仕様は、 `dialog$e 要素の具現化を定義する所, および
+`Fullscreen API^cite
+が~HTMLとどうやりとりするかを定義する所にて，その仕様の次に挙げる部分を参照する：
+</p>
+
+<ul ><li>`上端層! （`有順序~集合$）
+</li><li>上端層に`追加する!fs演算
+</li><li>`requestFullscreen()!m ~method
+</li><li>`全screen手続き!
+</li></ul>
+
+◎
+The following parts of Fullscreen API are referenced from this specification, in part to define the rendering of dialog elements, and also to define how the Fullscreen API interacts with HTML: [FULLSCREEN]
+• top layer (an ordered set) and its add operation
+• requestFullscreen()
+• run the fullscreen steps
+</dd>
+
+<!--% HRT -->
+	<dt>`High Resolution Time^cite `HRT$r</dt>
+	<dd>
+<p>
+次に挙げるものが供される：
+</p>
+
+<ul ><li>`現在の高分解能~時刻!
+</li><li>`DOMHighResTimeStamp!I ~typedef
+</li></ul>
+
+◎
+High Resolution Time provides the current high resolution time and the DOMHighResTimeStamp typedef. [HRT]
+</dd>
+
+<!--% FILEAPI -->
+	<dt>`File API^cite `FILEAPI$r</dt>
+	<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>`Blob!I ~interface, および その
+⇒
+`~type0!m 属性
+</li><li>`File!I ~interface, および その
+⇒＃
+`name!m 属性,
+`lastModified!m 属性
+</li><li>`FileList!I ~interface
+</li><li>`Blob$I の`~snapshot状態! の概念
+</li><li>`読取-~error@の概念
+</li><li>`Blob URL Store!
+</li></ul>
+
+◎
+This specification uses the following features defined in File API: [FILEAPI]
+• The Blob interface and its type attribute
+• The File interface and its name and lastModified attributes
+• The FileList interface
+• The concept of a Blob's snapshot state
+• The concept of read errors
+• Blob URL Store
+</dd>
+
+<!--% INDEXEDDB -->
+	<dt>`Indexed Database API^cite `INDEXEDDB$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義され，この仕様から参照される：
+</p>
+
+<ul ><li>`Indexed Database ~transactionを片付ける!
+</li></ul>
+◎
+This specification uses cleanup Indexed Database transactions defined by Indexed Database API. [INDEXEDDB]
+</dd>
+
+<!--% MEDIASOURCE -->
+	<dt>`Media Source Extensions^cite `MEDIASOURCE$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義され，この仕様から参照される：
+</p>
+
+<ul ><li>`MediaSource!I ~interface
+</li><li>`媒体~要素から切り離す!
+</li></ul>
+
+◎
+The following terms are defined in Media Source Extensions: [MEDIASOURCE]
+• MediaSource interface
+• detaching from a media element
+</dd>
+
+<!--% MEDIASTREAM -->
+	<dt>`Media Capture and Streams^cite `MEDIASTREAM$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`MediaStream!I ~interface
+</li></ul>
+
+◎
+The following terms are defined in Media Capture and Streams: [MEDIASTREAM]
+• MediaStream interface
+</dd>
+
+<!--% REPORTING -->
+	<dt>`Media Capture and Streams^cite `MEDIASTREAM$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`報告を~queueする!
+</li><li>`報告~種別!
+</li><li>`報告用~観測器から可視!
+</li></ul>
+
+◎
+The following terms are defined in Media Capture and Streams: [MEDIASTREAM]
+• MediaStream interface
+</dd>
+
+<!--% XHR -->
+	<dt>`XMLHttpRequest^cite `XHR$r</dt>
+	<dd>
+<p>
+次に挙げる特能, 用語が定義される：
+</p>
+
+<ul ><li>`XMLHttpRequest!I ~interface, および その
+⇒
+`responseXML!m 属性
+</li><li>`ProgressEvent!I ~interface, および その
+⇒＃
+`lengthComputable!m 属性,
+`loaded!m 属性,
+`total!m 属性
+</li><li>`FormData!I ~interface
+</li><li>`FormDataEntryValue!I 型
+</li><li>`~entry!fDの概念
+</li><li>`~entryを作成する!
+</li></ul>
+
+◎
+The following features and terms are defined in XMLHttpRequest: [XHR]
+• The XMLHttpRequest interface, and its responseXML attribute
+• The ProgressEvent interface, and its lengthComputable, loaded, and total attributes
+• FormData interface
+• FormDataEntryValue type
+• The concept of entry
+• create an entry
+</dd>
+
+<!--% BATTERY -->
+	<dt>`Battery Status API^cite `BATTERY$r</dt>
+	<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>`getBattery()!m ~method
+</li></ul>
+
+◎
+The following features are defined in Battery Status API: [BATTERY]
+• getBattery() method
+</dd>
+
+<!--% MQ -->
+	<dt>`Media Queries^cite `MQ$r</dt>
+	<dd>
+実装は、 Media Queries を~supportするモノトスル。
+`media-condition!t
+特能は、そこにて定義される。
+◎
+Implementations must support Media Queries. The &lt;media-condition&gt; feature is defined therein. [MQ]
+</dd>
+
+<!--% CSS -->
+	<dt>~CSSの各種~module</dt>
+	<dd>
+この仕様の実装には，~CSS全体に対する~supportは要求されないが（~web~browserに対しては少なくとも奨励されるが）、一部の特能は，特定の~CSS要件による用語を通して定義される。
+◎
+CSS modules
+◎
+While support for CSS as a whole is not required of implementations of this specification (though it is encouraged, at least for web browsers), some features are defined in terms of specific CSS requirements.
+</dd>
+	<dd>
+この仕様が何かを特定0の
+`~CSS文法に則って構文解析-!
+するよう要求する所では、
+`CSS Syntax^cite `CSSSYNTAX$r
+における関連な~algoに従うモノトスル
+— ~error取扱い規則も含め。
+◎
+When this specification requires that something be parsed according to a particular CSS grammar, the relevant algorithm in CSS Syntax must be followed, including error handling rules. [CSSSYNTAX]
+</dd>
+	<dd class="example">
+例えば~UAには、~stylesheetが予期せず終端することを見出したときは，すべての開き括弧を閉じることが要求される。
+したがって色~値に対する文字列 `rgb(0,0,0^l （閉じ丸括弧がない）を構文解析するときは、この~error取扱い規則により，閉じ丸括弧も含意され、値（ `black^v 色）が得されることになる。
+一方で，似た構成子 `rgb(0,0,^l （丸括弧と ~blue成分~値がない）は、開き括弧を閉じたときの結果が~~適正な値にならないので，構文解析できない。
+◎
+For example, user agents are required to close all open constructs upon finding the end of a style sheet unexpectedly. Thus, when parsing the string "rgb(0,0,0" (with a missing close-parenthesis) for a color value, the close parenthesis is implied by this error handling rule, and a value is obtained (the color 'black'). However, the similar construct "rgb(0,0," (with both a missing parenthesis and a missing "blue" value) cannot be parsed, as closing the open construct does not result in a viable value.
+</dd>
+	<dd class="algorithm">
+<p>
+`~CSS色~値として構文解析する@
+ときは、所与の
+( 文字列 %入力, 要素 %要素 （省略時は ε ） )
+に対し，次を走らす：
+◎
+To parse a CSS &lt;color&gt; value, given a string input with an optional element element, run these steps:
+</p>
+		<ol>
+			<li>
+%色 ~LET %入力 を
+`color$t `CSSCOLOR$r
+`~CSS文法に則って構文解析-$した結果
+◎
+Let color be the result of parsing input as a CSS &lt;color&gt;. [CSSCOLOR]
+</li>
+			<li>
+~IF［
+%色 ~EQ `失敗^i
+］
+⇒
+~RET `失敗^i
+◎
+If color is failure, then return failure.
+</li>
+			<li>
+<p>
+~IF［
+%色 ~EQ `currentcolor$v
+］：
+◎
+If color is 'currentcolor', then:
+</p>
+				<ol>
+					<li>
+~IF［
+%要素 ~EQ ε
+］
+⇒
+%色 ~SET `不透明な黒$
+◎
+If element is not given, then set color to opaque black.
+</li>
+			<li>
+~ELSE
+⇒
+%色 ~SET %要素 の `color$p ~propの算出d値
+◎
+Otherwise, set color to the computed value of the 'color' property of element.
+</li>
+				</ol>
+			</li>
+			<li>
+~RET %色
+◎
+Return color.
+</li>
+		</ol>
+	</dd>
+	<dd>
+		<dl>
+			<dt>`Cascading Style Sheets^cite （ `CSS^cite ） `CSS$r</dt>
+			<dd>
+<p>
+次に挙げる用語, 特能が定義される：
+</p>
+
+<ul ><li>`表示域!
+</li><li>`行l~box!
+</li><li>`~flow外!
+</li><li>`~flow内!
+</li><li>`内容~区画!
+</li><li>`内容~box!
+</li><li>`~border~box!
+</li><li>`~margin~box!
+</li><li>`~border辺!
+</li><li>`~margin辺!
+</li><li>`~marginの相殺!
+</li><li>`包含塊!
+</li><li>`行内~box!
+</li><li>`塊~box!
+</li></ul>
+
+◎
+The following terms and features are defined in Cascading Style Sheets (CSS): [CSS]
+• viewport
+• line box
+• out-of-flow
+• in-flow
+• content area
+• content box
+• border box
+• margin box
+• border edge
+• margin edge
+• collapsing margins
+• containing block
+• inline box
+• block box
+
+</dd>
+			<dd>
+<p>
+次に挙げる~propが定義される：
+</p>
+
+<ul ><li>各種~margin~prop
+⇒＃
+`margin-top!p,
+`margin-bottom!p,
+`margin-left!p,
+`margin-right!p
+</li><li>各種~padding~prop
+⇒＃
+`padding-top!p,
+`padding-bottom!p,
+`padding-left!p,
+`padding-right!p
+</li><li>各種~offset~prop
+⇒＃
+`top!p,
+`bottom!p,
+`left!p,
+`right!p
+</li><li>次に挙げる各種~prop
+⇒＃
+`float!p,
+`clear!p,
+`width!p,
+`height!p,
+`line-height!p,
+`vertical-align!p,
+`content!p,
+`visibility!p,
+`display!p
+</li><li>`display$p ~propの `inline-block!v 値
+— 他の~CSS~module `CSSRUBY$r `CSSTABLE$r も `display$p を拡張する。
+</li><li>次に挙げる各種~border~prop（上端, 下端, 左端, 右端の順に挙げる）：
+	<ul ><li>線幅
+⇒＃
+`border-top-width!p,
+`border-bottom-width!p,
+`border-left-width!p,
+`border-right-width!p
+	</li><li>~style
+⇒＃
+`border-top-style!p,
+`border-bottom-style!p,
+`border-left-style!p,
+`border-right-style!p
+	</li><li>色
+⇒＃
+`border-top-color!p,
+`border-bottom-color!p,
+`border-left-color!p,
+`border-right-color!p
+	</li></ul>
+</li></ul>
+
+◎
+• The 'margin-top', 'margin-bottom', 'margin-left', and 'margin-right' properties
+• The 'padding-top', 'padding-bottom', 'padding-left', and 'padding-right' properties
+• The 'top', 'bottom', 'left', and 'right' properties
+• The 'float' property
+• The 'clear' property
+• The 'width' property
+• The 'height' property
+• The 'line-height' property
+• The 'vertical-align' property
+• The 'content' property
+• The 'inline-block' value of the 'display' property
+• The 'visibility' property
+
+◎
+CSS also defines the following border properties: [CSS]
+
+Border properties 	Top 	Bottom 	Left 	Right
+Width 	'border-top-width' 	'border-bottom-width' 	'border-left-width' 	'border-right-width'
+Style 	'border-top-style' 	'border-bottom-style' 	'border-left-style' 	'border-right-style'
+Color 	'border-top-color' 	'border-bottom-color' 	'border-left-color' 	'border-right-color'
+◎
+The basic version of the 'display' property is defined in CSS, and the property is extended by other CSS modules. [CSS] [CSSRUBY] [CSSTABLE]
+</dd>
+
+			<dt>`CSS Logical Properties^cite `CSSLOGICAL$r</dt>
+			<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>各種 論理-~margin~prop
+⇒＃
+`margin-block-start!p,
+`margin-block-end!p,
+`margin-inline-start!p,
+`margin-inline-end!p
+</li><li>各種 論理-~padding~prop
+⇒＃
+`padding-block-start!p,
+`padding-block-end!p,
+`padding-inline-start!p,
+`padding-inline-end!p
+</li><li>`border-block-start-width!p,
+</li><li>`block-size!p
+</li><li>`inline-size!p
+</li></ul>
+
+◎
+The following terms and features are defined in CSS Logical Properties: [CSSLOGICAL]
+• The 'margin-block-start', 'margin-block-end', 'margin-inline-start', and 'margin-inline-end' properties
+• The 'padding-block-start', 'padding-block-end', 'padding-inline-start', and 'padding-inline-end' properties
+• The 'border-block-start-width' property
+• The 'block-size' property
+• The 'inline-size' property
+</dd>
+
+			<dt>`CSS Color^cite `CSSCOLOR$r</dt>
+			<dd>
+<p>
+次に挙げる用語, 特能が定義される：
+</p>
+
+<ul ><li>`有名~色!
+</li><li>`color!t
+</li><li>`color!p ~prop
+</li><li>`currentcolor!v 値
+</li><li>`不透明な黒!
+</li><li>`透明な黒!
+</li></ul>
+
+◎
+The following terms and features are defined in CSS Color: [CSSCOLOR]
+• named color
+• &lt;color&gt;
+• The 'color' property
+• The 'currentcolor' value
+• opaque black
+• transparent black
+</dd>
+
+			<dt>`CSS Images^cite `CSSIMAGES$r</dt>
+			<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`既定の~obj~size!
+</li><li>`内在的~寸法!
+</li><li>`内在的~縦横比!
+</li><li>`内在的~縦幅!
+</li><li>`内在的~横幅!
+</li><li>`image-orientation!p ~prop
+</li><li>`object-fit!p ~prop
+</li></ul>
+◎
+The following terms are defined in CSS Images: [CSSIMAGES]
+• default object size
+• intrinsic dimensions
+• intrinsic aspect ratio
+• intrinsic height
+• intrinsic width
+• The 'image-orientation' property
+• The 'object-fit' property
+</dd>
+
+			<dt>`CSS Images Level 4^cite `CSSIMAGES4$r</dt>
+			<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`塗り~source!
+— これは、一定の~HTML要素による~CSS `element()^css 関数との相互作用を定義するために利用される。
+</li></ul>
+
+◎
+The term paint source is used as defined in CSS Images Level 4 to define the interaction of certain HTML elements with the CSS 'element()' function. [CSSIMAGES4]
+</dd>
+
+			<dt>`CSS Backgrounds and Borders^cite `CSSBG$r</dt>
+			<dd>
+次に挙げる~propが定義される
+⇒＃
+`background-color!p,
+`background-image!p,
+`border-radius!p
+◎
+The following features are defined in CSS Backgrounds and Borders: [CSSBG]
+• The 'background-color' property
+• The 'background-image' property
+• The 'border-radius' property
+</dd>
+
+			<dt>`CSS Box Alignment^cite `CSSALIGN$r</dt>
+			<dd>
+次に挙げる~propが定義される
+⇒＃
+`align-content!p,
+`align-items!p,
+`align-self!p,
+`justify-self!p,
+`justify-content!p,
+`justify-items!p
+◎
+The following features are defined in CSS Box Alignment: [CSSALIGN]
+• The 'align-content' property
+• The 'align-items' property
+• The 'align-self' property
+• The 'justify-self' property
+• The 'justify-content' property
+• The 'justify-items' property
+</dd>
+
+			<dt>`CSS Display^cite `CSSDISPLAY$r</dt>
+			<dd>
+<p>
+次に挙げる用語, 特能が定義される：
+</p>
+
+<ul ><li>`外縁~表示~型!
+</li><li>`塊~level!
+</li><li>`塊~容器!
+</li><li>`整形~文脈!
+</li><li>`塊~整形~文脈!
+</li><li>`行内~整形~文脈!
+</li><li>`絶対的に位置され!【これは、 `CSS Positioned Layout^cite にて定義されるよう更新された。】
+</li><li>`置換d要素!
+</li><li>`~CSS~box!
+</li></ul>
+
+◎
+The following terms and features are defined in CSS Display: [CSSDISPLAY]
+• outer display type
+• block-level
+• block container
+• formatting context
+• block formatting context
+• inline formatting context
+• absolutely positioned
+• replaced element
+• CSS box
+</dd>
+
+			<dt>`CSS Flexible Box Layout^cite `CSSFLEXBOX$r</dt>
+			<dd>
+次に挙げる~propが定義される
+⇒＃
+`flex-direction!p,
+`flex-wrap!p
+◎
+The following features are defined in CSS Flexible Box Layout: [CSSFLEXBOX]
+• The 'flex-direction' property
+• The 'flex-wrap' property
+</dd>
+
+			<dt>`CSS Fonts^cite `CSSFONTS$r</dt>
+			<dd>
+<p>
+次に挙げる用語, 特能が定義される：
+</p>
+
+<ul ><li>`可用な最初の~font!
+</li><li>次に挙げる~prop
+⇒＃
+`font-family!p,
+`font-weight!p,
+`font-size!p,
+`font!p
+</li></ul>
+◎
+The following terms and features are defined in CSS Fonts: [CSSFONTS]
+• first available font
+• The 'font-family' property
+• The 'font-weight' property
+• The 'font-size' property
+• The 'font' property
+</dd>
+
+			<dt>`CSS Grid Layout^cite `CSSGRID$r</dt>
+			<dd>
+次に挙げる~propが定義される
+⇒＃
+`grid-auto-columns!p,
+`grid-auto-flow!p,
+`grid-auto-rows!p,
+`grid-column-gap!p,
+`grid-row-gap!p,
+`grid-template-areas!p,
+`grid-template-columns!p,
+`grid-template-rows!p
+◎
+The following features are defined in CSS Grid Layout: [CSSGRID]
+• The 'grid-auto-columns' property
+• The 'grid-auto-flow' property
+• The 'grid-auto-rows' property
+• The 'grid-column-gap' property
+• The 'grid-row-gap' property
+• The 'grid-template-areas' property
+• The 'grid-template-columns' property
+• The 'grid-template-rows' property
+</dd>
+
+			<dt>`CSS Inline Layout^cite `CSSINLINE$r</dt>
+			<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`~ascent計量!
+</li><li>`~descent計量!
+</li><li>次に挙げる基底線
+⇒＃
+`alphabetic!bL,
+`hanging!bL,
+`ideographic-under!bL
+</li></ul>
+◎
+The following terms are defined in CSS Inline Layout: [CSSINLINE]
+• alphabetic baseline
+• ascent metric
+• descent metric
+• hanging baseline
+• ideographic-under baseline
+</dd>
+
+			<dt>`CSS Box Sizing Module^cite `CSSSIZING$r</dt>
+			<dd>
+<p>
+次に挙げる用語, 特能が定義される：
+</p>
+
+<ul ><li>`内容収納 行内~size!
+</li></ul>
+
+◎
+The following terms and features are defined in CSS Intrinsic &amp; Extrinsic Sizing: [CSSSIZING]
+• fit-content inline size
+</dd>
+
+			<dt>`CSS Lists and Counters^cite `CSSLISTS$r</dt>
+			<dd>
+<p>
+次に挙げる~propが定義される：
+</p>
+
+<ul ><li>`list-style-type!p ~prop
+</li></ul>
+
+◎
+The 'list-style-type' property is defined in CSS Lists and Counters. [CSSLISTS]
+</dd>
+
+			<dt>`CSS Overflow^cite `CSSOVERFLOW$r</dt>
+			<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>`overflow!p ~prop, および その
+⇒
+`hidden!v 値
+</li><li>`text-overflow!p ~prop
+</li></ul>
+
+◎
+The following features are defined in CSS Overflow. [CSSOVERFLOW]
+• The 'overflow' property and its 'hidden' value
+• The 'text-overflow' property
+</dd>
+
+			<dt>`CSS Positioned Layout^cite `CSSPOSITION$r</dt>
+			<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>`position!p ~prop, および その
+⇒
+`static!v 値
+</li></ul>
+
+◎
+The following features are defined in CSS Positioned Layout: [CSSPOSITION]
+• The 'position' property and its 'static' value
+</dd>
+
+			<dt>`CSS Multi-column Layout^cite `CSSMULTICOL$r</dt>
+			<dd>
+次に挙げる~propが定義される
+⇒＃
+`column-count!p,
+`column-fill!p,
+`column-gap!p,
+`column-rule!p,
+`column-width!p
+◎
+The following features are defined in CSS Multi-column Layout. [CSSMULTICOL]
+• The 'column-count' property
+• The 'column-fill' property
+• The 'column-gap' property
+• The 'column-rule' property
+• The 'column-width' property
+</dd>
+
+			<dt>`CSS Ruby Layout^cite `CSSRUBY$r</dt>
+			<dd>
+<p>
+次に挙げる値が定義される：
+</p>
+
+<ul ><li>`display$p ~prop用の `ruby-base!v 値
+</li></ul>
+◎
+The 'ruby-base' value of the 'display' property is defined in CSS Ruby Layout. [CSSRUBY]
+</dd>
+
+			<dt>`CSS Table^cite `CSSTABLE$r</dt>
+			<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>次に挙げる~prop
+⇒＃
+`border-spacing!p,
+`border-collapse!p
+</li><li>次に挙げる `display$p ~prop用の値
+⇒＃
+`table-cell!v,
+`table-row!v,
+`table-caption!v,
+`table!v
+</li></ul>
+
+◎
+The following features are defined in CSS Table: [CSSTABLE]
+• The 'border-spacing' property
+• The 'border-collapse' property
+• The 'table-cell', 'table-row', 'table-caption', and 'table' values of the 'display' property
+</dd>
+
+			<dt>`CSS Text^cite `CSSTEXT$r</dt>
+			<dd>
+次に挙げる~propが定義される
+⇒＃
+`text-transform!p,
+`white-space!p,
+`text-align!p,
+`letter-spacing!p
+◎
+The following features are defined in CSS Text: [CSSTEXT]
+• The 'text-transform' property
+• The 'white-space' property
+• The 'text-align' property
+• The 'letter-spacing' property
+</dd>
+
+			<dt>`CSS Writing Modes^cite `CSSWM$r</dt>
+			<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>次に挙げる~prop
+⇒＃
+`direction!p,
+`unicode-bidi!p ~prop
+</li><li>次に挙げる概念
+⇒＃
+`塊~flow方向!,
+`塊~size!,
+`行内~size!,
+`塊-始端!,
+`塊-終端!,
+`行内-始端!,
+`行内-終端!,
+`行-左端!,
+`行-右端!
+</li></ul>
+
+◎
+The following features are defined in CSS Writing Modes: [CSSWM]
+• The 'direction' property
+• The 'unicode-bidi' property
+• The block flow direction, block size, inline size, block-start, block-end, inline-start, inline-end, line-left, and line-right concepts
+</dd>
+
+			<dt>`CSS Basic User Interface^cite `CSSUI$r</dt>
+			<dd>
+次に挙げる~propが定義される
+⇒＃
+`outline!p,
+`cursor!p,
+`appearance!p
+◎
+The following features are defined in CSS Basic User Interface: [CSSUI]
+• The 'outline' property
+• The 'cursor' property
+• The 'appearance' property
+</dd>
+
+			<dt>`Web Animations^cite `WEBANIMATIONS$r</dt>
+			<dd>
+<p>
+次に挙げる~algoが定義される：
+</p>
+
+<ul ><li>`~animationを更新して~eventを送信する!
+</li></ul>
+◎
+The algorithm to update animations and send events is defined in Web Animations. [WEBANIMATIONS].
+</dd>
+
+			<dt>`CSS Object Model^cite `CSSOM$r, `CSSOMVIEW$r</dt>
+			<dd>
+<p>
+~scriptingを~supportする実装は、
+CSSOM （ CSS Object Model ）を~supportするモノトスル。
+次に挙げる特能, 用語は
+CSSOM の各~仕様にて定義される：
+</p>
+
+<ul ><li>`Screen!I ~interface
+</li><li>`LinkStyle!I ~interface
+</li><li>`CSSStyleDeclaration!I ~interface, および その
+⇒
+`cssText!m 属性
+</li><li>`StyleSheet!I ~interface
+</li><li>`~CSS~stylesheetを作成する!
+</li><li>`~CSS~stylesheetを除去する!
+</li><li>`結付けられている~CSS~stylesheet!
+</li><li>`~CSS~stylesheet!, および 次に挙げる~prop
+⇒＃
+`種別!ss,
+`所在!ss,
+`親~CSS~stylesheet!ss,
+`所有者~node!ss,
+`所有者~CSS規則!ss,
+`媒体!ss,
+`~title!ss,
+`代替-~flag!ss,
+`不能化~flag!ss,
+`~CSS規則!ss,
+`生成元clean~flag!ss
+</li><li>`~CSS~stylesheet集合!
+</li><li>`~CSS~stylesheet集合~名!
+</li><li>`選好される~CSS~stylesheet集合~名!
+</li><li>`選好される~CSS~stylesheet集合~名を変更する!
+</li><li>`~CSS値の直列化-法!
+</li><li>`文書の~resize手続き!
+</li><li>`文書の~scroll手続き!
+</li><li>`文書~用の媒体~queryを評価して変化を報告する!
+</li><li>`要素を~viewの中へ~scrollする!
+</li><li>`文書の開始位置に~scrollする!
+</li><li>`resize!et ~event
+</li><li>`scroll!et ~event
+</li><li>`閲覧文脈の特能を設定しておく!
+</li></ul>
+
+◎
+Implementations that support scripting must support the CSS Object Model. The following features and terms are defined in the CSSOM specifications: [CSSOM] [CSSOMVIEW]
+• Screen interface
+• LinkStyle interface
+• CSSStyleDeclaration interface
+• cssText attribute of CSSStyleDeclaration
+• StyleSheet interface
+• create a CSS style sheet
+• remove a CSS style sheet
+• associated CSS style sheet
+• CSS style sheets and their properties:
+• 	type
+• 	location
+• 	parent CSS style sheet
+• 	owner node
+• 	owner CSS rule
+• 	media
+• 	title
+• 	alternate flag
+• 	disabled flag
+• 	CSS rules
+• 	origin-clean flag
+• CSS style sheet set
+• CSS style sheet set name
+• preferred CSS style sheet set name
+• change the preferred CSS style sheet set name
+• Serializing a CSS value
+• run the resize steps
+• run the scroll steps
+• evaluate media queries and report changes
+• Scroll an element into view
+• Scroll to the beginning of the document
+• The resize event
+• The scroll event
+• set up browsing context features
+</dd>
+
+			<dt>`CSS Syntax^cite `CSSSYNTAX$r</dt>
+			<dd>
+<p>
+次に挙げる特能, 用語が定義される：
+</p>
+
+<ul ><li>`適合t~stylesheet!
+</li><li>`~comma区切りの成分~値~listを構文解析する!
+</li><li>`成分~値!
+</li><li>`環境~符号化法!
+</li><li>`whitespace-token!t
+</li></ul>
+
+◎
+The following features and terms are defined in CSS Syntax: [CSSSYNTAX]
+• conformant style sheet
+• parse a comma-separated list of component values
+• component value
+• environment encoding
+• &lt;whitespace-token&gt;
+</dd>
+			<dt>`Selectors^cite `SELECTORS$r</dt>
+			<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`型~選択子!
+</li><li>`属性~選択子!
+</li><li>`疑似類!
+</li></ul>
+
+◎
+The following terms are defined in Selectors: [SELECTORS]
+• type selector
+• attribute selector
+• pseudo-class
+</dd>
+
+			<dt>`CSS Values and Units^cite `CSSVALUES$r</dt>
+			<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+<ul ><li>`length!t
+</li><li>次に挙げる単位
+⇒＃
+`em!css,
+`ex!css,
+`vw!css,
+`in!css,
+`px!css
+</li><li>`attr()!css 関数
+</li><li>`~math関数!
+</li></ul>
+
+◎
+The following features are defined in CSS Values and Units: [CSSVALUES]
+• &lt;length&gt;
+• The 'em' unit
+• The 'ex' unit
+• The 'vw' unit
+• The 'in' unit
+• The 'px' unit
+• The 'attr()' function
+• The math functions
+</dd>
+
+			<dt>`CSS Style Attributes^cite `CSSATTR$r</dt>
+			<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`~CSS~style属性! `CSSATTR$r
+</li></ul>
+◎
+The term style attribute is defined in CSS Style Attributes. [CSSATTR]
+</dd>
+			<dt>`CSS Cascading and Inheritance^cite `CSSCASCADE$r</dt>
+			<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`指定d値!
+</li><li>`算出d値!
+</li><li>`使用~値!
+</li></ul>
+◎
+The following terms are defined in the CSS Cascading and Inheritance: [CSSCASCADE]
+• specified value
+• computed value
+• used value
+</dd>
+
+			<dt>`CSS Fonts^cite ／ `Font Loading^cite</dt>
+			<dd>
+<p>
+`CanvasRenderingContext2D$I
+~objによる~fontの利用は、特に次に挙げる特能に依存する：
+</p>
+
+<ul ><li>`FontFace@I `CSSFONTS$r
+</li><li>`~font~source! `CSSFONTLOAD$r
+</li></ul>
+
+◎
+The CanvasRenderingContext2D object's use of fonts depends on the features described in the CSS Fonts and Font Loading specifications, including in particular FontFace objects and the font source concept. [CSSFONTS] [CSSFONTLOAD]
+</dd>
+
+<!--% GEOMETRY -->
+			<dt>`Geometry Interfaces Module^cite `GEOMETRY$r</dt>
+			<dd>
+<p>
+次に挙げる~interface, 用語が定義される：
+</p>
+
+<ul ><li>`DOMMatrix!I ~interface, および それを成す各成分
+⇒
+`m11!mat, `m12!mat, `m21!mat, `m22!mat, `m41!mat, `m42!mat
+</li><li>`DOMMatrix2DInit!I 辞書
+</li><li>`DOMMatrixInit!I 辞書
+</li><li>`辞書から行列を作成する! ~algo
+</li><li>`~2D辞書から行列を作成する! ~algo
+</li></ul>
+◎
+The following interfaces and terms are defined in Geometry Interfaces: [GEOMETRY]
+• DOMMatrix interface, and associated m11 element, m12 element, m21 element, m22 element, m41 element, and m42 element
+• DOMMatrix2DInit and DOMMatrixInit dictionaries
+• The create a DOMMatrix from a dictionary and create a DOMMatrix from a 2D dictionary algorithms for DOMMatrix2DInit or DOMMatrixInit
+</dd>
+
+			<dt>`CSS Scoping^cite `CSSSCOPING$r</dt>
+			<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`平坦~tree!
+</li></ul>
+◎
+The following terms are defined in the CSS Scoping: [CSSSCOPING]
+• flat tree
+</dd>
+		</dl>
+	</dd>
+
+<!--% INTERSECTIONOBSERVER -->
+	<dt>`Intersection Observer^cite `INTERSECTIONOBSERVER$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`交差~観測nを更新する! 手続き
+</li><li>`IntersectionObserver!I
+</li><li>`IntersectionObserverInit!I
+</li><li>`observe!m
+</li><li>`unobserve!m
+</li><li>`isIntersecting!m
+</li><li>`~target0!m
+</li></ul>
+
+◎
+The following term is defined in Intersection Observer: [INTERSECTIONOBSERVER]
+• run the update intersection observations steps
+• IntersectionObserver
+• IntersectionObserverInit
+• observe
+• unobserve
+• isIntersecting
+• target
+</dd>
+
+<!--% WEBGL -->
+	<dt>WebGL `WEBGL$r</dt>
+	<dd>
+<p>
+次に挙げる~interfaceが定義される：
+</p>
+
+<ul ><li>`WebGLRenderingContext!I ~interface
+</li><li>`WebGL2RenderingContext!I ~interface
+</li><li>`WebGLContextAttributes!I 辞書
+</li></ul>
+
+◎
+The following interfaces are defined in the WebGL specifications: [WEBGL]
+• WebGLRenderingContext interface
+• WebGL2RenderingContext interface
+• WebGLContextAttributes dictionary
+</dd>
+
+<!--% WEBVTT -->
+	<dt>`WebVTT^cite `WEBVTT$r</dt>
+	<dd>
+実装は、媒体~資源に対する［
+~subtitle, ~caption, ~metadata, 等々
+］に対する~text~track形式として，~WebVTTを~supportしてもヨイ。
+◎
+Implementations may support WebVTT as a text track format for subtitles, captions, metadata, etc., for media resources. [WEBVTT]
+</dd>
+	<dd>
+<p>
+次に挙げる用語が定義され，この仕様にて利用される：
+</p>
+
+<ul ><li>`~WebVTT~file!
+</li><li>`~cue~textを利用する~WebVTT~file!
+</li><li>`入子の~cueのみを利用する~WebVTT~file!
+</li><li>`~WebVTT構文解析器!
+</li><li>`~WebVTT~text~trackの表示を更新する規則!
+</li><li>`~WebVTT~text~track~cueの書字方向!
+</li><li>`VTTCue!I ~interface
+</li></ul>
+
+◎
+The following terms, used in this specification, are defined in WebVTT:
+• WebVTT file
+• WebVTT file using cue text
+• WebVTT file using only nested cues
+• WebVTT parser
+• The rules for updating the display of WebVTT text tracks
+• The WebVTT text track cue writing direction
+• VTTCue interface
+</dd>
+
+<!--% WSP -->
+	<dt>`WebSocket protocol^cite `WSP$r</dt>
+	<dd>
+<p>
+次に挙げる用語は、
+`Fetch^cite `FETCH$r
+にて定義される：
+</p>
+
+<ul ><li>`~WebSocket接続を確立する!
+</li></ul>
+
+◎
+The following terms are defined in Fetch: [FETCH]
+• establish a WebSocket connection 
+</dd>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`~WebSocket接続は確立-済み@
+</li><li>`利用-中の拡張@
+</li><li>`利用-中の下位protocol@
+</li><li>`~WebSocket~messageを受信した@
+</li><li>`~WebSocket~messageを送信する@
+</li><li>`~WebSocket接続に失敗した@
+</li><li>`~WebSocket接続を~closeする@
+</li><li>`~WebSocket~closing~handshakeを開始する@
+</li><li>`~WebSocket~closing~handshakeは開始-済み@
+</li><li>`~WebSocket接続は~close済み（場合によっては <i>clean に</i> ）@
+</li><li>`~WebSocket接続~close~code@
+</li><li>`~WebSocket接続~close事由@
+</li><li>`Sec-WebSocket-Protocol@h ~header
+</li></ul>
+
+◎
+The following terms are defined in The WebSocket protocol: [WSP]
+• the WebSocket connection is established
+• extensions in use
+• subprotocol in use
+• a WebSocket message has been received
+• send a WebSocket Message
+• fail the WebSocket connection
+• close the WebSocket connection
+• start the WebSocket closing handshake
+• the WebSocket closing handshake is started
+• the WebSocket connection is closed (possibly cleanly)
+• the WebSocket connection close code
+• the WebSocket connection close reason
+• Sec-WebSocket-Protocol field
+</dd>
+
+<!--% ARIA -->
+	<dt>`Accessible Rich Internet Applications^cite （ `ARIA^cite ） `ARIA$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`role@a
+属性, および次に挙げる~role
+⇒＃
+`button!v,
+`presentation!v
+</li><li>次に挙げる
+`aria-*@a
+内容~属性
+⇒＃
+`aria-describedby!a,
+`aria-disabled!a,
+`aria-label!a
+</li><li>`~access可能な名前!
+</li></ul>
+
+◎
+The role attribute is defined in Accessible Rich Internet Applications (ARIA), as are the following roles: [ARIA]
+• button
+• presentation
+◎
+In addition, the following aria-* content attributes are defined in ARIA: [ARIA]
+• aria-describedby
+• aria-disabled
+• aria-label
+◎
+Finally, the following terms are defined ARIA: [ARIA]
+• accessible name
+</dd>
+
+<!--% CSP -->
+	<dt>`Content Security Policy^cite `CSP$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義される
+【以下に現れる多くの "CSP" は、この訳による `Content Security Policy^en の略称】：
+</p>
+
+<ul ><li>`~CSP!（ `Content Security Policy^en ）
+</li><li>`処置先!
+</li><li>`指令~集合!
+</li><li>`~CSP指令!
+</li><li>`~CSP~list!
+</li><li>`~CSP構文!
+</li><li>`施策を施行する!
+</li><li>次に挙げる~algo
+⇒＃
+`直列形の~CSPを構文解析する!,
+`大域~objの~CSP~listを初期化する!,
+`文書の~CSP~listを初期化する!,
+`要素の~inlineによる挙動は~CSPにより阻止されるべきか？!,
+`~sourceから~targetを~navigateするある種別の要請は~CSPにより阻止されるべきか？!,
+`~sourceから~targetを~navigateするある種別の要請に対する応答は~CSPにより阻止されるべきか？!,
+`文書に対する基底~URLは許容されるか？!,
+`要素は~CSPにより先天的に阻止されるべきか？!
+</li><li>`report-uri!dir 指令
+</li><li>`EnsureCSPDoesNotBlockStringCompilation!jA 抽象-演算
+</li><li>`frame-ancestors!dir 指令
+</li><li>`sandbox!dir 指令
+</li><li>`~headerにより送達された~CSPを包含している!
+</li></ul>
+◎
+The following terms are defined in Content Security Policy: [CSP]
+• Content Security Policy
+• disposition
+• directive set
+• Content Security Policy directive
+• CSP list
+• The Content Security Policy syntax
+• enforce the policy
+• The parse a serialized Content Security Policy algorithm
+• The Initialize a global object's CSP list algorithm
+• The Initialize a Document's CSP list algorithm
+• The Should element's inline behavior be blocked by Content Security Policy? algorithm
+• The Should navigation request of type from source in target be blocked by Content Security Policy? algorithm
+• The Should navigation response to navigation request of type from source in target be blocked by Content Security Policy? algorithm
+• The report-uri directive
+• The EnsureCSPDoesNotBlockStringCompilation abstract operation
+• The Is base allowed for Document? algorithm
+• The frame-ancestors directive
+• The sandbox directive
+• The Should element be blocked a priori by Content Security Policy? algorithm
+• The contains a header-delivered Content Security Policy property.
+</dd>
+
+<!--% SW -->
+	<dt>`Service Workers^cite `SW$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`作動中の~worker!
+</li><li>`~client~message~queue!
+</li><li>`制御-!
+</li><li>`~fetchを取扱う!
+</li><li>`合致する~sw登録!
+</li><li>`~sw!
+</li><li>`~sw~client!
+</li><li>次に挙げる~interface
+⇒＃
+`ServiceWorker!I,
+`ServiceWorkerContainer!I,
+`ServiceWorkerGlobalScope!I
+</li></ul>
+
+◎
+The following terms are defined in Service Workers: [SW]
+• active worker
+• client message queue
+• control
+• handle fetch
+• match service worker registration
+• service worker
+• service worker client
+• ServiceWorker interface
+• ServiceWorkerContainer interface
+• ServiceWorkerGlobalScope interface
+</dd>
+
+<!--% Secure Contexts -->
+	<dt>`Secure Contexts^cite `SECURE-CONTEXTS$r</dt>
+	<dd>
+<p>
+次に挙げる~algoが定義される：
+</p>
+
+<ul ><li>`~URLは信用に価し得るか？!
+</li></ul>
+◎
+The following algorithms are defined in Secure Contexts: [SECURE-CONTEXTS]
+• Is url potentially trustworthy?
+</dd>
+
+<!--% PERMISSIONS-POLICY -->
+	<dt>`Permissions Policy^cite `PERMISSIONSPOLICY$r</dt>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`許可~施策!
+</li><li>`施策により制御される特能!
+</li><li>`容器~施策!
+</li><li>`直列形の許可~施策!
+</li><li>`既定の許容list!
+</li><li>次に挙げる~algo：
+	<ul ><li>`閲覧文脈~用の許可~施策を作成する!
+	</li><li>`応答から閲覧文脈~用の許可~施策を作成する!
+	</li><li>`文書~内の特能は生成元~用に可能化されるか？!
+	</li><li>`許可~施策~属性を処理する!
+	</li></ul>
+</li></ul>
+◎
+The following terms are defined in Permissions Policy: [PERMISSIONSPOLICY]
+• permissions policy
+• policy-controlled feature
+• container policy
+• serialized permissions policy
+• default allowlist
+• The creating a permissions policy algorithm
+• The creating a permissions policy from a response algorithm
+• The is feature enabled by policy for origin algorithm
+• The process permissions policy attributes algorithm
+</dd>
+
+<!--% Payment Request API -->
+	<dt>`Payment Request API^cite `PAYMENTREQUEST$r</dt>
+	<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>`PaymentRequest!I ~interface
+</li></ul>
+
+◎
+The following feature is defined in Payment Request API: [PAYMENTREQUEST]
+• PaymentRequest interface
+</dd>
+
+<!--% MathML -->
+	<dt>`Mathematical Markup Language^cite （ `MathML^cite ） `MathML$r</dt>
+	<dd>
+この仕様では~MathML全体の~supportは要求されないが（少なくとも~web~browserには奨励されるが）、ある種の特能は，~MathMLのいくつかの部分が実装されることに依存する。
+◎
+While support for MathML as a whole is not required by this specification (though it is encouraged, at least for web browsers), certain features depend upon small parts of MathML being implemented. [MATHML]
+</dd>
+	<dd>
+次に挙げる要素が定義される
+⇒＃
+`annotation-xml!e,
+`math!e,
+`merror!e,
+`mi!e,
+`mn!e,
+`mo!e,
+`ms!e,
+`mtext!e
+◎
+The following features are defined in Mathematical Markup Language (MathML):
+• MathML annotation-xml element
+• MathML math element
+• MathML merror element
+• MathML mi element
+• MathML mn element
+• MathML mo element
+• MathML ms element
+• MathML mtext element
+</dd>
+
+<!--% SVG2 -->
+	<dt>`SVG 2^cite `SVG$r</dt>
+	<dd>
+この仕様では~SVG全体の~supportは要求されないが（少なくとも~web~browserには奨励されるが）、ある種の特能は，~SVGのいくつかの部分が実装されることに依存する。
+◎
+While support for SVG as a whole is not required by this specification (though it is encouraged, at least for web browsers), certain features depend upon parts of SVG being implemented.
+</dd>
+	<dd id="_svg2-support-required">
+~SVGを実装する~UAは、
+`SVG 2^cite
+仕様を実装するモノトスル
+— それより前の版の~SVGではなく。
+◎
+User agents that implement SVG must implement the SVG 2 specification, and not any earlier revisions.
+</dd>
+	<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>次に挙げる~interface
+⇒＃
+`SVGElement!I,
+`SVGImageElement!I,
+`SVGScriptElement!I,
+`SVGSVGElement!I
+</li><li>次に挙げる要素
+⇒＃
+`~svg-a!e,
+`desc!e,
+`foreignObject!e,
+`image!e,
+`~svg-script!e,
+`svg!e,
+`title!e,
+`use!e
+</li></ul>
+
+◎
+The following features are defined in the SVG 2 specification: [SVG]
+• SVGElement interface
+• SVGImageElement interface
+• SVGScriptElement interface
+• SVGSVGElement interface
+• SVG a element
+• SVG desc element
+• SVG foreignObject element
+• SVG image element
+• SVG script element
+• SVG svg element
+• SVG title element
+• SVG use element 
+</dd>
+
+<!--% FILTERS -->
+	<dt>`Filter Effects^cite `FILTERS$r<dd>
+	<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>`filter-function-list!t【 `filter-value-list$t に更新された】
+</li></ul>
+
+◎
+The following feature is defined in Filter Effects: [FILTERS]
+• &lt;filter-function-list&gt;
+</dd>
+
+<!--% WORKLETS1 -->
+	<dt>`Worklets^cite `WORKLETS$r<dd>
+	<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>`WorkletGlobalScope!I
+</li><li>`WorkletGlobalScope^I の`所有者~文書!
+</li></ul>
+
+◎
+The following feature is defined in Worklets: [WORKLETS]
+• WorkletGlobalScope
+• A WorkletGlobalScope's owner document
+</dd>
+
+<!--% REQUESTIDLECALLBACK -->
+	<dt>`Cooperative Scheduling of Background Tasks^cite `REQUESTIDLECALLBACK$r<dd>
+	<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>`requestIdleCallback()!m
+</li><li>`遊休期間を開始する!
+</li></ul>
+
+◎
+The following features are defined in Cooperative Scheduling of Background Tasks: [REQUESTIDLECALLBACK]
+• requestIdleCallback()
+• start an idle period algorithm
+</dd>
+
+<!--% STORAGE -->
+	<dt>`Storage^cite `STORAGE$r<dd>
+	<dd>
+<p>
+次に挙げる用語が定義される：
+</p>
+
+<ul ><li>`局所~storage瓶~mapを得する!
+</li><li>`~session~storage瓶~mapを得する!
+</li><li>`~storage~proxy~map!
+</li><li>`閲覧~session~storage倉を旧来~cloneする!
+</li></ul>
+
+◎
+The following terms are defined in Storage: [STORAGE]
+• obtain a local storage bottle map
+• obtain a session storage bottle map
+• storage proxy map
+• legacy-clone a browsing session storage shed
+</dd>
+
+<!--% MANIFEST -->
+	<dt>`Web App Manifest^cite `MANIFEST$r<dt>
+	<dd>
+<p>
+次に挙げる特能が定義される：
+</p>
+
+<ul ><li>`~app~manifest!
+</li><li>`~installした~web~app!
+</li><li>`~manifestを処理する!
+</li></ul>
+
+◎
+The following features are defined in Web App Manifest: [MANIFEST]
+• application manifest
+• installed web application
+• process the manifest
+</dd>
+</dl>
+
+<hr>
+
+<p>
+この仕様は、特定0の［
+~network~protocol,
+~stylesheet言語,
+~scripting言語
+］, あるいは
+~DOM仕様において上に挙げたものから要求されていない部分に対する~supportは、<em>要求しない</em>。
+しかしながら，この仕様が述べる言語は、［
+~style付け言語として ~CSS,
+~scripting言語として ~JS,
+~network~protocolとして~HTTP
+］に偏向している。
+いくつかの特能は、それらの言語や~protocolが利用-中にあるものと見做している。
+◎
+This specification does not require support of any particular network protocol, style sheet language, scripting language, or any of the DOM specifications beyond those required in the list above. However, the language described by this specification is biased towards CSS as the styling language, JavaScript as the scripting language, and HTTP as the network protocol, and several features assume that those languages and protocols are in use.
+</p>
+
+<p>
+~HTTP~protocolを実装する~UAは、
+`HTTP State Management Mechanism^cite
+（ Cookies ）
+も実装するモノトスル。
+`HTTP$r
+`COOKIES$r
+◎
+A user agent that implements the HTTP protocol must implement HTTP State Management Mechanism (Cookies) as well. [HTTP] [COOKIES]
+</p>
+
+<p class="note">注記：
+この仕様は、［
+`文字~符号化法$,
+画像~形式,
+音声~形式,
+動画~形式
+］に対し，対応する節にて一定の要件を追加することもある。
+◎
+This specification might have certain additional requirements on character encodings, image formats, audio formats, and video formats in the respective sections.
+</p>
+
+			</section>
+</main>

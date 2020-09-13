@@ -1,0 +1,1754 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>Compatibility Standard （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+
+<style>
+:root {
+	--heading-color: hsl(93 85% 26%);
+}
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+Util.ready = function(){
+	var source_data = {
+		generate: expand
+	};
+	
+	Util.switchWordsInit(source_data);
+}
+
+
+function expand(){
+
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'f':
+	text = `${text}()`;
+	break;
+case 'at':
+	text = `@${text}`;
+	break;
+case 't':
+	text = `&lt;${text}&gt;`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-06-29
+trans_update:2019-03-06
+source_checked:181211
+page_state_key:CSS
+original_url:https://compat.spec.whatwg.org/
+	abbr_url:
+spec_status:LS
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+copyright:,whatwg
+trans_1st_pub:2016-08-29
+
+●●class_map
+p:property
+d:descriptor
+v:value
+t:type
+e:element
+a:attr
+f:func
+at:at-rule
+et:event-type
+css:css
+
+●●tag_map
+I:code
+m:code
+c:code
+e:code
+a:code
+p:code
+d:code
+t:var
+f:code
+at:code
+et:code
+css:code
+v:code
+V:var
+
+●●words_table1
+
+	CSSIMAGE:https://www.w3.org/TR/2011/WD-css3-images-20110217/
+POINTEREVENTS:pointerevents-ja.html
+
+●●original_id_map
+
+●●mdn_urls
+propdef--webkit-text-fill-color:CSS/-webkit-text-fill-color
+propdef--webkit-text-stroke:CSS/-webkit-text-stroke
+propdef--webkit-text-stroke-color:CSS/-webkit-text-stroke-color
+propdef--webkit-text-stroke-width:CSS/-webkit-text-stroke-width
+	propdef--webkit-background-clip:CSS/-webkit-background-clip
+
+descdef-media--webkit-device-pixel-ratio:CSS/@media/-webkit-device-pixel-ratio
+descdef-media--webkit-max-device-pixel-ratio:CSS/@media/-webkit-max-device-pixel-ratio
+descdef-media--webkit-min-device-pixel-ratio:CSS/@media/-webkit-min-device-pixel-ratio
+descdef-media--webkit-transform-3d:CSS/@media/-webkit-transform-3d
+
+event-orientationchange:Events/orientationchange
+
+●●link_map
+
+I.EventHandler:~WAPI#eventhandler
+I.HTMLBodyElement:~HEsections#htmlbodyelement
+I.ScreenOrientation:https://w3c.github.io/screen-orientation/#screenorientation-interface
+I.WebKitCSSMatrix:~GEOMETRY#webkitcssmatrix
+I.Window:~WINDOW#window
+short:~WEBIDL#idl-short
+
+at.-webkit-keyframes:#at-ruledef--webkit-keyframes
+at.keyframes:~CSSANIM#at-ruledef-keyframes
+at.media:~CSSCOND#at-ruledef-media
+
+
+d.-webkit-device-pixel-ratio:#descdef-media--webkit-device-pixel-ratio
+d.-webkit-max-device-pixel-ratio:#descdef-media--webkit-max-device-pixel-ratio
+d.-webkit-min-device-pixel-ratio:#descdef-media--webkit-min-device-pixel-ratio
+d.-webkit-transform-3d:#descdef-media--webkit-transform-3d
+d.max-resolution:~MQ4#descdef-media-resolution
+d.min-resolution:~MQ4#descdef-media-resolution
+d.resolution:~MQ4#descdef-media-resolution
+
+e.body:~HEsections#the-body-element
+
+f.-webkit-linear-gradient:#-webkit-linear-gradient
+f.-webkit-radial-gradient:#-webkit-radial-gradient
+f.-webkit-repeating-linear-gradient:#-webkit-repeating-linear-gradient
+f.-webkit-repeating-radial-gradient:#-webkit-repeating-radial-gradient
+
+m.onorientationchange:#dom-htmlbodyelement-onorientationchange
+m.onorientationchange:#dom-window-onorientationchange
+m.orientation:#dom-window-orientation
+m.window.orientation:#dom-window-orientation
+
+et.orientationchange:#event-orientationchange
+
+p.-webkit-appearance:~CSSUI#propdef--webkit-appearance
+
+p.-webkit-align-content:#propdef--webkit-align-content
+p.-webkit-align-items:#propdef--webkit-align-items
+p.-webkit-align-self:#propdef--webkit-align-self
+p.-webkit-animation-delay:#propdef--webkit-animation-delay
+p.-webkit-animation-direction:#propdef--webkit-animation-direction
+p.-webkit-animation-duration:#propdef--webkit-animation-duration
+p.-webkit-animation-fill-mode:#propdef--webkit-animation-fill-mode
+p.-webkit-animation-iteration-count:#propdef--webkit-animation-iteration-count
+p.-webkit-animation-name:#propdef--webkit-animation-name
+p.-webkit-animation-play-state:#propdef--webkit-animation-play-state
+p.-webkit-animation-timing-function:#propdef--webkit-animation-timing-function
+p.-webkit-animation:#propdef--webkit-animation
+p.-webkit-backface-visibility:#propdef--webkit-backface-visibility
+p.-webkit-background-clip:#propdef--webkit-background-clip
+p.-webkit-background-origin:#propdef--webkit-background-origin
+p.-webkit-background-size:#propdef--webkit-background-size
+p.-webkit-border-bottom-left-radius:#propdef--webkit-border-bottom-left-radius
+p.-webkit-border-bottom-right-radius:#propdef--webkit-border-bottom-right-radius
+p.-webkit-border-radius:#propdef--webkit-border-radius
+p.-webkit-border-top-left-radius:#propdef--webkit-border-top-left-radius
+p.-webkit-border-top-right-radius:#propdef--webkit-border-top-right-radius
+p.-webkit-box-align:#propdef--webkit-box-align
+p.-webkit-box-flex:#propdef--webkit-box-flex
+p.-webkit-box-ordinal-group:#propdef--webkit-box-ordinal-group
+p.-webkit-box-orient:#propdef--webkit-box-orient
+p.-webkit-box-pack:#propdef--webkit-box-pack
+p.-webkit-box-shadow:#propdef--webkit-box-shadow
+p.-webkit-box-sizing:#propdef--webkit-box-sizing
+p.-webkit-filter:#propdef--webkit-filter
+p.-webkit-flex-basis:#propdef--webkit-flex-basis
+p.-webkit-flex-direction:#propdef--webkit-flex-direction
+p.-webkit-flex-flow:#propdef--webkit-flex-flow
+p.-webkit-flex-grow:#propdef--webkit-flex-grow
+p.-webkit-flex-shrink:#propdef--webkit-flex-shrink
+p.-webkit-flex-wrap:#propdef--webkit-flex-wrap
+p.-webkit-flex:#propdef--webkit-flex-propdef
+p.-webkit-justify-content:#propdef--webkit-justify-content
+p.-webkit-mask-box-image-outset:#propdef--webkit-mask-box-image-outset
+p.-webkit-mask-box-image-repeat:#propdef--webkit-mask-box-image-repeat
+p.-webkit-mask-box-image-slice:#propdef--webkit-mask-box-image-slice
+p.-webkit-mask-box-image-source:#propdef--webkit-mask-box-image-source
+p.-webkit-mask-box-image-width:#propdef--webkit-mask-box-image-width
+p.-webkit-mask-box-image:#propdef--webkit-mask-box-image
+p.-webkit-mask-clip:#propdef--webkit-mask-clip
+p.-webkit-mask-composite:#propdef--webkit-mask-composite
+p.-webkit-mask-image:#propdef--webkit-mask-image
+p.-webkit-mask-origin:#propdef--webkit-mask-origin
+p.-webkit-mask-position:#propdef--webkit-mask-position
+p.-webkit-mask-repeat:#propdef--webkit-mask-repeat
+p.-webkit-mask-size:#propdef--webkit-mask-size
+p.-webkit-mask:#propdef--webkit-mask
+p.-webkit-order:#propdef--webkit-order
+p.-webkit-perspective-origin:#propdef--webkit-perspective-origin
+p.-webkit-perspective:#propdef--webkit-perspective
+p.-webkit-text-fill-color:#propdef--webkit-text-fill-color
+p.-webkit-text-size-adjust:#propdef--webkit-text-size-adjust
+p.-webkit-text-stroke-color:#propdef--webkit-text-stroke-color
+p.-webkit-text-stroke-width:#propdef--webkit-text-stroke-width
+p.-webkit-text-stroke:#propdef--webkit-text-stroke
+p.-webkit-transform-origin:#propdef--webkit-transform-origin
+p.-webkit-transform-style:#propdef--webkit-transform-style
+p.-webkit-transform:#propdef--webkit-transform
+p.-webkit-transition-delay:#propdef--webkit-transition-delay
+p.-webkit-transition-duration:#propdef--webkit-transition-duration
+p.-webkit-transition-property:#propdef--webkit-transition-property
+p.-webkit-transition-timing-function:#propdef--webkit-transition-timing-function
+p.-webkit-transition:#propdef--webkit-transition
+
+p.align-content:~CSSALIGN#propdef-align-content
+p.align-items:~CSSALIGN#propdef-align-items
+p.align-self:~CSSALIGN#propdef-align-self
+p.animation-delay:~CSSANIM#propdef-animation-delay
+p.animation-direction:~CSSANIM#propdef-animation-direction
+p.animation-duration:~CSSANIM#propdef-animation-duration
+p.animation-fill-mode:~CSSANIM#propdef-animation-fill-mode
+p.animation-iteration-count:~CSSANIM#propdef-animation-iteration-count
+p.animation-name:~CSSANIM#propdef-animation-name
+p.animation-play-state:~CSSANIM#propdef-animation-play-state
+p.animation-timing-function:~CSSANIM#propdef-animation-timing-function
+p.animation:~CSSANIM#propdef-animation
+p.appearance:~CSSUI#propdef-appearance
+p.backface-visibility:~TRANSFORM2#propdef-backface-visibility
+p.background-clip:~CSSBG#propdef-background-clip
+p.background-origin:~CSSBG#propdef-background-origin
+p.background-size:~CSSBG#propdef-background-size
+p.border-bottom-left-radius:~CSSBG#propdef-border-bottom-left-radius
+p.border-bottom-right-radius:~CSSBG#propdef-border-bottom-right-radius
+p.border-radius:~CSSBG#propdef-border-radius
+p.border-top-left-radius:~CSSBG#propdef-border-top-left-radius
+p.border-top-right-radius:~CSSBG#propdef-border-top-right-radius
+p.box-shadow:~CSSBG#propdef-box-shadow
+p.box-sizing:~SIZING#propdef-box-sizing
+p.filter:~FILTERS#propdef-filter
+p.flex-basis:~CSSFLEX#propdef-flex-basis
+p.flex-direction:~CSSFLEX#propdef-flex-direction
+p.flex-flow:~CSSFLEX#propdef-flex-flow
+p.flex-grow:~CSSFLEX#propdef-flex-grow
+p.flex-shrink:~CSSFLEX#propdef-flex-shrink
+p.flex-wrap:~CSSFLEX#propdef-flex-wrap
+p.flex:~CSSFLEX#propdef-flex
+p.justify-content:~CSSALIGN#propdef-justify-content
+p.mask-border-outset:~MASKING1#propdef-mask-border-outset
+p.mask-border-repeat:~MASKING1#propdef-mask-border-repeat
+p.mask-border-slice:~MASKING1#propdef-mask-border-slice
+p.mask-border-source:~MASKING1#propdef-mask-border-source
+p.mask-border-width:~MASKING1#propdef-mask-border-width
+p.mask-border:~MASKING1#propdef-mask-border
+p.mask-clip:~MASKING1#propdef-mask-clip
+p.mask-composite:~MASKING1#propdef-mask-composite
+p.mask-image:~MASKING1#propdef-mask-image
+p.mask-origin:~MASKING1#propdef-mask-origin
+p.mask-position:~MASKING1#propdef-mask-position
+p.mask-repeat:~MASKING1#propdef-mask-repeat
+p.mask-size:~MASKING1#propdef-mask-size
+p.mask:~MASKING1#propdef-mask
+p.order:~CSSFLEX#propdef-order
+p.touch-action:~POINTEREVENTS#propdef-touch-action
+	~POINTEREVENTS#the-touch-action-css-property
+	#propdef-touch-action
+p.perspective-origin:~TRANSFORM2#propdef-perspective-origin
+p.perspective:~TRANSFORM2#propdef-perspective
+p.transform-origin:~TRANSFORM#propdef-transform-origin
+p.transform-style:~TRANSFORM2#propdef-transform-style
+p.transform:~TRANSFORM#propdef-transform
+p.transition-delay:~TRANSITION#propdef-transition-delay
+p.transition-duration:~TRANSITION#propdef-transition-duration
+p.transition-property:~TRANSITION#propdef-transition-property
+p.transition-timing-function:~TRANSITION#propdef-transition-timing-function
+p.transition:~TRANSITION#propdef-transition
+p.text-size-adjust:~CSSWG#propdef-text-size-adjust
+
+
+t.box:~CSSBG#typedef-box
+t.color:~CSSWG/css-color-3/#valuea-def-color
+	t.color:~CSSCOLOR#typedef-color
+t.line-width:~CSSBG#typedef-line-width
+t.mq-boolean:~MQ4#typedef-mq-boolean
+t.number:~CSSVAL#number-value
+
+css.dppx:~CSSVAL#dppx
+
+v.-webkit-box:#valdef-flex--webkit-box
+v.-webkit-flex:#valdef-flex--webkit-flex-valdef
+v.-webkit-inline-box:#valdef-flex--webkit-inline-box
+v.-webkit-inline-flex:#valdef-flex--webkit-inline-flex
+v.border-box:#valdef--webkit-background-clip-border-box
+v.content-box:#valdef--webkit-background-clip-content-box
+v.currentcolor:~CSSCOLOR#valdef-color-currentcolor
+v.flex:~CSSDISP#valdef-display-flex
+v.inline-flex:~CSSFLEX#valdef-display-inline-flex
+v.padding-box:#valdef--webkit-background-clip-padding-box
+v.text:#valdef--webkit-background-clip-text
+
+	window.orientation angle:#dfn-window-orientation-angle
+
+
+~eventを発火する:~DOM4#concept-event-fire
+
+作動中の文書:~BROWSERS#active-document
+	結付けられている文書
+切抜き領域:~MASKING1#clipping-region
+
+色として:~TR/css-transitions-1/#animtype-color
+~event~handler~event型:~WAPI#event-handler-event-type
+~event~handler:~WAPI#event-handlers
+
+f.linear-gradient:~CSSIMAGE#funcdef-linear-gradient
+	t.linear-gradient:~CSSIMAGE#ltlinear-gradient
+f.radial-gradient:~CSSIMAGE#funcdef-radial-gradient
+	t.radial-gradient~CSSIMAGE#ltradial-gradient
+f.repeating-linear-gradient:~CSSIMAGE#funcdef-repeating-linear-gradient
+	t.repeating-linear-gradient:~CSSIMAGE#ltrepeating-linear-gradient
+f.repeating-radial-gradient:~CSSIMAGE#funcdef-repeating-radial-gradient
+	t.repeating-radial-gradient:~CSSIMAGE#ltrepeating-radial-gradient
+
+媒体~特能:~MQ4#media-feature
+範囲~型:~MQ4#range-type
+離散~型:~MQ4#discrete-type
+	範囲~特能~上の接頭辞:~MQ4#mq-min-max
+
+担当の文書:~WAPI#responsible-document
+特別な要素の背景:~CSSBG#special-backgrounds
+背景~塗ng区画:~CSSBG#background-painting-area
+方位~情報を更新する:https://w3c.github.io/screen-orientation/#dfn-update-the-orientation-information
+~vendor接頭辞付き:~CSSSNAPSHOT#vendor-prefix
+	https://www.w3.org/TR/CSS/#vendor-prefix
+
+
+
+●●words_table
+
+	●仕様
+出荷-:ship:~
+概要:rough guide:~
+必要最小限:minimal:~
+	非~標準:non-standard
+de-facto:de facto:事実上の標準
+目指す:aim する:~
+増補-:augment:~
+
+	にある:serve
+	はっきりしない:unclear
+	大量の〜が集積されてきているincreasingly large corpus
+
+	●CSS
+glyph::::グリフ
+別名化-:alias::~
+	:non-aliased
+単位:unit::~
+離散:discrete::~
+For:for:用途
+
+接頭辞付き:prefixed::~
+接頭辞なし:unprefixed::~
+	絶対~化:absolutize
+
+	●幾何
+回転:rotation::~
+変形-:transform::~
+三次元変形:3D transform::3D 変形
+太さ:thickness:~
+度t:degree:度
+幅:width:~
+時計回り:clockwise:~
+反時計回り:counterclockwise:~
+横方向:horizontal::~
+
+	●塗り
+gradient:
+fill::::フィル
+stroke::::ストローク
+RGBA:
+alpha:
+前景:foreground::~
+塗られ:paintされ::~
+切抜き:clipping::切り抜き
+切抜かれ:clipされ::切り抜かれ
+背景:background::~
+色:color::~
+透明度:transparency::~
+塗ng:painting::塗り
+領域:region::~
+黒く:blackに:~
+白く:whiteに:~
+青く:blueに:~
+描かれ:draw され::~
+描く:draw する::~
+
+	●処理
+担当:responsible::~
+
+	●未分類
+	collection::::
+desktop::::デスクトップ
+	 0:zero
+	〜の代わりに:instead#1
+対応付ける:map する::~
+携帯:mobile::~::モバイル
+回転台:carousel:~
+panning:::パン操作
+zooming:::ズーム操作
+手指:finger:~
+
+	二つ:two
+	大きい:large
+	blog:::ブログ
+	thank
+	Apple
+	WebKit
+
+
+●●ref_normative
+
+[CSS-ALIGN-3]
+    Elika Etemad; Tab Atkins Jr.. CSS Box Alignment Module Level 3. URL: https://drafts.csswg.org/css-align/ 
+[CSS-ANIMATIONS-1]
+    Dean Jackson; et al. CSS Animations Level 1. URL: https://drafts.csswg.org/css-animations/ 
+[CSS-BACKGROUNDS-3]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. URL: https://drafts.csswg.org/css-backgrounds/ 
+[CSS-COLOR-3]
+    Tantek Çelik; Chris Lilley; David Baron. CSS Color Module Level 3. URL: https://drafts.csswg.org/css-color-3/ 
+[CSS-COLOR-4]
+    Tab Atkins Jr.; Chris Lilley. CSS Color Module Level 4. URL: https://drafts.csswg.org/css-color/ 
+[CSS-CONDITIONAL-3]
+    CSS Conditional Rules Module Level 3 URL: https://drafts.csswg.org/css-conditional-3/ 
+[CSS-DISPLAY-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Display Module Level 3. URL: https://drafts.csswg.org/css-display/ 
+[CSS-FLEXBOX-1]
+    Tab Atkins Jr.; et al. CSS Flexible Box Layout Module Level 1. URL: https://drafts.csswg.org/css-flexbox-1/ 
+[CSS-MASKING-1]
+    Dirk Schulze; Brian Birtles; Tab Atkins Jr.. CSS Masking Module Level 1. URL: https://drafts.fxtf.org/css-masking-1/ 
+[CSS-SIZE-ADJUST-1]
+    CSS Mobile Text Size Adjustment Module Level 1 URL: https://drafts.csswg.org/css-size-adjust-1/ 
+[CSS-SIZING-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Intrinsic & Extrinsic Sizing Module Level 3. URL: https://drafts.csswg.org/css-sizing-3/ 
+[CSS-TRANSFORMS-1]
+    Simon Fraser; et al. CSS Transforms Module Level 1. URL: https://drafts.csswg.org/css-transforms/ 
+[CSS-TRANSFORMS-2]
+    Tab Atkins Jr.; et al. CSS Transforms Module Level 2. URL: https://drafts.csswg.org/css-transforms-2/ 
+[CSS-TRANSITIONS-1]
+    David Baron; et al. CSS Transitions. URL: https://drafts.csswg.org/css-transitions/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. URL: https://drafts.csswg.org/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. URL: https://drafts.csswg.org/css-values-4/ 
+[CSS2]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. URL: https://drafts.csswg.org/css2/ 
+[CSS3-IMAGES-20110217]
+    Tab Atkins Jr.; Elika Etemad; Lea Verou. CSS Images Module Level 3. URL: https://www.w3.org/TR/2011/WD-css3-images-20110217/ 
+[DOM]
+    Anne van Kesteren. DOM Standard. Living Standard. URL: https://dom.spec.whatwg.org/ 
+[FILTER-EFFECTS-1]
+    Dirk Schulze; Dean Jackson. Filter Effects Module Level 1. URL: https://drafts.fxtf.org/filter-effects-1/ 
+[GEOMETRY-1]
+    Simon Pieters; Chris Harrelson. Geometry Interfaces Module Level 1. URL: https://drafts.fxtf.org/geometry/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[MEDIAQUERIES-4]
+    Florian Rivoal; Tab Atkins Jr.. Media Queries Level 4. URL: https://drafts.csswg.org/mediaqueries-4/ 
+[POINTEREVENTS2]
+    Matt Brubeck; et al. Pointer Events. URL: https://w3c.github.io/pointerevents/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[SCREEN-ORIENTATION]
+    Mounir Lamouri; Marcos Caceres; Johanna Herman. The Screen Orientation API. URL: https://w3c.github.io/screen-orientation/ 
+[WebIDL]
+    Boris Zbarsky. Web IDL. URL: https://heycam.github.io/webidl/ 
+
+●●ref_informative
+
+[CSS-UI-4]
+    Florian Rivoal. CSS Basic User Interface Module Level 4. URL: https://drafts.csswg.org/css-ui-4/ 
+
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、
+<a href="https://www.whatwg.org/">WHATWG</a>
+による
+<a href="~SPEC_URL">Compatibility Standard</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+
+●●spec_metadata
+
+Participate:
+	<a href="https://github.com/whatwg/compat">GitHub whatwg/compat</a> (<a href="https://github.com/whatwg/compat/issues/new">new issue</a>, <a href="https://github.com/whatwg/compat/issues">open issues</a>)
+	<a href="https://wiki.whatwg.org/wiki/IRC">IRC: #whatwg on Freenode</a>
+
+Commits:
+	<a href="https://github.com/whatwg/compat/commits">GitHub whatwg/compat/commits</a>
+	<a href="https://compat.spec.whatwg.org/commit-snapshots/dbc4b853a34120f596cba7029560a1e0f164ecce/" id="commit-snapshot-link">Snapshot as of this commit</a>
+	<a href="https://twitter.com/compatstandard">@compatstandard</a>
+
+Tests:
+	<a href="https://github.com/web-platform-tests/wpt/tree/master/compat">web-platform-tests compat/</a> (<a href="https://github.com/web-platform-tests/wpt/labels/compat">ongoing work</a>)
+
+各国語翻訳（非規範的）
+	日本語（このページ）
+
+</script>
+<!-- 
+class="XXX" → class="issue"
+ -->
+
+</head>
+
+<body>
+
+<header>
+
+<a
+	href="https://whatwg.org/"><img
+	style="float: right;"
+	alt="WHATWG"
+	height="100"
+	src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KPHJlY3Qgd2lkdGg9IjkwIiBoZWlnaHQ9IjkwIiBmaWxsPSIjZmZmIiB4PSI1IiB5PSI1IiBzdHJva2U9IiMzYzc5MGEiIHN0cm9rZS13aWR0aD0iMTAiIC8+CjxwYXRoIGQ9Im0zOCwzOCBjMC0xMiwyNC0xNSwyMy0yIGMwLDktMTYsMTMtMTYsMjN2N2gxMHYtNCBjMC05LDE3LTEyLDE3LTI3Yy0yLTIyLTQ1LTIyLTQ1LDN6IG03LDMyIGgxMCB2MTAgaC0xMCIgZmlsbD0iIzNjNzkwYSIvPgo8L3N2Zz4K"
+></a>
+
+	<hgroup>
+<h1 id="title">互換性 — Compatibility</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この標準は、~web~browserが ~webにおける~de-factoとの互換性のために~supportする必要がある，一連の［
+非~標準な~CSS~prop（多くは~vendor接頭辞付き）,
+および ~DOM~API
+］について述べる。
+◎
+This standard describes a collection of non-standard (and often vendor-prefixed) CSS properties and DOM APIs that web browsers need to support for compatibility with the de facto web.
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="introduction">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+［
+~web~browserが，各種［
+`webkit^css 接頭辞付き~CSS~propや, ~DOM~API
+］を~supportすること
+］に機能性や~layoutが依存するような，大量の~web内容が集積されてきている。
+このことは、とりわけ携帯に最適化された~web内容に該当する。
+◎
+There exists an increasingly large corpus of web content that depends on web browsers supporting a number of webkit-prefixed CSS properties and DOM APIs for functionality or layout. This holds especially true for mobile-optimized web content.
+</p>
+
+
+<p>
+この仕様は、~UAに対し ~web互換性のために~supportが要求される，各種［
+`webkit^css 接頭辞付き~CSS~prop, および ~DOM~API
+］からなる必要最小限な集合について述べることを目指す。
+◎
+This specification aims to describe the minimal set of webkit-prefixed CSS properties and DOM APIs that user agents are required to support for web compatibility.
+</p>
+
+<p class="issue">
+この仕様が受持つものと意図される概要は、
+<a href="https://wiki.mozilla.org/Compatibility/Mobile/Non_Standard_Compatibility">Non-Standard Compatibility</a>
+（ “非~標準な互換性” ） wiki ~pageにある。
+◎
+The Non-Standard Compatibility wiki page will serve as a rough guide for what this specification intends to cover. 
+</p>
+
+
+
+	</section>
+	<section id="conformance">
+<h2 title="Conformance">2. 適合性</h2>
+
+<p class="trans-note">【
+この節の内容は、
+Infra 標準の
+<a href="~INFRA#conventions">表記規約~節</a>,
+および
+<a href="~INFRA#algorithms">~algo節</a>
+に委譲。
+】</p>
+
+	</section>
+	<section id="css-compat-section">
+<h2 title="CSS Compatibility">3. ~CSSとの互換性</h2>
+
+
+		<section id="css-at-rules">
+<h3 title="CSS At-rules">3.1. 各種~CSS~at-rule</h3>
+
+
+<p>
+次に挙げる各種 `-webkit-^css `~vendor接頭辞付き$ ~at-ruleは、［
+それぞれに対応する接頭辞なし~at-ruleの別名
+］として~supportするモノトスル：
+◎
+The following -webkit- vendor prefixed at-rules must be supported as aliases of the corresponding unprefixed at-rules:
+</p>
+
+<table>
+<thead><tr><th>`-webkit-^css 接頭辞付き~at-rule（別名）
+<th>接頭辞なし~at-rule
+</thead>
+
+<tbody><tr><td>`-webkit-keyframes@at
+<td>`keyframes$at
+
+</tbody></table>
+
+
+
+		</section>
+		<section id="css-media-queries">
+<h3 title="CSS Media Queries">3.2. ~CSSの各種~媒体~query</h3>
+
+
+			<section id="css-media-queries-webkit-device-pixel-ratio">
+<h4>3.2.1. `-webkit-device-pixel-ratio^d</h4>
+
+◎述 `-webkit-device-pixel-ratio@d
+◎用 `media$at
+◎値 `number$t
+◎型 `範囲~型$
+◎表終
+
+
+<p>
+`-webkit-device-pixel-ratio$d は、その値を，`dppx$css 単位として解釈する下で，［
+`範囲~型$の`媒体~特能$ `resolution$d
+］の別名として扱うモノトスル。
+◎
+-webkit-device-pixel-ratio must be treated as an alias of the resolution range type media feature, with its value interpreted as a dppx unit.
+</p>
+
+
+<p>
+範囲~型の媒体~特能に対する
+<a href="~MQ4#mq-min-max">`min-^css ／ `max-^css 接頭辞</a>
+は、
+`-webkit-device-pixel-ratio$d
+には適用しないモノトスル。
+代わりに，次に挙げる別名を利用するモノトスル：
+◎
+The min- or max- prefixes on range features must not apply to -webkit-device-pixel-ratio, instead the following aliases must be used:
+</p>
+
+<table>
+<thead><tr><th>旧来の， `-webkit-^css 接頭辞付き, 範囲~型の`媒体~特能$（別名）
+<th>標準な， `min-^css ／ `max-^css 接頭辞付き, 範囲~型の`媒体~特能$
+</thead>
+
+<tbody><tr><td>`-webkit-min-device-pixel-ratio@d
+<td>`min-resolution$d
+
+<tr><td>`-webkit-max-device-pixel-ratio@d
+<td>`max-resolution$d
+
+</tbody></table>
+
+
+
+			</section>
+			<section id="css-media-queries-webkit-transform-3d">
+<h4>3.2.2. `-webkit-transform-3d^d</h4>
+
+◎述 `-webkit-transform-3d@d
+◎用 `media$at
+◎値 `mq-boolean$t
+◎型 `離散~型$
+<!-- Accepts min/max prefixes: no-->
+◎表終
+
+
+<p>
+`-webkit-transform-3d$d `媒体~特能$は、~UAが~CSS三次元変形を~supportするかどうかを~queryするために利用される。
+`css-transforms-1$r
+◎
+The -webkit-transform-3d media feature is used to query whether the user agent supports CSS 3D transforms. [css-transforms-1]
+</p>
+
+
+<p>
+その値は、~UAが三次元変形を~supportするならば 1 になり，他の場合 0 になる。
+◎
+If the user agent supports 3D transforms, the value will be 1. Otherwise the value is 0.
+</p>
+
+
+
+			</section>
+		</section>
+		<section id="css-image-type">
+<h3 title="CSS Gradients">3.3. 各種~CSS~gradient</h3>
+
+			<section id="css-gradients-webkit-linear-gradient">
+<h4>3.3.1. `-webkit-linear-gradient^f</h4>
+
+
+<p>
+`-webkit-linear-gradient@f
+は、
+`css3-images-20110217$r にて定義される `linear-gradient$f の別名として扱うモノトスル。
+◎
+-webkit-linear-gradient() must be treated as an alias of linear-gradient as defined in [css3-images-20110217].
+</p>
+
+
+
+			</section>
+			<section id="css-gradients-webkit-radial-gradient">
+<h4>3.3.2. `-webkit-radial-gradient^f</h4>
+
+
+<p>
+`-webkit-radial-gradient@f
+は、
+`css3-images-20110217$r にて定義される `radial-gradient$f の別名として扱うモノトスル。
+◎
+-webkit-radial-gradient() must be treated as an alias of radial-gradient as defined in [css3-images-20110217].
+</p>
+
+
+
+			</section>
+			<section id="css-gradients-repeating-webkit-linear-gradient">
+<h4>3.3.3. `-webkit-repeating-linear-gradient^f</h4>
+
+
+<p>
+`-webkit-repeating-linear-gradient@f
+は、
+`css3-images-20110217$r にて定義される `repeating-linear-gradient$f の別名として扱うモノトスル。
+◎
+-webkit-repeating-linear-gradient() must be treated as an alias of repeating-linear-gradient as defined in [css3-images-20110217].
+</p>
+
+			</section>
+			<section id="css-gradients-repeating-webkit-radial-gradient">
+<h4>3.3.4. `-webkit-repeating-radial-gradient^f</h4>
+
+
+<p>
+`-webkit-repeating-radial-gradient@f
+は、
+`css3-images-20110217$r にて定義される `repeating-radial-gradient$f の別名として扱うモノトスル。
+◎
+-webkit-repeating-radial-gradient() must be treated as an alias of repeating-radial-gradient as defined in [css3-images-20110217].
+</p>
+
+
+
+			</section>
+		</section>
+		<section id="css-properties">
+<h3 title="CSS Properties">3.4. 各種~CSS~prop</h3>
+
+
+
+			<section id="css-simple-aliases">
+<h4 title="Simple property aliases">3.4.1. 単純な別名~prop</h4>
+
+
+<p>
+次に挙げる各種 `-webkit-^css `~vendor接頭辞付き$~propは、それぞれに対応する接頭辞なし~propの別名として~supportするモノトスル。
+◎
+The following -webkit- vendor prefixed properties must be supported as aliases of the corresponding unprefixed property:
+</p>
+
+<table>
+<thead><tr><th>`-webkit-^css 接頭辞付き~prop（別名）
+<th>接頭辞なし~prop
+</thead>
+
+<tbody><tr><td>`-webkit-align-items@p
+<td>`align-items$p
+
+<tr><td>`-webkit-align-content@p
+<td>`align-content$p
+
+<tr><td>`-webkit-align-self@p
+<td>`align-self$p
+
+<tr><td>`-webkit-animation-name@p
+<td>`animation-name$p
+
+<tr><td>`-webkit-animation-duration@p
+<td>`animation-duration$p
+
+<tr><td>`-webkit-animation-timing-function@p
+<td>`animation-timing-function$p
+
+<tr><td>`-webkit-animation-iteration-count@p
+<td>`animation-iteration-count$p
+
+<tr><td>`-webkit-animation-direction@p
+<td>`animation-direction$p
+
+<tr><td>`-webkit-animation-play-state@p
+<td>`animation-play-state$p
+
+<tr><td>`-webkit-animation-delay@p
+<td>`animation-delay$p
+
+<tr><td>`-webkit-animation-fill-mode@p
+<td>`animation-fill-mode$p
+
+<tr><td>`-webkit-animation@p
+<td>`animation$p
+
+<tr><td>`-webkit-backface-visibility@p
+<td>`backface-visibility$p
+
+<tr><td>`-webkit-background-origin@p
+<td>`background-origin$p
+
+<tr><td>`-webkit-background-size@p
+<p class="issue">
+単純でない。
+<a href="https://github.com/whatwg/compat/issues/28">issue #28</a>
+を見よ。
+◎
+Not simple. See issue #28.
+</p>
+<td>`background-size$p
+
+<tr><td>`-webkit-border-bottom-left-radius@p
+<td>`border-bottom-left-radius$p
+
+<tr><td>`-webkit-border-bottom-right-radius@p
+<td>`border-bottom-right-radius$p
+
+<tr><td>`-webkit-border-top-left-radius@p
+<td>`border-top-left-radius$p
+
+<tr><td>`-webkit-border-top-right-radius@p
+<td>`border-top-right-radius$p
+
+<tr><td>`-webkit-border-radius@p
+<td>`border-radius$p
+
+<tr><td>`-webkit-box-shadow@p
+<td>`box-shadow$p
+
+<tr><td>`-webkit-box-sizing@p
+<td>`box-sizing$p
+
+<tr><td>`-webkit-flex@p
+<td>`flex$p
+
+<tr><td>`-webkit-flex-basis@p
+<td>`flex-basis$p
+
+<tr><td>`-webkit-flex-direction@p
+<td>`flex-direction$p
+
+<tr><td>`-webkit-flex-flow@p
+<td>`flex-flow$p
+
+<tr><td>`-webkit-flex-grow@p
+<td>`flex-grow$p
+
+<tr><td>`-webkit-flex-shrink@p
+<td>`flex-shrink$p
+
+<tr><td>`-webkit-flex-wrap@p
+<td>`flex-wrap$p
+
+<tr><td>`-webkit-filter@p
+<td>`filter$p
+
+<tr><td>`-webkit-justify-content@p
+<td>`justify-content$p
+
+<tr><td>`-webkit-mask@p
+<td>`mask$p
+
+<tr><td>`-webkit-mask-box-image@p
+<td>`mask-border$p
+
+<tr><td>`-webkit-mask-box-image-outset@p
+<td>`mask-border-outset$p
+
+<tr><td>`-webkit-mask-box-image-repeat@p
+<td>`mask-border-repeat$p
+
+<tr><td>`-webkit-mask-box-image-slice@p
+<td>`mask-border-slice$p
+
+<tr><td>`-webkit-mask-box-image-source@p
+<td>`mask-border-source$p
+
+<tr><td>`-webkit-mask-box-image-width@p
+<td>`mask-border-width$p
+
+<tr><td>`-webkit-mask-clip@p
+<td>`mask-clip$p
+
+<tr><td>`-webkit-mask-composite@p
+<td>`mask-composite$p
+
+<tr><td>`-webkit-mask-image@p
+<td>`mask-image$p
+
+<tr><td>`-webkit-mask-origin@p
+<td>`mask-origin$p
+
+<tr><td>`-webkit-mask-position@p
+<td>`mask-position$p
+
+<tr><td>`-webkit-mask-repeat@p
+<td>`mask-repeat$p
+
+<tr><td>`-webkit-mask-size@p
+<td>`mask-size$p
+
+<tr><td>`-webkit-order@p
+<td>`order$p
+
+<tr><td>`-webkit-perspective@p
+<td>`perspective$p
+
+<tr><td>`-webkit-perspective-origin@p
+<td>`perspective-origin$p
+
+<tr><td>`-webkit-transform-origin@p
+<td>`transform-origin$p
+
+<tr><td>`-webkit-transform-style@p
+<td>`transform-style$p
+
+<tr><td>`-webkit-transform@p
+<td>`transform$p
+
+<tr><td>`-webkit-transition-delay@p
+<td>`transition-delay$p
+
+<tr><td>`-webkit-transition-duration@p
+<td>`transition-duration$p
+
+<tr><td>`-webkit-transition-property@p
+<td>`transition-property$p
+
+<tr><td>`-webkit-transition-timing-function@p
+<td>`transition-timing-function$p
+
+<tr><td>`-webkit-transition@p
+<td>`transition$p
+
+</tbody></table>
+
+
+
+			</section>
+			<section id="css-prefixed-aliases">
+<h4 title="Prefixed property aliases">3.4.2. 接頭辞付き別名~prop</h4>
+
+
+<p>
+次に挙げる各種 `-webkit-^css `~vendor接頭辞付き$~propは、それぞれに対応する接頭辞なし~propの別名として~supportするモノトスル。
+~UAが接頭辞なし等価を出荷していない場合、
+`-webkit-^css 接頭辞付き~propは、~UAの自前の~vendor接頭辞付き~propの別名として扱うモノトスル。
+◎
+The following -webkit- vendor prefixed properties must be supported as aliases of the corresponding unprefixed properties. If the user agent does not ship the unprefixed equivalent, the -webkit- prefixed property must be treated as an alias of the user agent’s own vendor prefixed property.
+</p>
+
+<table>
+<thead><tr><th>`-webkit-^css 接頭辞付き~prop（別名）
+<th>（~vendor接頭辞付き）~prop
+</thead>
+
+<tbody><tr><td>`-webkit-text-size-adjust@p
+<td><code>(-prefix-)`text-size-adjust$p</code>
+
+</tbody></table>
+
+
+<p class="note">注記：
+各~propは、接頭辞を付与し得なくなり次第，
+“単純な” 別名として定義し得るようになる
+◎
+As soon as each property is unprefixable it can be defined as a "simple" alias.
+</p>
+
+			</section>
+			<section id="css-non-aliased">
+<h4 title="Non-aliased vendor prefixed properties">3.4.3. 別名化されていない，~vendor接頭辞付き~prop</h4>
+
+<p class="note">注記：
+この節は、 `-webkit-appearance$p ~prop用の仕様を与えていた。
+これは今や `CSS-UI-4$r
+<a href="~CSSUI#appearance-switching">にて定義される</a>。
+◎
+Note: This section used to have a specification for the -webkit-appearance property. This is now defined in CSS Basic User Interface Module.
+</p>
+
+			</section>
+			<section id="css-property-mappings">
+<h4 title="Property mappings">3.4.4. ~propの対応付け</h4>
+
+
+<p>
+次に挙げる各種 `-webkit-^css `~vendor接頭辞付き$~propは、それぞれに対応する接頭辞なし~propに対応付けるように~supportするモノトスル：
+◎
+The following -webkit- vendor prefixed properties must be supported as mappings to the corresponding unprefixed property:
+</p>
+
+<table>
+<thead><tr><th>`-webkit-^css 接頭辞付き~prop
+<th>接頭辞なし~prop
+</thead><tbody>
+
+<tr><td>`-webkit-box-align@p
+<td>`align-items$p
+
+<tr><td>`-webkit-box-flex@p
+<td>`flex-grow$p
+
+<tr><td>`-webkit-box-ordinal-group@p
+<td>`order$p
+
+<tr><td>`-webkit-box-orient@p
+<td>`flex-direction$p
+
+<tr><td>`-webkit-box-pack@p
+<td>`justify-content$p
+
+</tbody></table>
+
+
+
+			</section>
+			<section id="css-keyword-mappings">
+<h4 title="Keyword mappings">3.4.5. ~keywordの対応付け</h4>
+
+
+<p>
+次に挙げる各種 `-webkit-^css `~vendor接頭辞付き$~keywordは、それぞれに対応する接頭辞なし~keywordに対応付けるように~supportするモノトスル：
+◎
+The following -webkit- vendor prefixed keywords must be supported as mappings to the corresponding unprefixed keyword:
+</p>
+
+<table>
+<thead><tr><th>`-webkit-^css 接頭辞付き~keyword
+<th>接頭辞なし~propの~keyword
+</thead>
+
+<tbody><tr><td>`-webkit-box@v
+<td>`flex$v
+
+<tr><td>`-webkit-flex@v
+<td>`flex$v
+
+<tr><td>`-webkit-inline-box@v
+<td>`inline-flex$v
+
+<tr><td>`-webkit-inline-flex@v
+<td>`inline-flex$v
+
+</tbody></table>
+
+
+
+			</section>
+			<section id="the-webkit-background-clip-property">
+<h4 title="Foreground Text Clipping: the -webkit-background-clip property">3.4.6. 前景~textによる切抜き： `-webkit-background-clip^p ~prop</h4>
+
+
+◎名 `-webkit-background-clip@p
+◎値 `border-box$v | `padding-box$v | `content-box$v | `text$v
+◎初 `none^v
+◎適 すべての要素
+◎継 されない
+◎百 受容しない
+◎算 `text$v
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+
+<p>
+`-webkit-background-clip$p
+~propは、その値が `text$v のときは，前景~textの外縁~text~strokeから背景`切抜き領域$を作成する（~alphaによる透明度も含めて）。
+◎
+The -webkit-background-clip property—when its value is text—creates a background clipping region from the outer text stroke of the foreground text (including alpha transparency).
+</p>
+
+
+<p>
+他のすべての `box$t 値に対しては、
+`-webkit-background-clip$p ~propは，単純に `background-clip$p ~propの別名になる。
+◎
+The -webkit-background-clip property is a simple alias of the background-clip property for all other &lt;box&gt; values.
+</p>
+
+<p class="note">注記：
+根~要素の`背景~塗ng区画$は他と異なるので、
+`-webkit-background-clip$p ~propは，根~要素~上に指定されても効果はない。
+`特別な要素の背景$を見よ。
+◎
+Note that the root element has a different background painting area, and thus the -webkit-background-clip property has no effect when specified on it. See the backgrounds of special elements.
+</p>
+
+<dl>
+	<dt>`border-box@v</dt>
+	<dd>
+背景は~border~boxの中に塗られる（切抜かれる）
+◎
+The background is painted within (clipped to) the border box.
+</dd>
+
+	<dt>`padding-box@v</dt>
+
+	<dd>
+背景は~padding~boxの中に塗られる（切抜かれる）。
+◎
+The background is painted within (clipped to) the padding box.
+</dd>
+
+	<dt>`content-box@v</dt>
+
+	<dd>
+背景は内容~boxの中に塗られる（切抜かれる）。
+◎
+The background is painted within (clipped to) the content box.
+</dd>
+
+	<dt>`text@v</dt>
+	<dd>
+背景~画像は前景~textで切抜かれるべきであることを，指示する。
+◎
+Indicates that the background image should clip to the foreground text
+</dd>
+
+</dl>
+
+<hr>
+
+<div class="example">
+
+<p>
+<samp class="css">`-webkit-background-clip$p: `text$v</samp>
+と
+<samp class="css">`-webkit-text-fill-color$p: `transparent^v</samp>
+を併用して，~gradient色~効果を伴う~textを達成する方法を次の例に示す。
+◎
+Here’s an example showing how to use -webkit-background-clip: text together with -webkit-text-fill-color: transparent to achieve text with a gradient color effect.
+</p>
+
+
+<pre class="lang-css">
+p {
+  background: linear-gradient(90deg, red, blue);
+  color: #fff;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+</pre>
+
+
+<p>
+`-webkit-background-clip$p ／ `-webkit-text-fill-color$p
+を~supportしない~browserは、~fallback色として `color^css 宣言を利用することになる。
+◎
+Browsers that don’t support -webkit-background-clip or -webkit-text-fill-color will use the color declaration as a fallback color.
+</p>
+
+</div>
+
+
+
+			</section>
+			<section id="text-fill-and-stroking">
+<h4 title="Text Fill and Stroking">3.4.7. ~textの~fillと~stroke</h4>
+
+
+
+				<section id="the-webkit-text-fill-color">
+<h5 title="Foreground Text Color: the -webkit-text-fill-color property">3.4.7.1. 前景~text色： `-webkit-text-fill-color^p ~prop</h5>
+
+
+◎名 `-webkit-text-fill-color@p
+◎値 `color$t
+◎初 `currentcolor$v
+◎適 すべての要素
+◎継 される
+◎百 受容しない
+◎算 ~RGBA色
+◎順 文法に従う
+◎ア `色として$【参照先は廃されている — おそらく “算出d値の型による” 】
+◎表終
+
+
+<p>
+`-webkit-text-fill-color$p
+~propは、要素の~text内容の前景~fill色を定義する。
+◎
+The -webkit-text-fill-color property defines the foreground fill color of an element’s text content.
+</p>
+
+<div class="example">
+
+<p>
+`-webkit-text-fill-color$p
+が、要素の~textの前景~fill色を常に決定する例を示す：
+◎
+Here’s an example showing -webkit-text-fill-color will always determine the foreground fill color of an element’s text.
+</p>
+
+<pre class="lang-css">
+.one {
+  color: blue;
+  /* <span class="comment">
+次の宣言は、初期~値を指定しているので省略できる：
+◎
+the following can be omitted because it’s the initial value:
+</span>
+  -webkit-text-fill-color: currentcolor; */
+}
+
+.two {
+  color: red;
+  -webkit-text-fill-color: blue;
+}
+</pre>
+
+
+<p>
+`one^css ／ `two^css
+~classを伴う要素の~textは、青くなる。
+◎
+Elements with the one or two classes will have blue text.
+</p></div>
+
+
+
+				</section>
+				<section id="the-webkit-text-stroke-color">
+<h5 title="Text Stroke Color: the -webkit-text-stroke-color property">3.4.7.2. ~text~stroke色： `-webkit-text-stroke-color^p ~prop</h5>
+
+
+◎名 `-webkit-text-stroke-color@p
+◎値 `color$t
+◎初 `currentcolor$v
+◎適 すべての要素
+◎継 される
+◎百 受容しない
+◎算 ~RGBA色
+◎順 文法に従う
+◎ア `色として$【参照先は廃されている — おそらく “算出d値の型による” 】
+◎表終
+
+
+<p>
+`-webkit-text-stroke-color$p
+~propは、要素の~textの~stroke色を指定する。
+◎
+The -webkit-text-stroke-color property specifies a stroke color for an element’s text.
+</p>
+
+
+
+				</section>
+				<section id="the-webkit-text-stroke-width">
+<h5 title="Text Stroke Thickness: the -webkit-text-stroke-width property">3.4.7.3. ~text~strokeの太さ： `-webkit-text-stroke-width^p ~prop</h5>
+
+
+◎名 `-webkit-text-stroke-width@p
+◎値 `line-width$t
+◎初 `0^v
+◎適 すべての要素
+◎継 される
+◎百 受容しない
+◎算 絶対~化された長さ
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+
+<p>
+`-webkit-text-stroke-width$p
+~propは、要素の~textの各~glyphの辺に描かれる~stroke幅（太さ）を指定する。
+値を 0 にすると，~strokeは塗られなくなる。
+負な値は無効。
+◎
+The -webkit-text-stroke-width property specifies the width of the stroke drawn at the edge of each glyph of an element’s text. A zero value results in no stroke being painted. A negative value is invalid.
+</p>
+
+
+
+				</section>
+				<section id="the-webkit-text-stroke">
+<h5 title="Text Stroke Shorthand: the -webkit-text-stroke property">3.4.7.4. ~text~stroke略式~prop： `-webkit-text-stroke^p ~prop</h5>
+
+
+◎名 `-webkit-text-stroke@p
+◎値 `line-width$t || `color$t
+◎初 個々の~propを見よ
+◎適 個々の~propを見よ
+◎継 される
+◎百 受容しない
+◎算 個々の~propを見よ
+◎順 文法に従う
+◎ア 個々の~propを見よ
+◎表終
+
+
+<p>
+`-webkit-text-stroke$p ~propは、要素の~textの［
+~stroke幅, ~stroke色
+］を一括して設定するための略式~propである。
+◎
+The -webkit-text-stroke property is a shorthand property for setting the stroke width and stroke color of an element’s text.
+</p>
+
+<div class="example">
+
+<p>
+白く~fillされる~textに黒く~strokeする（縁取りする）効果を達成する 2 つの例を示す。
+最初の例では下位propを利用し，
+2 番目の例では `-webkit-text-stroke$p 略式~propを利用して、同じ結果を得る：
+◎
+Here are two examples showing how to use the longhand and shorthand -webkit-text-stroke properties to achieve white text with a black stroked text effect.
+</p>
+
+
+<pre class="lang-css">
+.stroked-text-longhand {
+  color: #fff;
+  -webkit-text-stroke-color: #000;
+  -webkit-text-stroke-width: 1px;
+}
+
+.stroked-text-shorthand {
+  -webkit-text-fill-color: #fff;
+  -webkit-text-stroke: thin #000;
+}
+</pre>
+
+<p>
+これにより、次の要素は：
+◎
+The element
+</p>
+
+<pre class="lang-html">
+&lt;p class="stroked-text-longhand"&gt;Serious typography&lt;/p&gt;
+</pre>
+
+<p>
+次のように描画されることになる：
+◎
+would be rendered as follows:
+</p>
+
+
+<figure>
+<img
+	src="compat/stroked-text.png"
+	alt="~strokeされた~textの画像"
+	style="width: 381px;height: 116px;"
+>
+</figure>
+
+</div>
+
+
+
+				</section>
+			</section>
+		</section>
+		<section id="css-property-values">
+<h3 title="CSS Property values">3.5. ~CSS~prop値</h3>
+			<section id="touch-action">
+<h4 title="Additional touch-action values">3.5.1. 追加的な `touch-action^p 値</h4>
+
+<p id="propdef-touch-action">
+この節では、 `pointerevents2$r による `touch-action$p の定義を増補する `pinch-zoom^v 値を
+<a href="https://github.com/whatwg/compat/issues/68">追加する</a>。
+◎
+This section augments the definition of touch-action from [pointerevents2] to add the pinch-zoom value.
+</p>
+
+◎名 `touch-action$p
+◎値
+`auto^v
+| `none^v
+| [ [ `pan-x^v | `pan-left^v | `pan-right^v ]
+|| [ `pan-y^v | `pan-up^v | `pan-down^v ]
+|| <mark>`pinch-zoom^v</mark> ]
+| `manipulation^v
+◎表終
+
+<p class="trans-note">【
+この訳では、定義~表の必要な部位だけ示す。
+全部的な定義~表は、リンク先を参照されたし。
+】</p>
+
+<p>
+`pinch-zoom^v を指定した場合、複数の手指による~pageの~panningや~zoomingが可能化される。
+~zoomingが生じるためには、【触れている】すべての手指が，［
+ `pinch-zoom^v の挙動が（自身または先祖における
+`pinch-zoom^v, `manipulation^v, `auto^v
+いずれかの値を介して）可能化された要素
+］から開始されるモノトスル。
+◎
+When specified, the pinch-zoom token enables multi-finger panning and zooming of the page. For zooming to occur, all fingers must start on an element that has the pinch-zoom behavior enabled (via one of the pinch-zoom, manipulation, or auto values on itself or an ancestor).
+</p>
+
+<p class="note">注記：
+画像~回転台にて~panningを横方向だけ不能化したいと望むなら、不必要に~zoomingが不能化されるのを避けるため，
+`touch-action^p に "`pan-y pinch-zoom^v" を利用できる。
+◎
+Scenarios like image carousels which wish to disable only horizontal panning can use "touch-action: pan-y pinch-zoom" to avoid disabling zooming unnecessarily.
+</p>
+
+<p>
+`manipulation^v は、 "`pan-x pan-y pinch-zoom^v" の別名である。
+◎
+manipulation is an alias for "pan-x pan-y pinch-zoom".
+</p>
+			</section>
+		</section>
+	</section>
+	<section id="dom-compat-section">
+<h2 title="DOM Compatibility">4. ~DOMの互換性</h2>
+
+
+
+		<section id="webkitcssmatrix-interface">
+<h3 title="The WebKitCSSMatrix interface">4.1. `WebKitCSSMatrix^I ~interface</h3>
+
+<p class="note">注記：
+`WebKitCSSMatrix$I は、今や DOM Geometry `geometry-1$r 仕様にて定義された。
+◎
+WebKitCSSMatrix is now defined by the DOM Geometry specification. [geometry-1].
+</p>
+
+
+
+		</section>
+		<section id="windoworientation-interface">
+<h3 title="window.orientation API">4.2. `window.orientation^m API</h3>
+
+
+<pre class="idl">
+partial interface `Window$I {
+    readonly attribute `short$ `orientation$m;
+    attribute `EventHandler$I `onorientationchange@m;
+};
+
+partial interface `HTMLBodyElement$I {
+    attribute `EventHandler$I `onorientationchange@m;
+};
+</pre>
+
+
+<p>
+`orientation@m
+属性の取得子は、次の手続きを走らすモノトスル：
+◎
+When getting the orientation attribute, the user agent must run the following steps:
+</p>
+
+<ol>
+	<li>
+~RET `担当の文書$の現在の
+<a href="#dfn-window-orientation-angle">`window.orientation^m 角度</a>
+◎
+Return the responsible document’s current window.orientation angle.
+</li>
+</ol>
+
+
+<p>
+~UAは、機器の自然な方位と異なる角度で表示域を描くときは，次の手続きを走らすモノトスル：
+◎
+Whenever the viewport is drawn at a different angle compared to the device’s natural orientation, the user agent must run the following steps:
+</p>
+
+<ol>
+	<li>
+<!-- ＊結付けられている文書？ -->
+`Window$I ~objの`作動中の文書$に向けて，名前
+`orientationchange@et
+の`~eventを発火する$
+◎
+Fire an event named orientationchange at the Window object of the active document.
+</li>
+</ol>
+
+<p>
+`window.orientation$m 属性, および それに結付けられている `orientationchange$et ~eventを実装している~UAは、~desktop~platformには，それらを公開しないモノトスル。
+◎
+User agents implementing the window.orientation attribute and its associated orientationchange event must not expose them on Desktop platforms.
+</p>
+
+<p class="note">注記：
+iOS Safari も `body$e 要素に向けて `orientationchange^et ~eventを発火するが、他の実装は発火しない
+— したがって，~webとの互換性には必要とされないことになる。
+◎
+iOS Safari also fires an orientationchange event on the body element, but other implementations do not, suggesting it’s not necessary for compatibility with the web.
+</p>
+
+
+
+			<section id="dfn-window-orientation-angle">
+<h4 title="window.orientation angle">4.2.1. `window.orientation^m 角度</h4>
+
+<p>
+`window.orientation$m
+角度がとり得る値は［
+`-90^v, `0^v, `90^v, `180^v
+］である。
+~UAは、これらの値のうち［
+`-90^v, `0^v, `90^v
+］は~supportするモノトスル。
+また、任意選択で `180^v も~supportしてもヨイ。
+◎
+The possible values for the window.orientation angle are: -90, 0, 90, 180. User agents must support the -90, 0 and 90 values and may optionally support 180.
+</p>
+
+
+<p class="note" role="note">
+`0^v は、自然な方位を表現する。
+［
+`90^v, `180^v, `-90^v
+］は、順に，自然な方位から時計回りに［
+90 度t, 180 度t, 270 度t
+］の回転を表現する。
+◎
+0 represents the natural orientation. -90 represents a rotation 90 degrees clockwise from the natural orientation. 90 represents a rotation 90 degrees counterclockwise from the natural orientation. 180 represents a rotation 180 degrees from the natural orientation.
+</p>
+
+<p>
+~UAは、現在の
+`window.orientation$m 角度を決定するためには、［
+`ScreenOrientation$I の
+`方位~情報を更新する$
+~algoを，その段 3 に次の変更を加えた上で，走らせた結果
+］を返すモノトスル：
+◎
+In order to determine the current window.orientation angle, the user agent must run the following steps:
+◎
+Return the result of step 3 of the ScreenOrientation's update the orientation information algorithm with the following changes:
+</p>
+
+<!-- 
+Set the document's current orientation angle to 
+the clockwise angle in degrees
+	between
+		the orientation of the viewport as it is drawn
+	and
+		the natural orientation of the device
+	(i.e., the top of the physical screen).
+This is the opposite of the physical rotation.
+In other words, if a device is turned 90 degrees on the right, the current orientation angle would be 270 degrees.
+-->
+
+<div >
+<ol>
+	<li>
+以下において， `角度^V は、段 3 の結果の
+orientation angle（ “方位~角度” ）を表すとする
+（ 0 以上, 360 未満）。
+</li>
+	<li>
+~IF［
+`角度^V ~EQ 180
+］~AND［
+~UAは 値 `180^v を~supportしない
+］
+⇒
+~RET 0
+</li>
+	<li>
+~IF［
+`角度^V ~LTE 180
+］
+⇒
+~RET `角度^V
+</li>
+	<li>
+~RET ( `角度^V − 360 )
+</li>
+</ol>
+
+◎
+If the orientation angle is less than or equal to 180, return the orientation angle
+◎
+If the orientation angle is greater than 180, return the orientation angle - 360.
+◎
+If the resulting orientation angle is 180 and the user agent does not support that value, return 0.
+</div>
+
+
+			</section>
+			<section id="event-handlers">
+<h4 title="Event Handlers on Window objects and body elements">4.2.2. `Window^I ~obj ／ `body^e 要素~上の~event~handler</h4>
+
+
+<p>
+すべての ［
+`Window$I ~obj ／ `body$e 要素
+］は、次に挙げる~event~handler, および
+それぞれに対応する~event~handler~event型を，属性として~supportするモノトスル：
+◎
+The following are the event handlers and their corresponding event handler event types that must be supported on all Window objects and body elements as attributes:
+</p>
+
+<table>
+<thead><tr><th>`~event~handler$
+<th>`~event~handler~event型$
+</thead>
+
+<tbody><tr><td> `onorientationchange$m
+<td> `orientationchange$et
+
+</tbody></table>
+
+<p class="issue">
+WebKit は、これを
+<a href="https://github.com/WebKit/webkit/blob/e455672f9e6861ced85d8be01cb7bc03a30a0555/LayoutTests/fast/dom/event-handler-attributes.html#L335">`HTMLFrameSetElement^I 上にも有する</a>
+。
+それも互換性のために必要かどうかは はっきりしない。
+◎
+WebKit also has this on HTMLFrameSetElement. It’s unclear if this is needed for compatibility.
+</p>
+
+
+
+			</section>
+		</section>
+	</section>
+	<section id="acknowledgements">
+<h2 title="Acknowledgements">謝辞</h2>
+
+<p>
+この標準に~feedbackを寄せられ，貢献された次の方々に：
+</p>
+
+<div lang="en-x-a0">
+
+<p>
+Thanks to Alan Cutter, Cameron McCormack,Chris Rebert, Chun-Min (Jeremy) Chen, Daniel Holbert, David Håsäther, Domenic Denicola, hexalys, Jean-Yves Perrier, Jacob Rossi, Philip Jägenstedt, Rick Byers, Simon Pieters, Stanley Stuart, William Chen and Your Name Here for feedback and contributions to this standard.
+</p>
+
+<p lang="ja">
+`ScreenOrientation$I ~interface `screen-orientation$r
+を定義された
+Mounir Lamouri, Marcos Cáceres
+両氏に。
+◎
+Thanks to Mounir Lamouri and Marcos Cáceres for defining the ScreenOrientation interface. [screen-orientation]
+</p>
+
+
+<p lang="ja">
+この仕様に定義されている内容のかなりの部分を占める初期の記述を供された
+Apple, および WebKit.org のブログ著者に特別な謝意を。
+◎
+Special thanks to Apple and the WebKit.org blog authors for providing initial descriptions of much of the content defined in this specification.
+</p>
+
+
+<p>
+This standard is written by 
+<a href="https://miketaylr.com/">Mike Taylor</a>
+(<a href="https://www.mozilla.org/">Mozilla</a>,
+<a href="mailto:miket@mozilla.com">miket@mozilla.com</a>).
+</p>
+
+<p>
+Copyright © WHATWG (Apple, Google, Mozilla, Microsoft). This work is licensed under a <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution
+4.0 International License</a>.
+</p>
+
+</div>
+
+
+	</section>
+
+</main></div>
+

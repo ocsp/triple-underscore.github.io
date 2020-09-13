@@ -1,0 +1,131 @@
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	width="280" height="190"
+	viewBox="0 0 280 190"
+>
+<style>
+text {
+	font-family: monospace;
+	font-size: 10px;
+	text-anchor: middle;
+}
+text.ellipsis {
+	font-family: sans-serif;
+}
+
+path, rect {
+	stroke: black;
+	fill: transparent;
+}
+
+#item {
+	stroke: darkgray;
+}
+
+marker > path {
+	fill: white;
+}
+
+</style>
+
+<defs>
+
+	<marker id="arrow" orient="auto" markerWidth="6" markerHeight="6" refX="5" refY="3">
+<path d="M0,0 V6 L5,3 Z" fill="black"/>
+	</marker>
+
+	<marker id="circle" markerWidth="3" markerHeight="3" refX="1.5" refY="1.5">
+<circle cx="1.5" cy="1.5" r="1.5" fill="black"/>
+	</marker>
+
+	<marker id="diamond" markerWidth="6" markerHeight="10" refX="3" refY="10">
+<path d="M3,0 L6,5 L3,10 L0,5 Z" fill="white" stroke="black"/>
+	</marker>
+
+<rect id="item" x="0" y="0" width="15" height="10" rx="2" ry="2"/>
+<rect id="element" x="0" y="0" width="35" height="20" rx="5" ry="5" />
+
+</defs>
+
+<!-- custom-elements-reaction-stack -->
+	<g transform="translate(5,0)">
+
+<path d="
+M0,30 v100
+M80,30 v100
+M0,50 h80
+M0,70 h80
+M0,90 h80
+M0,110 h80
+M0,130 h80
+" />
+
+<!--  queue-in-stack -->
+		<g transform="translate(0,50)">
+<use xlink:href="#item" transform="translate(5, 5)"/>
+<use xlink:href="#item" transform="translate(25, 5)"/>
+		</g>
+
+		<g transform="translate(0,70)">
+<use xlink:href="#item" transform="translate(5, 5)"/>
+<use xlink:href="#item" transform="translate(25, 5)"/>
+<use xlink:href="#item" transform="translate(45, 5)"/>
+<text x="70" y="14" class="ellipsis">…</text>
+		</g>
+
+		<g transform="translate(0,90)">
+<use xlink:href="#item" transform="translate(5, 5)"/>
+		</g>
+
+		<g transform="translate(0,110)">
+<use xlink:href="#item" transform="translate(5, 5)"/>
+<use xlink:href="#item" transform="translate(25, 5)"/>
+<use xlink:href="#item" transform="translate(45, 5)"/>
+		</g>
+	</g>
+
+<path d="M85,80 L125,80" marker-start="url(#circle)" marker-end="url(#arrow)" />
+
+	<g class="element-queue" transform="translate(120,60)">
+<path d="M155,5 h-150 v30 h150" />
+
+<!-- class="element-queue-element" -->
+		<g transform="translate(10,10)">
+<use xlink:href="#element"/>
+<text x="18" y="14">&lt;x-a&gt;</text>
+		</g>
+
+		<g transform="translate(50,10)">
+<use xlink:href="#element"/>
+<text x="18" y="14">&lt;x-b&gt;</text>
+		</g>
+
+		<g transform="translate(90,10)">
+<use xlink:href="#element"/>
+<text x="18" y="14">&lt;x-c&gt;</text>
+		</g>
+
+		<g transform="translate(130,10)">
+<text x="18" y="14" class="ellipsis">…</text>
+		</g>
+	</g>
+
+<path
+	d="M187.5,100 c0,20 -37.5,10 -37.5,40"
+	marker-start="url(#diamond)"
+	marker-end="url(#arrow)"
+	fill="transparent"
+/>
+
+<!-- custom-element-reaction-queue -->
+<path transform="translate(70,155)" d="
+M170,0 h-170 v30 h170
+M0,0 v30
+M40,0 v30
+M80,0 v30
+M120,0 v30
+M160,0 v30
+" />
+
+</svg>

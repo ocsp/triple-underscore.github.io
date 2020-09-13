@@ -1,0 +1,4587 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Index （要素／属性）（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+
+<style>
+
+@supports (display: grid) and (display: contents) {
+
+/* TODO @media */
+
+#element-table {
+	min-width:32em;
+}
+
+#element-table tr {
+	grid-template-areas:
+		"要素 説明 説明 interface"
+		"要素 分類 親 子"
+		"要素 属性 属性 属性"
+	;
+	grid-template-columns: 8em minmax(8em, 1fr) minmax(8em, 1fr) minmax(8em, 1fr);
+}
+
+#element-table tr > *:nth-child(1) {
+	border-left-width: 0;
+	grid-area: 要素;
+}
+
+#element-table tr > *:nth-child(2) {
+	grid-area: 説明;
+	padding: 0.5em;
+}
+
+#element-table tr > *:nth-child(3) {
+	grid-area: 分類;
+}
+
+#element-table tr > *:nth-child(4) {
+	grid-area: 親;
+}
+
+#element-table tr > *:nth-child(5) {
+	grid-area: 子;
+}
+
+#element-table tr > *:nth-child(6) {
+	grid-area: 属性;
+}
+
+#element-table tr > *:nth-child(7) {
+	grid-area: interface; /* 長い名前は overflow し得る */
+}
+
+
+#category-table {
+	min-width:30em;
+}
+
+#category-table tr {
+	grid-template-areas:
+		"分類 要素"
+		"分類 条件付き"
+	;
+	grid-template-columns: 15em 1fr;
+}
+
+#category-table tr > *:nth-child(1) {
+	grid-area: 分類;
+	border-left-width: 0;
+}
+
+#category-table tr > *:nth-child(2) {
+	grid-area: 要素;
+}
+
+#category-table tr > *:nth-child(3) {
+	grid-area: 条件付き;
+}
+
+
+#attributes-1 {
+	min-width: 32em;
+}
+
+#attributes-1 tr {
+	grid-template-areas:
+		"属性 説明 説明"
+		"属性 要素 値"
+	;
+	grid-template-columns: 14em 1fr 1fr;
+}
+
+#attributes-1 tr > *:nth-child(1) {
+	grid-area: 属性;
+	border-left-width: 0;
+}
+
+#attributes-1 tr > *:nth-child(2) {
+	grid-area: 要素;
+}
+
+#attributes-1 tr > *:nth-child(3) {
+	grid-area: 説明;
+	padding: 0.5em;
+}
+
+#attributes-1 tr > *:nth-child(4) {
+	grid-area: 値;
+}
+
+
+}
+
+</style>
+
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	let context_elem = '-';
+	let context_attr = '-';
+
+	return this.html.replace(
+		/%[\w\-~一-鿆]+|`(.+?)([$!\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+let classname = class_map[klass];
+let tag = tag_map[klass];
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'e': // elem ( 文脈指定／ )
+	if(indicator === '!'){
+		context_elem = key;
+		indicator = '$';
+	}
+	break;
+case 'eA': // elem ( 文脈依存 )
+	klass = key;
+	key = context_attr;
+	break;
+case 'H':
+	text = '~HTML要素';
+	key = context_attr;
+	break;
+case 'a': // attr ( 文脈指定／文脈依存 )
+	if(indicator === '!'){
+		context_attr = key;
+		indicator = '^';
+	} else {
+		klass = context_elem;
+	}
+	break;
+case 'hd':
+	href = `~WAPI#handler-window-on${key}`;
+	text = `on${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+}
+
+
+if(tag) {
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator === '$'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+	text = `<a href="${href}">${text}</a>`;
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-08-13
+trans_update:2020-07-10
+source_checked:180117
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/indices.html
+	abbr_url:HTMLindex1
+trans_1st_pub:2016-10-03
+
+
+●●class_map
+e:element
+eA:element
+a:attr
+A:attr
+v:value
+P:production
+
+●●tag_map
+I:code
+m:code
+hd:code
+e:code
+eA:code
+a:code
+A:code
+v:code
+P:i
+
+●●original_id_map
+
+
+●●words_table1
+
+MICRODATA:https://html.spec.whatwg.org/multipage/microdata.html
+math:MathML <code class="element">math</code>
+svg:SVG <code class="element">svg</code>
+metadata0:metadata
+auto0:auto
+auto1:auto
+noneI:none
+noneC:none
+search0:search
+typedef-color:<var class="type">&lt;color&gt;</var>
+
+
+●●words_table
+
+
+
+	●仕様
+意味-:means:~
+省略可:optional:~
+文脈依存:varies:~
+	定義-済み:defined
+結付n:association:結び付け
+	1 個~以上の名から 1 個~以上の値への結付n:association
+	-:excluding
+代用の:replacement:~
+給-:supply:~
+複雑:complicated:~
+	例
+	代わりに
+	併用:used with
+	任意の:any
+	指す:refer する
+	says 挙げられ
+
+
+	●UI／form ／ 呈示
+無反応域:dead area::~
+sidebar::::サイドバー
+計器:gauge::~::ゲージ
+combo::::コンボ
+進捗bar:progress bar::進捗 bar:進捗バー:~
+開閉式:disclosure:~
+整形済み:preformatted::~
+figure::図
+legend::::
+command::::コマンド
+複数行の:multiline:~
+隠す:hideする:~
+drag::::ドラッグ
+marker::::マーカ
+check::::チェック
+gauge::::ゲージ
+modal::::モーダル
+	~modal性:modality
+span::::
+
+横方向:horizontal:~
+縦方向:vertical:~
+編集-:edit:~
+自動充填:autofill:~
+自動補完:autocomplete:~
+自動頭字化-:autocapitalize::~
+自動頭字化:autocapitalization::~
+改行:line break:~
+改行機会:line breaking opportunity:~
+	呈示~用の:presentational
+図形:shape:~
+	行:line
+	行数
+表紙:poster:~
+必須:required:~
+高解像度:high-resolution:~
+display::::ディスプレイ
+monitor::::モニタ
+翻訳-:translate:~
+欄:field::~::フィールド
+地域化-:localize::~::ローカル化
+折返され:wrapされ:折り返され
+
+	●navi／network／
+manifest::::マニフェスト
+	navi用の:navigational
+nonce::::ナンス
+ping:
+pragma:
+iframe-srcdoc:iframe srcdoc
+
+事前読込み:preload::事前読み込み::プリロード
+	先送り可否:deferral
+
+	●内容意味論
+不正確:inaccurate::~
+強勢:stress emphasis::~
+強調:highlight::~
+引用:quotation::~
+引用-:quote::~
+略語:abbreviation::~
+見出し:heading::~
+見出cell:header cell::見出し cell:見出しセル
+可触:palpable::~
+句ng:phrasing::句::フレージング
+機械読取可能:machine-readable:機械読み取り可能
+等価物:equivalent::等価なデータ
+連携-:syndicate:~
+	syndicatable
+構成:composition:~
+	本線から外れた:tangentially related
+計算結果の:calculated:~
+連絡先:contact:~
+選択肢:option::~
+分断:break::~
+支配的:dominant::~
+分類:category::~
+自己完結的:self-contained::~
+template::::テンプレート
+section::::セクション
+sectioning::::セクショニング
+括弧:parenthesis::~
+透過的:transparent::~
+
+	紹介や前置き:introductory
+	説明的でない:unarticulated
+	地の文と異なる声／雰囲気:alternate voice
+
+	●構造
+slot:
+shadow:
+table::::テーブル
+cell::::セル
+column:::列
+row:::行
+名値:name-value:名-値
+要素間:inter-element::~
+一群の:group of:~
+	個々の:
+
+	●内容／媒体
+essence:
+track::::トラック
+	~buffer量:how much buffering
+bitmap::::ビットマップ
+footer::::フッタ
+ruby::::ルビ
+	~style付け:styling
+subscript:::下付き文字
+superscript:::上付き文字
+thema::::テーマ
+ナシ:none::なし
+	thematic
+時限:timed::~
+track::::トラック
+住所:postal address:~
+作品:work:~
+再生器:player::~
+再生:playback::~
+文書化:documentation::~
+暗号用:cryptographic::~
+body:
+自律的:autonomous::~
+詩文:poem:~
+細則事項:side comment:~
+
+	●暦
+時間長:duration::~
+年月t:year＆month::年＆月
+年週t:year＆week::年＆週
+月日t:month＆date::月＆日
+日付t:date::日付
+日時t:date＆time::日時
+時刻t:time::時刻
+偏差:time-zone offset::~
+	日時:date- or time
+
+	●構文
+comma::::カンマ
+上界:upper bound:~
+下界:lower bound:~
+高域:high range:~
+低域:low range:~
+下限:low limit:~
+上限:high limit:~
+正規表現:regular expression::~
+浮動小数点数:floating-point number:~
+空白区切りの:space-separated:~
+区切りの:-separated:~
+開始値:starting value:~
+序数:ordinal value:~
+最適:optimum:~
+粒度:granularity:~
+迂回-:bypass:~
+逐次的:sequential::~
+直列形の:serialized::~::シリアル形の
+	前後
+
+	●未分類
+	~script可能な:scriptable
+asterisk::::アスタリスク
+	示す:show
+hash::::ハッシュ
+microdata:
+mute::::
+shortcut::::ショートカット
+候補:candidate:~
+促す:encourageする:~
+展開形:expansion:~
+種類:kind:~
+綴り:spelling:~
+選択-:select:~
+略称:abbreviation:~
+指示書き:instruction::~
+支払い:payment:~
+為す:makeする:~
+復号:decoding::~::デコード処理
+
+	なりそうな:will likely
+	逆順:backwards
+	一群の:group of
+	referencing:referencing
+	-:optionally
+	一行あたりの
+	一連の
+	小さい:small
+	保存用
+	指す
+	付番する:number
+	数:number
+	異なる
+	省略あり
+	述べる
+	逆順:backward
+	所属-:belong
+	側:side
+	input type
+	Variant:どの~methodを
+
+
+●●link_map
+
+
+
+
+
+	●IDL
+I.SVGSVGElement:~SVGstruct#InterfaceSVGSVGElement
+I.Element:~DOM4#interface-element
+I.PaymentRequest:https://w3c.github.io/payment-request/#dom-paymentrequest
+
+I.HTMLAnchorElement:~HEtextlevel#htmlanchorelement
+I.HTMLAreaElement:~HEimages#htmlareaelement
+I.HTMLAudioElement:~HEmedia#htmlaudioelement
+I.HTMLBRElement:~HEtextlevel#htmlbrelement
+I.HTMLBaseElement:~HEmetadata#htmlbaseelement
+I.HTMLBodyElement:~HEsections#htmlbodyelement
+I.HTMLButtonElement:~HEforms#htmlbuttonelement
+I.HTMLCanvasElement:~HEcanvas#htmlcanvaselement
+I.HTMLDListElement:~HEgrouping#htmldlistelement
+I.HTMLDataElement:~HEtextlevel#htmldataelement
+I.HTMLDataListElement:~HEforms#htmldatalistelement
+I.HTMLDetailsElement:~HEinteractive#htmldetailselement
+I.HTMLDialogElement:~HEinteractive#htmldialogelement
+I.HTMLDivElement:~HEgrouping#htmldivelement
+I.HTMLElement:~HTMLdom#htmlelement
+I.HTMLEmbedElement:~HEembed#htmlembedelement
+I.HTMLFieldSetElement:~HEforms#htmlfieldsetelement
+I.HTMLFormElement:~HEforms#htmlformelement
+I.HTMLHRElement:~HEgrouping#htmlhrelement
+I.HTMLHeadElement:~HEmetadata#htmlheadelement
+I.HTMLHeadingElement:~HEsections#htmlheadingelement
+I.HTMLHtmlElement:~HEmetadata#htmlhtmlelement
+I.HTMLHyperlinkElementUtils:~HTMLlinks#htmlhyperlinkelementutils
+I.HTMLIFrameElement:~HEembed#htmliframeelement
+I.HTMLImageElement:~HEimages#htmlimageelement
+I.HTMLInputElement:~HEinput#htmlinputelement
+I.HTMLLIElement:~HEgrouping#htmllielement
+I.HTMLLabelElement:~HEforms#htmllabelelement
+I.HTMLLegendElement:~HEforms#htmllegendelement
+I.HTMLLinkElement:~HEmetadata#htmllinkelement
+I.HTMLMapElement:~HEimages#htmlmapelement
+I.HTMLMediaElement:~HEmedia#htmlmediaelement
+I.HTMLMenuElement:~HEgrouping#htmlmenuelement
+I.HTMLMetaElement:~HEmetadata#htmlmetaelement
+I.HTMLMeterElement:~HEforms#htmlmeterelement
+I.HTMLModElement:~HEedits#htmlmodelement
+I.HTMLOListElement:~HEgrouping#htmlolistelement
+I.HTMLObjectElement:~HEembed#htmlobjectelement
+I.HTMLOptGroupElement:~HEforms#htmloptgroupelement
+I.HTMLOptionElement:~HEforms#htmloptionelement
+I.HTMLOutputElement:~HEforms#htmloutputelement
+I.HTMLParagraphElement:~HEgrouping#htmlparagraphelement
+I.HTMLParamElement:~HEembed#htmlparamelement
+I.HTMLPictureElement:~HEimages#htmlpictureelement
+I.HTMLPreElement:~HEgrouping#htmlpreelement
+I.HTMLProgressElement:~HEforms#htmlprogresselement
+I.HTMLQuoteElement:~HEgrouping#htmlquoteelement
+I.HTMLScriptElement:~HEscripting#htmlscriptelement
+I.HTMLSelectElement:~HEforms#htmlselectelement
+I.HTMLSlotElement:~HEscripting#htmlslotelement
+I.HTMLSourceElement:~HEimages#htmlsourceelement
+I.HTMLSpanElement:~HEtextlevel#htmlspanelement
+I.HTMLStyleElement:~HEmetadata#htmlstyleelement
+I.HTMLTableCaptionElement:~HEtables#htmltablecaptionelement
+I.HTMLTableCellElement:~HEtables#htmltablecellelement
+I.HTMLTableColElement:~HEtables#htmltablecolelement
+I.HTMLTableElement:~HEtables#htmltableelement
+I.HTMLTableRowElement:~HEtables#htmltablerowelement
+I.HTMLTableSectionElement:~HEtables#htmltablesectionelement
+I.HTMLTemplateElement:~HEscripting#htmltemplateelement
+I.HTMLTextAreaElement:~HEforms#htmltextareaelement
+I.HTMLTimeElement:~HEtextlevel#htmltimeelement
+I.HTMLTitleElement:~HEmetadata#htmltitleelement
+I.HTMLTrackElement:~HEtrack#htmltrackelement
+I.HTMLUListElement:~HEgrouping#htmlulistelement
+I.HTMLUnknownElement:~HTMLdom#htmlunknownelement
+I.HTMLVideoElement:~HEmedia#htmlvideoelement
+
+
+m.document.forms:~HTMLdom#dom-document-forms
+m.form.elements:~HEforms#dom-form-elements
+m.requestFullscreen():~FULLSCREEN#dom-element-requestfullscreen
+m.willValidate:~HTMLforms#dom-elementinternals-willvalidate
+
+
+	●要素
+~math:https://www.w3.org/Math/draft-spec/chapter2.html#interf.toplevel
+~svg:~SVGstruct#SVGElement
+
+e.a:~HEtextlevel#the-a-element
+e.abbr:~HEtextlevel#the-abbr-element
+e.b:~HEtextlevel#the-b-element
+e.bdi:~HEtextlevel#the-bdi-element
+e.bdo:~HEtextlevel#the-bdo-element
+e.br:~HEtextlevel#the-br-element
+e.cite:~HEtextlevel#the-cite-element
+e.code:~HEtextlevel#the-code-element
+e.data:~HEtextlevel#the-data-element
+e.dfn:~HEtextlevel#the-dfn-element
+e.em:~HEtextlevel#the-em-element
+e.i:~HEtextlevel#the-i-element
+e.kbd:~HEtextlevel#the-kbd-element
+e.mark:~HEtextlevel#the-mark-element
+e.q:~HEtextlevel#the-q-element
+e.rp:~HEtextlevel#the-rp-element
+e.rt:~HEtextlevel#the-rt-element
+e.ruby:~HEtextlevel#the-ruby-element
+e.s:~HEtextlevel#the-s-element
+e.samp:~HEtextlevel#the-samp-element
+e.small:~HEtextlevel#the-small-element
+e.span:~HEtextlevel#the-span-element
+e.strong:~HEtextlevel#the-strong-element
+e.sub:~HEtextlevel#the-sub-and-sup-elements
+e.sup:~HEtextlevel#the-sub-and-sup-elements
+e.time:~HEtextlevel#the-time-element
+e.u:~HEtextlevel#the-u-element
+e.var:~HEtextlevel#the-var-element
+e.wbr:~HEtextlevel#the-wbr-element
+
+e.blockquote:~HEgrouping#the-blockquote-element
+e.div:~HEgrouping#the-div-element
+e.dl:~HEgrouping#the-dl-element
+e.dd:~HEgrouping#the-dd-element
+e.dt:~HEgrouping#the-dt-element
+e.figure:~HEgrouping#the-figure-element
+e.figcaption:~HEgrouping#the-figcaption-element
+e.hr:~HEgrouping#the-hr-element
+e.li:~HEgrouping#the-li-element
+e.main:~HEgrouping#the-main-element
+e.menu:~HEgrouping#the-menu-element
+e.ol:~HEgrouping#the-ol-element
+e.p:~HEgrouping#the-p-element
+e.pre:~HEgrouping#the-pre-element
+e.ul:~HEgrouping#the-ul-element
+
+e.del:~HEedits#the-del-element
+e.ins:~HEedits#the-ins-element
+
+e.address:~HEsections#the-address-element
+e.article:~HEsections#the-article-element
+e.aside:~HEsections#the-aside-element
+e.body:~HEsections#the-body-element
+e.footer:~HEsections#the-footer-element
+e.header:~HEsections#the-header-element
+e.hgroup:~HEsections#the-hgroup-element
+e.nav:~HEsections#the-nav-element
+e.section:~HEsections#the-section-element
+e.h1:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h2:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h3:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h4:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h5:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.h6:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+
+e.base:~HEmetadata#the-base-element
+e.head:~HEmetadata#the-head-element
+e.html:~HEmetadata#the-html-element
+e.link:~HEmetadata#the-link-element
+e.meta:~HEmetadata#the-meta-element
+e.style:~HEmetadata#the-style-element
+e.title:~HEmetadata#the-title-element
+
+e.noscript:~HEscripting#the-noscript-element
+e.script:~HEscripting#the-script-element
+e.slot:~HEscripting#the-slot-element
+e.template:~HEscripting#the-template-element
+e.canvas:~HEcanvas#the-canvas-element
+
+e.input:~HEinput#the-input-element
+e.button:~HEforms#the-button-element
+e.datalist:~HEforms#the-datalist-element
+e.fieldset:~HEforms#the-fieldset-element
+e.form:~HEforms#the-form-element
+e.legend:~HEforms#the-legend-element
+e.label:~HEforms#the-label-element
+e.meter:~HEforms#the-meter-element
+e.output:~HEforms#the-output-element
+e.optgroup:~HEforms#the-optgroup-element
+e.option:~HEforms#the-option-element
+e.progress:~HEforms#the-progress-element
+e.select:~HEforms#the-select-element
+e.textarea:~HEforms#the-textarea-element
+
+e.details:~HEinteractive#the-details-element
+e.dialog:~HEinteractive#the-dialog-element
+e.summary:~HEinteractive#the-summary-element
+
+e.area:~HEimages#the-area-element
+e.img:~HEimages#the-img-element
+e.map:~HEimages#the-map-element
+e.source:~HEimages#the-source-element
+e.picture:~HEimages#the-picture-element
+
+e.embed:~HEembed#the-embed-element
+e.iframe:~HEembed#the-iframe-element
+e.object:~HEembed#the-object-element
+e.param:~HEembed#the-param-element
+
+e.audio:~HEmedia#the-audio-element
+e.video:~HEmedia#the-video-element
+e.track:~HEtrack#the-track-element
+
+e.table:~HEtables#the-table-element
+e.td:~HEtables#the-td-element
+e.th:~HEtables#the-th-element
+e.tr:~HEtables#the-tr-element
+e.caption:~HEtables#the-caption-element
+e.colgroup:~HEtables#the-colgroup-element
+e.tbody:~HEtables#the-tbody-element
+e.tfoot:~HEtables#the-tfoot-element
+e.thead:~HEtables#the-thead-element
+e.col:~HEtables#the-col-element
+
+	●attr
+
+a.download:~HTMLlinks#attr-hyperlink-download
+a.href:~HTMLlinks#attr-hyperlink-href
+a.hreflang:~HTMLlinks#attr-hyperlink-hreflang
+a.ping:~HTMLlinks#ping
+a.referrerpolicy:~HTMLlinks#attr-hyperlink-referrerpolicy
+a.rel:~HTMLlinks#attr-hyperlink-rel
+a.target:~HTMLlinks#attr-hyperlink-target
+a.type:~HTMLlinks#attr-hyperlink-type
+abbr.title:~HTMLtextlevel#attr-abbr-title
+area.alt:~HEimages#attr-area-alt
+area.coords:~HEimages#attr-area-coords
+area.download:~HTMLlinks#attr-hyperlink-download
+area.href:~HTMLlinks#attr-hyperlink-href
+hyperlink.href:~HTMLlinks#attr-hyperlink-href
+area.ping:~HTMLlinks#ping
+area.referrerpolicy:~HTMLlinks#attr-hyperlink-referrerpolicy
+area.rel:~HTMLlinks#attr-hyperlink-rel
+area.shape:~HEimages#attr-area-shape
+area.target:~HTMLlinks#attr-hyperlink-target
+audio.autoplay:~HEmedia#attr-media-autoplay
+audio.controls:~HEmedia#attr-media-controls
+audio.crossorigin:~HEmedia#attr-media-crossorigin
+audio.loop:~HEmedia#attr-media-loop
+audio.muted:~HEmedia#attr-media-muted
+audio.preload:~HEmedia#attr-media-preload
+audio.src:~HEmedia#attr-media-src
+base.href:~HEmetadata#attr-base-href
+base.target:~HEmetadata#attr-base-target
+bdo.dir:~HEtextlevel#the-bdo-element
+blockquote.cite:~HEgrouping#attr-blockquote-cite
+button.disabled:~HTMLforms#attr-fe-disabled
+button.form:~HTMLforms#attr-fae-form
+button.formaction:~HTMLforms#attr-fs-formaction
+button.formenctype:~HTMLforms#attr-fs-formenctype
+button.formmethod:~HTMLforms#attr-fs-formmethod
+button.formnovalidate:~HTMLforms#attr-fs-formnovalidate
+button.formtarget:~HTMLforms#attr-fs-formtarget
+button.name:~HTMLforms#attr-fe-name
+button.type:~HEforms#attr-button-type
+button.value:~HEforms#attr-button-value
+canvas.height:~HEcanvas#attr-canvas-height
+canvas.width:~HEcanvas#attr-canvas-width
+col.span:~HEtables#attr-col-span
+colgroup.span:~HEtables#attr-colgroup-span
+data.value:~HEtextlevel#attr-data-value
+del.cite:~HEedits#attr-mod-cite
+del.datetime:~HEedits#attr-mod-datetime
+details.open:~HEinteractive#attr-details-open
+dfn.title:~HEtextlevel#attr-dfn-title
+dialog.open:~HEinteractive#attr-dialog-open
+embed.height:~HEembed#attr-dim-height
+embed.src:~HEembed#attr-embed-src
+embed.type:~HEembed#attr-embed-type
+embed.width:~HEembed#attr-dim-width
+fieldset.disabled:~HEforms#attr-fieldset-disabled
+fieldset.form:~HTMLforms#attr-fae-form
+fieldset.name:~HTMLforms#attr-fe-name
+form.accept-charset:~HEforms#attr-form-accept-charset
+form.action:~HTMLforms#attr-fs-action
+form.autocomplete:~HEforms#attr-form-autocomplete
+form.enctype:~HTMLforms#attr-fs-enctype
+form.method:~HTMLforms#attr-fs-method
+form.name:~HEforms#attr-form-name
+form.novalidate:~HTMLforms#attr-fs-novalidate
+form.target:~HTMLforms#attr-fs-target
+html.manifest:~HEmetadata#attr-html-manifest
+iframe.allowfullscreen:~HEembed#attr-iframe-allowfullscreen
+iframe.allowpaymentrequest:~HEembed#attr-iframe-allowpaymentrequest
+iframe.height:~HEembed#attr-dim-height
+iframe.name:~HEembed#attr-iframe-name
+iframe.referrerpolicy:~HEembed#attr-iframe-referrerpolicy
+iframe.sandbox:~HEembed#attr-iframe-sandbox
+iframe.allow:~HEembed#attr-iframe-allow
+iframe.src:~HEembed#attr-iframe-src
+iframe.srcdoc:~HEembed#attr-iframe-srcdoc
+iframe.width:~HEembed#attr-dim-width
+iframe.loading:~HEembed#attr-iframe-loading
+img.alt:~HEimages#attr-img-alt
+img.crossorigin:~HEimages#attr-img-crossorigin
+img.decoding:~HEimages#attr-img-decoding
+img.loading:~HEimages#attr-img-loading
+img.height:~HEembed#attr-dim-height
+img.ismap:~HEimages#attr-img-ismap
+img.referrerpolicy:~HEimages#attr-img-referrerpolicy
+img.sizes:~HEimages#attr-img-sizes
+img.src:~HEimages#attr-img-src
+img.srcset:~HEimages#attr-img-srcset
+img.usemap:~HEimages#attr-hyperlink-usemap
+img.width:~HEembed#attr-dim-width
+input.accept:~HEinput#attr-input-accept
+input.alt:~HEinput#attr-input-alt
+input.autocomplete:~HTMLautofill#attr-fe-autocomplete
+input.checked:~HEinput#attr-input-checked
+input.dirname:~HTMLforms#attr-fe-dirname
+input.disabled:~HTMLforms#attr-fe-disabled
+input.form:~HTMLforms#attr-fae-form
+input.formaction:~HTMLforms#attr-fs-formaction
+input.formenctype:~HTMLforms#attr-fs-formenctype
+input.formmethod:~HTMLforms#attr-fs-formmethod
+input.formnovalidate:~HTMLforms#attr-fs-formnovalidate
+input.formtarget:~HTMLforms#attr-fs-formtarget
+input.height:~HEembed#attr-dim-height
+input.list:~HEinput#attr-input-list
+input.max:~HEinput#attr-input-max
+input.maxlength:~HEinput#attr-input-maxlength
+input.min:~HEinput#attr-input-min
+input.minlength:~HEinput#attr-input-minlength
+input.multiple:~HEinput#attr-input-multiple
+input.name:~HTMLforms#attr-fe-name
+input.pattern:~HEinput#attr-input-pattern
+input.placeholder:~HEinput#attr-input-placeholder
+input.readonly:~HEinput#attr-input-readonly
+input.required:~HEinput#attr-input-required
+input.size:~HEinput#attr-input-size
+input.src:~HEinput#attr-input-src
+input.step:~HEinput#attr-input-step
+input.title:~HEinput#attr-input-title
+input.type:~HEinput#attr-input-type
+input.value:~HEinput#attr-input-value
+input.width:~HEembed#attr-dim-width
+ins.cite:~HEedits#attr-mod-cite
+ins.datetime:~HEedits#attr-mod-datetime
+label.for:~HEforms#attr-label-for
+li.value:~HEgrouping#attr-li-value
+link.as:~HEmetadata#attr-link-as
+link.color:~HEmetadata#attr-link-color
+link.crossorigin:~HEmetadata#attr-link-crossorigin
+link.href:~HEmetadata#attr-link-href
+link.hreflang:~HEmetadata#attr-link-hreflang
+link.media:~HEmetadata#attr-link-media
+link.integrity:~HEmetadata#attr-link-integrity
+link.color:~HEmetadata#attr-link-color
+link.disabled:~HEmetadata#attr-link-disabled
+link.referrerpolicy:~HEmetadata#attr-link-referrerpolicy
+link.rel:~HEmetadata#attr-link-rel
+link.sizes:~HEmetadata#attr-link-sizes
+link.imagesrcset:~HEmetadata#attr-link-imagesrcset
+link.imagesizes:~HEmetadata#attr-link-imagesizes
+link.title:~HEmetadata#attr-link-title
+link.type:~HEmetadata#attr-link-type
+link.usecache:~HEmetadata#attr-link-usecache
+
+map.name:~HEimages#attr-map-name
+meta.charset:~HEmetadata#attr-meta-charset
+meta.content:~HEmetadata#attr-meta-content
+meta.http-equiv:~HEmetadata#attr-meta-http-equiv
+meta.name:~HEmetadata#attr-meta-name
+meter.high:~HEforms#attr-meter-high
+meter.low:~HEforms#attr-meter-low
+meter.max:~HEforms#attr-meter-max
+meter.min:~HEforms#attr-meter-min
+meter.optimum:~HEforms#attr-meter-optimum
+meter.value:~HEforms#attr-meter-value
+object.data:~HEembed#attr-object-data
+object.form:~HTMLforms#attr-fae-form
+object.height:~HEembed#attr-dim-height
+object.name:~HEembed#attr-object-name
+object.type:~HEembed#attr-object-type
+object.usemap:~HEimages#attr-hyperlink-usemap
+object.width:~HEembed#attr-dim-width
+ol.reversed:~HEgrouping#attr-ol-reversed
+ol.start:~HEgrouping#attr-ol-start
+ol.type:~HEgrouping#attr-ol-type
+optgroup.disabled:~HEforms#attr-optgroup-disabled
+optgroup.label:~HEforms#attr-optgroup-label
+option.disabled:~HEforms#attr-option-disabled
+option.label:~HEforms#attr-option-label
+option.selected:~HEforms#attr-option-selected
+option.value:~HEforms#attr-option-value
+output.for:~HEforms#attr-output-for
+output.form:~HTMLforms#attr-fae-form
+output.name:~HTMLforms#attr-fe-name
+param.name:~HEembed#attr-param-name
+param.value:~HEembed#attr-param-value
+progress.max:~HEforms#attr-progress-max
+progress.value:~HEforms#attr-progress-value
+q.cite:~HEtextlevel#attr-q-cite
+script.async:~HEscripting#attr-script-async
+script.crossorigin:~HEscripting#attr-script-crossorigin
+script.defer:~HEscripting#attr-script-defer
+script.nomodule:~HEscripting#attr-script-nomodule
+script.integrity:~HEscripting#attr-script-integrity
+script.referrerpolicy:~HEscripting#attr-script-referrerpolicy
+script.src:~HEscripting#attr-script-src
+script.type:~HEscripting#attr-script-type
+select.autocomplete:~HTMLautofill#attr-fe-autocomplete
+select.disabled:~HTMLforms#attr-fe-disabled
+select.form:~HTMLforms#attr-fae-form
+select.multiple:~HEforms#attr-select-multiple
+select.name:~HTMLforms#attr-fe-name
+select.required:~HEforms#attr-select-required
+select.size:~HEforms#attr-select-size
+slot.name:~HEscripting#attr-slot-name
+source.media:~HEimages#attr-source-media
+source.sizes:~HEimages#attr-source-sizes
+source.src:~HEmedia#attr-source-src
+source.srcset:~HEimages#attr-source-srcset
+source.type:~HEimages#attr-source-type
+style.media:~HEmetadata#attr-style-media
+style.title:~HEmetadata#attr-style-title
+td.colspan:~HEtables#attr-tdth-colspan
+td.headers:~HEtables#attr-tdth-headers
+td.rowspan:~HEtables#attr-tdth-rowspan
+textarea.autocomplete:~HTMLautofill#attr-fe-autocomplete
+textarea.cols:~HEforms#attr-textarea-cols
+textarea.dirname:~HTMLforms#attr-fe-dirname
+textarea.disabled:~HTMLforms#attr-fe-disabled
+textarea.form:~HTMLforms#attr-fae-form
+textarea.maxlength:~HEforms#attr-textarea-maxlength
+textarea.minlength:~HEforms#attr-textarea-minlength
+textarea.name:~HTMLforms#attr-fe-name
+textarea.placeholder:~HEforms#attr-textarea-placeholder
+textarea.readonly:~HEforms#attr-textarea-readonly
+textarea.required:~HEforms#attr-textarea-required
+textarea.rows:~HEforms#attr-textarea-rows
+textarea.wrap:~HEforms#attr-textarea-wrap
+th.abbr:~HEtables#attr-th-abbr
+th.colspan:~HEtables#attr-tdth-colspan
+th.headers:~HEtables#attr-tdth-headers
+th.rowspan:~HEtables#attr-tdth-rowspan
+th.scope:~HEtables#attr-th-scope
+time.datetime:~HEtextlevel#attr-time-datetime
+track.default:~HEtrack#attr-track-default
+track.kind:~HEtrack#attr-track-kind
+track.label:~HEtrack#attr-track-label
+track.src:~HEtrack#attr-track-src
+track.srclang:~HEtrack#attr-track-srclang
+video.autoplay:~HEmedia#attr-media-autoplay
+video.controls:~HEmedia#attr-media-controls
+video.crossorigin:~HEmedia#attr-media-crossorigin
+video.height:~HEembed#attr-dim-height
+video.loop:~HEmedia#attr-media-loop
+video.muted:~HEmedia#attr-media-muted
+video.playsinline:~HEmedia#attr-video-playsinline
+video.poster:~HEmedia#attr-video-poster
+video.preload:~HEmedia#attr-media-preload
+video.src:~HEmedia#attr-media-src
+video.width:~HEembed#attr-dim-width
+
+
+A.itemprop:~MICRODATA#names:-the-itemprop-attribute
+A.inputmode:~HTMLinteraction#attr-inputmode
+A.rel:~HEmetadata#attr-link-rel
+A.pattern:~HEinput#attr-input-pattern
+A.type:~HEembed#attr-object-type
+A.usemap:~HEimages#attr-hyperlink-usemap
+
+
+H.autocapitalize:~HTMLinteraction#attr-autocapitalize
+H.autofocus:~HTMLinteraction#attr-fe-autofocus
+H.lang:~HTMLdom#attr-lang
+H.nonce:~HTMLurl#attr-nonce
+H.title:~HTMLdom#attr-title
+H.translate:~HTMLdom#attr-translate
+H.class:~HTMLdom#classes
+H.dir:~HTMLdom#the-dir-attribute
+H.id:~HTMLdom#the-id-attribute
+H.slot:~HTMLdom#attr-slot
+H.style:~HTMLdom#the-style-attribute
+H.contenteditable:~HTMLinteraction#attr-contenteditable
+H.spellcheck:~HTMLinteraction#attr-spellcheck
+H.tabindex:~HTMLinteraction#attr-tabindex
+H.accesskey:~HTMLinteraction#the-accesskey-attribute
+H.draggable:~HTMLdnd#the-draggable-attribute
+H.enterkeyhint:~HTMLinteraction#attr-enterkeyhint
+H.hidden:~HTMLinteraction#the-hidden-attribute
+H.itemid:~MICRODATA#attr-itemid
+H.itemref:~MICRODATA#attr-itemref
+H.itemscope:~MICRODATA#attr-itemscope
+H.itemtype:~MICRODATA#attr-itemtype
+H.itemprop:~MICRODATA#names:-the-itemprop-attribute
+H.inputmode:~HTMLinteraction#attr-inputmode
+H.is:~HEcustom#attr-is
+
+	●attr 値
+
+v.1:~HEgrouping#attr-ol-type-keyword-decimal
+v.A:~HEgrouping#attr-ol-type-keyword-upper-alpha
+v.I:~HEgrouping#attr-ol-type-keyword-upper-roman
+v.a:~HEgrouping#attr-ol-type-keyword-lower-alpha
+v.allow-forms:~ORIGIN#attr-iframe-sandbox-allow-forms
+v.allow-modals:~ORIGIN#attr-iframe-sandbox-allow-modals
+v.allow-orientation-lock:~ORIGIN#attr-iframe-sandbox-allow-orientation-lock
+v.allow-pointer-lock:~ORIGIN#attr-iframe-sandbox-allow-pointer-lock
+v.allow-popups-to-escape-sandbox:~ORIGIN#attr-iframe-sandbox-allow-popups-to-escape-sandbox
+v.allow-popups:~ORIGIN#attr-iframe-sandbox-allow-popups
+v.allow-presentation:~ORIGIN#attr-iframe-sandbox-allow-presentation
+v.allow-downloads:~ORIGIN#attr-iframe-sandbox-allow-downloads
+v.allow-same-origin:~ORIGIN#attr-iframe-sandbox-allow-same-origin
+v.allow-scripts:~ORIGIN#attr-iframe-sandbox-allow-scripts
+v.allow-top-navigation:~ORIGIN#attr-iframe-sandbox-allow-top-navigation
+v.anonymous:~HTMLurl#attr-crossorigin-anonymous-keyword
+v.application/x-www-form-urlencoded:~HTMLforms#attr-fs-enctype-urlencoded
+v.async:~HEimages#attr-img-decoding-async
+v.auto:~HTMLdom#attr-dir-auto
+v.button:~HEforms#attr-button-type-button
+v.captions:~HEtrack#attr-track-kind-keyword-captions
+v.chapters:~HEtrack#attr-track-kind-keyword-chapters
+v.characters:~HTMLinteraction#attr-autocapitalize-characters
+v.circle:~HEimages#attr-area-shape-keyword-circle
+v.col:~HEtables#attr-th-scope-col
+v.colgroup:~HEtables#attr-th-scope-colgroup
+v.content-security-policy:~HEmetadata#attr-meta-http-equiv-keyword-content-security-policy
+v.content-type:~HEmetadata#attr-meta-http-equiv-keyword-content-type
+v.decimal:~HTMLinteraction#attr-inputmode-keyword-decimal
+v.default-style:~HEmetadata#attr-meta-http-equiv-keyword-default-style
+v.default:~HEimages#attr-area-shape-keyword-default
+v.descriptions:~HEtrack#attr-track-kind-keyword-descriptions
+v.dialog:~HTMLforms#attr-fs-method-dialog-keyword
+v.done:~HTMLinteraction#attr-enterkeyhint-keyword-done
+v.eager:~HTMLurl#attr-loading-eager
+v.email:~HTMLinteraction#attr-inputmode-keyword-email
+v.enter:~HTMLinteraction#attr-enterkeyhint-keyword-enter
+v.form:~HEforms#attr-form-accept-charset
+v.get:~HTMLforms#attr-fs-method-get-keyword
+v.go:~HTMLinteraction#attr-enterkeyhint-keyword-go
+v.hard:~HEforms#attr-textarea-wrap-hard
+v.i:~HEgrouping#attr-ol-type-keyword-lower-roman
+v.icon:~HTMLlinks#rel-icon
+v.lazy:~HTMLurl#attr-loading-lazy
+v.ltr:~HTMLdom#attr-dir-ltr
+v.meta:~HEmetadata#attr-meta-http-equiv
+v.metadata:~HEmedia#attr-media-preload-metadata
+v.modulepreload:~HTMLlinks#link-type-modulepreload
+v.multipart/form-data:~HTMLforms#attr-fs-enctype-formdata
+v.next:~HTMLinteraction#attr-enterkeyhint-keyword-next
+v.none:~HEmedia#attr-media-preload-none
+v.numeric:~HTMLinteraction#attr-inputmode-keyword-numeric
+v.off:~HTMLinteraction#attr-autocapitalize-off
+v.on:~HTMLinteraction#attr-autocapitalize-on
+v.poly:~HEimages#attr-area-shape-keyword-poly
+v.post:~HTMLforms#attr-fs-method-post-keyword
+v.preload:~HTMLlinks#link-type-preload
+v.previous:~HTMLinteraction#attr-enterkeyhint-keyword-previous
+v.rect:~HEimages#attr-area-shape-keyword-rect
+v.refresh:~HEmetadata#attr-meta-http-equiv-keyword-refresh
+v.reset:~HEforms#attr-button-type-reset
+v.row:~HEtables#attr-th-scope-row
+v.rowgroup:~HEtables#attr-th-scope-rowgroup
+v.rtl:~HTMLdom#attr-dir-rtl
+v.search:~HTMLinteraction#attr-inputmode-keyword-search
+v.send:~HTMLinteraction#attr-enterkeyhint-keyword-send
+v.sentences:~HTMLinteraction#attr-autocapitalize-sentences
+v.soft:~HEforms#attr-textarea-wrap-soft
+v.submit:~HEforms#attr-button-type-submit
+v.subtitles:~HEtrack#attr-track-kind-keyword-subtitles
+v.sync:~HEimages#attr-img-decoding-sync
+v.tel:~HTMLinteraction#attr-inputmode-keyword-tel
+v.text/plain:~HTMLforms#attr-fs-enctype-text
+v.text:~HTMLinteraction#attr-inputmode-keyword-text
+v.url:~HTMLinteraction#attr-inputmode-keyword-url
+v.use-credentials:~HTMLurl#attr-crossorigin-use-credentials-keyword
+v.words:~HTMLinteraction#attr-autocapitalize-words
+v.x-ua-compatible:~HEmetadata#attr-meta-http-equiv-keyword-x-ua-compatible
+v.~auto0:~HEmedia#attr-media-preload-auto
+v.~auto1:~HEimages#attr-img-decoding-auto
+v.~metadata0:~HEtrack#attr-track-kind-keyword-metadata
+v.~noneC:~HTMLinteraction#attr-autocapitalize-none
+v.~noneI:~HTMLinteraction#attr-inputmode-keyword-none
+v.~search0:~HTMLinteraction#attr-enterkeyhint-keyword-search
+
+
+
+~typedef-color:~CSSCOLOR#typedef-color
+	●
+
+st.Hidden:~HEinput#hidden-state-(type=hidden)
+
+	●用語
+~event~handler内容~属性:~WAPI#event-handler-content-attributes
+~module~script:~WAPI#module-script
+
+	~URL:~DOM4#concept-document-url
+
+要素間~空白:~HTMLdom#inter-element-whitespace
+
+~flow:~HTMLdom#flow-content-2
+~flow内容:~HTMLdom#flow-content-2
+埋込d内容:~HTMLdom#embedded-content-category
+埋込d:~HTMLdom#embedded-content-category
+見出し:~HTMLdom#heading-content-2
+見出し内容:~HTMLdom#heading-content-2
+対話的:~HTMLdom#interactive-content-2
+対話的~内容:~HTMLdom#interactive-content-2
+~metadata:~HTMLdom#metadata-content-2
+~metadata内容:~HTMLdom#metadata-content-2
+可触:~HTMLdom#palpable-content-2
+可触~内容:~HTMLdom#palpable-content-2
+句ng:~HTMLdom#phrasing-content-2
+句ng内容:~HTMLdom#phrasing-content-2
+~script用:~HTMLdom#script-supporting-elements-2
+~scriptを~supportする要素:~HTMLdom#script-supporting-elements-2
+~sectioning内容:~HTMLdom#sectioning-content-2
+~sectioning:~HTMLdom#sectioning-content-2
+~sectioning根:~HEsections#sectioning-root
+
+自律的~custom要素:~HEcustom#autonomous-custom-element
+透過的:~HTMLdom#transparent
+~text:~HTMLdom#text-content
+大域:~HTMLdom#global-attributes
+参照-:~HTMLdom#referenced
+階層的に正しく:~HEgrouping#hierarchically-correct-main-element
+
+~body内に許容される:~HEmetadata#allowed-in-the-body
+
+~formに所有され得る要素:~HEforms#form-associated-element
+~formに所有され得る:~HEforms#form-associated-element
+~label可能:~HEforms#category-label
+~label可能な要素:~HEforms#category-label
+~listされる:~HEforms#category-listed
+~listされる要素:~HEforms#category-listed
+再設定-可能:~HEforms#category-reset
+再設定-可能な要素:~HEforms#category-reset
+提出-可能:~HEforms#category-submit
+提出-可能な要素:~HEforms#category-submit
+自動頭字化-を継承する要素:~HEforms#category-autocapitalize
+
+~focus可能:~HTMLinteraction#focusable
+逐次的に~focus可能:~HTMLinteraction#sequentially-focusable
+逐次的~focus~navi:~HTMLinteraction#sequential-focus-navigation
+
+閲覧文脈:~BROWSERS#browsing-context
+入子の閲覧文脈:~BROWSERS#nested-browsing-context
+~plugin:~HTMLINFRA#plugin
+画像~map:~HEimages#image-map
+
+文書~基底~URL:~HTMLurl#document-base-url
+妥当かつ空でない~URL:~HTMLurl#valid-non-empty-url
+前後~空白~可の妥当な~URL:~HTMLurl#valid-url-potentially-surrounded-by-spaces
+前後~空白~可の妥当かつ空でない~URL:~HTMLurl#valid-non-empty-url-potentially-surrounded-by-spaces
+
+妥当な省略あり日時t文字列:~HTMLcms#valid-date-string-with-optional-time
+妥当な日付t文字列:~HTMLcms#valid-date-string
+妥当な時間長~文字列:~HTMLcms#valid-duration-string
+妥当な大域的~日時t文字列:~HTMLcms#valid-global-date-and-time-string
+妥当な局所的~日時t文字列:~HTMLcms#valid-local-date-and-time-string
+妥当な時刻t文字列:~HTMLcms#valid-time-string
+妥当な偏差~文字列:~HTMLcms#valid-time-zone-offset-string
+妥当な年週t文字列:~HTMLcms#valid-week-string
+妥当な月日t文字列:~HTMLcms#valid-yearless-date-string
+妥当な年月t文字列:~HTMLcms#valid-month-string
+
+真偽-属性:~HTMLcms#boolean-attribute
+~comma区切りの~token集合:~HTMLcms#set-of-comma-separated-tokens
+空白区切りの~token集合:~HTMLcms#set-of-space-separated-tokens
+空白区切りの一意な~token集合:~HTMLcms#_set-of-unique-space-separated-tokens
+妥当な浮動小数点数:~HTMLcms#valid-floating-point-number
+妥当な負でない整数:~HTMLcms#valid-non-negative-integer
+妥当な~hash名~参照-:~HTMLcms#valid-hash-name-reference
+妥当な整数:~HTMLcms#valid-integer
+妥当な浮動小数点数~list:~HTMLcms#valid-list-of-floating-point-numbers
+妥当な~media~query~list:~HTMLcms#valid-media-query-list
+
+言語:~HTMLdom#language
+av.~text:~HTMLdom#attribute-text
+~text方向性:~HTMLdom#the-directionality
+方向性:~HTMLdom#the-directionality
+
+
+~iframe-srcdoc文書:~HEembed#an-iframe-srcdoc-document
+画像~map:~HEimages#image-map
+~media資源:~HEmedia#media-resource
+~text~track:~HEtrack#text-track
+妥当な~source~size~list:~HEimages#valid-source-size-list
+画像~候補~文字列:~HEimages#image-candidate-string
+
+~app~cache~manifest:~HTMLLS/offline.html#concept-appcache-manifest
+閲覧文脈:~BROWSERS#browsing-context
+~navi:~NAVI#navigate
+入子の閲覧文脈:~BROWSERS#nested-browsing-context
+妥当な閲覧文脈~名または~keyword:~BROWSERS#valid-browsing-context-name-or-keyword
+
+妥当な~custom要素~名:~HEcustom#valid-custom-element-name
+~custom化された組込みの要素:~HEcustom#customized-built-in-element
+~formに所有され得る~custom要素:~HEcustom#form-associated-custom-element
+
+文字~符号化法~宣言:~HEmetadata#character-encoding-declaration
+序数~値:~HEgrouping#ordinal-value
+開始値:~HEgrouping#concept-ol-start
+~hyperlink:~HTMLlinks#hyperlink
+
+自動充填~欄:~HTMLautofill#autofill-field
+~file~upload~control:~HEinput#file-upload-state-(type=file)
+~form提出:~HTMLforms#form-submission
+	~input-type~keyword:~HEinput#attr-input-type
+
+大域的~識別子:~MICRODATA#global-identifier
+~item型:~MICRODATA#item-types
+~prop名:~MICRODATA#property-names
+定義-済み~prop名:~MICRODATA#defined-property-name
+
+	●外部
+~ASCII大小無視:~INFRA#ascii-case-insensitive
+長さ:~INFRA#string-length
+
+~JS~MIME型に~essence合致-:~MIMESNIFF#javascript-mime-type-essence-match
+
+~URL:~URL1#concept-url
+妥当な絶対~URL:~URL1#absolute-url-string
+行先の素:~FETCH#concept-potential-destination
+~scriptに類する行先:~FETCH#request-destination-script-like
+~fetch:~FETCH#concept-fetch
+~CSS~stylesheet集合~名:~CSSOM1#css-style-sheet-set-name
+
+妥当な~MIME型~文字列:~MIMESNIFF#valid-mime-type
+~parameterを伴わない妥当な~MIME型~文字列:~MIMESNIFF#valid-mime-type-with-no-parameters
+
+P.Pattern:~TC39#prod-Pattern
+~ID:~DOM4#concept-id
+~referrer施策:~REFERRER-POLICY#referrer-policy
+直列形の許可~施策:~PERMISSIONS-POLICY#serialized-permissions-policy
+許可~施策:~PERMISSIONS-POLICY#permissions-policy
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる HTML 仕様の一部である
+<a href="~SPEC_URL">§ Index</a>
+の前半部分を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+</head>
+
+<body>
+
+<header id="head">
+	<hgroup>
+<h1 id="index">索引（要素／属性） — Index</h1>
+	</hgroup>
+</header>
+
+<main id="MAIN" hidden>
+
+<p>
+以下の節が対象にするのは、適合する［
+要素 ／ 特能
+］に限られる。
+◎
+The following sections only cover conforming elements and features.
+</p>
+
+		<section id="elements-3">
+<h2 title="Elements">要素</h2>
+
+~INFORMATIVE
+
+<table id="element-table" class="grid-table">
+<caption>
+要素~一覧
+<small>（表内の~asterisk（ * ）は、実際の規則は そこに指示されるものより複雑であることを指示する）</small>
+◎
+List of elements
+</caption>
+
+<thead>
+<tr><th>要素◎ Element
+<th>~~説明◎ Description
+<th>分類◎ Categories
+<th><a href="#_parent-note" >親†</a>◎ Parents†
+<th>子◎ Children
+<th>属性◎ Attributes
+<th>~interface◎ Interface
+</thead><tbody>
+
+<tr><th>`a!e
+<td>
+~hyperlink
+◎
+Hyperlink
+<td>`~flow$ | `句ng$* | `対話的$ | `可触$
+<td>`句ng$
+<td>`透過的$*
+<td>`大域$ | `href$a | `target$a | `download$a | `ping$a | `rel$a | `hreflang$a | `type$a | `referrerpolicy$a
+<td>`HTMLAnchorElement$I
+
+<tr><th>`abbr!e
+<td>
+略語
+◎
+Abbreviation
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`address!e
+<td>
+［
+~page ／ `article$e 要素
+］用の連絡先~情報
+◎
+Contact information for a page or article element
+<td>`~flow$ | `可触$
+<td>`~flow$
+<td>`~flow$*
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`area!e
+<td>
+画像~map上の［
+~hyperlink／無反応域
+］
+◎
+Hyperlink or dead area on an image map
+<td>`~flow$ | `句ng$
+<td>`句ng$*
+<td>空
+<td>`大域$ | `alt$a | `coords$a | `shape$a | `href$a | `target$a | `download$a | `ping$a | `rel$a | `referrerpolicy$a
+<td>`HTMLAreaElement$I
+
+<tr><th>`article!e
+<td>
+自己完結的かつ［
+連携-可能 ／再利用-可能
+］な構成
+◎
+Self-contained syndicatable or reusable composition
+<td>`~flow$ | `~sectioning$ | `可触$
+<td>`~flow$
+<td>`~flow$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`aside!e
+<td>
+本線から外れた内容~用の~sidebar
+◎
+Sidebar for tangentially related content
+<td>`~flow$ | `~sectioning$ | `可触$
+<td>`~flow$
+<td>`~flow$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`audio!e
+<td>
+音声~再生器
+◎
+Audio player
+<td>`~flow$ | `句ng$ | `埋込d$ | `対話的$ | `可触$*
+<td>`句ng$
+<td>`source$e* | `track$e* | `透過的$*
+<td>`大域$ | `src$a | `crossorigin$a | `preload$a | `autoplay$a | `loop$a | `muted$a | `controls$a
+<td>`HTMLAudioElement$I
+
+<tr><th>`b!e
+<td>
+~keyword
+◎
+Keywords
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`base!e
+<td>
+［
+~hyperlink ／ ~form
+］用の［
+基底~URL, または
+既定の~targetになる`閲覧文脈$
+］
+◎
+Base URL and default target browsing context for hyperlinks and forms
+<td>`~metadata$
+<td>`head$e
+<td>空
+<td>`大域$ | `href$a | `target$a
+<td>`HTMLBaseElement$I
+
+<tr><th>`bdi!e
+<td>
+~text方向性の隔離
+◎
+Text directionality isolation
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`bdo!e
+<td>
+~text方向性の整形
+◎
+Text directionality formatting
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`blockquote!e
+<td>
+別の~sourceから引用された~section
+◎
+A section quoted from another source
+<td>`~flow$ | `~sectioning根$ | `可触$
+<td>`~flow$
+<td>`~flow$
+<td>`大域$ | `cite$a
+<td>`HTMLQuoteElement$I
+
+<tr><th>`body!e
+<td>
+文書の本体
+◎
+Document body
+<td>`~sectioning根$
+<td>`html$e
+<td>`~flow$
+<td>`大域$ | `afterprint$hd | `beforeprint$hd | `beforeunload$hd | `hashchange$hd | `languagechange$hd | `message$hd | `messageerror$hd | `offline$hd | `online$hd | `pagehide$hd | `pageshow$hd | `popstate$hd | `rejectionhandled$hd | `storage$hd | `unhandledrejection$hd | `unload$hd
+<td>`HTMLBodyElement$I
+
+<tr><th>`br!e
+<td>
+改行
+— 例えば詩文や住所~内の。
+◎
+Line break, e.g. in poem or postal address
+<td>`~flow$ | `句ng$
+<td>`句ng$
+<td>空
+<td>`大域$
+<td>`HTMLBRElement$I
+
+<tr><th>`button!e
+<td>
+~button~control
+◎
+Button control
+<td>`~flow$ | `句ng$ | `対話的$ | `~listされる$ | `~label可能$ | `提出-可能$ | `~formに所有され得る$ | `可触$
+<td>`句ng$
+<td>`句ng$*
+<td>`大域$ | `disabled$a | `form$a | `formaction$a | `formenctype$a | `formmethod$a | `formnovalidate$a | `formtarget$a | `name$a | `type$a | `value$a
+<td>`HTMLButtonElement$I
+
+<tr><th>`canvas!e
+<td>
+~script可能な，~bitmapによる~canvas
+◎
+Scriptable bitmap canvas
+<td>`~flow$ | `句ng$ | `埋込d$ | `可触$
+<td>`句ng$
+<td>`透過的$
+<td>`大域$ | `width$a | `height$a
+<td>`HTMLCanvasElement$I
+
+<tr><th>`caption!e
+<td>
+~tableの~caption
+◎
+Table caption
+<td>ナシ
+<td>`table$e
+<td>`~flow$*
+<td>`大域$
+<td>`HTMLTableCaptionElement$I
+
+<tr><th>`cite!e
+<td>
+作品の~title
+◎
+Title of a work
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`code!e
+<td>
+~computer~code
+◎
+Computer code
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`col!e
+<td>
+~tableの~column
+◎
+Table column
+<td>ナシ
+<td>`colgroup$e
+<td>空
+<td>`大域$ | `span$a
+<td>`HTMLTableColElement$I
+
+<tr><th>`colgroup!e
+<td>
+~table内の一群の~column
+◎
+Group of columns in a table
+<td>ナシ
+<td>`table$e
+<td>`col$e* | `template$e*
+<td>`大域$ | `span$a
+<td>`HTMLTableColElement$I
+
+<tr><th>`data!e
+<td>
+機械読取可能な等価物
+◎
+Machine-readable equivalent
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$ | `value$a
+<td>`HTMLDataElement$I
+
+<tr><th>`datalist!e
+<td>
+<a href="~HEinput#attr-input-list">~combo~box~control</a>
+用の一群の選択肢の容器
+◎
+Container for options for combo box control
+<td>`~flow$ | `句ng$
+<td>`句ng$
+<td>`句ng$* | `option$e* | `~script用$*
+<td>`大域$
+<td>`HTMLDataListElement$I
+
+<tr><th>`dd!e
+<td>
+対応する `dt$e 要素（たち）用の内容
+◎
+Content for corresponding dt element(s)
+<td>ナシ
+<td>`dl$e | `div$e*
+<td>`~flow$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`del!e
+<td>
+文書からの除去
+◎
+A removal from the document
+<td>`~flow$ | `句ng$*
+<td>`句ng$
+<td>`透過的$
+<td>`大域$ | `cite$a | `datetime$a
+<td>`HTMLModElement$I
+
+<tr><th>`details!e
+<td>
+詳細を隠すための開閉式~control
+◎
+Disclosure control for hiding details
+<td>`~flow$ | `~sectioning根$ | `対話的$ | `可触$
+<td>`~flow$
+<td>`summary$e* | `~flow$
+<td>`大域$ | `open$a
+<td>`HTMLDetailsElement$I
+
+<tr><th>`dfn!e
+<td>
+個々の語を定義する
+◎
+Defining instance
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$*
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`dialog!e
+<td>
+~dialogを示す［
+~box／~UIwindow
+］
+◎
+Dialog box or window
+<td>`~flow$ | `~sectioning根$
+<td>`~flow$
+<td>`~flow$
+<td>`大域$ | `open$a
+<td>`HTMLDialogElement$I
+
+<tr><th>`div!e
+<td>
+汎用の~flow容器, または
+`dl$e 要素~内の名値~group用の容器
+◎
+Generic flow container, or container for name-value groups in dl elements
+<td>`~flow$ | `可触$
+<td>`~flow$ | `dl$e
+<td>`~flow$
+<td>`大域$
+<td>`HTMLDivElement$I
+
+<tr><th>`dl!e
+<td>
+0 個~以上の［
+1 個~以上の名から 1 個~以上の値への結付nが成す~group
+］からなる~list
+◎
+Association list consisting of zero or more name-value groups
+<td>`~flow$ | `可触$
+<td>`~flow$
+<td>`dt$e* | `dd$e* | `div$e* | `~script用$
+<td>`大域$
+<td>`HTMLDListElement$I
+
+<tr><th>`dt!e
+<td>
+対応する `dd$e 要素（たち）用の~legend
+◎
+Legend for corresponding dd element(s)
+<td>ナシ
+<td>`dl$e | `div$e*
+<td>`~flow$*
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`em!e
+<td>
+強勢
+◎
+Stress emphasis
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`embed!e
+<td>
+`~plugin$
+◎
+Plugin
+<td>`~flow$ | `句ng$ | `埋込d$ | `対話的$ | `可触$
+<td>`句ng$
+<td>空
+<td>`大域$ | `src$a | `type$a | `width$a | `height$a | その他の属性*
+<td>`HTMLEmbedElement$I
+
+<tr><th>`fieldset!e
+<td>
+一群の~form~control
+◎
+Group of form controls
+<td>`~flow$ | `~sectioning根$ | `~listされる$ | `~formに所有され得る$ | `可触$
+<td>`~flow$
+<td>`legend$e* | `~flow$
+<td>`大域$ | `disabled$a | `form$a | `name$a
+<td>`HTMLFieldSetElement$I
+
+<tr><th>`figcaption!e
+<td>
+`figure$e 用の
+~caption
+◎
+Caption for figure
+<td>ナシ
+<td>`figure$e
+<td>`~flow$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`figure!e
+<td>
+~caption（省略可）を伴う~figure
+◎
+Figure with optional caption
+<td>`~flow$ | `~sectioning根$ | `可触$
+<td>`~flow$
+<td>`figcaption$e* | `~flow$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`footer!e
+<td>
+~pageや~section用の~footer
+◎
+Footer for a page or section
+<td>`~flow$ | `可触$
+<td>`~flow$
+<td>`~flow$*
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`form!e
+<td>
+利用者が提出-可能な~form
+◎
+User-submittable form
+<td>`~flow$ | `可触$
+<td>`~flow$
+<td>`~flow$*
+<td>`大域$ | `accept-charset$a | `action$a | `autocomplete$a | `enctype$a | `method$a | `name$a | `novalidate$a | `target$a
+<td>`HTMLFormElement$I
+
+<tr><th>`h1$e | `h2$e | `h3$e | `h4$e | `h5$e | `h6$e;
+
+<td>
+~section見出し
+◎
+Section heading
+<td>`~flow$ | `見出し$ | `可触$
+<td>`legend$e | `summary$e | `~flow$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLHeadingElement$I
+
+<tr><th>`head!e
+<td>
+文書~metadata用の容器
+◎
+Container for document metadata
+<td>ナシ
+<td>`html$e
+<td><a href="~HTMLdom#metadata-content-2">~metadata内容</a>*
+<td>`大域$
+<td>`HTMLHeadElement$I
+
+<tr><th>`header!e
+<td>
+~pageや~section用の［
+紹介や前置き／~navi
+］用の援助
+◎
+Introductory or navigational aids for a page or section
+<td>`~flow$ | `可触$
+<td>`~flow$
+<td>`~flow$*
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`hgroup!e
+<td>
+一群の見出し
+◎
+heading group
+<td>`~flow$ | `見出し$ | `可触$
+<td>`legend$e | `summary$e | `~flow$
+<td>`h1$e | `h2$e | `h3$e | `h4$e | `h5$e | `h6$e | `~script用$
+◎
+h1; h2; h3; h4; h5; h6; script-supporting elements
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`hr!e
+<td>
+~thema的な分断
+◎
+Thematic break
+<td>`~flow$
+<td>`~flow$
+<td>空
+<td>`大域$
+<td>`HTMLHRElement$I
+
+<tr><th>`html!e
+<td>
+根~要素
+◎
+Root element
+<td>ナシ
+<td>ナシ*
+<td>`head$e* | `body$e*
+<td>`大域$ | `manifest$a
+<td>`HTMLHtmlElement$I
+
+<tr><th>`i!e
+<td>
+地の文と異なる声／雰囲気
+◎
+Alternate voice
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`iframe!e
+<td>
+`入子の閲覧文脈$
+◎
+Nested browsing context
+<td>`~flow$ | `句ng$ | `埋込d$ | `対話的$ | `可触$
+<td>`句ng$
+<td>空
+<td>`大域$ | `src$a | `srcdoc$a | `name$a | `sandbox$a | `allow$a | `allowfullscreen$a | `allowpaymentrequest$a | `width$a | `height$a | `referrerpolicy$a | `loading$a
+<td>`HTMLIFrameElement$I
+
+<tr><th>`img!e
+<td>
+画像
+◎
+Image
+<td>`~flow$ | `句ng$ | `埋込d$ | `対話的$* | `~formに所有され得る$ | `可触$
+<td>`句ng$ | `picture$e
+<td>空
+<td>`大域$ | `alt$a | `src$a | `sizes$a | `srcset$a | `crossorigin$a | `usemap$a | `ismap$a | `width$a | `height$a | `referrerpolicy$a | `decoding$a | `loading$a
+<td>`HTMLImageElement$I
+
+<tr><th>`input!e
+<td>
+~form~control
+◎
+Form control
+<td>`~flow$ | `句ng$ | `対話的$* | `~listされる$ | `~label可能$ | `提出-可能$ | `再設定-可能$ | `~formに所有され得る$ | `可触$*
+<td>`句ng$
+<td>空
+<td>`大域$ | `accept$a | `alt$a | `autocomplete$a | `checked$a | `dirname$a | `disabled$a | `form$a | `formaction$a | `formenctype$a | `formmethod$a | `formnovalidate$a | `formtarget$a | `height$a | `list$a | `max$a | `maxlength$a | `min$a | `minlength$a | `multiple$a | `name$a | `pattern$a | `placeholder$a | `readonly$a | `required$a | `size$a | `src$a | `step$a | `type$a | `value$a | `width$a
+<td>`HTMLInputElement$I
+
+<tr><th>`ins!e
+<td>
+文書に対する追加
+◎
+An addition to the document
+<td>`~flow$ | `句ng$* | `可触$
+<td>`句ng$
+<td>`透過的$
+<td>`大域$ | `cite$a | `datetime$a
+<td>`HTMLModElement$I
+
+<tr><th>`kbd!e
+<td>
+利用者~入力
+◎
+User input
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`label!e
+<td>
+~form~control用の~caption
+◎
+Caption for a form control
+<td>`~flow$ | `句ng$ | `対話的$ | `可触$
+<td>`句ng$
+<td>`句ng$*
+<td>`大域$ | `for$a
+<td>`HTMLLabelElement$I
+
+<tr><th>`legend!e
+<td>
+`fieldset$e 用の~caption
+◎
+Caption for fieldset
+<td>ナシ
+<td>`fieldset$e
+<td>`句ng$ | `見出し$
+<td>`大域$
+<td>`HTMLLegendElement$I
+
+<tr><th>`li!e
+<td>
+~list~item
+◎
+List item
+<td>ナシ
+<td>`ol$e | `ul$e | `menu$e*
+<td>`~flow$
+<td>`大域$ | `value$a*
+<td>`HTMLLIElement$I
+
+<tr><th>`link!e
+<td>
+~link~metadata
+◎
+Link metadata
+<td>`~metadata$ | `~flow$* | `句ng$*
+<td>`head$e | `noscript$e* | `句ng$*
+<td>空
+<td>`大域$ | `href$a | `crossorigin$a | `rel$a | `as$a | `media$a | `hreflang$a | `type$a | `sizes$a | `imagesrcset$a | `imagesizes$a | `referrerpolicy$a | `integrity$a | `color$a | `disabled$a
+<td>`HTMLLinkElement$I
+
+<tr><th>`main!e
+<td>
+文書の支配的~内容~用の容器
+◎
+Container for the dominant contents of the document
+<td>`~flow$ | `可触$
+<td>`~flow$*
+<td>`~flow$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`map!e
+<td>
+`画像~map$
+◎
+Image map
+<td>`~flow$ | `句ng$* | `可触$
+<td>`句ng$
+<td>`透過的$ | `area$e*
+<td>`大域$ | `name$a
+<td>`HTMLMapElement$I
+
+<tr><th>`mark!e
+<td>
+強調
+◎
+Highlight
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`~math$
+<td>
+MathML 根
+◎
+MathML root
+<td>`~flow$ | `句ng$ | `埋込d$ | `可触$
+<td>`句ng$
+<td>`MATHML$r に従う
+<td>`MATHML$r に従う
+<td>`Element$I
+
+<tr><th>`menu!e
+<td>
+一群の~commandからなる~menu
+◎
+Menu of commands
+<td>`~flow$ | `可触$*
+<td>`~flow$
+<td>`li$e | `~script用$
+<td>`大域$
+<td>`HTMLMenuElement$I
+
+<tr><th>`meta!e
+<td>
+~text~metadata
+◎
+Text metadata
+<td>`~metadata$ | `~flow$* | `句ng$*
+<td>`head$e | `noscript$e* | `句ng$*
+<td>空
+<td>`大域$ | `name$a | `http-equiv$a | `content$a | `charset$a
+<td>`HTMLMetaElement$I
+
+<tr><th>`meter!e
+<td>
+計器
+◎
+Gauge
+<td>`~flow$ | `句ng$ | `~label可能$ | `可触$
+<td>`句ng$
+<td>`句ng$*
+<td>`大域$ | `value$a | `min$a | `max$a | `low$a | `high$a | `optimum$a
+<td>`HTMLMeterElement$I
+
+<tr><th>`nav!e
+<td>
+~navi用の~linkを伴う~section
+◎
+Section with navigational links
+<td>`~flow$ | `~sectioning$ | `可触$
+<td>`~flow$
+<td>`~flow$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`noscript!e
+<td>
+~script用の~fallback内容
+◎
+Fallback content for script
+<td>`~metadata$ | `~flow$ | `句ng$
+<td>`head$e* | `句ng$*
+<td>文脈依存*
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`object!e
+<td>
+画像 ／ `入子の閲覧文脈$ ／ `~plugin$
+◎
+Image, nested browsing context, or plugin
+<td>`~flow$ | `句ng$ | `埋込d$ | `対話的$* | `~listされる$ | `提出-可能$ | `~formに所有され得る$ | `可触$
+<td>`句ng$
+<td>`param$e* | `透過的$
+<td>`大域$ | `data$a | `type$a | `name$a | `usemap$a | `form$a | `width$a | `height$a
+<td>`HTMLObjectElement$I
+
+<tr><th>`ol!e
+<td>
+有順序~list
+◎
+Ordered list
+<td>`~flow$ | `可触$*
+<td>`~flow$
+<td>`li$e | `~script用$
+<td>`大域$ | `reversed$a | `start$a | `type$a
+<td>`HTMLOListElement$I
+
+<tr><th>`optgroup!e
+<td>
+~list~box内の一群の選択肢
+◎
+Group of options in a list box
+<td>ナシ
+<td>`select$e
+<td>`option$e | `~script用$
+<td>`大域$ | `disabled$a | `label$a
+<td>`HTMLOptGroupElement$I
+
+<tr><th>`option!e
+<td>
+［
+~list~box／~combo~box
+］~control内のある選択肢
+◎
+Option in a list box or combo box control
+<td>ナシ
+<td>`select$e | `datalist$e | `optgroup$e
+<td>`~text$*
+<td>`大域$ | `disabled$a | `label$a | `selected$a | `value$a
+<td>`HTMLOptionElement$I
+
+<tr><th>`output!e
+<td>
+計算結果の出力~値
+◎
+Calculated output value
+<td>`~flow$ | `句ng$ | `~listされる$ | `~label可能$ | `再設定-可能$ | `~formに所有され得る$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$ | `for$a | `form$a | `name$a
+<td>`HTMLOutputElement$I
+
+<tr><th>`p!e
+<td>
+段落
+◎
+Paragraph
+<td>`~flow$ | `可触$
+<td>`~flow$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLParagraphElement$I
+
+<tr><th>`param!e
+<td>
+`object$e に渡す~parameter
+◎
+Parameter for object
+<td>ナシ
+<td>`object$e
+<td>空
+<td>`大域$ | `name$a | `value$a
+<td>`HTMLParamElement$I
+
+<tr><th>`picture!e
+<td>
+画像
+◎
+Image
+<td>`~flow$ | `句ng$ | `埋込d$
+<td>`句ng$
+<td>`source$e* | 1 個の `img$e | `~script用$
+<td>`大域$
+<td>`HTMLPictureElement$I
+
+<tr><th>`pre!e
+<td>
+整形済み~textからなる~block
+◎
+Block of preformatted text
+<td>`~flow$ | `可触$
+<td>`~flow$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLPreElement$I
+
+<tr><th>`progress!e
+<td>
+進捗bar
+◎
+Progress bar
+<td>`~flow$ | `句ng$ | `~label可能$ | `可触$
+<td>`句ng$
+<td>`句ng$*
+<td>`大域$ | `value$a | `max$a
+<td>`HTMLProgressElement$I
+
+<tr><th>`q!e
+<td>
+引用
+◎
+Quotation
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$ | `cite$a
+<td>`HTMLQuoteElement$I
+
+<tr><th>`rp!e
+<td>
+~ruby注釈~text用の括弧
+◎
+Parenthesis for ruby annotation text
+<td>ナシ
+<td>`ruby$e
+<td>`~text$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`rt!e
+<td>
+~ruby注釈~text
+◎
+Ruby annotation text
+<td>ナシ
+<td>`ruby$e
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`ruby!e
+<td>
+~ruby注釈（たち）
+◎
+Ruby annotation(s)
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$ | `rt$e | `rp$e*
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`s!e
+<td>
+不正確な~text
+◎
+Inaccurate text
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`samp!e
+<td>
+~computer出力
+◎
+Computer output
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`script!e
+<td>
+埋込d~script
+◎
+Embedded script
+<td>`~metadata$ | `~flow$ | `句ng$ | `~script用$
+<td>`head$e | `句ng$ | `~script用$
+<td>~script ／ ~data ／ ~script文書化*
+◎
+script, data, or script documentation*
+<td>`大域$ | `src$a | `type$a | `async$a | `defer$a | `crossorigin$a | `integrity$a | `referrerpolicy$a
+<td>`HTMLScriptElement$I
+
+<tr><th>`section!e
+<td>
+［
+文書／~app
+］の汎用の~section
+◎
+Generic document or application section
+<td>`~flow$ | `~sectioning$ | `可触$
+<td>`~flow$
+<td>`~flow$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`select!e
+<td>
+~list~box~control
+◎
+List box control
+<td>`~flow$ | `句ng$ | `対話的$ | `~listされる$ | `~label可能$ | `提出-可能$ | `再設定-可能$ | `~formに所有され得る$ | `可触$
+<td>`句ng$
+<td>`option$e | `optgroup$e | `~script用$
+<td>`大域$ | `autocomplete$a | `disabled$a | `form$a | `multiple$a | `name$a | `required$a | `size$a
+<td>`HTMLSelectElement$I
+
+<tr><th>`slot!e
+<td>
+~shadow~treeの~slot
+◎
+Shadow tree slot
+<td>`~flow$ | `句ng$
+<td>`句ng$
+<td>`透過的$
+<td>`大域$ | `name$a
+<td>`HTMLSlotElement$I
+
+<tr><th>`small!e
+<td>
+細則事項
+◎
+Side comment
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`source!e
+<td>
+`video$e や `audio$e 用の［
+`img$e ／ ~media~source
+］用の画像~source
+◎
+Image source for img or media source for video or audio
+<td>ナシ
+<td>`picture$e | `video$e | `audio$e
+<td>空
+<td>`大域$ | `src$a | `type$a `srcset$a | `sizes$a | `media$a
+<td>`HTMLSourceElement$I
+
+<tr><th>`span!e
+<td>
+句ngのための汎用の容器
+◎
+Generic phrasing container
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLSpanElement$I
+
+<tr><th>`strong!e
+<td>
+重要度
+◎
+Importance
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`style!e
+<td>
+埋込d~style付け情報
+◎
+Embedded styling information
+<td>`~metadata$
+<td>`head$e | `noscript$e*
+<td>~text*
+<td>`大域$ | `media$a
+<td>`HTMLStyleElement$I
+
+<tr><th>`sub!e
+<td>
+~subscript
+◎
+Subscript
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`summary!e
+<td>
+`details$e の~caption
+◎
+Caption for details
+<td>ナシ
+<td>`details$e
+<td>`句ng$ | `見出し$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`sup!e
+<td>
+~superscript
+◎
+Superscript
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`~svg$
+<td>
+~SVG根
+◎
+SVG root
+<td>`~flow$ | `句ng$ | `埋込d$ | `可触$
+<td>`句ng$
+<td>`SVG$r に従う
+<td>`SVG$r に従う
+<td>`SVGSVGElement$I
+
+<tr><th>`table!e
+<td>
+~table
+◎
+Table
+<td>`~flow$ | `可触$
+<td>`~flow$
+<td>`caption$e* | `colgroup$e* | `thead$e* | `tbody$e* | `tfoot$e* | `tr$e* | `~script用$
+<td>`大域$
+<td>`HTMLTableElement$I
+
+<tr><th>`tbody!e
+<td>
+~table内の一群の~row
+◎
+Group of rows in a table
+<td>ナシ
+<td>`table$e
+<td>`tr$e | `~script用$
+<td>`大域$
+<td>`HTMLTableSectionElement$I
+
+<tr><th>`td!e
+<td>
+~table~cell
+◎
+Table cell
+<td>`~sectioning根$
+<td>`tr$e
+<td>`~flow$
+<td>`大域$ | `colspan$a | `rowspan$a | `headers$a
+<td>`HTMLTableCellElement$I
+
+<tr><th>`template!e
+<td>
+~template
+◎
+Template
+<td>`~metadata$ | `~flow$ | `句ng$ | `~script用$
+<td>`~metadata$ | `句ng$ | `~script用$ | `colgroup$e*
+<td>空
+<td>`大域$
+<td>`HTMLTemplateElement$I
+
+<tr><th>`textarea!e
+<td>
+複数行の~text~control
+◎
+Multiline text controls
+<td>`~flow$ | `句ng$ | `対話的$ | `~listされる$ | `~label可能$ | `提出-可能$ | `再設定-可能$ | `~formに所有され得る$ | `可触$
+<td>`句ng$
+<td>`~text$
+<td>`大域$ | `cols$a | `dirname$a | `disabled$a | `form$a | `maxlength$a | `minlength$a | `name$a | `placeholder$a | `readonly$a | `required$a | `rows$a | `wrap$a
+<td>`HTMLTextAreaElement$I
+
+<tr><th>`tfoot!e
+<td>
+~table内の一群の~footer~row
+◎
+Group of footer rows in a table
+<td>ナシ
+<td>`table$e
+<td>`tr$e | `~script用$
+<td>`大域$
+<td>`HTMLTableSectionElement$I
+
+<tr><th>`th!e
+<td>
+~tableの見出cell
+◎
+Table header cell
+<td>`対話的$*
+<td>`tr$e
+<td>`~flow$*
+<td>`大域$ | `colspan$a | `rowspan$a | `headers$a | `scope$a | `abbr$a
+<td>`HTMLTableCellElement$I
+
+<tr><th>`thead!e
+<td>
+~table内の一群の見出し~row
+◎
+Group of heading rows in a table
+<td>ナシ
+<td>`table$e
+<td>`tr$e | `~script用$
+<td>`大域$
+<td>`HTMLTableSectionElement$I
+
+<tr><th>`time!e
+<td>
+日時に関係する~dataの機械読取可能な等価物
+◎
+Machine-readable equivalent of date- or time-related data
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$ | `datetime$a
+<td>`HTMLTimeElement$I
+
+<tr><th>`title!e
+<td>
+文書~title
+◎
+Document title
+<td>`~metadata$
+<td>`head$e
+<td>`~text$*
+<td>`大域$
+<td>`HTMLTitleElement$I
+
+<tr><th>`tr!e
+<td>
+~table~row
+◎
+Table row
+<td>ナシ
+<td>`table$e | `thead$e | `tbody$e | `tfoot$e
+<td>`th$e* | `td$e | `~script用$
+<td>`大域$
+<td>`HTMLTableRowElement$I
+
+<tr><th>`track!e
+<td>
+時限~text~track
+◎
+Timed text track
+<td>ナシ
+<td>`audio$e | `video$e
+<td>空
+<td>`大域$ | `default$a | `kind$a | `label$a | `src$a | `srclang$a
+<td>`HTMLTrackElement$I
+
+<tr><th>`u!e
+<td>
+説明的でない注釈
+◎
+Unarticulated annotation
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`ul!e
+<td>
+~list
+◎
+List
+<td>`~flow$ | `可触$*
+<td>`~flow$
+<td>`li$e | `~script用$
+<td>`大域$
+<td>`HTMLUListElement$I
+
+<tr><th>`var!e
+<td>
+変数
+◎
+Variable
+<td>`~flow$ | `句ng$ | `可触$
+<td>`句ng$
+<td>`句ng$
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th>`video!e
+<td>
+動画~再生器
+◎
+Video player
+<td>`~flow$ | `句ng$ | `埋込d$ | `対話的$ | `可触$
+<td>`句ng$
+<td>`source$e* | `track$e* | `透過的$*
+<td>`大域$ | `src$a | `crossorigin$a | `poster$a | `preload$a | `autoplay$a | `playsinline$a | `loop$a | `muted$a | `controls$a | `width$a | `height$a
+<td>`HTMLVideoElement$I
+
+<tr><th>`wbr!e
+<td>
+改行機会
+◎
+Line breaking opportunity
+<td>`~flow$ | `句ng$
+<td>`句ng$
+<td>空
+<td>`大域$
+<td>`HTMLElement$I
+
+<tr><th><a href="~HEcustom#autonomous-custom-element" style="white-space:normal">自律的~custom要素</a>
+<td>
+作者により定義される要素
+◎
+Author-defined elements
+<td>`~flow$ | `句ng$ | `可触$
+<td>`~flow$ | `句ng$
+<td>`透過的$
+<td>`大域$ | 要素の作者が裁定する任意のもの
+◎
+globals; any, as decided by the element's author
+<td>
+要素の作者が給する（ `HTMLElement$I を継承する）
+◎
+Supplied by the element's author (inherits from HTMLElement)
+</tbody></table>
+
+<ul>
+	<li><small>
+各~cell内の~asterisk（ * ）は、実際の規則は そこに指示されるものより複雑であることを指示する。
+◎
+An asterisk (*) in a cell indicates that the actual rules are more complicated than indicated in the table above.
+</small></li>
+
+	<li id="_parent-note"><small>†
+“親” ~column内に与える各~分類は、要素の親がそれらの分類いずれかに入るのではなく，［
+自身の内容~model内に，所与の分類を 挙げる／含む
+］ような親を指す。
+例えば， `a$e 要素の “親” ~columnには、 “句ng” が挙げられている
+— これは、要素のうち［
+その内容~modelに “句ng” 分類を包含する
+］ものは， `a$e 要素の親になり得ることを意味する。
+“~flow” 分類は “句ng” 要素すべてを含むので、例えば `th$e 要素は `a$e 要素の親になり得ることになる。
+◎
+† Categories in the "Parents" column refer to parents that list the given categories in their content model, not to elements that themselves are in those categories. For example, the a element's "Parents" column says "phrasing", so any element whose content model contains the "phrasing" category could be a parent of an a element. Since the "flow" category includes all the "phrasing" elements, that means the th element could be a parent to an a element.
+</small></li>
+</ul>
+
+		</section>
+		<section id="element-content-categories">
+<h2 title="Element content categories">要素~内容の分類</h2>
+
+~INFORMATIVE
+
+<table id="category-table" class="grid-table">
+<caption>
+要素~分類の一覧
+◎
+List of element content categories
+</caption>
+
+<thead><tr><th>分類◎ Category
+<th>要素◎ Elements
+<th>条件付き（括弧内）で該当する要素◎ Elements with exceptions
+</thead><tbody>
+
+<tr><td>`~metadata内容$
+<td>
+`base$e | `link$e | `meta$e | `noscript$e | `script$e | `style$e | `template$e | `title$e
+<td>
+—
+
+<tr><td>`~flow内容$
+<td>
+`a$e | `abbr$e | `address$e | `article$e | `aside$e | `audio$e | `b$e | `bdi$e | `bdo$e | `blockquote$e | `br$e | `button$e | `canvas$e | `cite$e | `code$e | `data$e | `datalist$e | `del$e | `details$e | `dfn$e | `dialog$e | `div$e | `dl$e | `em$e | `embed$e | `fieldset$e | `figure$e | `footer$e | `form$e | `h1$e | `h2$e | `h3$e | `h4$e | `h5$e | `h6$e | `header$e | `hgroup$e | `hr$e | `i$e | `iframe$e | `img$e | `input$e | `ins$e | `kbd$e | `label$e | `map$e | `mark$e | `~math$ | `menu$e | `meter$e | `nav$e | `noscript$e | `object$e | `ol$e | `output$e | `p$e | `picture$e | `pre$e | `progress$e | `q$e | `ruby$e | `s$e | `samp$e | `script$e | `section$e | `select$e | `slot$e | `small$e | `span$e | `strong$e | `sub$e | `sup$e | `~svg$ | `table$e | `template$e | `textarea$e | `time$e | `u$e | `ul$e | `var$e | `video$e | `wbr$e | `自律的~custom要素$ | `~text$
+<td>
+`area$e （ `map$e 要素の子孫である）
+| `link$e （ `~body内に許容される$）
+| `main$e （`階層的に正しく$なる）
+| `meta$e （ `itemprop$A 属性を有する）
+◎
+area (if it is a descendant of a map element); link (if it is allowed in the body); main (if it is a hierarchically correct main element); meta (if the itemprop attribute is present)
+
+<tr><td>`~sectioning内容$
+<td>
+`article$e | `aside$e | `nav$e | `section$e
+<td>
+—
+
+<tr><td>`見出し内容$
+<td>
+`h1$e | `h2$e | `h3$e | `h4$e | `h5$e | `h6$e | `hgroup$e
+<td>
+—
+
+<tr><td>`句ng内容$
+<td>
+`a$e | `abbr$e | `audio$e | `b$e | `bdi$e | `bdo$e | `br$e | `button$e | `canvas$e | `cite$e | `code$e | `data$e | `datalist$e | `del$e | `dfn$e | `em$e | `embed$e | `i$e | `iframe$e | `img$e | `input$e | `ins$e | `kbd$e | `label$e | `map$e | `mark$e | `~math$ | `meter$e | `noscript$e | `object$e | `output$e | `picture$e | `progress$e | `q$e | `ruby$e | `s$e | `samp$e | `script$e | `select$e | `slot$e | `small$e | `span$e | `strong$e | `sub$e | `sup$e | `~svg$ | `template$e | `textarea$e | `time$e | `u$e | `var$e | `video$e | `wbr$e | `自律的~custom要素$ | `~text$
+<td>
+`area$e  （ `map$e 要素の子孫である）
+| `link$e （ `~body内に許容される$）
+| `meta$e （ `itemprop$A 属性を有する)
+◎
+area (if it is a descendant of a map element); link (if it is allowed in the body); meta (if the itemprop attribute is present)
+
+<tr><td>`埋込d内容$
+<td>
+`audio$e | `canvas$e | `embed$e | `iframe$e | `img$e | `~math$ | `object$e | `picture$e | `~svg$ | `video$e
+<td>
+—
+
+<tr><td>`対話的~内容$
+<td>
+`button$e | `details$e | `embed$e | `iframe$e | `label$e | `select$e | `textarea$e
+<td>
+`a!e  （ `href$a 属性を有する）
+| `audio!e （ `controls$a 属性を有する）
+| `img!e （ `usemap$a 属性を有する）
+| `input!e （ `type$a 属性は `Hidden$st 状態でない）
+| `object!e （ `usemap$a 属性を有する）
+| `video!e （ `controls$a 属性を有する）
+◎
+a (if the href attribute is present); audio (if the controls attribute is present); img (if the usemap attribute is present); input (if the type attribute is not in the Hidden state); object (if the usemap attribute is present); video (if the controls attribute is present)
+
+<tr><td>`~sectioning根$
+<td>
+`blockquote$e | `body$e | `details$e | `dialog$e | `fieldset$e | `figure$e | `td$e
+<td>
+—
+
+<tr><td>`~formに所有され得る要素$
+<td>
+`button$e | `fieldset$e | `input$e | `label$e | `object$e | `output$e | `select$e | `textarea$e | `img$e | `~formに所有され得る~custom要素$
+<td>
+—
+
+<tr><td>`~listされる要素$
+<td>
+`button$e | `fieldset$e | `input$e | `object$e | `output$e | `select$e | `textarea$e | `~formに所有され得る~custom要素$
+<td>
+—
+
+<tr><td>`提出-可能な要素$
+<td>
+`button$e | `input$e | `object$e | `select$e | `textarea$e | `~formに所有され得る~custom要素$
+<td>
+—
+
+<tr><td>`再設定-可能な要素$
+<td>
+`input$e | `output$e | `select$e | `textarea$e | `~formに所有され得る~custom要素$
+<td>
+—
+
+<tr><td>`自動頭字化-を継承する要素$
+<td>
+`button$e | `fieldset$e | `input$e | `output$e | `select$e | `textarea$e
+<td>
+—
+
+<tr><td>`~label可能な要素$
+<td>
+`button$e | `input$e | `meter$e | `output$e | `progress$e | `select$e | `textarea$e | `~formに所有され得る~custom要素$
+<td>
+—
+
+<tr><td>`可触~内容$
+<td>
+`a$e | `abbr$e | `address$e | `article$e | `aside$e | `b$e | `bdi$e | `bdo$e | `blockquote$e | `button$e | `canvas$e | `cite$e | `code$e | `data$e | `details$e | `dfn$e | `div$e | `em$e | `embed$e | `fieldset$e | `figure$e | `footer$e | `form$e | `h1$e | `h2$e | `h3$e | `h4$e | `h5$e | `h6$e | `header$e | `hgroup$e | `i$e | `iframe$e | `img$e | `ins$e | `kbd$e | `label$e | `main$e | `map$e | `mark$e | `~math$ | `meter$e | `nav$e | `object$e | `output$e | `p$e | `pre$e | `progress$e | `q$e | `ruby$e | `s$e | `samp$e | `section$e | `select$e | `small$e | `span$e | `strong$e | `sub$e | `sup$e | `~svg$ | `table$e | `textarea$e | `time$e | `u$e | `var$e | `video$e | `自律的~custom要素$
+<td>
+`audio!e （  `controls$a 属性を有する）
+| `dl$e （要素の子に 1 個~以上の一群の名値が含まれる）
+| `input!e （ `type$a 属性は `Hidden$st 状態でない）
+| `menu!e （要素の子に `li$e 要素がある）
+| `ol$e （要素の子に `li$e 要素がある）
+| `ul$e （要素の子に`li$e 要素がある）
+| `~text$（`要素間~空白$でない）
+◎
+audio (if the controls attribute is present); dl (if the element's children include at least one name-value group); input (if the type attribute is not in the Hidden state); menu (if the element's children include at least one li element); ol (if the element's children include at least one li element); ul (if the element's children include at least one li element); Text that is not inter-element whitespace
+
+<tr><td>`~script用$
+<td>
+`script$e | `template$e
+<td>
+—
+</tbody></table>
+
+		</section>
+		<section id="attributes-3">
+<h2 title="Attributes">属性</h2>
+
+~INFORMATIVE
+
+<table id="attributes-1"  class="grid-table">
+<caption>属性の~list
+<small>（表内の~asterisk（ * ）は、実際の規則は そこに指示されるものより複雑であることを指示する）</small>
+◎
+List of attributes (excluding event handler content attributes)
+</caption>
+
+<thead><tr><th>属性◎ Attribute
+<th>要素◎ Element(s)
+<th>~~説明◎ Description
+<th>値◎ Value
+</thead><tbody>
+
+<tr><th>`abbr!a
+<td>`th$eA
+<td>
+この見出cellに与える代替~label
+— 他の文脈~内からこの~cellを参照するときに利用される
+◎
+Alternative label to use for the header cell when referencing the cell in other contexts
+<td>
+`~text$av *
+◎
+Text*
+
+<tr><th>`accept!a
+<td>`input$eA
+<td>
+`~file~upload~control$に期待される~file型についての~hint
+◎
+Hint for expected file type in file upload controls
+<td>
+各~tokenが次のいずれかであるような，`~comma区切りの~token集合$ *
+⇒＃
+`~parameterを伴わない妥当な~MIME型~文字列$,
+`audio/*^v,
+`video/*^v,
+`image/*^v
+◎
+Set of comma-separated tokens* consisting of valid MIME type strings with no parameters or audio/*, video/*, or image/*
+
+<tr><th>`accept-charset!a
+<td>`form$eA
+<td>
+`~form提出$用に利用する文字~符号化法
+◎
+Character encodings to use for form submission
+<td>
+`~ASCII大小無視$で `UTF-8^l に合致する文字列
+◎
+ASCII case-insensitive match for "UTF-8"
+
+<tr><th>`accesskey!a
+<td>`_$H
+<td>
+要素を［
+作動化する／~focusする
+］ための~keyboard~shortcut
+◎
+Keyboard shortcut to activate or focus element
+<td>
+各~tokenが 1 個の符号位置を与えるような，`空白区切りの一意な~token集合$（有順序【！, 大小区別】）
+◎
+Ordered set of unique space-separated tokens, none of which are identical to another, each consisting of one code point in length
+
+<tr><th>`action!a
+<td>`form$eA
+<td>
+`~form提出$用に利用する`~URL$
+◎
+URL to use for form submission
+<td>
+`前後~空白~可の妥当かつ空でない~URL$
+◎
+Valid non-empty URL potentially surrounded by spaces
+
+<tr><th>`allow!a
+<td>`iframe$eA
+<td>
+`iframe$e の内容に適用されることになる`許可~施策$
+◎
+Permissions policy to be applied to the iframe's contents
+<td>
+`直列形の許可~施策$
+◎
+Serialized permissions policy
+
+<tr><th>`allowfullscreen!a
+<td>`iframe$eA
+<td>
+`iframe$e の内容を `requestFullscreen()$m に利用できるようにするかどうか
+◎
+Whether to allow the iframe's contents to use requestFullscreen()
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`allowpaymentrequest!a
+<td>`iframe$eA
+<td>
+支払い要請（ payment request）を為すときに，
+`PaymentRequest$I ~interfaceに `iframe$e の内容を利用することが許容されるかどうか
+◎
+Whether the iframe's contents are allowed to use the PaymentRequest interface to make payment requests
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`alt!a
+<td>`area$eA | `img$eA | `input$eA
+<td>
+画像が可用でないときの代用の~text
+◎
+Replacement text for use when images are not available
+<td>
+`~text$av *
+◎
+Text*
+
+<tr><th>`as!a
+<td>`link$eA
+<td>
+事前読込み要請~用の`行先の素$（
+`rel$A="`preload$v" ／ `rel$A="`modulepreload$v"
+用）
+◎
+Potential destination for a preload request (for rel="preload" and rel="modulepreload")
+<td>
+`preload$v 用には `行先の素$ ／
+`modulepreload$v 用には `~scriptに類する行先$
+◎
+Potential destination, for rel="preload"; script-like destination, for rel="modulepreload"
+
+<tr><th>`async!a
+<td>`script$eA
+<td>
+~scriptが可用になったら実行する
+— ~fetchしている間は他を阻むことなく
+◎
+Execute script when available, without blocking while fetching
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`autocapitalize!a
+<td>`_$H
+<td>
+推奨される自動頭字化の挙動（~supportされる入力~method用）
+◎
+Recommended autocapitalization behavior (for supported input methods)	<td>
+`on$v | `off$v | `~noneC$v | `sentences$v | `words$v | `characters$v
+◎
+"on"; "off"; "none"; "sentences"; "words"; "characters" 
+
+<tr><th>`autocomplete!a
+<td>`form$eA
+<td>
+~form内の~control用の自動充填~特能~用の既定の設定
+◎
+Default setting for autofill feature for controls in the form
+<td>
+`on^v | `off^v
+◎
+"on"; "off"
+
+<tr><th>`autocomplete!a
+<td>`input$eA | `select$eA | `textarea$eA
+<td>
+~form自動充填~特能についての~hint
+◎
+Hint for form autofill feature
+<td>
+`自動充填~欄$の名前, および関係する一連の~token *
+◎
+Autofill field name and related tokens*
+
+<tr><th>`autofocus!a
+<td>`_$H
+<td>
+~pageが読込まれたときに，自動的に この要素に~focusする
+◎
+Automatically focus the element when the page is loaded
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`autoplay!a
+<td>`audio$eA | `video$eA
+<td>
+［
+~pageが読込まれたときに，`~media資源$を自動的に開始できるかどうか
+］についての~hint
+◎
+Hint that the media resource can be started automatically when the page is loaded
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`charset!a
+<td>`meta$eA
+<td>
+`文字~符号化法~宣言$
+◎
+Character encoding declaration
+<td>
+"`utf-8^v"
+
+<tr><th>`checked!a
+<td>`input$eA
+<td>
+~controlは~checkされているかどうか
+◎
+Whether the control is checked
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`cite!a
+<td>`blockquote$eA | `del$eA | `ins$eA | `q$eA
+<td>
+［
+引用 ／ 編集-
+］についての更なる情報~源を指す~link
+◎
+Link to the source of the quotation or more information about the edit
+<td>
+`前後~空白~可の妥当な~URL$
+◎
+Valid URL potentially surrounded by spaces
+
+<tr><th>`class!a
+<td>`_$H
+<td>
+要素が所属する~classたち
+◎
+Classes to which the element belongs
+<td>
+`空白区切りの~token集合$
+◎
+Set of space-separated tokens
+
+<tr><th>`color!a
+<td>`link$eA
+<td>
+~siteの~iconを~custom化するときに利用する色
+（ <code>`rel$A="`mask-icon^v"</code> 用）
+◎
+Color to use when customizing a site's icon (for rel="mask-icon")
+<td>
+~CSS`~typedef-color$
+◎
+CSS &lt;color&gt;
+
+<tr><th>`cols!a
+<td>`textarea$eA
+<td>
+一行あたりの最大~文字~数
+◎
+Maximum number of characters per line
+<td>
+0 でない`妥当な負でない整数$
+◎
+Valid non-negative integer greater than zero
+
+<tr><th>`colspan!a
+<td>`td$eA | `th$eA
+<td>
+この~cellが~spanする~column数
+◎
+Number of columns that the cell is to span
+<td>
+0 でない`妥当な負でない整数$
+◎
+Valid non-negative integer greater than zero
+
+<tr><th>`content!a
+<td>`meta$eA
+<td>
+要素の値
+◎
+Value of the element
+<td>
+`~text$av *
+◎
+Text*
+
+<tr><th>`contenteditable!a
+<td>`_$H
+<td>
+要素は編集-可能かどうか
+◎
+Whether the element is editable
+<td>
+`true^v | `false^v
+◎
+"true"; "false"
+
+<tr><th>`controls!a
+<td>`audio$eA | `video$eA
+<td>
+~UA~controlを示す
+◎
+Show user agent controls
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`coords!a
+<td>`area$eA
+<td>
+`画像~map$内に作成される図形の座標
+◎
+Coordinates for the shape to be created in an image map
+<td>
+`妥当な浮動小数点数~list$ *
+◎
+Valid list of floating-point numbers*
+
+<tr><th>`crossorigin!a
+<td>`audio$eA | `img$eA | `link$eA | `script$eA | `video$eA
+<td>
+要素が非同一-生成元~要請をどう取扱うか
+◎
+How the element handles crossorigin requests
+<td>
+`anonymous$v | `use-credentials$v
+◎
+"anonymous"; "use-credentials"
+
+<tr><th>`data!a
+<td>`object$eA
+<td>
+資源の~address
+◎
+Address of the resource
+<td>
+`前後~空白~可の妥当かつ空でない~URL$
+◎
+Valid non-empty URL potentially surrounded by spaces
+
+<tr><th>`datetime!a
+<td>`del$eA | `ins$eA
+<td>
+変更の［
+日付t または日時t
+］
+◎
+Date and (optionally) time of the change
+<td>
+`妥当な省略あり日時t文字列$
+◎
+Valid date string with optional time
+
+<tr><th>`datetime!a
+<td>`time$eA
+<td>
+機械読取可能な値
+◎
+Machine-readable value
+<td>
+`妥当な年月t文字列$ |
+`妥当な日付t文字列$ |
+`妥当な月日t文字列$ |
+`妥当な時刻t文字列$ |
+`妥当な局所的~日時t文字列$ |
+`妥当な偏差~文字列$ |
+`妥当な大域的~日時t文字列$ |
+`妥当な年週t文字列$ |
+`妥当な負でない整数$ |
+`妥当な時間長~文字列$
+◎
+Valid month string, valid date string, valid yearless date string, valid time string, valid local date and time string, valid time-zone offset string, valid global date and time string, valid week string, valid non-negative integer, or valid duration string
+
+<tr><th>`decoding!a
+<td>`img$eA
+<td>
+この画像を呈示~用に処理するときに利用する，復号~用の~hint
+◎
+Decoding hint to use when processing this image for presentation
+<td>
+`sync$v | `async$v | `~auto1$v
+◎
+"sync"; "async"; "auto"
+
+<tr><th>`loading!a
+<td>`img$eA | `iframe$eA
+<td>
+読込ngの先送り可否を決定するために利用される
+◎
+Used when determining loading deferral
+<td>
+`lazy$v | `eager$v
+◎
+"lazy"; "eager"
+
+<tr><th>`default!a
+<td>`track$eA
+<td>
+この~trackを可能化する
+— より相応しい`~text~track$が他になければ
+◎
+Enable the track if no other text track is more suitable
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`defer!a
+<td>`script$eA
+<td>
+~script実行を先送りする
+◎
+Defer script execution
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`dir!a
+<td>`_$H
+<td>
+要素の`方向性$
+◎
+The text directionality of the element
+<td>
+`ltr$v | `rtl$v | `auto$v
+◎
+"ltr"; "rtl"; "auto"
+
+<tr><th>`dir!a
+<td>`bdo$eA
+<td>
+要素の`方向性$
+◎
+The text directionality of the element
+<td>
+`ltr$v | `rtl$v
+◎
+"ltr"; "rtl"
+
+<tr><th>`dirname!a
+<td>`input$eA | `textarea$eA
+<td>
+`~form提出$時に要素の`方向性$を送信するために利用される，~form~controlの名前
+◎
+Name of form control to use for sending the element's directionality in form submission
+<td>
+`~text$av *
+◎
+Text*
+
+<tr><th>`disabled!a
+<td>`button$eA | `input$eA | `optgroup$eA | `option$eA | `select$eA | `textarea$eA |
+<a href="~HTMLforms#attr-fe-disabled">~formに所有され得る~custom要素</a>
+<td>
+~form~controlは 不能化されるかどうか
+◎
+Whether the form control is disabled
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`disabled!a
+<td>`fieldset$eA
+<td>
+子孫~form~control
+— `legend$e の内側にあるものを除く —
+は、不能化されるかどうか
+◎
+Whether the descendant form controls, except any inside legend, are disabled
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`disabled!a
+<td>`link$eA
+<td>
+~linkは不能化されるかどうか
+◎
+Whether the link is disabled
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`download!a
+<td>`a$eA | `area$eA
+<td>
+この資源を，そこへ~navigateする代わりに~downloadするかどうか, および
+そうする場合の~~保存用~file名
+◎
+Whether to download the resource instead of navigating to it, and its file name if so
+<td>
+~text
+◎
+Text
+
+<tr><th>`draggable!a
+<td>`_$H
+<td>
+要素は~drag可能かどうか
+◎
+Whether the element is draggable
+<td>
+`true^v | `false^v
+◎
+"true"; "false"
+
+<tr><th>`enctype!a
+<td>`form$eA
+<td>
+`~form提出$用に利用する~entry~list符号化法の種別
+◎
+Entry list encoding type to use for form submission
+<td>
+`application/x-www-form-urlencoded$v | `multipart/form-data$v | `text/plain$v
+◎
+"application/x-www-form-urlencoded"; "multipart/form-data"; "text/plain"
+
+<tr><th>`enterkeyhint!a
+<td>`_$H
+<td>
+<kbd>Enter</kbd> ~Key動作の選定-用~hint
+◎
+Hint for selecting an enter key action
+<td>
+`enter$v | `done$v | `go$v | `next$v | `previous$v | `~search0$v | `send$v
+
+<tr><th>`for!a
+<td>`label$eA
+<td>
+~labelを~form~controlに結付ける
+◎
+Associate the label with form control
+<td>`~ID$ *
+◎
+ID*
+
+<tr><th>`for!a
+<td>`output$eA
+<td>
+出力を計算させた~controlたちを指定する
+◎
+Specifies controls from which the output was calculated
+<td>
+各~tokenが~IDを与えるような，`空白区切りの一意な~token集合$ *
+◎
+Unordered set of unique space-separated tokens consisting of IDs*
+
+<tr><th>`form!a
+<td>`button$eA | `fieldset$eA | `input$eA | `object$eA | `output$eA | `select$eA | `textarea$eA | <a href="~HTMLforms#attr-fae-form">~formに所有され得る~custom要素</a>
+<td>
+この要素を所有させる `form$e 要素
+◎
+Associates the element with a form element
+<td>
+`~ID$ *
+◎
+ID*
+
+<tr><th>`formaction!a
+<td>`button$eA | `input$eA
+<td>
+`~form提出$用に利用する`~URL$
+◎
+URL to use for form submission
+<td>
+`前後~空白~可の妥当かつ空でない~URL$
+◎
+Valid non-empty URL potentially surrounded by spaces
+
+<tr><th>`formenctype!a
+<td>`button$eA | `input$eA
+<td>
+`~form提出$用に利用する~entry~list符号化法の種別
+◎
+Entry list encoding type to use for form submission
+<td>
+`application/x-www-form-urlencoded$v | `multipart/form-data$v | `text/plain$v
+◎
+"application/x-www-form-urlencoded"; "multipart/form-data"; "text/plain"
+
+<tr><th>`formmethod!a
+<td>`button$eA | `input$eA
+<td>
+`~form提出$用に利用する~method（等）
+◎
+Variant to use for form submission
+<td>
+`get$v | `post$v | `dialog$v
+◎
+"GET"; "POST"; "dialog"
+
+<tr><th>`formnovalidate!a
+<td>`button$eA | `input$eA
+<td>
+`~form提出$に際し，~form~control検証を迂回する
+◎
+Bypass form control validation for form submission
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`formtarget!a
+<td>`button$eA | `input$eA
+<td>
+`~form提出$用に利用する`閲覧文脈$
+◎
+Browsing context for form submission
+<td>
+`妥当な閲覧文脈~名または~keyword$
+◎
+Valid browsing context name or keyword
+
+<tr><th>`headers!a
+<td>`td$eA | `th$eA
+<td>
+この~cellが標的にする見出cellたち
+◎
+The header cells for this cell
+<td>
+各~tokenが~IDを与えるような，`空白区切りの一意な~token集合$ *
+◎
+Unordered set of unique space-separated tokens consisting of IDs*
+
+<tr><th>`height!a
+<td>`canvas$eA | `embed$eA | `iframe$eA | `img$eA | `input$eA | `object$eA | `video$eA
+<td>
+縦方向~寸法
+◎
+Vertical dimension
+<td>
+`妥当な負でない整数$
+◎
+Valid non-negative integer
+
+<tr><th>`hidden!a
+<td>`_$H
+<td>
+要素は関連するかどうか
+◎
+Whether the element is relevant
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`high!a
+<td>`meter$eA
+<td>
+高域の下限
+◎
+Low limit of high range
+<td>
+`妥当な浮動小数点数$ *
+◎
+Valid floating-point number*
+
+<tr><th>`href!a
+<td>`a$eA | `area$eA
+<td>
+`~hyperlink$の~address
+◎
+Address of the hyperlink
+<td>
+`前後~空白~可の妥当な~URL$
+◎
+Valid URL potentially surrounded by spaces
+
+<tr><th>`href!a
+<td>`link$eA
+<td>
+`~hyperlink$の~address
+◎
+Address of the hyperlink
+<td>
+`前後~空白~可の妥当かつ空でない~URL$
+◎
+Valid non-empty URL potentially surrounded by spaces
+
+<tr><th>`href!a
+<td>`base$eA
+<td>
+`文書~基底~URL$
+◎
+Document base URL
+<td>
+`前後~空白~可の妥当な~URL$
+◎
+Valid URL potentially surrounded by spaces
+
+<tr><th>`hreflang!a
+<td>`a$eA | `link$eA
+<td>
+~link先~資源の言語
+◎
+Language of the linked resource
+<td>
+妥当な BCP 47 言語~tag
+◎
+Valid BCP 47 language tag
+
+<tr><th>`http-equiv!a
+<td>`meta$eA
+<td>
+~pragma指令
+◎
+Pragma directive
+<td>
+`content-type$v | `default-style$v | `refresh$v | `x-ua-compatible$v | `content-security-policy$v
+◎
+"content-type"; "default-style"; "refresh"; "x-ua-compatible"; "content-security-policy"
+
+<tr><th>`id!a
+<td>`_$H
+<td>
+要素の`~ID$
+◎
+The element's ID
+<td>
+`~text$av *
+◎
+Text*
+
+<tr><th>`imagesizes!a
+<td>`link$eA
+<td>
+種々の~page~layout用の画像~size（
+<code class="literal">`rel$A="`preload$v"</code>
+用）
+◎
+Image sizes for different page layouts (for rel="preload")
+<td>
+`妥当な~source~size~list$
+◎
+Valid source size list
+
+<tr><th>`imagesrcset!a
+<td>`link$eA
+<td>
+種々の状況（例：高解像度~display, 狭い~monitor, 等々）に応じて利用する一連の画像（
+<code class="literal">`rel$A="`preload$v"</code>
+用）
+◎
+Images to use in different situations, e.g., high-resolution displays, small monitors, etc. (for rel="preload")
+<td>
+一連の`画像~候補~文字列$からなる，~comma区切りの~list
+◎
+Comma-separated list of image candidate strings
+
+<tr><th>`inputmode!a
+<td>`_$H
+<td>
+入力~modal性を選択するための~hint
+◎
+Hint for selecting an input modality
+<td>
+`~noneI$v | `text$v | `tel$v | `email$v | `url$v | `numeric$v | `decimal$v | `search$v
+◎
+"none"; "text"; "tel"; "email"; "url"; "numeric"; "decimal"; "search"
+
+<tr><th>`integrity!a
+<td>`link$eA | `script$eA
+<td>
+<cite>Subresource Integrity</cite>（下位資源の完全性）検査に利用される完全性~metadata
+`SRI$r
+◎
+Integrity metadata used in Subresource Integrity checks [SRI]
+<td>
+`~text$av
+◎
+Text
+
+<tr><th>`is!a
+<td>`_$H
+<td>
+`~custom化された組込みの要素$を作成する
+◎
+Creates a customized built-in element
+<td>
+定義された`~custom化された組込みの要素$の`妥当な~custom要素~名$
+◎
+Valid custom element name of a defined customized built-in element
+
+<tr><th>`ismap!a
+<td>`img$eA
+<td>
+この画像は~server側 画像~mapかどうか
+◎
+Whether the image is a server-side image map
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`itemid!a
+<td>`_$H
+<td>
+~microdata~item用の`大域的~識別子$
+◎
+Global identifier for a microdata item
+<td>
+`前後~空白~可の妥当な~URL$
+◎
+Valid URL potentially surrounded by spaces
+
+<tr><th>`itemprop!a
+<td>`_$H
+<td>
+~microdata~itemの`~prop名$
+◎
+Property names of a microdata item
+<td>
+各~tokenが［
+`妥当な絶対~URL$ ／ `定義-済み~prop名$ ／ ~text
+］を与えるような，`空白区切りの一意な~token集合$ *
+◎
+Unordered set of unique space-separated tokens consisting of valid absolute URLs, defined property names, or text*
+
+<tr><th>`itemref!a
+<td>`_$H
+<td>
+`参照-$先の要素
+◎
+Referenced elements
+<td>
+各~tokenが~IDを与えるような，`空白区切りの一意な~token集合$ *
+◎
+Unordered set of unique space-separated tokens consisting of IDs*
+
+<tr><th>`itemscope!a
+<td>`_$H
+<td>
+~microdata~itemを導入する
+◎
+Introduces a microdata item
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`itemtype!a
+<td>`_$H
+<td>
+~microdata~itemの`~item型$
+◎
+Item types of a microdata item
+<td>
+各~tokenが`妥当な絶対~URL$を与えるような，`空白区切りの一意な~token集合$ *
+◎
+Unordered set of unique space-separated tokens consisting of valid absolute URLs*
+
+<tr><th>`kind!a
+<td>`track$eA
+<td>
+~text~trackの種別
+◎
+The type of text track
+<td>
+`subtitles$v | `captions$v | `descriptions$v | `chapters$v | `~metadata0$v
+◎
+"subtitles"; "captions"; "descriptions"; "chapters"; "metadata"
+
+<tr><th>`label!a
+<td>`optgroup$eA | `option$eA | `track$eA
+<td>
+利用者から可視な~label
+◎
+User-visible label
+<td>
+`~text$av
+◎
+Text
+
+<tr><th>`lang!a
+<td>`_$H
+<td>
+要素の`言語$
+◎
+Language of the element
+<td>
+妥当な BCP 47 言語~tag | 空~文字列
+◎
+Valid BCP 47 language tag or the empty string
+
+<tr><th>`list!a
+<td>`input$eA
+<td>
+一連の自動補完~選択肢からなる~list
+◎
+List of autocomplete options
+<td>
+`~ID$ *
+◎
+ID*
+
+<tr><th>`loop!a
+<td>`audio$eA | `video$eA
+<td>
+この`~media資源$を~loopするかどうか
+◎
+Whether to loop the media resource
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`low!a
+<td>`meter$eA
+<td>
+低域の上限
+◎
+High limit of low range
+<td>
+`妥当な浮動小数点数$ *
+◎
+Valid floating-point number*
+
+<tr><th>`manifest!a
+<td>`html$eA
+<td>
+`~app~cache~manifest$
+◎
+Application cache manifest
+<td>
+`前後~空白~可の妥当かつ空でない~URL$
+◎
+Valid non-empty URL potentially surrounded by spaces
+
+<tr><th>`max!a
+<td>`input$eA
+<td>
+最大値
+◎
+Maximum value
+<td>
+文脈依存 *
+◎
+Varies*
+
+<tr><th>`max!a
+<td>`meter$eA | `progress$eA
+<td>
+範囲の上界
+◎
+Upper bound of range
+<td>
+`妥当な浮動小数点数$ *
+◎
+Valid floating-point number*
+
+<tr><th>`maxlength!a
+<td>`input$eA | `textarea$eA
+<td>
+値の最大`長さ$
+◎
+Maximum length of value
+<td>
+`妥当な負でない整数$
+◎
+Valid non-negative integer
+
+<tr><th>`media!a
+<td>`link$eA | `source$eA | `style$eA
+<td>
+適用-可能な~media
+◎
+Applicable media
+<td>
+`妥当な~media~query~list$
+◎
+Valid media query list
+
+<tr><th>`method!a
+<td>`form$eA
+<td>
+`~form提出$用に利用する~method（等）
+◎
+Variant to use for form submission
+<td>
+`get$v | `post$v | `dialog$v
+◎
+"GET"; "POST"; "dialog"
+
+<tr><th>`min!a
+<td>`input$eA
+<td>
+最小値
+◎
+Minimum value
+<td>
+文脈依存 *
+◎
+Varies*
+
+<tr><th>`min!a
+<td>`meter$eA
+<td>
+範囲の下界
+◎
+Lower bound of range
+<td>
+`妥当な浮動小数点数$ *
+◎
+Valid floating-point number*
+
+<tr><th>`minlength!a
+<td>`input$eA | `textarea$eA
+<td>
+値の最小`長さ$
+◎
+Minimum length of value
+<td>
+`妥当な負でない整数$
+◎
+Valid non-negative integer
+
+<tr><th>`multiple!a
+<td>`input$eA | `select$eA
+<td>
+複数の値を許容するかどうか
+◎
+Whether to allow multiple values
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`muted!a
+<td>`audio$eA | `video$eA
+<td>
+この`~media資源$は既定で~muteするかどうか
+◎
+Whether to mute the media resource by default
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`name!a
+<td>`button$eA | `fieldset$eA | `input$eA | `output$eA | `select$eA | `textarea$eA | <a href="~HTMLforms#attr-fe-name">~formに所有され得る~custom要素</a>
+<td>
+［
+`~form提出$用に ／ `form.elements$m ~APIにおいて
+］利用する，要素の名前。
+◎
+Name of the element to use for form submission and in the form.elements API
+<td>
+`~text$av *
+◎
+Text*
+
+<tr><th>`name!a
+<td>`form$eA
+<td>
+`document.forms$m ~APIにおいて利用する，~formの名前
+◎
+Name of form to use in the document.forms API
+<td>
+`~text$av *
+◎
+Text*
+
+<tr><th>`name!a
+<td>`iframe$eA | `object$eA
+<td>
+`入子の閲覧文脈$の名前
+◎
+Name of nested browsing context
+<td>
+`妥当な閲覧文脈~名または~keyword$
+◎
+Valid browsing context name or keyword
+
+<tr><th>`name!a
+<td>`map$eA
+<td>
+`usemap$A 属性から`参照-$する`画像~map$の名前
+◎
+Name of image map to reference from the usemap attribute
+<td>
+`~text$av *
+◎
+Text*
+
+<tr><th>`name!a
+<td>`meta$eA
+<td>
+~metadata名前
+◎
+Metadata name
+<td>
+`~text$av *
+◎
+Text*
+
+<tr><th>`name!a
+<td>`param$eA
+<td>
+~parameterの名前
+◎
+Name of parameter
+<td>
+`~text$av
+◎
+Text
+
+<tr><th>`name!a
+<td>`slot$eA
+<td>
+~shadow~tree~slotの名前
+◎
+Name of shadow tree slot
+<td>
+`~text$av
+◎
+Text
+
+<tr><th>`nomodule!a
+<td>`script$eA
+<td>
+`~module~script$を~supportする~UAにおける実行を防止する
+◎
+Prevents execution in user agents that support module scripts
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`nonce!a
+<td>`_$H
+<td>
+暗号用~nonce
+—
+<cite>Content Security Policy</cite> 検査 `CSP$r に利用される
+◎
+Cryptographic nonce used in Content Security Policy checks [CSP]
+<td>
+`~text$av
+◎
+Text
+
+<tr><th>`novalidate!a
+<td>`form$eA
+<td>
+`~form提出$に際し，~form~control検証を迂回する
+◎
+Bypass form control validation for form submission
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`open!a
+<td>`details$eA
+<td>
+この詳細は可視かどうか
+◎
+Whether the details are visible
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`open!a
+<td>`dialog$eA
+<td>
+この~dialog~boxは示されているかどうか
+◎
+Whether the dialog box is showing
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`optimum!a
+<td>`meter$eA
+<td>
+この~gaugeにおける最適~値
+◎
+Optimum value in gauge
+<td>
+`妥当な浮動小数点数$ *
+◎
+Valid floating-point number*
+
+<tr><th>`pattern!a
+<td>`input$eA
+<td>
+この~form~controlの値と照合される~pattern
+◎
+Pattern to be matched by the form control's value
+<td>
+~JS `Pattern$P 生成規則に合致するような，正規表現
+◎
+Regular expression matching the JavaScript Pattern production
+
+<tr><th>`ping!a
+<td>`a$eA | `area$eA
+<td>
+~ping先の`~URL$
+◎
+URLs to ping
+<td>
+一連の`妥当かつ空でない~URL$からなる，`空白区切りの~token集合$
+◎
+Set of space-separated tokens consisting of valid non-empty URLs
+
+<tr><th>`placeholder!a
+<td>`input$eA | `textarea$eA
+<td>
+この~form~controlの中に配置されることになる，利用者から可視な~label
+◎
+User-visible label to be placed within the form control
+<td>
+`~text$av *
+◎
+Text*
+
+<tr><th>`playsinline!a
+<td>`video$eA
+<td>
+要素の再生~区画の中に動画~内容を表示するよう，~UAに促す
+◎
+Encourage the user agent to display video content within the element's playback area
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`poster!a
+<td>`video$eA
+<td>
+動画~再生に先立って先立って示す表紙~frame
+◎
+Poster frame to show prior to video playback
+<td>
+`前後~空白~可の妥当かつ空でない~URL$
+◎
+Valid non-empty URL potentially surrounded by spaces
+
+<tr><th>`preload!a
+<td>`audio$eA | `video$eA
+<td>
+この`~media資源$に必要になりそうな~buffer量についての~hint
+◎
+Hints how much buffering the media resource will likely need
+<td>
+`none$v | `metadata$v | `~auto0$v
+◎
+"none"; "metadata"; "auto"
+
+<tr><th>`readonly!a
+<td>`input$eA | `textarea$eA
+<td>
+利用者が値を編集できるようにするかどうか
+◎
+Whether to allow the value to be edited by the user
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`readonly!a
+<td><a href="~HEcustom#attr-face-readonly">~formに所有され得る~custom要素</a>
+<td>
+`willValidate$m, および［
+当の~custom要素の作者により追加される挙動
+］に影響する。
+◎
+Affects willValidate, plus any behavior added by the custom element author
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`referrerpolicy!a
+<td>`a$eA | `area$eA | `iframe$eA | `img$eA | `link$eA | `script$eA
+<td>
+要素により起動される`~fetch$用の`~referrer施策$
+◎
+Referrer policy for fetches initiated by the element
+<td>
+`~referrer施策$
+◎
+Referrer policy
+
+<tr><th>`rel!a
+<td>`a$eA | `area$eA
+<td>
+文書における この`~hyperlink$の所在と, 行先の資源との関係性
+◎
+Relationship between the location in the document containing the hyperlink and the destination resource
+<td>
+`空白区切りの一意な~token集合$ *
+◎
+Unordered set of unique space-separated tokens*
+
+<tr><th>`rel!a
+<td>`link$eA
+<td>
+この`~hyperlink$を包含している文書と, 行先の資源との関係性
+◎
+Relationship between the document containing the hyperlink and the destination resource
+<td>
+`空白区切りの一意な~token集合$ *
+◎
+Unordered set of unique space-separated tokens*
+
+<tr><th>`required!a
+<td>`input$eA | `select$eA | `textarea$eA
+<td>
+この~controlは`~form提出$用に必須かどうか
+◎
+Whether the control is required for form submission
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`reversed!a
+<td>`ol$eA
+<td>
+この~listを逆順に付番する
+◎
+Number the list backwards
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`rows!a
+<td>`textarea$eA
+<td>
+示す行~数
+◎
+Number of lines to show
+<td>
+0 でない`妥当な負でない整数$
+◎
+Valid non-negative integer greater than zero
+
+<tr><th>`rowspan!a
+<td>`td$eA | `th$eA
+<td>
+この~cellが~spanする~row数
+◎
+Number of rows that the cell is to span
+<td>
+`妥当な負でない整数$
+◎
+Valid non-negative integer
+
+<tr><th>`sandbox!a
+<td>`iframe$eA
+<td>
+入子の内容~用の~security規則
+◎
+Security rules for nested content
+<td>
+各~tokenが 次のいずれかであるような，`空白区切りの一意な~token集合$（大小無視）：
+`allow-downloads$v【この訳による補完】,
+`allow-forms$v,
+`allow-modals$v,
+`allow-orientation-lock$v,
+`allow-pointer-lock$v,
+`allow-popups$v,
+`allow-popups-to-escape-sandbox$v,
+`allow-presentation$v,
+`allow-same-origin$v,
+`allow-scripts$v,
+`allow-top-navigation$v
+◎
+Unordered set of unique space-separated tokens, ASCII case-insensitive, consisting of "allow-forms", "allow-modals", "allow-orientation-lock", "allow-pointer-lock", "allow-popups", "allow-popups-to-escape-sandbox", "allow-presentation", "allow-same-origin", "allow-scripts" and "allow-top-navigation"
+
+<tr><th>`scope!a
+<td>`th$eA
+<td>
+この見出cellが どの~cellに適用されるかを指定する
+◎
+Specifies which cells the header cell applies to
+<td>
+`row$v | `col$v | `rowgroup$v | `colgroup$v
+◎
+"row"; "col"; "rowgroup"; "colgroup"
+
+<tr><th>`selected!a
+<td>`option$eA
+<td>
+この選択肢は既定で選択されるかどうか
+◎
+Whether the option is selected by default
+<td>
+`真偽-属性$
+◎
+Boolean attribute
+
+<tr><th>`shape!a
+<td>`area$eA
+<td>
+`画像~map$内に作成される図形の種類
+◎
+The kind of shape to be created in an image map
+<td>
+`circle$v | `default$v | `poly$v | `rect$v
+◎
+"circle"; "default"; "poly"; "rect"
+
+<tr><th>`size!a
+<td>`input$eA | `select$eA
+<td>
+この~controlの~size
+◎
+Size of the control
+<td>
+0 でない`妥当な負でない整数$
+◎
+Valid non-negative integer greater than zero
+
+<tr><th>`sizes!a
+<td>`link$eA
+<td>
+~iconの~sizeたち（ `rel$A="`icon$v" 用）
+◎
+Sizes of the icons (for rel="icon")
+<td>
+各~tokenが~sizeを与えるような，`空白区切りの一意な~token集合$（大小無視） *
+◎
+Unordered set of unique space-separated tokens, ASCII case-insensitive, consisting of sizes*
+
+<tr><th>`sizes!a
+<td>`img$eA | `source$eA
+<td>
+種々の~page~layout用の画像~size
+◎
+Image sizes for different page layouts
+<td>
+`妥当な~source~size~list$
+◎
+Valid source size list
+
+<tr><th>`slot!a
+<td>`_$H
+<td>
+要素に欲される~slot
+◎
+The element's desired slot
+<td>
+`~text$av
+◎
+Text
+
+<tr><th>`span!a
+<td>`col$eA | `colgroup$eA
+<td>
+要素が~spanする~column数
+◎
+Number of columns spanned by the element
+<td>
+0 でない`妥当な負でない整数$
+◎
+Valid non-negative integer greater than zero
+
+<tr><th>`spellcheck!a
+<td>`_$H
+<td>
+要素における綴りや文法は検査されるかどうか
+◎
+Whether the element is to have its spelling and grammar checked
+<td>
+`true^v | `false^v
+◎
+"true"; "false"
+
+<tr><th>`src!a
+<td>`audio$eA | `embed$eA | `iframe$eA | `img$eA | `input$eA | `script$eA | `source$eA | `track$eA | `video$eA
+<td>
+資源の~address
+◎
+Address of the resource
+<td>
+`前後~空白~可の妥当かつ空でない~URL$
+◎
+Valid non-empty URL potentially surrounded by spaces
+
+<tr><th>`srcdoc!a
+<td>`iframe$eA
+<td>
+`iframe$e 内に具現化する文書
+◎
+A document to render in the iframe
+<td>
+`~iframe-srcdoc文書$の~source *
+◎
+The source of an iframe srcdoc document*
+
+<tr><th>`srclang!a
+<td>`track$eA
+<td>
+この~text~trackの言語
+◎
+Language of the text track
+<td>
+妥当な BCP 47 言語~tag
+◎
+Valid BCP 47 language tag
+
+<tr><th>`srcset!a
+<td>`img$eA | `source$eA
+<td>
+種々の状況（例：高解像度~display, 狭い~monitor, 等々）に応じて利用する一連の画像
+◎
+Images to use in different situations, e.g., high-resolution displays, small monitors, etc.
+<td>
+一連の`画像~候補~文字列$からなる，~comma区切りの~list
+◎
+Comma-separated list of image candidate strings
+
+<tr><th>`start!a
+<td>`ol$eA
+<td>
+この~listの`開始値$
+◎
+Starting value of the list
+<td>
+`妥当な整数$
+◎
+Valid integer
+
+<tr><th>`step!a
+<td>`input$eA
+<td>
+この~form~controlの値がとり得る粒度
+◎
+Granularity to be matched by the form control's value
+<td>
+0 でない`妥当な浮動小数点数$ | `any^v
+◎
+Valid floating-point number greater than zero, or "any"
+
+<tr><th>`style!a
+<td>`_$H
+<td>
+呈示~用の／整形~用の指示書き
+◎
+Presentational and formatting instructions
+<td>
+一連の~CSS宣言 *
+◎
+CSS declarations*
+
+<tr><th>`tabindex!a
+<td>`_$H
+<td>
+要素は［
+`~focus可能$になるかどうか,
+`逐次的に~focus可能$になるかどうか
+］, および
+`逐次的~focus~navi$の目的における要素の相対-順序
+◎
+Whether the element is focusable and sequentially focusable, and the relative order of the element for the purposes of sequential focus navigation
+<td>
+`妥当な整数$
+◎
+Valid integer
+
+<tr><th>`target!a
+<td>`a$eA | `area$eA
+<td>
+［
+`~hyperlink$ ／ `~navi$
+］に利用する`閲覧文脈$
+◎
+Browsing context for hyperlink navigation
+<td>
+`妥当な閲覧文脈~名または~keyword$
+◎
+Valid browsing context name or keyword
+
+<tr><th>`target!a
+<td>`base$eA
+<td>
+［
+`~hyperlink$ ／ `~navi$ ／ `~form提出$
+］に利用する既定の`閲覧文脈$
+◎
+Default browsing context for hyperlink navigation and form submission
+<td>
+`妥当な閲覧文脈~名または~keyword$
+◎
+Valid browsing context name or keyword
+
+<tr><th>`target!a
+<td>`form$eA
+<td>
+`~form提出$用に利用する`閲覧文脈$
+◎
+Browsing context for form submission
+<td>
+`妥当な閲覧文脈~名または~keyword$
+◎
+Valid browsing context name or keyword
+
+<tr><th>`title!a
+<td>`_$H
+<td>
+要素~用の助言的~情報
+◎
+Advisory information for the element
+<td>
+`~text$av
+◎
+Text
+
+<tr><th>`title!a
+<td>`abbr$eA | `dfn$eA
+<td>
+全部的な用語, または 略称の展開形
+◎
+Full term or expansion of abbreviation
+<td>
+`~text$av
+◎
+Text
+
+<tr><th>`title!a
+<td>`input$eA
+<td>
+~patternについての記述（ `pattern$A 属性と併用するときの）
+◎
+Description of pattern (when used with pattern attribute)
+<td>
+`~text$av
+◎
+Text
+
+<tr><th>`title!a
+<td>`link$eA
+<td>
+この~linkの~title
+◎
+Title of the link
+<td>
+`~text$av
+◎
+Text
+
+<tr><th>`title!a
+<td>`link$eA | `style$eA
+<td>
+`~CSS~stylesheet集合~名$
+◎
+CSS style sheet set name
+<td>
+`~text$av
+◎
+Text
+
+<tr><th>`translate!a
+<td>`_$H
+<td>
+要素は、~pageが地域化されるときに翻訳されるかどうか
+◎
+Whether the element is to be translated when the page is localized
+<td>
+`yes^v | `no^v
+◎
+"yes"; "no"
+
+<tr><th>`type!a
+<td>`a$eA | `link$eA
+<td>
+参照-先の資源の型についての~hint
+◎
+Hint for the type of the referenced resource
+<td>
+`妥当な~MIME型~文字列$
+◎
+Valid MIME type string
+
+<tr><th>`type!a
+<td>`button$eA
+<td>
+~buttonの種別
+◎
+Type of button
+<td>
+`submit$v | `reset$v | `button$v
+◎
+"submit"; "reset"; "button"
+
+<tr><th>`type!a
+<td>`embed$eA | `object$eA | `source$eA
+<td>
+埋込d資源の型
+◎
+Type of embedded resource
+<td>
+`妥当な~MIME型~文字列$
+◎
+Valid MIME type string
+
+<tr><th>`type!a
+<td>`input$eA
+<td>
+~form~controlの種別
+◎
+Type of form control
+<td>
+各種
+<a href="~HEinput#attr-input-type">`input^e `type^A ~keyword</a>
+◎
+input type keyword
+
+<tr><th>`type!a
+<td>`ol$eA
+<td>
+~list~markerの種類
+◎
+Kind of list marker
+<td>
+`1$v | `a$v | `A$v | `i$v | `I$v
+◎
+"1"; "a"; "A"; "i"; "I"
+
+<tr><th>`type!a
+<td>`script$eA
+<td>
+~scriptの種別
+◎
+Type of script
+<td>
+`module^v | `~JS~MIME型に~essence合致-$しない`妥当な~MIME型~文字列$
+◎
+"module"; a valid MIME type string that is not a JavaScript MIME type essence match
+
+<tr><th>`usemap!a
+<td>`img$eA | `object$eA
+<td>
+利用する`画像~map$の名前
+◎
+Name of image map to use
+<td>
+`妥当な~hash名~参照-$ *
+◎
+Valid hash-name reference*
+
+<tr><th>`value!a
+<td>`button$eA | `option$eA
+<td>
+`~form提出$用に利用する値
+◎
+Value to be used for form submission
+<td>
+`~text$av
+◎
+Text
+
+<tr><th>`value!a
+<td>`data$eA
+<td>
+機械読取可能な値
+◎
+Machine-readable value
+<td>
+`~text$av *
+◎
+Text*
+
+<tr><th>`value!a
+<td>`input$eA
+<td>
+この~form~controlの値
+◎
+Value of the form control
+<td>
+文脈依存 *
+◎
+Varies*
+
+<tr><th>`value!a
+<td>`li$eA
+<td>
+この~list~itemの`序数~値$
+◎
+Ordinal value of the list item
+<td>
+`妥当な整数$
+◎
+Valid integer
+
+<tr><th>`value!a
+<td>`meter$eA | `progress$eA
+<td>
+要素の現在の値
+◎
+Current value of the element
+<td>
+`妥当な浮動小数点数$
+◎
+Valid floating-point number
+
+<tr><th>`value!a
+<td>`param$eA
+<td>
+~parameterの値
+◎
+Value of parameter
+<td>
+`~text$av
+◎
+Text
+
+<tr><th>`width!a
+<td>`canvas$eA | `embed$eA | `iframe$eA | `img$eA | `input$eA | `object$eA | `video$eA
+<td>
+横方向~寸法
+◎
+Horizontal dimension
+<td>
+`妥当な負でない整数$
+◎
+Valid non-negative integer
+
+<tr><th>`wrap!a
+<td>`textarea$eA
+<td>
+`~form提出$時に，~form~controlの値はどう折返されるか
+◎
+How the value of the form control is to be wrapped for form submission
+<td>
+`soft$v | `hard$v
+◎
+"soft"; "hard"
+</tbody></table>
+
+<p><small>
+各~cell内の~asterisk（ * ）は、実際の規則は そこに指示されるものより複雑であることを指示する。
+◎
+An asterisk (*) in a cell indicates that the actual rules are more complicated than indicated in the table above.
+</small></p>
+
+<h3>~event~handler内容~属性</h3>
+
+<p class="trans-note">【
+以下，この節の~event~handler内容~属性の和訳は、
+<a href="~HTMLindex#attributes-3">別ページ</a>
+にて。
+】</p>
+
+		</section>
+		<section id="element-interfaces">
+<h2 title="Element Interfaces">要素~interface</h2>
+
+<p class="trans-note">【
+この節の和訳は、
+<a href="~HTMLindex#element-interfaces">別ページ</a>
+にて。
+】</p>
+
+		</section>
+		<section id="all-interfaces">
+<h2 title="All Interfaces">すべての~interface</h2>
+
+<p class="trans-note">【
+この節の和訳は、
+<a href="~HTMLindex#all-interfaces">別ページ</a>
+にて。
+】</p>
+
+		</section>
+		<section id="events-2">
+<h2 title="Events">~event</h2>
+
+<p class="trans-note">【
+この節の和訳は、
+<a href="~HTMLindex#events-2">別ページ</a>
+にて。
+】</p>
+		</section>
+		<section id="mime-types-2">
+<h2 title="MIME Types">MIME 型</h2>
+
+<p class="trans-note">【
+この節の和訳は、
+<a href="~HTMLindex#mime-types-2">別ページ</a>
+にて。
+】</p>
+
+		</section>
+</main>
+

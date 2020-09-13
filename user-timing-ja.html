@@ -1,0 +1,1431 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>User Timing Level 3 — （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-w3c.css" type="text/css" />
+<style>
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		generate: expand,
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w~\-一-鿆]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#bib-${key.toLowerCase()}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`
+	break;
+case 'mc':
+	text = 'constructor';
+	klass = 'm';
+	break;
+case 'm':
+case 'm1':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	if(klass==='m1') { 
+		href = link_map[`${ctx_ifc}.${key}`];
+	}
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+
+
+</script>
+
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:User Timing Level 3
+spec_date:2020-08-18
+trans_update:2020-08-19
+source_checked:180222
+page_state_key:TIMING
+original_url:https://w3c.github.io/user-timing/
+	abbr_url:USER-TIMING
+spec_status:ED
+ref_id_prefix:bib-
+ref_id_lowercase:true
+conformance:w3c
+copyright:2019,permissive
+	trans_1st_pub:2016-02-24
+
+
+●●class_map
+E:error
+css:css
+jA:abstract
+jv:js-value
+
+●●tag_map
+I:code
+E:code
+msO:code
+mkO:code
+mS:code
+mK:code
+m:code
+m1:code
+	m:code
+c:code
+jA:span
+jv:code
+
+●●original_id_map
+
+●●mdn_urls
+dom-performancemark:API/PerformanceMark
+dom-performancemeasure:API/PerformanceMeasure
+	dom-performancemarkoptions:API/PerformanceMarkOptions
+	dom-performancemeasureoptions:API/PerformanceMeasureOptions
+dom-performance-mark:API/Performance/mark
+dom-performance-clearmarks:API/Performance/clearMarks
+dom-performance-measure:API/Performance/measure
+dom-performance-clearmeasures:API/Performance/clearMeasures
+
+●●link_map
+
+Exposed:~WEBIDLjs#Exposed
+	throw:~WEBIDL#dfn-throw
+
+E.InvalidAccessError:~WEBIDL#invalidaccesserror
+E.SyntaxError:~WEBIDL#syntaxerror
+E.TypeError:~WEBIDL#exceptiondef-typeerror
+
+any:~WEBIDL#idl-any
+undefined:~WEBIDL#idl-undefined
+DOMString:~WEBIDL#idl-DOMString
+DOMHighResTimeStamp:~HRTIME#dom-domhighrestimestamp
+
+I.DOMString:~WEBIDL#idl-DOMString
+I.Window:~WINDOW#window
+I.Performance:~HRTIME#dfn-performance
+I.PerformanceMark:#dom-performancemark
+I.PerformanceMeasure:#dom-performancemeasure
+I.PerformanceObserver:~TIMELINE#the-performanceobserver-interface
+
+I.PerformanceMarkOptions:#dom-performancemarkoptions
+I.PerformanceMeasureOptions:#dom-performancemeasureoptions
+
+I.DOMHighResTimeStamp:~HRTIME#dom-domhighrestimestamp
+	~HRTIME#idl-def-domhighrestimestamp
+I.PerformanceEntry:~TIMELINE#dom-performanceentry
+
+	＊level 1
+I.PerformanceTiming:~NAV-TIMING#dom-performancetiming
+	https://www.w3.org/TR/navigation-timing/#performancetiming
+I.PerformanceNavigationTiming:~NAV-TIMING#dom-performancenavigationtiming
+
+m.PerformanceMark:#dfn-performancemark-constructor
+
+mK.detail:#dom-performancemark-detail
+mkO.detail:#dom-performancemarkoptions-detail
+mkO.startTime:#dom-performancemarkoptions-starttime
+
+mS.detail:#dom-performancemeasure-detail
+msO.duration:#dom-performancemeasureoptions-duration
+msO.end:#dom-performancemeasureoptions-end
+msO.start:#dom-performancemeasureoptions-start
+msO.detail:#dom-performancemeasureoptions-detail
+
+m.name:~TIMELINE#dom-performanceentry-name
+m.entryType:~TIMELINE#dom-performanceentry-entrytype
+m.startTime:~TIMELINE#dom-performanceentry-starttime
+m.duration:~TIMELINE#dom-performanceentry-duration
+
+m.navigationStart:~NAV-TIMING#dom-performancetiming-navigationstart
+m.mark:#dom-performance-mark
+m.clearMarks:#dom-performance-clearmarks
+m.measure:#dom-performance-measure
+m.clearMeasures:#dom-performance-clearmeasures
+m.getEntries:~TIMELINE#dom-performance-getentries
+m.getEntriesByType:~TIMELINE#dom-performance-getEntriesbytype
+m.timeStamp:~DOM4#dom-event-timestamp
+
+m.supportedEntryTypes:~TIMELINE#dom-performanceobserver-supportedentrytypes
+
+jA.StructuredSerialize:~HTMLcloning#structuredserialize
+jA.StructuredDeserialize:~HTMLcloning#structureddeserialize
+
+処理能~entry~buffer:~TIMELINE#dfn-performance-entry-buffer
+処理能~entryを~queueする:~TIMELINE#dfn-queue-a-performanceentry
+
+現在の高分解能~時刻:~HRTIME#dfn-current-high-resolution-time
+	m.now:~HRTIME#dom-performance-now
+
+	Standard Mark Name:#ut-standard-mark-names
+
+処理能時列線:~TIMELINE#dfn-performance-timeline
+	#performance-timeline
+~markを時刻印に変換する:#dfn-convert-a-mark-to-a-timestamp
+名前を時刻印に変換する:#dfn-convert-a-name-to-a-timestamp
+
+
+map.空:~INFRA#map-is-empty
+
+大域~obj:~WAPI#global-object
+現在の大域~obj:~WAPI#current-global-object
+現在の~realm:~WAPI#concept-current-everything
+~Realm:~WAPI#concept-global-object-realm
+関連な~Realm:~WAPI#concept-relevant-realm
+	読専:~WEBIDL#dfn-read-only
+
+●●words_table1
+
+●●words_table
+
+
+mark::::マーク
+時列線:timeline::~::タイムライン
+処理能時列線:Performance Timeline::~::パフォーマンスタイムライン
+時間:time::~
+時刻:time::~
+測定:measure::~
+	計測:measure
+計量:metric:~
+単調増加-:monotonic に increase:~
+近過去:recent::~
+高分解能:high resolution::~
+読取れる:readできる:読み取れる
+	高-:high
+	%始端~時刻:startTime
+	%終端~時刻:endTime
+
+	●仕様
+特性:characteristics:~
+計画:plan:~
+log::::ログ
+活動:activity:~
+解析:analytics:~
+
+	最も適する best suited
+	とする:suppose
+	たい:want
+	retrieval
+	~MINUS:subtracting
+	取りこぼす:miss
+	%component:component
+	-:occurrence
+	-:match
+	-:found
+
+
+●●ref_normative
+
+[HR-TIME-2]
+    High Resolution Time Level 2. Ilya Grigorik. W3C. 21 November 2019. W3C Recommendation. URL: https://www.w3.org/TR/hr-time-2/
+[HTML]
+    HTML Standard. Anne van Kesteren; Domenic Denicola; Ian Hickson; Philip Jägenstedt; Simon Pieters. WHATWG. Living Standard. URL: https://html.spec.whatwg.org/multipage/
+[INFRA]
+    Infra Standard. Anne van Kesteren; Domenic Denicola. WHATWG. Living Standard. URL: https://infra.spec.whatwg.org/
+[NAVIGATION-TIMING]
+    Navigation Timing. Zhiheng Wang. W3C. 17 December 2012. W3C Recommendation. URL: https://www.w3.org/TR/navigation-timing/
+[PERFORMANCE-TIMELINE-2]
+    Performance Timeline Level 2. Ilya Grigorik. W3C. 24 October 2019. W3C Working Draft. URL: https://www.w3.org/TR/performance-timeline-2/
+[RFC2119]
+    Key words for use in RFCs to Indicate Requirement Levels. S. Bradner. IETF. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119
+[RFC8174]
+    Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words. B. Leiba. IETF. May 2017. Best Current Practice. URL: https://tools.ietf.org/html/rfc8174
+[WEBIDL]
+    Web IDL. Boris Zbarsky. W3C. 15 December 2016. W3C Editor's Draft. URL: https://heycam.github.io/webidl/
+
+●●ref_informative
+
+[ECMA-262]
+    ECMAScript Language Specification. Ecma International. URL: https://tc39.es/ecma262/
+[NAVIGATION-TIMING-2]
+    Navigation Timing Level 2. Ilya Grigorik; Tobin Titus; Jatinder Mann; Arvind Jain. W3C. 15 July 2019. W3C Working Draft. URL: https://www.w3.org/TR/navigation-timing-2/
+[USER-TIMING-2]
+    User Timing Level 2. Ilya Grigorik. W3C. 26 February 2019. W3C Recommendation. URL: https://www.w3.org/TR/user-timing-2/
+
+
+●●trans_metadata
+
+<p>
+~THIS_PAGEは、~W3Cにより作業草案として公開された
+<a href="~SPEC_URL">User Timing Level 3</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/user-timing-3/
+編集者草案
+	https://w3c.github.io/user-timing/
+テスト一式
+	https://wpt.fyi/results/user-timing
+実装報告
+	https://wpt.fyi/results/user-timing
+編集
+	<a href="igrigorik@gmail.com">Ilya Grigorik</a> (Google)
+	<a href="https://github.com/npm1">Nicolas Pena Moreno</a> (Google)
+前任編集者
+	Jatinder Mann, Microsoft Corp. (Until February 2014)
+	Zhiheng Wang, Google Inc. (Until July 2013)
+	Anderson Quach, Microsoft Corp. (until March 2011)
+Participate:
+	<a href="https://github.com/w3c/user-timing/">GitHub w3c/user-timing</a>
+	<a href="https://github.com/w3c/user-timing/issues/">File a bug</a>
+	<a href="https://github.com/w3c/user-timing/commits/gh-pages/index.html">Commit history</a>
+	<a href="https://github.com/w3c/user-timing/pulls/">Pull requests</a>
+実装
+	<a href="http://caniuse.com/#feat=user-timing">Can I use User Timing?</a>
+Mailing list
+	<a href="https://lists.w3.org/Archives/Public/public-web-perf/">public-web-perf@w3.org</a> (<a href="public-web-perf-request@w3.org">subscribe</a>, <a href="https://lists.w3.org/Archives/Public/public-web-perf/">archives</a>)
+発行
+	<a href="https://www.w3.org/webperf/">Web Performance Working Group</a>
+
+</script>
+
+</head>
+<body>
+
+<header>
+
+	<hgroup>
+<h1>利用者計時 — User Timing Level 3</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この仕様は、高-精度な時刻印への~accessを与えることにより，~web開発者による自身の~appの処理能の測定を支援するための~interfaceを定義する。
+◎
+This specification defines an interface to help web developers measure the performance of their applications by giving them access to high precision timestamps.
+</p>
+	</section>
+	<section id="sotd">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公な複製です…
+【以下，この節の他の内容は、<a href="w3c-common-ja.html#status">W3C 日本語訳 共通~page</a>／冒頭の仕様~metadataに委譲。】
+</p>
+
+<p>
+User Timing Level 3 は、 `USER-TIMING-2$r に取って代わることが意図される。
+また、次を含む：
+◎
+User Timing Level 3 is intended to supersede [USER-TIMING-2] and includes:
+</p>
+
+<ul>
+	<li>
+任意な時刻印にまたがって、~mark【 `PerformanceMark$I 】と測定【 `PerformanceMeasure$I 】を実行する能。
+◎
+Ability to execute marks and measures across arbitrary timestamps.
+</li>
+	<li>
+~markや測定とともに，任意な~metadataも報告する~support。
+◎
+Support for reporting arbitrary metadata along with marks and measures.
+</li>
+</ul>
+	</section>
+
+<main id="MAIN0">
+
+	<section id="introduction">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+
+<p>
+~web開発者は、~appの処理能~特性について，~accessし, 理解する能を必要とする。
+~JS `ECMA-262$r は，~appの待時間を測定する仕組み（ `Date.now()^m ~methodで現在の時刻印を検索取得する）を供するが、この時刻印の精度は~UAによってまちまちである。
+◎
+Web developers need the ability to assess and understand the performance characteristics of their applications. While JavaScript [ECMA-262] provides a mechanism to measure application latency (retrieving the current timestamp from the Date.now() method), the precision of this timestamp varies between user agents.
+</p>
+
+<p>
+この文書は、高-精度かつ単調増加する時刻印を公開する［
+`PerformanceMark$I, `PerformanceMeasure$I
+］~interfaceを定義し，
+`Performance$I ~interfaceを拡張して、開発者が~appの処理能をより良く測定できるようにする。
+◎
+This document defines the PerformanceMark and PerformanceMeasure interfaces, and extensions to the Performance interface, which expose a high precision, monotonically increasing timestamp so that developers can better measure the performance characteristics of their applications.
+</p>
+
+<div class="example">
+<p>
+次の~scriptに，開発者が~scriptに関係する計時~dataを得するために、この文書で定義される~interfaceを利用する例を示す：
+◎
+The following script shows how a developer can use the interfaces defined in this document to obtain timing data related to developer scripts.
+◎
+Example 1
+</p>
+
+<pre class="lang-js">
+async function run() {
+  performance.mark("startTask1");
+  await doTask1(); /* <span class="comment">
+何らかの開発者~code
+◎
+Some developer code
+</span> */
+  performance.mark("endTask1");
+
+  performance.mark("startTask2");
+  await doTask2(); /* <span class="comment">
+何らかの開発者~code
+◎
+Some developer code
+</span> */
+  performance.mark("endTask2");
+
+  /* <span class="comment">
+~logに出す
+◎
+Log them out
+</span> */
+  const %entries = performance.getEntriesByType("mark");
+  for (const %entry of %entries) {
+    console.table(%entry.toJSON());
+  }
+}
+run();
+</pre>
+</div>
+
+
+<div class="p">
+<p>
+`PERFORMANCE-TIMELINE-2$r は、記録された計量を検索取得するときに利用できる 2 つの仕組みを定義する：
+</p>
+
+<ul>
+	<li>
+`getEntries()$m, `getEntriesByType()$m
+~methodは、ある時点の特定0の計量を名前で検索取得するときに最も適する。
+</li>
+	<li>
+`PerformanceObserver$I ~interfaceは、新たな計量が可用になり次第，その通知を受取る場合に最適化されている。
+</li>
+</ul>
+
+◎
+Note
+◎
+[PERFORMANCE-TIMELINE-2] defines two mechanisms that can be used to retrieve recorded metrics: getEntries() and getEntriesByType() methods, and the PerformanceObserver interface. The former is best suited for cases where you want to retrieve a particular metric by name at a single point in time, and the latter is optimized for cases where you may want to receive notifications of new metrics as they become available.
+</div>
+
+
+<div class="example" id="example-2">
+<p>
+別の例として、ある %component を~~包装する要素は［
+~clickされたとき、何らかの新たな内容を~fetchして，~fetchされたことを指示する
+］とする。
+ここでは、利用者が~clickしてから~fetchが完了するまでにかかった時間を報告したい。
+［
+~click~handlerが実行される時刻
+］を~markするのでは，その~eventが処理される【~handlerに渡される】までの待時間を取りこぼすことになるので、代わりに~eventの~hardware時刻印【 `timeStamp$m 】を利用する。
+また，より詳細な解析を得るため、 %component の名前も知りたい。
+◎
+As another example, suppose that there is an element which, when clicked, fetches some new content and indicates that it has been fetched. We'd like to report the time from when the user clicked to when the fetch was complete. We can't mark the time the click handler executes since that will miss latency to process the event, so instead we use the event hardware timestamp. We also want to know the name of the component to have more detailed analytics.
+◎
+Example 2
+</p>
+
+<pre class="lang-js">
+%element.addEventListener("click", %e =&gt; {
+  const %component = getComponent(%element);
+  fetch(%component.url).then(() =&gt; {
+    %element.textContent = "Updated";
+    const %updateMark = performance.mark("update_component", {
+      detail: {component: %component.name},
+    });
+    performance.measure("click_to_update_component", {
+      detail: {component: %component.name},
+      start: %e.timeStamp,
+      end: %updateMark.startTime,
+    });
+  });
+});
+
+</pre>
+</div>
+
+	</section>
+	<section id="conformance">
+<h2 title="Conformance">2. 適合性</h2>
+
+<p class="trans-note">【
+この節の内容は
+<a href="w3c-common-ja.html#conformance" >W3C 日本語訳 共通~page</a>
+に委譲
+】</p>
+
+	</section>
+	<section id="_conventions">
+<h3>【この訳に固有の表記規約】</h3>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, ~EQ, ~IF, ~EACH (…), ~RET, 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+	</section>
+	<section id="user-timing">
+<h2 title="User Timing">3. 利用者~計時</h2>
+
+		<section id="extensions-performance-interface">
+<h3 title="Extensions to the Performance interface">3.1. `Performance^I ~interfaceに対する拡張</h3>
+
+<p>
+［
+`Performance$I ~interface,
+`DOMHighResTimeStamp$I 型
+］は
+`HR-TIME-2$r にて定義される。
+`PerformanceEntry$I ~interfaceは
+`PERFORMANCE-TIMELINE-2$r にて定義される。
+◎
+The Performance interface and DOMHighResTimeStamp are defined in [HR-TIME-2]. The PerformanceEntry interface is defined in [PERFORMANCE-TIMELINE-2].
+</p>
+
+<pre class="idl">
+dictionary `PerformanceMarkOptions$I {
+  `any$ `detail$mkO;
+  `DOMHighResTimeStamp$ `startTime$mkO;
+};
+
+dictionary `PerformanceMeasureOptions$I {
+  `any$ `detail$msO;
+  (`DOMString$ or `DOMHighResTimeStamp$) `start$msO;
+  `DOMHighResTimeStamp$ `duration$msO;
+  (`DOMString$ or `DOMHighResTimeStamp$) `end$msO;
+};
+
+partial interface `Performance$I {
+  `PerformanceMark$I `mark$m(
+      `DOMString$ %markName,
+      optional `PerformanceMarkOptions$I %markOptions = {}
+  );
+  `undefined$ `clearMarks$m(optional `DOMString$ %markName);
+  `PerformanceMeasure$I `measure$m(
+      `DOMString$ %measureName,
+      optional (`DOMString$ or `PerformanceMeasureOptions$I) %startOrMeasureOptions = {},
+      optional `DOMString$ %endMark
+  );
+  `undefined$ `clearMeasures$m(optional `DOMString$ %measureName);
+};
+</pre>
+
+<div class="algo">
+<p id="mark-method">
+`mark(markName, markOptions)@m
+~methodは、時刻印に所与の名前（ “~mark” ）を結付けて格納する。
+◎
+3.1.1 mark() method
+◎
+Stores a timestamp with the associated name (a "mark").
+</p>
+
+<p>
+その~method手続きは：
+◎
+It MUST run these steps:
+</p>
+<ol>
+	<li>
+%~entry ~LET `PerformanceMark()$m 構築子の手続きを
+( %markName, %markOptions )
+を引数に走らせた結果
+◎
+Run the PerformanceMark constructor and let entry be the newly created object.
+</li>
+	<li>
+`処理能~entryを~queueする$( %~entry )
+◎
+Queue entry.
+</li>
+	<li id="stored_mark">
+`処理能~entry~buffer$に %~entry を追加する
+◎
+Add entry to the performance entry buffer.
+</li>
+	<li>
+~RET %~entry
+◎
+Return entry.
+</li>
+</ol>
+
+<p id="performancemarkoptions-dictionary">
+%markOptions に与える
+`PerformanceMarkOptions@I
+辞書の：
+◎
+3.1.1.1 PerformanceMarkOptions dictionary
+</p>
+<ul>
+	<li>
+`detail@mkO
+~memberは、~mark内に含めることになる~metadataを与える。
+◎
+detail
+• Metadata to be included in the mark.
+</li>
+	<li>
+`startTime@mkO
+~memberは、~mark時刻として利用される時刻印を与える。
+◎
+startTime
+• Timestamp to be used as the mark time.
+</li>
+</ul>
+</div>
+
+<div class="algo">
+<p>
+`clearMarks(markName)@m
+~methodは、格納-済み時刻印のうち，所与の名前が結付けられたものを除去する。
+◎
+3.1.2 clearMarks() method
+◎
+Removes the stored timestamp with the associated name.＼
+</p>
+
+<p>
+その~method手続きは
+⇒
+`処理能~entry~buffer$から，次を満たす `PerformanceMark$I ~objすべてを除去する
+⇒
+%markName は与えられていないならば無条件 ／
+~ELSE_ `name$m ~EQ %markName なるもの
+◎
+It MUST run these steps:
+• If markName is omitted, remove all PerformanceMark objects from the performance entry buffer.
+• Otherwise, remove all PerformanceMark objects listed in the performance entry buffer whose name matchesmarkName.
+• Return undefined.
+</p>
+</div>
+
+<div class="algo">
+<p id="measure-method">
+`measure(measureName, startOrMeasureOptions, endMark)@m
+~methodは、 2 つの~markの間の所要時間（ “測定” ）を表す `DOMHighResTimeStamp$I 値に所与の名前を結付けて格納する。
+◎
+3.1.3 measure() method
+◎
+Stores the DOMHighResTimeStamp duration between two marks along with the associated name (a "measure").
+</p>
+
+<p>
+その~method手続きは：
+◎
+It MUST run these steps:
+</p>
+<ol>
+	<li>
+( %始端, %終端, %所要時間, %detail ) ~LET ( ε, ε, ε, ε )
+◎
+↓</li>
+	<li>
+<p>
+~IF［
+%startOrMeasureOptions は `PerformanceMeasureOptions$I ~objである
+］：
+</p>
+		<ol>
+			<li>
+%始端 ~SET %startOrMeasureOptions[ "`start$msO" ]
+</li>
+			<li>
+%終端 ~SET %startOrMeasureOptions[ "`end$msO" ]
+</li>
+			<li>
+%所要時間 ~SET %startOrMeasureOptions[ "`duration$msO" ]
+</li>
+			<li>
+%detail ~SET %startOrMeasureOptions[ "`detail$msO" ]
+</li>
+			<li>
+<p>
+~IF［
+%startOrMeasureOptions は`空$mapでない
+］~AND［
+次のいずれかが満たされる
+］…：
+</p>
+				<ul>
+					<li>
+%endMark ~NEQ ε
+</li>
+					<li>
+［
+%始端 ~EQ ε
+］~AND［
+%終端 ~EQ ε
+］
+</li>
+					<li>
+［
+%始端 ~NEQ ε
+］~AND［
+%終端 ~NEQ ε
+］~AND［
+%所要時間 ~NEQ ε
+］
+</li>
+				</ul>
+<p>
+…ならば
+⇒
+~THROW `TypeError$E
+</p>
+			</li>
+		</ol>
+◎
+If startOrMeasureOptions is a non-empty PerformanceMeasureOptions object, run the following checks:
+• If endMark is given, throw a TypeError.
+• If startOrMeasureOptions's start and end members are both omitted, throw a TypeError.
+• If startOrMeasureOptions's start, duration, and end members are all present, throw a TypeError.
+</li>
+	<li>
+<p>
+%終端~時刻 ~LET 次の下位手続きを走らせた結果：
+◎
+Compute end time as follows:
+</p>
+		<ol>
+			<li>
+~IF［
+%endMark ~NEQ ε
+］
+⇒
+~RET `~markを時刻印に変換する$( %endMark )
+◎
+If endMark is given, let end time be the value returned by running the convert a mark to a timestamp algorithm passing in endMark.
+</li>
+			<li>
+~IF［
+%終端 ~NEQ ε
+］
+⇒
+~RET `~markを時刻印に変換する$( %終端 )
+◎
+Otherwise, if startOrMeasureOptions is a PerformanceMeasureOptions object, and if its end member is present, let end time be the value returned by running the convert a mark to a timestamp algorithm passing in startOrMeasureOptions's end.
+</li> 
+			<li>
+<p>
+~IF［
+%始端 ~NEQ ε
+］~AND［
+%所要時間 ~NEQ ε
+］：
+◎
+Otherwise, if startOrMeasureOptions is a PerformanceMeasureOptions object, and if its start and duration members are both present:
+</p>
+			<ol>
+					<li>
+%始端 ~SET `~markを時刻印に変換する$( %始端 )
+◎
+Let start be the value returned by running the convert a mark to a timestamp algorithm passing in start.
+</li>
+					<li>
+%所要時間 ~SET `~markを時刻印に変換する$( %所要時間 )
+◎
+Let duration be the value returned by running the convert a mark to a timestamp algorithm passing in duration.
+</li>
+					<li>
+~RET %始端 ~PLUS %所要時間
+◎
+Let end time be start plus duration.
+</li>
+				</ol>
+			</li>
+			<li>
+~RET `現在の高分解能~時刻$
+◎
+Otherwise, let end time be the value that would be returned by the Performance object's now() method.
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+%始端~時刻 ~LET 次の下位手続きを走らせた結果：
+◎
+Compute start time as follows:
+</p>
+		<ol>
+			<li>
+~IF［
+%始端 ~NEQ ε
+］
+⇒
+~RET `~markを時刻印に変換する$( %始端 )
+◎
+If startOrMeasureOptions is a PerformanceMeasureOptions object, and if its start member is present, let start time be the value returned by running the convert a mark to a timestamp algorithm passing in startOrMeasureOptions's start.
+</li>
+			<li>
+<p>
+~IF［
+%所要時間 ~NEQ ε
+］~AND［
+%終端 ~NEQ ε
+］：
+◎
+Otherwise, if startOrMeasureOptions is a PerformanceMeasureOptions object, and if its duration and end members are both present:
+</p>
+				<ol>
+					<li>
+%所要時間 ~SET `~markを時刻印に変換する$( %所要時間 )
+◎
+Let duration be the value returned by running the convert a mark to a timestamp algorithm passing in duration.
+</li>
+					<li>
+%終端 ~SET `~markを時刻印に変換する$( %終端 )
+◎
+Let end be the value returned by running the convert a mark to a timestamp algorithm passing in end.
+</li>
+					<li>
+~RET %終端 ~MINUS %所要時間
+◎
+Let start time be end minus duration.
+</li>
+				</ol>
+			</li>
+			<li>
+~IF［
+%startOrMeasureOptions は `DOMString$I である
+］
+⇒
+~RET `~markを時刻印に変換する$( %startOrMeasureOptions )
+◎
+Otherwise, if startOrMeasureOptions is a DOMString, let start time be the value returned by running the convert a mark to a timestamp algorithm passing in startOrMeasureOptions.
+</li>
+			<li>
+~RET 0
+◎
+Otherwise, let start time be 0.
+</li>
+		</ol>
+	</li>
+	<li>
+%~entry ~LET コレに`関連な~Realm$に属する，新たな `PerformanceMeasure$I ~obj
+◎
+Create a new PerformanceMeasure object (entry) with this's relevant realm.
+</li>
+	<li>
+%~entry の
+⇒＃
+`name$m ~SET %measureName,
+`entryType$m ~SET `measure^l,
+`startTime$m ~SET %始端~時刻,
+`duration$m ~SET %終端~時刻 ~MINUS %始端~時刻 （負にもなり得る）,
+`detail$mS ~SET ~NULL
+◎
+Set entry's name attribute to measureName.
+◎
+Set entry's entryType attribute to DOMString "measure".
+◎
+Set entry's startTime attribute to start time.
+◎
+Set entry's duration attribute to the duration from start time to end time. The resulting duration value MAY be negative.
+◎
+↓</li>
+	<li>
+~IF［
+%detail ~NEQ ε
+］
+⇒
+%~entry の `detail$mS ~SET `StructuredDeserialize$jA( `StructuredSerialize$jA( %detail ), `現在の~realm$ )
+◎
+Set entry's detail attribute as follows:
+• If startOrMeasureOptions is a PerformanceMeasureOptions object:
+•• Let record be the result of calling the StructuredSerialize algorithm on startOrMeasureOptions's detail.
+•• Set entry's detail to the result of calling the StructuredDeserialize algorithm on record and the current realm.
+• Otherwise, set it to null.
+</li>
+	<li>
+`処理能~entryを~queueする$( %~entry )
+◎
+Queue entry.
+</li>
+	<li id="stored_measure">
+`処理能~entry~buffer$に %~entry を追加する
+◎
+Add entry to the performance entry buffer.
+</li>
+	<li>
+~RET %~entry
+◎
+Return entry.
+</li>
+</ol>
+
+<p id="performancemeasureoptions-dictionary">
+%startOrMeasureOptions に与える
+`PerformanceMeasureOptions@I
+辞書の：
+◎
+3.1.3.1 PerformanceMeasureOptions dictionary
+</p>
+<ul>
+	<li>
+`detail@msO
+~memberは、~mark内に含めることになる~metadataを与える。
+◎
+detail
+• Metadata to be included in the measure.
+</li>
+	<li>
+`start@msO
+~memberは、［
+始端~時刻として利用されることになる時刻印／
+始端~markとして利用されることになる文字列
+］を与える。
+◎
+start
+• Timestamp to be used as the start time or string to be used as start mark.
+</li>
+	<li>
+`duration@msO
+~memberは、始端~時刻から終端~時刻までの所要時間を与える。
+◎
+duration
+• Duration between the start and end times.
+</li>
+	<li>
+`end@msO
+~memberは、［
+終端~時刻として利用されることになる時刻印／
+終端~markとして利用されることになる文字列
+］を与える。
+◎
+end
+• Timestamp to be used as the end time or string to be used as end mark.
+</li>
+</ul>
+</div>
+
+<div class="algo">
+<p>
+`clearMeasures(measureName)@m
+~methodは、所与の名前が結付けられた，格納-済み時刻印を除去する。
+◎
+3.1.4 clearMeasures() method
+◎
+Removes stored timestamp with the associated name.＼
+</p>
+
+<p>
+その~method手続きは
+⇒
+`処理能~entry~buffer$から，次を満たす `PerformanceMeasure$I ~objすべてを除去する
+⇒
+%measureName は与えられていないならば無条件 ／
+~ELSE_ `name$m ~EQ %measureName なるもの
+◎
+It MUST run these steps:
+• If measureName is omitted, remove all PerformanceMeasure objects in the performance entry buffer.
+• Otherwise remove all PerformanceMeasure objects listed in the performance entry buffer whose name matches measureName.
+• Return undefined.
+</p>
+</div>
+
+		</section>
+		<section id="performancemark">
+<h3 title="The PerformanceMark Interface">3.2. `PerformanceMark^I ~interface</h3>
+
+<p>
+`PerformanceMark$I ~interfaceは、
+`Performance$I ~interfaceの `mark()$m ~methodを介して作成された~markも`処理能時列線$に公開する。
+◎
+The PerformanceMark interface also exposes marks created via the Performance interface's mark() method to the Performance Timeline.
+</p>
+
+<pre class="idl">
+[`Exposed$=(Window,Worker)]
+interface `PerformanceMark@I : `PerformanceEntry$I {
+  `PerformanceMark$mc(`DOMString$ %markName, optional `PerformanceMarkOptions$I %markOptions = {});
+  readonly attribute `any$ `detail$mK;
+};
+</pre>
+
+<p>
+`PerformanceMark$I ~interfaceは、
+`PerformanceEntry$I ~interfaceの次に挙げる属性を拡張する：
+◎
+The PerformanceMark interface extends the following attributes of the PerformanceEntry interface:
+</p>
+
+<ul>
+	<li>
+`name$m は、~mark名を返すモノトスル。
+◎
+The name attribute must return the mark's name.
+</li>
+	<li>
+`entryType$m は、文字列 `mark^l を返すモノトスル。
+◎
+The entryType attribute must return the DOMString "mark".
+</li>
+	<li>
+`startTime$m は、~markの時刻を表す `DOMHighResTimeStamp$I 値を返すモノトスル。
+◎
+The startTime attribute must return a DOMHighResTimeStamp with the mark's time value.
+</li>
+	<li>
+`duration$m は、 `DOMHighResTimeStamp$I 値 0 を返すモノトスル。
+◎
+The duration attribute must return a DOMHighResTimeStamp of value 0.
+</li>
+</ul>
+
+<p class="trans-note">【
+すなわち，当の~objを作成した `PerformanceMark()$m 構築子の手続き（ `mark()$m ~methodが呼出したそれも含む）にて設定された値を返す。
+】</p>
+
+<p>
+`PerformanceMark$I ~interfaceは、次の属性／構築子も追加的に包含する：
+◎
+The PerformanceMark interface contains the following additional attribute:
+</p>
+
+<div class="algo">
+`detail@mK
+取得子~手続きは、コレの構築-時に `PerformanceMarkOptions$I 辞書から複製された値を返す。
+◎
+The detail attribute must return the value it is set to (it's copied from the PerformanceMarkOptions dictionary).
+</div>
+
+<div class="algo">
+<p id="the-performancemark-constructor">
+`PerformanceMark(markName, markOptions)@m
+構築子~手続きは：
+◎
+3.2.1 The PerformanceMark Constructor
+◎
+The PerformanceMark constructor must run the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+`現在の大域~obj$は `Window$I ~objである
+］~AND［
+%markName は `PerformanceTiming$I ~interface内のある【！読専】属性の名前である
+］
+⇒
+~THROW `SyntaxError$E
+◎
+If the current global object is a Window object and markName uses the same name as a read only attribute in the PerformanceTiming interface, throw a SyntaxError.
+</li>
+	<li>
+~Assert：
+コレは`現在の大域~obj$の`~Realm$に属する
+◎
+Create a new PerformanceMark object (entry) with the current global object's realm.
+</li>
+	<li>
+コレの `name$m ~SET %markName
+◎
+Set entry's name attribute to markName.
+</li>
+	<li>
+コレの `entryType$m ~SET `mark^l
+◎
+Set entry's entryType attribute to DOMString "mark".
+</li>
+	<li>
+<p>
+コレの `startTime$m ~SET 次の下位手続きを走らせた結果
+</p>
+		<ol>
+			<li>
+%開始-時刻 ~SET %markOptions[ "`startTime$mkO" ]
+</li>
+			<li>
+~IF［
+%開始-時刻 ~EQ ε
+］
+⇒
+~RET `現在の高分解能~時刻$
+</li>
+			<li>
+~IF［
+%開始-時刻 ~LT 0
+］
+⇒
+~THROW `TypeError$E
+</li>
+			<li>
+~RET %開始-時刻
+</li>
+		</ol>
+◎
+Set entry's startTime attribute as follows:
+• If markOptions's startTime member is present, then:
+•• If markOptions's startTime is negative, throw a TypeError.
+•• Otherwise, set entry's startTime to the value of markOptions's startTime.
+• Otherwise, set it to the value that would be returned by the Performance object's now() method.
+</li>
+	<li>
+コレの `duration$m ~SET 0
+◎
+Set entry's duration attribute to 0.
+</li>
+	<li>
+%detail ~LET %markOptions[ "`detail$mkO" ]
+◎
+↓</li>
+	<li>
+コレ `detail$mK ~SET `StructuredDeserialize$jA( `StructuredSerialize$jA( %detail ), `現在の~realm$ )
+◎
+Let record be the result of calling the StructuredSerialize algorithm on markOptions's detail.
+◎
+Set entry's detail to the result of calling the StructuredDeserialize algorithm on record and the current realm.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="performancemeasure">
+<h3 title="The PerformanceMeasure Interface">3.3 `PerformanceMeasure^I ~interface</h3>
+
+<p>
+`PerformanceMeasure$I ~interfaceは、
+`Performance$I ~interfaceの `measure()$m ~methodを介して作成された測定も`処理能時列線$に公開する。
+◎
+The PerformanceMeasure interface also exposes measures created via the Performance interface's measure() method to the Performance Timeline.
+</p>
+
+<pre class="idl">
+[`Exposed$=(Window,Worker)]
+interface `PerformanceMeasure@I : `PerformanceEntry$I {
+  readonly attribute `any$ `detail$mS;
+};
+</pre>
+
+<p>
+`PerformanceMeasure$I ~interfaceは、
+`PerformanceEntry$I ~interfaceの次に挙げる属性を拡張する：
+◎
+The PerformanceMeasure interface extends the following attributes of the PerformanceEntry interface:
+</p>
+<ul>
+	<li>
+`name$m は、この測定の名前を返すモノトスル。
+◎
+The name attribute must return the measure's name.
+</li>
+	<li>
+`entryType$m は、文字列 `measure^l を返すモノトスル。
+◎
+The entryType attribute must return the DOMString "measure".
+</li>
+	<li>
+`startTime$m は、この測定の始端~markの時刻を表す `DOMHighResTimeStamp$I 値を返すモノトスル。
+◎
+The startTime attribute must return a DOMHighResTimeStamp with the measure's start mark.
+</li>
+	<li>
+`duration$m は、この測定の所要時間を表す `DOMHighResTimeStamp$I 値を返すモノトスル。
+◎
+The duration attribute must return a DOMHighResTimeStamp with the duration of the measure.
+</li>
+</ul>
+
+<p class="trans-note">【
+すなわち，当の~objを作成した `measure()$m ~methodにて設定された値を返す。
+】</p>
+
+<p>
+`PerformanceMeasure$I ~interfaceは、次の属性も追加的に包含する：
+◎
+The PerformanceMeasure interface contains the following additional attribute:
+</p>
+
+<div class="algo">
+<p>
+`detail@mS
+取得子~手続きは、コレの作成-時に `PerformanceMeasureOptions$I 辞書から複製された値を返す。
+◎
+The detail attribute must return the value it is set to (it's copied from the PerformanceMeasureOptions dictionary).
+</div>
+
+		</section>
+	</section>
+	<section id="processing">
+<h2 title="Processing">4. 処理</h2>
+
+<p class="note">注記：
+`User Timing^cite ~APIを実装する~UAは、その~supportを開発者が検出できるよう，
+`supportedEntryTypes$m 内に `mark^l, `measure^l を含める必要がある。
+◎
+A user agent implementing the User Timing API would need to include "mark" and "measure" in supportedEntryTypes. This allows developers to detect support for User Timing.
+</p>
+
+<div class="algorithm">
+<p id="convert-a-mark-to-a-timestamp">
+`~markを時刻印に変換する@
+ときは、所与の
+( 文字列または `DOMHighResTimeStamp$I %~mark )
+に対し，
+%~mark の型に応じて，次の手続きを走らす：
+◎
+4.1 Convert a mark to a timestamp
+◎
+To convert a mark to a timestamp, given a mark that is a DOMString or DOMHighResTimeStamp run these steps:＼
+</p>
+
+<dl class="switch">
+	<dt>`DOMString$I</dt>
+	<dd>
+		<ol>
+			<li>
+~IF［
+%~mark は `PerformanceTiming$I ~interface内のある【！読専】属性の名前である
+］
+⇒
+~RET `名前を時刻印に変換する$( %~mark )
+◎
+If it has the same name as a read only attribute in the PerformanceTiming interface, let end time be the value returned by running the convert a name to a timestamp algorithm with name set to the value of mark.
+</li>
+			<li>
+~IF［
+`処理能~entry~buffer$内の `PerformanceMark$I ~objに［
+その `name$m 属性の値 ~EQ %名前
+］なるものはある
+］
+⇒
+~RET それらの~objの `startTime$m 属性~値のうち，最も近過去を指す値
+◎
+Otherwise, if mark is a DOMString, let end time be the value of the startTime attribute from the most recent occurrence of a PerformanceMark object in the performance entry buffer whose name matches the value of mark.＼
+</li>
+			<li>
+~THROW `SyntaxError$E
+◎
+If no matching entry is found, throw a SyntaxError.
+</li>
+		</ol>
+	</dd>
+
+	<dt>
+`DOMHighResTimeStamp^I
+◎
+Otherwise, if mark is a DOMHighResTimeStamp:
+</dt>
+	<dd>
+		<ol>
+			<li>
+~IF［
+%~mark ~LT 0
+］
+⇒
+~THROW `TypeError$E
+◎
+If mark is negative, throw a TypeError.
+</li>
+			<li>
+~RET %~mark
+◎
+Otherwise, let end time be mark.
+</li>
+		</ol>
+	</dd>
+</dl>
+</div>
+
+<div class="algorithm">
+<p id="convert-a-name-to-a-timestamp">
+`名前を時刻印に変換する@
+ときは、所与の
+( %名前 )
+に対し，次の手続きを走らす：
+◎
+4.2 Convert a name to a timestamp
+◎
+To convert a name to a timestamp given a name＼
+</p>
+
+<ol>
+	<li>
+~Assert：
+%名前 は `PerformanceTiming$I ~interface内のある【！読専】属性の名前である
+◎
+that is a read only attribute in the PerformanceTiming interface, run these steps:
+</li>
+	<li>
+~IF［
+`大域~obj$【！現在の大域~obj？】は `Window$I ~objでない
+］
+⇒
+~THROW `TypeError$E
+◎
+If the global object is not a Window object, throw a TypeError.
+</li>
+	<li>
+~IF［
+%名前 ~EQ `navigationStart^l
+］
+⇒
+~RET 0
+◎
+If name is navigationStart, return 0.
+</li>
+	<li>
+%始端~時刻 ~LET `PerformanceTiming$I ~interfaceの `navigationStart$m 値
+◎
+Let startTime be the value of navigationStart in the PerformanceTiming interface.
+</li>
+	<li>
+%終端~時刻 ~LET `PerformanceTiming$I ~interfaceの %名前 属性の値
+◎
+Let endTime be the value of name in the PerformanceTiming interface.
+</li>
+	<li>
+~IF［
+%終端~時刻 ~EQ 0
+］
+⇒
+~THROW `InvalidAccessError$E
+◎
+If endTime is 0, throw an InvalidAccessError.
+</li>
+	<li>
+~RET %終端~時刻 ~MINUS %始端~時刻
+◎
+Return result of subtracting startTime from endTime.
+</li>
+</ol>
+</div>
+
+<p class="note">
+`NAVIGATION-TIMING$r にて定義される `PerformanceTiming$I ~interfaceは、今や廃用にされたものと見なされている。
+`PerformanceTiming$I ~interfaceからの名前の利用は，後方-互換であり続けるよう~supportされるが、将来に，この機能性を `NAVIGATION-TIMING-2$r に定義される `PerformanceNavigationTiming$I （あるいは他の~interface）内の名前にまで拡張する計画は無い。
+◎
+Note
+◎
+The PerformanceTiming interface was defined in [NAVIGATION-TIMING] and is now considered obsolete. The use of names from the PerformanceTiming interface is supported to remain backwards compatible, but there are no plans to extend this functionality to names in the PerformanceNavigationTiming interface defined in [NAVIGATION-TIMING-2] (or other interfaces) in the future.
+</p>
+
+	</section>
+	<section id="privacy-security">
+<h2 title="Privacy and Security">5. ~privacyと~security</h2>
+
+~INFORMATIVE
+
+<p>
+この仕様に定義される~interfaceは、~page上の特定の~JS活動を感知し得る計時~情報を公開する。
+高分解能な計時~情報を公開する際の~privacyと~securityの考慮点については
+`HR-TIME-2$r を~~参照されたし。
+◎
+The interfaces defined in this specification expose potentially sensitive timing information on specific JavaScript activity of a page. Please refer to [HR-TIME-2] for privacy and security considerations of exposing high-resolution timing information.
+</p>
+
+<p>
+~web~platformは，［
+同じ~pageに含められた どの~scriptも、各~scriptの生成元に関わらず，同じ~accessを有する
+］という不変則の下に設計されているので、この仕様に定義される~interfaceは，［
+計時~情報を記録する ／ 記録された計時~情報を検索取得する
+］ときに制約を課すものではない。
+すなわち，~pageに含められた~scriptにより記録された利用者~計時~markや測定は、同じ~pageで走っている他のどの~scriptからも，その生成元に関わらず読取れる。
+◎
+Because the web platform has been designed with the invariant that any script included on a page has the same access as any other script included on the same page, regardless of the origin of either scripts, the interfaces defined by this specification do not place any restrictions on recording or retrieval of recorded timing information - i.e. a user timing mark or measure recorded by any script included on the page can be read by any other script running on the same page, regardless of origin.
+</p>
+
+	</section>
+	<section id="acknowledgements">
+<h2 title="Acknowledgements">謝辞</h2>
+
+<p>
+この仕事に貢献された次の方々に感謝する：
+</p>
+
+<p lang="en-x-a0">
+Thanks to
+
+James Simonsen,
+Jason Weber,
+Nic Jansma,
+Philippe Le Hegaret,
+Karen Anderson,
+Steve Souders,
+Sigbjorn Vik,
+Todd Reifsteck, and
+Tony Gentilcore
+
+for their contributions to this work.
+</p>
+
+	</section>
+</main></div>
+

@@ -1,0 +1,397 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>TextDecoder／TextEncoder の試用</title>
+<link rel="stylesheet" href="common.css" type="text/css" />
+
+<style >
+body {
+	margin: 1em;
+	padding: 0;
+}
+table {
+	border-collapse: collapse;
+	border: thin solid black;
+}
+th, td {
+	text-align: left;
+	vertical-align: baseline;
+	padding: 0.2em 0.5em;
+	border: thin solid black;
+}
+th {
+	white-space:nowrap;
+}
+
+p {
+	margin: 0.5em 0;
+}
+.num-field {
+	min-width: 6em;
+	text-align: right;
+}
+
+.disabled {
+	color: gray;
+}
+</style>
+
+
+
+<script >
+
+function E(id){
+	return document.getElementById(id);
+}
+function setText(id, text){
+	E(id).textContent = text;
+}
+function errorText(error){
+	return (error.name || '') + ':' + (error.message || '');
+}
+
+window.onload = function(){
+	var support = 'addEventListener, FileReader, Uint8Array, TextDecoder'
+		.replace(/\w+/g, function(feature){
+			return feature + ': ' + ((feature in window)? 'ok' : '未サポート');
+		});
+
+	E('output').value = '';
+	setText('error1', support);
+	resetOutputWrap();
+
+	E('file_input').addEventListener('change', function(event){
+		readFile(event.target.files[0]);
+	}, false);
+
+	E('read_more').addEventListener('click', decode, false);
+	E('reload').addEventListener('click', function(){
+		readFile(current_file);
+	}, false);
+
+	E('encode').addEventListener('click', encode, false);
+
+	E('output_format').addEventListener('change', function(event){
+		outputBinaryAsText();
+	}, false);
+
+	E('wrap_output').addEventListener('change', resetOutputWrap, false);
+	function resetOutputWrap(){
+		E('output').style.whiteSpace =
+			E('wrap_output').checked ? 'pre-wrap' : 'pre';
+	}
+}
+
+var current_file = null;
+
+function readFile(file){
+	if(!file) return;
+	setText('error', '');
+	current_file = file;
+	setText('file_type', file.type || '？');
+	setText('file_size', file.size || '？');
+
+	if(! E('ignore_type').checked && ! /^text\//.test(file.type)) {
+		setText('error', '入力ファイルはテキストファイルではないようです');
+		return;
+	}
+
+	var reader = new FileReader();
+/*
+	reader.onprogress = function(event){
+		console.log('onprogress: ' + event.total);
+		if(event.lengthComputable && event.total > limit_size) {...}
+	}
+*/
+	reader.onload = function(event){
+		if(reader.result.byteLength === 0){
+			setText('error', '入力ファイルが空です');
+			return;
+		}
+		try {
+			init_decoder(reader.result);//ArrayBuffer
+			decode(); // 内容を表示
+		} catch(e){
+			setText('error', 'エラー：' + errorText(e));
+		}
+	}
+	reader.onerror = function(event){
+		setText('error', '読み取りエラー：' + errorText(reader.error));
+	}
+	reader.readAsArrayBuffer(file);
+}
+
+var init_decoder, decode;
+var encode, outputBinaryAsText;
+
+new function(){
+	var buffer = null;
+	var decoder = null;
+	var offset = 0;
+
+	init_decoder = function(buf){
+		setText('read_size', 0);
+		buffer = buf;
+		offset = 0;
+		E('read_more').disabled = false;
+		decoder = new TextDecoder(
+			E('labels').value,
+			{ fatal: !E('ignore_fatal').checked }
+		);
+	};
+
+	decode = function(){
+		if(!decoder) return;
+		var length = parseInt(E('size_filter').value) * 
+			(E('kilo_unit').checked ? 1024 : 1);
+		if(!length) length = Infinity;
+		length = Math.min(buffer.byteLength - offset, length);
+		if(length <= 0) return;
+		var view = new Uint8Array(buffer, offset, length);
+		try {
+			var text = decoder.decode(view, {stream: true});
+			E('output').value = text;
+		} catch(e) {
+			setText('error', '復号エラー：' + errorText(e));
+		}
+		offset += length;
+		setText('read_size', offset);
+		if(offset >= buffer.byteLength){
+			E('read_more').disabled = true;
+		}
+	};
+
+	var encoder = null;
+	var encoder_buffer = null;
+	encode = function(){
+		if(!encoder) {
+			encoder = new TextEncoder();
+			E('download').setAttribute('download', 'utf-8-encoded.txt')
+		}
+
+		var text = E('output').value;
+		encoder_buffer = encoder.encode(text);
+		if(URL.createObjectURL){
+			E('download').href = URL.createObjectURL(new Blob([encoder_buffer]));
+			E('download').parentNode.className = 'enabled';
+		}
+
+		E('encoded_size').textContent = encoder_buffer.byteLength;
+		outputBinaryAsText();
+	}
+	
+	outputBinaryAsText = function(){
+		if(!encoder_buffer) return;
+		var output = '';
+		switch(E('output_format').value){
+		case 'base64':
+			encoder_buffer.forEach(function(b){
+				output += String.fromCharCode( b );
+			});
+			output = window.btoa(output);
+			break;
+		case 'Hex':
+			encoder_buffer.forEach(function(b){
+				output += b.toString( 16 );
+			});
+			break;
+		default:
+			encoder_buffer.forEach(function(b){
+				output += String.fromCharCode(0x2800 + b);
+			});
+			break;
+		}
+
+		E('encode_output').value = output.replace(/.{64}/g, '$&\n');
+	}
+}
+
+
+</script>
+
+
+</head>
+
+<body class="_expanded">
+
+<h1><code>TextDecoder</code> を試す</h1>
+
+<p>
+<a href="https://triple-underscore.github.io/Encoding-test.html">このページ</a>
+は、
+<a href="http://www.whatwg.org/" >WHATWG</a>
+による
+<a href="http://encoding.spec.whatwg.org/" >Enocoding Standard</a>（
+<a href="Encoding-ja.html" >和訳</a>
+）の，
+<a href="Encoding-ja.html#interface-textdecoder" ><code >TextDecoder</code></a>
+インタフェースの
+<a href="Encoding-ja.html#dom-textdecoder-decode" ><code >decode</code></a>
+メソッドのブラウザ実装を試すものです。
+</p>
+
+<div style="margin-left:2em; font-size: smaller;">
+
+<p >
+このページを利用するために必要な，閲覧中のブラウザ機能の検査結果：<br>
+&nbsp;&nbsp;<span id="error1" style="color: blue;"></span>
+</p>
+
+</div>
+
+
+<h2 >利用法</h2>
+
+<p>
+“入力ファイル” 行から入力ファイルを選択して下さい。
+ファイルは “符号化法ラベル” に指定される符号化法に従って復号され、その結果の Unicode テキストが “出力結果” に表示されます。
+</p>
+
+<table><tbody>
+<tr><th>入力ファイル：
+<td colspan="2">
+<input type="file" id="file_input" /><!-- accept="text/*" -->
+<input type="button" value="再読み込み" id="reload"/>
+
+<tr><th><a href="./encoding-ja.html#label" >符号化法ラベル</a>
+<td>
+<select size="1" id="labels">
+<option selected="selected" >utf-8</option>
+<option>ibm866</option>
+<option>iso-8859-2</option>
+<option>iso-8859-3</option>
+<option>iso-8859-4</option>
+<option>iso-8859-5</option>
+<option>iso-8859-6</option>
+<option>iso-8859-7</option>
+<option>iso-8859-8</option>
+<option>iso-8859-8-i</option>
+<option>iso-8859-10</option>
+<option>iso-8859-13</option>
+<option>iso-8859-14</option>
+<option>iso-8859-15</option>
+<option>iso-8859-16</option>
+<option>koi8-r</option>
+<option>koi8-u</option>
+<option>macintosh</option>
+<option>windows-874</option>
+<option>windows-1250</option>
+<option>windows-1251</option>
+<option>windows-1252</option>
+<option>windows-1253</option>
+<option>windows-1254</option>
+<option>windows-1255</option>
+<option>windows-1256</option>
+<option>windows-1257</option>
+<option>windows-1258</option>
+<option>x-mac-cyrillic</option>
+<option>gb18030</option>
+<option>hz-gb-2312</option>
+<option>big5</option>
+<option>euc-jp</option>
+<option>iso-2022-jp</option>
+<option>shift_jis</option>
+<option>euc-kr</option>
+<option>utf-16be</option>
+<option>utf-16le</option>
+<option>x-user-defined</option>
+</select>
+<td>
+<label><input type="checkbox" id="ignore_fatal" />
+復号エラーを無視</label>（＊）
+
+<tr><th><a href="File_API-ja.html#dfn-type">ファイルの種類</a>
+<td>
+<span id="file_type">？</span>
+<td>
+<label><input type="checkbox" id="ignore_type" />
+非テキストファイルでも処理する</label>（＊）
+
+<tr><th><a href="File_API-ja.html#dfn-size" >ファイルのサイズ</a>
+<td class="num-field">
+<span id="file_size">？</span>
+<td>
+約
+<select size="1" id="size_filter">
+<option>1</option>
+<option>2</option>
+<option>4</option>
+<option>8</option>
+<option>16</option>
+<option>32</option>
+<option selected>64</option>
+<option>128</option>
+<option>256</option>
+<option>512</option>
+<option>1024</option>
+<option>無限</option>
+</select>
+(<label ><input type="checkbox" id="kilo_unit" checked />k</label>)
+バイトごとに分けて読み取る（＊）
+
+<tr><th>累積 読み取りサイズ
+<td class="num-field">
+<span id="read_size">0</span>
+<td>
+<input type="button" value="続きを読み取る" id="read_more"/>
+
+</tbody></table>
+
+<p><small>
+（＊）ファイルが巨大な場合、設定によっては、（主に，ブラウザが出力テキストを描画するときの）処理に時間がかかるかもしれません。</small></p>
+<!-- 
+<label><input type="checkbox" id="stream" />
+追加</label>
+ -->
+<span id="error" style="color: red;"></span><br />
+
+出力結果：
+<label ><input type="checkbox" id="wrap_output" />自動改行</label>
+<br />
+<textarea
+	id="output"
+	rows="30" cols="80"
+	style="width:100%; height:30em; white-space:pre;"
+></textarea>
+
+
+
+<h2><code>TextEncoder</code> を試す</h2>
+
+<p >
+上のテキストエリアの内容を
+<input id="encode" type="button" value="符号化する" />
+<small>（符号化法は utf-8 のみ。他の符号化法は可用でない。）</small>：
+</p>
+
+<ul>
+	<li class="disabled">
+<a
+	id="download"
+	download="encoded-text.txt"
+>ダウンロード</a>（要 <a href="File_API-ja.html#dfn-createObjectURL"><code>URL.createObjectURL()</code></a> サポート）
+</li>
+	<li>
+結果のバイナリデータのサイズ：<span id="encoded_size">？</span> バイト
+</li>
+
+	<li>
+結果のバイナリデータを
+<select size="1" id="output_format">
+<option selected="selected">Unicode 点字</option>
+<option>base64</option>
+<option>Hex</option>
+</select>
+形式により， 64 文字ごとに改行して下のテキストエリアに表示させる：
+</li>
+
+</ul>
+
+<textarea
+	id="encode_output"
+	autocomplete="off"
+	rows="30" cols="80"
+	style="width:100%; height:30em; white-space:pre;"
+></textarea>
+
+
+</body>
+</html>

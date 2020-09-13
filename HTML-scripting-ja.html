@@ -1,0 +1,4396 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Scripting（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN',
+		persisted_parts: Util.collectHtmlCodeList(),
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'a': // 
+	text = text.slice(text.indexOf('.') + 1);
+	break;
+case 'sl':
+	text = `[[${key}]]`;
+	break;
+case '0x': // ABNF char code %x escape
+	return `%x${key}`;
+	break;
+case 'AA':
+	return `<a href="~HTMLARIA#el-${key}">作者~向け</a>／<a href="~HTMLAAM#el-${key}">実装者~向け</a>`;
+	break;
+case 'obsMb':
+	text = '廃用にされた~memberもある';
+	href= `~HTMLLS/obsolete.html#${key}-partial`;
+	break;
+case 'xCode':
+	return `<pre class="lang-html" id="_ex-${key}">＊</pre>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-07-14
+trans_update:2020-07-16
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/scripting.html
+	abbr_url:HEscripting
+nav_prev:HEinteractive
+nav_next:HEcanvas
+trans_1st_pub:2016-04-27
+
+
+●●class_map
+e:element
+a:attr
+et:event-type
+P:production
+st:attr-state
+v:value
+E:error
+sl:js-slot
+obsMb:comment
+
+●●tag_map
+I:code
+m:code
+E:code
+c:code
+e:code
+a:code
+et:code
+st:span
+P:code
+s:samp
+v:code
+sl:span
+V:var
+i:i
+cite:cite
+obsMb:span
+
+●●original_id_map
+
+	the-script-element:script
+
+●●mdn_urls
+the-noscript-element:HTML/Element/noscript
+the-script-element:HTML/Element/script
+the-slot-element:HTML/Element/slot
+the-template-element:HTML/Element/template
+
+	assignednodesoptions:API/AssignedNodesOptions
+htmlscriptelement:API/HTMLScriptElement
+htmlslotelement:API/HTMLSlotElement
+htmltemplateelement:API/HTMLTemplateElement
+
+●●link_map
+
+	●e
+e.script:#the-script-element
+e.slot:#the-slot-element
+e.template:#the-template-element
+e.noscript:#the-noscript-element
+
+e.p:~HEgrouping#the-p-element
+e.figure:~HEgrouping#the-figure-element
+
+e.head:~HEmetadata#the-head-element
+e.link:~HEmetadata#the-link-element
+e.meta:~HEmetadata#the-meta-element
+e.style:~HEmetadata#the-style-element
+
+
+e.colgroup:~HEtables#the-colgroup-element
+e.details:~HEinteractive#the-details-element
+
+	●attr
+a.async:#attr-script-async
+a.charset:~HTMLobs#attr-script-charset
+a.crossorigin:#attr-script-crossorigin
+a.defer:#attr-script-defer
+a.event:~HTMLobs#attr-script-event
+a.for:~HTMLobs#attr-script-for
+a.language:~HTMLobs#attr-script-language
+a.nomodule:#attr-script-nomodule
+a.name:#attr-slot-name
+a.integrity:#attr-script-integrity
+a.referrerpolicy:#attr-script-referrerpolicy
+a.span:~HEtables#attr-colgroup-span
+a.src:#attr-script-src
+a.type:#attr-script-type
+a.slot:~HTMLdom#attr-slot
+
+	●IDL 
+CEReactions:~HEcustom#cereactions
+HTMLConstructor:~HTMLdom#htmlconstructor
+
+I.AssignedNodesOptions:#assignednodesoptions
+I.DOMParser:~HTMLdynamic#domparser
+I.Document:~HTMLdom#document
+I.DocumentFragment:~DOM4#interface-documentfragment
+I.HTMLElement:~HTMLdom#htmlelement
+I.HTMLScriptElement:#htmlscriptelement
+I.HTMLSlotElement:#htmlslotelement
+I.HTMLTemplateElement:#htmltemplateelement
+I.Text:~DOM4#interface-text
+I.Window:~WINDOW#window
+I.XMLHttpRequest:~XHR#xmlhttprequest
+I.XSLTProcessor:~HTMLdep#xsltprocessor
+I.Element:~DOM4#interface-element
+
+文書片:#_documentfragment
+文書:~HTMLdom#the-document-object
+
+	●m
+
+m.appendChild:~DOM4#dom-node-appendchild
+m.assignedNodes:#dom-slot-assignednodes
+m.assignedElements:#dom-slot-assignedelements
+
+m.async:#dom-script-async
+m.cloneNode:~DOM4#dom-node-clonenode
+m.content:#dom-template-content
+m.createDocument:~DOM4#dom-domimplementation-createdocument
+m.crossOrigin:#dom-script-crossorigin
+m.currentScript:~HTMLdom#dom-document-currentscript
+m.defer:#dom-script-defer
+m.document.createElementNS:~DOM4#dom-document-createelementns
+m.document.importNode:~DOM4#dom-document-importnode
+m.document.write:~HTMLdynamic#dom-document-write
+m.innerHTML:~DOM-Parsing#dom-innerhtml-innerhtml
+m.outerHTML:~DOM-Parsing#dom-element-outerhtml
+m.noModule:#dom-script-nomodule
+m.name:#dom-slot-name
+m.integrity:#dom-script-integrity
+m.referrerPolicy:#dom-script-referrerpolicy
+m.responseXML:~XHR#dom-xmlhttprequest-responsexml
+m.src:#dom-script-src
+m.text:#dom-script-text
+	m.textContent:~DOM4#dom-node-textcontent
+m.transformToDocument:~HTMLdep#dom-xsltprocessor-transformtodocument
+m.transformToFragment:~HTMLdep#dom-xsltprocessor-transformtofragment
+
+m.type:#dom-script-type
+
+	●mime
+c.text/javascript:~HTMLindex#text/javascript
+
+	●et
+et.load:~HTMLindex#event-load
+et.error:~HTMLindex#event-error
+
+
+V.async:#_val-async
+V.charset:#_val-charset
+V.defer:#_val-defer
+V.language:#_val-language
+V.src:#_val-src
+V.type:#_val-type
+
+sl.CryptographicNonce:~HTMLurl#cryptographicnonce
+
+
+	●l
+開始済み~flag:#already-started
+	l.already started:#already-started
+構文解析器~文書:#parser-document
+構文解析器により挿入された:#parser-inserted
+	l.parser-inserted:#parser-inserted
+阻まず~flag:#non-blocking
+	l.non-blocking:#non-blocking
+解析器実行準備済み~flag:#ready-to-be-parser-executed
+	l.ready to be parser-executed:#ready-to-be-parser-executed
+準備~時点の文書:#preparation-time-document
+
+外部~file~flag:#concept-script-external
+外部~fileから:#concept-script-external
+
+
+	●terms
+~data~block:#data-block
+~script種別:#concept-script-type
+~script:#concept-script-script
+	~script要素の~script:#concept-script-script
+
+~scriptは準備済み:#the-script-is-ready
+準備済み:#the-script-is-ready
+準備-:#prepare-a-script
+~scriptを準備する:#prepare-a-script
+
+文書を構文解析し終えたときに実行される~scriptの~list:#list-of-scripts-that-will-execute-when-the-document-has-finished-parsing
+アリな限りすぐに順に実行される~scriptの~list:#list-of-scripts-that-will-execute-in-order-as-soon-as-possible
+アリな限りすぐに実行される~scriptの集合:#set-of-scripts-that-will-execute-as-soon-as-possible
+
+構文解析器を阻んでいる~script:#pending-parsing-blocking-script
+~script~blockを実行する:#execute-the-script-block
+
+~template内容:#template-contents
+~template内容を所有する適切な文書:#appropriate-template-contents-owner-document
+	適切な~template内容~所有者~文書
+不活~template文書:#associated-inert-template-document
+
+
+~data~block:#data-block
+~form提出:~HTMLforms#form-submission
+
+~script内容~制約:#restrictions-for-contents-of-script-elements
+~script文書化:#inline-documentation-for-external-scripts
+
+	●terms DOM4
+~nodeを受入する:~DOM4#concept-node-adopt
+~HTML文書:~DOM4#html-document
+~XML文書:~DOM4#xml-document
+	文書種別:~DOM4#concept-document-type
+受入-時の手続き:~DOM4#concept-node-adopt-ext
+割当された~nodeたち:~DOM4#slot-assigned-nodes
+~slotに割当する:~DOM4#assign-a-slot
+
+~nodeを~cloneする:~DOM4#concept-node-clone
+~clone時の手続き:~DOM4#concept-node-clone-ext
+~slot用に平坦~化された~slottableたちを見出す:~DOM4#find-flattened-slotables
+~host:~DOM4#concept-documentfragment-host
+文書~tree内:~DOM4#in-a-document-tree
+接続されて:~DOM4#connected
+~slot名:~DOM4#slot-name
+~node文書:~DOM4#concept-node-document
+~shadow~tree:~DOM4#concept-shadow-tree
+~slot:~DOM4#concept-slot
+doc.符号化法:~DOM4#concept-document-encoding
+~tree順序:~DOM4#concept-tree-order
+根:~DOM4#concept-tree-root
+~shadow根:~DOM4#concept-shadow-root
+~eventを発火する:~DOM4#concept-event-fire
+子~text内容:~DOM4#concept-child-text-content
+子孫~text内容:~DOM4#concept-descendant-text-content
+全~内容を文字列に置換する:~DOM4#string-replace-all
+
+~ASCII小文字~化する:~INFRA#ascii-lowercase
+~ASCII大小無視:~INFRA#ascii-case-insensitive
+前後の~ASCII空白~列を剥ぐ:~INFRA#strip-leading-and-trailing-ascii-whitespace
+~scalar値:~INFRA#scalar-value
+
+	●HTMLINFRA
+
+即時:~HTMLINFRA#immediately
+接続された:~HTMLINFRA#becomes-connected
+並列的:~HTMLINFRA#in-parallel
+非同期に完了した:~HTMLINFRA#_asynchronously-complete
+文書の中へ挿入された:~HTMLINFRA#insert-an-element-into-a-document
+node.挿入された:~HTMLINFRA#nodes-are-inserted
+
+真偽-属性:~HTMLcms#boolean-attribute
+反映する:~HTMLcdom#reflect
+既知な値のみに制限され:~HTMLcdom#limited-to-only-known-values
+
+~CORS設定群~属性:~HTMLurl#cors-settings-attribute
+~referrer施策~属性:~HTMLurl#referrer-policy-attribute
+~CORS設定群~属性の資格証~mode:~HTMLurl#cors-settings-attribute-credentials-mode
+~Content-Type~header:~HTMLurl#content-type
+相対的に構文解析-:~HTMLurl#parse-a-url
+文書~基底~URL:~HTMLurl#document-base-url
+結果の~URL~record:~HTMLurl#resulting-url-record
+前後~空白~可の妥当かつ空でない~URL:~HTMLurl#valid-non-empty-url-potentially-surrounded-by-spaces
+
+
+
+	●HTMLdom
+分類:~HTMLdom#concept-element-categories
+内容~属性:~HTMLdom#concept-element-attributes
+内容~model:~HTMLdom#concept-element-content-model
+なし:~HTMLdom#concept-content-nothing
+この要素を利用できる文脈:~HTMLdom#concept-element-contexts
+~accessibilityの考慮点:~HTMLdom#concept-element-accessibility-considerations
+~DOM~interface:~HTMLdom#concept-element-dom
+~flow内容:~HTMLdom#flow-content-2
+大域~属性:~HTMLdom#global-attributes
+~metadata内容:~HTMLdom#metadata-content-2
+句ng内容:~HTMLdom#phrasing-content-2
+~scriptを~supportする要素:~HTMLdom#script-supporting-elements-2
+text/html における~tag省略:~HTMLdom#concept-element-tag-omission
+透過的:~HTMLdom#transparent
+表現-:~HTMLdom#represents
+
+	●WAPI
+x.~script:~WAPI#concept-script
+古典~script:~WAPI#classic-script
+古典~scriptを~fetchする:~WAPI#fetch-a-classic-script
+古典~scriptを走らす:~WAPI#run-a-classic-script
+古典~scriptを作成する:~WAPI#creating-a-classic-script
+~inline~script~graphを~fetchする:~WAPI#fetch-an-inline-module-script-graph
+破壊的書込は無視する~counter:~HTMLdynamic#ignore-destructive-writes-counter
+
+~module~script:~WAPI#module-script
+~module~scriptを走らす:~WAPI#run-a-module-script
+外部~module~script~graphを~fetchする:~WAPI#fetch-a-module-script-tree
+~taskを~queueする:~WAPI#queue-a-task
+~scripting:~WAPI#scripting
+~scriptingは不能化-:~WAPI#concept-environment-noscript
+~scriptingは不能化されて:~WAPI#concept-n-noscript
+~scriptingは可能化されて:~WAPI#concept-n-script
+関連な設定群~obj:~WAPI#relevant-settings-object
+
+~script~fetch~options:~WAPI#script-fetch-options
+sfO.暗号用~nonce:~WAPI#concept-script-fetch-options-nonce
+sfO.完全性~metadata:~WAPI#concept-script-fetch-options-integrity
+sfO.構文解析器~metadata:~WAPI#concept-script-fetch-options-parser
+sfO.資格証~mode:~WAPI#concept-script-fetch-options-credentials
+sfO.~referrer施策:~WAPI#concept-script-fetch-options-referrer-policy
+
+大域~obj:~WAPI#global-object
+
+
+
+	●HTML
+構文解析-~error:~HTMLparsing#parse-errors
+~load~eventを遅延-:~HTMLparsing#delay-the-load-event
+~HTML素片~構文解析~algo:~HTMLparsing#html-fragment-parsing-algorithm
+~HTML構文解析器:~HTMLparsing#html-parser
+V.文脈~要素:~HTMLparsing#concept-frag-parse-context
+	~end:~HTMLparsing#scriptEndTag
+~script入子ng~level:~HTMLparsing#script-nesting-level
+	外来の内容:~HTMLparsing#scriptForeignEndTag
+~scriptingは可能化されていたかどうか:~HTMLparsing#scripting-flag
+
+~XML構文解析器:~HTMLxml#xml-parser
+
+閲覧文脈:~BROWSERS#browsing-context
+属する閲覧文脈:~BROWSERS#concept-document-bc
+
+生成元:~ORIGIN#concept-origin
+
+~scriptを阻んでいる~stylesheet:~HEmetadata#a-style-sheet-that-is-blocking-scripts
+
+	~in~XML:~HTMLxml#scriptTagXML
+	~start:~HTMLparsing#scriptTag
+~HTML構文:~HTMLwriting#syntax
+~XML構文:~HTMLxml#the-xhtml-syntax
+
+
+	●others
+~CORS~protocol:~FETCH#http-cors-protocol
+資格証~mode:~FETCH#concept-request-credentials-mode
+rq.完全性~metadata:~FETCH#concept-request-integrity-metadata
+~fetch:~FETCH#concept-fetch
+~fetching:~FETCH#concept-fetch
+
+符号化法:~ENCODING#encoding
+~labelから符号化法を取得する:~ENCODING#concept-encoding-get
+
+~URL:~URL1#concept-url
+
+~referrer施策:~REFERRER-POLICY#referrer-policy
+
+~MIME型:~MIMESNIFF#mime-type
+妥当な~MIME型~文字列:~MIMESNIFF#valid-mime-type
+~JS~MIME型:~MIMESNIFF#javascript-mime-type
+~JSON~MIME型:~MIMESNIFF#json-mime-type
+~JS~MIME型に~essence合致-:~MIMESNIFF#javascript-mime-type-essence-match
+
+P.Module:~TC39#prod-Module
+P.Script:~TC39#prod-Script
+
+要素における~inline型の挙動は~CSPにより阻止されるべきか？:~CSP3#should-block-inline
+
+
+●●words_table1
+
+●●words_table
+
+	●データ／操作／IDL
+scalar::::スカラー
+	-:entry
+受入-:adopt::~
+	-:unset
+形式変換-:transform::~
+形式変換:transformation::~
+
+	●構造
+	子たち:children
+平坦:flat:~
+	平坦~化:flatten
+	owning
+
+	●文字列／構文
+	mark:
+剥ぐ:stripする:~
+正規表現:regular expression::~
+式:expression::~
+省略:omission:~
+省略不可:omissibleでない:~
+開始tag:start tag::開始 tag:開始タグ
+終了tag:end tag::終了 tag:終了タグ
+文:statement:~
+
+	●slot
+shadow:
+slot:
+slottable:
+	スロット
+割当され:assignされ::あてがわれ
+割当する:assignする::あてがう
+割当済み:assign 済み::あてがい済み
+
+	●処理
+	~scriptなしを前提に:scriptless
+不活:inert::~
+	import:
+古典:classic::~::クラシック
+取込む:importする::取り込む
+取込まれ:importされ::取り込まれ
+取込める:importできる::取り込める
+阻まず:non-blocking::~::非ブロッキング
+阻み:blockし::~::ブロックし
+	阻まなくなる:unblocked
+	他を阻まない:non-blocking
+	~~方式:fashion
+	-:pending
+開始済み:already started::~
+準備-:prepare::~
+準備:preparation::~
+解析器実行準備済み:ready to be parser-executed::解析器実行 準備済み::パーサ実行 準備済み
+	parser-executed
+	parser-inserted
+	parsing-blocking
+破壊的書込:destructive-writes::破壊的な書き込み
+
+実行ng:executing::実行
+
+	評価-:evaluation
+	そのまま:onward
+
+	●fetch／network／保安
+	事前~fetching:prefetching
+Content-Type:
+nonce::::ナンス
+load:
+暗号用:cryptographic::~
+	阻止される^i:Blocked
+
+	●内容model
+句ng:phrasing::句::フレージング
+透過的:transparent::~
+外来の:foreign::~
+分類:category:~
+	categories
+文書化:documentation::~
+
+	●仕様
+
+上品:graceful:~
+冗長:redundant:~
+図式:schematic diagram:~
+
+自明:trivial:~
+不用意:accidental:~
+変則的:strange:~
+衝突:collision:~
+
+代理:proxy::~
+依存物:dependencies:~
+提示-:present:~
+陥穽:pitfall:~
+退行-:degrade:~
+	-:relate
+浪費-:waste:~
+選択的:selective:~
+競合-:conflict:~
+採用-:adopt:~
+免れる:exemptする:~
+
+	解釈し直す:reinterpret
+	ほぼ定義されていない:poorly-defined
+	強調表示:highlight
+	~~説明:illustrate
+	hope
+	interesting
+	likely
+	注目すべき:notable
+	potential
+	put
+	散らばって:scattered
+	易く:help
+	面した-:face:
+	refer
+	ちょっとしたことで抵触し易く:prone to triggering:
+	ここで起きていること:What is going on here 
+	けったいな読み物に変えてしまうmore interesting reading experience
+	chosen
+	using
+	-:Suppose
+	記され:put
+	終え:finish 
+	見かけ／様に見える:look 
+	切る:turning off
+	ふるまい:act
+	-:encountered therein
+	より明確には:for clarification
+	アリな限りすぐに:as soon as possible
+	可能性もある:possible
+	逆に:conversely
+	~~直に記して:hard-coded
+	accordingly
+	ひねくれた取扱い:contortion
+	風変わりな:exotic:
+	得られる:gain
+	no longer
+	modulo
+	namely
+	ざるを得なく:by necessity
+	当面の間:meantime／meanwhile
+	具体的には:for instance
+	~~理解しがたい:weird
+	その場で:on-the-fly
+	直感に反する:unintuitive
+	部分もある:somewhat
+	違い:distinction
+	maybe
+	一方で:however
+	になることもある:potentially
+	note
+	なまくら:blunt instrument
+	~code片:snippet
+
+
+	●未分類
+XSLT:
+XPath:
+essence:
+column::::カラム
+game::::ゲーム
+	jump::::
+license::::ライセンス
+	option
+strict:
+template:
+table::::テーブル
+video::::ビデオ
+代用-:substitute::~
+	代用-:substitution
+終了-:terminate:~
+連結-:concatenate:~
+	concatenation
+選択-:select:~
+絞込んだ:filterした:絞り込んだ
+処理命令:processing instruction:~
+探索:search::検索
+ニュースサイト:news site::~
+
+	-:destination
+	増減
+	calling
+	~clone時の:cloning
+	go
+	going
+	remain
+	having
+	labeled
+	made
+	marked
+	閉じられた:closing
+	対に:balance
+	行く:go
+	探してlook for
+	戻-:back 
+	書-:write 
+	現れ:appear 
+	詳細表示を切り替える:show or hide
+	なくなる:stop
+	節:section 
+	増分:increment
+	より大きな:bigger
+	direct-to-DOM
+	non-empty
+
+	●指示語
+旧-:old:~
+	旧-:older
+	earlier
+	異なる:differently
+	側:side
+	end
+	left
+	行:line
+	fifth
+	forth
+	four-column
+	piece
+	mostly
+	nonetheles
+	previously
+	今:now
+	冒頭:top
+	後で:later
+	他所:other parts
+	一部:part of
+	ever
+	entire
+	amongst
+	もの:thing
+	主な／主:main 
+	2 :two 
+	尽きるまで，there are no 〜 left
+	neither
+	part
+	somehow
+	sometime
+	until:
+	-外:outside
+	末尾:the end
+	同様:similar
+	広く:wide
+	周りで:around
+	始め近く:near the beginning
+
+●●html_code_list
+
+■script-2
+<％script src="game-engine.js"><％/script>
+<％script type="text/x-game-map">
+........U.........e
+o............A....e
+.....A.....AAA....e
+.A..AAA...AAAAA...e
+<％/script>
+
+■script-3
+<％script>
+ function calculate(%form) {
+   var %price = 832000;
+   if (%form.elements.brakes.checked)
+     %price += 160000;
+   if (%form.elements.radio.checked)
+     %price += 400000;
+   if (%form.elements.turbo.checked)
+     %price += 800000;
+   if (%form.elements.sticker.checked)
+     %price += 40000;
+   %form.elements.result.value = price;
+ }
+<％/script>
+<form
+   name="pricecalc"
+   onsubmit="return false"
+   onchange="calculate(this)"
+>
+ <fieldset>
+  <legend>車体価格を再計算する</legend>
+  <p>基本価格：83 万 2000 円</p>
+  <p>追加オプション：</p>
+  <ul>
+   <li><label><input type=checkbox name=brakes>
+      セラミックブレーキ（ 16 万円）</label></li>
+   <li><label><input type=checkbox name=radio>
+      衛星ラジオ（ 40 万円）</label></li>
+   <li><label><input type=checkbox name=turbo>
+      ターボチャージャー（ 80 万円）</label></li>
+   <li><label><input type=checkbox name=sticker>
+      "XZ" ステッカー（ 4 万円）</label></li>
+  </ul>
+  <p>合計価格： <output name=result></output> 円</p>
+ </fieldset>
+ <％script>
+  calculate(document.forms.pricecalc);
+ <％/script>
+</form>
+
+■script-4
+<％script type="module" src="app.mjs"><％/script>
+
+■script-5
+<％script type="module" src="app.mjs"><％/script>
+<％script nomodule defer src="classic-app-bundle.js"><％/script>
+
+■script-6
+<％script type="module">
+ import { walkAllTextNodeDescendants } from "./dom-utils.mjs";
+％
+ function substitute(%textNode) {
+   %textNode.data = %textNode.data.replace( /。/g, "っぽい。" );
+ }
+％
+ walkAllTextNodeDescendants(document.body, substitute);
+<％/script>
+
+■
+script-restrictions-1
+script-restrictions-2
+script-restrictions-3
+
+■inline-documentation-1
+<％script src="cool-effects.js">
+ // 新たなインスタンスを作成するときは、次を利用すること：
+ //    var %e = new Effect();
+ // 効果を開始する／停止するときは、 .play() ／ .stop() を利用すること：
+ //    %e.play();
+ //    %e.stop();
+<％/script>
+
+ // create new instances using:
+ //    var e = new Effect();
+ // start the effect using .play, stop using .stop:
+
+■noscript-1
+<form action="calcSquare.php">
+ <p>
+  <label for=x>数値</label>:
+  <input id="x" name="x" type="number">
+ </p>
+ <％script>
+  var %x = document.getElementById('x');
+  var %output = document.createElement('p');
+  %output.textContent = '数値を入れてください。二乗した結果が返されます。';
+  %x.form.appendChild(%output);
+  %x.form.onsubmit = function () { return false; }
+  %x.oninput = function () {
+    var %v = %x.valueAsNumber;
+    %output.textContent = %v + ' の二乗は ' + %v * %v ' です。';
+  };
+ <％/script>
+ <％noscript>
+  <input type=submit value="二乗を計算する">
+ <％/noscript>
+</form>
+
+Number
+  output.textContent = 'Type a number; it will be squared right then!';
+
+
+■noscript-2
+<form action="calcSquare.php">
+ <p>
+  <label for=x>数値</label>:
+  <input id="x" name="x" type="number">
+ </p>
+ ＜<input id="submit" type=submit value="二乗を計算する">＞
+ <％script>
+  var %x = document.getElementById('x');
+  var %output = document.createElement('p');
+  %output.textContent = '数値を入れてください。二乗した結果が返されます。';
+  %x.form.appendChild(%output);
+  %x.form.onsubmit = function () { return false; }
+  %x.oninput = function () {
+    var %v = %x.valueAsNumber;
+    %output.textContent = %v + ' の二乗は ' + %v * %v ' です。';
+  };
+  ＜var %submit = document.getElementById('submit');＞
+  ＜%submit.parentNode.removeChild(%submit);＞
+ <％/script>
+</form>
+
+■template-1
+<!doctype html>
+<html lang="ja">
+ <head>
+  <title>宿題</title>
+ <body>
+  <template id="template"><p>😀</p></template>
+  <％script>
+   let %num = 3;
+   const %fragment =
+      document.getElementById('template').content.cloneNode(true);
+   while (%num -- > 1) {
+     %fragment.firstChild.before(%fragment.firstChild.cloneNode(true));
+     %fragment.firstChild.textContent += %fragment.lastChild.textContent;
+   }
+   document.body.appendChild(%fragment);
+  <％/script>
+</html>
+
+■template-2
+<!DOCTYPE html>
+<html lang='en'>
+<title>Cat data</title>
+<％script>
+ // ここではデータを直に記しているが、サーバから得るようにすることもできる。
+ var %data = [
+   {
+      name: 'Pillar',
+      color: 'Ticked Tabby',
+      sex: 'Female (neutered)',
+      legs: 3
+   },
+   {
+      name: 'Hedral',
+      color: 'Tuxedo',
+      sex: 'Male (neutered)',
+      legs: 4
+   },
+ ];
+<％/script>
+<table>
+ <thead>
+  <tr>
+   <th>Name <th>Colour <th>Sex <th>Legs
+ <tbody>
+  <template id="row">
+   <tr><td><td><td><td>
+  </template>
+</table>
+<％script>
+ var %template = document.querySelector('#row');
+ for (var %i = 0; %i < %data.length; %i += 1) {
+   var %cat = data[%i];
+   var %clone = %template.content.cloneNode(true);
+   var %cells = %clone.querySelectorAll('td');
+   %cells[0].textContent = %cat.name;
+   %cells[1].textContent = %cat.color;
+   %cells[2].textContent = %cat.sex;
+   %cells[3].textContent = %cat.legs;
+   %template.parentNode.appendChild(%clone);
+ }
+<％/script>
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる
+HTML 仕様の（ § The elements of HTML 内の）
+<a href="~SPEC_URL">§ Scripting</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+</head>
+
+<body>
+
+<header id="head">
+	<hgroup>
+<h1>スクリプトの利用 — Scripting</h1>
+
+	</hgroup>
+</header>
+
+<main id="MAIN" hidden>
+
+	<section id="scripting-3">
+<h2 title="Scripting">4.12. ~scriptの利用</h2>
+
+<p>
+~scriptにより、作者は，文書に対話性を追加できるようになる。
+◎
+Scripts allow authors to add interactivity to their documents.
+</p>
+
+<p>
+作者には、アリな所では，~scriptingを代替する宣言的な仕組みを利用することが奨励される
+— そうした方が保守し易くなることが多く、また，~scriptingを不能化している利用者も多くいる。
+◎
+Authors are encouraged to use declarative alternatives to scripting where possible, as declarative mechanisms are often more maintainable, and many users disable scripting.
+</p>
+
+<div class="example">
+<p>
+例えば、~scriptを利用して，ある一節の詳細表示を切り替える代わりに、
+`details$e 要素を利用することもできる。
+◎
+For example, instead of using script to show or hide a section to show more details, the details element could be used.
+</p>
+
+</div>
+
+<p>
+作者にはまた、~scripting~supportが無い下では，自身の~appを上品に退行させることも奨励される。
+◎
+Authors are also encouraged to make their applications degrade gracefully in the absence of scripting support.
+</p>
+
+<div class="example">
+
+<p>
+例えば作者は、~tableの~header内に，~tableを動的に~sortし直すような~linkを供している場合、~serverに~sort済みの~tableを要請することで，~scriptなしに~linkを機能させることもできる。
+◎
+For example, if an author provides a link in a table header to dynamically resort the table, the link could also be made to function without scripts by requesting the sorted table from the server.
+</p>
+
+</div>
+
+		<section id="_conventions">
+<h3>【この訳に固有の表記規約】</h3>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, ε, ~IF, ~THROW, 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+<p>
+`文書片@
+は、 `DocumentFragment$I ~objの略記である。
+</p>
+
+		</section>
+
+		<section id="the-script-element">
+<h3 title="The script element">4.12.1. `script^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$：</dt>
+	<dd>
+`~metadata内容$ ／ `~flow内容$ ／ `句ng内容$ ／ `~scriptを~supportする要素$
+◎
+Metadata content.
+◎
+Flow content.
+◎
+Phrasing content.
+◎
+Script-supporting element.
+</dd>
+
+	<dt>`この要素を利用できる文脈$：</dt>
+	<dd>
+`~metadata内容$ ／
+`句ng内容$ ／
+`~scriptを~supportする要素$
+が期待される所。
+◎
+Where metadata content is expected.
+◎
+Where phrasing content is expected.
+◎
+Where script-supporting elements are expected.
+</dd>
+
+	<dt>`内容~model$：</dt>
+	<dd>
+`src$a 属性を有さない場合、 `type$a 属性の値にも依存するが，`~script内容~制約$に合致しなければナラナイ。
+◎
+If there is no src attribute, depends on the value of the type attribute, but must match script content restrictions.
+</dd>
+	<dd>
+`src$a 属性を有する場合、要素は空にされているか, または
+`~script内容~制約$にも合致するような`~script文書化$のみを包含していなければナラナイ。
+◎
+If there is a src attribute, the element must be either empty or contain only script documentation that also matches script content restrictions.
+</dd>
+
+	<dt>`text/html における~tag省略$：</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$：</dt>
+	<dd>`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+`src$a
+— 資源の~address
+◎
+src — Address of the resource
+</dd>
+	<dd>
+`type$a
+— ~scriptの種別
+◎
+type — Type of script
+</dd>
+	<dd>
+`nomodule$a
+— `~module~script$を~supportする~UAにおける実行を防止する
+◎
+nomodule — Prevents execution in user agents that support module scripts
+</dd>
+	<dd>
+`async$a
+— ~scriptが可用になったら実行する
+— ~fetchしている間は他を阻むことなく
+◎
+async — Execute script when available, without blocking while fetching
+</dd>
+	<dd>
+`defer$a
+— ~script実行を先送りする
+◎
+defer — Defer script execution
+</dd>
+	<dd>
+`crossorigin$a
+— 要素が非同一-生成元 要請をどう取扱うか
+◎
+crossorigin — How the element handles crossorigin requests
+</dd>
+	<dd>
+`integrity$a
+— `Subresource Integrity^cite `SRI$r（下位資源の完全性）検査に利用される完全性~metadata
+◎
+integrity — Integrity metadata used in Subresource Integrity checks [SRI]
+</dd>
+
+	<dd>
+`referrerpolicy$a
+— 要素により起動された`~fetch$用の`~referrer施策$
+◎
+referrerpolicy — Referrer policy for fetches initiated by the element
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`script$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLScriptElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [`CEReactions$] attribute USVString `src$m;
+  [`CEReactions$] attribute DOMString `type$m;
+  [`CEReactions$] attribute boolean `noModule$m;
+  [`CEReactions$] attribute boolean `async$m;
+  [`CEReactions$] attribute boolean `defer$m;
+  [`CEReactions$] attribute DOMString? `crossOrigin$m;
+  [`CEReactions$] attribute DOMString `text$m;
+  [`CEReactions$] attribute DOMString `integrity$m;
+  [`CEReactions$] attribute DOMString `referrerPolicy$m;
+
+  // `HTMLScriptElement$obsMb
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`script$e 要素により、作者は，文書~内に［
+動的~script ／ ~data~block
+］を含ませることが可能になる。
+この要素は、利用者~向けの内容は`表現-$しない。
+◎
+The script element allows authors to include dynamic script and data blocks in their documents. The element does not represent content for the user.
+</p>
+
+<p>
+`type@a
+属性は、表現される~script種別を~custom化できるようにする：
+◎
+The type attribute allows customization of the type of script represented:
+</p>
+
+<ul>
+	<li>
+この属性を省略した場合, あるいは
+`~JS~MIME型に~essence合致-$するものに設定した場合、当の~scriptは`古典~script$であるとされ，~JSの `Script$P ~top-level生成規則に則って解釈されることになる。
+古典~scriptは、
+`src$a 属性が設定されている場合に限り，［
+`async$a, `defer$a
+］属性に影響される。
+`type$a 属性を設定するのは冗長であり、作者は，代わりに省略するべきである。
+◎
+Omitting the attribute, setting it to the empty string, or setting it to a JavaScript MIME type essence match, means that the script is a classic script, to be interpreted according to the JavaScript Script top-level production. Classic scripts are affected by the async and defer attributes, but only when the src attribute is set. Authors should omit the type attribute instead of redundantly setting it.
+</li>
+	<li>
+この属性~値を［
+`~ASCII大小無視$で `module^l に合致する文字列
+］に設定することは、当の~scriptが`~module~script$になり，~JSの `Module$P ~top-level生成規則に則って解釈されることになることを意味する。
+~module~scriptは、 `defer$a 属性からは影響されないが，
+`async$a 属性からは影響される（ `src$a 属性の状態に関わらず）。
+◎
+Setting the attribute to an ASCII case-insensitive match for the string "module" means that the script is a module script, to be interpreted according to the JavaScript Module top-level production. Module scripts are not affected by the defer attribute, but are affected by the async attribute (regardless of the state of the src attribute).
+</li>
+	<li>
+この属性~値を他の値に設定した場合、~scriptは
+`~data~block@
+であるとされ，処理されなくなる。
+どの `script$e 属性も，~data~blockに効果を及ぼすことはない（ `type$a 自身は除いて）。
+作者は、~data~blockを~~指示するときは，`~JS~MIME型に~essence合致-$しない`妥当な~MIME型~文字列$を利用しなければナラナイ。
+◎
+Setting the attribute to any other value means that the script is a data block, which is not processed. None of the script attributes (except type itself) have any effect on data blocks. Authors must use a valid MIME type string that is not a JavaScript MIME type essence match to denote data blocks.
+</li>
+</ul>
+
+<p class="note">注記：
+`~data~block$に，`妥当な~MIME型~文字列$を利用しなければナラナイとする要件は、将来に起こり得る衝突を避けるためにある。
+さもなければ、この仕様が，いつか`~script$xに追加的な種別を追加した場合に、それらが
+— 値 `module^l が`~module~script$を~~指示するのと同様に —
+何かを誘発し得ることになる。
+今，妥当な~MIME型~文字列を利用しておけば、~data~blockは，将来の~UAからも何か別の~script種別に解釈し直されないことを確保できる。
+◎
+The requirement that data blocks must be denoted using a valid MIME type string is in place to avoid potential future collisions. If this specification ever adds additional types of script, they will be triggered by setting the type attribute to something which is not a MIME type, like how the "module" value denotes module scripts. By using a valid MIME type string now, you ensure that your data block will not ever be reinterpreted as a different script type, even in future user agents.
+</p>
+
+<p>
+［
+`古典~script$,
+`~module~script$
+］両者とも、~inlineに埋込むことも，
+`src@a
+属性を指定して 外部~fileから取込むこともできる。
+この `src^a 属性~値は、利用する外部~script資源の`~URL$を与える
+— その値は、`前後~空白~可の妥当かつ空でない~URL$でなければナラナイ。
+◎
+Classic scripts and module scripts can be embedded inline, or be imported from an external file using the src attribute, which if specified gives the URL of the external script resource to use. If src is specified, it must be a valid non-empty URL potentially surrounded by spaces.＼
+</p>
+
+<p>
+［
+~inline `script$e 要素 ／ 外部~script資源
+］の内容は、［
+`古典~script$の場合は ~JS仕様 `JAVASCRIPT$r の `Script$P 生成規則／
+`~module~script$の場合は 同~仕様の `Module$P 生成規則
+］による要件に適合しなければナラナイ。
+◎
+The contents of inline script elements, or the external script resource, must conform with the requirements of the JavaScript specification's Script or Module productions, for classic scripts and module scripts respectively. [JAVASCRIPT]
+</p>
+
+<p>
+`script$e 要素を，`~data~block$を含ませるために利用する場合：
+◎
+When used to include data blocks,＼
+</p>
+
+<ul>
+	<li>
+~dataは、~inlineに埋込まなければナラナイ。
+◎
+the data must be embedded inline,＼
+</li>
+	<li>
+`type$a 属性を利用して，~dataの形式も与えなければナラナイ。
+◎
+the format of the data must be given using the type attribute, and＼
+</li>
+	<li>
+要素の内容は、利用される形式に定義される要件に適合していなければナラナイ。
+◎
+the contents of the script element must conform to the requirements defined for the format used.＼
+</li>
+	<li>
+次に挙げる属性は、要素に指定されてはナラナイ
+⇒
+`src$a, `async$a, `nomodule$a, `defer$a, `crossorigin$a, `integrity$a, `referrerpolicy$a
+◎
+The src, async, nomodule, defer, crossorigin, integrity, and referrerpolicy attributes must not be specified.
+</li>
+</ul>
+
+<p>
+`nomodule@a
+属性は，`真偽-属性$であり、`~module~script$を~supportする~UAにおいて~scriptが実行されるのを防止する。
+これにより、
+<a href="#script-nomodule-example">下の例に示す</a>ように，［
+現代の~UAには`~module~script$,
+旧-~UAには`古典~script$
+］を選択的に実行させれるようになる。
+`nomodule$a 属性は、`~module~script$上に指定されてはナラナイ（また，指定されても無視される）。
+◎
+The nomodule attribute is a boolean attribute that prevents a script from being executed in user agents that support module scripts. This allows selective execution of module scripts in modern user agents and classic scripts in older user agents, as shown below. The nomodule attribute must not be specified on module scripts (and will be ignored if it is).
+</p>
+
+<p>
+`async@a,
+`defer@a
+属性は，`真偽-属性$であり、当の~scriptがどう評価されるべきかを指示する。
+`古典~script$に対しては、両~属性とも指定してヨイ
+— が、 `src$a 属性を有していない場合は，どちらも指定してはナラナイ。
+`~module~script$に対しては、
+`async$a 属性は指定してもヨイが，
+`defer$a 属性は指定してはナラナイ。
+◎
+The async and defer attributes are boolean attributes that indicate how the script should be evaluated. Classic scripts may specify defer or async, but must not specify either unless the src attribute is present. Module scripts may specify the async attribute, but must not specify the defer attribute.
+</p>
+
+<p>
+これらの属性を利用して選択され得る／できる~modeとしてアリなものは、~script種別に依存して，いくつかある：
+◎
+There are several possible modes that can be selected using these attributes, and depending on the script's type.
+</p>
+
+<ul>
+	<li>
+<p>
+`古典~script$に対しては：
+◎
+For classic scripts,＼
+</p>
+
+		<ul>
+			<li>
+要素は `async$a 属性を有する場合
+⇒
+~scriptは，~pageの構文解析と`並列的$に~fetchされ、可用になり次第，評価されることになる（構文解析が完了する前にもなり得る）。
+◎
+if the async attribute is present, then the classic script will be fetched in parallel to parsing and evaluated as soon as it is available (potentially before parsing completes).＼
+</li>
+			<li>
+要素は `async$a 属性を有さないが， `defer$a 属性は有する場合
+⇒
+~scriptは`並列的$に~fetchされ，~pageが構文解析を終えた時点で評価される。
+◎
+If the async attribute is not present but the defer attribute is present, then the classic script will be fetched in parallel and evaluated when the page has finished parsing.＼
+</li>
+			<li>
+要素は両~属性とも有さない場合
+⇒
+~scriptは，即時に~fetchされた上で評価され、両者とも完了するまで~pageの構文解析を阻むことになる。
+◎
+If neither attribute is present, then the script is fetched and evaluated immediately, blocking parsing until these are both complete.
+</li>
+		</ul>
+	</li>
+	<li>
+<p>
+`~module~script$に対しては：
+◎
+For module scripts,＼
+</p>
+
+		<ul>
+			<li>
+要素は `async$a 属性を有する場合
+⇒
+~scriptとそのすべての依存物
+【~scriptが取込む他の~script】
+は，~pageの構文解析と`並列的$に~fetchされ、可用になり次第，評価されることになる（構文解析が完了する前にもなり得る）。
+◎
+if the async attribute is present, then the module script and all its dependencies will be fetched in parallel to parsing, and the module script will be evaluated as soon as it is available (potentially before parsing completes).＼
+</li>
+			<li>
+他の場合
+⇒
+~scriptとその依存物は，構文解析と`並列的$に~fetchされ、~pageが構文解析を終えた時点で評価されることになる。
+◎
+Otherwise, the module script and its dependencies will be fetched in parallel to parsing and evaluated when the page has finished parsing.＼
+</li>
+			<li>
+（ `defer$a 属性による効果は、~module~scriptにはない。）
+◎
+(The defer attribute has no effect on module scripts.)
+</li>
+		</ul>
+	</li>
+</ul>
+
+<p>
+これらすべては、次の図式に要約される：
+◎
+This is all summarized in the following schematic diagram:
+</p>
+
+<figure>
+<img
+	src="HTML-resources/asyncdefer.svg"
+	alt=""
+	style="min-width:720px; min-height:220px;"
+>
+<figcaption style="font-size:smaller;">
+単に
+`&lt;script&gt;^s
+と記した場合、構文解析は~fetchingと実行により中断される。
+`&lt;script defer&gt;^s
+とした場合、構文解析と並列的に~fetchされ，すべての構文解析を終えた後に実行されることになる。
+`&lt;script async&gt;^s
+とした場合、~fetchingは構文解析と並列的になるが，構文解析は~scriptの実行により中断される。
+`&lt;script type="module"&gt;^s
+とした場合、
+`&lt;script defer&gt;^s
+とした場合と類似するが，依存物も~fetchされる。
+`&lt;script type="module" async&gt;^s
+とした場合、依存物の~fetchingを伴うことを除いて，
+`&lt;script async&gt;^s
+とした場合と類似する。
+◎
+With &lt;script&gt;, parsing is interrupted by fetching and execution. With &lt;script defer&gt;, fetching is parallel to parsing and execution takes place after all parsing has finished. And with &lt;script async&gt;, fetching is parallel to parsing but once it finishes parsing is interrupted to execute the script. The story for &lt;script type="module"&gt; is similar to &lt;script defer&gt;, but the dependencies will be fetched as well, and the story for &lt;script type="module" async&gt; is similar to &lt;script async&gt; with the extra dependency fetching.
+</figcaption></figure>
+
+<p></p>
+
+<div class="note">
+<p>注記：
+これらの属性に対する正確な処理の詳細のほとんどは，歴史的な理由によるものであり、自明でない部分もある，~HTMLのいくつもの側面が孕まれている。
+したがって，実装の要件は、この仕様~全体に散らばらざるを得なくなっている。
+（この節の）下に示す各種~algoは，この処理の中核を述べるが、それらの~algoと, 次に挙げるもの等々とは，相互に参照し合う：
+</p>
+
+<ul><li>
+［
+~HTML内 ／
+<a href="~HTMLparsing#scriptForeignEndTag">外来の内容~内</a> ／
+<a href="~HTMLxml#scriptTagXML">~XML内</a>
+］における［
+`script$e の
+<a href="~HTMLparsing#scriptTag">開始tag</a>,
+<a href="~HTMLparsing#scriptEndTag">終了tag</a>
+］に対する各種 構文解析~規則
+</li><li>`document.write()$m ~methodの規則
+</li><li>`~scripting$ の取扱い
+</li></ul>
+◎
+The exact processing details for these attributes are, for mostly historical reasons, somewhat non-trivial, involving a number of aspects of HTML. The implementation requirements are therefore by necessity scattered throughout the specification. The algorithms below (in this section) describe the core of this processing, but these algorithms reference and are referenced by the parsing rules for script start and end tags in HTML, in foreign content, and in XML, the rules for the document.write() method, the handling of scripting, etc.
+</div>
+
+<p>
+`async$a 属性が指定されている下でも， `defer$a 属性が指定されてヨイ
+— そうすることで、［
+`defer$a は~supportするが `async$a は~supportしないような，旧来の~web~browser
+］においても、既定である他を阻む挙動に代えて， `defer$a による挙動に~fall-backするようになる。
+◎
+The defer attribute may be specified even if the async attribute is specified, to cause legacy web browsers that only support defer (and not async) to fall back to the defer behavior instead of the blocking behavior that is the default.
+</p>
+
+<p>
+`crossorigin@a
+属性は、`~CORS設定群~属性$である。
+この属性は、`古典~script$に対しては［
+他の`生成元$から得された~scriptによる~error情報が公開されるかどうか
+］を制御し，`~module~script$に対しては［
+非同一-生成元 要請に利用される`資格証~mode$
+］を制御する。
+◎
+The crossorigin attribute is a CORS settings attribute. For classic scripts, it controls whether error information will be exposed, when the script is obtained from other origins. For module scripts, it controls the credentials mode used for cross-origin requests.
+</p>
+
+<p class="note">注記：
+`古典~script$と違って，`~module~script$では、非同一-生成元へ~fetchするときには，`~CORS~protocol$の利用が要求される。
+◎
+Unlike classic scripts, module scripts require the use of the CORS protocol for cross-origin fetching.
+</p>
+
+<p>
+`integrity@a
+属性は、［
+この要素が担当する要請
+］の`完全性~metadata$rqを表現する。
+値は~textである。
+この属性は、 `src$a 属性を指定していない場合には，指定してはナラナイ。
+`SRI$r
+◎
+The integrity attribute represents the integrity metadata for requests which this element is responsible for. The value is text. The integrity attribute must not be specified when the src attribute is not specified. [SRI]
+</p>
+
+<p>
+`referrerpolicy@a 属性は`~referrer施策~属性$である。
+その目的は、［
+~script, および
+それが取込む~script
+］を`~fetch$するときに利用される`~referrer施策$を設定することである。
+`REFERRERPOLICY$r
+◎
+The referrerpolicy attribute is a referrer policy attribute. Its purpose is to set the referrer policy used when fetching the script, as well as any scripts imported from it. [REFERRERPOLICY]
+</p>
+
+<div class="example">
+<p>
+他の下位資源ではなく，取込まれる~scriptを~fetchするときに利用される `script^e 要素の~referrer施策の例：
+◎
+An example of a script element's referrer policy being used when fetching imported scripts but not other subresources:
+</p>
+
+<pre class="lang-html">
+&lt;script referrerpolicy="origin"&gt;
+  fetch('/api/data');   /* <span class="comment">
+`script^e の~referrer施策では~fetchされない。
+◎
+not fetched with &lt;script&gt;'s referrer policy
+</span> */
+  import('./utils.mjs'); /* <span class="comment">
+`script^e の~referrer施策（この事例では `origin^l ）で~fetchされる。
+◎
+is fetched with &lt;script&gt;'s referrer policy ("origin" in this case)
+</span> */
+&lt;/script&gt;
+</pre>
+
+</div>
+
+<p>
+次に挙げる内容~属性を動的に変更しても，直接的な効果はない
+— これらの属性は、下に述べる特定の時点に限り利用される
+⇒
+`src$a,
+`type$a,
+`nomodule$a,
+`async$a,
+`defer$a,
+`crossorigin$a,
+`integrity$a,
+`referrerpolicy$a
+◎
+Changing the src, type, nomodule, async, defer, crossorigin, integrity, and referrerpolicy attributes dynamically has no direct effect; these attributes are only used at specific times described below.
+</p>
+
+<div>
+<p>
+`src@m
+~IDL属性は、
+`src$a 内容~属性を`反映する$モノトスル。
+</p>
+
+<p>
+`type@m
+~IDL属性は、
+`type$a 内容~属性を`反映する$モノトスル。
+</p>
+
+<p>
+`defer@m
+~IDL属性は、
+`defer$a 内容~属性を`反映する$モノトスル。
+</p>
+
+<p>
+`integrity@m
+~IDL属性は、
+`integrity$a 内容~属性を`反映する$モノトスル。
+</p>
+◎
+The IDL attributes src, type, defer, and integrity, must each reflect the respective content attributes of the same name.
+</div>
+
+<p>
+`referrerPolicy@m
+~IDL属性は、`既知な値のみに制限され$る下で，
+`referrerpolicy$a 内容~属性を`反映する$モノトスル。
+◎
+The referrerPolicy IDL attribute must reflect the referrerpolicy content attribute, limited to only known values.
+</p>
+
+<p>
+`crossOrigin@m
+~IDL属性は、`既知な値のみに制限され$る下で，
+`crossorigin$a 内容~属性を`反映する$モノトスル。
+◎
+The crossOrigin IDL attribute must reflect the crossorigin content attribute, limited to only known values.
+</p>
+
+<p>
+`noModule@m
+~IDL属性は、
+`nomodule$a 内容~属性を`反映する$モノトスル。
+◎
+The noModule IDL attribute must reflect the nomodule content attribute.
+</p>
+
+<p>
+`async@m
+~IDL属性は、要素が非同期に実行されるかどうかを制御する：
+◎
+The async IDL attribute controls whether the element will execute asynchronously or not.＼
+</p>
+<ul class="switch">
+	<li>
+<p>
+［
+コレの`阻まず~flag$ ~EQ ~T
+］の下では：
+◎
+If the element's "non-blocking" flag is set, then,＼
+</p>
+		<ul>
+			<li class="algo">
+取得子~手続きは
+⇒
+~RET ~T
+◎
+on getting, the async IDL attribute must return true, and＼
+</li>
+			<li class="algo">
+<p>
+設定子~手続きは：
+</p>
+				<ol>
+					<li>
+コレの`阻まず~flag$ ~SET ~F
+</li>
+					<li>
+~IF［
+所与の値 ~EQ ~F
+］
+⇒
+コレの `async$a 内容~属性を除去する
+</li>
+					<li>
+~ELSE
+⇒
+コレの `async$a 内容~属性 ~SET 空~文字列
+</li>
+				</ol>
+◎
+on setting, the "non-blocking" flag must first be unset, and then the content attribute must be removed if the IDL attribute's new value is false, and must be set to the empty string if the IDL attribute's new value is true.＼
+</li>
+		</ul>
+	</li>
+	<li>
+［
+コレの`阻まず~flag$ ~EQ ~F
+］の下では
+⇒
+`async$a 内容~属性を`反映する$モノトスル。
+◎
+If the element's "non-blocking" flag is not set, the IDL attribute must reflect the async content attribute.
+</li>
+</ul>
+
+<dl class="domintro">
+	<dt>%script . `text$m [ = %value ]</dt>
+	<dd>
+要素の`子~text内容$を返す。
+◎
+Returns the child text content of the element.
+</dd>
+	<dd>
+設定して，要素の子たちを所与の値に置換できる。
+◎
+Can be set, to replace the element's children with the given value.
+</dd>
+</dl>
+
+<div class="algo">
+`text@m
+取得子~手続きは
+⇒
+~RET コレの`子~text内容$
+◎
+The text attribute's getter must return this script element's child text content.
+</div>
+
+<div class="algo">
+`text$m 設定子~手続きは
+⇒
+コレの`全~内容を文字列に置換する$( 所与の値 )
+◎
+The text attribute's setter must string replace all with the given value within this script element.
+</div>
+
+<p class="note">注記：
+`document.write()$m ~methodを利用して挿入された `script$e 要素は、
+<a href="~HTMLparsing#document-written-scripts-intervention">通例的には</a>
+実行される（概して，その間は、更なる~script実行や~HTML構文解析は，阻まれる）。［
+`innerHTML$m ／ `outerHTML$m
+］属性を利用して挿入されたものは、全く実行されない。
+◎
+When inserted using the document.write() method, script elements usually execute (typically blocking further script execution or HTML parsing). When inserted using the innerHTML and outerHTML attributes, they do not execute at all.
+</p>
+
+<div class="example">
+
+<p>
+次の例には、 2 個の `script$e 要素
+— 外部`古典~script$を埋込むもの, および
+`~data~block$として何らかの~dataを含むもの —
+が利用されている。
+◎
+In this example, two script elements are used. One embeds an external classic script, and the other includes some data as a data block.
+</p>
+
+`script-2^xCode
+
+<p>
+この事例における~dataは、その~scriptにより，~video~gameの~mapを生成するために利用されているであろう
+— が、この仕方で利用する必要があるわけではない：
+実際の~map~dataは~pageの他所に埋込まれていて、この~data~blockは，単に利用者が ~game~mapの特定0の特能を探し易くするためとして，~siteの探索~engine向けに~~用意されたものかもしれない。
+◎
+The data in this case might be used by the script to generate the map of a video game. The data doesn't have to be used that way, though; maybe the map data is actually embedded in other parts of the page's markup, and the data block here is just used by the site's search engine to help users who are looking for particular features in their game maps.
+</p>
+
+</div>
+
+<div class="example">
+
+<p>
+次の見本に、 `script$e 要素を利用して、文書の他所から利用される関数を `古典~script$の一部として定義する方法を示す。
+同時に，別の `script$e 要素を利用して、文書が構文解析されている間に~scriptを呼出す方法も示す
+— この事例では、~formの出力を初期化する。
+◎
+The following sample shows how a script element can be used to define a function that is then used by other parts of the document, as part of a classic script. It also shows how a script element can be used to invoke script while the document is being parsed, in this case to initialize the form's output.
+</p>
+
+`script-3^xCode
+
+</div>
+
+<div id="script-type-module-example-1" class="example">
+
+<p>
+次の見本では、 `script$e 要素を利用して，外部`~module~script$を含ませる方法を示す。
+◎
+The following sample shows how a script element can be used to include an external module script.
+</p>
+
+`script-4^xCode
+
+<p>
+この~module, およびそのすべての依存物（~source~file内の ~JS `import^c 文を通して表出される）は、~fetchされることになる。
+結果の~module~graph全体が取込まれ，文書が構文解析を終えたなら、
+`app.mjs^s の内容は評価されることになる。
+◎
+This module, and all its dependencies (expressed through JavaScript import statements in the source file), will be fetched. Once the entire resulting module graph has been imported, and the document has finished parsing, the contents of app.mjs will be evaluated.
+</p>
+
+<p>
+加えて，同じ `Window$I 内の別の `script$e 要素からの~codeが
+`app.mjs^s からの~moduleを取込む場合（例： `import "./app.mjs";^s を介して）、前者の `script$e 要素により作成された同じ`~module~script$が取込まれることになる。
+◎
+Additionally, if code from another script element in the same Window imports the module from app.mjs (e.g. via import "./app.mjs";), then the same module script created by the former script element will be imported.
+</p>
+
+</div>
+
+<div id="script-nomodule-example" class="example">
+<p>
+現代の~UA用には`~module~script$,
+旧-~UA用には`古典~script$を含ませる例を示す：
+◎
+This example shows how to include a module script for modern user agents, and a classic script for older user agents:
+</p>
+
+`script-5^xCode
+
+<p>
+`~module~script$を~supportする現代の~UAでは、前者の `script$e 要素（ `type$a 属性は `module^l ）は，~fetchされた上で （`~module~script$として）評価される一方で、後者の `script$e 要素（ `nomodule$a 属性を有する）は無視されることになる。
+逆に，旧-~UAにとっては、前者は，未知な~script型なので無視することになる
+— が、 `nomodule$a 属性は実装していないので，後者を（`古典~script$として）~fetchして評価することには問題はない。
+◎
+In modern user agents that support module scripts, the script element with the nomodule attribute will be ignored, and the script element with a type of "module" will be fetched and evaluated (as a module script). Conversely, older user agents will ignore the script element with a type of "module", as that is an unknown script type for them — but they will have no problem fetching and evaluating the other script element (as a classic script), since they do not implement the nomodule attribute.
+</p>
+</div>
+
+<div id="script-type-module-example-2" class="example">
+
+<p>
+次の見本に、`script$e 要素を利用して、（例えば，ニュースサイト上の）文書~内の~textを曖昧な読み物で代用してしまうような，~inlineな`~module~script$を書く方法を示す：
+【！[XKCD1288]】
+◎
+The following sample shows how a script element can be used to write an inline module script that performs a number of substitutions on the document's text, in order to make for a more interesting reading experience (e.g. on a news site): [XKCD1288]
+</p>
+
+`script-6^xCode
+
+<div class="p">
+
+<p>
+~JS~module~scriptを利用して得られる特能のうち，注目すべきものには、次が挙げられる：
+</p>
+
+<ul><li>他の~JS~moduleから関数を取込む能。
+</li><li>既定で~strict~modeになる。
+</li><li>~top-level宣言であっても，`大域~obj$上に新たな~propを導入しない。
+</li></ul>
+◎
+Some notable features gained by using a module script include the ability to import functions from other JavaScript modules, strict mode by default, and how top-level declarations do not introduce new properties onto the global object. ＼
+</div>
+
+<p>
+また，この `script$e 要素が文書~内のどこに現れようが、［
+文書~構文解析が完了して，なおかつ
+その依存物（この例では `dom-utils.mjs^s ）が~fetchされ, 評価される
+］までは，評価されないことに注意。
+◎
+Also note that no matter where this script element appears in the document, it will not be evaluated until both document parsing has complete and its dependency (dom-utils.mjs) has been fetched and evaluated.
+</p>
+
+</div>
+
+			<section id="script-processing-model">
+<h4 title="Processing model">4.12.1.1. 処理~model</h4>
+
+<p>
+`script$e 要素には、その各種 状態を~~保持するものとして，次に挙げるものが結付けられる
+— 初期~時には、それぞれ，括弧内に示される値になるモノトスル：
+◎
+A script element has several associated pieces of state.
+</p>
+
+<p class="trans-note">【
+初期~時の値が無いものは、~scriptが実行されない場合，設定されるとは限らない（ `type$a 属性の値が妥当でない場合の`~script種別$など）。
+】</p>
+
+<dl>
+	<dt>`開始済み~flag@ （ ~F ）</dt>
+	<dd>
+この~flagは、~script~blockの実行は，すでに開始されたかどうかを指示する。
+（~script~blockの作成-時には “開始済み” でない）。
+［
+`script$e 要素~用の`~clone時の手続き$から得られる複製
+］の`開始済み~flag$は、~clone元~の要素のそれを引き継ぐモノトスル。
+◎
+The first is a flag indicating whether or not the script block has been "already started". Initially, script elements must have this flag unset (script blocks, when created, are not "already started"). The cloning steps for script elements must set the "already started" flag on the copy if it is set on the element being cloned.
+</dd>
+
+	<dt>`構文解析器~文書@（ ~NULL ）</dt>
+	<dd>
+~NULL または`文書$。
+これは、［
+`~HTML構文解析器$ ／ `~XML構文解析器$
+］により要素が挿入されるとき設定され、要素の処理に影響する。
+~NULL でないとき、当の `script$e 要素は
+`構文解析器により挿入された@
+ともいう。
+◎
+A script element has a parser document, which is either null or a Document. Initially, its value must be null. It is set by the HTML parser and the XML parser on script elements they insert, and affects the processing of those elements. script elements with non-null parser documents are known as "parser-inserted".
+</dd>
+
+	<dt>`阻まず~flag@ （ ~T ）</dt>
+	<dd>
+この~flagは、要素が “他を阻まなくなる” かどうかを指示する。
+［
+`~HTML構文解析器$ ／ `~XML構文解析器$
+］は、自身が挿入する `script$e 要素に対し，この~flagを ~F にする。
+加えて、この~flagが ~T にされた `script$e 要素に
+`async$a 内容~属性が追加されたときは、その要素の`阻まず~flag$を ~F にするモノトスル。
+◎
+A script element has a flag indicating whether the element will be "non-blocking". Initially, script elements must have this flag set. It is unset by the HTML parser and the XML parser on script elements they insert. In addition, whenever a script element whose "non-blocking" flag is set has an async content attribute added, the element's "non-blocking" flag must be unset.
+</dd>
+	<dd class="trans-note">【
+“阻まず（ `non-blocking^en ）”
+何が何を阻まないかが多義的で、曖昧な用語でもある。
+{ 当の~scriptの~fetching, 当の~scriptの実行ng }
+と
+{ ~pageの構文解析, 他の資源の~fetching, 他の~scriptの実行ng }
+との間で種々の組み合わせが考えられる。
+】</dd>
+
+	<dt>`解析器実行準備済み~flag@ （ ~F ）</dt>
+	<dd>
+この~flagは、［
+構文解析器により，~script~blockを実行する用意が整った
+］かどうかを指示する。
+（~script~blockの作成-時には、 “実行する用意は整って” いない）。
+この~flagは，構文解析器が当の~scriptをいつ実行するか知れるようにするためにあり、要素が`構文解析器により挿入された$場合に限り，利用される。
+◎
+A script element has a flag indicating whether or not the script block is "ready to be parser-executed". Initially, script elements must have this flag unset (script blocks, when created, are not "ready to be parser-executed"). This flag is used only for elements that are also "parser-inserted", to let the parser know when to execute the script.
+</dd>
+
+	<dt>`~script種別@</dt>
+	<dd>
+`classic^l, `module^l
+のいずれか。
+これは、`~scriptを準備する$ときに，要素の `type$a 属性に基づいて決定される。
+◎
+The script's type for a script element is either "classic" or "module". It is determined when the script is prepared, based on the type attribute of the element at that time.
+</dd>
+
+	<dt>`準備~時点の文書@</dt>
+	<dd>
+`~scriptを準備する$~algoの始め近くで決定される`文書$。
+これは、その~algoの間に他の文書へ移動した~scriptが，`~script~blockを実行する$のを防止するために利用される。
+◎
+A script element has a preparation-time document, which is a Document determined near the beginning of the prepare a script algorithm. It is used to prevent scripts that move between documents during preparation from executing.
+</dd>
+
+	<dt>`外部~file~flag@</dt>
+	<dd>
+この~flagは、~scriptが外部~fileからのものかどうかを指示する。
+この~flagは、`~scriptを準備する$ときに，要素の `src$a 属性に基づいて決定される。
+◎
+A script element has a flag indicating whether or not the script is from an external file. It is determined when the script is prepared, based on the src attribute of the element at that time.
+</dd>
+
+	<dt>`~script@</dt>
+	<dd>
+~NULL または `script$e 要素を`準備-$した結果の`~script$x。
+これは、［
+`古典~script$／~module~graph
+］が非同期に~fetchされた後に，それが［
+成功した場合は `~script$x ／
+失敗した場合は ~NULL
+］に設定される。
+その時点で、 `script^e は，~fetching~algoにより
+`準備済み@
+にされ、他の動作を誘発し得ることになる。
+~UAは、 `script^e 要素が`準備済み$になるまで，その`~node文書$の`~load~eventを遅延-$するモノトスル。
+◎
+The script's script for a script element is either null or a script resulting from preparing the element. This is set asynchronously after the classic script or module graph is fetched. Once it is set, either to a script in the case of success or to null in the case of failure, the fetching algorithms will note that the script is ready, which can trigger other actions. The user agent must delay the load event of the element's node document until the script is ready.
+</dd>
+	<dd class="trans-note">【
+原文では “script's script”
+（ ~scriptの~script （おそらく， “`script$e 要素の`~script$x” の意）として定義されているが、表記~上の都合により，ここでは単に “〜の~script” と表記する（ “〜” には常に，ある `script^e 要素が記される）。
+】</dd>
+
+</dl>
+
+<hr>
+
+<p>
+`script$e 要素 %S が［
+その`構文解析器~文書$ ~NEQ ~NULL
+］を満たす下で，次に挙げるいずれかが生じたときは，~UAは `即時$に %S を`準備-$するモノトスル：
+◎
+When a script element that is not "parser-inserted" experiences one of the events listed in the following list, the user agent must immediately prepare the script element:
+</p>
+
+<ul>
+	<li>
+%S が`接続された$とき。
+◎
+The script element becomes connected.
+</li>
+	<li>
+%S は`接続されて$いる下で、
+%S の中に，何らかの~nodeか`文書片$が`挿入された$node時点。
+ただし，他の `script$e 要素が同時に`挿入された$node場合は、それらより後の時点とする。
+◎
+The script element is connected and a node or document fragment is inserted into the script element, after any script elements inserted at that time.
+</li>
+	<li>
+%S は`接続されて$いる, かつ
+%S は `src$a 属性を有していない下で、その属性が %S 上に設定された時点。
+◎
+The script element is connected and has a src attribute set where previously the element had no such attribute.
+</li>
+</ul>
+
+<!--%準備 -->
+
+<div class="algorithm">
+<p>
+`~scriptを準備する@
+ときは、~UAは次に従って動作するモノトスル：
+◎
+To prepare a script, the user agent must act as follows:
+</p>
+
+<ol>
+	<li>
+<p>
+各種 変数：
+</p>
+		<ol>
+			<li>
+%S ~LET 当の `script$e 要素
+</li>
+			<li>
+%文書 ~LET %S の`~node文書$
+</li>
+			<li>
+`async@V ~LET ［
+%S は `async$a 属性を有するならば ~T ／
+~ELSE_ ~F
+］
+</li>
+			<li>
+`src@V ~LET ［
+%S は `src$a 属性を有するならば その値 ／
+~ELSE_ ε
+］
+</li>
+		</ol>
+◎
+↓</li>
+	<li>
+~IF［
+%S の`開始済み~flag$ ~EQ ~T
+］
+⇒
+~RET
+— ~scriptは実行されない
+◎
+If the script element is marked as having "already started", then return. The script is not executed.
+</li>
+	<li>
+%構文解析器~文書 ~LET %S の`構文解析器~文書$
+◎
+Let parser document be the element's parser document.
+</li>
+	<li>
+<p>
+%S の`構文解析器~文書$ ~SET ~NULL
+◎
+Set the element's parser document to null.
+</p>
+
+<p class="note">注記：
+この段は、［
+`構文解析器により挿入された$ `script$e 要素を当の構文解析器が走らせようと試行して失敗した場合（例： 空あるいは, 未~supportな~scripting言語を指定していた）
+］に，後で［
+別の~scriptがそれを変異させて再度~走らす
+］ことを可能にするために行われる。
+◎
+This is done so that if parser-inserted script elements fail to run when the parser tries to run them, e.g. because they are empty or specify an unsupported scripting language, another script can later mutate them and cause them to run again.
+</p>
+	</li>
+	<li>
+<p>
+~IF［
+%構文解析器~文書 ~NEQ ~NULL
+］~AND［
+`async$V ~EQ ~F
+］
+⇒
+%S の`阻まず~flag$ ~SET ~T
+◎
+If parser document is non-null and the element does not have an async attribute, then set the element's "non-blocking" flag to true.
+</p>
+
+<p class="note">注記：
+この段は、［
+`構文解析器により挿入された$ `script$e 要素を当の構文解析器が走らせようと試行して失敗したが、他の~scriptが動的にそれを更新した後に，後で実行された場合
+］に，［
+`async$a 属性が設定されていなくとも， “他を阻まない” ~~方式で実行されるようにする
+］ために行われる。
+◎
+This is done so that if a parser-inserted script element fails to run when the parser tries to run it, but it is later executed after a script dynamically updates it, it will execute in a non-blocking fashion even if the async attribute isn't set.
+</p>
+	</li>
+	<li>
+%~source~text ~LET %S の`子~text内容$
+◎
+Let source text be the element's child text content.
+</li>
+	<li id="script-processing-empty">
+~IF［
+`src$V ~EQ ε
+］~AND［
+%~source~text ~EQ 空~文字列
+］
+⇒
+~RET
+— ~scriptは実行されない。
+◎
+If the element has no src attribute, and source text is the empty string, then return. The script is not executed.
+</li>
+	<li>
+~IF［
+%S は `接続されて$いない
+］
+⇒
+~RET
+— ~scriptは実行されない。
+◎
+If the element is not connected, then return. The script is not executed.
+</li>
+	<li>
+<div>
+<p id="script-processing-prepare">
+%~script~block種別~文字列 ~LET 次に与える［
+%種別, %言語
+］が満たす条件に応じて、下の表の右端列に与えられる値：
+</p>
+		<ul>
+			<li>
+%種別 ~LET［
+%S は `type$a 属性を有するならば その値 ／
+~ELSE_ ε
+］
+</li>
+			<li>
+%言語 ~LET［
+%S は `language$a 属性を有するならば その値 ／
+~ELSE_ ε
+］
+</li>
+		</ul>
+
+<table><thead><tr><th>%種別
+<th>%言語
+<th>%~script~block種別~文字列
+</thead><tbody>
+
+<tr><td>ε
+<td>ε または 空~文字列
+<td>`text/javascript^l
+
+<tr><td>ε
+<td>空でない文字列
+<td>［
+`text/^l, %言語
+］を連結した結果
+
+<tr><td>空~文字列
+<td>任意
+<td>`text/javascript^l
+
+<tr><td>空でない文字列
+<td>任意
+<td>`前後の~ASCII空白~列を剥ぐ$( %種別 )
+
+</tbody></table>
+
+◎
+If either:
+• the script element has a type attribute and its value is the empty string, or
+• the script element has no type attribute but it has a language attribute and that attribute's value is the empty string, or
+• the script element has neither a type attribute nor a language attribute, then
+...let the script block's type string for this script element be "text/javascript".
+
+Otherwise, if the script element has a type attribute, let the script block's type string for this script element be the value of that attribute with leading and trailing ASCII whitespace stripped.
+
+Otherwise, the element has a non-empty language attribute; let the script block's type string for this script element be the concatenation of the string "text/" followed by the value of the language attribute.
+</div>
+
+<p class="note">注記：
+`language$a 属性は、決して適合せず，
+`type$a 属性が在るときは常に無視される。
+◎
+The language attribute is never conforming, and is always ignored if there is a type attribute present.
+</p>
+
+	</li>
+	<li>
+%S の`~script種別$ ~SET
+`~ASCII小文字~化する$( %~script~block種別~文字列 ) の結果に応じて
+⇒＃
+`~JS~MIME型に~essence合致-$するならば `classic^l ／
+`module^l ならば `module^l ／
+~ELSE_ ε
+◎
+Determine the script's type as follows:
+• If the script block's type string is a JavaScript MIME type essence match, the script's type is "classic".
+• If the script block's type string is an ASCII case-insensitive match for the string "module", the script's type is "module".
+</li>
+	<li>
+~IF［
+%S の`~script種別$ ~EQ ε
+］
+⇒
+~RET
+— 実行される~scriptはない。
+◎
+If neither of the above conditions are true, then return. No script is executed.
+</li>
+	<li>
+~IF［
+%構文解析器~文書 ~NEQ ~NULL
+］
+⇒＃
+%S の`阻まず~flag$ ~SET ~F；
+%S の`構文解析器~文書$ ~SET %構文解析器~文書
+◎
+If parser document is non-null, then set the element's parser document back to parser document and set the element's "non-blocking" flag to false.
+</li>
+	<li id="script-processing-start">
+%S の`開始済み~flag$ ~SET ~T
+◎
+Set the element's "already started" flag.
+</li>
+	<li>
+%S の`準備~時点の文書$ ~SET %S の`~node文書$
+◎
+Set the element's preparation-time document to its node document.
+</li>
+	<li>
+~IF［
+%構文解析器~文書 ~NIN { ~NULL, %S の`準備~時点の文書$ }
+］
+⇒
+~RET
+◎
+If parser document is non-null, and parser document is not equal to the element's preparation-time document, then return.
+</li>
+	<li id="script-processing-noscript">
+<p>
+~IF［
+%S 用の`~scriptingは不能化されて$いる
+］
+⇒
+~RET
+— ~scriptは実行されない。
+◎
+If scripting is disabled for the script element, then return. The script is not executed.
+</p>
+
+<div class="note">
+
+<p>注記：
+`~scriptingは不能化されて$いる，の定義により、次に該当する~scriptは，実行されない：
+</p>
+
+<ul>
+	<li>
+`XMLHttpRequest$I の `responseXML$m 文書~内の~script。
+`XHR$r
+</li>
+	<li>
+`DOMParser$I が作成した文書~内の~script。
+`DOMPARSING$r
+</li>
+	<li>
+`XSLTProcessor$I の `transformToDocument()$m 特能により作成された文書~内の~script。
+`XSLTP$r
+</li>
+	<li>
+［
+`createDocument()$m ~APIを利用して作成された`文書$
+］の中に，ある~scriptにより先ず挿入された~script。
+`DOM$r
+【！ ＊先ず】
+</li>
+</ul>
+
+◎
+The definition of scripting is disabled means that, amongst others, the following scripts will not execute: scripts in XMLHttpRequest's responseXML documents, scripts in DOMParser-created documents, scripts in documents created by XSLTProcessor's transformToDocument feature, and scripts that are first inserted by a script into a Document that was created using the createDocument() API. [XHR] [DOMPARSING] [XSLTP] [DOM]
+</div>
+
+	</li>
+	<li>
+<p>
+~IF［
+%S は `nomodule$a 内容~属性を有する
+］~AND［
+%S の`~script種別$ ~EQ `classic^l
+］
+⇒
+~RET
+— ~scriptは実行されない。
+◎
+If the script element has a nomodule content attribute and the script's type is "classic", then return. The script is not executed.
+</p>
+
+<p class="note">
+これは、`~module~script$に対し `nomodule$a を指定しても効果はなく，~algoはそのまま継続されることを意味する。
+◎
+This means specifying nomodule on a module script has no effect; the algorithm continues onward.
+</p>
+	</li>
+	<li id="script-processing-csp">
+~IF［
+`src$V ~EQ ε
+］
+⇒
+~IF［
+( %S , `script^l , %~source~text )
+を与える下で，
+`要素における~inline型の挙動は~CSPにより阻止されるべきか？$
+`CSP$r
+を実行した結果 ~EQ `阻止される^i
+］
+⇒
+~RET
+— ~scriptは実行されない。
+◎
+If the script element does not have a src content attribute, and the Should element's inline behavior be blocked by Content Security Policy? algorithm returns "Blocked" when executed upon the script element, "script", and source text, then return. The script is not executed. [CSP]
+</li>
+	<li id="script-processing-for">
+<p>
+~IF［
+%S の`~script種別$ ~EQ `classic^l
+］~AND［
+%S は［
+`event$a, `for$a
+］属性とも有していて，それらの値［
+%event, %for
+］（同順）は次のいずれかを満たさない
+］
+⇒
+~RET
+— ~scriptは実行されない：
+</p>
+		<ul>
+			<li>
+`~ASCII小文字~化する$( `前後の~ASCII空白~列を剥ぐ$( %event ) ) ~IN { `onload^l, `onload()^l }
+</li>
+			<li>
+`~ASCII小文字~化する$( `前後の~ASCII空白~列を剥ぐ$( %for ) ) ~EQ `window^l
+</li>
+		</ul>
+
+◎
+If the script element has an event attribute and a for attribute, and the script's type is "classic", then:
+• Let for be the value of the for attribute.
+• Let event be the value of the event attribute.
+• Strip leading and trailing ASCII whitespace from event and for.
+• If for is not an ASCII case-insensitive match for the string "window", then return. The script is not executed.
+• If event is not an ASCII case-insensitive match for either the string "onload" or the string "onload()", then return. The script is not executed.
+</li>
+	<li id="script-processing-encoding">
+<p>
+%符号化法 ~LET ［［
+%S は `charset$a 属性を有していて［
+`~labelから符号化法を取得する$( その属性~値 ) の結果 ~NEQ `失敗^i
+］］ならば その結果 ／
+~ELSE_ %文書 の`符号化法$doc
+］
+◎
+If the script element has a charset attribute, then let encoding be the result of getting an encoding from the value of the charset attribute.
+◎
+If the script element does not have a charset attribute, or if getting an encoding failed, let encoding be the same as the encoding of the script element's node document.
+</p>
+
+<p class="note">注記：
+［
+%S の`~script種別$ ~EQ `module^l
+］の場合、この符号化法は無視されることになる。
+◎
+If the script's type is "module", this encoding will be ignored.
+</p>
+	</li>
+	<li>
+%古典~script~CORS設定 ~LET %S の `crossorigin$a 内容~属性の現在の状態
+◎
+Let classic script CORS setting be the current state of the element's crossorigin content attribute.
+</li>
+	<li>
+%~module~script資格証~mode ~LET
+%S の `crossorigin$a 内容~属性~用の`~CORS設定群~属性の資格証~mode$
+◎
+Let module script credentials mode be the CORS settings attribute credentials mode for the element's crossorigin content attribute.
+</li>
+	<li>
+%暗号用~nonce ~LET %S の `CryptographicNonce$sl 内部~slotの値
+◎
+Let cryptographic nonce be the element's [[CryptographicNonce]] internal slot's value.
+</li>
+	<li>
+%完全性~metadata ~LET ［
+%S は `integrity$a 属性を有するならば その値 ／
+~ELSE_ 空~文字列
+］
+◎
+If the script element has an integrity attribute, then let integrity metadata be that attribute's value.
+◎
+Otherwise, let integrity metadata be the empty string.
+</li>
+	<li>
+%~referrer施策 ~LET %S の `referrerpolicy$a 内容~属性の現在の状態
+◎
+Let referrer policy be the current state of the element's referrerpolicy content attribute.
+</li>
+	<li>
+%構文解析器~metadata ~LET ［
+%構文解析器~文書 ~NEQ ~NULL ならば `parser-inserted^l ／
+~ELSE_  `not-parser-inserted^l
+］
+◎
+Let parser metadata be "parser-inserted" if the script element is "parser-inserted", and "not-parser-inserted" otherwise.
+</li>
+	<li>
+%~options ~LET 次のようにされた`~script~fetch~options$
+⇒＃
+`暗号用~nonce$sfO ~SET %暗号用~nonce,
+`完全性~metadata$sfO ~SET %完全性~metadata,
+`構文解析器~metadata$sfO ~SET %構文解析器~metadata,
+`資格証~mode$sfO ~SET %~module~script資格証~mode,
+`~referrer施策$sfO ~SET %~referrer施策
+◎
+Let options be a script fetch options whose cryptographic nonce is cryptographic nonce, integrity metadata is integrity metadata, parser metadata is parser metadata, credentials mode is module script credentials mode, and referrer policy is referrer policy.
+</li>
+	<li>
+%設定群~obj ~LET %文書 に`関連な設定群~obj$
+◎
+Let settings object be the element's node document's relevant settings object.
+</li>
+	<li id="script-processing-src-prepare">
+<p>
+~IF［
+`src$V ~NEQ ε
+］：
+◎
+If the element has a src content attribute, then:
+</p>
+		<ol>
+			<li>
+<p>
+~IF［
+`src$V ~EQ 空~文字列
+］：
+</p>
+				<ol>
+					<li>
+次を走らす`~taskを~queueする$
+⇒
+%S に向けて，名前 `error$et の`~eventを発火する$
+</li>
+					<li>
+~RET
+</li>
+				</ol>
+
+◎
+Let src be the value of the element's src attribute.
+◎
+If src is the empty string, queue a task to fire an event named error at the element, and return.
+</li>
+			<li>
+%S の`外部~file~flag$ ~SET ~T
+◎
+Set the element's from an external file flag.
+</li>
+			<li>
+%~url ~LET 
+`src$V を %文書 に`相対的に構文解析-$した`結果の~URL~record$
+◎
+Parse src relative to the element's node document.
+</li>
+			<li>
+<p>
+~IF［
+%~url ~EQ `失敗^i
+］：
+</p>
+				<ol>
+					<li>
+次を走らす`~taskを~queueする$
+⇒
+%S に向けて，名前 `error$et の`~eventを発火する$
+</li>
+					<li>
+~RET
+</li>
+				</ol>
+◎
+If the previous step failed, queue a task to fire an event named error at the element, and return. Otherwise, let url be the resulting URL record.
+</li>
+			<li>
+<p>
+%S の`~script種別$に応じて：
+◎
+Switch on the script's type:
+</p>
+
+				<dl class="switch">
+					<dt>`classic^l</dt>
+					<dd>
+`古典~scriptを~fetchする$(
+%~url,
+%設定群~obj,
+%~options,
+%古典~script~CORS設定,
+%符号化法
+)
+◎
+Fetch a classic script given url, settings object, options, classic script CORS setting, and encoding.
+</dd>
+
+					<dt>`module^l</dt>
+					<dd>
+`外部~module~script~graphを~fetchする$(
+%~url,
+%設定群~obj,
+%~options
+)
+◎
+Fetch an external module script graph given url, settings object, and options.
+</dd>
+			</dl>
+
+<div class="p">
+<p>
+~fetchする~algoが`非同期に完了した$ときは：
+</p>
+
+<ol ><li>%S の`~script$ ~SET その結果
+</li><li>%S を`準備済み$にする
+</li></ol>
+◎
+When the chosen algorithm asynchronously completes, set the script's script to the result. At that time, the script is ready.
+</div>
+
+<p>
+処理能~上の理由から、~UAは：
+◎
+For performance reasons, user agents＼
+</p>
+				<ul>
+					<li>
+%S の `src$a 属性が設定され次第，すぐに（上に定義されるように）［
+古典~script／~module~graph
+］の~fetchingを開始してもヨイ
+— ~~実際に %S が文書の中へ挿入される（かつ，それまでは
+%S の `crossorigin$a 属性の値は変更されない）のを待つことなく。
+いずれにせよ，
+%S が`文書の中へ挿入された$なら、この段に述べたように，読込nを開始するモノトスル。
+◎
+may start fetching the classic script or module graph (as defined above) as soon as the src attribute is set, instead, in the hope that the element will be inserted into the document (and that the crossorigin attribute won't change value in the meantime). Either way, once the element is inserted into the document, the load must have started as described in this step.＼
+</li>
+					<li>
+<p>
+前項のような事前~fetchingを遂行する下で，次のいずれかに該当する場合…：
+</p>
+
+<ul><li>%S は、~~実際には，文書~内に挿入されなかった
+</li><li>%S は文書~内に挿入されたが、それまでに %S の［
+`src$a ／ `crossorigin$a
+］属性が動的に変更された
+</li></ul>
+
+<p>
+…場合、そのように得された~scriptは実行しないとする
+— ~fetchingは、実質的に浪費されることになる。
+</p>
+
+◎
+If the UA performs such prefetching, but the element is never inserted in the document, or the src attribute is dynamically changed, or the crossorigin attribute is dynamically changed, then the user agent will not execute the script so obtained, and the fetching process will have been effectively wasted.
+</li>
+				</ul>
+			</li>
+		</ol>
+	</li>
+	<li id="establish-script-block-source">
+<p>
+~ELSE （ `src$V ~EQ ε ）：
+◎
+If the element does not have a src content attribute, run these substeps:
+</p>
+		<ol>
+			<li>
+%基底~URL ~LET %文書 の`文書~基底~URL$
+◎
+Let base URL be the script element's node document's document base URL.
+</li>
+			<li>
+<p>
+%S の`~script種別$に応じて：
+◎
+Switch on the script's type:
+</p>
+				<dl class="switch">
+					<dt>`classic^l</dt>
+					<dd>
+						<ol>
+							<li>
+%S の`~script$ ~SET
+`古典~scriptを作成する$( %~source~text, %設定群~obj, %基底~URL, %~options  )
+◎
+Let script be the result of creating a classic script using source text, settings object, base URL, and options.
+◎
+Set the script's script to script.
+</li>
+							<li>
+%S を`準備済み$にする
+◎
+The script is ready.
+</li>
+						</ol>
+					</dd>
+
+					<dt>`module^l</dt>
+					<dd>
+						<ol>
+							<li>
+<p>
+`~inline~script~graphを~fetchする$(
+%~source~text,
+%基底~URL,
+%設定群~obj,
+%~options
+)
+</p>
+<p>
+これが %結果 を結果として`非同期に完了した$ときは
+⇒＃
+%S の`~script$ ~SET %結果；
+%S を`準備済み$にする
+</p>
+◎
+Fetch an inline module script graph, given source text, base URL, settings object, and options. When this asynchronously completes, set the script's script to the result. At that time, the script is ready.
+</li>
+						</ol>
+					</dd>
+				</dl>
+			</li>
+		</ol>
+	</li>
+	<li>
+%defer ~LET ［
+%S は `defer$a 属性を有するならば ~T ／
+~ELSE_ ~F
+］
+◎
+↓</li>
+	<li>
+%挿入された ~LET ［
+%構文解析器~文書 ~NEQ ~NULL ならば ~T ／
+~ELSE_ ~F
+］
+◎
+↓</li>
+	<li>
+%準備~時点の文書 ~LET %S の`準備~時点の文書$
+（ %構文解析器~文書 ~NEQ ~NULL ならば それに一致する）
+◎
+↓</li>
+	<li>
+<p>
+次の表において， %S が満たす各種条件に応じて、同じ行の “ふるまい” 列（右端）に与える~labelが付与された［
+表に後続する段
+］に従う：
+◎
+Then, follow the first of the following options that describes the situation:
+</p>
+
+<table>
+<caption>空欄は無条件を表す。</caption>
+<thead><tr><th>`~script種別$
+<th>`src$V
+<th>`async$V
+<th>%挿入された
+<th>`阻まず~flag$
+<th>%defer
+<th>ふるまい
+</thead><tbody>
+
+<tr><td>`classic^l
+<td>非 ε
+<td>~F
+<td>~T
+<td>
+<td>~T
+<td id="script-processing-defer">`構文解析-後^i
+
+<tr><td>`classic^l
+<td>非 ε
+<td>~F
+<td>~T
+<td>
+<td>~F
+<td id="script-processing-parser-inserted">`構文解析器を阻む^i
+
+<tr><td>`classic^l
+<td>非 ε
+<td>~F
+<td>~F
+<td>~F
+<td>
+<td id="script-processing-src-sync">`すぐに順に^i
+
+<tr><td>`classic^l
+<td>非 ε
+<td>~F
+<td>~F
+<td>~T
+<td>
+<td rowspan="2" id="script-processing-src">`すぐに^i
+
+<tr><td>`classic^l
+<td>非 ε
+<td>~T
+<td>
+<td>
+<td>
+
+<tr><td>`classic^l
+<td>ε
+<td>
+<td>~T
+<td>
+<td>
+<td>`~stylesheetの後^i
+
+<tr><td>`classic^l
+<td>ε
+<td>
+<td>~F
+<td>
+<td>
+<td>`即時に^i
+
+<tr><td>`module^l
+<td>
+<td>~F
+<td>~T
+<td>
+<td>
+<td id="script-processing-module-noasync-parser-inserted">`構文解析-後^i
+
+<tr><td>`module^l
+<td>
+<td>~F
+<td>~F
+<td>~F
+<td>
+<td id="script-processing-module-noasync">`すぐに順に^i
+
+<tr><td>`module^l
+<td>
+<td>~F
+<td>~F
+<td>~T
+<td>
+<td rowspan="2" id="script-processing-module-async">`すぐに^i
+
+<tr><td>`module^l
+<td>
+<td>~T
+<td>
+<td>
+<td>
+
+</tbody></table>
+
+<p class="trans-note">【
+原文の条件記述が煩雑なので、この訳では，表の形に, 各行が排他的になるよう整理している。
+】</p>
+
+		<dl class="switch">
+			<dt>
+`構文解析-後^i
+【！id="script-processing-defer"】
+【！id="script-processing-module-noasync-parser-inserted"】
+◎
+If the script's type is "classic", and the element has a src attribute, and the element has a defer attribute, and the element is "parser-inserted", and the element does not have an async attribute
+◎
+If the script's type is "module", and the element is "parser-inserted", and the element does not have an async attribute
+</dt>
+			<dd>
+%準備~時点の文書 に結付けられている
+`文書を構文解析し終えたときに実行される~scriptの~list@
+の末尾に %S を追加する
+◎
+Add the element to the end of the list of scripts that will execute when the document has finished parsing associated with the Document of the parser that created the element.
+</dd>
+			<dd>
+</dd>
+			<dd>
+<p>
+%S が`準備済み$になったときは
+⇒
+%S の`解析器実行準備済み~flag$ ~SET ~T
+— 当の構文解析器が，この~scriptの実行ngを取扱うことになる。
+◎
+When the script is ready, set the element's "ready to be parser-executed" flag. The parser will handle executing the script.
+</dd>
+			<dt>
+【！id="script-processing-parser-inserted"】
+`構文解析器を阻む^i
+◎
+If the script's type is "classic", and the element has a src attribute, and the element is "parser-inserted", and the element does not have an async attribute
+</dt>
+			<dd>
+%準備~時点の文書 の`構文解析器を阻んでいる~script$ ~SET %S
+◎
+The element is the pending parsing-blocking script of the Document of the parser that created the element. (There can only be one such script per Document at a time.)
+</dd>
+			<dd>
+%S が`準備済み$になったときは
+⇒
+%S の`解析器実行準備済み~flag$ ~SET ~T
+— 当の構文解析器が，この~scriptの実行ngを取扱うことになる。
+◎
+When the script is ready, set the element's "ready to be parser-executed" flag. The parser will handle executing the script.
+</dd>
+
+			<dt>
+`すぐに順に^i
+【！id="script-processing-src-sync"】
+【！id="script-processing-module-noasync"】
+【！A2】
+◎
+If the script's type is "classic", and the element has a src attribute, and the element does not have an async attribute, and the element does not have the "non-blocking" flag set
+◎
+If the script's type is "module", and the element does not have an async attribute, and the element does not have the "non-blocking" flag set
+</dt>
+			<dd>
+%準備~時点の文書 に結付けられている
+`アリな限りすぐに順に実行される~scriptの~list@
+— 以下，単に %~list と記す —
+内の［
+この~algoの開始-時における末尾位置
+］に %S を挿入する
+◎
+Add the element to the end of the list of scripts that will execute in order as soon as possible associated with the element's preparation-time document.
+</dd>
+			<dd>
+<p>
+%S が`準備済み$になったときは，次の手続きを走らす：
+◎
+When the script is ready, run the following steps:
+</p>
+
+				<ol>
+<!-- If the element is not now... は不要 -->
+
+					<li>
+<p>
+~WHILE %~list は空でない
+</p>
+						<ol>
+							<li>
+%~script要素 ~LET %~list 内の最初の `script^e 要素
+</li>
+							<li>
+~IF［
+%~script要素 は`準備済み$でない
+］
+⇒
+~BREAK
+</li>
+							<li>
+%~script要素 に対応する`~script~blockを実行する$
+</li>
+							<li>
+%~list から %~script要素 を除去する
+</li>
+						</ol>
+◎
+If the element is not now the first element in the list of scripts that will execute in order as soon as possible to which it was added above, then mark the element as ready but return without executing the script yet.
+◎
+Execution: Execute the script block corresponding to the first script element in this list of scripts that will execute in order as soon as possible.
+◎
+Remove the first element from this list of scripts that will execute in order as soon as possible.
+◎
+If this list of scripts that will execute in order as soon as possible is still not empty and the first entry has already been marked as ready, then jump back to the step labeled execution.
+</li>
+				</ol>
+			</dd>
+			<dt>
+【！id="script-processing-src"】
+【！id="script-processing-module-async"】
+`すぐに^i
+◎
+If the script's type is "classic", and the element has a src attribute
+◎
+If the script's type is "module"
+</dt>
+			<dd>
+%準備~時点の文書 に結付けられている
+`アリな限りすぐに実行される~scriptの集合@
+— 以下，単に %集合 と記す —
+に %S を追加する
+◎
+The element must be added to the set of scripts that will execute as soon as possible of the element's preparation-time document.
+</dd>
+			<dd>
+<p>
+%S が`準備済み$になったときは：
+</p>
+<ol>
+	<li>
+%S に対応する`~script~blockを実行する$
+</li>
+	<li>
+%集合 から %S を除去する
+</li>
+</ol>
+
+◎
+When the script is ready, execute the script block and then remove the element from the set of scripts that will execute as soon as possible.
+</dd>
+
+			<dt>
+【！id="script-processing-style-delayed"】
+`~stylesheetの後^i
+◎
+If the element does not have a src attribute, and the element is "parser-inserted",＼
+</dt>
+			<dd>
+				<ol>
+					<li>
+<p>
+~IF［
+次のいずれも満たされる
+］…：
+◎
+and＼
+</p>
+
+						<ul>
+							<li>
+［
+当の構文解析器は`~XML構文解析器$である
+］~OR［
+当の構文解析器は`~HTML構文解析器$であって，その
+`~script入子ng~level$ ~LTE 1
+］
+◎
+either the parser that created the script is an XML parser or it's an HTML parser whose script nesting level is not greater than one, and＼
+</li>
+							<li>
+%準備~時点の文書 には`~scriptを阻んでいる~stylesheet$は在る
+◎
+the element's parser document has a style sheet that is blocking scripts
+</li>
+						</ul>
+<p>
+…ならば：
+</p>
+						<ol id="script-processing-style-delayed">
+							<li>
+%準備~時点の文書 の`構文解析器を阻んでいる~script$ ~SET %S
+◎
+The element is the pending parsing-blocking script of its parser document. (There can only be one such script per Document at a time.)
+</li>
+							<li>
+%S の`解析器実行準備済み~flag$ ~SET ~T
+— 当の構文解析器が，この~scriptの実行ngを取扱うことになる。
+◎
+Set the element's "ready to be parser-executed" flag. The parser will handle executing the script.
+</li>
+						</ol>
+					</li>
+					<li>
+~ELSE
+⇒
+~GOTO `即時に^i
+</li>
+				</ol>
+			</dd>
+
+			<dt>`即時に^i</dt>
+			<dd id="script-processing-inline">
+`即時$に`~script~blockを実行する$
+— 他の~scriptがすでに実行-中にあっても
+【他の~scriptの実行に割り込む？】
+◎
+Otherwise
+◎
+Immediately execute the script block, even if other scripts are already executing.
+</dd>
+		</dl>
+	</li>
+</ol>
+</div>
+
+<p>
+各 `文書$には，
+`構文解析器を阻んでいる~script@
+が結付けられ、初期~時は ε （なし）とする（同じ文書に対し，そのような~scriptが同時に複数~生じることはない）。
+それは、`文書$の構文解析器（たち）により利用される。
+◎
+The pending parsing-blocking script of a Document is used by the Document's parser(s).
+</p>
+
+<p class="note">注記：
+構文解析器を阻んでいる `script$e 要素が
+— 通常はその構文解析器を阻まなくなるが、その前に —
+別の`文書$へ移動された場合でも、［
+構文解析器を阻んでいる条件が，それ以上~適用されなくなる
+］まで，その構文解析器を阻み続ける（例：
+元の`文書$に`~scriptを阻んでいる~stylesheet$が在るために，当の~scriptは構文解析-時に`構文解析器を阻んでいる~script$であった場合，［
+阻んでいる~stylesheetたちが読込まれる前に ~scriptが別の`文書$へ移動された
+］としても、~scriptは，それらの~stylesheetがすべて読込まれるまで，依然として構文解析器を阻む
+— その時点で、~scriptは実行され，構文解析器を阻まなくなる）。
+◎
+If a script element that blocks a parser gets moved to another Document before it would normally have stopped blocking that parser, it nonetheless continues blocking that parser until the condition that causes it to be blocking the parser no longer applies (e.g., if the script is a pending parsing-blocking script because the original Document has a style sheet that is blocking scripts when it was parsed, but then the script is moved to another Document before the blocking style sheet(s) loaded, the script still blocks the parser until the style sheets are all loaded, at which time the script executes and the parser is unblocked).
+</p>
+
+<div class="algorithm">
+<p>
+`~script~blockを実行する@
+ときは、所与の
+( `script$e 要素 %S )
+に対し：
+◎
+To execute a script block given a script element scriptElement:
+</p>
+
+<ol>
+	<li>
+%文書 ~LET %S の`~node文書$
+◎
+Let document be scriptElement's node document.
+</li>
+	<li>
+~IF［
+%S の`準備~時点の文書$ ~NEQ %文書
+］
+⇒
+~RET
+◎
+If scriptElement's preparation-time document is not equal to document, then return.
+</li>
+	<li>
+~IF［
+%S の`~script$ ~EQ ~NULL
+］
+⇒＃
+%S に向けて，名前 `error$et の`~eventを発火する$；
+~RET
+◎
+If the script's script is null for scriptElement, then fire an event named error at scriptElement, and return.
+</li>
+	<li>
+%~counter増減 ~LET ［
+次が満たされるならば ~T ／
+~ELSE_ ~F
+］
+⇒
+［
+%S の`外部~file~flag$ ~EQ ~T
+］~OR［
+%S の`~script種別$ ~EQ `module^l
+］
+◎
+↓</li>
+	<li>
+~IF［
+%~counter増減 ~EQ ~T
+］
+⇒
+%文書 の`破壊的書込は無視する~counter$ ~INCBY 1
+◎
+If scriptElement is from an external file, or the script's type for scriptElement is "module", then increment document's ignore-destructive-writes counter.
+</li>
+	<li>
+<p>
+%S の`~script種別$に応じて：
+◎
+Switch on the script's type for scriptElement:
+</p>
+		<dl class="switch">
+			<dt>`classic^l</dt>
+			<dd>
+				<ol>
+					<li>
+%旧-~script要素 ~LET %文書 の `currentScript$m 属性~値
+【！object was most recently set】
+◎
+Let oldCurrentScript be the value to which document's currentScript object was most recently set.
+</li>
+					<li>
+<p>
+%文書 の`currentScript$m 属性 ~SET ［
+%S の`根$は`~shadow根$でないならば %S ／
+~ELSE_ ~NULL
+］
+◎
+If scriptElement's root is not a shadow root, then set document's currentScript attribute to scriptElement. Otherwise, set it to null.
+</p>
+
+<p class="note">
+ここでは、 %S が`文書~tree内$にあるかどうかは検査しない
+— `script$e 要素は、実行に先立って文書から除去されていることもあり、その局面でも依然として， `currentScript$m は それを指す必要があるので。
+◎
+This does not use the in a document tree check, as scriptElement could have been removed from the document prior to execution, and in that scenario currentScript still needs to point to it.
+</p>
+					</li>
+					<li>
+`古典~scriptを走らす$( %S の`~script$ )
+◎
+Run the classic script given by the script's script for scriptElement.
+</li>
+					<li>
+%文書 の`currentScript$m 属性 ~SET %旧-~script要素
+◎
+Set document's currentScript attribute to oldCurrentScript.
+</li>
+				</ol>
+			</dd>
+
+			<dt>`module^l</dt>
+			<dd>
+				<ol>
+					<li>
+~Assert:
+%文書 の`currentScript$m 属性 ~EQ ~NULL
+◎
+Assert: document's currentScript attribute is null.
+</li>
+					<li>
+`~module~scriptを走らす$( %S の`~script$ )
+◎
+Run the module script given by the script's script for scriptElement.
+</li>
+				</ol>
+			</dd>
+		</dl>
+	</li>
+	<li>
+~IF［
+%~counter増減 ~EQ ~T
+］
+⇒
+%文書 の`破壊的書込は無視する~counter$ ~DECBY 1
+◎
+Decrement the ignore-destructive-writes counter of document, if it was incremented in the earlier step.
+</li>
+	<li>
+~IF［
+%S の`外部~file~flag$ ~EQ ~T
+］
+⇒
+%S に向けて，名前 `load$et の`~eventを発火する$
+◎
+If scriptElement is from an external file, then fire an event named load at scriptElement.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="scriptingLanguages">
+<h4 title="Scripting languages">4.12.1.2. ~scripting言語</h4>
+
+<p>
+~UAには、~JSを~supportすることは要求されない。
+この標準は、~JS以外の言語が~JS同様に~web~browserに広く採用されたならば，更新される必要がある。
+そのときが来ない限り、他の言語を実装するのは，この標準に定義されている `script$e 要素~用の処理~modelに競合することになる。
+◎
+User agents are not required to support JavaScript. This standard needs to be updated if a language other than JavaScript comes along and gets similar wide adoption by web browsers. Until such a time, implementing other languages is in conflict with this standard, given the processing model defined for the script element.
+</p>
+
+<div class="p">
+<p>
+~serverは、~JS資源に対しては：
+</p>
+
+<ul>
+	<li>
+`text/javascript$c を利用するべきである
+— 他の`~JS~MIME型$は利用するべきでない。
+</li>
+	<li>
+非`~JS~MIME型$を利用してはナラナイ。
+</li>
+</ul>
+
+◎
+Servers should use text/javascript for JavaScript resources. Servers should not use other JavaScript MIME types for JavaScript resources, and must not use non-JavaScript MIME types.
+</div>
+
+<p>
+外部~JS資源に対しては、その `~Content-Type~header$内の~MIME型~parameterは，一般に無視される（ `charset^c ~parameterについては、効果がある事例もある）。
+一方で， `script$e 要素の `type$a 属性~内のそれは、有意になる
+— `~JS~MIME型に~essence合致-$の概念を利用するので。
+◎
+For external JavaScript resources, MIME type parameters in `Content-Type` headers are generally ignored. (In some cases the `charset` parameter has an effect.) However, for the script element's type attribute they are significant; it uses the JavaScript MIME type essence match concept.
+</p>
+
+<p class="note">注記：
+例えば、 `type$a 属性が `text/javascript; charset=utf-8^l に設定されている~scriptは，評価されないことになる
+— 構文解析-時には妥当な`~JS~MIME型$であったとしても。
+◎
+For example, scripts with their type attribute set to "text/javascript; charset=utf-8" will not be evaluated, even though that is a valid JavaScript MIME type when parsed.
+</p>
+
+<p>
+外部~JS資源に対しては、また，その`~Content-Type~header$の処理~周りで特別な考慮点が適用される
+— 詳細は、`~scriptを準備する$~algo, および
+`Fetch^cite `FETCH$r
+を見よ。
+◎
+Furthermore, again for external JavaScript resources, special considerations apply around `Content-Type` header processing as detailed in the prepare a script algorithm and Fetch. [FETCH]
+</p>
+
+			</section>
+			<section id="restrictions-for-contents-of-script-elements">
+<h4 title="Restrictions for contents of script elements">4.12.1.3. `script^e 要素の内容に課される制約</h4>
+
+<p class="note">注記：
+この節に述べる変則的な制約を避ける最も容易かつ安全な仕方は、~script内に（例えば 文字列, 正規表現, ~comment として）~literalで現れるもののうち［
+`&lt;!--^l ／ `&lt;script^l ／ `&lt;/script^l
+］に~ASCII大小無視で合致するものは，常に［
+`&lt;\!--^l ／ `&lt;\script^l ／ `&lt;\/script^l
+］に~escapeして、式の中でそのような構成子を利用するような~codeを書くのは，避けることである。
+この節における制約は，ちょっとしたことで抵触し易く、そうすることで，陥穽は避けられる。
+すなわち、歴史的な理由から，~HTML内の `script$e ~blockの構文解析では、これらの文字~並びに面した際のふるまいが直感に反するような，変則的で風変わりな実施になっている。
+◎
+The easiest and safest way to avoid the rather strange restrictions described in this section is to always escape an ASCII case-insensitive match for "&lt;!--" as "&lt;\!--", "&lt;script" as "&lt;\script", and "&lt;/script" as "&lt;\/script" when these sequences appear in literals in scripts (e.g. in strings, regular expressions, or comments), and to avoid writing code that uses such constructs in expressions. Doing so avoids the pitfalls that the restrictions in this section are prone to triggering: namely, that, for historical reasons, parsing of script blocks in HTML is a strange and exotic practice that acts unintuitively in the face of these sequences.
+</p>
+
+<p>
+`script$e 要素の`子孫~text内容$は、次の~ABNFで与えられる `script^P 生成規則に合致しなければナラナイ
+— この ABNF の文字~集合は~Unicodeとする `ABNF$r：
+◎
+The script element's descendant text content must match the script production in the following ABNF, the character set for which is Unicode. [ABNF]
+</p>
+
+<!-- 
+any string that doesn't contain a substring that matches
+	not-in-outer|not-in-inner
+-->
+
+<pre class="bnf">
+script        = outer *( comment-open inner comment-close outer )
+
+outer         = &lt; not-in-outer に合致する文字列は含まない任意の文字列 &gt;
+not-in-outer  = comment-open
+inner         = &lt; not-in-inner に合致する文字列は含まない任意の文字列 &gt;
+not-in-inner  = comment-close / script-open
+
+comment-open  = "&lt;!--"
+comment-close = "--&gt;"
+script-open   = "&lt;" s c r i p t tag-end
+
+s             =  `0053^0x ; U+0053 LATIN CAPITAL LETTER S
+s             =/ `0073^0x ; U+0073 LATIN SMALL LETTER S
+c             =  `0043^0x ; U+0043 LATIN CAPITAL LETTER C
+c             =/ `0063^0x ; U+0063 LATIN SMALL LETTER C
+r             =  `0052^0x ; U+0052 LATIN CAPITAL LETTER R
+r             =/ `0072^0x ; U+0072 LATIN SMALL LETTER R
+i             =  `0049^0x ; U+0049 LATIN CAPITAL LETTER I
+i             =/ `0069^0x ; U+0069 LATIN SMALL LETTER I
+p             =  `0050^0x ; U+0050 LATIN CAPITAL LETTER P
+p             =/ `0070^0x ; U+0070 LATIN SMALL LETTER P
+t             =  `0054^0x ; U+0054 LATIN CAPITAL LETTER T
+t             =/ `0074^0x ; U+0074 LATIN SMALL LETTER T
+
+tag-end       =  `0009^0x ; U+0009 CHARACTER TABULATION (tab)
+tag-end       =/ `000A^0x ; U+000A LINE FEED (LF)
+tag-end       =/ `000C^0x ; U+000C FORM FEED (FF)
+tag-end       =/ `0020^0x ; U+0020 SPACE
+tag-end       =/ `002F^0x ; U+002F SOLIDUS (/)
+tag-end       =/ `003E^0x ; U+003E GREATER-THAN SIGN (&gt;)
+</pre>
+
+<p>
+`script$e 要素が`~script文書化$を包含する場合、要素の内容にも，下の節で述べる制約が更に課される。
+◎
+When a script element contains script documentation, there are further restrictions on the contents of the element, as described in the section below.
+</p>
+
+<div class="example">
+
+<p>
+この~~問題を，次のような文字列を包含している~scriptで~~説明する：
+◎
+The following script illustrates this issue. Suppose you have a script that contains a string, as in:
+</p>
+
+<pre class="lang-js">
+var %example = 'Consider this string: &lt;!-- &lt;script&gt;';
+console.log(%example);
+</pre>
+
+<p>
+仮に，この文字列が `script$e ~block内に直に記された場合、上の制約に違反することになる：
+◎
+If one were to put this string directly in a script block, it would violate the restrictions above:
+</p>
+
+<pre class="lang-html">
+&lt;script&gt;
+  var %example = 'Consider this string: &lt;!-- &lt;script&gt;';
+  console.log(%example);
+&lt;/script&gt;
+</pre>
+
+<p>
+より大きな問題であり，なぜそれが制約に違反することになるかの理由は、上の~script~blockが，<em>実際には終了していない</em>点にある。
+この~scriptに対する構文解析され方は~~理解しがたいものであり，終了tagの様に見える
+`&lt;/script&gt;^l
+は、実際には，依然として `script$e ~blockの一部になる。
+~scriptは（終端していないので）実行されないが、どうにかして実行されるようになっていた場合
+— 例えば~markupが次のようになっていた場合 —
+~script（<mark>強調表示</mark>されている部分）は、妥当な~JSでないので，失敗することになる：
+◎
+The bigger problem, though, and the reason why it would violate those restrictions, is that actually the script would get parsed weirdly: the script block above is not terminated. That is, what looks like a "&lt;/script&gt;" end tag in this snippet is actually still part of the script block. The script doesn't execute (since it's not terminated); if it somehow were to execute, as it might if the markup looked as follows, it would fail because the script (highlighted here) is not valid JavaScript:
+</p>
+
+<pre class="lang-html">
+&lt;script&gt;<mark>
+  var %example = 'Consider this string: &lt;!-- &lt;script&gt;';
+  console.log(%example);
+&lt;/script&gt;
+&lt;!-- 見かけに反し、実際には，ここも~scriptの一部になる。 --&gt;
+&lt;script&gt;
+ ... // ここもまだ同じ~script~block内にある...
+</mark>&lt;/script&gt;
+</pre>
+
+<!-- 
+  var example = 'Consider this string: ...';
+
+despite appearances, this is actually part of the script still!
+
+ ... // this is the same script block still...
+ -->
+
+<p>
+ここで起きていることは、旧来の理由から，
+`script$e 要素~内の文字列［
+`&lt;!--^l ／ `&lt;script^l
+］を対にしなければ、~HTMLの構文解析器からは，~blockが閉じたものと見なされなくなることである。
+◎
+What is going on here is that for legacy reasons, "&lt;!--" and "&lt;script" strings in script elements in HTML need to be balanced in order for the parser to consider closing the block.
+</p>
+
+<p>
+この節の冒頭で言及したように、問題になり得る文字列を~escapeすれば，この問題をまるごと避けられる：
+◎
+By escaping the problematic strings as mentioned at the top of this section, the problem is avoided entirely:
+</p>
+
+<pre class="lang-html">
+&lt;script&gt;
+  /* <span class="comment">
+`\s^c は `s^c 用の~escape列を与えることに注意。
+◎
+Note: `\s` is an escape sequence for `s`.
+</span> */<mark>
+  var %example = 'Consider this string: &lt;\!-- &lt;\script&gt;';
+  console.log(%example);
+</mark>&lt;/script&gt;
+&lt;!-- ここは単に 2 つの~script~blockの合間にある~commentになる --&gt;
+&lt;script&gt;<mark>
+ ... // 新たな~script~block
+</mark>&lt;/script&gt;
+</pre>
+<!-- 
+this is just a comment between script blocks
+ -->
+<p>
+これらの文字~並びが~scriptの式の中に自然に生じる可能性もある
+— 次の例のように：
+◎
+It is possible for these sequences to naturally occur in script expressions, as in the following examples:
+</p>
+
+<pre class="lang-js">
+if (x&lt;!--y) { ... }
+if ( player&lt;script ) { ... }
+</pre>
+
+<p>
+このような事例では、文字たちは~escapeできないが、この式は，そのような文字~並びが生じないように書き直せる：
+◎
+In such cases the characters cannot be escaped, but the expressions can be rewritten so that the sequences don't occur, as in:
+</p>
+
+<pre class="lang-js">
+if (x &lt; !--y) { ... }
+if (!--y &gt; x) { ... }
+if (!(--y) &gt; x) { ... }
+if (player &lt; script) { ... }
+if (script &gt; player) { ... }
+</pre>
+
+<p>
+こうすることで，別の陥穽
+— 歴史的な理由から、`古典~script$内の文字列 
+`&lt;!--^l
+は，実際には
+`//^l
+と同じく，行~commentの開始として扱われること —
+も避けられる。
+◎
+Doing this also avoids a different pitfall as well: for related historical reasons, the string "&lt;!--" in classic scripts is actually treated as a line comment start, just like "//".
+</p>
+
+</div>
+
+			</section>
+			<section id="inline-documentation-for-external-scripts">
+<h4 title="Inline documentation for external scripts">4.12.1.4. 外部~scriptに対する~inline文書化</h4>
+
+<p>
+`src$a 属性が指定されている `script$e 要素に対しては、要素の内容は，［
+内容から導出される `text$m ~IDL属性の値が，次の~ABNFによる `documentation^P 生成規則に合致する
+］ようにならなければナラナイ
+— この ABNF の文字~集合は~Unicodeとする：
+`ABNF$r
+◎
+If a script element's src attribute is specified, then the contents of the script element, if any, must be such that the value of the text IDL attribute, which is derived from the element's contents, matches the documentation production in the following ABNF, the character set for which is Unicode. [ABNF]
+</p>
+
+<pre class="bnf">
+documentation = *( *( space / tab / comment ) [ line-comment ] newline )
+comment       = slash star *( not-star / star not-slash ) 1*star slash
+line-comment  = slash slash *not-newline
+
+; characters
+tab           = `0009^0x ; U+0009 CHARACTER TABULATION (tab)
+newline       = `000A^0x ; U+000A LINE FEED (LF)
+space         = `0020^0x ; U+0020 SPACE
+star          = `002A^0x ; U+002A ASTERISK (*)
+slash         = `002F^0x ; U+002F SOLIDUS (/)
+not-newline   = `0000-0009^0x / `000B-10FFFF^0x
+                ; U+000A LINE FEED (LF) 以外の `~scalar値$
+not-star      = `0000-0029^0x / `002B-10FFFF^0x
+                ; U+002A ASTERISK (*) 以外の `~scalar値$
+not-slash     = `0000-002E^0x / `0030-10FFFF^0x
+                ; U+002F SOLIDUS (/) 以外の `~scalar値$
+</pre>
+
+<!-- 
+a Unicode character other than
+ -->
+
+<p class="note">注記：
+これは、要素の内容を ~JS~comment内に置くことに対応する。
+◎
+This corresponds to putting the contents of the element in JavaScript comments.
+</p>
+
+<p class="note">注記：
+この要件は、前節に述べた `script$e 要素の内容の構文に課される制約に対する追加である。
+◎
+This requirement is in addition to the earlier restrictions on the syntax of contents of script elements.
+</p>
+
+<div class="example">
+
+<p>
+これにより，作者は、依然として外部~script~fileを指しつつ，文書の内側にも~license情報や~API情報などの文書化を含ませることも可能になる。
+この構文では、 `src$a 属性も供している作者が，不用意に妥当な~scriptの様に見える~dataを含めることがないように，拘束される。
+◎
+This allows authors to include documentation, such as license information or API information, inside their documents while still referring to external script files. The syntax is constrained so that authors don't accidentally include what looks like valid script while also providing a src attribute.
+</p>
+
+`inline-documentation-1^xCode
+
+</div>
+
+			</section>
+			<section id="scriptTagXSLT">
+<h4 title="Interaction of script elements and XSLT">4.12.1.5.  `script$e 要素と XSLT との相互作用</h4>
+
+~INFORMATIVE
+
+<p>
+この仕様は、~XSLTと `script$e 要素とが，どう相互作用するかは定義しない。
+しかしながら、これを実際に定義している別の仕様が無い下での、既存の実装に基づく実装者~向けの指針を，いくつかここに述べる：
+◎
+This specification does not define how XSLT interacts with the script element. However, in the absence of another specification actually defining this, here are some guidelines for implementers, based on existing implementations:
+</p>
+
+<ul>
+	<li>
+~browserが~DOMへの直接的な形式変換を実装する下で，
+`&lt;?xml-stylesheet?&gt;^c
+処理命令により ~XSLT形式変換~programが誘発された場合、~XSLT処理器により作成される各 `script$e 要素は，その`構文解析器~文書$を正しく設定した上で，形式変換が生じるに伴って，`即時$に, 文書~順序で（ただし，［
+`defer$a ／ `async$a
+］による順序は除く）走らす必要がある。
+◎
+When an XSLT transformation program is triggered by an &lt;?xml-stylesheet?&gt; processing instruction and the browser implements a direct-to-DOM transformation, script elements created by the XSLT processor need to have its parser document set correctly, and run in document order (modulo scripts marked defer or async), immediately, as the transformation is occurring.
+</li>
+	<li>
+<p>
+`XSLTProcessor$I の `transformToDocument()$m ~methodは、［
+`属する閲覧文脈$ ~EQ ~NULL
+］なる`文書$に要素を追加する。
+それに則り、作成されるどの `script$e 要素も次のようにしておく必要がある：
+</p>
+		<ul>
+			<li>
+`~scriptを準備する$~algoの中で，その`開始済み~flag$を ~T にして、決して実行されないようにする（`~scriptingは不能化-$される）。
+</li>
+			<li>
+要素の`構文解析器~文書$を設定する。
+</li>
+			<li>
+要素の `async$m ~IDL属性は、要素が `async$a 内容~属性を有さないときは ~F を返すようにする。
+</li>
+		</ul>
+
+◎
+The XSLTProcessor transformToDocument() method adds elements to a Document object with a null browsing context, and, accordingly, any script elements they create need to have their "already started" flag set in the prepare a script algorithm and never get executed (scripting is disabled). Such script elements still need to have their parser document set, though, such that their async IDL attribute will return false in the absence of an async content attribute.
+</li>
+	<li>
+`XSLTProcessor$I の `transformToFragment()$m ~methodは、［
+`document.createElementNS()$m
+を利用して要素を作成することにより，手動で築かれた`文書片$
+］と等価なものを作成する必要がある。
+具体的には、 `script$e 要素を作成する際には，その［
+`構文解析器~文書$は ~NULL,
+`開始済み~flag$は ~F 
+］に設定した上で，その`文書片$が文書~内に挿入された時点で実行されるようにする必要がある。
+◎
+The XSLTProcessor transformToFragment() method needs to create a fragment that is equivalent to one built manually by creating the elements using document.createElementNS(). For instance, it needs to create script elements with null parser document and that don't have their "already started" flag set, so that they will execute when the fragment is inserted into a document.
+</li>
+</ul>
+
+<p>
+上の 1, 2 番目の事例と, 3 番目の事例との間の主な違いは、前者は`文書$に対し演算する一方で，後者は`文書片$に対し演算する点にある。
+◎
+The main distinction between the first two cases and the last case is that the first two operate on Documents and the last operates on a fragment.
+</p>
+
+			</section>
+		</section>
+		<section id="the-noscript-element">
+<h3 title="The noscript element">4.12.2. `noscript^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$：</dt>
+	<dd>
+`~metadata内容$ ／ `~flow内容$ ／ `句ng内容$
+◎
+Metadata content.
+◎
+Flow content.
+◎
+Phrasing content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$：</dt>
+	<dd>
+`~HTML文書$の `head$e 要素~内, または
+`~HTML文書$内の `句ng内容$が期待される所
+— ただし、いずれにせよ，先祖に `noscript$e 要素がある所は除く。
+◎
+In a head element of an HTML document, if there are no ancestor noscript elements.
+◎
+Where phrasing content is expected in HTML documents, if there are no ancestor noscript elements.
+</dd>
+
+	<dt>`内容~model$：</dt>
+	<dd>
+<p>
+要素~用の`~scriptingは不能化されて$いる場合：
+</p>
+		<ul>
+			<li>
+要素が `head$e 要素~内にある場合、順序は問わず，それぞれが［
+`link$e, `style$e, `meta$e
+］のいずれかであるような， 0 個以上の要素。
+</li>
+			<li>
+要素が `head$e 要素~外にある場合、`透過的$になる
+— ただし、子孫に `noscript$e 要素があってはナラナイ。
+</li>
+		</ul>
+
+◎
+When scripting is disabled, in a head element: in any order, zero or more link elements, zero or more style elements, and zero or more meta elements.
+◎
+When scripting is disabled, not in a head element: transparent, but there must be no noscript element descendants.
+</dd>
+	<dd>
+他の場合、下の注釈文に与える要件に適合するような~text。
+◎
+Otherwise: text that conforms to the requirements given in the prose.
+</dd>
+
+	<dt>`text/html における~tag省略$：</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$：</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`noscript$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+`HTMLElement$I を利用する
+◎
+Uses HTMLElement.
+</dd></dl>
+
+<p>
+`noscript$e 要素は、`~scriptingは可能化されて$いる場合は，何も`表現-$せず、`~scriptingは不能化されて$いる場合は，その子たちを`表現-$する。
+それは、~UAが~scriptingを~supportするかどうかに応じて，文書がどう構文解析されるかを違えることにより、~UAに異なる~markupを提示するために利用される。
+◎
+The noscript element represents nothing if scripting is enabled, and represents its children if scripting is disabled. It is used to present different markup to user agents that support scripting and those that don't support scripting, by affecting how the document is parsed.
+</p>
+
+<p>
+`noscript$e 要素 %noscript が
+`~HTML文書$に利用される場合に許容される内容~modelは、次に従う：
+◎
+When used in HTML documents, the allowed content model is as follows:
+</p>
+
+<dl class="switch">
+	<dt>
+%noscript は `head$e 要素~内にある場合：
+◎
+↓</dt>
+	<dd>
+		<dl class="switch">
+			<dt>
+`~scriptingは不能化されて$いる場合：
+◎
+In a head element, if scripting is disabled for the noscript element
+</dt>
+			<dd>
+%noscript は［
+`link$e, `style$e, `meta$e
+］要素のみを包含していなければナラナイ。
+◎
+The noscript element must contain only link, style, and meta elements.
+</dd>
+
+			<dt>
+`~scriptingは可能化されて$いる場合：
+◎
+In a head element, if scripting is enabled for the noscript element
+</dt>
+			<dd>
+<p>
+%noscript は、~textのみを包含するか, または次を満たさなければナラナイ：
+</p>
+
+				<ul>
+					<li>
+<p>
+( `文脈~要素$V, %入力 )
+として
+( %noscript, %noscript の~text内容 )
+を与える下で，`~HTML素片~構文解析~algo$を呼出したときに，次をすべて満たす：
+</p>
+
+<ul ><li>`構文解析-~error$は生じない
+</li><li>~algoの結果は［
+`link$e, `style$e, `meta$e
+］要素のみからなる~nodeの~listである
+</li><li>前項の~listが %noscript の子たちであったとするとき，適合する
+</li></ul>
+					</li>
+				</ul>
+
+◎
+The noscript element must contain only text, except that invoking the HTML fragment parsing algorithm with the noscript element as the context element and the text contents as the input must result in a list of nodes that consists only of link, style, and meta elements that would be conforming if they were children of the noscript element, and no parse errors.
+</dd>
+
+		</dl>
+	</dd>
+
+	<dt>
+%noscript は `head$e 要素~外にある場合：
+◎
+↓</dt>
+	<dd>
+		<dl class="switch">
+			<dt>
+`~scriptingは不能化されて$いる場合：
+◎
+Outside of head elements, if scripting is disabled for the noscript element
+</dt>
+			<dd>
+%noscript の内容~modelは`透過的$になる
+— ただし， %noscript の先祖に `noscript$e 要素があってはナラナイ（すなわち，
+`noscript$e は入子にできない）。
+◎
+The noscript element's content model is transparent, with the additional restriction that a noscript element must not have a noscript element as an ancestor (that is, noscript can't be nested).
+<dd>
+
+			<dt>
+`~scriptingは可能化されて$いる場合：
+◎
+Outside of head elements, if scripting is enabled for the noscript element
+</dt>
+			<dd>
+<p>
+%noscript は、~textのみを包含するか, または次を満たさなければナラナイ：
+</p>
+
+				<ul>
+					<li>
+<p>
+下の~algoを走らせたときに，次をすべて満たす：
+</p>
+
+<ul ><li>例外は投出されない
+</li><li>結果の文書は、［
+`noscript$e, `script$e
+］要素を含まない，適合~文書になる
+</li><li>`~HTML構文解析器$において，`構文解析-~error$は生じない
+</li></ul>
+					</li>
+				</ul>
+
+◎
+The noscript element must contain only text, except that the text must be such that running the following algorithm results in a conforming document with no noscript elements and no script elements, and such that no step in the algorithm throws an exception or causes an HTML parser to flag a parse error:
+</dd>
+			<dd>
+<p>
+~algoは、次で与えられる：
+◎
+↑</p>
+				<ol>
+					<li>
+当の文書からすべての `script$e 要素を除去する
+◎
+Remove every script element from the document.
+</li>
+					<li>
+<p>
+当の文書~内の~EACH ( `noscript$e 要素 %E ) に対し：
+◎
+Make a list of every noscript element in the document. For every noscript element in that list, perform the following steps:
+</p>
+
+						<ol>
+							<li>
+%E の `outerHTML$m 属性 ~SET %E の`子~text内容$
+（これによる副作用として， %E は当の文書から除去される。）
+`DOMPARSING$r
+◎
+Let s be the child text content of the noscript element.
+◎
+Set the outerHTML attribute of the noscript element to the value of s. (This, as a side-effect, causes the noscript element to be removed from the document.) [DOMPARSING]
+</li>
+						</ol>
+					</li>
+				</ol>
+			</dd>
+		</dl>
+	</dd>
+</dl>
+
+<p class="note">注記：
+上述の ひねくれた取扱いすべてが要求される
+— 歴史的な理由から，`~HTML構文解析器$による `noscript$e 要素に対する取扱いは、［
+構文解析器が呼出されたときに，その要素~用の`~scriptingは可能化されていたかどうか$
+］に応じて，異なるので。
+◎
+All these contortions are required because, for historical reasons, the noscript element is handled differently by the HTML parser based on whether scripting was enabled or not when the parser was invoked.
+</p>
+
+<p>
+`~XML文書$には、 `noscript$e 要素は利用されてはナラナイ。
+◎
+The noscript element must not be used in XML documents.
+</p>
+
+<p class="note">注記：
+`noscript$e 要素が効果を及ぼすのは，`~HTML構文$に限られ、`~XML構文$には効果は及ばない。
+それは，~scriptが可能化されている下では、本質的に［
+要素の内容を本当の要素としてではなく，純粋な~textとして扱う
+］ように，構文解析器を “切る” ように働くが、~XMLには，これを行う仕組みは定義されていないので。
+◎
+The noscript element is only effective in the HTML syntax, it has no effect in the XML syntax. This is because the way it works is by essentially "turning off" the parser when scripts are enabled, so that the contents of the element are treated as pure text and not as real elements. XML does not define a mechanism by which to do this.
+</p>
+
+<p>
+`noscript$e 要素には、他の要件はない。
+特に，要素~用の`~scriptingは可能化されて$いるときでも、
+`noscript$e 要素の子たちが
+`~form提出$, ~scripting, 等々, から免れることはない。
+◎
+The noscript element has no other requirements. In particular, children of the noscript element are not exempt from form submission, scripting, and so forth, even when scripting is enabled for the element.
+</p>
+
+<div class="example">
+
+<p>
+次の例では、~scriptに対する~fallbackを供するために
+`noscript$e 要素が利用されている：
+◎
+In the following example, a noscript element is used to provide fallback for a script.
+</p>
+
+`noscript-1^xCode
+
+<p>
+~scriptが不能化されている下では、~server側で計算を行わせるような~buttonが現れる。
+一方で，~scriptが可能化されている下では、その場で値が算出される。
+◎
+When script is disabled, a button appears to do the calculation on the server side. When script is enabled, the value is computed on-the-fly instead.
+</p>
+
+<p>
+`noscript$e 要素は、 “なまくら” である。
+~pageの~scriptが可能化されていても，何らかの理由で失敗することはある。
+よって，一般に、 `noscript$e の利用は避ける方が良い
+— 次の例のように、まず，~scriptなしが~~前提の~pageにした上で、［
+~scriptが成功したなら，その場で その結果を利用するように~pageを変更する
+］ように，設計することにより：
+◎
+The noscript element is a blunt instrument. Sometimes, scripts might be enabled, but for some reason the page's script might fail. For this reason, it's generally better to avoid using noscript, and to instead design the script to change the page from being a scriptless page to a scripted page on the fly, as in the next example:
+</p>
+
+`noscript-2^xCode
+
+<p>
+この技法は、 `noscript$e が許容されない`~XML文書$においても有用になる。
+◎
+The above technique is also useful in XML documents, since noscript is not allowed there.
+</p>
+
+</div>
+
+		</section>
+		<section id="the-template-element">
+<h3 title="The template element">4.12.3. `template^e 要素</h3>
+
+<dl class="element-def">
+	<dt>`分類$：</dt>
+	<dd>
+`~metadata内容$ ／ `~flow内容$ ／ `句ng内容$ ／ `~scriptを~supportする要素$
+◎
+Metadata content.
+◎
+Flow content.
+◎
+Phrasing content.
+◎
+Script-supporting element.
+</dd>
+
+	<dt>`この要素を利用できる文脈$：</dt>
+	<dd>
+`~metadata内容$が期待される所。
+◎
+Where metadata content is expected.
+</dd>
+	<dd>
+`句ng内容$が期待される所。
+◎
+Where phrasing content is expected.
+</dd>
+	<dd>
+`~scriptを~supportする要素$が期待される所。
+◎
+Where script-supporting elements are expected.
+</dd>
+	<dd>
+`span$a 属性を有さない `colgroup$e 要素の子として。
+◎
+As a child of a colgroup element that doesn't have a span attribute.
+</dd>
+
+	<dt>`内容~model$：</dt>
+	<dd>
+`なし$（より明確には，
+<a href="#template-example">例を見よ</a>。
+）
+◎
+Nothing (for clarification, see example).
+</dd>
+
+	<dt>`text/html における~tag省略$：</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$：</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`template$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLTemplateElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  readonly attribute `DocumentFragment$I `content$m;
+};
+</pre>
+</dd>
+
+</dl>
+
+<p>
+`template$e 要素は、~scriptにより，~cloneしたり文書~内に挿入できるような，~HTML素片を宣言するために利用される。
+◎
+The template element is used to declare fragments of HTML that can be cloned and inserted in the document by script.
+</p>
+
+<p>
+具現化においては、 `template$e 要素は何も`表現-$しない。
+◎
+In a rendering, the template element represents nothing.
+</p>
+
+<p>
+`template$e 要素の`~template内容$は、要素~自身の子ではない。
+◎
+The template contents of a template element are not children of the element itself.
+</p>
+
+<p class="note">注記：
+~DOM操作の結果として， `template$e 要素が `Text$I ~nodeや要素~nodeを包含することもアリだが、 `template$e 要素の内容~modelは`なし$と定義されているので，それは違反になる。
+◎
+It is also possible, as a result of DOM manipulation, for a template element to contain Text nodes and element nodes; however, having any is a violation of the template element's content model, since its content model is defined as nothing.
+</p>
+
+<div class="example" id="template-example">
+
+<p>
+例えば、次の文書を考える：
+◎
+For example, consider the following document:
+</p>
+
+`template-1^xCode
+
+<p>
+`template$e 内の `p$e 要素は、
+~DOM内では `template$e の子<em>ではない</em>
+— それは、 `template$e 要素の `content$m ~IDL属性から返される`文書片$の子である。
+◎
+The p element in the template is not a child of the template in the DOM; it is a child of the DocumentFragment returned by the template element's content IDL attribute.
+</p>
+
+<p>
+~scriptが `template$e 要素~上の `appendChild()$m を~callした場合、
+（他の要素に対するときと同様に） `template$e 要素に子を追加することになる
+— しかしながら，そうすると、
+`template$e 要素の内容~modelに違反することになる。
+◎
+If the script were to call appendChild() on the template element, that would add a child to the template element (as for any other element); however, doing so is a violation of the template element's content model.
+</p>
+
+</div>
+
+<dl class="domintro">
+	<dt>%~template . `content$m</dt>
+	<dd>
+`~template内容$（ `文書片$ ）を返す。
+◎
+Returns the template contents (a DocumentFragment).
+</dd>
+</dl>
+
+<div class="algorithm">
+<p>
+各 `template$e 要素には，`文書片$が結付けられ、それが 要素の
+`~template内容@
+になる。
+`~template内容$には、
+<a href="~HTMLdom#no-browsing-context">適合性~要件はない</a>
+。
+~UAは、 `template$e 要素 %要素 を作成するときは，次の手続きを走らせて， %要素 の`~template内容$を確立するモノトスル：
+◎
+Each template element has an associated DocumentFragment object that is its template contents. The template contents have no conformance requirements. When a template element is created, the user agent must run the following steps to establish the template contents:
+</p>
+
+<ol>
+	<li>
+%文書 ~LET %要素 の`~node文書$の`~template内容を所有する適切な文書$
+◎
+Let doc be the template element's node document's appropriate template contents owner document.
+</li>
+	<li>
+%文書片 ~LET 次のようにされた，新たな`文書片$
+⇒＃
+`~node文書$ ~SET %文書,
+`~host$ ~SET %要素
+◎
+Create a DocumentFragment object whose node document is doc and host is the template element.
+</li>
+	<li>
+%要素 の`~template内容$ ~SET %文書片
+◎
+Set the template element's template contents to the newly created DocumentFragment object.
+</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+`文書$ %文書 の
+`~template内容を所有する適切な文書@
+は、次の~algoから返される`文書$として定義される：
+◎
+A Document doc's appropriate template contents owner document is the Document returned by the following algorithm:
+</p>
+<ol>
+	<li>
+~IF［
+%文書 は、ある`文書$の`不活~template文書$である
+］
+⇒
+~RET %文書
+◎
+If doc is not a Document created by this algorithm, then:
+</li>
+	<li>
+%不活~文書 ~LET %文書 の`不活~template文書$
+◎
+</li>
+	<li>
+~IF［
+%不活~文書 ~NEQ ε
+］
+⇒
+~RET %不活~文書
+◎
+If doc does not yet have an associated inert template document, then:
+</li>
+	<li>
+%不活~文書 ~LET 新たな`文書$（それが`属する閲覧文脈$ ~EQ ~NULL ）
+◎
+Let new doc be a new Document (whose browsing context is null). This is "a Document created by this algorithm" for the purposes of the step above.
+</li>
+	<li>
+~IF［
+%文書 は`~HTML文書$である
+］
+⇒
+%不活~文書 も`~HTML文書$にする
+◎
+If doc is an HTML document, mark new doc as an HTML document also.
+</li>
+	<li>
+%文書 の`不活~template文書$ ~SET %不活~文書
+◎
+Let doc's associated inert template document be new doc.
+</li>
+	<li>
+~RET %不活~文書
+◎
+Set doc to doc's associated inert template document.
+</li>
+</ol>
+
+<p>
+この~algoの目的においては、各 `文書$には，自身の`~template内容$を保持するための
+`不活~template文書@
+が結付けられる
+— それは、`文書$または ε （~~存在しない）であり，必要に応じて作成される。
+◎
+↑</p>
+
+<p class="note">注記：
+したがって，この~algoにより作成されたものでない各 `文書$は、［
+自身の `template$e 要素すべての`~template内容$
+］を，［
+それらが どの`閲覧文脈$にも属さず，不活であり続ける（例： ~scriptは走らせない）ようにする
+］ために所有するための、代理として動作するような単独の`文書$
+— `不活~template文書$ —
+を取得する。
+`不活~template文書$の内側にある `template$e 要素は、当面の間は
+【不活でなくなるまでは】
+単に同じ`文書$を，その内容の所有者として再利用する。
+◎
+Each Document not created by this algorithm thus gets a single Document to act as its proxy for owning the template contents of all its template elements, so that they aren't in a browsing context and thus remain inert (e.g. scripts do not run). Meanwhile, template elements inside Document objects that are created by this algorithm just reuse the same Document owner for their contents.
+◎
+Return doc.
+</p>
+</div>
+
+<div class="algorithm">
+<p id="template-adopting-steps">
+`template$e 要素に対する`受入-時の手続き$は、所与の
+( %~node, %旧-文書 )
+に対し，次を走らす：
+◎
+The adopting steps (with node and oldDocument as parameters) for template elements are the following:
+</p>
+
+<ol>
+	<li>
+<p>
+%文書 ~LET %~node の`~node文書$の`~template内容を所有する適切な文書$
+◎
+Let doc be node's node document's appropriate template contents owner document.
+</p>
+
+<p class="note">注記：
+%~node の`~node文書$は、直前に %~node を受入した`文書$である。
+【 %旧-文書 ではなく（ %旧-文書 はこの手続きの中では利用されていない）。】
+◎
+node's node document is the Document object that node was just adopted into.
+</p>
+	</li>
+	<li>
+%文書 に`~nodeを受入する$( %~node の（`文書片$である）`~template内容$ )
+◎
+Adopt node's template contents (a DocumentFragment object) into doc.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`content@m
+取得子~手続きは
+⇒
+~RET コレの`~template内容$
+◎
+The content IDL attribute must return the template element's template contents.
+</div>
+
+<hr>
+
+<div class="algorithm">
+<p>
+`template$e 要素~用の`~clone時の手続き$は、所与の
+( %複製, %~node, %文書, %子も~cloneする~flag )
+に対し，次を走らすモノトスル：
+◎
+The cloning steps for a template element node being cloned to a copy copy must run the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%子も~cloneする~flag ~EQ ε
+］
+⇒
+~RET
+◎
+If the clone children flag is not set in the calling clone algorithm, return.
+</li>
+	<li>
+<p>
+%~node の`~template内容$の ~EACH ( 子 %子 ) に対し：
+</p>
+		<ol>
+			<li>
+%~clone ~LET `~nodeを~cloneする$( %子, %複製 の`~template内容$の`~node文書$, `子も~cloneする^i )
+</li>
+			<li>
+%複製 の`~template内容$に %~clone を付加する
+</li>
+		</ol>
+
+◎
+Let copied contents be the result of cloning all the children of node's template contents, with document set to copy's template contents's node document, and with the clone children flag set.
+◎
+Append copied contents to copy's template contents.
+</li>
+</ol>
+</div>
+
+<div class="example">
+
+<p>
+次の例の~scriptは、要素~構造を供する `template$e を利用して，
+4 ~columnからなる~tableを ある~data構造からの~dataで拡充する
+— 手動で~markupして構造を生成する代わりに：
+◎
+In this example, a script populates a table four-column with data from a data structure, using a template to provide the element structure instead of manually generating the structure from markup.
+</p>
+
+`template-2^xCode
+
+<p>
+この例では、
+`template$e の内容~上で `cloneNode()$m を利用しているが，同じことを行う
+`document.importNode()$m を利用しても等価になる。
+これらの~APIの唯一の相違は、いつ`~node文書$が更新されるかになる：
+`cloneNode()$m では， `appendChild()$m で~nodeが付加されるとき ／
+`document.importNode()$m では，~nodeが~cloneされるときに更新される。
+◎
+This example uses cloneNode() on the template's contents; it could equivalently have used document.importNode(), which does the same thing. The only difference between these two APIs is when the node document is updated: with cloneNode() it is updated when the nodes are appended with appendChild(), with document.importNode() it is updated when the nodes are cloned.
+</p>
+
+</div>
+
+			<section id="template-XSLT-XPath">
+<h4 title="Interaction of template elements with XSLT and XPath">4.12.3.1. `template$e 要素と~XSLT, ~XPathとの相互作用</h4>
+
+~INFORMATIVE
+
+<p>
+この仕様は、~XSLTと `template$e 要素とが，どう相互作用するかは定義しない。
+しかしながら、これを実際に定義している別の仕様が無い下での、既存の実装に基づく，実装者に対するいくつかの指針をここに述べる。
+これらの指針は、この仕様に述べる他の処理と整合するように意図されている：
+◎
+This specification does not define how XSLT and XPath interact with the template element. However, in the absence of another specification actually defining this, here are some guidelines for implementers, which are intended to be consistent with other processing described in this specification:
+</p>
+
+  <ul>
+	<li>
+［
+この仕様に述べるように動作する`~XML構文解析器$
+］に基づく~XSLT処理器は、形式変換-の目的においては，［
+`template$e 要素が その`~template内容$の子孫を包含していた
+］かのように動作する必要がある。
+◎
+An XSLT processor based on an XML parser that acts as described in this specification needs to act as if template elements contain as descendants their template contents for the purposes of the transform.
+</li>
+	<li>
+~DOMを出力する~XSLT処理器は、［
+`template$e 要素の中へ行く~nodeが，要素の`~template内容$の中に置かれる
+］ことを確保する必要がある。
+◎
+An XSLT processor that outputs a DOM needs to ensure that nodes that would go into a template element are instead placed into the element's template contents.
+</li>
+	<li>
+~XPath~DOM~APIを利用する~XPath式を評価する際には、この仕様に述べる［
+`~HTML構文解析器$ ／ `~XML構文解析器$
+］を利用して構文解析された`文書$に適用されるときは，`~template内容$を無視する必要がある。
+◎
+XPath evaluation using the XPath DOM API when applied to a Document parsed using the HTML parser or the XML parser described in this specification needs to ignore template contents.
+</li>
+</ul>
+
+			</section>
+		</section>
+		<section id="the-slot-element">
+<h3 title="The slot element">4.12.4. `slot^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$：</dt>
+	<dd>
+`~flow内容$ ／ `句ng内容$
+◎
+Flow content.
+◎
+Phrasing content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$：</dt>
+	<dd>
+`句ng内容$が期待される所。
+◎
+Where phrasing content is expected.
+</dd>
+
+	<dt>`内容~model$：</dt>
+	<dd>
+`透過的$
+◎
+Transparent
+</dd>
+
+	<dt>`text/html における~tag省略$：</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$：</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+`name$a
+— `~shadow~tree$の`~slot$の`~slot名$
+◎
+name — Name of shadow tree slot
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`slot$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLSlotElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [`CEReactions$] attribute DOMString `name$m;
+  sequence&lt;Node&gt; `assignedNodes$m(optional `AssignedNodesOptions$I %options = {});
+  sequence&lt;Element&gt; `assignedElements$m(optional `AssignedNodesOptions$I %options = {});
+};
+
+dictionary `AssignedNodesOptions@I {
+  boolean flatten = false;
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`slot$e 要素は、`~slot$を定義する。
+それは概して，`~shadow~tree$に利用される。
+`slot$e 要素は、それに`割当された~nodeたち$が［
+あれば それら ／
+なければ自身の内容
+］を`表現-$する。
+◎
+The slot element defines a slot. It is typically used in a shadow tree. A slot element represents its assigned nodes, if any, and its contents otherwise.
+</p>
+
+<p>
+`name@a
+内容~属性が包含する値は、どのような文字列でもヨイ。
+それは、`~slot$の`~slot名$を表現する。
+◎
+The name content attribute may contain any string value. It represents a slot's name.
+</p>
+
+<p class="note">注記：
+`name$a 属性は、他の要素を，この要素が定義する`~slotに割当する$ために利用される：
+`name$a 属性を有する `slot$e 要素 %slot は、その属性~値を`~slot名$とする`~slot$を作成し，次を満たすような他の要素を その`~slotに割当する$ことが可能になる
+⇒
+［
+要素の `slot$a 属性の値は~slot名に合致する
+］~AND［
+%slot を子とする`~shadow~tree$の`根$の`~host$が，対応する `slot$a 属性~値を持つ【？】
+］
+【！要素は slot の~shadow根の~hostの子／子孫である？】
+◎
+The name attribute is used to assign slots to other elements: a slot element with a name attribute creates a named slot to which any element is assigned if that element has a slot attribute whose value matches that name attribute's value, and the slot element is a child of the shadow tree whose root's host has that corresponding slot attribute value.
+</p>
+
+<dl class="domintro">
+	<dt>%slot . `name$m</dt>
+	<dd>
+%slot の`~slot名$を取得したり設定するために利用できる。
+◎
+Can be used to get and set slot's name.
+</dd>
+
+	<dt>%slot . `assignedNodes(options)$m</dt>
+	<dd>
+<p>
+%options の `flatten^m ~member値に応じて：
+</p>
+		<ul>
+			<li>
+~F （ %options の省略時も含む）ならば
+⇒
+%slot に`割当された~nodeたち$を返す。
+</li>
+			<li>
+~T ならば
+⇒
+%slot に`割当された~nodeたち$が［
+あれば それら ／
+なければ %slot の子たち
+］に加えて、それらに含まれる各 `slot$e 要素に対しても，
+`slot$e 要素が尽きるまで，再帰的に同じことをして得られる~nodeたちを返す。
+</li>
+		</ul>
+◎
+Returns slot's assigned nodes.
+◎
+slot . assignedNodes({ flatten: true })
+◎
+Returns slot's assigned nodes, if any, and slot's children otherwise, and does the same for any slot elements encountered therein, recursively, until there are no slot elements left.
+</dd>
+
+	<dt>%slot . `assignedElements(options)$m</dt>
+	<dd>
+`assignedNodes(options)$m
+と同じ結果を，要素のみに制限した上で返す。
+◎
+Returns slot's assigned nodes, limited to elements.
+◎
+slot . assignedElements({ flatten: true })
+◎
+Returns the same as assignedNodes({ flatten: true }), limited to elements.
+</dd>
+</dl>
+
+<p>
+`name@m
+~IDL属性は、
+`name$a 内容~属性を`反映する$モノトスル。
+◎
+The name IDL attribute must reflect the content attribute of the same name.
+</p>
+
+<div class="algo">
+<p>
+`assignedNodes(options)@m
+~method~手続きは：
+◎
+The assignedNodes(options) method, when invoked, must run these steps:
+</p>
+<ol>
+	<li>
+~RET %options の `flatten^m ~member値に応じて
+⇒＃
+~F ならば コレに`割当された~nodeたち$ ／
+~T ならば `~slot用に平坦~化された~slottableたちを見出す$( コレ )
+◎
+If the value of options's flatten member is false, then return this element's assigned nodes.
+◎
+Return the result of finding flattened slottables with this element.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`assignedElements(options)@m
+~method~手続きは：
+</p>
+<ol>
+	<li>
+%結果 ~LET %options の `flatten^m ~member値に応じて
+⇒＃
+~F ならば コレに`割当された~nodeたち$ ／
+~T ならば `~slot用に平坦~化された~slottableたちを見出す$( コレ )
+</li>
+	<li>
+~RET
+%結果 を `Element$I ~nodeのみを包含するように絞込んだ結果
+</li>
+</ol>
+◎
+The assignedElements(options) method, when invoked, must run these steps:
+• If the value of options's flatten member is false, then return this element's assigned nodes, filtered to contain only Element nodes.
+• Return the result of finding flattened slottables with this element, filtered to contain only Element nodes.
+</div>
+
+		</section>
+	</section>
+</main>
+

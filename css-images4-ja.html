@@ -1,0 +1,4249 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Images Module Level 4 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+
+<style>
+
+#_dgm-efunc2 {
+	position: relative;
+	overflow: hidden;
+	width: 24em;
+	padding: 1.5em;
+}
+
+._ex-efunc-src {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 12em;
+	height: 3em;
+	color: white;
+	background: lime;
+}
+#_ex-efunc-dst {
+	position: relative;
+	color: black;
+}
+
+</style>
+
+<style>
+/* style-railroad */
+svg.railroad-diagram {
+	background-color: hsl(30 20% 95%);
+}
+svg.railroad-diagram path {
+	stroke-width: 3px;
+	stroke: black;
+	fill: none;
+}
+svg.railroad-diagram text {
+	font: bold 14px monospace;
+	text-anchor: middle;
+}
+svg.railroad-diagram text.label {
+	text-anchor: start;
+}
+svg.railroad-diagram text.comment {
+	font:italic 12px monospace;
+}
+svg.railroad-diagram rect {
+	stroke-width: 3px;
+	stroke: black;
+	fill: hsl(120 100% 90%);
+}
+</style>
+
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+
+Util.ready = function(){
+	const source_data = {
+		collectParts: Util.collectParts,
+		generate: expand,
+	};
+	Util.switchWordsInit(source_data);
+}
+
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r': // ref
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 't': // typedef
+	text = `&lt;${key}&gt;`;
+	break;
+case 'vt': // css values
+	text = `&lt;${key}&gt;`;
+	break;
+case 'f': // funcdef
+	text = `${key}()`;
+	break;
+case 'ft': // funcdef
+	text = `&lt;<code class="func">${key}()</code>&gt;`;
+	klass='f';
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+case 'dgm':
+	return `<a id="_dgm-${key}">＊</a>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Images Module Level 4
+spec_date:2020-08-27
+trans_update:2020-08-29
+source_checked:190415
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-images-4/
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+site_nav:paint,css
+conformance:css
+copyright:2020,permissive
+trans_1st_pub:2017-04-24
+
+
+●●class_map
+p:property
+f:func
+t:type
+u:unit
+vt:type
+ft:type
+v:value
+css:css
+e:element
+a:attr
+et:event-type
+
+●●tag_map
+p:code
+t:var
+vt:var
+ft:var
+css:code
+f:code
+d:code
+c:code
+e:code
+a:code
+u:code
+f:code
+v:code
+I:code
+m:code
+et:code
+V:var
+i:i
+em:em
+
+●●original_id_map
+
+●●mdn_urls
+	propdef-image-resolution:CSS/image-resolution
+propdef-object-fit:CSS/object-fit
+
+typedef-image:CSS/image
+typedef-gradient:CSS/gradient
+	typedef-image-set-option
+	typedef-image-src
+	typedef-image-tags
+	typedef-linear-color-hint
+	typedef-linear-color-stop
+	typedef-angular-color-hint
+	typedef-angular-color-stop-list
+	typedef-angular-color-stop
+	typedef-color-stop
+	typedef-color-stop-angle
+	typedef-color-stop-length
+	typedef-color-stop-list
+
+funcdef-conic-gradient:CSS/conic-gradient
+funcdef-cross-fade:CSS/cross-fade
+funcdef-element:CSS/element
+funcdef-image-set:CSS/image-set
+funcdef-image:CSS/image
+	funcdef-repeating-conic-gradient:CSS/repeating-conic-gradient
+funcdef-repeating-linear-gradient:CSS/repeating-linear-gradient
+funcdef-repeating-radial-gradient:CSS/repeating-radial-gradient
+
+●●link_map
+
+I.CSS:~CSSOM1#namespacedef-css
+SameObject:~WEBIDLjs#SameObject
+m.elementSources:#dom-css-elementsources
+
+a.dir:~HTMLdom#the-dir-attribute
+e.canvas:~HEcanvas#the-canvas-element
+e.p:~HEgrouping#the-p-element
+e.img:~HEimages#the-img-element
+e.video:~HEmedia#the-video-element
+e.iframe:~HEembed#the-iframe-element
+e.picture:~HEimages#the-picture-element
+	e.ul
+	e.h1:~HEsections#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements
+e.defs:~SVGstruct#elementdef-defs
+	e.defs:~SVG11/struct.html#DefsElement
+	e.linearGradient:~SVG11/pservers.html#LinearGradientElement
+	e.radialGradient:~SVG11/pservers.html#RadialGradientElement
+e.pattern:~SVGpservers#elementdef-pattern
+	e.pattern:~SVG11/pservers.html#PatternElement
+e.use:~SVGstruct#elementdef-use
+	e.use:~SVG11/struct.html#UseElement
+
+	et.click
+p.object-fit:#propdef-object-fit
+
+p.image-resolution:#propdef-image-resolution
+p.background-image:~CSSBG#propdef-background-image
+p.background-position:~CSSBG#propdef-background-position
+p.background-color:~CSSBG#propdef-background-color
+p.background-size:~CSSBG#propdef-background-size
+p.cursor:~CSSUI#propdef-cursor
+p.direction:~CSSWM#propdef-direction
+	~CSS2VISUREN#propdef-direction
+p.list-style-image:~CSSLIST#propdef-list-style-image
+p.list-style-type:~CSSLIST#propdef-list-style-type
+
+v.snap:#valdef-image-resolution-snap
+v.from-image:#valdef-image-resolution-from-image
+v.transparent:~CSSCOLOR#valdef-color-transparent
+	透明な黒:
+v.center:~CSSBG#valdef-background-position-center
+
+v.contain:#valdef-object-fit-contain
+v.cover:#valdef-object-fit-cover
+v.fill:#valdef-object-fit-fill
+v.none:#valdef-object-fit-none
+v.scale-down:#valdef-object-fit-scale-down
+
+v.circle:~CSSIMAGE#valdef-ending-shape-circle
+v.ellipse:~CSSIMAGE#valdef-ending-shape-ellipse
+
+t.angular-color-hint:#typedef-angular-color-hint
+t.angular-color-stop-list:#typedef-angular-color-stop-list
+t.angular-color-stop:#typedef-angular-color-stop
+t.color-stop-angle:#typedef-color-stop-angle
+t.color-stop-length:#typedef-color-stop-length
+t.color-stop-list:#typedef-color-stop-list
+t.color-stop:#typedef-color-stop
+t.gradient:#typedef-gradient
+t.image-set-option:#typedef-image-set-option
+t.image-src:#typedef-image-src
+t.image-tags:#typedef-image-tags
+t.image:#typedef-image
+t.linear-color-hint:#typedef-linear-color-hint
+t.linear-color-stop:#typedef-linear-color-stop
+
+t.color:~CSSCOLOR#typedef-color
+	~CSSWG/css-color-3/#valuea-def-color
+t.id-selector:~SELECTORS4#typedef-id-selector
+
+t.angle-percentage:~CSSVAL#typedef-angle-percentage
+t.angle:~CSSVAL#angle-value
+t.length-percentage:~CSSVAL#typedef-length-percentage
+t.position:~CSSVAL#typedef-position
+t.string:~CSSVAL#string-value
+t.url:~CSSVAL#url-value
+t.angle:~CSSVAL#angle-value
+t.custom-ident:~CSSVAL#identifier-value
+t.length:~CSSVAL#length-value
+t.position:~CSSVAL#typedef-position
+t.resolution:~CSSVAL#resolution-value
+t.percentage:~CSSVAL#percentage-value
+
+t.cf-image:#typedef-cf-image
+t.ending-shape:~CSSIMAGE#valdef-radial-gradient-ending-shape
+
+f.linear-gradient:~CSSIMAGE#funcdef-linear-gradient
+f.radial-gradient:~CSSIMAGE#funcdef-radial-gradient
+	f.repeating-linear-gradient:~CSSIMAGE#funcdef-repeating-linear-gradient
+f.repeating-conic-gradient:#funcdef-repeating-conic-gradient
+f.repeating-linear-gradient:#funcdef-repeating-linear-gradient
+f.repeating-radial-gradient:#funcdef-repeating-radial-gradient
+
+f.cross-fade:#funcdef-cross-fade
+f.image-set:#funcdef-image-set
+f.type:#funcdef-image-set-type
+f.conic-gradient:#funcdef-conic-gradient
+f.element:#funcdef-element
+f.image:#funcdef-image
+f.url:~CSSVAL#funcdef-url
+
+	tv.angle:#valdef-conic-gradient-angle
+	tv.position:#valdef-conic-gradient-position
+	tv.resolution:#valdef-image-resolution-resolution
+
+u.px:~CSSVAL#px
+
+
+	●用語
+
+~gradient関数:#gradient-function
+~gradient~box:#gradient-box
+~gradient中心:#conic-gradient-gradient-center
+~gradient線:#gradient-line
+
+読込n中の画像:#loading-image
+画像~解像度:#image-resolution
+内在的~解像度:#intrinsic-resolution
+無効な画像:#invalid-image
+描画され:#element-not-rendered
+塗り~source:#paint-source
+
+内在的~寸法を決定する:#intrinsic-dimensions-of-a-cross-fade
+外観を決定する:#appearance-of-a-cross-fade
+
+~fallback色を伴う~URL:#image-notation
+装飾d限界~box:#decorated-bounding-box
+
+円錐型~gradient:#conic-gradients
+
+始点:#starting-point
+終点:#ending-point
+
+色停:#color-stop
+遷移~hint:#color-transition-hint
+色停~list:#color-stop-list
+
+	§:#gradients
+	§:#image-notation
+	§:#color-images
+	§:#element-notation
+	§:#repeating-gradients
+	§:#color-stop-syntax
+	§:#color-stop-syntax
+
+	●用語（L3
+	色停:~CSSIMAGE#color-stop
+	遷移~hint:~CSSIMAGE#color-transition-hint
+	色停~list:~CSSIMAGE#color-stop-list
+
+終形:~CSSIMAGE#ending-shape
+中心:~CSSIMAGE#radial-gradient-gradient-center
+線型~gradient:~CSSIMAGE#linear-gradients
+放射型~gradient:~CSSIMAGE#radial-gradients
+繰返ng~gradient:~CSSIMAGE#repeating-gradients
+	繰返ng~gradient:#repeating-gradients
+~url参照:~CSSIMAGE#url-notation
+具象-~obj~size:~CSSIMAGE#concrete-object-size
+既定の~obj~size:~CSSIMAGE#default-object-size
+内在的~寸法:~CSSIMAGE#intrinsic-dimensions
+~obj~size折衝:~CSSIMAGE#object-size-negotiation
+
+	●用語（外部
+算出d値:~CASCADE#computed-value
+指定d値:~CASCADE#specified-value
+
+~tuple:~INFRA#tuple
+~item:~INFRA#list-item
+~list:~INFRA#list
+付加する:~INFRA#list-append
+空:~INFRA#list-is-empty
+
+
+~border画像~区画:~CSSBG#border-image-area
+
+積層~文脈:~CSS2VISUREN#stacking-context
+媒体~素片~識別子:~TR/media-frags/#naming-space
+媒体~素片:~TR/media-frags/
+
+透明な黒:~CSSCOLOR#transparent-black
+
+利用元~単位:~SVGcoords#TermUserUnits
+	利用元~単位:~SVG11/coords.html#Units
+塗り~server:~SVGpainting#TermPaintServerElement
+	塗り~server:~SVG11/pservers.html
+~secure~animate化~mode:~SVGconform#secure-animated-mode
+	~secure~animate化~mode:~TR/svg-integration/#secure-animated-mode
+~secure静的~mode:~SVGconform#secure-static-mode
+	~secure静的~mode:~TR/svg-integration/#secure-static-mode
+
+	all elements:~CSSWG/css-pseudo/#generated-content
+
+	:~TR/2012/WD-css4-images-20120911/
+	:images/sprites.svg
+	<color-hint> <color-hint>:
+	<color-stop> <color-stop>:
+
+首要~box:~CSSDISP#principal-box
+置換d要素:~CSSDISP#replaced-element
+
+生成d内容:~CSS22/generate.html#content
+
+~ID選択子:~SELECTORS4#id-selector
+
+線型~easing関数:~CSSEASING#linear-easing-function
+~easing関数:~CSSEASING#easing-function
+
+妥当な~MIME型:~MIMESNIFF#valid-mime-type
+
+●●words_table1
+SVGconform:svg-conform-ja.html
+
+
+●●words_table
+
+
+	●幾何
+2D:
+1D:
+	軸に~~平行な:axis-aligned
+回転-:rotate::~
+回転:rotation::~
+中心:center:~
+半径:radius:~
+四分円:quadrant:~
+楕円な:ellipticalな:~
+真円:circle:~
+円錐:cone::~
+正方形:square:~
+領域:region:~
+無限小:infinitesimal:~
+線:line::~
+直線:straight line:~
+射線:ray line:~
+	射線:ray
+渦巻き:spiral:~
+重合n:overlap:重なり合い
+端点:endpoints:~
+始点:starting point:~
+終点:ending point:~
+外方:outward:~
+側:side:~
+矩形:rectangle:~
+
+裏返され:flipされ:~
+裏返して:flipして:~
+左上隅:top left corner:~
+変形-:transform:~
+横:horizontal::~
+縦:vertical::~
+線:line::~
+ズラし:shiftし:ずらし
+拡縮-:scale::~
+	拡縮し直す:rescale
+時計回り:clockwise::~
+	反~時計回り
+並進:translation::~
+形状:shape:~
+
+	●値／スカラー／比較
+	広さ無限:infinite
+単位:unit:~
+	利用元~単位:user coordinate
+丸めた:roundした:~
+総和:sum:~
+	総和:summed together
+加算-:add:~
+減算-:subtract:~
+	変換
+加重d:weighted:加重
+重み:weight:~
+平均:average:~
+同等性:equality:~
+分配-:distribute:~
+平坦:flat:~
+	平坦~化:flatten
+結合-:combine:~
+延伸-:extend:~
+
+	切り上げ:floor
+	等分にあてがわれる:divided equally between〜
+
+	●gradient
+gradient:
+線型:linear::~
+放射型:radial::~
+円錐型:conic::~
+	^en:conical
+終形:ending shape::~
+滑らか:smooth::~
+繰返ng:repeating:繰り返し
+	繰返ngなしの:non-repeating
+繰返n:repetition:繰り返し
+繰返して:repeatして:繰り返して
+繰返しな:repeatしな:繰り返しな
+均等:even:~
+乗算-:multiply::~
+乗算済み:premultiplied::~
+一足飛び:abrupt:~
+
+
+	●§gradient
+graphics-library:graphics library::グラフィックス ライブラリ
+埋める:fillする:~
+確定的:definite::~
+混合-:mix:~
+先行-:precede:~
+後続-:follow:~
+割合:percentage:~
+市松模様:checkerboard:~
+旭光状:starburst-type:~
+縞:stripes:~
+pie-chart:pie chart:円グラフ
+指数関数曲線:exponential curve:~
+中間点:halfway:~
+	中間点:halfway point
+動き:movement:~
+湧出る:emergeする:湧き出る
+修繕-:fix up:~
+修繕:fixup:~
+実数:number:~
+
+	増加:increasing
+	~~式
+	deg^v:degree
+	~~区間:segment
+	それを挟む:surrounding
+	上から見た:observed from above
+	中心~点:center-point
+	同じ所:right on
+	周に沿って:around the circumference
+	周り:around
+	回る:spin
+	地点:at／:point
+	幅:wide
+	指して／地点:point
+
+	沿って:along
+	等間隔:space themselves out equally
+	等間隔に置く:evenly spaced
+	高さ:tall
+	-:weighting
+	~~幾何的:technically
+	変える:varying
+	変わる:vary
+	-:Just like linear gradients,
+	見かけ:looks
+	順
+	置かれ:put／-
+	近い:near
+	通る:passes through
+	連なり:run
+	~~連続する:in a row／:-
+	各~数字:numbers
+	並ぶ:-
+	成す
+	挟まれ:in
+	挟める:-
+	数
+	一定:constant
+	欠いて:lack
+	点
+	現れた:-
+	白丸
+	種
+	節
+	結ぶ:-
+	昇順:ascending order
+	交わる
+
+
+	●色
+RGB:
+sRGB:
+RGBA:
+sRGBA:
+色:color::~
+色停:color-stop::~
+単色:solid-color::~
+	単色:solid-color::ベタ塗り
+色相:hue::~
+色環:wheel:~
+彩度:saturation::~
+alpha:
+透明度:transparency::~
+不透明度:opacity::~
+半透明:partially-transparent::~
+混色-:blend::~
+
+灰色:gray:~
+	灰色っぽく くすむ:grayish color
+黒:black:~
+白い:white:~
+白から:whiteから:~
+
+	色~付け:coloring
+	色停:stop
+	^v:blue
+	^v:yellow
+	^v:red
+	オレンジ:orange
+	黄に近いオレンジ:orangish-yellow
+	黄に近いオレンジ:reddish-orange
+
+	●塗り／画像
+bitmap::::ビットマップ
+raster::::ラスター
+	~raster化:rasterization
+vector::::ベクター
+解像度:resolution::~
+断片:fragment::~::フラグメント
+影:shadow::~
+塗り:paint:~
+塗ng:painting:塗り
+塗られ:paintされ:~
+dot::::ドット
+	ドット数:dots
+品質:quality:~
+fade::::フェード
+cross-fade::::クロスフェード
+美麗:attractive:~
+見かけ:look:~
+interlace::::インターレース
+GIF:
+PNG:
+JPEG:
+AVIF:
+
+	~~背後に回る:lies beneath
+	淡く染める:tinting
+	画素が目立つ:pixellated
+	上層に重ね:overlay
+	重ねて:overlay
+	濃くなる:shade
+	急激:sudden／:sharp
+	色相と彩度を伴う色環:hue &amp; saturation wheel
+	淡い陰影:subtle shading
+	徐々に濃く:shading gradually
+	くすむ:-
+	明るく:lighter
+
+	●network
+mobile::::モバイル
+filesize::::ファイルサイズ
+帯域幅:bandwidth:~
+混在して:mixされて:~
+混在でき:mixでき:~
+速度:speed:~
+低速:slow:~
+	読込n中の:loading
+	~~部分的走査:pass
+	~~更新:refresh
+
+	●CSS layout
+slice::::スライス
+	overlay
+	逆~方向の:opposite direction
+	向きのある:directional
+背景:background::~
+縦横比:aspect ratio::~
+	視覚-化:visualize
+	~page割り:pagination
+
+装飾-:decorate::~
+装飾d:decorated::装飾
+装飾的:decorative::~
+限界:bounding::~
+限界域:bounds::~
+
+
+描く:drawする:~
+描いた:drawした:~
+描かれ:drawされ:~
+切抜く:clip outする:切り抜く
+切抜かれ:clip outされ:切り抜かれ
+切取る:clipする:切り取る
+切取られ:clipされ:切り取られ
+埋尽く:fill し尽く:埋め尽く
+接合-:flush:~
+	接合-:joined flush
+積層:stacking::~
+分断:break::~
+	分断され:broken
+整列-:align::~
+浮動-:float::~
+収める:fitさせる:~
+
+首要:principal::主要
+柱:column::::カラム
+
+	●遷移
+	~animate化:animated
+開始:starting:~
+終止-:end:~
+終止:ending:~
+経過時間:elapsed time:~
+easing:
+	増減:grow and then shrink
+一足飛び:abrupt:~
+	進行度合い:how far along in
+
+	●CSS
+	~LET:initialized
+左横書き:LTR:~
+右横書き:RTL:~
+双向性:bidi::~
+
+
+	●構文
+省略可能:optional:~
+構成-:compose:~
+線路図式:railroad diagram:~
+	構文~空間:syntax-space
+
+	●構造
+循環:cycle:~
+循環関係:circular relationship:~
+
+
+	●仕様
+Level:
+正され:correctされ:~
+利点:advantage:~
+自立的:standalone:~
+疑似的な:pseudo-:~
+無為:nonsensical:~
+解決策:solution:~
+賢い:smartな:~
+強調:highlight:~
+条項:clause:~
+最大化して:maximizeして:最大限に得て
+防げる:preventできる:~
+競合-:conflict:~
+修正-:fix:~
+代理-:proxy:~
+見積もり:estimation:~
+アタられ:consultされ:あたられ
+微妙:subtle:~
+可能性:possibility
+
+	より詳しく述べるなら、:In specific terms,
+	も:still
+	補助:helpful
+	易くする:help
+	誤ったものに:be wrong
+	~~問題なく:fine
+	かなり:substantially
+	度に:over time
+	またはそれに準じるもの:some degree of
+	表す:denote
+	最低限:at minimum
+	どうにかして:somehow
+	に対する:compared to
+	に応じる:-sensitive
+	応じ:care
+	編集者:I
+	多くの用途に:put to many uses
+	-:we
+	-:my
+	~~仕事:task
+	気をつける:exercise caution
+	目立って:noticeably
+	裁定-:decision
+	dependent
+	見受けられ:appears to be
+	行える:can be done
+	要する:requiring
+	選ぶ:choice
+	選ぶ:choose
+	選ばれ／選んだ:chosen
+	次に従って:as follows
+	影響しない:has no effect on
+	助ける:help:
+	~~十分表現可能な:that can do it justice
+
+	●仕様§gradient
+普通の:ordinaryな:~
+編成-:organize:~
+図解-:illustrate:~
+意向:intention:~
+	意向に反して:unintentionally
+
+	従う
+	従って:follow
+	暗黙に:implied
+	捉えれ:think of
+	方法
+	施す
+	示す:illustrate
+	要する
+	明らかにする:show off
+	称されて:known
+	様子
+	良好:nice
+	略記
+	暗黙
+	簡素な:terse
+	傾向:tends
+	助けになる:helpful
+	いくぶん:somewhat
+	-:making sure
+
+
+	●未分類
+存続期間:lifetime:~
+給-:supply:~
+再生産-:reproduce:~
+印刷機:printer::~::プリンタ
+refer:::参照
+	基準に:refer
+参照先の:referenced:~
+参照元の:referencing:~
+読める:readできる:~
+	readable
+検索-:look up:~
+選択-:select:~
+
+	追加された:additional
+	生成し直-:regenerate／:regeneration
+	~~計算
+	~~指示
+	対応~付ける:match
+	探す:look for
+	指-:point
+	保ち続け keep track
+	食い過ぎる:eats too much 
+	塞ぐ:slapping
+	片:snippet
+
+	●未分類
+GCPM:
+bullet::::ビュレット
+tellub::::トッレュビ
+slideshow::::スライドショー
+slide::::スライド
+preview::::プレビュー
+display::::ディスプレイ
+紙:paper:~
+fancy:
+	文書~外:Out-Of-Document
+
+数値的:explicit:~
+
+	上書き法:overriding
+monitor::::モニタ
+inch::::インチ
+背後:behind:~
+矢印:arrow:~
+中間的:intermediate:~
+
+	存続する:lifetime
+	高
+	低
+	挟まれた:interleaved with
+	現れる:appear
+	小さい:small
+	一斉に:in tandem
+	X
+	background-image
+	against
+	HTML5
+	-:entirely
+	Mozilla:Moz
+	consist
+	B
+	A
+	来:come
+	欠く:lack
+
+	●指示語
+一部分:portion:~
+	全:fully
+	先ず:first
+	先頭:beginning
+	先頭の:leading
+	も:as well
+	だけ:just
+	単に:just
+	何〜かに:across
+	まったく:at all／never 〜 at all
+	他のどこか:anywhere else
+	他方:other
+	-:somewhat silly
+	最も小さい:smallest
+	次の／前の:next/previous
+	主な:main
+	そのまま:as-is
+	またがる:across
+	数種の:handful
+	あるもの／:anything
+	傍:alongside
+	他方:On the other hand
+	最終:final
+	種々の:various
+	まるで:entirely
+	~~連続する:in a row
+	部分的に:partially-
+	-:in place
+	を挟む:surrounding
+	残りの:remaining
+	より古い:older
+	広く:widely-
+	より高:higher-
+	高-:high-
+	低-:low-
+	極高-:extremely high
+	極めて:extremely
+	-:finally
+	-:among
+
+	●指示語§gradient
+	2 回:twice
+	ほぼ:mostly
+	-:now
+	それぞれに対応する:respective〜siblings
+	指して:pointing
+	一連の:sets of
+	上げ
+	両:either
+	互いに
+	以上
+	以下
+	以前に:previously
+	先に
+	前者:-
+	後者:-
+	時点
+	部分:part of
+	以前に:previously
+
+●●ref_normative
+
+[CSS-BACKGROUNDS-3]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. 17 October 2017. CR. URL: https://www.w3.org/TR/css-backgrounds-3/ 
+[CSS-CASCADE-4]
+    Elika Etemad; Tab Atkins Jr.. CSS Cascading and Inheritance Level 4. 18 August 2020. WD. URL: https://www.w3.org/TR/css-cascade-4/ 
+[CSS-COLOR-3]
+    Tantek Çelik; Chris Lilley; David Baron. CSS Color Module Level 3. 19 June 2018. REC. URL: https://www.w3.org/TR/css-color-3/ 
+[CSS-COLOR-4]
+    Tab Atkins Jr.; Chris Lilley. CSS Color Module Level 4. 5 November 2019. WD. URL: https://www.w3.org/TR/css-color-4/ 
+[CSS-LISTS-3]
+    Elika Etemad; Tab Atkins Jr.. CSS Lists Module Level 3. 9 July 2020. WD. URL: https://www.w3.org/TR/css-lists-3/ 
+[CSS-UI-4]
+    Florian Rivoal. CSS Basic User Interface Module Level 4. 24 January 2020. WD. URL: https://www.w3.org/TR/css-ui-4/ 
+[CSS-VALUES-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 3. 6 June 2019. CR. URL: https://www.w3.org/TR/css-values-3/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS2]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[CSS3-IMAGES]
+    Tab Atkins Jr.; Elika Etemad; Lea Verou. CSS Images Module Level 3. 10 October 2019. CR. URL: https://www.w3.org/TR/css-images-3/ 
+[CSS3-TRANSFORMS]
+    Simon Fraser; et al. CSS Transforms Module Level 1. 14 February 2019. CR. URL: https://www.w3.org/TR/css-transforms-1/ 
+[CSSOM]
+    Simon Pieters; Glenn Adams. CSS Object Model (CSSOM). 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-1/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[INFRA]
+    Anne van Kesteren; Domenic Denicola. Infra Standard. Living Standard. URL: https://infra.spec.whatwg.org/ 
+[MEDIA-FRAGS]
+    Raphaël Troncy; et al. Media Fragments URI 1.0 (basic). 25 September 2012. REC. URL: https://www.w3.org/TR/media-frags/ 
+[MIMESNIFF]
+    Gordon P. Hemsley. MIME Sniffing Standard. Living Standard. URL: https://mimesniff.spec.whatwg.org/ 
+[PNG]
+    Tom Lane. Portable Network Graphics (PNG) Specification (Second Edition). 10 November 2003. REC. URL: https://www.w3.org/TR/PNG/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[SELECT]
+    Tantek Çelik; et al. Selectors Level 3. 6 November 2018. REC. URL: https://www.w3.org/TR/selectors-3/ 
+[SELECTORS-4]
+    Elika Etemad; Tab Atkins Jr.. Selectors Level 4. 21 November 2018. WD. URL: https://www.w3.org/TR/selectors-4/ 
+[SVG-INTEGRATION]
+    Cameron McCormack; Doug Schepers; Dirk Schulze. SVG Integration. 17 April 2014. WD. URL: https://www.w3.org/TR/svg-integration/ 
+[SVG11]
+    Erik Dahlström; et al. Scalable Vector Graphics (SVG) 1.1 (Second Edition). 16 August 2011. REC. URL: https://www.w3.org/TR/SVG11/ 
+[WebIDL]
+    Boris Zbarsky. Web IDL. 15 December 2016. ED. URL: https://heycam.github.io/webidl/ 
+
+●●ref_informative
+
+[SMIL10]
+    Philipp Hoschka. Synchronized Multimedia Integration Language (SMIL) 1.0 Specification. 15 June 1998. REC. URL: https://www.w3.org/TR/1998/REC-smil-19980615/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Images Module Level 4</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/css4-images/
+編集者草案
+	https://drafts.csswg.org/css-images-4/
+以前のバージョン
+	https://www.w3.org/TR/2012/WD-css4-images-20120911/
+最新の課題
+	<a href="https://www.w3.org/Style/CSS/Tracker/products/27">Tracker</a>
+	<span><a href="https://github.com/w3c/csswg-drafts/labels/css-images-4">GitHub Issues</a></span>
+編集
+	<a href="http://xanthir.com/contact/">Tab Atkins Jr.</a> (Google)
+	<a href="http://fantasai.inkedblade.net/contact">Elika J. Etemad / fantasai</a> (Invited Expert)
+	<a class="p-name fn u-url url" href="http://lea.verou.me/about">Lea Verou</a> (Invited Expert)
+
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-images-4/Overview.bs">GitHub Editor</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-images-4
+</script>
+
+</head>
+
+<body>
+
+
+<!--%resource pool -->
+<div id="_persisted_parts" hidden>
+
+<img
+	id="_dgm-img_scale"
+	height="160"
+	alt="（ SVG 画像）"
+	src="css-images/img_scale.svg"
+	style="border: thin solid black;"
+>
+
+<pre class="lang-html" id="_dgm-efunc1">
+&lt;style&gt;
+#src {
+    color: white;
+    background: lime;
+    width: 12em;
+    height: 3em;
+    position: relative;
+}
+#dst {
+    color: black;
+    background: element(#src);
+    width: 20em;
+    padding: 1.5em;
+}
+&lt;/style&gt;
+&lt;p id='src'&gt;普通の要素です。&lt;/p&gt;
+&lt;p id='dst'&gt;前の要素を背景に利用しています。&lt;/p&gt;
+</pre>
+
+<!-- 
+I’m an ordinary element!
+I’m using the previous element as my background!
+ -->
+
+<!-- element-function.png -->
+<div id="_dgm-efunc2">
+<div class="_ex-efunc-src" style="">普通の要素です。</div>
+<div class="_ex-efunc-src" style="left:12em;">普通の要素です。</div>
+<div class="_ex-efunc-src" style="left:24em;">普通の要素です。</div>
+<div class="_ex-efunc-src" style="top: 3em;">普通の要素です。</div>
+<div class="_ex-efunc-src" style="top: 3em; left:12em;">普通の要素です。</div>
+<div class="_ex-efunc-src" style="top: 3em; left:24em;">普通の要素です。</div>
+<div id="_ex-efunc-dst">前の要素を背景に利用しています。</div>
+</div>
+
+<img
+	id="_dgm-sprites"
+	alt="黒い部分が次第に増える 9 個の円（ SVG 画像）"
+	title="[9 circles, with 0 to 8 eighths filled in]"
+	src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB2ZXJzaW9uPSIxLjEiCgl4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCgl4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIKCXdpZHRoPSIzNjAiCgloZWlnaHQ9IjQwIgo+Cgo8ZGVmcz4KCTxwYXRoIGlkPSJIIiBkPSJNIDAgLTUgQSA1LDUgMCAwIDEgMCw1IHoiLz4KCTxnIGlkPSJISCI+CgkJPHVzZSB4bGluazpocmVmPSIjSCIgZmlsbD0iYmxhY2siIC8+CgkJPHVzZSB4bGluazpocmVmPSIjSCIgZmlsbD0iI0NDQyIgdHJhbnNmb3JtPSJyb3RhdGUoMTgwKSIgLz4KCTwvZz4KPC9kZWZzPgoKPGcgdHJhbnNmb3JtPSJzY2FsZSg0KXRyYW5zbGF0ZSg1LDUpIiBzdHJva2U9Im5vbmUiPgoKCTxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsMCkiPgoJCTx1c2UgeGxpbms6aHJlZj0iI0hIIiAvPgoJCTx1c2UgeGxpbms6aHJlZj0iI0giIHRyYW5zZm9ybT0icm90YXRlKDApIiBmaWxsPSIjQ0NDIiAvPgoJPC9nPgoJPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAsMCkiPgoJCTx1c2UgeGxpbms6aHJlZj0iI0hIIiAvPgoJCTx1c2UgeGxpbms6aHJlZj0iI0giIHRyYW5zZm9ybT0icm90YXRlKDQ1KSIgZmlsbD0iI0NDQyIgLz4KCTwvZz4KCTxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIwLDApIj4KCQk8dXNlIHhsaW5rOmhyZWY9IiNISCIgLz4KCQk8dXNlIHhsaW5rOmhyZWY9IiNIIiB0cmFuc2Zvcm09InJvdGF0ZSg5MCkiIGZpbGw9IiNDQ0MiIC8+Cgk8L2c+Cgk8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgzMCwwKSI+CgkJPHVzZSB4bGluazpocmVmPSIjSEgiIC8+CgkJPHVzZSB4bGluazpocmVmPSIjSCIgdHJhbnNmb3JtPSJyb3RhdGUoMTM1KSIgZmlsbD0iI0NDQyIgLz4KCTwvZz4KCTxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDQwLDApIj4KCQk8dXNlIHhsaW5rOmhyZWY9IiNISCIgLz4KCTwvZz4KCTxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDUwLDApIj4KCQk8dXNlIHhsaW5rOmhyZWY9IiNISCIgLz4KCQk8dXNlIHhsaW5rOmhyZWY9IiNIIiB0cmFuc2Zvcm09InJvdGF0ZSg0NSkiIGZpbGw9ImJsYWNrIiAvPgoJPC9nPgoJPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNjAsMCkiPgoJCTx1c2UgeGxpbms6aHJlZj0iI0hIIiAvPgoJCTx1c2UgeGxpbms6aHJlZj0iI0giIHRyYW5zZm9ybT0icm90YXRlKDkwKSIgZmlsbD0iYmxhY2siIC8+Cgk8L2c+Cgk8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3MCwwKSI+CgkJPHVzZSB4bGluazpocmVmPSIjSEgiIC8+CgkJPHVzZSB4bGluazpocmVmPSIjSCIgdHJhbnNmb3JtPSJyb3RhdGUoMTM1KSIgZmlsbD0iYmxhY2siIC8+Cgk8L2c+Cgk8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg4MCwwKSI+CgkJPHVzZSB4bGluazpocmVmPSIjSEgiIC8+CgkJPHVzZSB4bGluazpocmVmPSIjSCIgdHJhbnNmb3JtPSJyb3RhdGUoMTgwKSIgZmlsbD0iYmxhY2siIC8+Cgk8L2c+CjwvZz4KCjwvc3ZnPg=="
+>
+
+<img
+	id="_dgm-conic-diagram"
+	alt=""
+	src="css-images/conic-diagram.png"
+	style="width:400px; height:300px;"
+>
+<img
+	id="_dgm-conic1"
+	alt=""
+	src="css-images/conic1.png"
+	style="width:300px; height:200px;"
+>
+<img
+	id="_dgm-conic2"
+	alt=""
+	src="css-images/conic2.png"
+	style="width:300px; height:200px;"
+>
+<img
+	id="_dgm-conic3"
+	alt=""
+	src="css-images/conic3.png"
+	style="width:300px; height:200px;"
+>
+<img
+	id="_dgm-conic4"
+	alt=""
+	src="css-images/conic4.png"
+	style="width:300px; height:200px;"
+>
+<img
+	id="_dgm-conic5"
+	alt=""
+	src="css-images/conic5.png"
+	style="width:200px; height:200px;"
+>
+<img
+	id="_dgm-conic6"
+	alt=""
+	src="css-images/conic6.png"
+	style="width:202px; height:202px;"
+>
+<img
+	id="_dgm-repeating-conic1"
+	alt=""
+	src="css-images/repeating-conic1.png"
+	style="width:300px; height:200px;"
+>
+<img
+	id="_dgm-repeating-conic2"
+	alt=""
+	src="css-images/repeating-conic2.png"
+	style="width:300px; height:200px;"
+>
+<img
+	id="_dgm-repeating-conic3"
+	alt=""
+	src="css-images/repeating-conic3.png"
+	style="width:300px; height:200px;"
+>
+
+<svg
+	id="_dgm-color-stop-railroad"
+	class="railroad-diagram"
+	width="634" height="112" 
+	viewBox="0 0 634 112"
+>
+
+ <g transform="translate(.5 .5)">
+  <path d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"></path>
+  <path d="M40 31h10"></path>
+  <g class="non-terminal">
+   <path d="M50 31h0"></path>
+   <path d="M166 31h0"></path>
+   <rect height="22" width="116" x="50" y="20"></rect>
+   <a href="">
+    <text x="108" y="35">&lt;color-stop&gt;</text>
+    <text x="108" y="35">&lt;color-stop&gt;</text>
+   </a>
+  </g>
+  <path d="M166 31h10"></path>
+  <path d="M176 31h10"></path>
+  <g class="terminal">
+   <path d="M186 31h0"></path>
+   <path d="M214 31h0"></path>
+   <rect height="22" rx="10" ry="10" width="28" x="186" y="20"></rect>
+   <a href="">
+    <text x="200" y="35">,</text>
+    <text x="200" y="35">,</text>
+   </a>
+  </g>
+  <path d="M214 31h10"></path>
+  <path d="M224 31h10"></path>
+  <g>
+   <path d="M234 31h0"></path>
+   <path d="M584 31h0"></path>
+   <path d="M234 31h10"></path>
+   <g>
+    <path d="M244 31h0"></path>
+    <path d="M574 31h0"></path>
+    <g>
+     <path d="M244 31h0"></path>
+     <path d="M448 31h0"></path>
+     <path d="M244 31h20"></path>
+     <g>
+      <path d="M264 31h164"></path>
+     </g>
+     <path d="M428 31h20"></path>
+     <path d="M244 31a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+     <g>
+      <path d="M264 51h0"></path>
+      <path d="M428 51h0"></path>
+      <g class="non-terminal">
+       <path d="M264 51h0"></path>
+       <path d="M380 51h0"></path>
+       <rect height="22" width="116" x="264" y="40"></rect>
+       <a href="">
+        <text x="322" y="55">&lt;color-hint&gt;</text>
+        <text x="322" y="55">&lt;color-hint&gt;</text>
+       </a>
+      </g>
+      <path d="M380 51h10"></path>
+      <path d="M390 51h10"></path>
+      <g class="terminal">
+       <path d="M400 51h0"></path>
+       <path d="M428 51h0"></path>
+       <rect height="22" rx="10" ry="10" width="28" x="400" y="40"></rect>
+       <a href="">
+        <text x="414" y="55">,</text>
+        <text x="414" y="55">,</text>
+       </a>
+      </g>
+     </g>
+     <path d="M428 51a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+    </g>
+    <path d="M448 31h10"></path>
+    <g class="non-terminal">
+     <path d="M458 31h0"></path>
+     <path d="M574 31h0"></path>
+     <rect height="22" width="116" x="458" y="20"></rect>
+     <a href="">
+      <text x="516" y="35">&lt;color-stop&gt;</text>
+      <text x="516" y="35">&lt;color-stop&gt;</text>
+     </a>
+    </g>
+   </g>
+   <path d="M574 31h10"></path>
+   <path d="M244 31a10 10 0 0 0 -10 10v30a10 10 0 0 0 10 10"></path>
+   <g class="terminal">
+    <path d="M244 81h151"></path>
+    <path d="M423 81h151"></path>
+    <rect height="22" rx="10" ry="10" width="28" x="395" y="70"></rect>
+    <a href="">
+     <text x="409" y="85">,</text>
+     <text x="409" y="85">,</text>
+    </a>
+   </g>
+   <path d="M574 81a10 10 0 0 0 10 -10v-30a10 10 0 0 0 -10 -10"></path>
+  </g>
+  <path d="M584 31h10"></path>
+  <path d="M 594 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path>
+ </g>
+</svg>
+
+</div>
+
+<header>
+	<hgroup>
+<h1>CSS Images Module Level 4</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この~moduleは、 `image$t 型と`置換d要素$に関係する~CSS~level 4 の特能を包含する。
+それは、~CSS~level 2 `CSS2$r と この仕様の~level 3 `css3-images$r の機能性を含み，それを拡張する。
+~level 3 からの主な拡張は、
+`image$t 型に対する `image$f 記法, `element$f 記法などの追加，および
+円錐型~gradientである。
+◎
+This module contains the features of CSS level 4 relating to the &lt;image&gt; type and replaced elements. It includes and extends the functionality of CSS level 2 [CSS2] and in the previous level of this specification [css3-images]. The main extensions compared to "CSS Images Module Level 3" [css3-images] are several additions to the &lt;image&gt; type, such as the image() notation, the element() notation, and conic gradients.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公の複製です…
+<!-- 
+この節では、発行時点における…
+ -->
+【以下，この節の他の内容は <a href="css-common-ja.html#status">CSS 日本語訳 共通ページ</a>に委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+この~moduleは~2D画像を表現するための追加的な仕方を導入する
+例えば，
+`~fallback色を伴う~URL$ ／
+`円錐型~gradient$として ／
+<a href="#element-notation">文書~内の別の要素の描画</a>として。
+◎
+This module introduces additional ways of representing 2D images, for example as a URL with color fallback, as conic gradients, or as the rendering of another element in the document.
+</p>
+
+		<section id="values">
+<h3 title="Value Definitions">1.1. 値~定義</h3>
+
+<p class="trans-note">【
+この節の内容は <a href="css-common-ja.html#values">~CSS日本語訳 共通~page</a>に委譲。
+】</p>
+
+		</section>
+	</section>
+	<section id="image-values">
+<h2 title="2D Image Values: the &lt;image&gt; type">2. ~2D画像~値： `image^t 型</h2>
+
+<p>
+`image$t 値~型は、~2D画像を表し，［
+`~url参照$ ／
+`~fallback色を伴う~URL$ ／
+<a href="#gradients">~gradient記法</a>
+］をとり得る。
+その構文は、次で与えられる：
+◎
+The &lt;image&gt; value type denotes a 2D image. It can be a url reference, image notation, or gradient notation. Its syntax is:
+</p>
+
+<pre class="prod">
+`image@t
+    = `url$t
+    | `image$ft
+    | `image-set$ft
+    | `cross-fade$ft
+    | `element$ft
+    | `gradient$t
+</pre>
+
+<p class="trans-note">【
+以下，［
+`無効な画像@
+／
+`読込n中の画像@
+／
+`image$t の`算出d値$
+<!-- id="computed-image" -->
+］の定義も含め，
+<a href="~CSSIMAGE#image-values">~level 3 と同じ</a>
+（なので、和訳は省略する）。
+】</p>
+
+		<section id="image-file-formats">
+<h3 title="Image File Formats">2.1. 画像~file形式</h3>
+
+<p>
+~propにおいて `image$t 値から参照される妥当な画像に対しては、~UAは，最低限，次の~file形式を~supportするモノトスル：
+◎
+At minimum, the UA must support the following image file formats when referenced from an &lt;image&gt; value, for all the properties in which using &lt;image&gt; is valid:
+</p>
+
+<ul>
+	<li>
+`PNG$r により指定される，~PNG
+◎
+PNG, as specified in [PNG]
+</li>
+	<li>
+`SVG11$r により指定される，`~secure静的~mode$を利用している~SVG（ `SVG-INTEGRATION$r を見よ）
+◎
+SVG, as specified in [SVG11], using the secure static mode (See [SVG-INTEGRATION])
+</li>
+	<li>
+~UAが~animate化 `image$t を~supportする場合、
+`SVG11$r により指定される，`~secure~animate化~mode$を利用している~SVG（
+`SVG-INTEGRATION$r を見よ）
+◎
+If the UA supports animated &lt;image&gt;s, SVG, as specified in [SVG11], using the secure animated mode (See [SVG-INTEGRATION])
+</li>
+</ul>
+
+<p>
+~UAは、他の~file形式を~supportしてもヨイ。
+◎
+The UA may support other file formats as well.
+</p>
+
+		</section>
+		<section id="url-notation">
+<h3 title="Image References: the url() notation">2.2. 画像~参照： `url^f 記法</h3>
+
+<p class="note">注記：
+`css3-images$r と<a href="~CSSIMAGE#url-notation">同じ</a>。
+◎
+Note: No change from [css3-images].
+</p>
+
+		</section>
+		<section id="image-set-notation">
+<h3 title="Resolution/Type Negotiation: the image-set() notation">2.3. 解像度／型の折衝： `image-set^f 記法</h3>
+
+<p>
+利用者の機器に最も適切な解像度の画像を送達することは、困難な~~仕事にもなり得る。
+理想的には、画像~解像度は、利用者~間で様々な，機器それぞれの解像度と同じになるべきである。
+しかしながら、どの画像を送信するか裁定する要因になるものは、他にもあり得る
+— 例えば，低速な~mobile接続の下では、利用者は，解像度は適正でも，巨大になる画像を読込むのを待つより，低-解像度な画像を受信する方を選好するかもしれない。
+`image-set$f 関数により、作者は，これらの課題のほとんどを無視して、単に，画像に複数の解像度を供することで，与えられた状況で最も適切なものを~UAに裁定してもらうことが可能になる。
+◎
+Delivering the most appropriate image resolution for a user’s device can be a difficult task. Ideally, images should be in the same resolution as the device they’re being viewed in, which can vary between users. However, other factors can factor into the decision of which image to send; for example, if the user is on a slow mobile connection, they may prefer to receive lower-res images rather than waiting for a large proper-res image to load. The image-set() function allows an author to ignore most of these issues, simply providing multiple resolutions of an image and letting the UA decide which is most appropriate in a given situation.
+</p>
+
+<p class="issue">
+この解決策は、解像度が~filesizeを代理するものと見做しているので、［
+複数の解像度からなる一連の~vector画像や,
+一連の画像に~vectorと~rasterが混在しているとき（例えば~icon）
+］を，適切に取扱わない。
+例えば、高-解像度 向けには~vector画像,
+低-解像度 向けには画素に最適化された~bitmap,
+低-帯域幅 向けには同じ~vector画像（高-解像度であってもずっと小さいので）など。
+◎
+This solution assumes that resolution is a proxy for filesize, and therefore doesn’t appropriately handle multi-resolution sets of vector images, or mixing vector images with raster ones (e.g. for icons). For example, use a vector for high-res, pixel-optimized bitmap for low-res, and same vector again for low-bandwidth (because it’s much smaller, even though it’s higher resolution).
+</p>
+
+<p>
+`image-set^f の構文は：
+◎
+The syntax for image-set() is:
+</p>
+
+<pre class="prod">
+`image-set@f
+    = image-set( `image-set-option$t# )
+`image-set-option@t
+    = [ `image$t | `string$t ]
+      [ `resolution$t || type(`string$t) ]
+</pre>
+
+<p class="issue">
+~HTMLの `picture$e 要素の機能性に合致する可能性として、［
+`w^u, `h^u
+］次元を追加するべき。
+◎
+We should add "w" and "h" dimensions as a possibility to match the functionality of HTML’s picture.
+</p>
+
+<p>
+`image-set$f の内側にある各 `string$t は、 `url$t を表現する。
+◎
+Each &lt;string&gt; inside image-set() represents a &lt;url&gt;.
+</p>
+
+<p>
+`image-set$f 関数は、直接的にも（他の `image$t 型の引数として）間接的にも，入子にできない。
+◎
+The image-set() function can not be nested inside of itself, either directly or indirectly (as an argument to another &lt;image&gt; type).
+</p>
+
+<p>
+各 `image-set-option$t は、
+`image-set$f 関数が表現する画像としてアリなものを定義し，次に挙げる各部で構成される：
+◎
+Each &lt;image-set-option&gt; defines a possible image for the image-set() function to represent, composed of three parts:
+</p>
+<dl class="def-list">
+	<dt>
+画像~参照（要求される）
+◎
+An image reference (required).＼
+</dt>
+	<dd>
+次のいずれかをとり得る
+⇒＃
+~URL／
+~CSSから生成される画像（ `linear-gradient$f など）
+◎
+This can be a URL, or a CSS generated image, such as a linear-gradient().
+</dd>
+
+	<dt>
+`resolution$t （省略可能）
+◎
+A &lt;resolution&gt; (optional).＼
+</dt>
+	<dd>
+これは、~UAが，どの `image-set-option$t を選ぶか裁定するのを助けるために利用される。
+当の画像~参照が~raster画像~用ならば、画像の`内在的~解像度$も指定する
+— それは、`内在的~解像度$を給する他の~data源があっても，それを上書きする。
+◎
+This is used to help the UA decide which &lt;image-set-option&gt; to choose. If the image reference is for a raster image, it also specifies the image’s intrinsic resolution, overriding any other source of data that might supply an intrinsic resolution.
+</dd>
+	<dd>
+指定されなかった場合、［
+どの `image-set-option$t を利用するか選定する目的
+］においては， `1x^v として挙動する。
+それはまた，画像の`内在的~解像度$も`既定の^em `1x^v にするが、他の何らかの~data源が`内在的~解像度$を給する場合，その解像度を尊守するモノトスル。
+◎
+If not specified, it behaves as 1x for the purpose of selecting which &lt;image-set-option&gt; to use. It also defaults the image’s intrinsic resolution to 1x, but if some other source of data supplies an intrinsic resolution, that resolution must be honored instead.
+</dd>
+
+	<dt id="funcdef-image-set-type">
+<code class="func">type( `string$t )</code>
+関数（省略可能）
+◎
+A type( &lt;string&gt; ) function (optional),＼
+</dt>
+	<dd>
+`string$t 内に画像の~MIME型を指定する。
+◎
+specifying the image’s MIME type in the &lt;string&gt;.
+</dd>
+	<dd>
+`string$t を`妥当な~MIME型$として構文解析した結果が［
+妥当でない／
+~supportされる画像~形式を指定しない
+］場合、
+`image-set-option$t は妥当な~optionを定義しない。
+（これは、 `image-set$f 関数の妥当性には影響しない。）
+◎
+If the &lt;string&gt;, when parsed as a valid MIME type string, is either not valid, or is valid but doesn’t specify a supported image format, the &lt;image-set-option&gt; does not define a valid option. (This has no effect on the validity of the image-set() function.)
+</dd>
+	<dd>
+これには、画像~自体に対する効果は無い。
+`url("picture.png") 1x format("image/jpeg")^v
+の様な `image-set-option$t は妥当であり、選ばれた場合
+— ~JPEG形式として宣言されていようが —
+~link先の~PNG画像を表示することになる。
+◎
+It does not have any effect on the image itself; an &lt;image-set-option&gt; like url("picture.png") 1x format("image/jpeg") is valid, and if chosen will display the linked PNG image, even tho it was declared to be a JPEG.
+</dd>
+	<dd>
+指定されなかった場合、
+`image-set-option$t に対する効果は無い。
+◎
+It not specified, it has no effect on the &lt;image-set-option&gt;.
+</dd>
+</dl>
+
+<p>
+`image-set$f 関数は、
+1 個以上の `image-set-option$t からなる~listを包含する。
+~UAは、それらのうち 1 つだけを以下に従って選定して、どの画像を表現するか決定するモノトスル：
+◎
+An image-set() function contains a list of one or more &lt;image-set-option&gt;s, and must select only one of them to determine what image it will represent:
+</p>
+<ol>
+	<li>
+次に該当する `image-set-option$t を~listから除去する
+⇒
+その `type$f 値にて［
+未知な／~supportされない
+］~MIME型を指定するもの
+◎
+First, remove any &lt;image-set-option&gt;s from the list that specify an unknown or unsupported MIME type in their type() value.
+</li>
+	<li>
+次に該当する `image-set-option$t を~listから除去する
+⇒
+`resolution$t が~list内で それまでに~~現れた~optionと同じであるもの
+◎
+Second, remove any &lt;image-set-option&gt;s from the list that have the same &lt;resolution&gt; as a previous option in the list.
+</li>
+	<li>
+残りの `image-set-option$t から、何であれ，［
+関連するものと判断される，~UAに特有な判定基準
+］に基づいて（例：~displayの解像度, 接続~速度, 等々）、読込むものを一つ選ぶ。
+◎
+Finally, among the remaining &lt;image-set-option&gt;s, make a UA-specific choice of which to load, based on whatever criteria deemed relevant (such as the resolution of the display, connection speed, etc).
+</li>
+	<li>
+`image-set$f 関数は、前~段で選んだ `image-set-option$t の `image$t を表現する。
+◎
+The image-set() function then represents the &lt;image&gt; of the chosen &lt;image-set-option&gt;.
+</li>
+</ol>
+
+<p>
+~UAは、~pageの存続期間において，所与の `image-set$f 用に利用する `image-set-option$t を<strong>変更してもヨイ</strong>
+— ~optionを選ぶために利用した判定基準が，~UAの見積もりにおいて変更に価する程に十分~変化したならば。
+◎
+UAs may change which &lt;image-set-option&gt; they wish to use for a given image-set() over the lifetime of the page, if the criteria used to determine which option to choose change significantly enough to make it worthwhile in the UA’s estimation.
+</p>
+
+<div class="example">
+<p>
+次の例に、 `image-set$f を利用して 3 種の画像
+— “通常”, “高-解像度”, “極高-解像度”（高-品質な印刷~用 — 印刷機には解像度が `極めて^em高いものもあるので） —
+を供する方法を示す：
+◎
+This example shows how to use image-set() to provide an image in three versions: a "normal" version, a "high-res" version, and an extra-high resolution version for use in high-quality printing (as printers can have extremely high resolution):
+</p>
+
+<pre class="lang-css">
+background-image: image-set(
+    "foo.png" 1x,
+    "foo-2x.png" 2x,
+    "foo-print.png" 600dpi
+);
+</pre>
+</div>
+
+<div class="example">
+
+<p>
+`type$f 関数を利用して，同じ画像を成す複数の~version
+— 新しい, より高-品質な形式，および より古い, より広く~supportされる形式 —
+を~serveする例を次に示す：
+◎
+This example shows use of the type() function to serve multiple versions of the same image in both new, higher-quality formats, and older, more widely-supported formats:
+</p>
+
+<pre class="lang-css">
+background-image: image-set(
+    "foo.avif" type("image/avif"),
+    "foo.jpg" type("image/jpeg")
+);
+</pre>
+
+<p>
+~AVIF画像を最初に与えていることに注意。
+両~画像とも解像度は同じなので（指定されていないので，既定の `1x^v になる）、後に与えた~JPEG画像は，~AVIF画像を~supportする~UAにおいては自動的に落とされる。
+◎
+Note that the AVIF image is given first; since both images have the same resolution (defaulting to 1x since it’s unspecified), the JPEG image, coming second, is automatically dropped in UAs that support AVIF images.
+</p>
+
+<p>
+しかしながら，より古い~UAにおいては、~AVIF画像は無視され（~UAは、 `image/avif^l から~fileを~supportしないと知るので），代わりに~JPEGが選ばれる。
+◎
+In older UAs, however, the AVIF image is ignored (because the UA knows it doesn’t support "image/avif" files), and so the JPEG is chosen instead.
+</p>
+</div>
+
+<div class="example">
+<p>
+~raster画像は、~vector画像, あるいは~CSSから生成された画像とも混在できる。
+◎
+Raster images can be mixed with vector images, or even CSS generated images.
+</p>
+
+<p>
+例えば，次の~code片では、~~十分表現可能な~screen上では，微妙な詳細を伴う高-解像度な画像が利用される一方で、低-解像度な状況~用には，普通の~CSS `linear-gradient$f が利用される：
+◎
+For example, in this code snippet a high-resolution image with subtle details is used on screens that can do it justice, while an ordinary CSS linear-gradient() is used instead for low-resolution situations:
+</p>
+
+<pre class="lang-css">
+background-image: image-set(
+    linear-gradient(cornflowerblue, white) 1x,
+    url("detailed-gradient.png") 3x
+);
+</pre>
+</div>
+
+		</section>
+		<section id="image-notation">
+<h3 title="Image Fallbacks and Annotations: the image() notation">2.4. 画像~fallbackと注釈： `image^f 記法</h3>
+
+<p>
+`image$f 関数により、作者は次が可能になる：
+◎
+The image() function allows an author to:
+</p>
+
+<ul>
+   <li>
+`媒体~素片$を利用して、画像の一部分を切抜く。
+◎
+use media fragments to clip out a portion of an image
+</li>
+	<li>
+単色を画像として利用する。
+◎
+use a solid color as an image
+</li>
+	<li>
+指定された URL にある画像が［
+~downloadできない, または復号できない
+］ときの，単色~画像への~fallbackを指定する。
+◎
+fallback to a solid-color image, when the image at the specified url can’t be downloaded or decoded
+</li>
+	<li>
+画像の~metadataに指定されている画像の方位に，自動的に従うようにする。
+◎
+automatically respect the image orientation specified in the image’s metadata
+</li>
+</ul>
+
+<p>
+`image$f 記法は，次で定義される：
+◎
+The image() notation is defined as:
+</p>
+
+<pre class="prod">
+`image@f = image( `image-tags$t? [ `image-src$t? , `color$t? ]! )
+`image-tags@t = [ ltr | rtl ]
+`image-src@t = [ `url$t | `string$t ]
+</pre>
+
+<p>
+`image$f 内で利用される `string$t は、 `url$t を表現する。
+CSS における通例の~URLと同じく、
+`image$f 値に指定された相対~URLは，算出d値を得るときに（ “値と単位” 仕様 `CSS-VALUES-3$r に従って）絶対~URLに解決される。
+◎
+A &lt;string&gt; used in image() represents a &lt;url&gt;. As usual for URLs in CSS, relative URLs are resolved to an absolute URL (as described in Values &amp; Units [CSS-VALUES-3]) when a specified image() value is computed.
+</p>
+
+<p>
+EXIF などの画像の~metadataにて，方位が指定されている場合、~UAは，その~metadataの指定に従って，画像を回転させたり裏返して 正しく方位させるモノトスル。
+◎
+If the image has an orientation specified in its metadata, such as EXIF, the UA must rotate or flip the image to correctly orient it as the metadata specifies.
+</p>
+
+			<section id="image-fallbacks">
+<h4 title="Image Fallbacks">2.4.1. 画像の~fallback</h4>
+
+<p>
+`image$f 関数に~URLが指定されていて，~URLが［
+`無効な画像$／`読込n中の画像$
+］を表現するときは、その関数は：
+◎
+↓</p>
+<ul>
+	<li>
+`color$t も指定されていた場合、~URLが元々指定されていなかったかのように
+<a href="#color-images">単色~画像</a>を描画する。
+◎
+If both a URL and a &lt;color&gt; are specified in image(), then whenever the URL represents an invalid image or loading image, the image() function renders as if the URL were not specified at all; it generates a solid-color image as specified in § 2.4.3 Solid-color Images.
+</li>
+	<li>
+他の場合、同じ［
+`無効な画像$／`読込n中の画像$
+］を表現する。
+◎
+If just a URL is specified (no &lt;color&gt;) and it represents an invalid image or loading image, the image() function represents the same.
+</li>
+</ul>
+
+<div class="example">
+
+<p>
+~fallback色を利用すれば、画像の読込nに失敗したときでも，少なくとも~textは読めるようになる。
+例えば次の旧来~codeは、画像が透明度を持たない矩形であれば，~~問題なく働く。
+◎
+The fallback color can be used to ensure that text is still readable even when the image fails to load. For example, the following legacy code works fine if the image is rectangular and has no transparency:
+</p>
+
+<pre class="lang-css">
+body      { color: black; background: white; }
+p.special { color: white; background: url("dark.png") black; }
+</pre>
+
+<p>
+画像が読込めなくても、背景~色により，依然として白い~textは読める。
+しかしながら，画像に透明度がある場合、背後の黒が可視になり，おそらく欲されない結果になる。
+`image$f 関数は、これに取組む：
+◎
+When the image doesn’t load, the background color is still there to ensure that the white text is readable. However, if the image has some transparency, the black will be visible behind it, which is probably not desired. The image() function addresses this:
+</p>
+
+<pre class="lang-css">
+body      { color: black; background: white; }
+p.special { color: white; background: image("dark.png", black); }
+</pre>
+
+<p>
+今度は、画像を読込めたときには黒はまったく現れなくなる一方、何らかの理由で画像の読込nに失敗した場合には，黒がそれに代わり，白い背景に白い~textが設定されるのを防げる。
+◎
+Now, the black won’t show at all if the image loads, but if for whatever reason the image fails, it’ll pop in and prevent the white text from being set against a white background.
+</p>
+
+</div>
+
+			</section>
+			<section id="image-fragments">
+<h4 title="Image Fragments">2.4.2. 画像~断片</h4>
+
+<p>
+`image$f に指定された~URLが，（例えば，`媒体~素片~識別子$の利用により）資源の一部分を表現するとき、その一部分は，その文脈から切抜かれた上で，自立的な画像として利用されるようになる。
+◎
+When a URL specified in image() represents a portion of a resource (e.g. by the use of media fragment identifiers) that portion is clipped out of its context and used as a standalone image.
+</p>
+
+<div class="example">
+<p>
+例えば，次の画像と~CSSが与えられたとする：
+◎
+For example, given the following image and CSS:
+</p>
+
+<figure>
+`sprites^dgm
+</figure>
+
+<pre class="lang-css">
+background-image: image('sprites.svg#xywh=80,0,40,40')
+</pre>
+
+<p>
+要素の背景は、この画像の， ( 80px, 0px ) の所から，右下へ高さ幅ともに 40px の部分（画像の中では黒の四分円）で埋尽くされることになる。
+◎
+...the background of the element will be the portion of the image that starts at (40px,0px) and is 20px wide and tall, which is just the circle with a quarter filled in.
+</p>
+
+</div>
+
+<p>
+作者が，~CSSの前方-互換な構文解析~規則の利点を活かして，画像~slice用の~fallbackを供せるようにするため、 `image$f 記法を~supportする実装は，［
+`image$f を通して指定された画像
+］に対する
+`xywh=<var>#,#,#,#</var>^c
+形による`媒体~素片~識別子$ `MEDIA-FRAGS$r を~supportする`モノトスル^em。
+◎
+So that authors can take advantage of CSS’s forwards-compatible parsing rules to provide a fallback for image slices, implementations that support the image() notation must support the xywh=#,#,#,# form of media fragment identifiers for images specified via image(). [MEDIA-FRAGS]
+</p>
+
+<div class="example">
+
+<p>
+画像~断片は `url$f 記法でも利用し得ることに注意。
+しかしながら、`媒体~素片$ 記法を解せない旧来の~UA は，素片を無視して，単純に画像~全体を表示することになる。
+◎
+Note that image fragments can also be used with the url() notation. However, a legacy UA that doesn’t understand the media fragments notation will ignore the fragment and simply display the entirety of the image.
+</p>
+
+<p>
+`image$f 記法は~UA による`媒体~素片$の~supportを要するので、作者は，画像~素片~URLを利用する際に，~fallbackを供する CSS の前方-互換な構文解析~規則の利点を活かせる：
+◎
+Since the image() notation requires UAs to support media fragments, authors can take advantage of CSS’s forward-compatible parsing rules to provide a fallback when using an image fragment URL:
+</p>
+
+<pre class="lang-css">
+background-image: url('swirl.png'); /* 旧~UA */
+background-image: image('sprites.png#xywh=10,30,60,20'); /* 新~UA */
+</pre>
+
+</div>
+
+<p>
+~URLに利用されている素片~識別子の構文が，実装が解せない, あるいはその画像~型において妥当でない場合、その~URLは，`無効な画像$を表現しているものと扱うモノトスル。
+◎
+If a URL uses a fragment identifier syntax that the implementation does not understand, or does not consider valid for that type of image, the URL must be treated as representing an invalid image.
+</p>
+
+<p class="note">注記：
+旧来との互換性の理由から、この~errorの取扱いは，
+~URL【そのもの】の定義ではなく， `image$f 【の中の~URL】に限られる。
+◎
+Note: This error-handling is limited to image(), and not in the definition of URL, for legacy compat reasons.
+</p>
+
+			</section>
+			<section id="color-images">
+<h4 title="Solid-color Images">2.4.3. 単色~画像</h4>
+
+<p>
+`image$f 関数の引数に（~URLなしで） `color$t のみが指定された場合、内在的~寸法を伴わない，指定された色による単色~画像を表現する。
+◎
+If the image() function is specified with only a &lt;color&gt; argument (no URL), it represents a solid-color image of the specified color with no intrinsic dimensions.
+</p>
+
+<div class="example">
+
+<p>
+例えば，これを、他の画像の上層に半透明な色を重ねて背景~画像を “淡く染める” 単純な仕方として利用できる：
+◎
+For example, one can use this as a simple way to "tint" a background image, by overlaying a partially-transparent color over the top of the other image:
+</p>
+
+<pre class="lang-css">
+background-image: image(rgba(0,0,255,.5)), url("bg-image.png");
+</pre>
+
+<p>
+`background-color$p は、これに対しては働かない。
+それが生成する単色は、常に，すべての背景~画像の`~~背後に回る^emので。
+◎
+background-color does not work for this, as the solid color it generates always lies beneath all the background images.
+</p>
+
+</div>
+
+			</section>
+			<section id="bidi-images">
+<h4 title="Bidi-sensitive Images">2.4.4. 双向性に応じる画像</h4>
+
+<p>
+作者は、 `image$f 内の `image-src$t の前に、画像~用の方向性（ `image-tags$t ）を指定してもヨイ
+— これは、~HTML要素に `dir$a 属性を追加するのに類似する。
+要素~上で／内で逆~方向の `direction$p を伴う画像が利用された場合、その画像は，行内~方向に裏返されるモノトスル（行内~方向が X 軸であれば，例えば `scaleX(-1)^v で変形されたかのように）。
+◎
+Before listing any &lt;image-src&gt;s, the author may specify a directionality for the image, similar to adding a dir attribute to an element in HTML. If a directional image is used on or in an element with opposite direction, the image must be flipped in the inline direction (as if it was transformed by, e.g., scaleX(-1), if the inline direction is the X axis).
+</p>
+
+<p class="note">注記：
+この宣言が無い場合の既定では、画像の方向性はまったくないので，周囲の要素の方向性にも応じない。
+◎
+Note: Absent this declaration, images default to no directionality at all, and thus don’t care about the directionality of the surrounding element.
+</p>
+
+<div class="example">
+
+<p>
+~listが，~bulletとして内容の中を指す矢印を利用していて、左横書きの~textを包含する~list~itemと, 右横書きのそれとが混在している場合、~bulletは，左端にも右端にも生じる。
+その結果、一方の側では~textの中を指すよう設計された画像は、他方の側では~textの外を指すことになる。
+これは、次の様な~codeで修正できる：
+◎
+A list may use an arrow for a bullet that points into the content. If the list can contain both LTR and RTL text, though, the bullet may be on the left or the right, and an image designed to point into the text on one side will point out of the text on the other side. This can be fixed with code like:
+</p>
+
+<pre class="lang-html">
+&lt;ul style="list-style-image: image(ltr 'arrow.png');"&gt;
+  &lt;li dir='ltr'&gt;左に~bulletがあります。&lt;/li&gt;
+  &lt;li dir='rtl'&gt;~bulletは右にあります。&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+<!-- 
+My bullet is on the left!
+MY BULLET IS ON THE RIGHT!
+ -->
+
+<p>
+これは次の様に描画されるべきである：
+◎
+This should render something like:
+</p>
+
+<pre class="lang-html">
+☞ 左に~bulletがあります。
+  。すまりあに右は~tellub ☜
+</pre>
+<!-- 
+☞ My bullet is on the left!
+  !THGIR EHT NO SI TELLUB YM ⇐
+-->
+
+<p class="trans-note">【
+便宜上，日本語で記しているが、実際には，右横書きの言語でなければ、このように左方へ流れる表示にはならない。
+】</p>
+
+<p>
+左横書き~list~itemにおいては，画像はそのまま利用され、右横書き~list~itemにおいても内容を指すように，画像は行内~方向に裏返されることになる。
+◎
+In LTR list items, the image will be used as-is. In the RTL list items, however, it will be flipped in the inline direction, so it still points into the content.
+</p></div>
+
+			</section>
+		</section>
+		<section id="cross-fade-function">
+<h3 title="Combining images: the cross-fade() notation">2.5. 画像を組合せる： `cross-fade^f 記法</h3>
+
+<p>
+~CSSにより 2 個の画像~間の遷移を与えるためには、［
+開始-, 終止-
+］画像を組合せた中間的な画像を明示的に指す仕方を要する。
+`cross-fade$f 関数が、これを達成する。
+それは、組合される 2 個の画像, および
+組合nの遷移の進行度合いを指示する。
+◎
+When transitioning between images, CSS requires a way to explicitly refer to the intermediate image that is a combination of the start and end images. This is accomplished with the cross-fade() function, which indicates the two images to be combined and how far along in the transition the combination is.
+</p>
+
+<p class="note">注記：
+作者は、 `cross-fade$f 関数を，多くの単純な画像~操作にも利用できる
+—
+画像を単色で淡く染めたり，`放射型~gradient$と組合せて，~page内の特定0の区画を強調するなど。
+◎
+Note: Authors can also use the cross-fade() function for many simple image manipulations, such as tinting an image with a solid color or highlighting a particular area of the page by combining an image with a radial gradient.
+</p>
+
+<p>
+`cross-fade^f の構文は、次で定義される：
+◎
+The syntax for cross-fade() is defined as:
+</p>
+
+<pre class="prod">
+`cross-fade@f = cross-fade( `cf-image$t# )
+`cf-image$t = `percentage$t? &amp;&amp; [ `image$t | `color$t ]
+</pre>
+
+<p>
+この関数は、 2 枚~以上の画像を組合せて生成される画像を表現する。
+◎
+The function represents an image generated by combining two or more images.
+</p>
+
+<p>
+各~画像の `percentage$t は、その画像が他の画像と混色されたときの含有率を表現する。
+`percentage$t 値は、 `0%^v 以上 `100%^v 以下でなければナラナイ
+— 他の値は無効とする。
+◎
+The &lt;percentage&gt; represents how much of each image is retained when it is blended with the other images. The &lt;percentage&gt; must be between 0% and 100% inclusive; any other value is invalid.
+</p>
+
+<p>
+百分率が省略された画像がある場合、 `100%^v から［
+他の画像に指定されたすべての百分率の総和
+］を減算してから `0%^v 以上に切り上げた結果が，算出d値の時点で［
+省略された百分率を伴うすべての画像
+］に等分にあてがわれる。
+【<a href="#cross-fade-painting">実際の~algo</a>／下の注記と食い違う？】
+◎
+If any percentages are omitted, all the specified percentages are summed together and subtracted from 100%, the result is floored at 0%, then divided equally between all images with omitted percentages at computed-value time.
+</p>
+
+<div class="note">
+
+<p>注記：
+これは，算出d値には反映されないが、すべての引数の百分率の総和が `100%^v を超えるときは
+— ［
+~sizing／塗ng
+］の詳細~にて —
+実質的に，総和が正確に `100%^v になるよう各 引数は拡縮し直される。
+◎
+While this is not reflected in the computed value, when all the arguments’ percentages sum to greater than 100%, the sizing/painting details effectively rescale them so that they sum to exactly 100%.
+</p>
+
+<p>
+他方，総和が `100%^v 以下のときは
+— ［
+~sizing／塗ng
+］の詳細~にて —
+実質的に，［
+百分率が［
+総和が `100%^v に等しくなるために必要とされる残りの値
+］に設定され，`透明な黒$にされた `cf-image$t【！ `transparent$v 引数】
+］が追加されたかの様に動作する。
+◎
+On the other hand, when the sum is less than 100%, the sizing/painting details effectively act like there’s an additional transparent argument, with its percentage set to the remaining value necessary to make the sum equal 100%.
+</p>
+
+</div>
+
+<p>
+`color$t が供された場合、それは “自動的”な寸法を伴う単色~画像を表現する
+（それは、結果の画像の~sizingにはまったく関与しない
+— 詳細は下の~sizingを見よ）。
+◎
+If a &lt;color&gt; is provided, it represents a solid-color image with “automatic” dimensions (it doesn’t participate in the sizing of the result image at all; see details in the sizing details below).
+</p>
+
+			<section id="cross-fade-sizing">
+<h4 title="cross-fade() Sizing">2.5.1. `cross-fade^f の~sizing</h4>
+
+<p>
+`cross-fade$f が表現する画像の寸法は、関数の各 `image$t 引数の寸法の加重d平均になる
+— `color$t 引数には効果は無い。
+それは、以下に従って計算される。
+◎
+The dimensions of the image represented by a cross-fade() are a weighted average of dimensions of the &lt;image&gt; arguments to the function; the &lt;color&gt; arguments have no effect. They are calculated as follows:
+</p>
+
+<p class="trans-note">【
+以下に現れる百分率は、どこから得られるのか不明。
+`cf-image$t を成す `percentage^t ではないはず（混色-用の重みであり，~sizeとは~~関係ないので）。
+】</p>
+
+<div class="algorithm">
+<p>
+`cross-fade$f の
+`内在的~寸法を決定する@
+ときは：
+◎
+To determine the intrinsic dimensions of a cross-fade():
+</p>
+
+<ol>
+	<li>
+%画像~list ~LET 新たな`~list$
+◎
+Let images be an empty list.
+</li>
+	<li>
+<p>
+`cross-fade$f 関数の
+~EACH( `image$t 値を伴う引数 %引数 )
+に対し：
+◎
+For each argument of the cross-fade() function with an &lt;image&gt; value:
+</p>
+		<ol>
+			<li>
+%~item ~LET
+( `横幅^i, `縦幅^i, `百分率^i )
+からなる`~tuple$
+◎
+Let item be a tuple consisting of a width, a height, and a percentage.
+</li>
+			<li>
+%~item の ( `横幅^i, `縦幅^i ) ~SET ［
+%引数 の `image$t に対し， `cross-fade$f が現れる文脈に適切に`~obj~size折衝$ ~algoを走らせた結果
+］の`具象-~obj~size$の ( 横幅, 縦幅 )
+◎
+Run the object size negotiation algorithm for the &lt;image&gt;, as appropriate for the context in which the cross-fade() appears, and set item’s width and height to the width and height of the resulting concrete object size.
+</li>
+			<li>
+%~item の`百分率^i ~SET %引数 の百分率
+◎
+Set item’s percentage to the argument’s percentage.
+</li>
+			<li>
+%画像~list に %~item を`付加する$
+【この段は、この訳による補完】
+</li>
+		</ol>
+	</li>
+	<li>
+~IF［
+%画像~list は`空$である
+］
+⇒
+~RET ε （内在的~寸法は無い）
+【 `既定の~obj~size$を返すべきでは？】
+◎
+If images is empty, return no intrinsic dimensions.
+</li>
+	<li>
+%百分率の総和 ~LET %画像~list 内のすべての`~item$の`百分率^iの総和
+◎
+Let percentage sum be the sum of all the percentages of the items in images.
+</li>
+	<li>
+%画像~list 内の
+~EACH( %~item )
+に対し
+⇒
+%~item の百分率 ~SET %~item の`百分率^i ~DIV %百分率の総和
+◎
+For each item in images, divide item’s percentage by percentage sum, and set item’s percentage to the result.
+</li>
+	<li>
+~Assert：
+%画像~list 内の`百分率^iの総和 ~EQ `100%^v 
+◎
+Assert: The percentages in images now sum to 100%.
+</li>
+	<li>
+( %最終~横幅, %最終~縦幅 ) ~LET ( `0px^v, `0px^v )
+◎
+Let final width and final height be 0px.
+</li>
+	<li>
+%画像~list 内の
+~EACH( %~item )
+に対し
+⇒＃
+%最終~横幅 ~INCBY %~item の`横幅^i ~MUL %~item の`百分率^i；
+%最終~縦幅 ~INCBY %~item の`縦幅^i ~MUL %~item の`百分率^i
+◎
+For each item in images, multiply item’s width by item’s percentage and add the result to final width, and multiply item’s height by item’s percentage and add the result to final height.
+</li>
+	<li>
+~RET 内在的~寸法( %最終~横幅, %最終~縦幅 )
+◎
+Return an intrinsic width of final width and an intrinsic height of final height.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="cross-fade-painting">
+<h4 title="cross-fade() Painting">2.5.2. `cross-fade^f の塗ng</h4>
+
+<p>
+`cross-fade$f が表現する画像は、関数に与えられた引数たちの加重d平均であり，以下に従って計算される：
+◎
+The image represented by a cross-fade() is a weighted average of the input arguments to the function, calculated as follows:
+</p>
+
+<div class="algorithm">
+
+<p>
+`cross-fade^f の
+`外観を決定する@
+ときは：
+◎
+To determine the appearance of a cross-fade():
+</p>
+
+<ol>
+	<li>
+%画像~list ~LET 新たな`~list$
+◎
+Let images be an empty list.
+</li>
+	<li>
+%~size ~LET  `内在的~寸法を決定する$を利用して `cross-fade$f 関数の`具象-~obj~size$を見出した結果
+◎
+Let size be a tuple of width and height, initialized to the result of finding the concrete object size of the cross-fade() function (using the intrinsic dimensions of a cross-fade()).
+</li>
+	<li>
+<p>
+`cross-fade$f 関数の
+~EACH( %引数 )
+に対し：
+◎
+For each argument of the cross-fade() function:
+</p>
+		<ol>
+			<li>
+%~item ~LET
+( `画像^i, `百分率^i )
+からなる`~tuple$
+◎
+Let item be a tuple consisting of an image and a percentage.
+</li>
+			<li>
+~IF［
+%引数 は `image$t 値を伴う
+］
+⇒
+%~item の`画像^i ~SET その `image^t 画像を %~size に拡縮し直した結果 
+◎
+If argument has an &lt;image&gt;, rescale it to size’s width and height and set item’s image to the result.＼
+</li>
+			<li>
+~ELSE （ %引数 は `color$t 値を伴う）
+⇒
+%~item の`画像^i ~SET
+寸法 %~size の，その `color^t の単色~画像
+◎
+Otherwise, argument has a &lt;color&gt;; set item’s image to a solid-color image of the &lt;color&gt;, with size’s dimensions.
+</li>
+			<li>
+%~item の`百分率^i ~SET %引数 の百分率
+【無い場合は？】
+◎
+Set item’s percentage to the argument’s percentage.
+</li>
+		</ol>
+	</li>
+	<li>
+%百分率の総和 ~LET %画像~list を成すすべての`~item$の`百分率^iの総和
+◎
+Let percentage sum be the sum of all the percentages of the items in images.
+</li>
+	<li>
+~IF［
+%百分率の総和 ~LT 100%
+］
+⇒
+%画像~list に次のようにされた`~tuple$を付加する
+⇒＃
+`画像^i ~SET 寸法 %~size の`透明な黒$にされた単色~画像,
+`百分率^i ~SET 100% ~MINUS %百分率の総和
+◎
+If percentage sum is less than 100%, append a tuple to images consisting of a solid-color transparent-black image with size’s dimensions, and a percentage equal to 100% minus percentage sum.
+</li>
+	<li>
+~ELIF［
+%百分率の総和 ~GT 100%
+］
+⇒
+%画像~list 内の
+~EACH( %~item )
+に対し
+⇒
+%~item の`百分率^i ~SET %~item の百分率 ~DIV %百分率の総和
+◎
+Otherwise, if percentage sum is greater than 100%, then for each item in images, divide item’s percentage by percentage sum, and set item’s percentage to the result.
+</li>
+	<li>
+<p>
+~RET 次のようにされた画像：
+</p>
+		<ul>
+			<li>
+寸法 %~size
+</li>
+			<li>
+各 画素は［
+%画像~list 内の各 %~item の`画像^iの，対応する画素
+］たちに対し，
+%~item の百分率を重みに用いて線型~加重d平均をとった結果
+（色~channel, ~alpha~channelとも平均をとる）
+</li>
+		</ul>
+<p>
+この段の目的においては、各~画素の色は乗算済み~sRGB空間で計算するモノトスル。
+◎
+Let final image be an image with size’s dimensions, and every pixel being the weighted linear average of the corresponding pixels of each item’s image in images, weighted according to the item’s percentage. (Average both the color channels and the alpha channel of the pixels.) For the purpose of this calculation, each pixel’s color must be in pre-multiplied sRGB.
+</p>
+
+<details class="note" open="">
+	<summary>
+上の演算の詳細
+◎
+Details on the above operation
+</summary>
+<div>
+【未訳】
+◎
+This is applying an N-way Porter-Duff dissolve operation to the source images. Wikipedia defines dissolve as a stochastic operation, with the result pixels independently randomly chosen from the source images’ corresponding pixels according to their source images’ weights, but as pixels shrink to infinitely small, this converges to doing color-averaging in pre-multiplied color space.
+
+In particular, this means that `cross-fade(white 50%, transparent 50%)` will produce a partially-transparent solid white image. (Rather than a partially-transparent gray, which is what you’d get if you averaged the opaque white and transparent black pixels in non-premultiplied space.)
+
+As converting to pre-multiplied does entail some loss of precision, and graphics libraries may or may not support this operation natively, as per usual any method can be used so long as it achieves the specified effect.
+
+For example, one can instead rebalance the percentages according to the alphas of each pixel, then do the color-channel averages in non-premultiplied space. E.g., to render cross-fade(rgb(255 0 0 / 1) 40%, rgb(0 255 0 / .5) 20%, rgb(0 0 255 / 0) 40%), rebalancing the percentages according to the 1 / .5 / 0 alphas would produce 40% / 10% / 0% (which renormalizes to 80% / 20% / 0%), at which point you can average the raw color channel values and end up with an rgb(204 51 0 / .5) image. (Note that the alpha channel is still averaged using the original percentages, not the rebalanced ones.)
+◎
+Return final image.
+</div>
+</details>
+
+	</li>
+</ol>
+
+</div>
+
+			</section>
+			<section id="cross-fade-complex">
+<h4 title="Simplifying Complex cross-fade()">2.5.3. 複階的な `cross-fade^f の単純~化</h4>
+
+<p class="issue">
+~WGによる解決にしたがって、画像~用に “同等性” の観念を定義し，
+“同じ” 画像たちは算出d値の時点で百分率の総和をとって結合する。
+◎
+Per WG resolution, define a notion of "equality" for images, and combine "same" images at computed-value time, summing their percentages.
+</p>
+
+<p class="issue">
+~WGによる解決にしたがって、直に入子にされた `cross-fade$f は，算出d値の時点で単に百分率を分配して平坦~化するように単純~化する
+— `cross-fade(A 10%, cross-fade(B 30%, C 70%) 90%)^v は
+`cross-fade(A 10%, B 27%, C 63%)^v になるように。
+◎
+Per WG resolution, simplify directly-nested cross-fade() at computed-value time by just distributing the percentage and flattening; cross-fade(A 10%, cross-fade(B 30%, C 70%) 90%) becomes cross-fade(A 10%, B 27%, C 63%).
+</p>
+
+			</section>
+		</section>
+		<section id="element-notation">
+<h3 title="Using Elements as Images: the element() notation">2.6. 要素を画像として利用する： `element^f 記法</h3>
+
+<p>
+`element$f 関数により、作者は，文書~内の要素を画像として利用することが可能になる。
+参照先の要素の外観が変化するに伴い、画像も変化するようになる。
+これを利用すれば，例えば、~slideshowにおける次／前の~slideの~live~previewを作成したり，~fancyな~gradientを生成するために `canvas$e 要素を参照したり，背景を~animate化することさえ可能になる。
+◎
+The element() function allows an author to use an element in the document as an image. As the referenced element changes appearance, the image changes as well. This can be used, for example, to create live previews of the next/previous slide in a slideshow, or to reference a canvas element for a fancy generated gradient or even an animated background.
+</p>
+
+<p class="note">注記：
+`element$f 関数が再生産するのは、参照先の要素の`外観^emに限られ，実際の内容やその構造を再生産することはない。
+作者は、装飾的な目的に限り，これを利用するべきである。
+`element$f を，~pageにまたがる有意な内容を伴う要素を再生産するために利用してはナラナイ
+— 代わりに、単に文書の中に要素の複数の複製を挿入すること。
+◎
+Note: The element() function only reproduces the appearance of the referenced element, not the actual content and its structure. Authors should only use this for decorative purposes, and must not use element() to reproduce an element with significant content across the page. Instead, just insert multiple copies of the element into the document.
+</p>
+
+<p>
+`element$f の構文は、次で与えられる：
+◎
+The syntax for element() is:
+</p>
+
+<pre class="prod">
+`element@f = element( `id-selector$t )
+</pre>
+
+<p>
+ここで `id-selector$t は`~ID選択子$である。
+`SELECT$r
+◎
+where &lt;id-selector&gt; is an ID selector [SELECT].
+</p>
+
+<p class="issue">
+外部~文書~内の要素（~SVGの`塗り~server$など）を~referできるようにする必要はあるか？
+あるいは、この用途には `url^f を利用するだけで十分か？
+◎
+Do we need to be able to refer to elements in external documents (such as SVG paint servers)? Or is it enough to just use url() for this?
+</p>
+
+<p class="issue">
+この名前は、 GCPM のいくぶん類似な関数と競合する。
+これはどうにかして解決される必要がある。
+◎
+This name conflicts with a somewhat similar function in GCPM. This needs to be resolved somehow.
+</p>
+
+<p class="issue">
+要素の “反映” を行う能が求まれる
+— 要素~上の背景~画像として, または疑似要素~内で。
+循環の検出を誘発するのを避けるため、これは特別に取扱われる必要がある。
+◎
+Want the ability to do "reflections" of an element, either as a background-image on the element or in a pseudo-element. This needs to be specially-handled to avoid triggering the cycle-detection.
+</p>
+
+<p class="issue">
+`overflow^p が `paged^v にされている~view内の単独の~pageにはどう取組むか？
+◎
+When we have overflow:paged, how can we address a single page in the view?
+</p>
+
+<p>
+`element$f 関数は、その引数に与えた~IDに合致する要素を参照する。
+~IDは、先ず `elementSources$m ~map内で検索される。
+見出されなかった場合，文書に対し照合され、合致した要素が複数あれば，関数は それらのうち最初の要素を参照する。
+◎
+The element() function references the element matched by its argument. The ID is first looked up in the elementSources map, as described in that section. If it’s not found, it’s then matched against the document. If multiple elements are matched, the function references the first such element.
+</p>
+
+<p>
+`element$f 関数により表現される画像は、要素が文書~内で可視かどうかに基づいて変わり得る：
+◎
+The image represented by the element() function can vary based on whether the element is visible in the document:
+</p>
+
+<dl>
+	<dt>
+要素は`描画され$ていて，`置換d要素$の子孫ではない, かつ`積層~文脈$を生成する場合：
+◎
+an element that is rendered, is not a descendant of a replaced element, and generates a stacking context 
+</dt>
+	<dd>
+<p>
+関数は、内在的~sizeが参照先の要素の
+`装飾d限界~box@
+に等しい画像を表現する：
+◎
+The function represents an image with its intrinsic size equal to the decorated bounding box of the referenced element:
+</p>
+		<ul>
+			<li>
+~CSS描画~modelを利用して描画される要素に対しては、`装飾d限界~box$は，`首要~box$のすべての断片の`~border画像~区画$を包含する, かつ軸に~~平行な，最も小さい矩形になる。
+◎
+for an element rendered using a CSS rendering model, the decorated bounding box is the smallest axis-aligned rectangle that contains the border image areas of all the fragments of the principal box
+</li>
+			<li>
+~SVG描画~modelを利用して描画される要素に対する`装飾d限界~box$は，
+<a href="~SVGcoords#TermDecoratedBoundingBox">SVGにより定義されるそれ</a>になる。
+【！~TR/SVGTiny12/intro.html#TermDecoratedBoundingBox】
+【大雑把に言えば，外形線の太さも含め，図形~全体を囲う最~小な矩形】
+◎
+for an element rendered using the SVG rendering model, the decorated bounding box is defined by SVG
+</li>
+		</ul>
+
+<p class="note">注記：
+画像は，その限界域の外側にあるものは既定で切取るので、~box影の様な`装飾d限界~box$の外側へ拡張する装飾は，切取られることになる。
+◎
+Note: Because images clip anything outside their bounds by default, this means that decorations that extend outside the decorated bounding box, like box shadows, may be clipped.
+</p>
+
+	</dd>
+	<dd>
+画像は、広さ無限で`透明な黒$にされた~canvas上に，参照先の要素とその子孫を描画して構築され（文書~内にあるときの~sizeと同じになる）、`装飾d限界~box$の各~辺は画像の各~辺に接合されるように，位置される。
+◎
+The image is constructed by rendering the referenced element and its descendants (at the same size that they would be in the document) over an infinite transparent canvas, positioned so that the edges of the decorated bounding box are flush with the edges of the image.
+</dd>
+	<dd class="issue">
+実装を効率的にするためには、要素には積層~文脈またはそれに準じるものが要求されるよう見受けられる。
+全部的な積層~文脈は必要か？あるいは疑似的な積層~文脈で済むか？
+それは通常の積層~文脈になる必要はあるか？あるいは `element^f に描画するときに積層~文脈として描画するだけで済むか？
+◎
+Requiring some degree of stacking context on the element appears to be required for an efficient implementation. Do we need a full stacking context, or just a pseudo-stacking context? Should it need to be a stacking context normally, or can we just render it as a stacking context when rendering it to element()?
+</dd>
+	<dd>
+参照先の要素またはその先祖に変形-が適用されている場合、要素を画像として描画するときには，変形-は無視するモノトスル。
+`CSS3-TRANSFORMS$r
+◎
+If the referenced element has a transform applied to it or an ancestor, the transform must be ignored when rendering the element as an image. [CSS3-TRANSFORMS]
+</dd>
+	<dd>
+参照先の要素が何~pageかに分断されている場合、要素は，~pageの内容~区画が~page割り方向に接合されていたかのように表示される
+— ~pageの各~辺は初期~包含塊の対応する始端~辺に整列された上で。
+<span class="note">
+何~行lか／何~柱か
+に分断されている要素は、単に`装飾d限界~box$と伴に描画される
+</span>
+◎
+If the referenced element is broken across pages, the element is displayed as if the page content areas were joined flush in the pagination direction, with pages' edges corresponding to the initial containing block’s start edge aligned. Elements broken across lines or columns are just rendered with their decorated bounding box.
+</dd>
+	<dd>
+実装は、参照先の要素~用に生成した既存の~bitmap~dataを再利用してもヨイ。
+あるいは，要素の表示-を生成し直して、当の~sizeにおける画像の品質を最大化してもヨイ（例えば、参照先の要素は~SVG素片であると検出された場合）。
+生成し直す場合でも、結果の画像における~layoutは参照先の要素から変化させないモノトスル。
+すなわち，画像の見かけは、~raster化の品質の違いを除き，参照先の要素と一致させるモノトスル。
+◎
+Implementations may either re-use existing bitmap data generated for the referenced element or regenerate the display of the element to maximize quality at the image’s size (for example, if the implementation detects that the referenced element is an SVG fragment); in the latter case, the layout of the referenced element in the image must not be changed by the regeneration process. That is, the image must look identical to the referenced element, modulo rasterization quality.
+</dd>
+	<dd class="example">
+<p>
+`p$e 要素を文書~内の他所で背景として再利用する例：
+◎
+As a somewhat silly example, a p element can be reused as a background elsewhere in the document:
+</p>
+
+`efunc1^dgm
+
+<figure>
+`efunc2^dgm
+</figure>
+
+	</dd>
+
+	<dt>
+要素は`描画され$ないが、`塗り~source$を供する場合：
+◎
+an element that is not rendered, but which provides a paint source
+</dt>
+	<dd>
+関数は、`塗り~source$の［
+内在的~size, 外観
+］を伴う画像を表現する
+— ~sizeと外観は、~host言語により定義される。
+◎
+The function represents an image with the intrinsic size and appearance of the paint source. The host language defines the size and appearance of paint sources.
+</dd>
+	<dd class="example">
+<p>
+例えば， `element$f 関数は、~HTML文書~内の ~SVG `pattern$e 要素を参照できる：
+◎
+For example, the element() function can reference an SVG &lt;pattern&gt; element in an HTML document:
+</p>
+
+<pre class="lang-html">
+&lt;!DOCTYPE html&gt;
+&lt;svg&gt;
+  &lt;defs&gt;
+    &lt;pattern id='pattern1'&gt;
+      &lt;path d='...'&gt;
+    &lt;/pattern&gt;
+  &lt;/defs&gt;
+&lt;/svg&gt;
+&lt;p style="background: element(#pattern1)"&gt;
+<span class="comment">
+ここでは~patternを背景に利用しています。
+~patternが変化したり~animateされた場合、背景も更新されることになります。
+◎
+I’m using the pattern as a background! If the pattern is changed or animated, my background will be updated too!
+</span>
+&lt;/p&gt;
+</pre>
+
+<p>
+~HTMLは［
+`canvas$e, `img$e, `video$e
+］など、塗り~sourceを供する，数種の要素を定義する。
+~page内には表示されてないが，中に何か描かれている `canvas$e を，~CSSから参照できることを意味する：
+◎
+HTML also defines that a handful of elements, such as canvas, img, and video, provide a paint source. This means that CSS can, for example, reference a canvas that’s being drawn into, but not displayed in the page:
+</p>
+
+<pre class="lang-html">
+&lt;!DOCTYPE html&gt;
+&lt;script&gt;
+  var %canvas = document.querySelector('#animated-bullet');
+  %canvas.width = 20; canvas.height = 20;
+  drawAnimation(%canvas);
+&lt;/script&gt;
+&lt;canvas id='animated-bullet' style='display:none'&gt;&lt;/canvas&gt;
+&lt;ul style="list-style-image: element(#animated-bullet);"&gt;
+  &lt;li&gt;<span class="comment">
+ここでは `canvas$e を~bulletに利用しています。
+◎
+I’m using the canvas as a bullet!
+</span>&lt;/li&gt;
+  &lt;li&gt;<span class="comment">
+ここでも。
+◎
+So am I!
+</span>&lt;/li&gt;
+  &lt;li&gt;<span class="comment">
+`canvas$e が~JSで変更される度に，すべての~bullet画像も更新されます。
+◎
+As the canvas is changed over time with Javascript, we’ll all update our bullet image with it!
+</span>&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+
+	</dd>
+
+	<dt>
+その他の場合：
+◎
+anything else
+</dt>
+	<dd>
+関数は`無効な画像$を表現する。
+◎
+The function represents an invalid image.
+</dd>
+	<dd class="example">
+<p>
+例えば，次に挙げる `element$f の利用は、どれも透明な背景になる：
+◎
+For example, all of the following element() uses will result in a transparent background:
+</p>
+
+<pre class="lang-html">
+&lt;!DOCTYPE html&gt;
+&lt;p id='one' style="display:none; position: relative;"&gt;one&lt;/p&gt;
+&lt;iframe src="http://example.com"&gt;
+  &lt;p id='two' style="position: relative;"&gt;<span class="comment">
+~fallback内容
+◎
+I’m fallback content!
+</span>&lt;/p&gt;
+&lt;/iframe&gt;
+&lt;ul&gt;
+  &lt;li style="background: element(#one);"&gt;
+<span class="comment">
+要素 `p id='one'^e は、 `display^p が `none^v にされていて`描画され$ないので，塗り~sourceを供さない。
+◎
+A display:none element isn’t rendered, and a P element doesn’t provide a paint source.
+</span>
+  &lt;/li&gt;
+  &lt;li style="background: element(#two);"&gt;
+<span class="comment">
+`element^f には `iframe$e の様な`置換d要素$の子孫は利用できない。
+◎
+The descendants of a replaced element like an IFRAME can’t be used in element() either.
+</span>
+  &lt;/li&gt;
+  &lt;li style="background: element(#three);"&gt;
+<span class="comment">
+`id^a "`three^v" の要素はないので、この背景も透明になる。
+◎
+There’s no element with an id of "three", so this also gets rendered as a transparent image.
+</span>
+  &lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+	</dd>
+</dl>
+
+<p>
+結付けられている~boxがない要素は、
+`描画され@
+ないとされる。
+これは例えば、要素またはその ある先祖にて `display^p が `none^v にされている場合などに起こり得る。
+~host言語は、要素が描画されないと見なされ得る追加的な仕方を定義してもヨイ
+— 例えば，~SVGにおいては、 `defs$e 要素のどの子孫も描画されないものと見なされる。
+◎
+An element is not rendered if it does not have an associated box. This can happen, for example, if the element or an ancestor is display:none. Host languages may define additional ways in which an element can be considered not rendered; for example, in SVG, any descendant of a &lt;defs&gt; element is considered to be not rendered.
+</p>
+
+<div class="example">
+
+<p>
+`element$f 関数には、多くの用途がある。
+例えば、~slideshowにおける次／前の~slideの~previewを示すために利用できる：
+◎
+The element() function can be put to many uses. For example, it can be used to show a preview of the previous or next slide in a slideshow:
+</p>
+
+<pre class="lang-html">
+&lt;!DOCTYPE html&gt;
+&lt;script&gt;
+function navigateSlides() {
+  var %currentSlide = ...;
+  document.querySelector('#prev-slide').id = '';
+  document.querySelector('#next-slide').id = '';
+  %currentSlide.previousElementSibling.id = 'prev-slide';
+  %currentSlide.nextElementSibling.id = 'next-slide';
+}
+&lt;/script&gt;
+&lt;style&gt;
+.slide {
+  /* <span class="comment">
+`element^f 可能になるためには、積層~文脈にする必要がある。
+◎
+Need to be a stacking context to be element()-able.
+</span> */
+  position: relative;
+}
+#prev-preview, #next-preview {
+  position: fixed;
+  ...
+}
+#prev-preview { background: element(#prev-slide); }
+#next-preview { background: element(#next-slide); }
+&lt;/style&gt;
+&lt;a id='prev-preview'&gt;前の~slide&lt;/a&gt;
+&lt;a id='next-preview'&gt;次の~slide&lt;/a&gt;
+&lt;section class='slide'&gt;...&lt;/section&gt;
+&lt;section class='slide current-slide'&gt;...&lt;/section&gt;
+...
+</pre>
+<!-- 
+Previous Slide
+Next Slide
+ -->
+
+<p>
+この例の `navigateSlides()^c 関数は、次の／前の~slideの `id^a を更新する
+— それは、~slideの傍に浮動している小さい~box内に表示される。
+`element$f 関数による~slideとはヤリトリできないので（それは単なる画像である）、~preview~box上で `click^et ~handlerを利用して~pageを~navigateし易くすることもできる。
+◎
+In this example, the navigateSlides function updates the ids of the next and previous slides, which are then displayed in small floating boxes alongside the slides. Since you can’t interact with the slides through the element() function (it’s just an image), you could even use click handlers on the preview boxes to help navigate through the page.
+</p>
+
+</div>
+
+			<section id="paint-sources">
+<h4 title="Paint Sources">2.6.1. 塗り~source</h4>
+
+<p>
+~host言語は、何らかの要素を
+`塗り~source@
+を供するものとを定義してもヨイ。
+塗り~sourceは、内在的~外観を持ち，［
+~layoutする／描画-
+］する必要なく`具象-~obj~size$を得せるので、`描画され$ていなくとも画像として利用できる。
+◎
+Host languages may define that some elements provide a paint source. Paint sources have an intrinsic appearance and can obtain a concrete object size without having to do layout or rendering, and so may be used as images even when they’re not rendered.
+</p>
+
+<p>
+~HTMLにおいては、［
+`img$e ／ `video$e ／ `canvas$e
+］要素が塗り~sourceを供する。
+◎
+In HTML, the img, video, and canvas elements provide paint sources.
+</p>
+
+<p>
+~SVGにおいては、`塗り~server$を供する要素が，塗り~sourceを供する。
+<span class="note">注記：
+SVG1.1 においては，［
+<a href="~SVG11/pservers.html#LinearGradientElement">`linearGradient^e</a>,
+<a href="~SVG11/pservers.html#RadialGradientElement">`radialGradient^e</a>,
+<a href="~SVG11/pservers.html#PatternElement">`pattern^e</a>
+］要素が塗り~sourceを供する。
+</span>
+それらは，その仕様にて述べるように描かれる
+— 次に定義される座標系の下で：
+◎
+In SVG, any element that provides a paint server provides a paint source. Note: In SVG1.1, the &lt;linearGradient&gt;, &lt;radialGradient&gt;, and &lt;pattern&gt; elements provide paint sources. They are drawn as described in the spec, with the coordinate systems defined as follows:
+</p>
+
+<dl>
+	<dt>`objectBoundingBox^v</dt>
+	<dd>
+原点は，描かれている`具象-~obj~size$により定義される矩形の左上隅。
+寸法は，`具象-~obj~size$と同じ。
+`利用元~単位$は，`具象-~obj~size$の横幅, 縦幅。
+◎
+The coordinate system has its origin at the top left corner of the rectangle defined by the concrete object size that it’s being drawn into, and the same width and height as the concrete object size. A single user coordinate is the width and height of the concrete object size.
+</dd>
+
+	<dt>`userSpaceOnUse^v</dt>
+	<dd>
+原点は，描かれている`具象-~obj~size$により定義される矩形の左上隅。
+寸法は，`具象-~obj~size$と同じ。
+`利用元~単位$は， `px$u 単位に等価。
+◎
+The coordinate system has its origin at the top left corner of the rectangle defined by the concrete object size that it’s being drawn into, and the same width and height as the concrete object size. User coordinates are sized equivalently to the CSS px unit.
+</dd>
+</dl>
+
+<p class="note">注記：
+この~moduleの将来の~versionでは、［
+外部~文書~内の／
+もっぱら~scriptにより作成された文書~内にまったく挿入されない
+］塗り~sourceを~referする仕方を定義することが期待されている。
+◎
+Note: It is expected that a future version of this module will define ways to refer to paint sources in external documents, or ones that are created solely by script and never inserted into a document at all.
+</p>
+
+			</section>
+			<section id="elementsources">
+<h4 title="Using Out-Of-Document Sources: the ElementSources interface">2.6.2. 文書~外~sourceの利用-法： `ElementSources^I ~interface</h4>
+
+<p>
+`element$f 関数は、通常は文書の中の要素を選択するが、`塗り~source$を供する要素は，必ずしも文書~内にある必要はない。
+例えば、~scriptにより 作成され, 保守され, 描かれ，文書に直に挿入されてはいない~HTML `canvas$e 要素など。
+◎
+The element() function normally selects elements within a document, but elements that provide a paint source don’t necessarily need to be in-document. For example, an HTML canvas element can be created, maintained, and drawn into entirely in script, with no need for it to be inserted into the document directly.
+</p>
+
+<p>
+`~ID選択子$は，文書の外側にある要素は選択できないので、要素を~referする仕方が必要になる。
+`elementSources$m ~map~objがこれを供する。
+◎
+All that’s needed is a way to refer to the element, as an ID selector cannot select elements outside of the document. The elementSources Map object provides this.
+</p>
+
+<pre class="idl">
+partial namespace `CSS$I {
+  [`SameObject$] readonly attribute any `elementSources@m;
+};
+</pre>
+
+<p>
+`elementSources$m ~map内の~entryのうち，次を満たすものが、 `element$f 関数にて可用になる
+⇒
+［
+文字列を~keyとする
+］~AND［
+`塗り~source$を供している~objを値にとる
+］
+◎
+Any entries in the elementSources map with a string key and a value that is an object providing a paint source are made available to the element() function.
+</p>
+
+<p>
+`element$f に与えた `id-selector$t に対しては、先ず `elementSources$m ~map内で，~ID（先頭の文字 `#^c は含めない）が検索される：
+◎
+Whenever element() uses an &lt;id-selector&gt;, the ID’s value (without the leading # character) is first looked up in the elementSources map:
+</p>
+
+<ul>
+	<li>
+~IDを~keyとする~entryが見出された場合、 `element$f 関数は，~entryの値で与えられる~objが`塗り~source$を供して［
+いるならば その塗り~source ／
+いないならば`無効な画像$
+］を表現する。
+◎
+If it’s found, and the object associated with it provides a paint source, the element() function represents that paint source.
+◎
+If it’s found, but the object associated with it doesn’t provide a paint source, the element() function represent an invalid image.
+</li>
+	<li>
+見出されなかった場合、通常通り，文書~内を探す。
+◎
+If the ID isn’t found in the map at all, it’s then looked for in the document as normal.
+</li>
+</ul>
+
+<p class="issue">
+この`~ID選択子$の再利用は、 Mozilla の挙動に合致する。
+編集者は、文法の先頭を `custom-ident$t で塞ぐのは避けたいと~~考えている
+— それは構文~空間を食い過ぎるので。
+別の可能性として、値を言語により定義される~keywordから開始させ，
+`custom-ident$t を後続させる~~案もあるが
+— `element(external fancy)^v  か何かの様に。
+何か命名の示唆があれば歓迎する。
+◎
+This reuse of the ID selector matches Moz behavior. I’m trying to avoid slapping a &lt;custom-ident&gt; right in the beginning of the grammar, as that eats too much syntax-space. Another possibility, though, is to start the value with a language-defined keyword followed by a &lt;custom-ident&gt;, like element(external fancy) or something. Naming suggestions welcome.
+</p>
+
+<div class="example">
+
+<p>
+外部~canvasで~fancyな背景を~animateする例：
+◎
+For example, fancy animating backgrounds can be done with an external canvas:
+</p>
+
+<pre class="lang-html">
+&lt;script&gt;
+var %bg = document.createElement('canvas');
+%bg.height = 200;
+%bg.width = 1000;
+drawFancyBackground(%bg);
+CSS.elementSources.set('fancy', %bg);
+&lt;/script&gt;
+&lt;style&gt;
+h1 {
+  background-image: element(#fancy);
+}
+&lt;/style&gt;
+</pre>
+
+<p>
+“~fancyな” ~canvasの中に何かが描かれ，~animateされるに伴い，すべての `h1^e 要素の背景も自動的かつ一斉に更新されることになる。
+◎
+As the "fancy" canvas is drawn into and animated, the backgrounds of all the H1 elements will automatically update in tandem.
+</p>
+
+<p>
+`elementSources$m ~mapは，文書に対し`~ID選択子$を照合する前にアタられるので、文書~内に `#fancy^v に合致する要素があっても，背景は依然として `elementSources$m 値から来ることに注意。
+◎
+Note that the elementSources map is consulted before the document to match the ID selector, so even if there’s an element in the document that would match #fancy, the backgrounds will still predictably come from the elementSources value instead.
+</p>
+
+</div>
+
+			</section>
+			<section id="element-cycles">
+<h4 title="Cycle Detection">2.6.3. 循環の検出</h4>
+
+<p>
+`element$f 関数は、無為な循環関係を生産し得る
+— 自身を自前の背景に利用する要素など。
+が，これらの関係性は、依存関係~graphを保ち続け, 共通的な循環~検出~algoを利用すれば，容易かつ依拠-可能に検出して解決できる。
+◎
+The element() function can produce nonsensical circular relationships, such as an element using itself as its own background. These relationships can be easily and reliably detected and resolved, however, by keeping track of a dependency graph and using common cycle-detection algorithms.
+</p>
+
+<p>
+依存関係~graphは、次に挙げる辺からなる：
+◎
+The dependency graph consists of edges such that:
+</p>
+
+<ul>
+	<li>
+どの要素も、その子たちに依存する。
+◎
+every element depends on its children
+</li>
+	<li>
+要素 A 上のある~propが `element$f 関数を利用していて，要素 B を指しているならば、 A は B に依存する
+◎
+for any element A with a property using the element() function pointing to an element B, A depends on B
+</li>
+	<li>
+~host言語が，要素が他の要素の描画を~referする仕方を定義しているならば、参照元の要素は参照先の要素に依存する。
+例えば，~SVGにおいては、 `use$e 要素は参照先の要素に依存する。
+◎
+if a host language defines a way for elements to refer to the rendering of other elements, the referencing element depends on the referenced element. For example, in SVG, a &lt;use&gt; element depends on the element it referenced.
+</li>
+</ul>
+
+<p>
+この~graphが循環を包含する場合、その循環に関与しているどの `element$f 関数も，`無効な画像$になる。
+◎
+If the graph contains a cycle, any element() functions participating in the cycle are invalid images.
+</p>
+
+			</section>
+		</section>
+	</section>
+	<section id="gradients">
+<h2 title="Gradients">3. ~gradient</h2>
+
+<p>
+~gradientとは、ある色から別の色へ滑らかに~fadeする画像である。
+これらは、背景~画像, ~buttonその他 多くのものに淡い陰影を施すために，共通的に利用される。
+この節に述べる
+`~gradient関数@
+により、作者は，簡素な構文でその種の画像を指定でき、~UAによる~page描画の際に自動的に生成される。
+その構文は、次で与えられる：
+◎
+A gradient is an image that smoothly fades from one color to another. These are commonly used for subtle shading in background images, buttons, and many other things. The gradient functions described in this section allow an author to specify such an image in a terse syntax, so that the UA can generate the image automatically when rendering the page. The syntax of a &lt;gradient&gt; is:
+</p>
+
+<pre class="prod">
+`gradient@t
+    = `linear-gradient$ft
+    | `repeating-linear-gradient$ft
+    | `radial-gradient$ft
+    | `repeating-radial-gradient$ft
+    | `conic-gradient$ft
+    | `repeating-conic-gradient$ft
+</pre>
+
+<div class="example">
+<p>
+他の `image$t 型と同じく、この仕様にて定義される~gradientは，画像を受容するどの~propでも利用できる。
+例えば：
+◎
+As with the other &lt;image&gt; types defined in this specification, gradients can be used in any property that accepts images. For example:
+</p>
+
+<pre class="lang-css">
+`background^p: `linear-gradient(white, gray)^v;
+`list-style-image^p: `radial-gradient(circle, #006, #00a 90%, #0000af 100%, white 100%)^v;
+</pre>
+
+</div>
+
+<p>
+~gradientは、
+`~gradient~box@
+と呼ばれる，`具象-~obj~size$の寸法による~boxの中に描かれる。
+しかしながら、~gradient自身は`内在的~寸法$を持たない。
+◎
+A gradient is drawn into a box with the dimensions of the concrete object size, referred to as the gradient box. However, the gradient itself has no intrinsic dimensions.
+</p>
+
+<div class="example">
+
+<p>
+例えば，~gradientを背景として利用する場合、既定では，~gradientは［
+要素の~padding~boxに~sizeされた`~gradient~box$
+］の中に描かれることになる。
+`background-size$p が， `100px 200px^v のような数値的な値にされている場合、`~gradient~box$は，幅 100px, 高さ 200px になる。
+同様に， `list-style-image$p として利用される~gradientに対しては、~boxは，その~propの`既定の~obj~size$である 1em の正方形になる。
+◎
+For example, if you use a gradient as a background, by default the gradient will draw into a gradient box the size of the element’s padding box. If background-size is explicitly set to a value such as 100px 200px, then the gradient box will be 100px wide and 200px tall. Similarly, for a gradient used as a list-style-image, the box would be a 1em square, which is the default object size for that property.
+</p>
+
+</div>
+
+<p>
+~gradientは、
+`~gradient線@
+（その形状は，~gradientの型に依存し、~~幾何的には，直線, 射線, 渦巻き線になり得る）の
+`始点@
+と
+`終点@
+を定義した上で，この線~上のいくつかの点に色を指定することにより指定される。
+これらの色は、まず，線~上の他の部分を埋めるように滑らかに混色される。
+`~gradient線$の色を利用して~gradient 全体の色を実際に生産する方法は、~gradientの各~型ごとに定義される。
+◎
+Gradients are specified by defining the starting point and ending point of a gradient line (which, depending on the type of gradient, may be technically a line, or a ray, or a spiral), and then specifying colors at points along this line. The colors are smoothly blended to fill in the rest of the line, and then each type of gradient defines how to use the color of the gradient line to produce the actual gradient.
+</p>
+
+		<section id="linear-gradients">
+<h3 title="Linear Gradients: the linear-gradient() notation">3.1. 線型~gradient： `linear-gradient^f 記法</h3>
+
+<p class="note">注記：
+`css3-images$r と<a href="~CSSIMAGE#linear-gradients">同じ</a>。
+◎
+Note: No change from [css3-images].
+</p>
+
+		</section>
+		<section id="radial-gradients">
+<h3 title="Radial Gradients: the radial-gradient() notation">3.2. 放射型~gradient： `radial-gradient^f 記法</h3>
+
+<p class="note">注記：
+`css3-images$r と<a href="~CSSIMAGE#radial-gradients">同じ</a>。
+◎
+Note: No change from [css3-images].
+</p>
+
+		</section>
+		<section id="conic-gradients">
+<h3 title="Conic Gradients: the conic-gradient() notation">3.3. 円錐型~gradient： `conic-gradient^f 記法</h3>
+
+<p>
+円錐型~gradientは、放射型~gradientと類似に 真円の中心を指定するが、その色停は，中心から湧出る線ではなく，真円の`周に沿って^em配置される
+— 色は、中心から外方へは進捗せず，中心の周りを回るに伴い滑らかに遷移する。
+◎
+A conic gradient starts by specifying the center of a circle, similar to radial gradients, except that conic gradient color-stops are placed around the circumference of the circle, rather than on a line emerging from the center, causing the color to smoothly transition as you spin around the center, rather than as you progress outward from the center.
+</p>
+
+<p>
+円錐型~gradientを指定するためには、［
+回転~角度, ~gradientの中心
+］を指示した上で，一連の色停が成す~listを指定する。
+円錐型~gradientの各~色停は `angle$t で指定される
+— `length$t 指定して配置する［
+線型／放射型
+］~gradientと違って。
+射線は，中心からすべての方向へ湧出るように描かれ、各~射線の色は，それが~gradient線に交差する所の色に等しくなる。
+◎
+A conic gradient is specified by indicating a rotation angle, the center of the gradient, and then specifying a list of color-stops. Unlike linear and radial gradients, whose color-stops are placed by specifying a &lt;length&gt;, the color-stops of a conic gradient are specified with an &lt;angle&gt;. Rays are then drawn emerging from the center and pointing in all directions, with the color of each ray equal to the color of the gradient-line where they intersect it.
+</p>
+
+<p class="note">注記：
+これらの~gradientが “円錐型” （ “`conic^en” あるいは “`conical^en” ）と呼ばれるわけは、それが生産する~patternが
+— 一方の色停を他方のそれより有意に明るくしたときには —
+円錐を上から見た様な見かけになるからである。
+それは，射線の回転~角度を変えることで生産されるので、一部の文脈においては “角度” ~gradientとも称されている。
+◎
+Note: These gradients are called "conic" or "conical" because, if the color stops are chosen to be significantly lighter on one side than the other, it produces a pattern that looks like a cone observed from above. They are also known as "angle" gradients in some contexts, since they are produced by varying the rotation angle of a ray.
+</p>
+
+<div class="example">
+<figure>`conic-diagram^dgm
+<figcaption class="leaf">
+~boxの背景が、上端から開始して, 時計回りに, 白から黒へ徐々に濃くなる様子を示している画像。
+この画像には、~gradient線を成す真円（赤線）と，角度 `0deg^v, `216deg^v （白丸）に~~位置する色が示されている。
+◎
+[An image showing a box with a background shading gradually clockwise from white to black, starting from the top. A gradient circle is shown, and the colors at 0 and 216 degrees respectively.]
+</figcaption></figure>
+
+<p>
+この例は、 `conic-gradient(at 25% 30%, white, black 60%)^v
+がどう描かれるかを視覚的に示す。
+各~色停の位置は，常に角度に解決されるので、
+`25% 30%^v の効果は、~gradientの~2D並進~しかないことに注意
+— すなわちそれは、~gradientがどう描かれるかには影響しない。
+◎
+This example visually illustrates how conic-gradient(at 25% 30%, white, black 60%) would be drawn. Note that since color stop positions always resolve to angles, the only effect of the at 25% 30% is a 2D translation of the gradient, i.e. it does not affect how the gradient is drawn.
+</p>
+
+</div>
+
+			<section id="conic-gradient-syntax">
+<h4 title="conic-gradient() Syntax">3.3.1.  `conic-gradient^f の構文</h4>
+
+<p>
+円錐型~gradientの構文は：
+◎
+The syntax for a conic gradient is:
+</p>
+
+<pre class="prod">
+`conic-gradient@f
+    = conic-gradient( [ from `angle$t ]? [ at `position$t ]?, `angular-color-stop-list$t )
+</pre>
+
+<p>
+各 引数は、次に従って定義される：
+◎
+The arguments are defined as follows:
+</p>
+
+<dl>
+	<dt id="valdef-conic-gradient-angle">`angle$t</dt>
+	<dd>
+~gradient全体がこの角度で回転される。
+省略-時の既定は、 `0deg^v になる。
+角度 0 の場合、 `angle$t の単位~識別子は省略してもヨイ。
+◎
+The entire gradient is rotated by this angle. If omitted, defaults to 0deg. The unit identifier may be omitted if the &lt;angle&gt; is zero.
+</dd>
+
+	<dt id="valdef-conic-gradient-position">`position$t</dt>
+	<dd>
+~gradientの
+`~gradient中心@
+を決定する。
+値は `radial-gradient$f に対するときと同じに解決される。
+<!-- ＊
+`position$t 値~型（ `background-position$p にも利用される）は， `CSS-VALUES-3$r にて定義され、［
+~obj区画として中心~点,
+背景~位置決め区画として`~gradient~box$
+］を利用して解決される。
+ -->
+この引数が省略された場合の既定は `center$v とする。
+◎
+Determines the gradient center of the gradient. The &lt;position&gt; value type (which is also used for background-position) is defined in [CSS-VALUES-3], and is resolved using the center-point as the object area and the gradient box as the positioning area. If this argument is omitted, it defaults to center.
+</dd>
+</dl>
+
+<p class="issue">
+円錐型~gradientにおいては、 `0deg^v 地点での急激な遷移は 通例的に望ましくないので，最初と最後の色停は概して同じ色にされる。
+たぶん、これを自動的に達成する~keywordがあれば，有用になる。
+◎
+Usually in conic gradients the sharp transition at 0deg is undesirable, which is typically avoided by making sure the first and last color stops are the same color. Perhaps it would be useful to have a keyword for automatically achieving this.
+</p>
+
+<p class="issue">
+~gradientを切取る（内縁や外縁の）半径は有用になるか？
+もしそうなら、特定の半径があるので，長さ値による色停~位置も~supportできる。
+◎
+Would a radius (inner &amp; outer) for clipping the gradient be useful? If so, we could also support lengths in color stop positions, since we now have a specific radius.
+</p>
+
+<p class="issue">
+楕円な円錐型~gradientは有用になるか？
+~graphics-libraryはそれを~supportするか？
+◎
+Are elliptical conic gradients useful? Do graphics libraries support them?
+</p>
+
+			</section>
+			<section id="conic-color-stops">
+<h4 title="Placing Color Stops">3.3.2. 色停の配置-法</h4>
+
+<p>
+`色停$は、ある真円~内で，`~gradient中心$の周りに沿って曲がる`~gradient線$上に配置される。
+`0%^v, `100%^v は，両者とも `0deg^v の所在に一致し、~pageの上端を指す。
+角度の増加は、時計回りの動きに対応する。
+◎
+Color stops are placed on a gradient line that curves around the gradient center in a circle, with both the 0% and 100% locations at 0deg. Just like linear gradients, 0deg points to the top of the page, and increasing angles correspond to clockwise movement around the circle.
+</p>
+
+<p class="note">注記：
+~gradient線は、［
+`0deg^v から `360deg^v までの~~区間のみが描画されるような，渦巻き
+］を形成していると捉えれば，助けになるかもしれない。
+これは、角度が描画される領域の外側にあるときの “重合n” についての混同を避ける。
+◎
+Note: It may be more helpful to think of the gradient line as forming a spiral, where only the segment from 0deg to 360deg is rendered. This avoids any confusion about "overlap" when you have angles outside of the rendered region.
+</p>
+
+<p>
+色停は［
+`0%^v より前 ／ `100%^v より後
+］の所在にも配置できる。
+これらの領域は，描画-時に直にアタられることは決してないが、そこに配置される色停は
+— 補間や繰返nを通して —
+描画される領域の中にある色停の色に影響し得る（
+<a href="#repeating-gradients">~gradientの繰返ng</a>
+を見よ）。
+例えば， `conic-gradient(red -50%, yellow 150%)^v が生産する円錐型~gradientは、
+`0deg^v の所では 赤に近いオレンジ色
+<span style="background:#f50;">　</span>
+（ `#f50^v ）に,
+`360deg^v の所では 黄に近いオレンジ色
+<span style="background:#fa0;">　</span>（ `#fa0^v ）
+になり，前者から後者へ遷移する。
+◎
+A color-stop can be placed at a location before 0% or after 100%; though these regions are never directly consulted for rendering, color stops placed there can affect the color of color-stops within the rendered region through interpolation or repetition (see repeating gradients). For example, conic-gradient(red -50%, yellow 150%) produces a conic gradient that starts with a reddish-orange color at 0deg (specifically, #f50), and transitions to an orangish-yellow color at 360deg (specifically, #fa0).
+</p>
+
+<p>
+~canvas上の与えられた点 %P における~gradientの色を決定するためには、まず，~gradientの中心から %P を通る一意な射線を見出す。
+%P の色は、この射線が`~gradient線$に交わる点の色で与えられる。
+◎
+The color of the gradient at any point is determined by first finding the unique ray anchored at the center of the gradient that passes through the given point. The point’s color is then the color of the gradient line at the location where this ray intersects it.
+</p>
+
+			</section>
+			<section id="conic-gradient-examples">
+<h4 title="Conic Gradient Examples">3.3.3. 円錐型~gradientの例</h4>
+
+<p>
+以下に挙げるどの `conic-gradient$f 例も，幅 `300px^v, 高さ `200px^v の~boxに適用される。
+◎
+All of the following conic-gradient() examples are presumed to be applied to a box that is 300px wide and 200px tall, unless otherwise specified.
+</p>
+
+<div class="example">
+
+<p>
+同じ基本的な円錐型~gradientを指定する種々の仕方を下に示す：
+◎
+Below are various ways of specifying the same basic conic gradient:
+</p>
+
+<pre class="lang-css">
+background: conic-gradient(#f06, gold);
+background: conic-gradient(at 50% 50%, #f06, gold);
+background: conic-gradient(from 0deg, #f06, gold);
+background: conic-gradient(from 0deg at center, #f06, gold);
+background: conic-gradient(#f06 0%, gold 100%);
+background: conic-gradient(#f06 0deg, gold 1turn);
+</pre>
+
+<figure>`conic1^dgm
+<figcaption>
+
+</figcaption></figure>
+</div>
+
+<div class="example">
+
+<p>
+同じ基本的な円錐型~gradientを指定する種々の仕方を下に示す。
+これは、色停の角度が [`0deg^v, `360deg^v) の外側にあって直に塗られない場合でも，色停は依然として~gradientの塗られる部分を成す色には影響し得る様子をデモる。
+◎
+Below are various ways of specifying the same basic conic gradient. This demonstrates how even though color stops with angles outside [0deg, 360deg) are not directly painted, they can still affect the color of the painted part of the gradient.
+</p>
+
+<pre class="lang-css">
+background: conic-gradient(white -50%, black 150%);
+background: conic-gradient(white -180deg, black 540deg);
+background: conic-gradient(hsl(0,0%,75%), hsl(0,0%,25%));
+</pre>
+
+<figure>`conic2^dgm
+<figcaption>
+
+</figcaption></figure>
+</div>
+
+<div class="example">
+
+<p>
+同じ回転された円錐型~gradientを指定する， 2 つ仕方を下に示す
+— 一方は回転~角度を伴い，他方は伴わない：
+◎
+Below are two different ways of specifying the same rotated conic gradient, one with a rotation angle and one without:
+</p>
+<pre class="lang-css">
+background: conic-gradient(from 45deg, white, black, white);
+background: conic-gradient(hsl(0,0%,75%), white 45deg, black 225deg, hsl(0,0%,75%));
+</pre>
+
+<figure>`conic3^dgm
+<figcaption>
+
+</figcaption></figure>
+
+<p>
+すべての色停を回転~角度だけ~offsetしても，同じにはならず、まるで異なる~gradientを生産することに注意：
+◎
+Note that offsetting every color stop by the rotation angle instead would not work and produces an entirely different gradient:
+</p>
+
+<pre class="lang-css">
+background: conic-gradient(white 45deg, black 225deg, white 405deg);
+</pre>
+
+<figure>`conic4^dgm
+<figcaption>
+
+</figcaption></figure>
+</div>
+
+<div class="example">
+
+<p>
+円錐型~gradientの上層に放射型~gradientを重ねて，色相と彩度を伴う色環を描く例：
+◎
+A conic gradient with a radial gradient overlaid on it, to draw a hue &amp; saturation wheel:
+</p>
+
+<pre class="lang-css">
+background: radial-gradient(gray, transparent),
+            conic-gradient(red, magenta, blue, aqua, lime, yellow, red);
+border-radius: 50%;
+width: 200px; height: 200px;
+</pre>
+
+<figure>`conic5^dgm
+<figcaption>
+
+</figcaption></figure>
+</div>
+
+<div class="example">
+
+<p>
+単純な~pie-chartを描くために利用される円錐型~gradient。
+色停の位置 `0deg^v は、それより前にある色停の位置に等しくなるよう，修繕されることになる。
+これは、異なる色の 2 つの色停の合間に，無限小な（不可視な）遷移を生産することになる
+— 実質的に単色の~~区間を生産するような。
+◎
+A conic gradient used to draw a simple pie chart. The 0deg color stop positions will be fixed up to be equal to the position of the color stop before them. This will produce infinitesimal (invisible) transitions between the color stops with different colors, effectively producing solid color segments.
+</p>
+
+<pre class="lang-css">
+background: conic-gradient(yellowgreen 40%, gold 0deg 75%, #f06 0deg);
+border-radius: 50%;
+width: 200px; height: 200px;
+</pre>
+
+<figure>`conic6^dgm
+<figcaption>
+
+</figcaption></figure>
+
+</div>
+
+			</section>
+		</section>
+		<section id="repeating-gradients">
+<h3 title="Repeating Gradients: the repeating-linear-gradient(), repeating-radial-gradient(), and repeating-conic-gradient() notations">3.4. ~gradientの繰返ng： `repeating-linear-gradient^f, `repeating-radial-gradient^f, `repeating-conic-gradient^f 記法</h3>
+
+<p>
+［
+`linear-gradient$f ／
+`radial-gradient$f ／
+`conic-gradient$f
+］に加えて，この仕様は［
+`repeating-linear-gradient@f
+／
+`repeating-radial-gradient@f
+／
+`repeating-conic-gradient@f
+］値を定義する。
+これらの記法は、以前に定義したそれぞれに対応する繰返ngなしの記法と同じ値をとり，同じに解釈される。
+【繰返ngの有無を除けば。（~level 3 による`繰返ng~gradient$を見よ）】
+◎
+In addition to linear-gradient(), radial-gradient(), and conic-gradient(), this specification defines repeating-linear-gradient(), repeating-radial-gradient(), and repeating-conic-gradient() values. These notations take the same values and are interpreted the same as their respective non-repeating siblings defined previously.
+</p>
+
+<div class="example">
+
+<p>
+基本的な繰返ng円錐型~gradient:
+◎
+Basic repeating conic gradient:
+</p>
+
+<pre class="lang-css">
+background: repeating-conic-gradient(gold, #f06 20deg);
+</pre>
+
+<figure>`repeating-conic1^dgm
+<figcaption>
+
+</figcaption></figure>
+</div>
+
+<div class="example">
+
+<p>
+一足飛びに遷移する色停たちが繰返されるときは、旭光状の背景を作成する：
+◎
+Repeating color stops with abrupt transitions creates a starburst-type background:
+</p>
+
+<pre class="lang-css">
+background: repeating-conic-gradient(
+    hsla(0,0%,100%,.2) 0deg 15deg,
+    hsla(0,0%,100%,0) 0deg 30deg
+) #0ac;
+</pre>
+
+<figure>`repeating-conic2^dgm
+<figcaption>
+
+</figcaption></figure>
+</div>
+
+<div class="example">
+
+<p>
+ここでは、市松模様を作成するために，一足飛びに遷移する繰返ng色停が利用されている：
+◎
+Here repeating color stops with abrupt transitions are used to create a checkerboard:
+</p>
+<pre class="lang-css">
+background: repeating-conic-gradient(black 0deg 25%, white 0deg 50%);
+background-size: 60px 60px;
+</pre>
+
+<figure>`repeating-conic3^dgm
+<figcaption>
+</figcaption></figure>
+
+<p>
+同じ市松模様は、繰返ngなしの円錐型~gradientを介しても作成できる：
+◎
+The same checkerboard can be created via non-repeating conic gradients:
+</p>
+
+<pre class="lang-css">
+background: conic-gradient(black 25%, white 0deg 50%, black 0deg 75%, white 0deg);
+background-size: 60px 60px;
+</pre>
+</div>
+
+		</section>
+		<section id="gradient-colors">
+<h3 title="Defining Gradient Color">3.5. ~gradient色の定義-法</h3>
+
+<p class="trans-note">【
+この節の内容の和訳は、
+<a href="~CSSIMAGE#gradient-colors">~level 3 の内容</a>
+からの差分のみを与える（この節に定義される［
+`色停@
+／
+`遷移~hint@
+／
+`色停~list@
+］は、~level 3 による定義に一致する）。
+】</p>
+
+			<section id="color-stop-syntax">
+<h4 title="Color Stop Lists">3.5.1. 色停~list</h4>
+
+<p>
+`色停~list$の構文は、~level 3 から，次のように拡張される：
+◎
+Color stops and transition hints are specified in a color stop list, which is a list of two or more color stops interleaved with optional transition hints:
+</p>
+
+<pre class="prod">
+`color-stop-list@t
+    = `linear-color-stop$t , [ `linear-color-hint$t? , `linear-color-stop$t ]#
+`linear-color-stop@t
+    = `color$t &amp;&amp; `color-stop-length$t?
+`linear-color-hint@t
+    = `length-percentage$t
+`color-stop-length@t
+    = `length-percentage$t{1,2}
+
+`angular-color-stop-list@t
+    = `angular-color-stop$t , [ `angular-color-hint$t? , ]? `angular-color-stop$t ]#
+`angular-color-stop@t
+    = `color$t &amp;&amp; `color-stop-angle$t?
+`angular-color-hint@t
+    = `angle-percentage$t
+`color-stop-angle@t
+    = `angle-percentage$t{1,2}
+
+`color-stop@t = `color-stop-length$t | `color-stop-angle$t
+</pre>
+
+<p class="note">注記：
+`color-stop-list$t と `angular-color-stop-list$t の構造は正確に一致することに注意
+— ［
+色停／遷移~hint
+］の位置を指定するときに［
+`length$t, `angle$t
+］どちらを受容するかが相違するだけである。
+◎
+Note that &lt;color-stop-list&gt; and &lt;angular-color-stop-list&gt; are exactly identical in structure, they just differ on whether they accept &lt;length&gt;s or &lt;angle&gt;s for specifying the position of the stops and hints.
+</p>
+
+<p>
+線路図式で視覚-化すれば、これら両者とも次の~patternに従う：
+◎
+Visualized with a railroad diagram, both of them follow this pattern:
+◎
+alt="&lt;color-stop&gt; &lt;color-stop&gt; , , &lt;color-hint&gt; &lt;color-hint&gt; , , &lt;color-stop&gt; &lt;color-stop&gt; , ,"
+</p>
+
+<div class="railroad">
+`color-stop-railroad^dgm
+</div>
+
+<p>
+2 個の位置を伴う`色停$は、［
+各~位置ごとに同じ色を伴う， 2 個の`色停$
+］を指定することに，等価になる。
+<span class="note">
+2 個の位置を指定すれば、色を 2 回~繰返すことなく，~gradient内で単色の “縞” を容易に作成できる。
+</span>
+◎
+A color stop with two positions is equivalent to specifying two color stops with the same color, one for each position. Specifying two locations makes it easier to create solid-color "stripes" in a gradient, without having to repeat the color twice.
+</p>
+
+【以下、<a href="~CSSIMAGE#color-stop-syntax">~level 3 と同じ</a>。】
+
+			</section>
+			<section id="coloring-gradient-line">
+<h4 title="Coloring the Gradient Line">3.5.2. 色~付けと~gradient線</h4>
+
+【<a href="~CSSIMAGE#coloring-gradient-line">~level 3 と同じ</a>。】
+
+			</section>
+			<section id="color-stop-fixup">
+<h4 title="Color Stop “Fixup”">3.5.3. 色停の “修繕”</h4>
+
+【<a href="~CSSIMAGE#color-stop-fixup">~level 3 と同じ</a>。】
+
+			</section>
+		</section>
+	</section>
+	<section id="stripes">
+<h2 title="1D Image Values: the stripes() notation">4. ~1D画像~値： `stripes^f 記法</h2>
+
+<p class="issue">
+<a href="https://github.com/w3c/csswg-drafts/issues/2532">WG resolution</a>
+により、［
+~border／外形線
+］用に，~1D画像を作成する `stripes^f 関数を定義することになった。
+◎
+Per WG resolution, define the stripes() function which creates a 1D image for use in borders/outlines.
+</p>
+
+	</section>
+	<section id="sizing">
+<h2 title="Sizing Images and Objects in CSS">5. ~CSSにおける画像／~objの~sizing</h2>
+
+		<section id="the-object-fit">
+<h3 title="Sizing Objects: the object-fit property">5.1. ~objの~sizing： `object-fit^p ~prop</h3>
+
+◎名 `object-fit@p
+◎値 `fill$v | `none$v | [`contain$v | `cover$v] || `scale-down$v
+◎初 `fill$v
+◎適 `置換d要素$
+◎継 されない
+◎百 受容しない
+◎算 指定された~keyword（たち）
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p>
+`object-fit$p ~propは、置換d要素の内容が，その使用［
+横幅, 縦幅
+］により確立される~boxに，どう収めるべきかを指定する。
+◎
+The object-fit property specifies how the contents of a replaced element should be fitted to the box established by its used height and width.
+</p>
+
+<p class="trans-note">【
+以下、
+<a href="~CSSIMAGE#the-object-fit">~level 3 の内容</a>
+と同じ部分
+—  “L3” と記されている箇所 —
+の和訳は省略する。
+】</p>
+
+<dl class="valdef">
+	<dt>`fill@v</dt>
+	<dd>
+L3
+◎
+The replaced content is sized to fill the element’s content box: the object’s concrete object size is the element’s used width and height.
+</dd>
+
+	<dt>`none@v</dt>
+	<dd>
+L3
+◎
+The replaced content is not resized to fit inside the element’s content box: determine the object’s concrete object size using the default sizing algorithm with no specified size, and a default object size equal to the replaced element’s used width and height.
+</dd>
+
+	<dt>`contain@v</dt>
+	<dd>
+L3
+◎
+The replaced content is sized to maintain its aspect ratio while fitting within the element’s content box: its concrete object size is resolved as a contain constraint against the element’s used width and height.
+</dd>
+	<dd>
+`scale-down$v も併用された場合、内容は［
+`none$v, `contain$v
+］のうち，`具象-~obj~size$が小さくなる方が指定されたかのように~sizeされる。
+◎
+If the scale-down flag is used, size the content as if none or contain were specified, whichever would result in a smaller concrete object size.
+</dd>
+	<dd class="note">注記：
+`none$v, `contain$v
+の両者とも内容の内在的~縦横比を保つので、大きさは比較可能になる。
+◎
+Note: Both none and contain respect the content’s intrinsic aspect ratio, so the concept of "smaller" is well-defined.
+</dd>
+
+	<dt>`cover@v</dt>
+	<dd>
+L3
+◎
+The replaced content is sized to maintain its aspect ratio while filling the element’s entire content box: its concrete object size is resolved as a cover constraint against the element’s used width and height.
+</dd>
+	<dd>
+`scale-down$v も併用された場合、内容は［
+`none$v, `cover$v
+］のうち，`具象-~obj~size$が小さくなる方が指定されたかのように~sizeされる。
+◎
+If the scale-down flag is used, size the content as if none or cover were specified, whichever would result in a smaller concrete object size.
+</dd>
+	<dd class="note">注記：
+`none$v, `cover$v 
+の両者とも内容の内在的~縦横比を保つので、大きさは比較可能になる。
+◎
+Note: Both none and cover respect the content’s intrinsic aspect ratio, so the concept of "smaller" is well-defined.
+</dd>
+
+	<dt>`scale-down@v</dt>
+	<dd>
+`contain scale-down^v と等価。
+◎
+Equivalent to contain scale-down. 
+</dd>
+</dl>
+
+<p>
+L3
+◎
+If the content does not completely fill the replaced element’s content box, the unfilled space shows the replaced element’s background. Since replaced elements always clip their contents to the content box, the content will never overflow. See the object-position property for positioning the object with respect to the content box.
+</p>
+
+<figure>`img_scale^dgm<figcaption>
+<p>
+L3
+◎
+An example showing how four of the values of object-fit cause the replaced element (blue figure) to be scaled to fit its height/width box (shown with a green background), using the initial value for object-position.＼
+</p>
+
+<p>
+この事例では、図に示されていない値 `scale-down$v, および `scale-down contain^v による見かけは， `contain$v と一致し、
+`scale-down cover^v による見かけは， `none$v と一致する。
+◎
+In this case, scale-down and scale-down contain would look identical to contain, and scale-down cover would look identical to none. 
+</p>
+</figcaption></figure>
+
+<p class="note">注記：
+L3
+◎
+Note: The object-fit property has similar semantics to the fit attribute in [SMIL10] and the &lt;meetOrSlice&gt; parameter on the preserveAspectRatio attribute in [SVG11].
+</p>
+
+<p class="note">注記：
+L3
+◎
+Note: Per the object size negotiation algorithm, the concrete object size (or, in this case, the size of the content) does not directly scale the object itself - it is merely passed to the object as information about the size of the visible canvas. How to then draw into that size is up to the image format. In particular, raster images always scale to the given size, while SVG uses the given size as the size of the "SVG Viewport" (a term defined by SVG) and then uses the values of several attributes on the root &lt;svg&gt; element to determine how to draw itself.
+</p>
+
+		</section>
+	</section>
+	<section id="image-processing">
+<h2 title="Image Processing">6. 画像~処理</h2>
+
+		<section id="the-image-resolution">
+<h3 title="Overriding Image Resolutions: the image-resolution property">6.1. 画像~解像度の上書き法： `image-resolution^p ~prop</h3>
+
+<p>
+`画像~解像度@
+は、単位~長さあたりの画像~画素~数として定義される。
+例えば、~inchあたりの画素~数。
+画像~形式には、画像の解像度についての情報を記録するものもある。
+この情報は、整形~処理-にあたって画像の実際の~sizeを決定する補助になり得るが、誤ったものにもなり得るので，その場合には，無視されるべきである。
+~CSSの既定では、
+~CSS `px$u 単位が 1 画像~画素に等しい解像度と見做すが、
+`image-resolution$p ~propにより，他の解像度も利用できるようになる。
+◎
+The image resolution is defined as the number of image pixels per unit length, e.g., pixels per inch. Some image formats can record information about the resolution of images. This information can be helpful when determining the actual size of the image in the formatting process. However, the information can also be wrong, in which case it should be ignored. By default, CSS assumes a resolution of one image pixel per CSS px unit; however, the image-resolution property allows using some other resolution.
+</p>
+
+◎名 `image-resolution@p
+◎値 [ `from-image$v || `resolution$t ] &amp;&amp; `snap$v?
+◎初 `1dppx^v
+◎適 すべての要素
+◎継 される
+◎百 受容しない
+◎算 
+指定された~keyword（たち） ／ 指定された `resolution$t ／ これらが成す組
+— ただし， `resolution$t は `snap$v 用に調整され得る（下記を見よ）。
+◎
+specified keyword(s) and/or &lt;resolution&gt; (possibly adjusted for snap, see below)
+◎順 文法に従う
+◎ア 離散的
+◎表終
+
+<p class="issue">
+`image-set$f 記法は、画像の内在的~解像度を改め得る
+—
+それは、この~propを設定しなくても，自動的に尊守されるのが理想的だが【？】。
+これをどう~~解決すべきか？
+初期~値を、
+“~CSSが他を~~指示しない限り `1dppx^v とする”
+を意味する `auto^v に変えるか？
+`image-resolution^p は、解像度が~CSSにおける他の何かで設定された画像には効果がないようにするか？
+あるいは、 `image-set$f を，それが常に何らかの方法で `1dppx^v 画像を生産するように，どうにか `wordsmith^en するか？
+◎
+The image-set() notation can alter the intrinsic resolution of an image, which ideally would be automatically honored without having to set this property. How should we best address this? Change the initial value to auto, meaning "1dppx, unless CSS says otherwise"? Say that image-resolution has no effect on images whose resolution was set by something else in CSS? Or somehow wordsmithing image-set() in some way such that it always produces 1dppx images somehow?
+</p>
+
+<p>
+`image-resolution$p ~propは、［［
+要素~内／要素~上
+］で利用されるすべての~raster画像
+］の`内在的~解像度$を，指定する。
+それは、内容~画像（例えば，`置換d要素$や`生成d内容$）にも, 装飾的な画像（ `background-image$p など）にも影響する。
+画像の
+`内在的~解像度@
+は、画像の`内在的~寸法$を決定するために利用される。
+各種 値の意味は：
+◎
+The image-resolution property specifies the intrinsic resolution of all raster images used in or on the element. It affects both content images (e.g. replaced elements and generated content) and decorative images (such as background-image). The intrinsic resolution of an image is used to determine the image’s intrinsic dimensions. Values have the following meanings:
+</p>
+
+<dl class="valdef">
+	<dt id="valdef-image-resolution-resolution">`resolution$t</dt>
+	<dd>
+内在的~解像度を数値的に指定する。
+この場合の 1 “~dot” は， 1 画像~画素に対応する。
+◎
+Specifies the intrinsic resolution explicitly. A "dot" in this case corresponds to a single image pixel.
+</dd>
+	<dd class="trans-note">【
+すなわち、［
+`CSS-VALUES-3$r による
+<a href="~CSSVAL#resolution">`resolution^t</a>
+の定義
+］に記されている “~dot” は 1 画像~画素と解釈される。
+】</dd>
+
+	<dt>`from-image@v</dt>
+	<dd>
+画像の内在的~解像度は、画像~形式から指定される。
+画像が自前の解像度を指定していない場合、
+`resolution$t が明示的に指定されていれば，それが利用され、他の場合は既定の `1dppx^v になる。
+◎
+The image’s intrinsic resolution is taken as that specified by the image format. If the image does not specify its own resolution, the explicitly specified resolution is used (if given), else it defaults to 1dppx.
+</dd>
+
+	<dt>`snap@v</dt>
+	<dd>
+この~keywordが伴われている `resolution$t は、 1 画像~画素が機器~画素の整数~倍に対応するような，最も近い値に丸めた結果に算出される。
+解像度が画像からとられる【 `from-image$v が供されている】場合、内在的~解像度の使用~値は，画像~自身による解像度を同様に調整した結果になる。
+◎
+If the "snap" keyword is provided, the computed &lt;resolution&gt; (if any) is the specified resolution rounded to the nearest value that would map one image pixel to an integer number of device pixels. If the resolution is taken from the image, then the used intrinsic resolution is the image’s native resolution similarly adjusted.
+</dd>
+</dl>
+
+<p>
+SVG などの~vector形式には、内在的~解像度はない。
+この~propは、~vector画像には効果がない。
+◎
+As vector formats such as SVG do not have an intrinsic resolution, this property has no effect on vector images.
+</p>
+
+<div class="example">
+
+<p>
+印刷機の解像度は、~computer~monitorより，かなり高いのが常なので、~screen上ではきれいな画像でも，印刷~時には画素が目立つ。
+`image-resolution$p ~propを利用すれば、文書~内に高-解像度な画像を埋込んで 適切な~sizeを保守しつつ，~screen上でも紙~上でも美麗に表示できるようになる：
+◎
+Printers tend to have substantially higher resolution than computer monitors; due to this, an image that looks fine on the screen may look pixellated when printed out. The image-resolution property can be used to embed a high-resolution image into the document and maintain an appropriate size, ensuring attractive display both on screen and on paper:
+</p>
+
+<pre class="lang-css">
+img.high-res {
+  image-resolution: 300dpi;
+}
+</pre>
+
+<p>
+この規則の下では、 300dpi で 5 ~inch幅になるようにされた画像は，実際に 5 ~inch幅で表示されることになる。
+この規則が無い下では、~CSSの既定による 1 ~inchあたり 96 画像~画素の表示になるので、画像は［
+300 ~MUL 5 ~DIV 96 ~EQ 約 15.6
+］~inch幅で表示されることになる。
+◎
+With this set, an image meant to be 5 inches wide at 300dpi will actually display as 5in wide; without this set, the image would display as approximately 15.6in wide since the image is 15000 image pixels across, and by default CSS displays 96 image pixels per inch.
+</p>
+
+</div>
+
+<div class="example">
+
+<p>
+画像~形式には、自身の~data内に解像度を符号化するものもある。
+次の規則は、~UAが，解像度を画像~自身から見出すように指定する
+— 見出されない場合、~CSS `px$u 単位あたり 1 画像~画素に~fallbackする。
+◎
+Some image formats can encode the image resolution into the image data. This rule specifies that the UA should use the image resolution found in the image itself, falling back to 1 image pixel per CSS px unit.
+</p>
+
+<pre class="lang-css">
+img { image-resolution: from-image }
+</pre>
+
+<p>
+次の規則は、~UAが，解像度を画像~自身から見出すように指定しつつ、見出せないときは，解像度を既定の `1dppx^v でなく `300dpi^v に設定する。
+◎
+These rules both specify that the UA should use the image resolution found in the image itself, but if the image has no resolution, the resolution is set to 300dpi instead of the default 1dppx.
+</p>
+
+<pre class="lang-css">
+img { image-resolution: from-image 300dpi }
+img { image-resolution: 300dpi from-image }
+</pre>
+
+</div>
+
+<div class="example">
+
+<p>
+次の規則は、画像~解像度を 300dpi に設定する（画像~自身の解像度は，無視される）。
+◎
+Using this rule, the image resolution is set to 300dpi. (The resolution in the image, if any, is ignored.)
+</p>
+
+<pre class="lang-css">
+img { image-resolution: 300dpi }
+</pre>
+
+<p>
+一方で，次の規則では、~screen解像度が 96dpi の下であれば，画像を解像度 288dpi で描画することになる（ 3 画像~画素が 1 機器~画素に対応する）：
+◎
+This rule, on the other hand, if used when the screen’s resolution is 96dpi, would instead render the image at 288dpi (so that 3 image pixels map to 1 device pixel):
+</p>
+
+<pre class="lang-css">
+img { image-resolution: 300dpi snap; }
+</pre>
+
+<p>
+`snap$v ~keywordは、解像度が画像からとれるときにも利用できる：
+◎
+The snap keyword can also be used when the resolution is taken from the image:
+</p>
+
+<pre class="lang-css">
+img { image-resolution: snap from-image; }
+</pre>
+
+<p>
+画像~自身に備わる解像度が
+300dpi のときには 288dpi で描画する（ 3 画像~画素が 1 機器~画素に対応する）一方で、
+72dpi のときには 96dpi で描画することになる（ 1 画像~画素が 1 機器~画素に対応する）。
+◎
+An image declaring itself as 300dpi will, in the situation above, display at 288dpi (3 image pixels per device pixel) whereas an image declaring 72dpi will render at 96dpi (1 image pixel per device pixel).
+</p>
+</div>
+
+		</section>
+	</section>
+	<section id="interpolation">
+<h2 title="Interpolation">7. 補間</h2>
+
+<p>
+この節では、~CSSによる遷移や~animation（ CSS Transitions ／ CSS Animations ）における利用のために，［
+この仕様にて定義される，新たな値~型
+］の補間-法を述べる。
+◎
+This section describes how to interpolate between new value types defined in this specification, for use with modules such as CSS Transitions and CSS Animations.
+</p>
+
+<p>
+以下の~algoにおいて，単に［
+2 つの値が “補間される”, あるいは “遷移する”
+］と記される所では、それ以上の詳細を言明することなく，
+<a href="~TRANSITION#animatable-types">CSS Transitions 仕様に従って補間される</a>
+べきであることを意味する
+【~link先は廃された — 補間-法は、現在は `CSS-VALUES-4$r にて<a href="~CSSVAL#combining-values">定義される</a>】
+。
+他の場合、 ~algoは，その補間の詳細な記述において，変数 %t を~referする。
+これは、 0% から 100% へ進捗する数値であり，遷移の［
+所要時間, 経過時間, 利用されている`~easing関数$
+］に基づく遷移の進捗を表現する値に設定される。
+例えば、`線型~easing関数$と所要時間 1 秒の下では， 0.3 秒後の %t は 30% になる。
+◎
+If an algorithm below simply states that two values should be "interpolated" or "transitioned" without further details, then the value should be interpolated as described by the Transitions spec. Otherwise, the algorithm may reference a variable t in its detailed description of the interpolation. This is a number which starts at 0% and goes to 100%, and is set to a value that represents the progress through the transition, based on the duration of the transition, the elapsed time, and the timing function in use. For example, with a linear timing function and a 1s duration, after .3s t is equal to 30%.
+</p>
+
+		<section id="interpolating-images">
+<h3 title="Interpolating &lt;image&gt;">7.1. `image^t の補間-法</h3>
+
+<p>
+すべての画像は補間できる
+— 一部の特殊な型の画像（~gradientなど）は、特別な補間~規則を備えるが。
+一般~語で述べるなら、画像は、 %開始-画像 の~sizeに拡縮した所から始まり， %終止-画像 の~sizeへ遷移する間に 2 つを~cross-fadeすることにより、補間される。
+◎
+All images can be interpolated, though some special types of images (like some gradients) have their own special interpolation rules. In general terms, images are interpolated by scaling them to the size of the start image and cross-fading the two while they transition to the size of the end image.
+</p>
+
+<p>
+より詳しく述べるなら、補間における各~時点にて，画像は
+<samp class="css">cross-fade( ( 100% ~MINUS %t ) %開始-画像, %終止-画像 )</samp>
+に等しくされる。
+◎
+In specific terms, at each point in the interpolation the image is equal to cross-fade( (100% - t) start image, end image).
+</p>
+
+<p class="issue">
+画像~無しから, あるいは画像~無しへ遷移するような，特殊な事例の補間-法
+—
+<samp class="css">`background-image^p: `url(foo)^v;</samp>
+から
+<samp class="css">`background-image^p: `none^v;</samp>
+へ のような。
+◎
+Special-case interpolating to/from no image, like "background-image: url(foo);" to "background-image: none;".
+</p>
+
+		</section>
+		<section id="interpolating-image-combinations">
+<h3 title="Interpolating cross-fade()">7.2. `cross-fade^f の補間-法</h3>
+
+<p>
+`cross-fade$f を成す 3 成分は独立に補間される。
+これは、入子の `cross-fade$f 記法にもなり得ることに注意。
+◎
+The three components of cross-fade() are interpolated independently. Note this may result in nested cross-fade() notations.
+</p>
+
+		</section>
+		<section id="interpolating-gradients">
+<h3 title="Interpolating &lt;gradient&gt;">7.3. `gradient^t の補間-法</h3>
+
+<p class="issue">
+この節は考査と改善を要する。
+特に、 `linear-gradient^f の取扱いは不完全であろう
+—
+~gradient線の［
+開始~位置 〜 終止~位置の “長さ” （ 0% から 100% までの距離）
+］が，同じ~animationを通じて増減しないように、数値的に特に補間すべきと見られる。
+◎
+This section needs review and improvement. In particular, I believe the handling of linear-gradient() is incomplete - I think we want to specifically interpolate the "length" of the gradient line (the distance between 0% and 100%) between the starting and ending positions explicitly, so it doesn’t grow and then shrink over a single animation.
+</p>
+
+<p>
+~gradient 画像は、~CSSによる遷移や~animationにおいて，~gradientの一方から他方へ向かう~animationが滑らかになるように，直に補間し得る。
+ただし、~gradientの補間が許容されるためには，少数の制約がある：
+◎
+Gradient images can be interpolated directly in CSS transitions and animations, smoothly animating from one gradient to another. There are only a few restrictions on what gradients are allowed to be interpolated:
+</p>
+
+<ol>
+	<li>
+［
+開始, 終止
+］~gradientを与える関数の型は，同じでなければナラナイ。
+（例えば、 `linear-gradient$f からは、
+`linear-gradient$f へは遷移できるが，
+`radial-gradient$f ／ `repeating-linear-gradient$f へは遷移できない）
+◎
+Both the starting and ending gradient must be expressed with the same function. (For example, you can transition from a linear-gradient() to a linear-gradient(), but not from a linear-gradient() to a radial-gradient() or a repeating-linear-gradient().)
+</li>
+	<li>
+［
+開始, 終止
+］~gradientの `color-stop$t は同数でなければナラナイ。
+この目的においては、すべての繰返ng~gradientには 無限~個の`色停$があり，互いに同数あると見なされる。
+◎
+Both the starting and ending gradient must have the same number of &lt;color-stop&gt;s. For this purpose, all repeating gradients are considered to have infinite color stops, and thus all repeating gradients match in this respect.
+</li>
+	<li>
+両~gradientとも， `length$t, `percentage$t による`色停$を組合せて利用していない。
+◎
+Neither gradient uses a combination of &lt;length&gt; and &lt;percentage&gt; color stops.
+</li>
+</ol>
+
+<p>
+2 つの~gradientが，上述の 3 つの拘束すべてを満たすならば、以下に述べるように補間するモノトスル。
+3 つ目の拘束だけ満たさない場合、 50% の所で一足飛びに遷移するモノトスル（将来の仕様により他が指定されない限り）。
+他の場合、汎用 `image$t に対するときと同じく， `cross-fade$f を利用して補間するモノトスル。
+◎
+If the two gradients satisfy all of those constraints, they must be interpolated as described below. If they fail the third one only, they must be abruptly transitioned at 50% (unless otherwise specified by a future specification). If they fail either of the first two constraints, they must be interpolated using cross-fade() as for generic images.
+</p>
+
+<p class="note">注記：
+50% の所で一足飛びに遷移させるのは，内容が~cross-fadeに依拠しないようにして、将来に，この事例~用に より賢い補間~規則を追加できるようにするためである。
+◎
+Note: The abrupt transition at 50% is so that content will not rely on cross-fading, and smarter interpolation rules can be added for this case in the future.
+</p>
+
+<ol>
+	<li>
+<p>
+［
+開始, 終止
+］~gradientの各~成分を，数値的な形に変換する：
+◎
+Convert both the start and end gradients to their explicit forms:
+</p>
+		<dl>
+			<dt>
+`線型~gradient$に対しては：
+◎
+For linear gradients:
+</dt>
+			<dd>
+<p>【成分は方向のみ】</p>
+				<ul>
+					<li>
+`angle$t として指定されている場合、すでに数値的な形である。
+◎
+If the direction is specified as an &lt;angle&gt;, it is already in its explicit form.
+</li>
+					<li>
+<p>
+他の場合【すなわち，~keyword】、まず，等価な描画を生産する［
+0 度 以上, 360 度 未満
+］の `angle$t に変換する。
+◎
+Otherwise, change its direction to an &lt;angle&gt; in [0deg,360deg) that would produce an equivalent rendering.
+</p>
+
+<p>
+加えて、［
+開始, 終止
+］~gradientの いずれの方向も~keywordで指定されていて, かつ［
+上で数値化された 2 つの角度の差の絶対値
+］が 180 度より大きい場合は、小さい方の角度に 360 度を加算する。
+<span class="note">
+これにより、例えば［
+`to left^v （ 270 度）から `to top^v （ 0 度）への遷移
+］は、期待されるように，~gradientを（反~時計回りに 3/4 回転ではなく，）時計回りに 1/4 回転させる。
+</span>
+◎
+If both the start and end gradients had their direction specified with keywords, and the absolute difference between the angles their directions mapped to is greater than 180deg, add 360deg to the direction of the gradient with the smaller angle. This ensures that a transition from, for example, "to left" (270deg) to "to top" (0deg) rotates the gradient a quarter-turn clockwise, as expected, rather than rotating three-quarters of a turn counter-clockwise.
+</p>
+					</li>
+				</ul>
+			</dd>
+
+			<dt>
+`放射型~gradient$に対しては：
+◎
+For radial gradients:
+</dt>
+			<dd>
+				<ul>
+					<li>
+【終形の】~sizeが［
+2 つの `length$t または 2 つの `percentage$t
+］で指定されている場合、すでに数値的であり，変換は必要ない。
+<!-- ＊
+“2 つの”, ”~size” — 補間の趣旨からは［
+開始~gradientの終形の縦（横）~sizeと, 
+終止~gradientの終形の縦（横）~size
+］と解釈すべきように思えるが、そうすると次項の記述にそぐわなくなる。
+ -->
+◎
+If the size is specified as two &lt;length&gt;s or &lt;percentage&gt;s, it is already in its explicit form.
+</li>
+					<li>
+<p>
+他の場合、2 つの~sizeは，［
+等価な`終形$を生産するような `length$t の~pair
+］に~~変換するモノトスル。
+</p>
+
+<p>
+加えて、 `ending-shape$t が `circle$v に指定されている場合は，それを `ellipse$v に変更する。
+</p>
+◎
+Otherwise, the size must be changed to a pair of &lt;length&gt;s that would produce an equivalent ending-shape. If the &lt;ending-shape&gt; was specified as circle, change it to ellipse.
+</li>
+				</ul>
+
+<p class="trans-note">【
+~gradientの`中心$（ `position$t ）も~keywordにより指定され得るが、言及されていない
+— それらも同様に数値化すると見られる。
+】</p>
+
+			</dd>
+		</dl>
+	</li>
+	<li>
+<p>
+~gradientの各 成分と色停を，独立に補間する：
+</p>
+
+<p>
+`線型~gradient$に対しては、成分は角度のみになる。
+`放射型~gradient$に対しては、成分は［
+中心の［
+横, 縦
+］位置
+］, および［
+【終形の】 ［
+横, 縦
+］方向の長さ
+］からなる。
+</p>
+◎
+Interpolate each component and color-stop of the gradients independently. For linear gradients, the only component is the angle. For radial gradients, the components are the horizontal and vertical position of the center and the horizontal and vertical axis lengths.
+</li>
+	<li>
+<p>
+`色停$を補間する：
+</p>
+
+<p>
+まず、［
+開始, 終止
+］~gradientの，各 色停を互いに対応~付ける：
+</p>
+		<ul>
+			<li>
+各~色停に，指定された順により ~indexを付与する。
+</li>
+			<li>
+繰返ng~gradientに対しては、後続する／先行する
+他のすべての色停には，色停~listを繰返しながら，適切にズラした~indexを付与する。
+</li>
+			<li>
+各~gradientの同じ~indexの色停が互いに対応する。
+</li>
+		</ul>
+<p>
+しかる後、各 対応する色停~pairに対し，その［
+位置, 色
+］を独立に補間する。
+</p>
+◎
+To interpolate a color-stop, first match each color-stop in the start gradient to the corresponding color-stop at the same index in the end gradient. For repeating gradients, the first specified color-stop in the start and end gradients are considered to be at the same index, and all other color-stops following and preceding are indexed appropriately, repeating and shifting each gradient’s list of color-stops as needed. Then, for each pair of color-stops, interpolate the position and color independently.
+</li>
+</ol>
+
+		</section>
+	</section>
+	<section id="serialization">
+<h2 title="Serialization">8. 直列化</h2>
+
+【次も適用されることを除き， <a href="~CSSIMAGE#serialization">~level 3 と同じ</a>（なので、和訳は省略する）。】
+
+<p>
+`cross-fade$f に対しては、常に `percentage$t も直列化する。
+◎
+For cross-fade(), always serialize the &lt;percentage&gt;.
+</p>
+
+	</section>
+	<section id="privsec">
+<h2 title="Privacy and Security Considerations">~privacy／~security上の考慮点</h2>
+
+<p class="note">注記：
+`css3-images$r と<a href="~CSSIMAGE#privsec">同じ</a>。
+◎
+Note: No change from [css3-images].
+</p>
+
+	</section>
+	<section id="changes">
+<h2 title="Changes">変更点</h2>
+
+<p id="changes-20120911">
+<a href="~TR/2012/WD-css4-images-20120911/">2012 年 9 月 11 日付 作業草案</a>
+からの変更点は：
+◎
+Changes Since the 11 September 2012 Working Draft
+</p>
+
+<ul>
+	<li>
+`遷移~hint$を追加した。
+◎
+Added color interpolation hints
+</li>
+	<li>
+~gradientの色停に
+<a href="#color-stop-syntax">2 個の所在による構文</a>
+を追加した。
+◎
+Added the two location syntax for gradient color stops
+</li>
+	<li>
+`円錐型~gradient$に開始-角度を追加した。
+◎
+Added start angles to conic gradients
+</li>
+	<li>
+色停の位置（たち）は、今や色より前にも来れる
+◎
+The position(s) of a color stop can now come before the color
+</li>
+	<li>
+`css3-images$r に一致する~textは、 `css3-images$r への参照に置換した。
+◎
+Text that is identical to [css3-images] has been replaced with a reference to [css3-images].
+</li>
+</ul>
+
+<p id="changes-3">
+~Level 3 からの変更点は：
+◎
+Changes Since Level 3
+</p>
+
+<ul>
+	<li>
+（~level 3 から先送りされた）
+`image$f 記法を追加した。
+◎
+Added the image() notation (deferred from Level 3)
+</li>
+	<li>
+（~level 3 から先送りされた）
+`image-resolution$p ~propを追加した。
+◎
+Added the image-resolution property (deferred from Level 3)
+</li>
+	<li>
+（~level 3 から先送りされた）
+`element$f 記法を追加した。
+◎
+Added the element() notation (deferred from Level 3)
+</li>
+	<li>
+`円錐型~gradient$を追加した。
+◎
+Added conic gradients
+</li>
+</ul>
+
+	</section>
+</main></div>

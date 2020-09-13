@@ -1,0 +1,4645 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>Structured Field Values for HTTP（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="http-common.css" type="text/css" />
+
+<script src="common0.js"></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN0',
+		generate: expand,
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r': // ref
+	text = `[${key}]`;
+	href = `#ref-${key}`;//.toLowerCase();
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'sf': // types
+	text = `<sub>sf-</sub>${text}`;
+	break;
+case 'sec':
+	{
+		const keys = key.split('/');
+		const spec = keys[0];
+		const sec = keys[1];
+		if(sec){
+			text = `[${spec}] § ${sec}`;
+			if(spec.slice(0,3) === 'RFC'){
+				href = `~RFCx/rfc${spec.slice(3)}#section-${sec}`;
+			}
+		} else {
+			text = ` § ${spec}`;
+		}
+		klass = '';
+	}
+	break;
+case 'X': // byte value
+	text = `%x${text}`;
+	break;
+case 'ch':
+	return(
+`<span class="hex-value">0x${(key.charCodeAt(0)).toString(16).toUpperCase()}</span>（ "<code class="literal">${key}</code>" ）`
+	);
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+●●options
+
+spec_date:2020-06-04
+trans_update:2020-06-13
+source_checked:200124
+original_url:https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html
+	abbr_url:HEADER-STRUCTURE
+spec_status:IETFID
+page_state_key:HTTP
+no_original_dfn:true
+ref_id_prefix:ref-
+ref_rfc:true
+site_nav:network,http
+trans_1st_pub:2020-01-27
+
+●●class_map
+p:production
+P:token
+X:hex-value
+h:header
+m:method
+
+●●tag_map
+h:code
+m:code
+P:code
+p:code
+c:code
+s:samp
+X:span
+i:i
+cite:cite
+st:code
+
+●●original_id_map
+
+references:rfc.references
+
+●●link_map
+
+P.ALPHA:~HTTPcommon#P.ALPHA
+P.DIGIT:~HTTPcommon#P.DIGIT
+P.DQUOTE:~HTTPcommon#P.DQUOTE
+P.SP:~HTTPcommon#P.SP
+P.VCHAR:~HTTPcommon#P.VCHAR
+P.LF:~HTTPcommon#P.LF
+	P.CR:~HTTPcommon#P.CR
+P.HTAB:~HTTPcommon#P.HTAB
+	P.CTL:~HTTPcommon#P.CTL
+
+	~RFC7230 → ~HTTPsem
+p.OWS:~HTTPsem#p.OWS
+p.token:~HTTPsem#p.token
+p.tchar:~HTTPsem#p.tchar
+p.field-name:~HTTPsem#p.field-name
+p.field-value:~HTTPsem#p.field-value
+
+p.bare-item:#p.bare-item
+p.base64:#p.base64
+p.boolean:#p.boolean
+p.chr:#p.chr
+p.dict-member:#p.dict-member
+p.dict-name:#p.dict-name
+p.escaped:#p.escaped
+p.inner-list:#p.inner-list
+p.key:#p.key
+p.lcalpha:#p.lcalpha
+p.list-member:#p.list-member
+p.member-name:#p.member-name
+p.member-value:#p.member-value
+p.parameter:#p.parameter
+p.parameters:#p.parameters
+p.param-name:#p.param-name
+p.param-value:#p.param-value
+p.sf-binary:#p.sf-binary
+p.sf-boolean:#p.sf-boolean
+p.sf-dictionary:#p.sf-dictionary
+p.sf-decimal:#p.sf-decimal
+p.sf-integer:#p.sf-integer
+p.sf-item:#p.sf-item
+p.sf-list:#p.sf-list
+p.sf-string:#p.sf-string
+p.sf-token:#p.sf-token
+p.unescaped:#p.unescaped
+
+有構造~header:#structured-header
+有構造~trailer:#structured~trailer
+有構造~field:#structured~field
+
+	有構造~header名:#structured-field-name-value
+	有構造~trailer名:#structured-field-name-value
+	有構造~field名:#structured-field-name-value
+	有構造~header値:#structured-field-name-value
+	有構造~trailer値:#structured-field-name-value
+	有構造~field値:#structured-field-name-value
+
+sf.~list:#sf-list
+sf.内縁~list:#sf-inner-list
+sf.~parameter:#sf-parameter
+sf.~parameters:#sf-parameters
+sf.辞書:#sf-dictionary
+sf.~item:#sf-item
+sf.裸~item:#sf-bare-item
+sf.~key:#sf-key
+sf.~byte列:#sf-binary
+sf.真偽値:#sf-boolean
+sf.~decimal:#sf-decimal
+sf.~token:#sf-token
+sf.文字列:#sf-string
+sf.整数:#sf-integer
+
+	§
+	sf.~parameters:#param
+	sf.~key:#_key
+	sf.~byte列:#binary
+	sf.真偽値:#boolean
+	sf.辞書:#dictionary
+	sf.~decimal:#decimal
+	sf.~token:#token
+	sf.文字列:#string
+	sf.内縁~list:#inner-list
+		~inner-list:#inner-list
+		~inner-list
+	sf.整数:#integer
+	sf.~item:#item
+	sf.~list:#list
+	sf.~parameters:#param
+	sf.裸~item:#_bare-item
+
+~token文字:#_token-characters
+~key文字:#_key-characters
+	~base64~alphabet:#_base64-alphabet
+
+裸~itemを直列化する:#ser-bare-item
+~byte列を直列化する:#ser-binary
+真偽値を直列化する:#ser-boolean
+辞書を直列化する:#ser-dictionary
+内縁~listを直列化する:#ser-innerlist
+~itemまたは内縁~listを直列化する:#_ser-item-or-list
+~itemを直列化する:#ser-item
+~keyを直列化する:#ser-key
+~listを直列化する:#ser-list
+~parametersを直列化する:#ser-params
+整数を直列化する:#ser-integer
+~decimalを直列化する:#ser-decimal
+文字列を直列化する:#ser-string
+~tokenを直列化する:#ser-token
+
+裸~itemを構文解析する:#parse-bare-item
+~byte列を構文解析する:#parse-binary
+真偽値を構文解析する:#parse-boolean
+辞書を構文解析する:#parse-dictionary
+内縁~listを構文解析する:#parse-innerlist
+~itemを構文解析する:#parse-item
+~itemまたは内縁~listを構文解析する:#parse-item-or-list
+~keyを構文解析する:#parse-key
+~listを構文解析する:#parse-list
+整数または~decimalを構文解析する:#parse-number
+~parametersを構文解析する:#parse-param
+文字列を構文解析する:#parse-string
+~tokenを構文解析する:#parse-token
+
+	~spaceを読飛ばす:#_skip-space
+
+	●§
+有構造~data型:#types
+	有構造~fieldの構文解析-法:#text-parse
+	有構造~fieldの直列化-法:#text-serialize
+
+	rfc.abstract
+	rfc.title
+	rfc.status
+	rfc.copyrightnotice
+	rfc.toc
+1:#introduction
+1.1:#strict
+1.2:#notational-conventions
+2:#specify
+3:#types
+3.1:#list
+3.1.1:#inner-list
+3.1.2:#param
+3.2:#dictionary
+3.3:#item
+3.3.1:#integer
+3.3.2:#decimal
+3.3.3:#string
+3.3.4:#token
+3.3.5:#binary
+3.3.6:#boolean
+4:#text
+4.1:#text-serialize
+4.1.1:#ser-list
+4.1.2:#ser-dictionary
+4.1.3:#ser-item
+4.1.4:#ser-integer
+4.1.5:#ser-decimal
+4.1.6:#ser-string
+4.1.7:#ser-token
+4.1.8:#ser-binary
+4.1.9:#ser-boolean
+4.2:#text-parse
+4.2.1:#parse-list
+4.2.2:#parse-dictionary
+4.2.3:#parse-item
+4.2.4:#parse-number
+4.2.5:#parse-string
+4.2.6:#parse-token
+4.2.7:#parse-binary
+4.2.8:#parse-boolean
+5:#iana-considerations
+6:#security-considerations
+7:#rfc.references
+7.1:#rfc.references.1
+7.2:#rfc.references.2
+A:#faq
+A.1:#why-not-json
+A.2:#structured-headers-dont-fit-my-data
+B:#implementation-notes
+C:#changes
+	C.1:#since-draft-ietf-httpbis-header-structure-14
+	C.2:#since-draft-ietf-httpbis-header-structure-13
+	C.3:#since-draft-ietf-httpbis-header-structure-12
+	C.4:#since-draft-ietf-httpbis-header-structure-11
+	C.5:#since-draft-ietf-httpbis-header-structure-10
+	C.6:#since-draft-ietf-httpbis-header-structure-09
+	C.7:#since-draft-ietf-httpbis-header-structure-08
+	C.8:#since-draft-ietf-httpbis-header-structure-07
+	C.9:#since-draft-ietf-httpbis-header-structure-06
+	C.10:#since-draft-ietf-httpbis-header-structure-05
+	C.11:#since-draft-ietf-httpbis-header-structure-04
+	C.12:#since-draft-ietf-httpbis-header-structure-03
+	C.13:#since-draft-ietf-httpbis-header-structure-02
+	C.14:#since-draft-ietf-httpbis-header-structure-01
+	C.15:#since-draft-ietf-httpbis-header-structure-00
+	#acknowledgements
+	#rfc.authors
+
+
+	●外部（HTTP
+
+受信者:~HTTPsem#recipient
+中継者:~HTTPsem#intermediary
+送信者:~HTTPsem#sender
+	~message
+上流:~HTTPsem#upstream
+下流:~HTTPsem#downstream
+
+~fieldの順序付けと結合:~HTTPsem#field.order
+RFC7230/3.2.2:~RFC7230#section-3.2.2
+	結合-:~RFC7231#combine-headers
+	結合-:~HTTPsem#combine-headers
+新たな~headerに対する考慮点:~HTTPsem#considerations.for.new.header.fields
+RFC7231/8.3.1:~RFC7231#section-8.3.1
+
+~field:~HTTPsem#fields
+~HTTP~field:~HTTPsem#fields
+~field名:~HTTPsem#field-name
+~field値:~HTTPsem#field-value
+~field行l:~HTTPsem#field-line
+~field行l値:~HTTPsem#field-line-value
+~field節:#field-section
+~header節:~HTTPsem#header-section
+~trailer節:~HTTPsem#trailer-section
+~header:~HTTPsem#header-field
+~trailer:~HTTPsem#trailer-field
+
+
+	●外部（INFRA
+
+真偽値:~INFRA#boolean
+~byte列:~INFRA#byte-sequence
+文字列:~INFRA#string
+~tuple:~INFRA#tuple
+	~pair:~INFRA#pair
+~list:~INFRA#list
+~size:~INFRA#list-size
+~item:~INFRA#list-item
+有順序~map:~INFRA#ordered-map
+map.~key:~INFRA#map-key
+map.値:~INFRA#map-value
+map.~entry:~INFRA#map-entry
+
+除去する:~INFRA#list-remove
+付加する:~INFRA#list-append
+	置換する:~INFRA#list-replace
+連結する:~INFRA#string-concatenate
+~ASCII復号する:~INFRA#ascii-decode
+~ASCII符号化する:~INFRA#ascii-encode
+長さ:~INFRA#string-length
+位置~変数:~INFRA#string-position-variable
+文字~並びを収集する:~INFRA#collect-a-sequence-of-code-points
+~ASCII空白を読飛ばす:~INFRA#skip-ascii-whitespace
+
+制御~文字:~INFRA#control
+~ASCII文字:~INFRA#ascii-code-point
+~ASCII数字:~INFRA#ascii-digit
+~ASCII英字:~INFRA#ascii-alpha
+~ASCII英小文字:~INFRA#ascii-lower-alpha
+~ASCII~byte:~INFRA#ascii-byte
+
+
+●●words_table1
+
+ナラナイ:<em class="rfc2119">ならない</em>
+ベキ:<em class="rfc2119">べき</em>
+ヨイ:<em class="rfc2119">よい</em>
+HTAB:<span class="hex-value">0x09</span> ( tab )
+
+●●words_table
+
+	●型／構造
+decimal:::10 進数
+実数:number:数
+符号:sign:~
+有符号:signed:~
+無符号:unsigned:~
+深さ:depth:~
+数量-:numeric:~
+裸:bare::~
+	〜を包装する:wrapper
+	~list$:array
+小数:fractional:~
+分割-:split:~
+HPACK:
+trailer::::トレイラ
+
+	浮動小数点
+	固定小数点数
+	Dictionary
+	List
+	Item
+	列:sequence／sequence of
+	-:key-value
+	-:name-value
+	~item$sf:singular
+	有構造~field:Structured Field／:structured header
+	〜:inclusive
+	内縁~list:inner list／inner-list
+	~byte列:bytes/Byte Sequence/sequence of bytes/array of bytes
+	~parameter(s)を伴い得る:parameterized
+
+	●構文解析／直列化
+結合-:combine::~
+結合:combination::~
+	結合-時:upon combination
+順序付け:ordering:~
+連結-:concatenate::~
+	連結:concatenation
+読飛ばす:skipする:読み飛ばす
+引用符:quote:~
+	引用符で括られない:unquoted
+二重引用符:double quote:~
+一重引用符:single quotes:~
+丸括弧:parenthesis:~
+区切子:delimiter::~
+	全体を〜括:surrounding
+	区切られ:separate
+	区切りの:-separated
+	区切られ:delimitされ
+	括られ:delimitされ
+	で区切る:separated
+	区切りの:-separated:~
+base64:
+alphabet:
+octet::::オクテット
+tab:
+英小文字:lower alpha::~
+英字:alpha::~
+数字:digit::~
+桁数:digits:~
+桁:digit:~
+有効桁数:significant digits:~
+単語:word:~
+生産器:producer::~
+消費器:consumer::~
+pad:
+	~padするもの:padding
+合成-:synthesize:~
+	0 個以上の:optional
+等距離:equidistant:~
+丸める:roundする:~
+丸めた:roundした:~
+丸め:rounding:~
+偶数:even:~
+係数:scaling factor:~
+遭遇-:encounter:~
+
+	`\^ch: backslash
+	` ^ch:space:
+	`,^ch:comma:
+	`;^ch:semicolon
+	`:^ch:colon:
+	` ^ch:whitespace
+	`SP$P:whitespace
+	`HTAB^P, `LF^P, `CR^P:tabs, newlines, carriage returns
+	LF$P:line feed
+	2 個目以降:remaining
+	%位置 ~INCBY 1:discard
+	破棄-:Discard any leading SP characters from
+	-:removing
+	始まる／の先頭に:beginning
+	~ASCII数字:decimal digits
+	10 進数:decimal number
+	過ぎた:reach
+	$p:field-name
+	$p:field-value
+	混在する:mixされた
+	混成:mix
+	-:printable
+	~base64に符号化-:base64-encoding
+	末尾に余計な:trailing
+	頭部:leading
+	尾部:trailing
+	-:rounding
+	-:equidistant
+	〜を閉じる:closing
+	10 進記数法:base 10
+	~header:field
+	最後を除き:all but the last instance
+	超える:larger than
+	大文字:uppercase letters
+	大文字:uppercase characters
+
+	●処理
+剥取る:stripする:剥ぎ取る
+往来-:round-trip::~
+	~NEQ ε:there is a duplicate
+	~BREAK~exit the loop
+	~MUL:product
+	^en:Base 64
+	~EQ:~match
+	構文解析を失敗させる:fail parsing
+	直列化を失敗させる:fail serialization
+	-:prepend
+	-:outside
+
+	●network
+送信者:sender::~
+中継者:intermediary::~
+受信者:recipient::~
+主体:party::~
+回送-:forward::~
+伝送路:wire::~
+伝達-:convey::~
+
+	受信した〜である:receiving
+	伝送路~上:on-wire
+
+	●仕様
+component::::コンポーネント
+収容-:accommodate:~
+安全性:safety:~
+微妙:subtle:~
+採用:adoption:~
+架空の:fictitiousな:~
+正せ:correctでき:~
+流儀:fashion:~
+良好:good:~
+表出:expression:~
+表記上の:notational:~
+質問:question:~
+陥穽:pitfall:落とし穴
+不一致:disagreement:~
+助言:advice:~
+確約-:assure:~
+際どい:edge:~
+緩めな:relaxしな:~
+緩めれ:relaxでき:~
+	~~緩める:loosen
+将来有望:prospective:~
+読者:reader:~
+課す:imposeする:~
+消費:consumption:~
+機能:function:~
+一式:suite:~
+任意選択する:opt inする:任意で選択する
+忠実:faithful:~
+	忠実に:fidelity
+IANA:
+収まる:fitする:~
+感覚:feeling:~
+具体化-:illustrate:~
+制定-:stipulate:~
+策:strategy:~
+超過-:exceed:~
+
+	しわ寄せが行く:create pressure
+	予め除外する:preclude
+	厳密さ:strictness
+	定義し直す:redefine
+	認識されない:unrecognised
+	逆に:conversely
+	選ばれ:chosen
+	必要に応じて:as required／as they require／:as necessary
+	-:readability
+	-:remember
+	〜周り:around
+	きちんと:well
+	ここ:herein:#1
+	それ~~専用の:bespoke
+	それにより／その結果:thereby
+	でない:non-
+	なり得るもの:potential
+	主要な~major:#1
+	予測-不能:unpredictable
+	人:people
+	似た何か／見えない:look
+	作業-法:working
+	優先される~precedenceを~take
+	総:overall
+	全体を／-:at all
+	制限された:limited
+	勧める~advise:
+	区別:distinction
+	好ましい:preferably
+	少しばかり:slightly
+	広い:broad
+	広く:widely
+	必要とされ:necessary
+	悪化させ:make worse
+	早期の:earlier
+	更には:furthermore
+	書かれる:written
+	書き手:writer
+	極めて:extremely
+	次の様な見かけになる:might/could look like
+	注記:note
+	短かく言えば:in short
+	至った:led
+	表され:denote
+	見込みが高い／見込まれ:likely
+	許容しないものとして:disallow
+	骨の折れる:onerous
+	可能性もある:It is possible
+	判別-不能:indistinguishable
+	省略可否:whether their presence is required or optional
+	次の点で相違する:with the exceptions
+	したくなりがち:tempted
+	不必要な:unnecessary
+	代替を成す:alternative
+	~~寛容:tolerant
+	~~親切:helpful
+	促す:help
+	-:thanks to
+	:opt into
+	まっとうに:right
+	却下:reject
+	適さない:unsuitable
+	どう実装されても:vary
+	対象になる:target
+	一連の段からなる:step-by-step
+	早く:early
+	近く:closely
+	を指して〜称せる:~refer
+	特になし:has no actions
+	満たす限りにおいて:subject to
+	-:effect
+
+	●未分類
+Foo:
+巨大:large:~
+節:section:~
+圧縮:compression::~
+
+	短い:short
+	在ること:presence
+	重複する／同じ〜に複数回／:duplicate
+	最後:final
+	^en:memory commitment
+	`Example-Description^h ~header:description
+	含めた結果:inclusion of
+
+	●訳注
+TLS:
+random::::ランダム
+負債:debt:~
+
+	●変数
+	%出力:output
+	%~memberたち:members
+	%~member:(member_value, parameters)
+	%~member値:member_value
+	%出力~文字列:output_string
+	%入力~list:input_list
+	%~list:inner_list
+	%~list~parameters:list_parameters
+	%入力~parameters:input_parameters
+	%~parameter名:param_name
+	%~parameter値:param_value
+	%~parameter名:~parameter-name
+	%入力~key:input_key
+	%入力~辞書:input_dictionary
+	%~member名:member_name
+	%裸~item:bare_item
+	%~item~parameters:item_parameters
+	%入力~item:input_item
+	%入力~整数~input_integer
+	%入力~decimal:input_decimal
+	%整数~桁数:integer_digits
+	%入力~文字列:input_string
+	%入力~token:input_token
+	%入力~byte列:input_byte
+	%入力~真偽値:input_boolean
+	-:input_number
+	%~header型:header_type
+	~item_or_inner_list:item_or_inner_list
+	%~key:this_key
+	%出力:output_number
+	-:next_char
+	%~base64内容:b64_content
+	%~binary内容:binary_content
+	%文字:char
+	%符号:sign
+
+	●指示語
+	個までは:at least
+	更なる:further
+	少数の:few
+	後続の:subsequent
+	いくつかの:a number of
+	何種類かの:variety
+	他には〜ない:the only
+	まるごと:altogether
+	一連の:set of／
+	個数:number of
+	一部分:portion
+	総数:total number of
+	わたって／またがって:across
+	〜の個数:cardinality
+	12:fifteen
+	最も近い:nearest
+	まで:at most
+	まで:no more than
+
+●●ref_normative
+
+[RFC0020]
+    Cerf, V., “ASCII format for network interchange”, STD 80, ~RFC20, October 1969
+[RFC2119]
+    Bradner, S., “Key words for use in RFCs to Indicate Requirement Levels”, BCP 14, ~RFC2119, March 1997
+[RFC4648]
+    Josefsson, S., “The Base16, Base32, and Base64 Data Encodings”, ~RFC4648, October 2006
+[RFC5234]
+    Crocker, D., Ed. and P. Overell, “Augmented BNF for Syntax Specifications: ABNF”, STD 68, ~RFC5234, January 2008
+[RFC7230]
+    Fielding, R., Ed. and J. Reschke, Ed., “Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing”, ~RFC7230, June 2014
+[RFC8174]
+    Leiba, B., “Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words”, BCP 14, ~RFC8174, May 2017
+[INFRA]
+    <span lang="ja">（この訳による追加）</span>
+    Anne van Kesteren; Domenic Denicola. Infra Standard. Living Standard. URL: https://infra.spec.whatwg.org/ 
+
+●●ref_informative
+
+[IEEE754]
+    IEEE, “IEEE Standard for Floating-Point Arithmetic”, IEEE 754-2019, July 2019, URL: https://ieeexplore.ieee.org/document/8766229
+[RFC7231]
+    Fielding, R., Ed. and J. Reschke, Ed., “Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content”, ~RFC7231, June 2014
+[RFC7493]
+    Bray, T., Ed., “The I-JSON Message Format”, ~RFC7493, March 2015
+[RFC7540]
+    Belshe, M., Peon, R., and M. Thomson, Ed., “Hypertext Transfer Protocol Version 2 (HTTP/2)”, ~RFC7540, May 2015
+[RFC7541]
+    Peon, R. and H. Ruellan, “HPACK: Header Compression for HTTP/2”, ~RFC7541, May 2015
+[RFC8259]
+    Bray, T., Ed., “The JavaScript Object Notation (JSON) Data Interchange Format”, STD 90, ~RFC8259, December 2017
+[UTF-8]
+    Yergeau, F., “UTF-8, a transformation format of ISO 10646”, STD 63, ~RFC3629, November 2003
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、
+~IETF により Internet-Draft として公開された，
+<a href="~SPEC_URL">Structured Field Values for HTTP</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+発行者
+	HTTP Working Group
+位置付け
+	Internet-Draft
+意図される位置付け
+	Standards Track
+失効日
+	日付から半年後
+編集／著作者アドレス
+	Mark Nottingham, Fastly <a href="mailto:mnot@mnot.net">mnot@mnot.net</a>, <a href="https://www.mnot.net/">https://www.mnot.net/</a>
+	Poul-Henning Kamp, The Varnish Cache Project <a href="mailto:phk@varnish-cache.org">phk@varnish-cache.org</a>
+HTTP working group mailing list
+	ietf-http-wg@w3.org (<a href="https://lists.w3.org/Archives/Public/ietf-http-wg/">archive</a>)
+commit 履歴
+	https://github.com/httpwg/http-extensions/commits/master/draft-ietf-httpbis-header-structure.md
+HTTP 拡張仕様の草案／ HTTP WG 情報
+	https://httpwg.github.io/
+ソースコード／課題リスト
+	https://github.com/httpwg/http-extensions/labels/header-structure
+実装テスト
+	https://github.com/httpwg/structured-field-tests
+実装追跡
+	https://github.com/httpwg/wiki/wiki/Structured-Headers
+
+</script>
+
+</head>
+
+<body>
+
+
+<header>
+	<hgroup>
+<h1>HTTP 用の有構造フィールド値 — Structured Field Values for HTTP</h1>
+	</hgroup>
+
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="rfc.abstract">
+~ABSTRACT
+<p>
+この文書は、［
+伝統的な`~field値$より制約的な，共通な構文
+］を利用したいと望む，新たな`~HTTP~field$の仕様から利用するために、一連の~data型, それらに結付けられる~algoを述べる。
+それは、~HTTP［
+`~header$／`~trailer$
+］を［
+より容易に定義して, より安全に取扱う
+］ために意図される。
+そのような`~HTTP~field$は、［
+`有構造~field$／`有構造~header$／`有構造~trailer$
+］と称される。
+【用語 “~HTTP~field” （略称 “~field” ）は、~HTTP［~header／~trailer］~fieldの総称。】
+◎
+This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header and trailer fields, known as “Structured Fields”, “Structured Headers”, or “Structured Trailers”. It is intended for use by specifications of new HTTP fields that wish to use a common syntax that is more restrictive than traditional HTTP field values.
+</p>
+
+	</section>
+	<section id="rfc.note.1">
+<h2 title="Note to Readers">読者~向け注記</h2>
+
+<p>
+`この節は、発行~前に除去されることになる^em
+【以下，この節の他の内容は、冒頭の仕様~metadataに移譲。】
+◎
+RFC EDITOR: please remove this section before publication
+</p>
+
+	</section>
+	<section id="rfc.status">
+<h2 title="Status of This Memo">このメモの位置付け</h2>
+
+<p class="trans-note">【
+この節の内容は
+<a href="~HTTPcommon#status-draft">~HTTP共通~page</a>に委譲。
+】</p>
+
+	</section>
+	<section id="rfc.copyrightnotice">
+<h2 title="Copyright Notice">著作権の告知</h2>
+
+<p class="trans-note">【
+この節の他の内容は
+<a href="~HTTPcommon#copyright-notice">~HTTP共通~page</a>に委譲。
+】</p>
+
+<p lang="en-x-a0">
+Copyright (c) 2020 IETF Trust and the persons identified as the document authors. All rights reserved.
+</p>
+
+	</section>
+
+<main id="MAIN0">
+	<section id="introduction">
+<h2 title="Introduction">1. 序論</h2>
+
+<p>
+新たな`~HTTP~field$（`~header$／`~trailer$）の構文を指定することは、骨の折れる~taskである。
+［
+`新たな~headerに対する考慮点$sec `Semantics^r ／`RFC7231/8.3.1$sec
+］による指導はあれど、将来有望な`~HTTP~field$の策定者にとって，多くの裁定
+— および陥穽 —
+がある。
+◎
+Specifying the syntax of new HTTP header (and trailer) fields is an onerous task; even with the guidance in Section 8.3.1 of [RFC7231], there are many decisions – and pitfalls – for a prospective HTTP field author.
+</p>
+
+<p>
+~fieldを定義したなら、それ~~専用の［
+構文解析器／直列化器
+］も書く必要があることが多い
+— 各`~field値$には、共通な構文にも見える様な少しばかり異なる取扱いがあるので。
+◎
+Once a field is defined, bespoke parsers and serializers often need to be written, because each field value has slightly different handling of what looks like common syntax.
+</p>
+
+<p>
+これらの問題に取組むため，この文書は、新たな~HTTP`~field値$の定義における利用-用に，一連の共通な~data構造を導入する。
+特に，`~field値$~用の汎用かつ抽象的な~modelを
+— その~modelを`~HTTP~field$ `RFC7230$r 内で表出するための具象的な直列化とともに —
+定義する。
+◎
+This document introduces a set of common data structures for use in definitions of new HTTP field values to address these problems. In particular, it defines a generic, abstract model for them, along with a concrete serialization for expressing that model in HTTP [RFC7230] header and trailer fields.
+</p>
+
+<p>
+`~HTTP~field$のうち，［
+`有構造~header$／`有構造~trailer$／当の~fieldがどちらにもなり得る場合は`有構造~field$
+］として定義されるものは、この仕様に定義される各種 型を利用して，その構文と基本的な取扱い規則を定義する
+— それにより，仕様の書き手による定義, および実装による取扱いの両者を単純~化する。
+◎
+A HTTP field that is defined as a “Structured Header” or “Structured Trailer” (if the field can be either, it is a “Structured Field”) uses the types defined in this specification to define its syntax and basic handling rules, thereby simplifying both its definition by specification writers and handling by implementations.
+</p>
+
+<p>
+加えて，~HTTPの将来~versionは、これらの構造の抽象-~modelの代替を成す直列化を定義し得る
+— その~modelを利用する~fieldを定義し直すことなく，より効率的に伝送できるようにするため。
+◎
+Additionally, future versions of HTTP can define alternative serializations of the abstract model of these structures, allowing fields that use that model to be transmitted more efficiently without being redefined.
+</p>
+
+<p>注記：
+この文書の目標は、既存の`~HTTP~field$の構文を定義し直すことではない。
+ここに述べる仕組みは、明示的にそれを任意選択する~fieldに限り，利用されることが意図される。
+◎
+Note that it is not a goal of this document to redefine the syntax of existing HTTP fields; the mechanisms described herein are only intended to be used with fields that explicitly opt into them.
+</p>
+
+<p>
+`2$sec では、［
+~HTTP~fieldを有構造~fieldとして指定する方法
+］を述べる。
+◎
+Section 2 describes how to specify a Structured Field.
+</p>
+
+<p>
+`3$sec では、［
+有構造~field内で利用できる，各種 抽象-~data型
+］を定義する。
+◎
+Section 3 defines a number of abstract data types that can be used in Structured Fields.
+</p>
+
+<p>
+それらの抽象-型は、
+`4$sec に述べる~algoを利用して，~HTTP`~field値$［
+へ直列化できる／から構文解析できる
+］。
+◎
+Those abstract types can be serialized into and parsed from HTTP field values using the algorithms described in Section 4.
+</p>
+
+		<section id="strict">
+<h3 title="Intentionally Strict Processing">1.1. 意図的に厳密な処理</h3>
+
+<p>
+この仕様は、一連の段からなる~algoを利用して，構文解析と直列化の挙動を意図的に厳密に定義する
+— ~errorの取扱いは、演算をまるごと失敗させる他には定義されない。
+◎
+This specification intentionally defines strict parsing and serialization behaviors using step-by-step algorithms; the only error handling defined is to fail the operation altogether.
+</p>
+
+<p>
+それは、忠実な実装を奨励して，良好な相互運用能を得るために設計されている。
+したがって，入力に~~寛容であることにより~~親切であろうと試行する実装は、相互運用能を悪化させることになる
+— そうすると、類似な（が、微妙に異なる見込みが高い）対処法を実装する他の実装に，しわ寄せが行くことになるので。
+◎
+It is designed to encourage faithful implementation and therefore good interoperability. Therefore, an implementation that tried to be helpful by being more tolerant of input would make interoperability worse, since that would create pressure on other implementations to implement similar (but likely subtly different) workarounds.
+</p>
+
+<p>
+言い換えれば，厳密な処理は、この仕様の意図的な特能である
+— それは、不適合tな入力を生産器が より早く発見して正せるようにして、さもなければ生じることになる［
+相互運用能／~security
+］の課題を避けれるようにする。
+◎
+In other words, strict processing is an intentional feature of this specification; it allows non-conformant input to be discovered and corrected by the producer early, and avoids both interoperability and security issues that might otherwise result.
+</p>
+
+<p>注記：
+この厳密さの結果として，ある~fieldが複数の主体により付加される場合（例：`中継者$や`送信者$における異なる~component）、ある主体による値に~errorがあれば，当の`~field値$全体の構文解析を失敗させると見込まれる。
+◎
+Note that as a result of this strictness, if a field is appended to by multiple parties (e.g., intermediaries, or different components in the sender), an error in one party’s value is likely to cause the entire field value to fail parsing.
+</p>
+
+		</section>
+		<section id="notational-conventions">
+<h3 title="Notational Conventions">1.2. 表記上の規約</h3>
+
+<p class="trans-note">【
+この節の他の内容（ `RFC2119$r, `RFC8174$r ）は、
+<a href="~HTTPcommon#requirements-notation">~HTTP共通~page</a>
+に委譲。
+】</p>
+
+<p>
+この文書は、各種~algoを利用して，構文解析と直列化の挙動を指定する。
+また、 `RFC5234$r による
+<abbr title="Augmented Backus-Naur Form">~ABNF</abbr>記法を利用して，~HTTP~headerにおいて期待される構文を具体化する。
+また、
+`RFC5234$r の［
+`VCHAR$P, `SP$P, `DIGIT$P, `ALPHA$P, `DQUOTE$P
+］規則, および
+`RFC7230$r の［
+`tchar$p, `OWS$p
+］規則を利用する。
+◎
+This document uses algorithms to specify parsing and serialization behaviors, and the Augmented Backus-Naur Form (ABNF) notation of [RFC5234] to illustrate expected syntax in HTTP header fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from [RFC5234]. It also includes the tchar and OWS rules from [RFC7230].
+</p>
+
+<p>
+`~HTTP~field$を構文解析する実装の挙動は、~algoに従うそれと判別-不能でなければナラナイ。
+構文解析~algoと~ABNFの間に不一致がある場合、指定された~algoが優先される。
+◎
+When parsing from HTTP fields, implementations MUST have behavior that is indistinguishable from following the algorithms. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
+</p>
+
+<p>
+~ABNFは、期待される伝送路~表現を
+— `~HTTP~field$への直列化~用に —
+具体化する。
+各~algoは、そのような表現を生産するときに推奨される仕方を定義する。
+~algoは、その出力が構文解析~algoにより正しく取扱われる限り，どう実装されてもヨイ。
+◎
+For serialization to HTTP fields, the ABNF illustrates their expected wire representations, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output is still correctly handled by the parsing algorithm.
+</p>
+
+		</section>
+		<section id="_conventions">
+<h3>【この訳に固有の表記規約】</h3>
+
+<p>
+この訳の，~algoの記述に利用されている各種記号（ ~LET, ~IF, ~RET, 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+<p>
+~algoや定義を［
+明確化する／精緻化する／簡潔に述べる
+］ため、この訳では `INFRA$r に定義される各種用語, 表記法を取り入れている。
+それに伴い、原文から構成を違えている~algoもある。
+</p>
+
+<p>
+この仕様に定義される，すべての`有構造~data型$は、より汎用な~data型（例：`~list$）と区別するため， `<var>型~名</var>^sf （例： `~list$sf）の様に表記される（
+"sf" は `Structured Field^en の略語
+— 原文では、これらの型~名は， "`List^en" の様に大文字を用いて区別されている）。
+`有構造~data型$は、概念的には
+( 汎用な~data型, とり得る値に対する制約 )
+の組と捉えられる。
+</p>
+
+<p>
+原文にて~HTTP仕様（ `RFC7230$r 他）を参照している用語には、現在 改訂-下にある仕様（の和訳）への~linkを付与している（~~実際，この仕様に利用される一部の用語は、改訂されたそれに基づいてもいる）。
+</p>
+
+<p>
+`~field節@
+は、［
+`~header節$, `~trailer節$
+］の総称とする。
+</p>
+
+
+		</section>
+	</section>
+	<section id="specify">
+<h2 title="Defining New Structured Fields">2. 新たな有構造~fieldの定義-法</h2>
+
+<p>
+`~HTTP~field$を有構造~fieldとして指定するためには、策定者は以下に従う必要がある：
+◎
+To specify a HTTP field as a Structured Field, its authors needs to:
+</p>
+
+<ul>
+	<li>
+この仕様を規範的に参照すること。
+~fieldの［
+`受信者$／生成器
+］は、この文書の要件が効果を及ぼすことを知る必要があるので。
+◎
+Normatively reference this specification. Recipients and generators of the field need to know that the requirements of this document are in effect.
+</li>
+	<li>
+<p>
+当の~fieldは、次のどれに該当するか識別すること：
+</p>
+		<ul>
+			<li>
+`有構造~header@
+（ `Structured Header^en ）
+（すなわち，`~header節$内に限り利用され得る — 共通的な事例）
+</li>
+			<li>
+`有構造~trailer@
+（ `Structured Trailer^en ）
+（すなわち，`~trailer節$内に限り利用され得る）／
+</li>
+			<li>
+`有構造~field@
+（ `Structured Field^en ）
+（~header節, ~trailer節どちらにも利用され得る）
+</li>
+		</ul>
+<p class="trans-note">【
+“有構造~field” は、この仕様のように各種［
+有構造~header／有構造~trailer
+］を汎用に取扱う必要がある所でも，それらの総称として利用される
+— そのような利用においては、［
+対象にされた個々の~fieldが，~header節, ~trailer節どちらにも利用され得る
+］ことは含意しない。
+】</p>
+
+◎
+Identify whether the field is a Structured Header (i.e., it can only be used in the header section - the common case), a Structured Trailer (only in the trailer section), or a Structured Field (both).
+</li>
+	<li>
+`~field値$の型を［
+`~list$sf／`辞書$sf／`~item$sf
+］として指定すること。
+◎
+Specify the type of the field value; either List (Section 3.1), Dictionary (Section 3.2), or Item (Section 3.3).
+</li>
+	<li>
+`~field値$の意味論を定義すること。
+◎
+Define the semantics of the field value.
+</li>
+	<li>
+`~field値$が利用される際に追加的な拘束があれば、拘束に違反した場合の帰結とともに指定すること。
+◎
+Specify any additional constraints upon the field value, as well as the consequences when those constraints are violated.
+</li>
+</ul>
+
+<p>
+すなわち，~field定義は、概して，~top-level型
+— `~list$sf／`辞書$sf／`~item$sf —
+を指定してから†，それに許容-可能な型を定義して，それらを拘束することになる。
+例えば，`~list$sfとして定義された~headerは、それを成す~memberたちを，すべて`整数$sfとすることもあれば，何種かの型の混成とすることもあろう。
+あるいは，`~item$sfとして定義された~headerは、その値として，`文字列$sf
+— それも、文字 `Q^ch から始まるもの，あるいは小文字のみからなるもの —
+に限り許容することもあろう。
+同様に， `内縁~list$sfは、~field定義にて明示的に許容される場合に限り，妥当になる。
+◎
+Typically, this means that a field definition will specify the top-level type – List, Dictionary or Item – and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter “Q”, or strings in lowercase. Likewise, Inner Lists (Section 3.1.1) are only valid when a field definition explicitly allows them.
+</p>
+
+<p class="trans-note">【†
+`文字列$sfなど他の型の値をとるかのように指定する仕様もあるかもしれないが、それは，［
+`~field値$の型は`~item$sfであって，その値は`文字列$sfに制約される
+］ものと指定することと同義になる。
+】</p>
+
+<p>
+構文解析に失敗したときは、当の~field全体が無視される（ `4.2$sec を見よ）。
+ほとんどの状況においては、~fieldに特有な拘束に違反することも，同じ効果になるべきである。
+したがって，［
+`~item$sfとして定義され，`整数$sfをとるものと要求された~header
+］にて`文字列$sfが受信された場合、当の~fieldは既定では無視されることになる。
+当の~fieldに対し，異なる~errorの取扱いを要求する場合、明示的に指定するべきである。
+◎
+When parsing fails, the entire field is ignored (see Section 4.2); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, the field will by default be ignored. If the field requires different error handling, this should be explicitly specified.
+</p>
+
+<p>
+［
+`~item$sf／`内縁~list$sf
+］は、拡張能の仕組みとして，`~parameters$sfを許容する。
+これは、もっと情報を収容するために必要なら，値は後で拡張され得ることを意味する。
+前方-互換性を保全するため、~field仕様が［
+認識されない`~parameter$sfが在ることを~error条件として定義する
+］ことは，忌避される。
+◎
+Both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. To preserve forward compatibility, field specifications are discouraged from defining the presence of an unrecognized Parameter as an error condition.
+</p>
+
+<p>
+さらに，［
+この拡張能が将来にも可用になるのを確約する
+］ため, および［
+完全な構文解析器の実装を利用することを奨励する
+］ため、~field定義は，［
+送信者は “潤滑（ `grease^en ）” `~parameter$sf†を追加する
+］ものと指定できる。
+仕様は、［
+ある定義-済み~patternに収まる`~parameter$sfは、すべて，この利用~用に予約される
+］ものと制定して，それらが要請のある一部分として送信されるよう奨励することもできる。
+これは、受信者が`~parameter$sfを織り込まない構文解析器を書くのを忌避するよう促す。
+◎
+To further assure that this extensibility is available in the future, and to encourage consumers to use a complete parser implementation, a field definition can specify that “grease” Parameters be added by senders. A specification could stipulate that all Parameters that fit a defined pattern are reserved for this use and then encourage them to be sent on some portion of requests. This helps to discourage recipients from writing a parser that does not account for Parameters.
+</p>
+
+<p class="trans-note">【†
+~TLSの `GREASE^en と同様な発想による（
+<a href="https://jovi0608.hatenablog.com/entry/2016/10/02/101233">参考</a>
+）、［
+不適合な実装を早期に発見して，技術的~負債を残さないようにする
+］ための［
+~randomに選ばれ，未定義になる名前
+］を持つ~parameterと見受けられる（
+<a href="https://github.com/httpwg/http-extensions/issues/1015">課題 #1015</a>
+に論点がある）。
+】</p>
+
+<p>
+`辞書$sfを利用する仕様は、未知な~memberが在っても
+— および，~memberの値やその型が未知な場合も —
+無視するよう要求することにより，前方-互換性も許容できる。
+そうすれば，後の仕様は、追加的な~memberを
+— 適切な拘束も指定した上で —
+追加できる。
+【場合によっては、一部に限り無視するよう指定することもあろう（未知な型は許容しないなど）。】
+◎
+Specifications that use Dictionaries can also allow for forward compatibility by requiring that the presence of – as well as value and type associated with – unknown members be ignored. Later specifications can then add additional members, specifying constraints on them as appropriate.
+</p>
+
+<p>
+有構造~fieldに対する拡張は、［
+自身が定義する値に対する拘束を`~field値$が満たさない場合には、~field値~全体を無視する
+］よう，当の拡張を解する受信者に対し要求できる。
+◎
+An extension to a structured field can then require that an entire field value be ignored by a recipient that understands the extension if constraints on the value it defines are not met.
+</p>
+
+<p>
+~field定義は、この仕様の要件を緩めることはできない
+— そうすると，汎用~softwareによる取扱いを予め除外することになるので。
+~field定義は、追加的な拘束に限り追加できる（例：
+`整数$sfや`~decimal$sfの数量-範囲 ／
+`文字列$sfや`~token$sfの形式／
+`辞書$sfを成す~memberの値に許容される型／
+`~list$sfを成す`~item$sfの個数）。
+同様に，~field定義がこの仕様を利用できるのは、`~field値$の一部分ではなく，値~全体~用に限られる。
+◎
+A field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of Integers and Decimals, the format of Strings and Tokens, the types allowed in a Dictionary’s values, or the number of Items in a List). Likewise, field definitions can only use this specification for the entire field value, not a portion thereof.
+</p>
+
+<p>
+この仕様は、実装が~supportする様々な構造の長さや個数~用に最小を定義する。
+ほとんどの事例では最大~sizeは指定しないが、策定者は，［
+~HTTP実装が［
+個々の~fieldの~size／
+~fieldの総数／
+`~field節$の~size
+］に様々な制限を課す
+］ことを自覚するべきである。
+◎
+This specification defines minimums for the length or number of various structures supported by implementations. It does not specify maximum sizes in most cases, but authors should be aware that HTTP implementations do impose various limits on the size of individual fields, the total number of fields, and/or the size of the entire header or trailer section.
+</p>
+
+<p id="structured-field-name-value">
+各 仕様は、有構造~fieldの［
+`~field名$／`~field値$
+］を指して
+— 必要に応じて適切に —
+次のいずれかとして称せる
+⇒＃
+“有構造~header名”, “有構造~trailer名”, “有構造~field名” ／
+“有構造~header値”, “有構造~trailer値”, “有構造~field値”
+◎
+Specifications can refer to a field name as a “structured header name”, “structured trailer name” or “structured field name” as appropriate. Likewise, they can refer its field value as a “structured header value”, “structured trailer value” or “structured field value” as necessary.＼
+</p>
+
+<p>
+~field定義には、この仕様に定義される［
+`sf-^p で始まる~ABNF規則
+］を利用することが奨励される。
+この仕様における他の規則は、そのような利用-用には意図されていない。
+◎
+Field definitions are encouraged to use the ABNF rules beginning with “sf-“ defined in this specification; other rules in this specification are not intended for their use.
+</p>
+
+<div class="example">
+
+<p>
+例えば，架空の `Foo-Example^h ~headerは、次のように指定されるかもしれない：
+◎
+For example, a fictitious Foo-Example header field might be specified as:
+</p>
+
+<aside>
+<h2>
+42. `Foo-Example^h ~header
+</h2>
+
+<p>
+`Foo-Example^h ~HTTP~headerは、~messageが~Fooをどれだけ有するかについての情報を伝達する。
+</p>
+
+<p>
+`Foo-Example^h は、`~item$sfを値にとる有構造~headerである `RFCxxxx^r 。
+値は`整数$sfでなければナラナイ（ `RFCxxxx^r, § Y.Y ）。
+その~ABNFは：
+</p>
+
+<pre class="bnf">
+Foo-Example = `sf-integer$p
+</pre>
+
+<p>
+その値は、~message内にある~Fooの量を指示する。
+値は 0 以上 10 以下でなければナラナイ
+— 他の値に対しては、~header全体を無視しなければナラナイ。
+</p>
+
+<p>
+`~parameters$sfを成す`~parameter$sfとして次が定義される
+— 下の処理~要件を見よ
+⇒＃
+名前は `foourl^l,
+値は~message用の~Foo~URLを伝達している`文字列$sfである（ `RFCxxxx^r, § Y.Y ）
+</p>
+
+<p>
+`~parameter$sf `foourl^l は、 `URI-reference^p （ `RFC3986/4.1$sec ）を値にとる。
+値が妥当な `URI-reference^p でない場合、当の~header全体を無視しなければナラナイ。
+値が相対~参照（ `RFC3986/4.2$sec ）である場合、利用する前に解決しなければナラナイ（ `RFC3986/5$sec ）。
+</p>
+
+<p>
+例えば：
+</p>
+
+<pre class="lang-http">
+Foo-Example: 2; foourl="https://foo.example.com/"
+</pre>
+
+<pre lang="en">
+42. Foo-Example Header
+
+The Foo-Example HTTP header field conveys information about how
+much Foo the message has.
+
+Foo-Example is a Item Structured Header [RFCxxxx]. Its value MUST be
+an Integer (Section Y.Y of [RFCxxxx]). Its ABNF is:
+
+  Foo-Example = sf-integer
+
+Its value indicates the amount of Foo in the message, and MUST
+be between 0 and 10, inclusive; other values MUST cause
+the entire header field to be ignored.
+
+The following parameters are defined:
+* A Parameter whose name is "foourl", and whose value is a String
+  (Section Y.Y of [RFCxxxx]), conveying the Foo URL
+  for the message. See below for processing requirements.
+
+"foourl" contains a URI-reference (Section 4.1 of [RFC3986]). If
+its value is not a valid URI-reference, the entire header field
+MUST be ignored. If its value is a relative reference (Section 4.2
+of [RFC3986]), it MUST be resolved (Section 5 of [RFC3986]) before
+being used.
+
+For example:
+
+  Foo-Example: 2; foourl="https://foo.example.com/"
+</pre>
+</aside>
+
+</div>
+
+	</section>
+	<section id="types">
+<h2 title="Structured Data Types">3. 各種 有構造~data型</h2>
+
+<p>
+この節は、有構造~field用の抽象的な型を定義する。
+供される~ABNFは、~HTTP`~field値$における伝送路~上の形式を表現する。
+◎
+This section defines the abstract types for Structured Fields. The ABNF provided represents the on-wire format in HTTP field values.
+</p>
+
+<p>
+要約すれば：
+◎
+In summary:
+</p>
+
+<ul>
+	<li>
+`~HTTP~field$の`~field値$として定義できる~top-level型には、次の 3 種がある
+⇒＃
+`~list$sf,
+`辞書$sf,
+`~item$sf
+◎
+There are three top-level types that a HTTP field can be defined as: Lists, Dictionaries, and Items.
+</li>
+	<li>
+［
+`~list$sf, `辞書$sf
+］は容器であり、それらの各~memberは［
+`~item$sf／`内縁~list$sf
+］を値にとり得る（後者は それ自体が一連の`~item$sfからなる~listである）。
+◎
+Lists and Dictionaries are containers; their members can be Items or Inner Lists (which are themselves lists of items).
+</li>
+	<li>
+［
+`~item$sf／`内縁~list$sf
+］のどちらも、`~parameters$sfを伴い得る。
+◎
+Both Items and Inner Lists can be Parameterized with key/value pairs.
+</li>
+</ul>
+
+		<section id="list">
+<h3 title="Lists">3.1. `~list^sf</h3>
+
+<p>
+`~list@sf
+（ `List^en ）は、各`~item$が［
+`~item$sf／`内縁~list$sf
+］に制約される`~list$である。
+◎
+Lists are arrays of zero or more members, each of which can be an Item (Section 3.3) or an Inner List (Section 3.1.1), both of which can be parameterized (Section 3.1.2).
+</p>
+
+<p>
+`~HTTP~field$における`~list$sf用の~ABNFは：
+◎
+The ABNF for Lists in HTTP fields is:
+</p>
+
+<pre class="bnf">
+`sf-list@p
+      = `list-member$p *( `OWS$p "," `OWS$p `list-member$p )
+`list-member@p
+      = `sf-item$p
+      / `inner-list$p
+</pre>
+
+<p>
+各~memberは［
+0 個以上の空白を伴う `,^ch
+］で区切られる。
+◎
+Each member is separated by a comma and optional whitespace.＼
+</p>
+
+<div class="example">
+<p>
+例えば，`文字列$sfからなる`~list$sfを値にとるものと定義される~fieldは、次の様な見かけになる：
+◎
+For example, a field whose value is defined as a List of Strings could look like:
+</p>
+
+<pre class="lang-http">
+Example-StrList: "foo", "bar", "It was the best of times."
+</pre>
+</div>
+
+<p>
+空な`~list$sfは、当の~field全体を直列化しないことにより表される。
+これは、`~list$sfとして定義された~fieldの既定の値は，空になることを含意する。
+◎
+An empty List is denoted by not serializing the field at all. This implies that fields defined as Lists have a default empty value.
+</p>
+
+<p>注記：
+`~list$sfを成す~memberたちは、`~field節$の内側では
+— ［
+`~fieldの順序付けと結合$sec `Semantics^r ／ `RFC7230/3.2.2$sec
+］に従って —
+複数個の`~field行l$に分割し得る。
+◎
+Note that Lists can have their members split across multiple lines inside a header or trailer section, as per Section 3.2.2 of [RFC7230];＼
+</p>
+
+<div class="example">
+<p>
+例えば，次は：
+◎
+for example, the following are equivalent:
+</p>
+
+<pre class="lang-http">
+Example-Hdr: foo, bar
+</pre>
+
+<p>
+次と等価になる：
+◎
+and
+</p>
+
+<pre class="lang-http">
+Example-Hdr: foo
+Example-Hdr: bar
+</pre>
+
+</div>
+
+<p>
+しかしながら，`~list$sfを成す個々の~memberは、複数個の`~field行l$に安全に分割し得ない
+— 詳細は`4.2$sec を見よ。
+◎
+However, individual members of a List cannot be safely split between across lines; see Section 4.2 for details.
+</p>
+
+<p>
+構文解析器は、`~list$sfを成す~memberとして 1024 個までは~supportしなければナラナイ。
+~field仕様は、個々の`~list$sfを成す［
+個々の~memberの型／~memberの個数
+］を必要に応じて拘束し得る。
+◎
+Parsers MUST support Lists containing at least 1024 members. Field specifications can constrain the types and cardinality of individual List values as they require.
+</p>
+
+			<section id="inner-list">
+<h4 title="Inner Lists">3.1.1. `内縁~list^sf</h4>
+
+<div class="p">
+<p>
+`内縁~list@sf
+（ `Inner List^en 【 “~top-level構造でない~list” 】）は、`~parameters$sfも伴い得る~list†
+— すなわち，次の 2 つからなる`~tuple$である：
+</p>
+<ol>
+	<li>
+各`~item$が`~item$sfに制約される`~list$
+</li>
+	<li>
+`~parameters$sf
+【† `内縁~list^sfが “`~parameters^sfを伴わない“ という句は、これが空であることと同義になる。】
+</li>
+</ol>
+
+◎
+An Inner List is an array of zero or more Items (Section 3.3). Both the individual Items and the Inner List itself can be Parameterized (Section 3.1.2).
+</div>
+
+<p>
+`内縁~list$sf用の~ABNFは：
+◎
+The ABNF for Inner Lists is:
+</p>
+
+<pre class="bnf">
+`inner-list@p
+      = "(" *`SP$P [ `sf-item$p *( 1*`SP$P `sf-item$p ) *`SP$P ] ")" `parameters$p
+</pre>
+
+<p>
+`内縁~list$sfは，各`~item$sfどうしを 1 個~以上の ` ^ch で区切った上で【`~parameters$sfを除く】全体を丸括弧で括って表される。
+◎
+Inner Lists are denoted by surrounding parenthesis, and have their values delimited by one or more spaces.＼
+</p>
+
+<div class="example">
+<p>
+一連の［
+一連の`文字列$sfからなる`内縁~list$sf
+］からなる`~list$sfを値にとるように定義された~fieldは、次の様な見かけになる：
+◎
+A field whose value is defined as a List of Inner Lists of Strings could look like:
+</p>
+
+<pre class="lang-http">
+Example-StrListList: ("foo" "bar"), ("baz"), ("bat" "one"), ()
+</pre>
+
+<p>
+この例における最後の~member（ `()^c ）は、空な`内縁~list^sfを表すことに注意。
+◎
+Note that the last member in this example is an empty Inner List.
+</p>
+
+<p>
+`~list$sfを成す［
+`内縁~list$sf, および それを成すある`~item$sf
+］どちらも`~parameters$sfを伴うように定義された~headerは、次の様な見かけになる：
+◎
+A header field whose value is defined as a List of Inner Lists with Parameters at both levels could look like:
+</p>
+
+<pre class="lang-http">
+Example-ListListParam: ("foo"; a=1;b=2);lvl=5, ("bar" "baz");lvl=1
+</pre>
+</div>
+
+<p>
+構文解析器は、`内縁~list$sfを成す`~item$として 256 個までは~supportしなければナラナイ。
+~field仕様は、`内縁~list$sfを成す［
+個々の~memberの型／~memberの個数
+］を必要に応じて拘束し得る。
+◎
+Parsers MUST support Inner Lists containing at least 256 members. Field specifications can constrain the types and cardinality of individual Inner List members as they require.
+</p>
+
+			</section>
+			<section id="param">
+<h4 title="Parameters">3.1.2. `~parameters^sf</h4>
+
+<div class="p">
+
+<p>
+各［
+`~item$sf ／ `内縁~list$sf
+］に結付けられる
+`~parameters@sf
+（ `Parameters^en ）は、各［
+`~parameter@sf
+（ `Parameter^en ）と称される`~entry$map
+］が次のように制約される`有順序~map$である：
+</p>
+<ul>
+	<li>
+`~parameter$sfの名前を与える`~key$mapは、`~key$sfである
+</li>
+	<li>
+`値$mapは、`裸~item$sfである
+</li>
+</ul>
+◎
+Parameters are an ordered map of key-value pairs that are associated with an Item (Section 3.3) or Inner List (Section 3.1.1). The keys are unique within the scope the Parameters they occur within, and the values are bare items (i.e., they themselves cannot be parameterized; see Section 3.3).
+</div>
+
+<p>
+`~parameters$sf用の~ABNFは：
+◎
+The ABNF for Parameters is:
+</p>
+
+<pre class="bnf">
+`parameters@p
+      = *( ";" *`SP$P `parameter$p )
+`parameter@p
+      = `param-name$p [ "=" `param-value$p ]
+`param-name@p
+      = `key$p
+`key@p
+      = ( `lcalpha$p / "*" )
+        *( `lcalpha$p / `DIGIT$P / "_" / "-" / "." / "*" )
+`lcalpha@p
+      = `61-7A^X ; a-z
+`param-value@p
+      = `bare-item$p
+</pre>
+
+<p class="trans-note">【
+同じ `param-name$p を伴う複数個の `parameter$p が現れても許容され，最後に現れるものが他を上書きする（`~parametersを構文解析する$secを見よ）。
+】</p>
+
+<p>注記：
+`~parameters$sfを成す`~parameter$sfたちは、直列化されたとおりに順序付けられる。
+各`~parameter$sfの`~key$sfは、大文字を包含し得ない。
+各`~parameter$sfは、
+`;^ch を接頭することにより，他と区切られる。
+◎
+Note that Parameters are ordered as serialized, and Parameter keys cannot contain uppercase letters. A parameter is separated from its Item or Inner List and other parameters by a semicolon.＼
+</p>
+
+<div class="example">
+<p>
+例えば【 `abc;…,^c は`~item$sf ／ `(ghi;jk=4 l)…^c は`内縁~list$sf 】：
+◎
+For example:
+</p>
+
+<pre class="lang-http">
+Example-ParamList: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
+</pre>
+</div>
+
+<p>
+`真偽値$sf ~T を値にとる`~parameter$sfを直列化するときには、その値を省略しなければナラナイ。
+◎
+Parameters whose value is Boolean (see Section 3.3.6) true MUST omit that value when serialized.＼
+</p>
+
+<div class="example">
+<p>
+例えば、`~parameter$sf［
+`a^c は ~T,
+`b^c は ~F
+］をとる場合の結果は：
+◎
+For example, the “a” parameter here is true, while the “b” parameter is false:
+</p>
+
+<pre class="lang-http">
+Example-Int: 1; a; b=?0
+</pre>
+</div>
+
+<p>注記：
+この要件は、直列化に限られる。
+構文解析器には、`~parameter$sf内に`真偽値$sf ~T が出現しても正しく取扱うことが，依然として要求される。
+◎
+Note that this requirement is only on serialization; parsers are still required to correctly handle the true value when it appears in a parameter.
+</p>
+
+<p>
+構文解析器は、［
+`~item$sf／`内縁~list$sf
+］の`~parameters$sfを成す`~parameter$sfとして 256 個までは~supportしなければナラナイ。
+~field仕様は、`~parameters$sfを成す［
+`~parameter$sfたちの順序／個々の`~parameter$sfの型
+］を必要に応じて拘束し得る。
+◎
+Parsers MUST support at least 256 parameters on an Item or Inner List,＼
+and support parameter keys with at least 64 characters.（ → § key に移動）＼
+Field specifications can constrain the order of individual Parameters, as well as their values’ types as required.
+</p>
+
+				<section id="_key">
+<h4>3.1.2.1. `~key^sf</h4>
+
+<p class="trans-note">【
+この節は、他所を集約するための，この訳による追加。
+】</p>
+
+<p>
+`~key@sf
+は、［
+`~parameters$sf／`辞書$sf
+］を成す`~key$mapを与える。
+それは、次のように制約される`文字列$である：
+</p>
+
+<ul>
+	<li>
+1 個以上の，次に挙げる
+`~key文字@
+のみからなる
+⇒＃
+`~ASCII英小文字$,
+`~ASCII数字$,
+`_^ch,
+`-^ch,
+`.^ch,
+`*^ch
+</li>
+	<li>
+最初の文字は［
+`~ASCII英小文字$ ／ `*^ch
+］
+</li>
+</ul>
+
+<p>
+`~key$sf用の~ABNFは、 `key$p である。
+</p>
+
+<p>
+構文解析器は、`~key$sfを成す文字として 64 個までは~supportしなければナラナイ。
+</p>
+
+				</section>
+			</section>
+		</section>
+		<section id="dictionary">
+<h3 title="Dictionaries">3.2. `辞書^sf</h3>
+
+<div class="p">
+<p>
+`辞書@sf
+（ `Dictionary^en ）は、各`~entry$mapが次のように制約される`有順序~map$である：
+</p>
+<ul>
+	<li>
+`~key$mapは、（短い~textな名前を成す）`~key$sfである
+</li>
+	<li>
+`値$mapは、［
+`~item$sf／`内縁~list$sf
+］である
+</li>
+</ul>
+◎
+Dictionaries are ordered maps of name-value pairs, where the names are short textual strings and the values are Items (Section 3.3) or arrays of Items, both of which can be Parameterized (Section 3.1.2). There can be zero or more members, and their names are unique in the scope of the Dictionary they occur within.
+</div>
+
+<p>
+実装は、`辞書$sfへの［
+~indexによる~access, 名前による~access
+］両者を供さなければナラナイ。
+仕様は、~memberに~accessする手段にどちらを利用してもヨイ。
+◎
+Implementations MUST provide access to Dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
+</p>
+
+<p>
+`辞書$sf用の~ABNFは：
+◎
+The ABNF for Dictionaries is:
+</p>
+
+<pre class="bnf">
+`sf-dictionary@p
+      = `dict-member$p *( `OWS$p "," `OWS$p `dict-member$p )
+`dict-member@p
+      = `member-name$p [ "=" `member-value$p ]
+`member-name@p
+      = `key$p
+`member-value@p
+      = `sf-item$p
+      / `inner-list$p
+</pre>
+
+<p class="trans-note">【
+同じ `dict-name$p を伴う複数個の `dict-member$p が現れても許容され，最後に現れるものが他を上書きする（`辞書を構文解析する$secを見よ）。
+】</p>
+
+<p>
+~memberたちは、直列化されたとおりに順序付けられ，［
+0 個以上の空白を伴う `,^ch
+］で互いに区切られる。
+各~memberの名前は、大文字を包含し得ない。
+各~memberの名前と値は、［
+空白は伴わない `=^ch
+］で区切られる。
+◎
+Members are ordered as serialized, and separated by a comma with optional whitespace. Member names cannot contain uppercase characters. Names and values are separated by “=” (without whitespace).＼
+</p>
+
+<div class="example">
+<p>
+例えば：
+◎
+For example:
+</p>
+
+<pre class="lang-http">
+Example-Dict: en="Applepie", da=:w4ZibGV0w6ZydGU=:
+</pre>
+
+<p>
+この例における最後の `=^l は、`~byte列$sfを含めた結果に因ることに注意。
+◎
+Note that in this example, the final “=” is due to the inclusion of a Byte Sequence; see Section 3.3.5.
+</p>
+</div>
+
+<p>
+~memberのうち`真偽値$sf ~T を値にとる`~item$sfを直列化するときには、その値を省略しなければナラナイ。
+◎
+Members whose value is Boolean (see Section 3.3.6) true MUST omit that value when serialized.＼
+</p>
+
+<div class="example">
+<p>
+次の例の~member［
+`b^c, `c^c
+］は、どちらも ~T を値にとる：
+◎
+For example, here both “b” and “c” are true:
+</p>
+
+<pre class="lang-http">
+Example-Dict: a=?0, b, c; foo=bar
+</pre>
+</div>
+
+<p>注記：
+この要件は、直列化に限られる。
+構文解析器には、`辞書$sfを成す各~memberに出現する`真偽値$sf ~T を正しく取扱うことが依然として要求される。
+◎
+Note that this requirement is only on serialization; parsers are still required to correctly handle the true Boolean value when it appears in Dictionary values.
+</p>
+
+<div class="example">
+<p>
+一連の`~token$sfからなる`内縁~list$sfを値にとる~memberを伴う`辞書$sf：
+◎
+A Dictionary with a member whose value is an Inner List of Tokens:
+</p>
+
+<pre class="lang-http">
+Example-DictList: rating=1.5, feelings=(joy sadness)
+</pre>
+
+<p>
+各~memberの値として［
+`~item$sf, `内縁~list$sf
+］が混在する`辞書$sfの例
+— うちいくつか（ `c^c, `d^c ）は、`~parameters$sfも伴う:
+◎
+A Dictionary with a mix of singular and list values, some with Parameters:
+</p>
+
+<pre class="lang-http">
+Example-MixDict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid
+</pre>
+</div>
+
+<p>
+`~list$sfと同じく，空な`辞書$sfは、当の~field全体を省略することにより表現される。
+これは、`辞書$sfとして定義された~fieldの既定の値は，空になることを含意する。
+◎
+As with lists, an empty Dictionary is represented by omitting the entire field. This implies that fields defined as Dictionaries have a default empty value.
+</p>
+
+<p>
+~field仕様は、`辞書$sfの意味論を，概して［
+個々の~member名に対し，［
+値に許容される型（たち）,
+~memberの省略可否
+］を指定する
+］ことにより定義することになる。
+`受信者$は、［
+未定義／未知
+］な名前を
+— ~field仕様が特定的にそれを許容しないものとしている場合を除き —
+無視しなければナラナイ。
+◎
+Typically, a field specification will define the semantics of Dictionaries by specifying the allowed type(s) for individual members by their names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the field’s specification specifically disallows them.
+</p>
+
+<p>注記：
+`辞書$sfを成す~memberたちは、`~field節$の内側では複数個の`~field行l$に分割し得る。
+◎
+Note that Dictionaries can have their members split across multiple lines inside a header or trailer section;＼
+</p>
+
+<div class="example">
+<p>
+例えば，次は：
+◎
+for example, the following are equivalent:
+</p>
+
+<pre class="lang-http">
+Example-Hdr: foo=1, bar=2
+</pre>
+
+<p>
+次と等価になる：
+◎
+and
+</p>
+
+<pre class="lang-http">
+Example-Hdr: foo=1
+Example-Hdr: bar=2
+</pre>
+</div>
+
+<p>
+しかしながら，`辞書$sfを成す個々の~memberは、複数個の`~field行l$に安全に分割し得ない。
+詳細は`4.2$sec を見よ。
+◎
+However, individual members of a Dictionary cannot be safely split between lines; see Section 4.2 for details.
+</p>
+
+<p>
+構文解析器は、`辞書$sfを成す~memberとして 1024 個までは~supportしなければナラナイ。
+~field仕様は、`辞書$sfを成す［
+~memberたちの順序／個々の~memberの型
+］を必要に応じて拘束し得る。
+◎
+Parsers MUST support Dictionaries containing at least 1024 name/value pairs,＼
+and names with at least 64 characters.（ → § key に移動）＼
+Field specifications can constrain the order of individual Dictionary members, as well as their values’ types as required.
+</p>
+
+		</section>
+		<section id="item">
+<h3 title="Items">3.3. `~item^sf</h3>
+
+<div class="p">
+<p>
+`~item@sf
+（ `Item^en ）は、`~parameters$sfも伴い得る値†
+— すなわち，次の 2 つからなる`~tuple$である：
+</p>
+<ul>
+	<li>
+`~item^sfの値を与える，`裸~item$sf
+</li>
+	<li>
+`~parameters$sf
+【† `~item^sfが “`~parameters^sfを伴わない“ という句は、これが空であることと同義になる。】
+</li>
+</ul>
+
+<p>
+`裸~item@sf
+（ `Bare Item^en ）は、次に挙げる いずれかの型として排他的に識別される値である
+⇒＃
+`整数$sf,
+`~decimal$sf,
+`文字列$sf,
+`~token$sf,
+`~byte列$sf,
+`真偽値$sf
+</p>
+
+<p class="trans-note">【
+例えば［
+`文字列$sf, `~token$sf
+］は，どちらも文字列であるが、実装は，型に応じて別々に扱えるよう型~情報を保持する必要がある（ `B$sec ）。
+】</p>
+
+◎
+An Item can be a Integer (Section 3.3.1), Decimal (Section 3.3.2), String (Section 3.3.3), Token (Section 3.3.4), Byte Sequence (Section 3.3.5), or Boolean (Section 3.3.6). It can have associated Parameters (Section 3.1.2).
+</div>
+
+<p>
+`~item$sf用の~ABNFは：
+◎
+The ABNF for Items is:
+</p>
+
+<pre class="bnf">
+`sf-item@p
+      = `bare-item$p `parameters$p
+`bare-item@p
+      = `sf-integer$p
+      / `sf-decimal$p
+      / `sf-string$p
+      / `sf-token$p
+      / `sf-binary$p
+      / `sf-boolean$p
+</pre>
+
+<div class="example">
+<p>
+例えば，`整数$sfを値にとるものと定義される~headerは、次の様な見かけになる:
+◎
+For example, a header field that is defined to be an Item that is an Integer might look like:
+</p>
+
+<pre class="lang-http">
+Example-IntItem【！Example-IntItemHeader】: 5
+</pre>
+
+<p>
+あるいは，`~parameters$sfを伴う場合は：
+◎
+or with Parameters:
+</p>
+
+<pre class="lang-http">
+Example-IntItem: 5; foo=bar
+</pre>
+</div>
+
+			<section id="integer">
+<h4 title="Integers">3.3.1. `整数^sf</h4>
+
+<p>
+`整数@sf
+（ `Integer^en ）は、
+`IEEE754$r との互換性を得るため†，次のように制約される整数である
+⇒
+範囲 { −999999999999999 〜 999999999999999 } に入る（すなわち， 15 桁まで, 有符号）。
+◎
+Integers have a range of -9999,999,999,999,999 to 999,999,999,999,999 inclusive (i.e., up to fifteen digits, signed), for IEEE 754 compatibility ([IEEE754]).
+</p>
+
+<p class="trans-note">【†
+すなわち、実装が整数を double 型の値として保持する場合に，文字列との相互変換が往来することを確保するため。
+】</p>
+
+<p>
+`整数$sf用の~ABNFは：
+◎
+The ABNF for Integers is:
+</p>
+
+<pre class="bnf">
+`sf-integer@p
+      = ["-"] 1*15`DIGIT$P
+</pre>
+
+<div class="example">
+<p>
+例えば：
+◎
+For example:
+</p>
+
+<pre class="lang-http">
+Example-Integer: 42
+</pre>
+</div>
+
+<p>
+桁数が 15 を超える整数は、何種類かの仕方で~supportできる
+— 例えば，［
+`文字列$sf／
+`~byte列$sf／
+~parameterに対する係数として動作する`整数$sf
+］を利用するなど。
+◎
+Integers larger than 15 digits can be supported in a variety of ways; for example, by using a String (Section 3.3.3), Byte Sequence (Section 3.3.5), or a parameter on an Integer that acts as a scaling factor.
+</p>
+
+<p>
+`整数$sfを［
+頭部に 0 を伴うよう（例： `0002^l, `-01^l ）／
+有符号な 0 （ `-0^l ）
+］に直列化することもアリだが【そうしても構文解析できるが】、実装は，これらの区別を保全しないであろう。
+◎
+While it is possible to serialise Integers with leading zeros (e.g., “0002”, “-01”) and signed zero (“-0”), these distinctions may not be preserved by implementations.
+</p>
+
+<p>
+◎
+（和訳には不要な内容なので省略）
+Note that commas in Integers are used in this section’s prose only for readability; they are not valid in the wire format.
+</p>
+
+			</section>
+			<section id="decimal">
+<h4 title="Decimals">3.3.2. `~decimal^sf</h4>
+
+<p>
+`~decimal@sf
+（ `Decimal^en ）は、有符号な実数であり，その整数~成分は 12 桁まで（絶対値として 0 〜 999999999999 ）, 小数~成分は 3 桁まで（同 0.000 〜 0.999 ）に制約される（いずれも 10 進記数法で）。
+◎
+Decimals are numbers with an integer and a fractional component. The integer component has at most 12 digits; the fractional component has at most three digits.
+</p>
+
+<p class="trans-note">【
+`整数$sfのときと同様，合わせて 15 桁までにされているのは、実装が`~decimal$sfを（例えば演算~用に） double 型の値として保持する場合に，それらの相互変換が往来すること
+— `~decimal$sfを double 型に変換してから`~decimal$sfに変換した（丸めた）結果が同じ値に戻ること —
+を確保することにある。
+小数~成分が 3 桁までにされているのは、［
+それ以上を要する利用事例は今の所無い／帯域幅の節約／相互運用能
+］などが理由に挙げられている。
+（<a href="https://github.com/httpwg/http-extensions/issues/982">課題 #982</a>）
+】</p>
+
+<p>
+`~decimal$sf用の~ABNFは：
+◎
+The ABNF for decimals is:
+</p>
+
+<pre class="bnf">
+`sf-decimal@p
+      = ["-"] 1*12`DIGIT$P "." 1*3`DIGIT$P
+</pre>
+
+<div class="example">
+<p>
+例えば，`~decimal$sfを値にとるように定義される~headerは、次の様な見かけになる：
+◎
+For example, a header whose value is defined as a Decimal could look like:
+</p>
+
+<pre class="lang-http">
+Example-Decimal: 4.5
+</pre>
+</div>
+
+<p>
+`~decimal$sfを［
+頭部に 0 を伴うよう（例： `0002.5^l, `-01.334^l ）／
+尾部に 0 を伴うよう（例： `5.230^l, `-0.40^l ）／
+有符号な 0 （例： `-0.0^l ）
+］に直列化することもアリだが【そうしても構文解析できるが】、実装は，これらの区別を保全しないであろう。
+◎
+While it is possible to serialise Decimals with leading zeros (e.g., “0002.5”, “-01.334”), trailing zeros (e.g., “5.230”, “-0.40”), and signed zero (e.g., “-0.0”), these distinctions may not be preserved by implementations.
+</p>
+
+<p>注記：
+`~decimalを直列化する$~algoは、小数~成分~内の 3 桁を超える精度を伴う入力を丸める。
+代替な丸め策が欲される場合、直列化の前に生じるよう，~header定義により指定されるべきである。
+◎
+Note that the serialisation algorithm (Section 4.1.5) rounds input with more than three digits of precision in the fractional component. If an alternative rounding strategy is desired, this should be specified by the header definition to occur before serialisation.
+</p>
+
+			</section>
+			<section id="string">
+<h4 title="Strings">3.3.3. `文字列^sf</h4>
+
+<p>
+`文字列@sf
+（ `String^en ）は、次のように制約される文字列である
+⇒
+0 個以上の［
+`制御~文字$以外の`~ASCII文字$【！`RFC0020$r】（すなわち， ` ^ch 〜 `~^ch ）
+］のみからなる（ `HTAB^P, `LF^P, `CR^P, 等々は除外されることに注意）
+◎
+Strings are zero or more printable ASCII [RFC0020] characters (i.e., the range %x20 to %x7E). Note that this excludes tabs, newlines, carriage returns, etc.
+</p>
+
+<p>
+`文字列$sf用の~ABNFは：
+◎
+The ABNF for Strings is:
+</p>
+
+<pre class="bnf">
+`sf-string@p
+      = `DQUOTE$P *`chr$p `DQUOTE$P
+`chr@p
+      = `unescaped$p
+      / `escaped$p
+`unescaped@p
+      = `20-21^X
+      / `23-5B^X
+      / `5D-7E^X
+`escaped@p
+      = "\" ( `DQUOTE$P / "\" )
+</pre>
+
+<p>
+`文字列$sfは二重引用符 `"^ch （ `DQUOTE$P ）で区切られ，［
+`"^ch ／ `\^ch
+］は `\^ch を利用して~escapeされる。
+◎
+Strings are delimited with double quotes, using a backslash (“\”) to escape double quotes and backslashes.＼
+</p>
+
+<div class="example">
+<p>
+例えば：
+◎
+For example:
+</p>
+
+<pre class="lang-http">
+Example-String: "hello world"
+</pre>
+</div>
+
+<p>注記：
+`文字列$sfが区切子として利用するのは `"^ch に限られる
+— 一重引用符 `'^ch は`文字列$sfを区切らない。
+更には、~escapeできる文字は［
+`"^ch ／ `\^ch
+］に限られる
+— `\^ch の直後にある他の文字は、構文解析を失敗させなければナラナイ。
+◎
+Note that Strings only use DQUOTE as a delimiter; single quotes do not delimit Strings. Furthermore, only DQUOTE and “\” can be escaped; other characters after “\” MUST cause parsing to fail.
+</p>
+
+<p>
+`文字列$sfにおいては、~Unicodeは直に~supportされない
+— それは、相互運用能の課題をいくつかもたらすのと，`~field値$に それが要求されるのは少数の例外に限られるので。
+◎
+Unicode is not directly supported in Strings, because it causes a number of interoperability issues, and – with few exceptions – field values do not require it.
+</p>
+
+<p>
+`~field値$が~ASCIIでない内容を伝達することが必要とされる場合、`~byte列$sfを その文字~符号化法（ `UTF-8$r が好ましい）とともに指定できる。
+◎
+When it is necessary for a field value to convey non-ASCII content, a Byte Sequence (Section 3.3.5) can be specified, along with a character encoding (preferably [UTF-8]).
+</p>
+
+<p>
+構文解析器は、（【~escapeを】復号した後の）`文字列$sfを成す文字として 1024 個までは~supportしなければナラナイ。
+◎
+Parsers MUST support Strings (after any decoding) with at least 1024 characters.
+</p>
+
+			</section>
+			<section id="token">
+<h4 title="Tokens">3.3.4. `~token^sf</h4>
+
+<div class="p">
+<p>
+`~token@sf
+（ `Token^en ）は、次のように制約される文字列である：
+</p>
+
+<ul>
+	<li>
+1 個以上の，次に挙げる
+`~token文字@
+のみからなる
+⇒＃
+`tchar$p に許容される~octetに等価な各~文字,
+`:^ch,
+`/^ch
+</li>
+	<li>
+最初の文字は［
+`~ASCII英字$ ／ `*^ch
+］
+</li>
+</ul>
+
+<p>
+`~token$sfは、短い~textな単語であり，その抽象-~modelは~HTTP`~field値$への直列化における表出に一致する。
+</p>
+
+◎
+Tokens are short textual words; their abstract model is identical to their expression in the HTTP field value serialization.
+</div>
+
+<p>
+`~token$sf用の~ABNFは：
+◎
+The ABNF for Tokens is:
+</p>
+
+<pre class="bnf">
+`sf-token@p
+      = ( `ALPHA$P / "*" ) *( `tchar$p / ":" / "/" )
+</pre>
+
+<div class="example">
+<p>
+例：
+◎
+For example:
+</p>
+
+<pre class="lang-http">
+Example-Token: foo123/456
+</pre>
+</div>
+
+<p>
+構文解析器は、`~token$sfを成す文字として 512 個までは~supportしなければナラナイ。
+◎
+Parsers MUST support Tokens with at least 512 characters.
+</p>
+
+<p>注記：
+`~token$sfは、［
+`RFC7230$r に定義される `token$p ~ABNF規則
+］と同じ文字たちを許容するが、次の点で相違する
+⇒＃
+最初の文字は、`~ASCII英字$か `*^ch にすることが要求される／
+後続の各~文字には、 `:^ch, `/^ch も許容される
+◎
+Note that Token allows the same characters as the “token” ABNF rule defined in [RFC7230], with the exceptions that the first character is required to be either ALPHA or “*”, and “:” and “/” are also allowed in subsequent characters.
+</p>
+
+			</section>
+			<section id="binary">
+<h4 title="Byte Sequences">3.3.5. `~byte列^sf</h4>
+
+<p>
+有構造~field内には、
+`~byte列@sf
+（ `Byte Sequence^en ）を伝達できる
+— それは、任意の`~byte列$である。
+◎
+Byte Sequences can be conveyed in Structured Fields.
+</p>
+
+<p>
+`~byte列$sf用の~ABNFは：
+◎
+The ABNF for a Byte Sequence is:
+</p>
+
+<pre class="bnf">
+`sf-binary@p
+      = ":" *(`base64$p) ":"
+`base64@p
+      = `ALPHA$P
+      / `DIGIT$P
+      / "+"
+      / "/"
+      / "="
+</pre>
+
+<p>
+`~byte列$sfは， `base64$p を利用して符号化された上で（ `RFC4648/4$sec ），
+`:^ch で括られる。
+◎
+A Byte Sequence is delimited with colons and encoded using base64 ([RFC4648], Section 4).＼
+</p>
+
+<div class="example">
+<p>
+例えば：
+◎
+For example:
+</p>
+
+<pre class="lang-http">
+Example-Binary: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
+</pre>
+</div>
+
+<p>
+構文解析器は、復号-後における`~byte列$sfを成す~octetとして，16384 【 ~EQ 1024 × 16 】個までは~supportしなければナラナイ。
+◎
+Parsers MUST support Byte Sequences with at least 16384 octets after decoding.
+</p>
+
+			</section>
+			<section id="boolean">
+<h4 title="Booleans">3.3.6. `真偽値^sf</h4>
+
+<p>
+有構造~field内には
+`真偽値@sf
+（ `Boolean^en ）を伝達できる
+— それは、`真偽値$（すなわち，~T／~F ）である。
+◎
+Boolean values can be conveyed in Structured Fields.
+</p>
+
+<p>
+`真偽値$sf用の~ABNFは：
+◎
+The ABNF for a Boolean is:
+</p>
+
+<pre class="bnf">
+`sf-boolean@p
+      = "?" `boolean$p
+`boolean@p
+      = "0"
+      / "1"
+</pre>
+
+<p>
+`真偽値$sfは［
+~T 値を表す `?1^l ／
+~F 値を表す `?0^l
+］で指示される。
+◎
+A Boolean is indicated with a leading “?” character followed by a “1” for a true value or “0” for false.＼
+</p>
+
+<div class="example">
+<p>
+例えば：
+◎
+For example:
+</p>
+
+<pre class="lang-http">
+Example-Bool: ?1
+</pre>
+</div>
+
+<p>注記：
+［
+`辞書$sfを成す各~entryの値／各`~parameter$sfの値
+］における`真偽値$sf ~T は、値を省略することで指示される。
+◎
+Note that in Dictionary (Section 3.2) and Parameter (Section 3.1.2) values, Boolean true is indicated by omitting the value.
+</p>
+
+			</section>
+		</section>
+	</section>
+	<section id="text">
+<h2 title="Working With Structured Fields in HTTP Headers">4. ~HTTP~header内の有構造~fieldに対する作業-法</h2>
+
+<p>
+この節は、有構造~fieldを，~textな`~field値$
+— あるいは それと互換な他の符号化法（例： ~HTTP/2 `RFC7540$r においては、~HPACK `RFC7541$r による圧縮が適用される前のそれ） —
+内に直列化する方法, および それらから構文解析する方法を定義する。
+◎
+This section defines how to serialize and parse Structured Fields in textual HTTP field values and other encodings compatible with them (e.g., in HTTP/2 [RFC7540] before compression with HPACK [RFC7541]).
+ field values, and protocols compatible with them 
+</p>
+
+		<section id="text-serialize">
+<h3 title="Serializing Structured Fields">4.1. 有構造~fieldの直列化-法</h3>
+
+<p>
+この節に定義される~algoは、汎用な~data型を入力にとるように設計されている（ `B$sec ）。
+`有構造~data型$をそのような~data型として内部的に保持する実装は、この節にて定義される各種 直列化~algoにおいて，どこかで ~Assert に違反した場合には、直列化~全体を失敗させるとする。
+【この規約は、以下を簡潔に述べるための，この訳による追加。】
+</p>
+
+<p>
+所与の
+（ %構造 )
+に対し，［
+~HTTP`~field値$に利用するに相応しい~ASCII文字列
+］を返す。
+◎
+Given a structure defined in this specification, return an ASCII string suitable for use in a HTTP field value.
+</p>
+
+<ol>
+	<li>
+~IF［
+%構造 は［
+`有順序~map$ ／ `~list$
+］である
+］~AND［
+%構造 は空である
+］
+⇒
+~RET
+— 当の~headerは直列化しない（すなわち， `field-name$p, `field-value$p 両者とも省略する）
+◎
+If the structure is a Dictionary or List and its value is empty (i.e., it has no members), do not serialize the field at all (i.e., omit both the field-name and field-value).
+</li>
+	<li>
+%出力~文字列 ~LET %構造 に応じて
+⇒＃
+`~list$であるならば `~listを直列化する$( %構造 ) ／
+`有順序~map$であるならば `辞書を直列化する$( %構造 ) ／
+~ELSE_ `~itemを直列化する$( %構造 )
+◎
+If the structure is a List, let output_string be the result of running Serializing a List (Section 4.1.1) with the structure.
+◎
+Else if the structure is a Dictionary, let output_string be the result of running Serializing a Dictionary (Section 4.1.2) with the structure.
+◎
+Else if the structure is an Item, let output_string be the result of running Serializing an Item (Section 4.1.3) with the structure.
+◎
+Else, fail serialization.
+</li>
+	<li>
+~RET `~ASCII符号化する$( %出力~文字列 )
+【！ `RFC0020$r を利用して， を~byte列に変換した結果】
+◎
+Return output_string converted into an array of bytes, using ASCII encoding [RFC0020].
+</li>
+</ol>
+
+			<section id="ser-list">
+<h4 title="Serializing a List">4.1.1. `~list$sfの直列化-法</h4>
+
+<p>
+所与の
+( `~list$ %入力~list )
+に対し，［
+~HTTP`~field値$に利用するに相応しい~ASCII文字列
+］を返す：
+◎
+Given an array of (member_value, parameters) tuples as input_list, return an ASCII string suitable for use in a HTTP field value.
+</p>
+<ol>
+	<li>
+%出力~list ~LET 新たな`~list$
+◎
+Let output be an empty string.
+</li>
+	<li>
+%入力~list を成す
+~EACH( %~item )
+に対し
+⇒
+%出力~list に次の結果を`付加する$
+⇒
+%~item に応じて
+⇒＃
+`~list$であるならば `内縁~listを直列化する$( %~item ) ／
+~ELSE_ `~itemを直列化する$( %~item )
+◎
+For each (member_value, parameters) of input_list:
+• If member_value is an array, append the result of running Serializing an Inner List (Section 4.1.1.1) with (member_value, parameters) to output.
+• Otherwise, append the result of running Serializing an Item (Section 4.1.3) with (member_value, parameters) to output.
+</li>
+	<li>
+~RET %出力~list を［
+`,^ch, ` ^ch
+］並びで`連結する$
+◎
+• If more member_values remain in input_list:
+•• Append “,” to output.
+•• Append a single SP to output.
+◎
+Return output.
+</li>
+</ol>
+
+				<section id="ser-innerlist">
+<h5 title="Serializing an Inner List">4.1.1.1. `内縁~list$sfの直列化-法</h5>
+
+<p>
+所与の
+( `~list$ %内縁~list )
+に対し，［
+~HTTP`~field値$に利用するに相応しい~ASCII文字列
+］を返す。
+◎
+Given an array of (member_value, parameters) tuples as inner_list, and parameters as list_parameters, return an ASCII string suitable for use in a HTTP field value.
+</p>
+<ol>
+	<li>
+%出力~item~list ~LET 新たな`~list$
+◎
+↓</li>
+	<li>
+%内縁~list を成す
+~EACH( %~item )
+に対し
+⇒
+%出力~item~list に次の結果を`付加する$
+⇒
+`~itemを直列化する$( %~item )
+◎
+Let output be the string “(“.
+◎
+For each (member_value, parameters) of inner_list:
+• Append the result of running Serializing an Item (Section 4.1.3) with (member_value, parameters) to output.
+• If more values remain in inner_list, append a single SP to output.
+</li>
+	<li>
+~RET 次を順に連結した結果
+⇒＃
+`(^ch,
+%出力~item~list を ` ^ch で`連結する$,
+`)^ch,
+`~parametersを直列化する$( %内縁~list の`~parameters$sf )
+◎
+↑
+◎
+Append “)” to output.
+◎
+Append the result of running Serializing Parameters (Section 4.1.1.2) with list_parameters to output.
+◎
+Return output.
+</li>
+</ol>
+				</section>
+				<section id="ser-params">
+<h5 title="Serializing Parameters">4.1.1.2. `~parameters$sfの直列化-法</h5>
+
+<p>
+所与の
+( `有順序~map$ %入力~parameters )
+に対し，［
+~HTTP`~field値$に利用するに相応しい~ASCII文字列
+］を返す：
+◎
+Given an ordered Dictionary as input_parameters (each member having a param_name and a param_value), return an ASCII string suitable for use in a HTTP field value.
+</p>
+<ol>
+	<li>
+%出力 ~LET 空~文字列
+◎
+Let output be an empty string.
+</li>
+	<li>
+<p>
+%入力~parameters を成す
+~EACH( %~parameter名 → %~parameter値 )
+に対し：
+◎
+For each param_name with a value of param_value in input_parameters:
+</p>
+		<ol>
+			<li>
+%出力 に `;^ch を付加する
+◎
+Append “;” to output.
+</li>
+			<li>
+%出力 に次の結果を付加する
+⇒
+`~keyを直列化する$( %~parameter名 )
+◎
+Append the result of running Serializing a Key (Section 4.1.1.3) with param_name to output.
+</li>
+			<li>
+~IF［
+%~parameter値 は`真偽値$sf ~T である
+］
+⇒
+~CONTINUE
+◎
+If param_value is not Boolean true:
+</li>
+			<li>
+%出力 に `=^ch を付加する
+◎
+Append “=” to output.
+</li>
+			<li>
+%出力 に次の結果を付加する
+⇒
+`裸~itemを直列化する$( %~parameter値 )
+◎
+Append the result of running Serializing a bare Item (Section 4.1.3.1) with param_value to output.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %出力
+◎
+Return output.
+</li>
+</ol>
+				</section>
+				<section id="ser-key">
+<h5 title="Serializing a Key">4.1.1.3. `~key$sfの直列化-法</h5>
+
+<p>
+所与の
+( %入力~key )
+に対し，［
+~HTTP`~field値$に利用するに相応しい~ASCII文字列
+］を返す：
+◎
+Given a key as input_key, return an ASCII string suitable for use in a HTTP field value.
+</p>
+
+<ol>
+	<li>
+~Assert：
+%入力~key は`~key$sfである
+◎
+Convert input_key into a sequence of ASCII characters; if conversion fails, fail serialization.
+◎
+If input_key contains characters not in lcalpha, DIGIT, “_”, “-“, “.”, or “*” fail serialization.
+◎
+If the first character of input_key is not lcalpha or “*”, fail serialization.
+</li>
+	<li>
+~RET %入力~key
+◎
+Let output be an empty string.
+◎
+Append input_key to output.
+◎
+Return output.
+</li>
+</ol>
+
+				</section>
+			</section>
+			<section id="ser-dictionary">
+<h4 title="Serializing a Dictionary">4.1.2. `辞書$sfの直列化-法</h4>
+
+<p>
+所与の
+( `有順序~map$ %入力~辞書 )
+に対し，［
+~HTTP`~field値$に利用するに相応しい~ASCII文字列
+］を返す：
+◎
+Given an ordered Dictionary as input_dictionary (each member having a member_name and a tuple value of (member_value, parameters)), return an ASCII string suitable for use in a HTTP field value.
+</p>
+<ol>
+	<li>
+%出力~list ~LET 新たな`~list$
+◎
+Let output be an empty string.
+</li>
+	<li>
+<p>
+%入力~辞書 を成す
+~EACH( %~member名 → %~member値 )
+に対し：
+◎
+For each member_name with a value of (member_value, parameters) in input_dictionary:
+</p>
+		<ol>
+			<li>
+%出力 ~LET `~keyを直列化する$( %~member名 )
+◎
+Append the result of running Serializing a Key (Section 4.1.1.3) with member’s member_name to output.
+</li>
+			<li>
+~IF［
+%~member値 は`~item$sfであって，その値は`真偽値$sf ~T である
+］
+⇒
+%出力 に次の結果を付加する
+⇒
+`~parametersを直列化する$( %~member値 の`~parameters$sf )
+◎
+If member_value is Boolean true:
+• Append the result of running Serializing Parameters (Section 4.1.1.2) with parameters to output.
+</li>
+			<li>
+<p>
+~ELSE
+◎
+Otherwise:
+</p>
+				<ol>
+					<li>
+%出力 に `=^ch を付加する
+◎
+Append “=” to output.
+</li>
+					<li>
+%出力 に %~member値 の型に応じて，次の結果を付加する
+⇒＃
+`~list$であるならば `内縁~listを直列化する$( %~member値 ) ／
+~ELSE_ `~itemを直列化する$( %~member値 )
+◎
+If member_value is an array, append the result of running Serializing an Inner List (Section 4.1.1.1) with (member_value, parameters) to output.
+◎
+Otherwise, append the result of running Serializing an Item (Section 4.1.3) with (member_value, parameters) to output.
+</li>
+				</ol>
+			</li>
+			<li>
+%出力~list に %出力 を`付加する$
+◎
+↓If more members remain in input_dictionary:
+• Append “,” to output.
+• Append a single SP to output.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET 次の結果
+⇒
+%出力~list を［
+`,^ch, ` ^ch
+］並びで`連結する$
+◎
+↑
+◎
+Return output.
+</li>
+</ol>
+
+			</section>
+			<section id="ser-item">
+<h4 title="Serializing an Item">4.1.3. `~item$sfの直列化-法</h4>
+
+<p>
+所与の
+( %~item )
+に対し，［
+~HTTP`~field値$に利用するに相応しい~ASCII文字列
+］を返す：
+◎
+Given an Item as bare_item and Parameters as item_parameters, return an ASCII string suitable for use in a HTTP field value.
+</p>
+<ol>
+	<li>
+~Assert：
+%~item は
+( 任意の値 %値, `有順序~map$ %~parameters )
+からなる`~tuple$である
+◎
+↑</li>
+	<li>
+~RET 次を順に連結した結果
+⇒＃
+`裸~itemを直列化する$( %値 ),
+`~parametersを直列化する$( %~parameters )
+◎
+Let output be an empty string.
+◎
+Append the result of running Serializing a Bare Item Section 4.1.3.1 with bare_item to output.
+◎
+Append the result of running Serializing Parameters Section 4.1.1.2 with item_parameters to output.
+◎
+Return output.
+</li>
+</ol>
+
+				<section id="ser-bare-item">
+<h5 title="Serializing a Bare Item">4.1.3.1. `裸~item$sfの直列化-法</h5>
+
+<p>
+所与の
+( %入力~item )
+に対し，［
+~HTTP`~field値$に利用するに相応しい~ASCII文字列
+］を返す：
+◎
+Given an Item as input_item, return an ASCII string suitable for use in a HTTP field value.
+</p>
+
+<ol>
+	<li>
+<p>
+~RET %入力~item の型に応じて：
+</p>
+		<ul class="switch">
+			<li>
+`整数$sf
+⇒
+`整数を直列化する$( %入力~item )
+◎
+If input_item is an Integer, return the result of running Serializing an Integer (Section 4.1.4) with input_item.
+</li>
+			<li>
+`~decimal$sf
+⇒
+`~decimalを直列化する$( %入力~item )
+◎
+If input_item is a Decimal, return the result of running Serializing a Decimal (Section 4.1.5) with input_item.
+</li>
+			<li>
+`文字列$sf
+⇒
+`文字列を直列化する$( %入力~item )
+◎
+If input_item is a String, return the result of running Serializing a String (Section 4.1.6) with input_item.
+</li>
+			<li>
+`~token$sf
+⇒
+`~tokenを直列化する$( %入力~item )
+◎
+If input_item is a Token, return the result of running Serializing a Token (Section 4.1.7) with input_item.
+</li>
+			<li>
+`真偽値$sf
+⇒
+`真偽値を直列化する$( %入力~item )
+◎
+If input_item is a Boolean, return the result of running Serializing a Boolean (Section 4.1.9) with input_item.
+</li>
+			<li>
+`~byte列$sf
+⇒
+`~byte列を直列化する$( %入力~item )
+◎
+If input_item is a Byte Sequence, return the result of running Serializing a Byte Sequence (Section 4.1.8) with input_item.
+</li>
+			<li>
+その他の型
+⇒
+~Assert：
+この事例は生じ得ない
+◎
+Otherwise, fail serialization.
+</li>
+		</ul>
+	</li>
+</ol>
+
+				</section>
+			</section>
+			<section id="ser-integer">
+<h4 title="Serializing an Integer">4.1.4. `整数$sfの直列化-法</h4>
+
+<p>
+所与の
+( %入力~整数 )
+に対し，［
+~HTTP`~field値$に利用するに相応しい~ASCII文字列
+］を返す：
+◎
+Given an Integer as input_integer, return an ASCII string suitable for use in a HTTP field value.
+</p>
+<ol>
+	<li>
+~Assert：
+%入力~整数 は整数である
+◎
+If input_integer is not an integer in the range of -999,999,999,999,999 to 999,999,999,999,999 inclusive, fail serialization.
+◎
+↓</li>
+	<li>
+%符号 ~LET 空~文字列
+◎
+Let output be an empty string.
+</li>
+	<li>
+~IF［
+%入力~整数 ~LT 0
+］
+⇒＃
+%符号 ~SET `-^ch；
+%入力~整数 ~SET %入力~整数 の絶対値
+◎
+If input_integer is less than (but not equal to) 0, append “-“ to output.
+</li>
+	<li>
+~Assert：
+%入力~整数 ~IN { 0 〜 999999999999999 } （15 桁まで）
+◎
+↑</li>
+	<li>
+<p>
+%整数~部 ~LET %入力~整数 を 10 進記数法で， 15 個~以下†の`~ASCII数字$を利用して表現する文字列
+</p>
+
+<p class="trans-note">【
+頭部にある `0^ch を除去して最短な表現にするよう、明示的に要求されてはいない（ 1 は `01^l 等々に直列化されるかもしれない／
+`~decimalを直列化する$ときと違って， 0 も）。
+】</p>
+◎
+Append input_integer’s numeric value represented in base 10 using only decimal digits to output.
+</li>
+	<li>
+~RET 次を順に連結した結果
+⇒＃
+%符号,
+%整数~部
+◎
+Return output.
+</li>
+</ol>
+
+			</section>
+			<section id="ser-decimal">
+<h4 title="Serializing a Decimal">4.1.5. `~decimal$sfの直列化-法</h4>
+
+<div>
+<p>
+所与の
+( %入力~decimal )
+に対し，［
+~HTTP`~field値$に利用するに相応しい~ASCII文字列
+］を返す：
+◎
+Given a decimal number as input_decimal, return an ASCII string suitable for use in a HTTP field value.
+</p>
+<ol>
+	<li>
+~Assert：
+%入力~decimal は実数である
+◎
+If input_decimal is not a decimal number, fail serialization.
+</li>
+	<li>
+%入力~decimal を その小数~部が 3 桁までになるよう（ 4 桁~目以降を）丸める
+— 等距離にある候補が 2 つある場合、小数~部の 3 桁~目が偶数になる方を選ぶとする
+◎
+If input_decimal has more than three significant digits to the right of the decimal point, round it to three decimal places, rounding the final digit to the nearest value, or to the even value if it is equidistant.
+</li>
+	<li>
+%符号 ~LET 空~文字列
+◎
+↓</li>
+	<li>
+~IF［
+%入力~decimal ~LT 0
+］
+⇒＃
+%符号 ~SET `-^ch；
+%入力~decimal ~SET %入力~decimal の絶対値
+◎
+↓</li>
+	<li>
+%入力~整数 ~LET %入力~decimal の整数~成分
+◎
+↓</li>
+	<li>
+~Assert：
+%入力~整数 ~IN { 0 〜 999999999999 } （ 12 桁まで）
+◎
+If input_decimal has more than 12 significant digits to the left of the decimal point after rounding, fail serialization.
+</li>
+	<li>
+<p>
+%整数~部 ~LET ［
+%入力~整数 ~EQ 0 ならば `0^ch ／
+~ELSE_ %入力~整数 を 10 進記数法で， 12 個~以下†の`~ASCII数字$を利用して表現する文字列
+］
+</p>
+
+<p class="trans-note">【
+頭部にある `0^ch を除去して最短な表現にするよう、明示的に要求されてはいない（ 1 は `01^l 等々に直列化されるかもしれない）。
+】</p>
+◎
+Let output be an empty string.
+◎
+If input_decimal is less than (but not equal to) 0, append “-“ to output.
+◎
+Append input_decimal’s integer component represented in base 10 (using only decimal digits) to output; if it is zero, append “0”.
+◎
+Append “.” to output.
+</li>
+	<li>
+<p>
+%小数~部 ~LET ［
+%入力~decimal の小数~成分 ~EQ 0 ならば `0^ch ／
+~ELSE_  1 〜 3 個†の`~ASCII数字$からなる，次を満たす文字列
+］
+⇒
+先頭に `0.^l を付加して 10 進数として解釈した結果は、
+%入力~decimal の小数~成分に等しい
+</p>
+<p class="trans-note">【†
+尾部にある `0^ch を除去して最短な表現にするよう、明示的に要求されてはいない（ 0.1 は `.100^l に直列化されるかもしれない）。
+】</p>
+◎
+If input_decimal’s fractional component is zero, append “0” to output.
+◎
+Otherwise, append the significant digits of input_decimal’s fractional component represented in base 10 (using only decimal digits) to output.
+</li>
+	<li>
+~RET 次を順に連結した結果
+⇒＃
+%符号,
+%整数~部,
+`.^ch,
+%小数~部
+◎
+Return output.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="ser-string">
+<h4 title="Serializing a String">4.1.6. `文字列$sfの直列化-法</h4>
+
+<p>
+所与の
+( %入力~文字列 )
+に対し，［
+~HTTP`~field値$に利用するに相応しい~ASCII文字列
+］を返す：
+◎
+Given a String as input_string, return an ASCII string suitable for use in a HTTP field value.
+</p>
+<ol>
+	<li>
+~Assert：
+%入力~文字列 は`文字列$sfである
+◎
+Convert input_string into a sequence of ASCII characters; if conversion fails, fail serialization.
+◎
+If input_string contains characters in the range %x00-1f or %x7f (i.e., not in VCHAR or SP), fail serialization.
+</li>
+	<li>
+%出力 ~LET `"^ch
+◎
+Let output be the string DQUOTE.
+</li>
+	<li>
+<p>
+%入力~文字列 を成す
+~EACH( %文字 )
+に対し：
+◎
+For each character char in input_string:
+</p>
+		<ol>
+			<li>
+~IF［
+%文字 ~IN { `\^ch, `"^ch }
+］
+⇒
+%出力 に `\^ch を付加する
+◎
+If char is “\” or DQUOTE:
+• Append “\” to output.
+</li>
+			<li>
+%出力 に %文字 を付加する
+◎
+Append char to output.
+</li>
+		</ol>
+	</li>
+	<li>
+%出力 に `"^ch を付加する
+◎
+Append DQUOTE to output.
+</li>
+	<li>
+~RET %出力
+◎
+Return output.
+</li>
+</ol>
+			</section>
+			<section id="ser-token">
+<h4 title="Serializing a Token">4.1.7. `~token$sfの直列化-法</h4>
+
+<p>
+所与の
+( %入力~token )
+に対し，［
+~HTTP`~field値$に利用するに相応しい~ASCII文字列
+］を返す：
+◎
+Given a Token as input_token, return an ASCII string suitable for use in a HTTP field value.
+</p>
+<ol>
+	<li>
+~Assert：
+%入力~token は`~token$sfである
+◎
+Convert input_token into a sequence of ASCII characters; if conversion fails, fail serialization.
+◎
+If the first character of input_token is not ALPHA or “*”, or the remaining portion contains a character not in tchar, “:” or “/”, fail serialization.
+</li>
+	<li>
+~RET %入力~token
+◎
+Let output be an empty string.
+◎
+Append input_token to output.
+◎
+Return output.
+</li>
+</ol>
+
+			</section>
+			<section id="ser-binary">
+<h4 title="Serializing a Byte Sequence">4.1.8. `~byte列$sfの直列化-法</h4>
+
+<p>
+所与の
+( %入力~byte列 )
+に対し，［
+~HTTP`~field値$に利用するに相応しい~ASCII文字列
+］を返す：
+◎
+Given a Byte Sequence as input_bytes, return an ASCII string suitable for use in a HTTP field value.
+• 
+</p>
+
+<ol>
+	<li>
+~Assert：
+%入力~byte列 は`~byte列$である
+◎
+If input_bytes is not a sequence of bytes, fail serialization.
+</li>
+	<li>
+%出力 ~LET 空~文字列
+◎
+Let output be an empty string.
+</li>
+	<li>
+%出力 に `:^ch を付加する
+◎
+Append “:” to output.
+</li>
+	<li>
+%出力 に次の結果を付加する
+⇒
+`RFC4648/4$sec に従って, および下に与える要件を織り込む下で，
+%入力~byte列 を~base64に符号化した結果
+◎
+Append the result of base64-encoding input_bytes as per [RFC4648], Section 4, taking account of the requirements below.
+</li>
+	<li>
+%出力 に `:^ch を付加する
+◎
+Append “:” to output.
+</li>
+	<li>
+~RET %出力
+◎
+Return output.
+</li>
+</ol>
+
+<p>
+`RFC4648/3.2$sec に従って、符号化された~dataには， `=^ch を~padすることが要求される†。
+◎
+The encoded data is required to be padded with “=”, as per [RFC4648], Section 3.2.
+</p>
+
+<p>
+同様に， `RFC4648/3.5$sec に従って、符号化される~dataにおける~pad~bit††は 0 に設定するベキである
+— 実装の拘束に因り，そうするのはアリでない限り。
+◎
+Likewise, encoded data SHOULD have pad bits set to zero, as per [RFC4648], Section 3.5, unless it is not possible to do so due to implementation constraints.
+</p>
+
+<p class="trans-note">【†
+すなわち、符号化した結果の長さが 4 の倍数にならない場合，そうなるよう補充する。
+】【††
+~base64単位を成す 6 ~bitと~byte単位を成す 8 ~bitとのずれに因る不足分を（~byte列の末尾に）補充する~bit。
+】【
+構文解析器は、~padに関しては，この~algoの出力より~~寛容な形式を受容する（ `4.2.7$sec ）。
+】</p>
+
+
+			</section>
+			<section id="ser-boolean">
+<h4 title="Serializing a Boolean">4.1.9. `真偽値$sfの直列化-法</h4>
+
+<p>
+所与の
+( %入力~真偽値 )
+に対し，［
+~HTTP`~field値$に利用するに相応しい~ASCII文字列
+］を返す：
+◎
+Given a Boolean as input_boolean, return an ASCII string suitable for use in a HTTP field value.
+</p>
+<ol>
+	<li>
+~Assert：
+%入力~真偽値 は`真偽値$である
+◎
+If input_boolean is not a boolean, fail serialization.
+</li>
+	<li>
+~RET %入力~真偽値 に応じて
+⇒＃
+~T ならば `?1^l ／
+~F ならば `?0^l
+◎
+Let output be an empty string.
+◎
+Append “?” to output.
+◎
+If input_boolean is true, append “1” to output.
+◎
+If input_boolean is false, append “0” to output.
+◎
+Return output.
+</li>
+</ol>
+			</section>
+		</section>
+		<section id="text-parse">
+<h3 title="Parsing Structured Fields">4.2. 有構造~fieldの構文解析-法</h3>
+
+<p>
+受信した［
+有構造~fieldであることが既知な`~HTTP~field$
+］を構文解析する実装は、［
+相互運用能や~securityにまで問題をもたらし得る，いくつかの際どい事例
+］を~careすることが重要になる。
+この節は、そうするための~algoを指定する。
+◎
+When a receiving implementation parses HTTP fields that are known to be Structured Fields, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
+</p>
+
+<p>
+所与の
+( %入力~byte列, %~field型 )
+に対し，構文解析された`~field値$を返す：
+◎
+Given＼
+</p>
+
+<ol>
+	<li>
+~Assert：
+%入力~byte列 は当の~fieldの `field-value$p を表現する`~byte列$である（その~fieldが無い場合、空~byte列）
+◎
+an array of bytes input_bytes that represents the chosen field’s field-value (which is empty if that field is not present), and＼
+</li>
+	<li>
+~Assert：
+%~field型 ~IN { `辞書^i, `~list^i, `~item^i }
+◎
+field_type (one of “dictionary”, “list”, or “item”), return the parsed header value.
+</li>
+	<li>
+~IF［
+%入力~byte列 を成すある~byteは`~ASCII~byte$でない
+］
+⇒
+構文解析を失敗させる
+◎
+↓</li>
+	<li>
+%入力~文字列 ~LET `~ASCII復号する$( %入力~byte列 )
+◎
+Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
+</li>
+	<li>
+<p>
+%位置 ~LET %入力~文字列 内の先頭を指している`位置~変数$
+⇒
+%入力~文字列, %位置 は、この~algoが利用する すべての~algoから共有される。
+</p>
+
+<p class="trans-note">【
+この段は、この訳による追加。
+この節~全体を通して，各種~algoは、構文解析される文字列を保持する %入力~文字列,
+および 次に構文解析される文字を指す変数 %位置 を用いる~patternに従う（そのように，この訳では改めている）。
+詳細は、以降に現れる %位置↗ という表記も含め，`位置~変数$を参照されたし。
+】</p>
+
+	</li>
+	<li>
+%入力~文字列 内の %位置 から ` ^ch からなる`文字~並びを収集する$
+◎
+Discard any leading SP characters from input_string.
+</li>
+	<li>
+%出力 ~LET %~field型 に応じて，次に与える結果
+⇒＃
+`~list^i ならば %入力~文字列 から`~listを構文解析する$／
+`辞書^i ならば %入力~文字列 から`辞書を構文解析する$／
+`~item^i ならば %入力~文字列 から`~itemを構文解析する$
+◎
+If field_type is “list”, let output be the result of running Parsing a List (Section 4.2.1) with input_string.
+◎
+If field_type is “dictionary”, let output be the result of running Parsing a Dictionary (Section 4.2.2) with input_string.
+◎
+If field_type is “item”, let output be the result of running Parsing an Item (Section 4.2.3) with input_string.
+</li>
+	<li>
+%入力~文字列 内の %位置 から ` ^ch からなる`文字~並びを収集する$
+◎
+Discard any leading SP characters from input_string.
+</li>
+	<li>
+~IF［
+%位置↗ ~NEQ ε
+］
+⇒
+構文解析を失敗させる
+◎
+If input_string is not empty, fail parsing.
+</li>
+	<li>
+~RET %出力
+◎
+Otherwise, return output.
+</li>
+</ol>
+
+<p>
+%入力~byte列 を生成するとき、構文解析器は、同じ`~field節$内の`~field行l$のうち［
+対象の`~field名$に文字大小無視で合致するものすべて
+］の`~field行l値$を
+— `~fieldの順序付けと結合$sec（
+`Semantics^r ／ `RFC7230/3.2.2$sec
+）に従って —
+`,^ch で区切って 1 個の `field-value$p に結合しなければナラナイ
+— これは`~field値$が正しく処理されることを確約する。
+◎
+When generating input_bytes, parsers MUST combine all field lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per [RFC7230], Section 3.2.2; this assures that the entire field value is processed correctly.
+</p>
+
+<p>
+［
+`~list$sf／`辞書$sf
+］に対しては、これには，当の`~field行l値$すべてを正しく連結する効果がある
+— ~top-level~data構造を成す個々の~memberが複数個の`~field行l$に分割されていない限り。
+どちらの型も、それ用の構文解析~algoは，~tab文字を許容する
+— `~field行l$を結合するとき，~tab文字を利用する実装があるかもしれないので。
+◎
+For Lists and Dictionaries, this has the effect of correctly concatenating all of the field’s lines, as long as individual members of the top-level data structure are not split across multiple header instances. The parsing algorithms for both types allow tab characters, since these might be used to combine field lines by some implementations.
+</p>
+
+<p>
+`文字列$sfは、複数個の`~field行l$に分割されると予測-不能な結果になる
+— 結合-時に挿入される `,^ch や ` ^ch は、構文解析器による文字列~出力の一部を成すことになるので。
+`上流$の`中継者$は，連結を行うかもしれないので、その結果は［
+直列化器／構文解析器
+］からは制御し得ない
+— どちらも同じ主体の制御-下にあるときであっても。
+◎
+Strings split across multiple field lines will have unpredictable results, because comma(s) and whitespace inserted upon combination will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serializer or the parser, even when they are both under the control of the same party.
+</p>
+
+<p>
+［
+`~token$sf／`整数$sf／`~decimal$sf／`~byte列$sf
+］は、複数個の`~field行l$に分割し得ない
+— 【結合-時に】挿入される `,^ch は，構文解析を失敗させることになるので。
+◎
+Tokens, Integers, Decimals and Byte Sequences cannot be split across multiple field lines because the inserted commas will cause parsing to fail.
+</p>
+
+<p>
+構文解析器は、複数の`~field行l$にまたがる`~field値$を処理するとき，いずれかの行lが当の~field用の値として構文解析されないときには，失敗してもヨイ。
+◎
+Parsers MAY fail when processing a field value spread across multiple field lines, when one of those lines does not parse as that field.＼
+</p>
+
+<div class="example">
+<p>
+例えば，［
+`sf-string$p として定義された `Example-String^h ~field
+］を取扱っている構文解析は、次の`~field節$を処理するときは，失敗することが許容される：
+◎
+For example, a parsing handling an Example-String field that’s defined as a sf-string is allowed to fail when processing this field section:
+</p>
+
+<pre class="lang-http">
+Example-String: "foo
+Example-String: bar"
+</pre>
+</div>
+
+<p>
+構文解析に失敗した場合
+— 別の~algoを~callするときも含め —
+`~field値$全体を，無視しなければナラナイ（すなわち、当の~fieldは当の`~field節$内に無かったかのように扱われる）
+【~algoにおいては、 “構文解析を失敗させる” という句で指示される】
+。
+相互運用能と安全性を改善するため、これは意図的に厳密である
+— この文書を参照している仕様には、この要件を~~緩めることは許容されない。
+◎
+If parsing fails – including when calling another algorithm – the entire field value MUST be ignored (i.e., treated as if the field were not present in the section). This is intentionally strict, to improve interoperability and safety, and specifications referencing this document are not allowed to loosen this requirement.
+</p>
+
+<p>注記：
+この要件は、~headerを構文解析しない実装には適用されない。
+例えば，`中継者$には、［
+~messageを回送する前に，失敗している~fieldを剥取る
+］ことは要求されない。
+◎
+Note that this requirement does not apply to an implementation that is not parsing the field;＼
+for example, an intermediary is not required to strip a failing field from a message before forwarding it.
+</p>
+
+			<section id="parse-list">
+<h4 title="Parsing a List">4.2.1. `~list^sfの構文解析-法</h4>
+
+<p>
+%入力~文字列 から`~list$sfを構文解析して返す：
+◎
+Given an ASCII string as input_string, return an array of (item_or_inner_list, parameters) tuples. input_string is modified to remove the parsed value.
+</p>
+<ol>
+	<li>
+%~memberたち ~LET 新たな`~list$
+◎
+Let members be an empty array.
+</li>
+	<li>
+
+<p>
+~WHILE［
+%位置↗ ~NEQ ε
+］：
+◎
+While input_string is not empty:
+</p>
+		<ol>
+			<li>
+%~memberたち に次の結果を`付加する$
+⇒
+%入力~文字列 から`~itemまたは内縁~listを構文解析する$
+◎
+Append the result of running Parsing an Item or Inner List (Section 4.2.1.1) with input_string to members.
+</li>
+			<li>
+%入力~文字列 内の %位置 から { ` ^ch, ~HTAB } からなる`文字~並びを収集する$
+◎
+Discard any leading OWS characters from input_string.
+</li>
+			<li>
+~IF［
+%位置↗ ~EQ ε
+］
+⇒
+~BREAK
+◎
+If input_string is empty, return members.
+</li>
+			<li>
+~IF［
+%位置↗ ~NEQ `,^ch
+］
+⇒
+構文解析を失敗させる
+◎
+↓</li>
+			<li>
+%位置 ~INCBY 1
+⇒
+◎
+Consume the first character of input_string; if it is not “,”, fail parsing.
+</li>
+			<li>
+%入力~文字列 内の %位置 から { ` ^ch, ~HTAB } からなる`文字~並びを収集する$
+◎
+Discard any leading OWS characters from input_string.
+</li>
+			<li>
+~IF［
+%位置↗ ~EQ ε
+］
+⇒
+構文解析を失敗させる
+（尾部に余計な `,^ch がある）
+◎
+If input_string is empty, there is a trailing comma; fail parsing.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %~memberたち
+【！No structured data has been found;】
+◎
+No structured data has been found; return members (which is empty).
+</li>
+</ol>
+
+				<section id="parse-item-or-list">
+<h5 title="Parsing an Item or Inner List">4.2.1.1. `~item$sfまたは`内縁~list^sfの構文解析-法</h5>
+
+<p>
+%入力~文字列 から［
+`~item$sf／`内縁~list$sf
+］を構文解析して返す：
+◎
+Given an ASCII string as input_string, return the tuple (item_or_inner_list, parameters), where item_or_inner_list can be either a single bare item, or an array of (bare_item, parameters) tuples. input_string is modified to remove the parsed value.
+</p>
+<ol>
+	<li>
+~IF［
+%位置↗ ~EQ `(^ch
+］
+⇒
+~RET %入力~文字列 から`内縁~listを構文解析する$
+◎
+If the first character of input_string is “(“, return the result of running Parsing an Inner List (Section 4.2.1.2) with input_string.
+</li>
+	<li>
+~RET %入力~文字列 から`~itemを構文解析する$
+◎
+Return the result of running Parsing an Item (Section 4.2.3) with input_string.
+</li>
+</ol>
+
+				</section>
+				<section id="parse-innerlist">
+<h5 title="Parsing an Inner List">4.2.1.2. `内縁~list^sfの構文解析-法</h5>
+
+<p>
+%入力~文字列 から`内縁~list$sfを構文解析して返す：
+◎
+Given an ASCII string as input_string, return the tuple (inner_list, parameters), where inner_list is an array of (bare_item, parameters) tuples. input_string is modified to remove the parsed value.
+</p>
+<ol>
+	<li>
+~IF［
+%位置↗ ~NEQ `(^ch
+］
+⇒
+構文解析を失敗させる
+◎
+↓</li>
+	<li>
+%位置 ~INCBY 1
+◎
+Consume the first character of input_string; if it is not “(“, fail parsing.
+</li>
+	<li>
+%~list ~LET 新たな`~list$
+◎
+Let inner_list be an empty array.
+</li>
+	<li>
+<p>
+~WHILE［
+%位置↗ ~NEQ ε
+］：
+◎
+While input_string is not empty:
+</p>
+		<ol>
+			<li>
+%入力~文字列 内の %位置 から ` ^ch からなる`文字~並びを収集する$
+◎
+Discard any leading SP characters from input_string.
+</li>
+			<li>
+<p>
+~IF［
+%位置↗ ~EQ `)^ch
+］：
+◎
+If the first character of input_string is “)”:
+</p>
+				<ol>
+					<li>
+%位置 ~INCBY 1
+◎
+Consume the first character of input_string.
+</li>
+					<li>
+%~parameters ~LET %入力~文字列 から`~parametersを構文解析する$
+◎
+Let parameters be the result of running Parsing Parameters (Section 4.2.3.2) with input_string.
+</li>
+					<li>
+~RET ( %~list, %~parameters ) からなる`内縁~list$sf
+◎
+Return the tuple (inner_list, parameters).
+</li>
+				</ol>
+			</li>
+			<li>
+%~list に次の結果を`付加する$
+⇒
+%入力~文字列 から`~itemを構文解析する$
+◎
+Let item be the result of running Parsing an Item (Section 4.2.3) with input_string.
+◎
+Append item to inner_list.
+</li>
+			<li>
+~IF［
+%位置↗ ~NIN { ` ^ch, `)^ch }
+］
+⇒
+構文解析を失敗させる
+◎
+If the first character of input_string is not SP or “)”, fail parsing.
+</li>
+		</ol>
+	</li>
+	<li>
+構文解析を失敗させる
+（`内縁~list$sfを閉じる括弧を見出すことなく， %入力~文字列 の終端を過ぎた）
+◎
+The end of the inner list was not found; fail parsing.
+</li>
+</ol>
+				</section>
+			</section>
+			<section id="parse-dictionary">
+<h4 title="Parsing a Dictionary">4.2.2. `辞書^sfの構文解析-法</h4>
+
+<p>
+%入力~文字列 から`辞書$sfを構文解析して返す：
+◎
+Given an ASCII string as input_string, return an ordered map whose values are (item_or_inner_list, parameters) tuples. input_string is modified to remove the parsed value.
+</p>
+<ol>
+	<li>
+%辞書 ~LET 新たな`有順序~map$
+◎
+Let dictionary be an empty, ordered map.
+</li>
+	<li>
+<p>
+~WHILE［
+%位置↗ ~NEQ ε
+］：
+◎
+While input_string is not empty:
+</p>
+		<ol>
+			<li>
+%~key ~LET %入力~文字列 から`~keyを構文解析する$
+◎
+Let this_key be the result of running Parsing a Key (Section 4.2.3.3) with input_string.
+</li>
+			<li>
+<p>
+~IF［
+%位置↗ ~EQ `=^ch
+］
+◎
+If the first character of input_string is “=”:
+</p>
+				<ol>
+					<li>
+%位置 ~INCBY 1
+◎
+Consume the first character of input_string.
+</li>
+					<li>
+%~member ~LET %入力~文字列 から`~itemまたは内縁~listを構文解析する$
+◎
+Let member be the result of running Parsing an Item or Inner List (Section 4.2.1.1) with input_string.
+</li>
+				</ol>
+			</li>
+			<li>
+~ELSE
+⇒
+%~member ~LET ( `真偽値$sf ~T, 次の結果 ) からなる`~item$sf
+⇒
+%入力~文字列 から`~parametersを構文解析する$
+◎
+Otherwise:
+• Let value be Boolean true.
+• Let parameters be the result of running Parsing Parameters Section 4.2.3.2 with input_string.
+• Let member be the tuple (value, parameters).
+</li>
+			<li>
+%辞書[ %~key ] ~SET %~member
+◎
+Add name this_key with value member to dictionary. If dictionary already contains a name this_key (comparing character-for-character), overwrite its value.
+</li>
+			<li>
+%入力~文字列 内の %位置 から { ` ^ch, ~HTAB } からなる`文字~並びを収集する$
+◎
+Discard any leading OWS characters from input_string.
+</li>
+			<li>
+~IF［
+%位置↗ ~EQ ε
+］
+⇒
+~BREAK
+◎
+If input_string is empty, return dictionary.
+</li>
+			<li>
+~IF［
+%位置↗ ~NEQ `,^ch
+］
+⇒
+構文解析を失敗させる
+◎
+↓</li>
+			<li>
+%位置 ~INCBY 1
+◎
+Consume the first character of input_string; if it is not “,”, fail parsing.
+</li>
+			<li>
+%入力~文字列 内の %位置 から { ` ^ch, ~HTAB } からなる`文字~並びを収集する$
+◎
+Discard any leading OWS characters from input_string.
+</li>
+			<li>
+~IF［
+%位置↗ ~EQ ε
+］
+⇒
+構文解析を失敗させる
+（尾部に余計な `,^ch がある）
+◎
+If input_string is empty, there is a trailing comma; fail parsing.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %辞書
+【！No structured data has been found;】
+◎
+No structured data has been found; return dictionary (which is empty).
+</li>
+</ol>
+
+<p>注記：
+`辞書$sf内で同じ`~key$sfに複数回 遭遇した場合、最後を除き無視される。
+◎
+Note that when duplicate Dictionary keys are encountered, this has the effect of ignoring all but the last instance.
+</p>
+
+			</section>
+			<section id="parse-item">
+<h4 title="Parsing an Item">4.2.3. `~item^sfの構文解析-法</h4>
+
+<p>
+%入力~文字列 から`~item$sfを構文解析して返す：
+◎
+Given an ASCII string as input_string, return a (bare_item, parameters) tuple. input_string is modified to remove the parsed value.
+</p>
+<ol>
+	<li>
+%裸~item ~LET %入力~文字列 から`裸~itemを構文解析する$
+◎
+Let bare_item be the result of running Parsing a Bare Item (Section 4.2.3.1) with input_string.
+</li>
+	<li>
+%~parameters ~LET %入力~文字列 から`~parametersを構文解析する$
+◎
+Let parameters be the result of running Parsing Parameters (Section 4.2.3.2) with input_string.
+</li>
+	<li>
+~RET ( %裸~item, %~parameters ) からなる`~item$sf
+◎
+Return the tuple (bare_item, parameters).
+</li>
+</ol>
+				<section id="parse-bare-item">
+<h5 title="Parsing a Bare Item">4.2.3.1. `裸~item^sfの構文解析-法</h5>
+
+<p>
+%入力~文字列 から`裸~item$sfを構文解析して返す：
+◎
+Given an ASCII string as input_string, return a bare Item. input_string is modified to remove the parsed value.
+</p>
+<ol>
+	<li>
+<p>
+%位置↗ に応じて：
+</p>
+		<ol class="switch">
+			<li>
+`-^ch ／ `~ASCII数字$
+⇒
+~RET %入力~文字列 から`整数または~decimalを構文解析する$
+◎
+If the first character of input_string is a “-“ or a DIGIT, return the result of running Parsing an Integer or Decimal (Section 4.2.4) with input_string.
+</li>
+			<li>
+`"^ch
+⇒
+~RET %入力~文字列 から`文字列を構文解析する$
+◎
+If the first character of input_string is a DQUOTE, return the result of running Parsing a String (Section 4.2.5) with input_string.
+</li>
+			<li>
+`:^ch
+⇒
+~RET %入力~文字列 から`~byte列を構文解析する$
+◎
+If the first character of input_string is “:”, return the result of running Parsing a Byte Sequence (Section 4.2.7) with input_string.
+</li>
+			<li>
+`?^ch
+⇒
+~RET %入力~文字列 から`真偽値を構文解析する$
+◎
+If the first character of input_string is “?”, return the result of running Parsing a Boolean (Section 4.2.8) with input_string.
+</li>
+			<li>
+`*^ch ／ `~ASCII英字$
+⇒
+~RET %入力~文字列 から`~tokenを構文解析する$
+◎
+If the first character of input_string is an ALPHA or “*”, return the result of running Parsing a Token (Section 4.2.6) with input_string.
+</li>
+			<li>
+その他
+⇒
+構文解析を失敗させる（認識されない型である）
+◎
+Otherwise, the item type is unrecognized; fail parsing.
+</li>
+		</ol>
+	</li>
+</ol>
+
+				</section>
+				<section id="parse-param">
+<h5 title="Parsing Parameters">4.2.3.2. `~parameters^sfの構文解析-法</h5>
+
+<p>
+%入力~文字列 から`~parameters$sfを構文解析して返す：
+◎
+Given an ASCII string as input_string, return an ordered map whose values are bare Items. input_string is modified to remove the parsed value.
+</p>
+<ol>
+	<li>
+%~parameters ~LET 新たな`有順序~map$
+◎
+Let parameters be an empty, ordered map.
+</li>
+	<li>
+
+<p>
+~WHILE［
+%位置↗ ~NEQ ε
+］：
+◎
+While input_string is not empty:
+</p>
+		<ol>
+			<li>
+~IF［
+%位置↗ ~NEQ `;^ch
+］
+⇒
+~BREAK
+◎
+If the first character of input_string is not “;”, exit the loop.
+</li>
+			<li>
+%位置 ~INCBY 1
+◎
+Consume a “;” character from the beginning of input_string.
+</li>
+			<li>
+%入力~文字列 内の %位置 から ` ^ch からなる`文字~並びを収集する$
+◎
+Discard any leading SP characters from input_string.
+</li>
+			<li>
+%~parameter名 ~LET %入力~文字列 から`~keyを構文解析する$
+◎
+let param_name be the result of running Parsing a Key (Section 4.2.3.3) with input_string.
+</li>
+			<li>
+%~parameter値 ~LET `真偽値$sf ~T
+◎
+Let param_value be Boolean true.
+</li>
+			<li>
+<p>
+~IF［
+%位置↗ ~EQ `=^ch
+］：
+◎
+If the first character of input_string is “=”:
+</p>
+				<ol>
+					<li>
+%位置 ~INCBY 1
+◎
+Consume the “=” character at the beginning of input_string.
+</li>
+					<li>
+%~parameter値 ~LET %入力~文字列 から`裸~itemを構文解析する$
+◎
+Let param_value be the result of running Parsing a Bare Item (Section 4.2.3.1) with input_string.
+</li>
+				</ol>
+			</li>
+			<li>
+%~parameters[ %~parameter名 ] ~SET %~parameter値
+◎
+Append key param_name with value param_value to parameters. If parameters already contains a name param_name (comparing character-for-character), overwrite its value.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %~parameters
+◎
+Return parameters.
+</li>
+</ol>
+
+<p>注記：
+`~parameters$sf内で同じ`~key$sfに複数回 遭遇した場合、最後を除き無視される。
+◎
+Note that when duplicate Parameter keys are encountered, this has the effect of ignoring all but the last instance.
+</p>
+
+				</section>
+				<section id="parse-key">
+<h5 title="Parsing a Key">4.2.3.3. `~key^sfの構文解析-法</h5>
+
+<p>
+%入力~文字列 から［
+`辞書$sf／`~parameters$sf
+］用の`~key$sfを構文解析して返す：
+◎
+Given an ASCII string as input_string, return a key. input_string is modified to remove the parsed value.
+</p>
+<ol>
+	<li>
+~IF［
+%位置↗ ~NIN { `~ASCII英小文字$, `*^l }
+］
+⇒
+構文解析を失敗させる
+◎
+If the first character of input_string is not lcalpha or “*”, fail parsing.
+</li>
+	<li>
+~RET %入力~文字列 内の %位置 から`~key文字$からなる`文字~並びを収集する$
+◎
+Let output_string be an empty string.
+◎
+While input_string is not empty:
+• If the first character of input_string is not one of lcalpha, DIGIT, “_”, “-“, “.”, or “*”, return output_string.
+• Let char be the result of consuming the first character of input_string.
+• Append char to output_string.
+◎
+Return output_string.
+</li>
+</ol>
+</section>
+
+			</section>
+			<section id="parse-number">
+<h4 title="Parsing an Integer or Decimal">4.2.4. `整数^sfまたは`~decimal^sfの構文解析-法</h4>
+
+<p>
+%入力~文字列 から［
+`整数$sf／`~decimal$sf
+］を構文解析して返す：
+◎
+Given an ASCII string as input_string, return an Integer or Decimal. input_string is modified to remove the parsed value.
+</p>
+
+<p class="note">
+この~algoは、`整数$sf, `~decimal$sfの両者を構文解析して，対応する構造を返す。
+◎
+NOTE: This algorithm parses both Integers (Section 3.3.1) and Decimals (Section 3.3.2), and returns the corresponding structure.
+</p>
+
+<div>
+<ol>
+	<li>
+%符号 ~LET 1
+</li>
+	<li>
+~IF［
+%位置↗ ~EQ `-^ch
+］
+⇒＃
+%位置 ~INCBY 1；
+%符号 ~SET ~MINUS 1
+</li>
+	<li>
+%整数~部 ~LET %入力~文字列 内の %位置 から`~ASCII数字$からなる`文字~並びを収集する$
+</li>
+	<li>
+~IF［
+%整数~部 の`長さ$ ~NIN { 1 〜 15 }
+］
+⇒
+構文解析を失敗させる
+</li>
+	<li>
+%整数~成分 ~LET %整数~部 を 10 進~整数として解釈した結果
+</li>
+	<li>
+~Assert：
+%整数~成分 ~IN { 0 〜 999999999999999 }
+</li>
+	<li>
+~IF［
+%位置↗ ~NEQ `.^ch
+］
+⇒
+~RET ( %符号 ~MUL %整数~成分 ) を値にとる`整数$sf
+</li>
+	<li>
+%位置 ~INCBY 1；
+</li>
+	<li>
+~IF［
+%整数~部 の`長さ$ ~GT 12
+］
+⇒
+構文解析を失敗させる
+</li>
+	<li>
+~Assert：
+%整数~成分 ~IN { 0 〜 999999999999 }
+</li>
+	<li>
+%小数~部 ~LET %入力~文字列 内の %位置 から`~ASCII数字$からなる`文字~並びを収集する$
+</li>
+	<li>
+~IF［
+%小数~部 の`長さ$ ~NIN { 1 〜 3 }
+］
+⇒
+構文解析を失敗させる
+</li>
+	<li>
+%小数~部 の末尾に ( 3 ~MINUS %小数~部 の`長さ$ ) 個の `0^ch を付加する
+</li>
+	<li>
+%小数~成分 ~LET %小数~部 を 10 進~整数として解釈した結果
+</li>
+	<li>
+~Assert：
+%小数~成分 ~IN { 0 〜 999 }
+</li>
+	<li>
+~RET 次の結果を表現する`~decimal$sf
+⇒
+%符号 ~MUL ( %整数~成分 ~PLUS ( %小数~成分 ~DIV 1000 ) )
+</li>
+</ol>
+
+◎
+Let type be “integer”.
+◎
+Let sign be 1.
+◎
+Let input_number be an empty string.
+◎
+If the first character of input_string is “-“, consume it and set sign to -1.
+◎
+If input_string is empty, there is an empty integer; fail parsing.
+◎
+If the first character of input_string is not a DIGIT, fail parsing.
+◎
+While input_string is not empty:
+• Let char be the result of consuming the first character of input_string.
+• If char is a DIGIT, append it to input_number.
+• Else, if type is “integer” and char is “.”:
+•• If input_number contains more than 12 characters, fail parsing.
+•• Otherwise, append char to input_number and set type to “decimal”.
+• Otherwise, prepend char to input_string, and exit the loop.（消費した文字を戻す）
+• If type is “integer” and input_number contains more than 15 characters, fail parsing.
+• If type is “decimal” and input_number contains more than 16 characters, fail parsing.
+◎
+If type is “integer”:
+• Parse input_number as an integer and let output_number be the product of the result and sign.
+• If output_number is outside the range -999,999,999,999,999 to 999,999,999,999,999 inclusive, fail parsing.
+◎
+Otherwise:
+• If the final character of input_number is “.”, fail parsing.
+• If the number of characters after “.” in input_number is greater than three, fail parsing.
+• Parse input_number as a decimal number and let output_number be the product of the result and sign.
+◎
+Return output_number.
+</div>
+
+			</section>
+			<section id="parse-string">
+<h4 title="Parsing a String">4.2.5. `文字列^sfの構文解析-法</h4>
+
+<p>
+%入力~文字列 から`文字列$sfを返す（引用符で括られない）：
+◎
+Given an ASCII string as input_string, return an unquoted String. input_string is modified to remove the parsed value.
+</p>
+<ol>
+	<li>
+%出力~文字列 ~LET 空~文字列
+◎
+Let output_string be an empty string.
+</li>
+	<li>
+~IF［
+%位置↗ ~NEQ `"^ch
+］
+⇒
+構文解析を失敗させる
+◎
+If the first character of input_string is not DQUOTE, fail parsing.
+</li>
+	<li>
+%位置 ~INCBY 1
+◎
+Discard the first character of input_string.
+</li>
+	<li>
+<p>
+~WHILE［
+%位置↗ ~NEQ ε
+］：
+</p>
+		<ol>
+			<li>
+~IF［
+%位置↗ ~EQ `"^ch
+］
+⇒＃
+%位置 ~INCBY 1；
+~RET %出力~文字列
+</li>
+			<li>
+<p>
+~IF［
+%位置↗ ~EQ `\^ch
+］：
+</p>
+				<ol>
+					<li>
+%位置 ~INCBY 1
+</li>
+					<li>
+~IF［
+%位置↗ ~NIN { `"^ch, `\^ch }
+］
+⇒
+構文解析を失敗させる
+</li>
+				</ol>
+			</li>
+			<li>
+~ELIF［
+%位置↗ は`制御~文字$である【！~NIN { `VCHAR$P, ` ^ch }】
+］
+⇒
+構文解析を失敗させる
+</li>
+			<li>
+%出力~文字列 に %位置↗ を付加する
+</li>
+			<li>
+%位置 ~INCBY 1
+</li>
+		</ol>
+◎
+While input_string is not empty:
+• Let char be the result of consuming the first character of input_string.
+• If char is a backslash (“\”):
+•• If input_string is now empty, fail parsing.
+•• Let next_char be the result of consuming the first character of input_string.
+•• If next_char is not DQUOTE or “\”, fail parsing.
+•• Append next_char to output_string.
+• Else, if char is DQUOTE, return output_string.
+• Else, if char is in the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail parsing.
+• Else, append char to output_string.
+</li>
+	<li>
+構文解析を失敗させる
+（`文字列$sfを閉じる `"^ch を見出すことなく %入力~文字列 の終端を過ぎた）
+◎
+Reached the end of input_string without finding a closing DQUOTE; fail parsing.
+</li>
+</ol>
+
+			</section>
+			<section id="parse-token">
+<h4 title="Parsing a Token">4.2.6. `~token^sfの構文解析-法</h4>
+
+<p>
+%入力~文字列 から`~token$sfを構文解析して返す：
+◎
+Given an ASCII string as input_string, return a Token. input_string is modified to remove the parsed value.
+</p>
+<ol>
+	<li>
+~IF［
+%位置↗ ~NIN { `~ASCII英字$, `*^ch }
+］
+⇒
+構文解析を失敗させる
+◎
+If the first character of input_string is not ALPHA or “*”, fail parsing.
+</li>
+	<li>
+~RET %入力~文字列 内の %位置↗ から`~token文字$からなる`文字~並びを収集する$
+◎
+Let output_string be an empty string.
+◎
+While input_string is not empty:
+• If the first character of input_string is not in tchar, “:” or “/”, return output_string.
+• Let char be the result of consuming the first character of input_string.
+• Append char to output_string.
+◎
+Return output_string.
+</li>
+</ol>
+
+			</section>
+			<section id="parse-binary">
+<h4 title="Parsing a Byte Sequence">4.2.7. `~byte列^sfの構文解析-法</h4>
+
+<p>
+%入力~文字列 から`~byte列$sfを構文解析して返す：
+◎
+Given an ASCII string as input_string, return a Byte Sequence. input_string is modified to remove the parsed value.
+</p>
+<ol>
+	<li>
+~IF［
+%位置↗ ~NEQ `:^ch
+］
+⇒
+構文解析を失敗させる
+◎
+If the first character of input_string is not “:”, fail parsing.
+</li>
+	<li>
+%位置 ~INCBY 1
+◎
+Discard the first character of input_string.
+</li>
+	<li>
+%~base64内容 ~LET
+%入力~文字列 内の %位置 から次に挙げる文字（ `base64$p ）からなる`文字~並びを収集する$
+⇒＃
+`~ASCII英字$,
+`~ASCII数字$,
+`+^ch,
+`/^ch,
+`=^ch
+◎
+If there is not a “:” character before the end of input_string, fail parsing.
+◎
+Let b64_content be the result of consuming content of input_string up to but not including the first instance of the character “:”.
+◎
+Consume the “:” character at the beginning of input_string.
+◎
+If b64_content contains a character not included in ALPHA, DIGIT, “+”, “/” and “=”, fail parsing.
+</li>
+	<li>
+~IF［
+%位置↗ ~NEQ `:^ch
+］
+⇒
+構文解析を失敗させる
+◎
+↑</li>
+	<li>
+%位置 ~INCBY 1
+◎
+↑</li>
+	<li>
+%~binary内容 ~LET %~base64内容 を `Base 64^en 復号した結果 `RFC4648$r
+— 必要とされるなら~padするものを合成して（下に与える`受信者$の挙動についての要件に注意）
+◎
+Let binary_content be the result of Base 64 Decoding [RFC4648] b64_content, synthesizing padding if necessary (note the requirements about recipient behavior below).
+</li>
+	<li>
+~RET %~binary内容
+◎
+Return binary_content.
+</li>
+</ol>
+
+<p>
+構文解析器は、符号化された~dataにおいて：
+◎
+↓</p>
+<ul>
+	<li>
+`=^ch が適正に~padされていない場合でも（ `RFC4648/3.2$sec を見よ）、失敗するベキでない
+— そうし得ないように環境設定されていない限り。
+~base64実装には、その却下を許容しないものもあるので。
+◎
+Because some implementations of base64 do not allow rejection of encoded data that is not properly “=” padded (see [RFC4648], Section 3.2), parsers SHOULD NOT fail when “=” padding is not present, unless they cannot be configured to do so.
+
+reject 
+NOT fail when it is not present, 
+</li>
+	<li>
+0 でない~pad~bitがある場合でも（ `RFC4648/3.5$sec を見よ）、失敗するベキでない
+— そうし得ないように環境設定されていない限り。
+~base64実装には、その却下を許容しないものもあるので。
+◎
+Because some implementations of base64 do not allow rejection of encoded data that has non-zero pad bits (see [RFC4648], Section 3.5), parsers SHOULD NOT fail when non-zero pad bits are present, unless they cannot be configured to do so.
+</li>
+	<li>
+`base64$p ~alphabetでない文字に対しては、 `LF$P であろうが，失敗しなければナラナイ
+— この仕様は、
+`RFC4648/3.1$sec,
+`RFC4648/3.3$sec
+における要件は緩めない。
+◎
+This specification does not relax the requirements in [RFC4648], Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
+</li>
+</ul>
+
+			</section>
+			<section id="parse-boolean">
+<h4 title="Parsing a Boolean">4.2.8. `真偽値^sfの構文解析-法</h4>
+
+<p>
+%入力~文字列 から`真偽値$sfを構文解析して返す：
+◎
+Given an ASCII string as input_string, return a Boolean. input_string is modified to remove the parsed value.
+</p>
+<ol>
+	<li>
+~IF［
+%位置↗ ~NEQ `?^ch
+］
+⇒
+構文解析を失敗させる
+◎
+If the first character of input_string is not “?”, fail parsing.
+</li>
+	<li>
+%位置 ~INCBY 1
+◎
+Discard the first character of input_string.
+</li>
+	<li>
+~IF［
+%位置↗ ~EQ `1^ch
+］
+⇒＃
+%位置 ~INCBY 1；
+~RET `真偽値$sf ~T
+◎
+If the first character of input_string matches “1”, discard the first character, and return true.
+</li>
+	<li>
+~IF［
+%位置↗ ~EQ `0^ch
+］
+⇒＃
+%位置 ~INCBY 1；
+~RET `真偽値$sf ~F
+◎
+If the first character of input_string matches “0”, discard the first character, and return false.
+</li>
+	<li>
+構文解析を失敗させる
+◎
+No value has matched; fail parsing.
+</li>
+</ol>
+			</section>
+		</section>
+	</section>
+	<section id="iana-considerations">
+<h2 title="IANA Considerations">5. ~IANA考慮点</h2>
+
+<p>
+特になし。
+◎
+This document has no actions for IANA.
+</p>
+
+	</section>
+	<section id="security-considerations">
+<h2 title="Security Considerations">6. ~securityの考慮点</h2>
+
+<p>
+有構造~fieldにより定義される ほとんどの型の~sizeは、制限されない。
+その結果、極めて巨大な~fieldは，攻撃~行路にもなり得る（例：資源の消費）。
+ほとんどの~HTTP実装は、そのような攻撃を軽減するため［
+個々の~fieldの~size,
+各`~field節$の総~size
+］を制限する。
+◎
+The size of most types defined by Structured Fields is not limited; as a result, extremely large fields could be an attack vector (e.g., for resource consumption). Most HTTP implementations limit the sizes of individual fields as well as the overall header or trailer section size to mitigate such attacks.
+</p>
+
+<p>
+ある主体が，［
+有構造~fieldの意味を変更するような，新たな`~HTTP~field$を注入する能
+］を有する可能性もある。
+これは，一部の状況下では構文解析を失敗させるが、すべての そのような状況下で依拠-可能に失敗させることはアリでない。
+◎
+It is possible for parties with the ability to inject new HTTP fields to change the meaning of a Structured Field. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
+</p>
+
+	</section>
+	<section id="faq">
+<h2 title="Frequently Asked Questions">付録 A. よくある質問</h2>
+
+		<section id="why-not-json">
+<h3 title="A.1. Why not JSON?">A.1. なぜ~JSONじゃない？</h3>
+
+<p>
+有構造~field用の早期の提案は~JSON `RFC8259$r に基づいていたが、その利用を
+~HTTP~header用に相応しくなるように拘束することは，［
+`送信者$／`受信者$
+］に特有な追加的な取扱いを実装するために要求される。
+◎
+Earlier proposals for Structured Fields were based upon JSON [RFC8259]. However, constraining its use to make it suitable for HTTP header fields required senders and recipients to implement specific additional handling.
+</p>
+
+<p>
+例えば，~JSON仕様には［
+巨大な実数／重複する~memberを伴う~obj
+］周りに課題がある。
+これらの課題を避けるための助言も可用であるが（例： `RFC7493$r ）、それには依拠できない。
+◎
+For example, JSON has specification issues around large numbers and objects with duplicate members. Although advice for avoiding these issues is available (e.g., [RFC7493]), it cannot be relied upon.
+</p>
+
+<p>
+同様に，~JSON文字列は既定では~Unicode文字列であり、相互運用能の課題になり得るものがいくつかある（例：比較において）。
+実装者には，不必要な所では~ASCIIでない内容を避けるよう勧めるが、これを施行するのは困難である。
+◎
+Likewise, JSON strings are by default Unicode strings, which have a number of potential interoperability issues (e.g., in comparison). Although implementers can be advised to avoid non-ASCII content where unnecessary, this is difficult to enforce.
+</p>
+
+<p>
+別の例として、任意な深さまで内容を入子にする~JSONの能も挙げられる。
+結果の `memory commitment^en 【必要に応じて~~確保する実メモリの~~絶対量】は適さないかもしれないので（例：埋込dその他の，制限された~server配備において）、それを何らかの流儀で制限することが必要とされる
+— しかしながら，既存の~JSON実装には そのような制限sは無く、制限-が指定されても，一部の~field定義は それに違反する必要を見出すことになる見込みが高い。
+◎
+Another example is JSON’s ability to nest content to arbitrary depths. Since the resulting memory commitment might be unsuitable (e.g., in embedded and other limited server deployments), it’s necessary to limit it in some fashion; however, existing JSON implementations have no such limits, and even if a limit is specified, it’s likely that some field definition will find a need to violate it.
+</p>
+
+<p>
+~JSONには広い採用と実装があるので、すべての実装にわたって，そのような追加的な拘束を課すのは困難である。
+それを施行するのに失敗する配備が一部でもあれば、相互運用能を害することになる。
+短かく言えば、~JSONに似た何かにした場合，人は~JSON［
+構文解析器／直列化器
+］を`~field値$に利用したくなりがちになる。
+◎
+Because of JSON’s broad adoption and implementation, it is difficult to impose such additional constraints across all implementations; some deployments would fail to enforce them, thereby harming interoperability. In short, if it looks like JSON, people will be tempted to use a JSON parser / serializer on field values.
+</p>
+
+<p>
+有構造~fieldの主要な目標は、相互運用能を改善して，実装を単純~化することにあるので、これらの懸念から，専用の［
+構文解析器, 直列化器
+］を要求する形式に至った。
+◎
+Since a major goal for Structured Fields is to improve interoperability and simplify implementation, these concerns led to a format that requires a dedicated parser and serializer.
+</p>
+
+<p>
+加えて，~JSONは、`~HTTP~field$内では “まっとうに見えない” 感覚が広く共有されている。
+◎
+Additionally, there were widely shared feelings that JSON doesn’t “look right” in HTTP fields.
+</p>
+
+		</section>
+	</section>
+	<section id="implementation-notes">
+<h2 title="Implementation Notes">付録 B. 実装~向けの注記</h2>
+
+<p>
+この仕様の汎用な実装は、~top-levelの［
+直列化する機能（ `4.1$sec ）／構文解析する機能（ `4.2$sec ）
+］を公開するべきである。
+それらは、関数にする必要はない
+— 例えば，各種~top-level型~用に異なる~methodを伴う~objとして，実装することもできる。
+◎
+A generic implementation of this specification should expose the top-level serialize (Section 4.1) and parse (Section 4.2) functions. They need not be functions;＼
+◎
+for example, it could be implemented as an object, with methods for each of the different top-level types.
+</p>
+
+<p>
+相互運用能を得るため，汎用な実装は，完全な, かつ~algoに近く従うことが重要になる
+— `1.1$sec を見よ。
+これを援助するため、~communityは，共通な~test一式を
+<a href="https://github.com/httpwg/structured-field-tests">https://github.com/httpwg/structured-field-tests</a>
+にて保守している。
+◎
+For interoperability, it’s important that generic implementations be complete and follow the algorithms closely; see Section 1.1. To aid this, a common test suite is being maintained by the community at https://github.com/httpwg/structured-field-tests.
+</p>
+
+<p>
+実装者は、［
+`辞書$sf／`~parameters$sf
+］が順序を保全する~mapであることに注意するべきである。
+~fieldには，これらの~data型に対する順序付けにより意味を伝達しないものもあるが、順序を利用する必要がある応用にも可用なるよう，順序は依然として公開されるべきである。
+◎
+Implementers should note that Dictionaries and Parameters are order-preserving maps. Some fields may not convey meaning in the ordering of these data types, but it should still be exposed so that applications which need to use it will have it available.
+</p>
+
+<p>
+同様に，実装は、［
+`~token$sfと`文字列$sfの区別を保全する
+］ことが重要なことに注意するべきである。
+ほとんどの~programming言語は，それ以外の型に きちんと対応付けられる~nativeな型を備えるが、［
+“~token” を包装する~objを作成する／
+これらの型が別々であり続けることを確約するような~parameterを関数に利用する
+］ことも必要とされ得る。
+◎
+Likewise, implementations should note that it’s important to preserve the distinction between Tokens and Strings. While most programming languages have native types that map to the other types well, it may be necessary to create a wrapper “token” object or use a parameter on functions to assure that these types remain separate.
+</p>
+
+<p>
+直列化~algoは、どの事例においても［
+`有構造~data型$secに定義される~data型
+］に厳密に制限されない仕方で定義される。
+例えば `~decimal^sf は、より広い入力をとるよう設計されており，許容される値に丸めることになる。
+◎
+The serialization algorithm is defined in a way that it is not strictly limited to the data types defined in Section 3 in every case. For example, Decimals are designed to take broader input and round to allowed values.
+</p>
+
+<p>
+実装には、構造ごとに，許容される~sizeを
+— 各~型ごとに定義される最小を満たす限りにおいて —
+制限することも許容される。
+構造が実装による制限-を超過するとき、その構造は［
+構文解析／直列化
+］に失敗する。
+◎
+Implementations are allowed to limit the allowed size of different structures, subject to the minimums defined for each type. When a structure exceeds an implementation limit, that structure fails parsing or serialisation.
+</p>
+
+	</section>
+	<section id="changes">
+<h2 title="Changes">付録 C. 変更点</h2>
+
+【この節は、未訳。】
+
+	</section>
+	<section id="acknowledgements">
+<h2 title="Acknowledgements">謝辞</h2>
+
+<p>
+この仕様の開発に詳細な~feedback, 注意深い考慮を寄せられた
+`Matthew Kerwin^en 氏に。
+貢献された他の各氏にも：
+◎
+Many thanks to Matthew Kerwin for his detailed feedback and careful consideration during the development of this specification.
+</p>
+
+<div lang="en-x-a0">
+Thanks also to Ian Clelland, Roy Fielding, Anne van Kesteren, Kazuho Oku, Evert Pot, Julian Reschke, Martin Thomson, Mike West, and Jeffrey Yasskin for their contributions.
+</div>
+
+	</section>
+</main></div>

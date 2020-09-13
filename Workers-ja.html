@@ -1,0 +1,5176 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Web Workers （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'workers',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん？]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'I':
+	href = `#${key.toLowerCase()}`;
+	break;
+case 'mc':
+	text = 'constructor';
+	href = `#dom-${key.toLowerCase()}`;
+	break;
+case 'm':
+case 'mW':
+case 'mMP':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'sc': // url scheme
+	text += ':';
+	break;
+case 'et':
+	href = `~HTMLindex#event-${key}`;
+	break;
+case 'sl':
+	text = `[[${text}]]`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-08-25
+trans_update:2020-08-26
+source_checked:191126
+page_state_key:HTML
+original_url:https://html.spec.whatwg.org/multipage/workers.html
+	abbr_url:WORKERS
+spec_status:LS
+nav_prev:WEBSOCKET
+nav_next:WEBSTORAGE
+trans_1st_pub:2012-03-11
+
+
+●●class_map
+e:element
+a:attr
+E:error
+et:event-type
+sc:scheme
+h:header
+jA:abstract
+sl:js-slot
+
+●●tag_map
+I:code
+m:code
+mW:code
+mMP:code
+c:code
+e:code
+a:code
+h:code
+sc:code
+et:code
+E:code
+jA:span
+sl:span
+V:var
+i:i
+cite:cite
+
+●●original_id_map
+
+	concept-WorkerGlobalScope-owner-set:the-worker's-documents
+	'
+
+●●mdn_urls
+abstractworker:API/AbstractWorker
+dedicatedworkerglobalscope:API/DedicatedWorkerGlobalScope
+sharedworker:API/SharedWorker
+sharedworkerglobalscope:API/SharedWorkerGlobalScope
+worker:API/Worker
+	workeroptions:API/WorkerOptions
+	workertype:API/WorkerType
+workerglobalscope:API/WorkerGlobalScope
+workerlocation:API/WorkerLocation
+workernavigator:API/WorkerNavigator
+navigatorconcurrenthardware:API/NavigatorConcurrentHardware
+
+●●link_map
+
+
+	●IDL
+object:~WEBIDL#idl-object
+
+I.AbstractWorker:#abstractworker
+I.DedicatedWorkerGlobalScope:#dedicatedworkerglobalscope
+I.PostMessageOptions:~HTMLcomms#postmessageoptions
+I.SharedWorker:#sharedworker
+I.SharedWorkerGlobalScope:#sharedworkerglobalscope
+I.Worker:#worker
+I.WorkerOptions:#workeroptions
+I.WorkerType:#workertype
+I.RequestCredentials:~FETCH#requestcredentials
+I.WorkerGlobalScope:#workerglobalscope
+I.WorkerLocation:#workerlocation
+I.WorkerNavigator:#workernavigator
+I.Window:~WINDOW#window
+I.Event:~DOM4#event
+I.EventTarget:~DOM4#interface-eventtarget
+I.EventHandler:~WAPI#eventhandler
+I.ErrorEvent:~WAPI#errorevent
+I.OnErrorEventHandler:~WAPI#onerroreventhandler
+I.ServiceWorkerContainer:~SW1#serviceworkercontainer
+I.ServiceWorkerGlobalScope:~SW1#serviceworkerglobalscope
+
+I.NavigatorID:~HTMLnavigator#navigatorid
+I.NavigatorLanguage:~HTMLnavigator#navigatorlanguage
+I.NavigatorOnLine:~HTMLLS/offline.html#navigatoronline
+I.NavigatorConcurrentHardware:#navigatorconcurrenthardware
+I.URLUtilsReadOnly:~URL1#urlutilsreadonly
+I.MessagePort:~HTMLcomms#messageport
+I.MessageEvent:~HTMLcomms#messageevent
+I.Document:~HTMLdom#document
+
+
+I.ArrayBuffer:~WEBIDL#idl-ArrayBuffer
+	E.NetworkError:~WEBIDL#networkerror
+	E.SecurityError:~WEBIDL#securityerror
+	E.SyntaxError:~WEBIDL#js-syntaxerror
+	E.SyntaxError:~WEBIDL#syntaxerror
+	E.URLMismatchError:~WEBIDL#urlmismatcherror
+
+	●IDL members
+		■WorkerGlobalScope
+m.self:#dom-workerglobalscope-self
+m.location:#dom-workerglobalscope-location
+m.navigator:#dom-worker-navigator
+m.importScripts:#dom-workerglobalscope-importscripts
+m.onerror:#handler-workerglobalscope-onerror
+m.onlanguagechange:#handler-workerglobalscope-onlanguagechange
+m.onoffline:#handler-workerglobalscope-onoffline
+m.ononline:#handler-workerglobalscope-ononline
+m.onrejectionhandled:#handler-workerglobalscope-onrejectionhandled
+m.onunhandledrejection:#handler-workerglobalscope-onunhandledrejection
+
+		■DedicatedWorkerGlobalScope
+m.postMessage:#dom-dedicatedworkerglobalscope-postmessage
+m.~postMessageO:#dom-dedicatedworkerglobalscope-postmessage-options
+m.name:#dom-dedicatedworkerglobalscope-name
+m.close:#dom-dedicatedworkerglobalscope-close
+m.onmessage:#handler-dedicatedworkerglobalscope-onmessage
+m.onmessageerror:#handler-dedicatedworkerglobalscope-onmessageerror
+
+		■SharedWorkerGlobalScope
+m.~closeS:#dom-sharedworkerglobalscope-close
+m.~nameS:#dom-sharedworkerglobalscope-name
+m.onconnect:#handler-sharedworkerglobalscope-onconnect
+
+		■AbstractWorker
+mW.onerror:#handler-abstractworker-onerror
+		■Worker
+m.new Worker:#dom-worker
+mW.terminate:#dom-worker-terminate
+mW.postMessage:#dom-worker-postmessage
+mW.~postMessageO:#dom-worker-postmessage-options
+mW.onmessage:#dom-worker-onmessage
+mW.onmessageerror:#dom-worker-onmessageerror
+		■SharedWorker
+m.new SharedWorker:#dom-sharedworker
+mW.port:#dom-sharedworker-port
+
+		■WorkerLocation
+m.href:#dom-workerlocation-href
+m.origin:#dom-workerlocation-origin
+m.protocol:#dom-workerlocation-protocol
+m.host:#dom-workerlocation-host
+m.hostname:#dom-workerlocation-hostname
+m.port:#dom-workerlocation-port
+m.pathname:#dom-workerlocation-pathname
+m.search:#dom-workerlocation-search
+m.hash:#dom-workerlocation-hash
+
+		■NavigatorConcurrentHardware
+m.hardwareConcurrency:#dom-navigator-hardwareconcurrency
+
+		■外部
+m.addEventListener:~DOM4#dom-eventtarget-addeventlistener
+m.cancelable:~DOM4#dom-event-cancelable
+
+m.start:~HTMLcomms#dom-messageport-start
+m.source:~HTMLcomms#dom-messageevent-source
+m.ports:~HTMLcomms#dom-messageevent-ports
+m.data:~HTMLcomms#dom-messageevent-data
+
+m.transfer:~HTMLcomms#dom-postmessageoptions-transfer
+
+m.message:~WAPI#dom-errorevent-message
+m.filename:~WAPI#dom-errorevent-filename
+m.lineno:~WAPI#dom-errorevent-lineno
+m.colno:~WAPI#dom-errorevent-colno
+m.error:~WAPI#dom-errorevent-error
+
+mMP.postMessage:~HTMLcomms#dom-messageport-postmessage
+mMP.~postMessageO:~HTMLcomms#dom-messageport-postmessage-options
+
+
+l.require-corp:~ORIGIN#coep-require-corp
+
+	et.XXX:~HTMLindex#event-XXX
+	languagechange
+	message
+	offline
+	online
+	error
+	rejectionhandled
+	unhandledrejection
+et.connect:~HTMLindex#event-workerglobalscope-connect
+
+sc.blob:~FILEAPI#url
+	廃：~FILEAPI#DefinitionOfScheme
+sc.data:~RFCx/rfc2397#section-2
+
+e.iframe:~HEembed#the-iframe-element
+e.script:~HEscripting#the-script-element
+
+	●用語
+
+暗黙的な~port:#_scope-implicit-port
+1.暗黙的な~port:#_worker-implicit-port
+V.url:#_location-url
+
+~workerが終了され:#terminate-a-worker
+~workerを終了させ:#terminate-a-worker
+~workerを走らす:#run-a-worker
+~workerを~closeする:#close-a-worker
+休止-可能:#suspendable-worker
+許可-可能:#permissible-worker
+専用~worker:#dedicatedworkerglobalscope
+保護され:#protected-worker
+作動中のため必要:#active-needed-worker
+
+~workerの環境~設定群~objを設定しておく:#set-up-a-worker-environment-settings-object
+公式的な作成~時点:#official-moment-of-creation
+~close中~flag:#dom-workerglobalscope-closing
+
+~scriptを~worker大域~scopeの中に取込む:#import-scripts-into-worker-global-scope
+~worker大域~scope:#concept-workerlocation-workerglobalscope
+関連な所有者として追加するもの:#relevant-owner-to-add
+
+wG.所有者~集合:#concept-WorkerGlobalScope-owner-set
+wG.~worker集合:#the-worker's-workers
+	'
+wG.~port~list:#the-worker's-ports
+	'
+wG.名前:#concept-workerglobalscope-name
+wG.~url:#concept-workerglobalscope-url
+wG.種別:#concept-workerglobalscope-type
+wG.~referrer施策:#concept-workerglobalscope-referrer-policy
+wG.埋込元~施策:#concept-workerglobalscope-embedder-policy
+wG.非同一-生成元~隔離-済み能力:#concept-workerglobalscope-cross-origin-isolated-capability
+wG.~CSP~list:#concept-workerglobalscope-csp-list
+wG.~module~map:#concept-workerglobalscope-module-map
+
+wG.構築子~生成元:#concept-sharedworkerglobalscope-constructor-origin
+wG.構築子~url:#concept-sharedworkerglobalscope-constructor-url
+wG.資格証:#concept-sharedworkerglobalscope-credentials
+
+共用~worker~manager:#shared-worker-manager
+
+	●用語（HTML
+文書:~HTMLdom#the-document-object
+
+	● comms
+~portを連絡する:~HTMLcomms#entangle
+連絡-:~HTMLcomms#entangle
+~port~message~queue:~HTMLcomms#port-message-queue
+~message~channel:~HTMLcomms#channel-messaging
+
+	●WAPI
+~event~handler:~WAPI#event-handlers
+~event~handler~IDL属性:~WAPI#event-handler-idl-attributes
+~event~handler ~event型:~WAPI#event-handler-event-type
+~worker~event~loop:~WAPI#worker-event-loop-2
+~window~event~loop:~WAPI#window-event-loop
+~event~loop:~WAPI#event-loop
+aG.~event~loop:~WAPI#concept-agent-event-loop
+~module~map:~WAPI#module-map
+~errorを報告-:~WAPI#report-the-error
+sC.再投出-用~error:~WAPI#concept-script-error-to-rethrow
+~script:~WAPI#concept-script
+古典~script:~WAPI#classic-script
+~module~script:~WAPI#module-script
+~worker用古典~scriptを~fetchする:~WAPI#fetch-a-classic-worker-script
+~module~worker~script~graphを~fetchする:~WAPI#fetch-a-module-worker-script-tree
+~workerが取込んだ古典~scriptを~fetchする:~WAPI#fetch-a-classic-worker-imported-script
+
+古典~scriptを走らす:~WAPI#run-a-classic-script
+~module~scriptを走らす:~WAPI#run-a-module-script
+~scriptを作成-:~WAPI#create-a-script
+~realm実行~環境:~WAPI#realm-execution-environment
+~task源:~WAPI#task-source
+~task:~WAPI#concept-task
+~taskを~queueする:~WAPI#queue-a-task
+大域~taskを~queueする:~WAPI#queue-a-global-task
+~task~queue:~WAPI#task-queue
+~DOM操作~task源:~WAPI#dom-manipulation-task-source
+大域~obj:~WAPI#global-object
+関連な大域~obj:~WAPI#concept-relevant-global
+rM.大域~obj:~WAPI#concept-realm-global
+
+新たな~JS~realmを作成する:~WAPI#creating-a-new-javascript-realm
+環境を破棄する手続き:~WAPI#environment-discarding-steps
+関連な~agent:~WAPI#relevant-agent
+専用／共用~worker~agentを得する:~WAPI#obtain-a-dedicated/shared-worker-agent
+
+enV.~secureな文脈:~WAPI#secure-context
+enV.~Realm:~WAPI#environment-settings-object's-realm
+enV.大域~obj:~WAPI#concept-settings-object-global
+enV.~id:~WAPI#concept-environment-id
+enV.作成時の~URL:~WAPI#concept-environment-creation-url
+enV.~top-level作成時の~URL:~WAPI#concept-environment-top-level-creation-url
+enV.~target閲覧文脈:~WAPI#concept-environment-target-browsing-context
+enV.作動中の~sw:~WAPI#concept-environment-active-service-worker
+enV.担当の文書:~WAPI#responsible-document
+enV.担当の~event~loop:~WAPI#responsible-event-loop
+enV.生成元:~WAPI#concept-settings-object-origin
+enV.~top-level生成元:~WAPI#concept-environment-top-level-origin
+enV.~module~map:~WAPI#concept-settings-object-module-map
+enV.~referrer施策:~WAPI#concept-settings-object-referrer-policy
+enV.埋込元~施策:~WAPI#concept-settings-object-embedder-policy
+enV.非同一-生成元~隔離-済み能力:~WAPI#concept-settings-object-cross-origin-isolated-capability
+enV.~API用~URL文字~符号化法:~WAPI#api-url-character-encoding
+enV.~API用~基底~URL:~WAPI#api-base-url
+
+未取扱い:~WAPI#concept-error-nothandled
+現在の設定群~obj:~WAPI#current-settings-object
+設定群~obj:~WAPI#settings-object
+関連な設定群~obj:~WAPI#relevant-settings-object
+環境~設定群~obj:~WAPI#environment-settings-object
+尚早に中止され:~WAPI#abort-a-running-script
+走っている~scriptを中止する:~WAPI#abort-a-running-script
+~fetchを遂行する:~WAPI#fetching-scripts-perform-fetch
+i.~top-level内:~WAPI#fetching-scripts-is-top-level
+実行~準備済み~flag:~WAPI#concept-environment-execution-ready-flag
+非同一-生成元~隔離-済み:~WAPI#cross-origin-isolated
+
+	●navi
+全部的に作動中:~BROWSERS#fully-active
+~top-level閲覧文脈:~BROWSERS#top-level-browsing-context
+閲覧文脈:~BROWSERS#browsing-context
+作動中の文書:~BROWSERS#active-document
+
+生成元:~ORIGIN#concept-origin
+不透明な生成元:~ORIGIN#concept-origin-opaque
+同一-生成元:~ORIGIN#same-origin
+生成元を直列化する:~ORIGIN#ascii-serialisation-of-an-origin
+埋込元~施策:~ORIGIN#embedder-policy
+埋込元~施策を得する:~ORIGIN#obtain-an-embedder-policy
+大域~objの埋込元~施策を検査する:~ORIGIN#check-a-global-object's-embedder-policy
+
+完全に読込まれ:~NAVI#completely-loaded
+~app~cache用:~NAVI#offline
+	~NAVI#_for-app-cache
+
+並列的:~HTMLINFRA#in-parallel
+非同期に完了-:~HTMLINFRA#_asynchronously-complete
+新たな並列~queueを開始-:~HTMLINFRA#starting-a-new-parallel-queue
+手続きを~enqueueする:~HTMLINFRA#enqueue-the-following-steps
+
+相対的に構文解析-:~HTMLurl#parse-a-url
+結果の~URL~record:~HTMLurl#resulting-url-record
+結果の~URL文字列:~HTMLurl#resulting-url-string
+
+作動中の~timerの~list:~HTMLGAPI#list-of-active-timers
+
+	●用語（他
+
+実装定義:~INFRA#implementation-defined
+set.付加する:~INFRA#set-append
+集合:~INFRA#ordered-set
+空:~INFRA#list-is-empty
+
+凍結d配列:~WEBIDL#dfn-frozen-array-type
+新たな:~WEBIDLjs#new
+
+~eventを発火する:~DOM4#concept-event-fire
+
+	●URL/fetch
+~URL:~URL1#concept-url
+同等な~URL:~URL1#concept-url-equals
+url.~scheme:~URL1#concept-url-scheme
+url.~host:~URL1#concept-url-host
+url.~port:~URL1#concept-url-port
+url.~path:~URL1#concept-url-path
+url.~query:~URL1#concept-url-query
+url.素片:~URL1#concept-url-fragment
+url.生成元:~URL1#concept-url-origin
+url.基底~URL不可用~flag:~URL1#url-cannot-be-a-base-url-flag
+
+整数を直列化する:~URL1#serialize-an-integer
+~hostを直列化する:~URL1#concept-host-serializer
+~URLを直列化する:~URL1#concept-url-serializer
+
+~fetch:~FETCH#concept-fetch
+~network~error:~FETCH#concept-network-error
+rq.予約-済み~client:~FETCH#concept-request-reserved-client
+応答を処理する:~FETCH#process-response
+応答:~FETCH#concept-response
+rs.~URL:~FETCH#concept-response-url
+局所~scheme:~FETCH#local-scheme
+
+
+UTF-8:~ENCODING#utf-8
+
+~JS実行~文脈:~TC39#sec-execution-contexts
+~agent~cluster:~TC39#sec-agent-clusters
+
+~client~message~queue:~SW1#dfn-client-message-queue
+~sw~client:~SW1#serviceworkercontainer-service-worker-client
+
+~referrer施策:~REFERRER-POLICY#referrer-policy
+~CSP~obj:~CSP3#content-security-policy-object
+~CSP~list:~CSP3#csp-list
+大域~objの~CSP~listを初期化する:~CSP3#initialize-global-object-csp
+
+●●words_table1
+
+
+DEMO:https://html.spec.whatwg.org/demos/workers
+	Document: <code>Document</code> 
+closeS:close
+nameS:name
+postMessageO:postMessage
+
+●●words_table
+
+
+
+	●序論
+	ユーザインタフェース
+core::::コア
+demo::::デモ
+filter::::フィルタ
+log::::ログ
+multi::::マルチ
+online::::オンライン
+private::非公開
+public::公開
+chat::::チャット
+routine::::ルーチン
+strict:
+tutorial::::チュートリアル
+viewer::::ビューア
+マップ:map::~
+
+仕事:task::~::タスク
+代理-:proxy:~
+協同-:collaborate:~
+	単純にする:simplicity
+即応可能:responsive::~::レスポンシブ
+原理:principle:~
+告知-:announce:~
+探索:search:~
+文:statement:~
+漸進的:progressive:~
+直接:direct:~
+直通:direct:~
+	different
+立上げる:launchする:立ち上げる
+素数:prime number:~
+素朴:naïve:~
+衝突-:collide:~
+記憶域:memory::~::メモリ
+返信-:send back::~
+返送:transfer back::~
+輝度:luminance:~
+	人の目は 赤, 青 に鈍感
+	減衰-
+委譲:delegation:~
+比較的:relativeに:~
+
+	通用:apply
+	普及:becoming prevalent
+	書かれ
+	注意
+	注目すべき要点:key things worth noting
+	興味を引く:interesting
+	良い~~選択:better choice
+	要する
+	記し方:signature
+	関係が深い:involved
+	~~簡単:quick
+	ここでの名称:called herein
+	一律:turn all
+	不要
+	仕方:way
+	~map
+	保ち
+	束ねる:coordinating
+	動き回れ:move around
+	示-:
+	置かれ:
+	見つか:found
+	見る
+	加える
+	事を終え:is done with
+	~~指名:naming
+	付番
+	待ち受ける:listen
+	待つ
+	付け加え:attach
+
+	ごとに分別:by
+	付与
+	可能
+	各升:tiles
+	同様
+	変数
+	多数の同時利用:used in large numbers
+	完成:finished
+	明るく
+	幾千万:mega-
+	後続の:
+	数値計算:number-crunching
+	易い
+	最新:recent
+	望む限り
+	本物
+	様
+	汚さな:polluting
+	分業:split
+	渡り
+	~~状況
+	生成-:spawn
+	発見:found
+	等分:farmed out
+	親しみ:
+	計算:compute, calculation
+	計算量の大きな:computationally expensive
+	達
+	違える:different
+	選んで
+	重い:heavy-weight
+	長い:long
+	長時間居残:long-lived
+	長期:long
+	開く:open
+	開ける:open でき
+	関して
+	高くつく
+	備わり
+	形
+
+	実行環境
+	登場
+	所
+	推察
+	理解-
+
+	~~示唆
+	考えれ
+	~~個別的:specific
+
+	■暗号 library
+stub::::スタブ
+負荷分散-:offload::~
+鍵:key::~
+公開鍵:public key::~
+私用鍵:private key::~
+暗号:crypto::~
+暗号化:cryptography::~
+暗号化-:encrypt::~
+復号化-:decrypt::復号
+平文:plaintext::~
+暗号文:ciphertext::~
+移譲-:delegate:~
+
+	-:Notice how
+	本当の:real
+	以降は:remainder
+	知る:know
+	小分けに:little
+
+	●fetch, url, network
+同等:equal:~
+	fetching
+	予約-済み:reserved
+	●通信
+transaction::::トランザクション
+	接続-法:connecting
+連絡-:entangle::~::エンタングル
+	~~解く:dis-entangle
+	送信-法:sending
+	通信-法:communicating
+	転送-法:transferring
+報告ng:reporting::報告
+
+	●保安
+	similar-origin:
+迂回-:bypass:~
+
+	●環境
+下位worker:subworker::下位 worker
+担当の:responsible::~::レスポンシブル
+閲覧:browsing::~
+agent:
+埋込元:embedder::埋め込み元
+
+	●IDL／型／構造
+	%共用？:is shared
+孤立:orphan::~
+	設定しておく:set up
+
+	●処理
+close:
+	~close中:closing
+	~instance化-:instantiate
+稼働時の:runtime:~
+再投出-:rethrow::~
+終了-:terminate::~
+scope::::スコープ
+timer::::タイマー
+timeout:
+待機中の:outstanding:~
+background::::バックグラウンド
+同時的:concurrent::~
+同時並行性:concurrency::~
+尚早:premature:~
+並列:parallel::~
+活動:activities::~
+休止:suspending::~
+作成時の:creation::~
+作成元:creator::~
+存続期間:lifetime::~
+処理待ち:pending:~
+開始時:start-up 時:~
+生残れる:surviveできる:生き残れる
+
+	initialize ／ unoptimized
+	開始し直す:restart
+
+	●仕様
+省略可:optional:~
+未取扱い:not handled:未取り扱い
+適用外:not applicable:~
+適応-:accomodate:~
+給-:supply:~
+保守的:conservative:~
+
+	任意選択で:may
+	観測され得:observably
+	最新情報:the latest
+	本当は:really
+	されるべき:ought
+	設計し直:redesign
+	~~解明する:figure out
+
+	●未分類
+manager:
+繋がろ:contactしよ:~
+古典:classic::~::クラシック
+取込む:importする::取り込む
+取込んだ:importした::取り込んだ
+取込み:import::取り込み
+id:
+main::::メイン
+database::::データベース
+論理CPU:logical processor:~
+番号:number:~
+仕切り:partition::~
+同一性:identity:~
+
+	後続:following
+	対応-
+	生み出-:spawn
+	:follow
+	合致しない:mismatch
+	連結-:followed by
+	位置:position
+	行~番号:line number
+	列~番号:column number
+	方法
+	時点:moment
+	時間:time
+	可能
+	必要
+	最~大:highest
+
+	●指示語
+現在:currently:~
+	単:single
+	1 個だけ:single
+	度
+	何個
+	他方:another
+	の外:off-
+		〜の代わりに:instead
+	最後
+	最初
+	一方
+	一部
+	別々の:diffrent
+	次第
+	同様
+	自身
+	一連
+	以下
+	次
+	全体
+	複数
+	一段上層:one level up
+	もう:no longer
+	唯一:only
+	種類:kinds of
+	また別の:third
+	対象:
+	以降:
+	すでにある:already on
+	もの:construct
+	上述:
+	外で
+	少し
+	一方の
+	今の
+	代わり
+	何か
+	何らか
+	側
+	全く
+	最も
+	範囲
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる
+HTML 仕様の
+<a href="~SPEC_URL">§ Web Workers</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+</head>
+<body>
+
+<header>
+	<hgroup>
+<h1>Web Workers</h1>
+
+	</hgroup>
+
+</header>
+
+<main id="MAIN" hidden>
+
+<section id="workers">
+<h1>10. Web Workers</h1>
+
+	<section id="introduction-15">
+<h2 title="Introduction">10.1. 序論</h2>
+
+		<section id="scope-2">
+<h3 title="Scope">10.1.1. 視野</h3>
+
+~INFORMATIVE
+
+<p>
+この仕様は、他の~UI~scriptから独立に，~backgroundで~scriptを走らすための~APIを定義する。
+◎
+This specification defines an API for running scripts in the background independently of any user interface scripts.
+</p>
+
+<p>
+これにより，~click他 利用者との対話に応答する~scriptから中断されることなく，長期に渡り~scriptを走らせて、~pageは即応可能に保ちながら，長い~taskを実行させられるようになる。
+◎
+This allows for long-running scripts that are not interrupted by scripts that respond to clicks or other user interactions, and allows long tasks to be executed without yielding to keep the page responsive.
+</p>
+
+<p>
+~worker（これらの~background~scriptのここでの名称）は、比較的 重いので，多数の同時利用は意図されていない。
+例えば、画像~内に幾千万ある画素それぞれに対し，別々の~workerを立上げるのは不適切である。
+下の例に~workerの適切な利用を示す：
+◎
+Workers (as these background scripts are called herein) are relatively heavy-weight, and are not intended to be used in large numbers. For example, it would be inappropriate to launch one worker for each pixel of a four megapixel image. The examples below show some appropriate uses of workers.
+</p>
+
+<p>
+一般に，~workerは長時間居残り続け、開始時の処理能~cost, および ~instanceごとの記憶域~costは，高くつくものと予期されている。
+◎
+Generally, workers are expected to be long-lived, have a high start-up performance cost, and a high per-instance memory cost.
+</p>
+
+		</section>
+		<section id="examples-6">
+<h3 title="Examples">10.1.2. 例</h3>
+
+~INFORMATIVE
+
+<p>
+~workerには様々な利用がある。
+後続の下位節にて、この利用を示す。
+◎
+There are a variety of uses that workers can be put to. The following subsections show various examples of this use.
+</p>
+
+			<section id="a-background-number-crunching-worker">
+<h4 title="A background number-crunching worker">10.1.2.1. ~backgroundで数値計算し続ける~worker</h4>
+
+~INFORMATIVE
+
+<p>
+~workerの最も単純な利用は、~UIを中断せずに計算量の大きな仕事を遂行するものである。
+◎
+The simplest use of workers is for performing a computationally expensive task without interrupting the user interface.
+</p>
+
+<p>
+この例では、~main文書が~workerを生み出して, （素朴な）素数の~~計算を行い, 見つかった最新の素数を 漸進的に表示し続ける。
+◎
+In this example, the main document spawns a worker to (naïvely) compute prime numbers, and progressively displays the most recently found prime number.
+</p>
+
+<p>
+~main~pageは次で与えられる：
+◎
+The main page is as follows:
+</p>
+
+<pre class="lang-html">
+&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;title&gt;~worker例： 単~coreによる~~計算&lt;/title&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  &lt;p&gt;これまでに見つかった最~大の素数は：&lt;output id="result"&gt;&lt;/output&gt;&lt;/p&gt;
+
+&lt;script&gt;
+   var %worker = new Worker('worker.js');
+   %worker.onmessage = function (%event) {
+     document.getElementById('result').textContent = %event.data;
+   };
+&lt;/script&gt;
+
+ &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p>
+`new Worker()$m
+構築子の~callにより，~workerが作成され、［
+その~workerを表現し, その~workerと通信する， `Worker$I ~obj
+］が返される。
+~objの `onmessage$mW ~event~handlerには、~workerから~messageを受信する~codeを入れられる。
+◎
+The Worker() constructor call creates a worker and returns a Worker object representing that worker, which is used to communicate with the worker. That object's onmessage event handler allows the code to receive messages from the worker.
+</p>
+
+<p>
+~worker自身は次で与えられる：
+◎
+The worker itself is as follows:
+</p>
+
+<pre class="lang-js">
+var %n = 1;
+search: while (true) {
+  %n += 1;
+  for (var %i = 2; %i &lt;= Math.sqrt(%n); %i += 1)
+    if (%n % %i == 0)
+     continue search;
+  /* <span class="comment">
+素数~発見！
+◎
+found a prime!
+</span> */
+  postMessage(%n);
+}
+</pre>
+
+<p class="trans-note">【
+いきなり `postMessage()$m が大域~関数として登場している所からも推察されるように、ちょうど通常時における~scriptの `Window^I ~objにあたる，~worker用の~script実行~環境を与える大域~obj（<a href="#the-global-scope">大域~scope節</a>）が、（~workerを生み出した側の実行~環境とは別に）存在している、と考えれば，仕様の残りの部分も理解し易い。
+】</p>
+
+<p>
+この~codeは、単純な 最適化されていない，素数の探索~routineである。
+`postMessage()$m
+が、見つかった素数を~messageにして~pageに返信する~methodである。
+◎
+The bulk of this code is simply an unoptimized search for a prime number. The postMessage() method is used to send a message back to the page when a prime is found.
+</p>
+
+<p>
+<a href="~DEMO/primes/page.html">この例を~onlineで見る</a>
+◎
+View this example online.
+</p>
+
+			</section>
+			<section id="module-worker-example">
+<h4 title="Using a JavaScript module as a worker">10.1.2.2. ~JS~moduleを~workerとして利用する</h4>
+
+~INFORMATIVE
+
+<div >
+<p>
+これまでのどの例も`古典~script$を走らす~workerを示してきたが、~workerは，`~module~script$を利用して~instance化することもできる
+— これには通例的に次の便益がある：
+</p>
+
+<ul><li>~JS `import^c 文を利用して他の~moduleを取込む能
+</li><li>既定で~strict~modeになる
+</li><li>~workerの大域~scopeを汚さないような，~top-levelの宣言
+</li></ul>
+◎
+All of our examples so far show workers that run classic scripts. Workers can instead be instantiated using module scripts, which have the usual benefits: the ability to use the JavaScript import statement to import other modules; strict mode by default; and top-level declarations not polluting the worker's global scope.
+</div>
+
+<p>
+`import^c 文が可用になったことに伴い、
+`importScripts()$m ~methodは，~module~workerの内側では自動的に失敗することになる。
+◎
+As the import statement is available, the importScripts() method will automatically fail inside module workers.
+</p>
+
+<p>
+この例では、~main文書が，~main~threadの外で画像~操作を行う~workerを利用する。
+それは、別の~moduleから利用される~filterを取込む。
+◎
+In this example, the main document uses a worker to do off-main-thread image manipulation. It imports the filters used from another module.
+</p>
+
+<p>
+~main~pageは次で与えられる：
+◎
+The main page is as follows:
+</p>
+
+<pre class="lang-html">
+&lt;!DOCTYPE html&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;title&gt;~worker例： 画像を復号する&lt;/title&gt;
+
+&lt;p&gt;
+  &lt;label&gt;
+    復号する画像の URL を入れてください<!-- Type an image URL to decode -->
+    &lt;input type="url" id="image-url" list="image-list"&gt;
+    &lt;datalist id="image-list"&gt;
+      &lt;option value="https://html.spec.whatwg.org/images/drawImage.png"&gt;
+      &lt;option value="https://html.spec.whatwg.org/images/robots.jpeg"&gt;
+      &lt;option value="https://html.spec.whatwg.org/images/arcTo2.png"&gt;
+    &lt;/datalist&gt;
+  &lt;/label&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+  &lt;label&gt;
+    適用する~filterを選んでください<!-- Choose a filter to apply -->
+    &lt;select id="filter"&gt;
+      &lt;option value="none"&gt;none&lt;/option&gt;
+      &lt;option value="grayscale"&gt;grayscale&lt;/option&gt;
+      &lt;option value="brighten"&gt;brighten by 20%&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/label&gt;
+&lt;/p&gt;
+
+&lt;canvas id="output"&gt;&lt;/canvas&gt;
+
+&lt;script type="module"&gt;
+  const %worker = new Worker("worker.js", { type: "module" });
+  %worker.onmessage = receiveFromWorker;
+
+  const %url = document.querySelector("#image-url");
+  const %filter = document.querySelector("#filter");
+  const %output = document.querySelector("#output");
+
+  %url.oninput = updateImage;
+  %filter.oninput = sendToWorker;
+
+  let %imageData, %context;
+
+  function updateImage() {
+    const %img = new Image();
+    %img.src = %url.value;
+
+    %img.onload = () =&gt; {
+      %output.innerHTML = "";
+
+      const %canvas = document.createElement("canvas");
+      %canvas.width = %img.width;
+      %canvas.height = %img.height;
+
+      %context = %canvas.getContext("2d");
+      %context.drawImage(%img, 0, 0);
+      %imageData = %context.getImageData(0, 0, %canvas.width, %canvas.height);
+
+      sendToWorker();
+      %output.appendChild(%canvas);
+    };
+  }
+
+  function sendToWorker() {
+    %worker.postMessage({ %imageData, filter: %filter.value });
+  }
+
+  function receiveFromWorker(%e) {
+    %context.putImageData(%e.data, 0, 0);
+  }
+&lt;/script&gt;
+</pre>
+
+<p>
+~worker~fileは次で与えられる：
+◎
+The worker file is then:
+</p>
+
+<pre class="lang-js">
+import * as filters from "./filters.js";
+
+self.onmessage = %e =&gt; {
+  const { %imageData, %filter } = %e.data;
+  filters[%filter](%imageData);
+  self.postMessage(%imageData, [%imageData.data.buffer]);
+};
+</pre>
+
+<p>
+これは、次の~file `filters.js^c を取込む：
+◎
+Which imports the file filters.js:
+</p>
+
+<pre class="lang-js">
+export function none() {}
+
+export function grayscale({ data: %d }) {
+  for (let %i = 0; %i &lt; %d.length; %i += 4) {
+    const [%r, %g, %b] = [%d[%i], %d[%i + 1], %d[%i + 2]];
+    /* <span class="comment">
+RGB に対する CIE 輝度
+— ヒトの目は 赤, 青 に鈍感なので，それらを減衰する
+◎
+CIE luminance for the RGB
+— The human eye is bad at seeing red and blue, so we de-emphasize them.
+</span> */
+    %d[%i] = %d[%i + 1] = %d[%i + 2] = 0.2126 * %r + 0.7152 * %g + 0.0722 * %b;
+  }
+};
+
+export function brighten({ data: %d }) {
+  for (let %i = 0; %i &lt; %d.length; ++%i) {
+    %d[%i] *= 1.2;
+  }
+};</pre>
+
+<p>
+<a href="~DEMO/modules/page.html">この例を~onlineで見る</a>
+◎
+View this example online.
+</p>
+
+			</section>
+			<section id="shared-workers-introduction">
+<h4 title="Shared workers introduction">10.1.2.3. 共用~worker序論</h4>
+
+~INFORMATIVE
+
+<p>
+この節では、 Hello World の例を利用して，共用~workerを導入する。
+共用~workerでは、それぞれの~workerが複数の接続を持ち得るので，少し異なる~APIが利用される。
+◎
+This section introduces shared workers using a Hello World example. Shared workers use slightly different APIs, since each worker can have multiple connections.
+</p>
+
+<p>
+この最初の例では、利用者がどのようにして~workerに接続し，~workerがその接続-時にどのように~pageに~messageを返信するかを示す。
+受信された~messageは~logに表示される。
+◎
+This first example shows how you connect to a worker and how a worker can send a message back to the page when it connects to it. Received messages are displayed in a log.
+</p>
+
+<p>
+~HTML~pageをここに示す：
+◎
+Here is the HTML page:
+</p>
+
+<pre class="lang-html">
+&lt;!DOCTYPE HTML&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;title&gt;共用~worker： ~demo 1&lt;/title&gt;
+&lt;pre id="log"&gt;Log:&lt;/pre&gt;
+
+&lt;script&gt;
+  var %worker = new SharedWorker('test.js');
+  var %log = document.getElementById('log');
+  %worker.port.onmessage = function(%e) { /* <span class="comment">
+<code >%worker.onmessage</code> ではないことに注意
+◎
+note: not worker.onmessage!
+</span> */
+    %log.textContent += '\n' + %e.data;
+  }
+&lt;/script&gt;
+</pre>
+
+<p>
+~JS~workerは次になる：
+◎
+Here is the JavaScript worker:
+</p>
+
+<pre class="lang-js">
+onconnect = function(%e) {
+  var %port = %e.ports[0];
+  %port.postMessage('Hello World!');
+}
+</pre>
+
+<p class="trans-note">【
+`onconnect^m の名が~~示唆するように、接続が確立され次第，~workerの大域~scopeに属する `onconnect()^m が呼出される。
+】</p>
+
+<p>
+<a href="~DEMO/shared/001/test.html">この例を~onlineで見る</a>
+◎
+View this example online.
+</p>
+
+<hr>
+
+<p>
+次の例は、 2 つの変更により，最初のものを拡張する：
+まず，~messageは`~event~handler~IDL属性$の代わりに
+`addEventListener()$m
+を利用して受信される。
+次に，~messageは
+~workerに<em>向けて</em> 送信され，それに対し~workerが別の~messageを返信するようにしている。
+受信された~messageは再び~logに表示される。
+◎
+This second example extends the first one by changing two things: first, messages are received using addEventListener() instead of an event handler IDL attribute, and second, a message is sent to the worker, causing the worker to send another message in return. Received messages are again displayed in a log.
+</p>
+
+<p>
+次は~HTML~page：
+◎
+Here is the HTML page:
+</p>
+
+<pre class="lang-html">
+&lt;!DOCTYPE HTML&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;title&gt;共用~worker： ~demo 2&lt;/title&gt;
+&lt;pre id="log"&gt;Log:&lt;/pre&gt;
+
+&lt;script&gt;
+  var %worker = new SharedWorker('test.js');
+  var %log = document.getElementById('log');
+  %worker.port.addEventListener('message', function(%e) {
+    %log.textContent += '\n' + %e.data;
+  }, false);
+  %worker.port.start(); /* <span class="comment">
+注記： `addEventListener()^m を利用した場合はこれが必要になる
+◎
+note: need this when using addEventListener
+</span> */
+  %worker.port.postMessage('ping');
+&lt;/script&gt;
+</pre>
+
+<p>
+~JS~workerは次になる：
+◎
+Here is the JavaScript worker:
+</p>
+
+<pre class="lang-js">
+onconnect = function(%e) {
+  var %port = %e.ports[0];
+  %port.postMessage('Hello World!');
+  %port.onmessage = function(%e) {
+    %port.postMessage('pong'); /* <span class="comment">
+<code>%e.ports[0].postMessage</code> ではないことに注意
+◎
+not e.ports[0].postMessage!
+</span> */
+    /* <span class="comment">
+<code>%e.target.postMessage('pong');</code> でもいける
+◎
+e.target.postMessage('pong'); would work also
+</span> */
+  }
+}
+</pre>
+
+<p>
+<a href="~DEMO/shared/002/test.html">この例を~onlineで見る</a>
+◎
+View this example online.
+</p>
+
+<hr>
+
+<p>
+最後の例は、 2 つの~pageから同じ~workerに接続させる方法を示す。
+この例では， 2 番目の~pageは 単に最初の~pageの `iframe$e に入れられているが、同じ原理は，別々の`~top-level閲覧文脈$に属する全く別々の~pageであっても，通用する。
+◎
+Finally, the example is extended to show how two pages can connect to the same worker; in this case, the second page is merely in an iframe on the first page, but the same principle would apply to an entirely separate page in a separate top-level browsing context.
+</p>
+
+<p>
+外縁~HTML~page：
+◎
+Here is the outer HTML page:
+</p>
+
+<pre class="lang-html">
+&lt;!DOCTYPE HTML&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;title&gt;共用~worker： ~demo 3&lt;/title&gt;
+&lt;pre id="log"&gt;Log:&lt;/pre&gt;
+
+&lt;script&gt;
+  var %worker = new SharedWorker('test.js');
+  var %log = document.getElementById('log');
+  %worker.port.addEventListener('message', function(%e) {
+    %log.textContent += '\n' + %e.data;
+  }, false);
+  %worker.port.start();
+  %worker.port.postMessage('ping');
+&lt;/script&gt;
+
+&lt;iframe src="inner.html"&gt;&lt;/iframe&gt;
+</pre>
+
+<p>
+内縁~HTML~page：
+◎
+Here is the inner HTML page:
+</p>
+
+<pre class="lang-html">
+&lt;!DOCTYPE HTML&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;title&gt;共用~worker： ~demo 3 inner frame&lt;/title&gt;
+&lt;pre id=log&gt;Inner log:&lt;/pre&gt;
+
+&lt;script&gt;
+  var %worker = new SharedWorker('test.js');
+  var %log = document.getElementById('log');
+  %worker.port.onmessage = function(%e) {
+   %log.textContent += '\n' + %e.data;
+  }
+&lt;/script&gt;
+</pre>
+
+<p>
+~JS~workerは次になる：
+◎
+Here is the JavaScript worker:
+</p>
+
+<pre class="lang-js">
+var %count = 0;
+onconnect = function(%e) {
+  %count += 1;
+  var %port = %e.ports[0];
+  %port.postMessage('Hello World! You are connection #' + %count);
+  %port.onmessage = function(%e) {
+    %port.postMessage('pong');
+  }
+}
+</pre>
+
+<p>
+<a href="~DEMO/shared/003/test.html">この例を~onlineで見る</a>
+◎
+View this example online.
+</p>
+
+			</section>
+			<section id="shared-state-using-a-shared-worker">
+<h4 title="Shared state using a shared worker">10.1.2.4. 共用~workerの利用による状態の共有-</h4>
+
+~INFORMATIVE
+
+<p>
+次の例では、同じマップを~~表示する複数の~window（~viewer）を開けるようになっている。
+単独の~workerが すべての~viewerを束ねる形で、すべての~windowが同じマップ情報を共有する。
+それぞれの~viewerでは 独立にマップ内を動き回れつつ、それらのいずれかにおいて 何らかの~dataがマップ内に置かれたときは，すべての~viewerが更新される。
+◎
+In this example, multiple windows (viewers) can be opened that are all viewing the same map. All the windows share the same map information, with a single worker coordinating all the viewers. Each viewer can move around independently, but if they set any data on the map, all the viewers are updated.
+</p>
+
+<p>
+~main~pageはさほど興味を引くものではない。
+~viewerを開くための単なる起点である：
+◎
+The main page isn't interesting, it merely provides a way to open the viewers:
+</p>
+
+<pre class="lang-html">
+&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;title&gt;~worker例： Multiviewer&lt;/title&gt;
+
+&lt;script&gt;
+   function openViewer() {
+     window.open('viewer.html');
+   }
+&lt;/script&gt;
+
+ &lt;/head&gt;
+ &lt;body&gt;
+  &lt;p&gt;&lt;button type=button onclick="openViewer()"&gt;新たな~viewerを開く&lt;/button&gt;&lt;/p&gt;
+  &lt;p&gt;各~viewerは新たな~windowを開きます。好きなだけ，いくつでも~viewerを開けます。それらはすべて同じ~dataを~~表示します。&lt;/p&gt;
+ &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<!-- 
+Open a new viewer
+Each viewer opens in a new window. You can have as many viewers as you like, they all view the same data.
+
+ -->
+
+<p>
+~viewerはより~~関係が深いものになる：
+◎
+The viewer is more involved:
+</p>
+
+<pre class="lang-html">
+&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;title&gt;~worker例： Multiviewer ~viewer&lt;/title&gt;
+
+&lt;script&gt;
+   var worker = new SharedWorker('worker.js', 'core');
+
+   /* <span class="comment">
+環境設定
+◎
+CONFIGURATION
+</span> */
+   function configure(%event) {
+     if (%event.data.substr(0, 4) != 'cfg ') return;
+     var %name = %event.data.substr(4).split(' ', 1)[0];
+     /* <span class="comment">
+名前が %name であることを示すために表示を更新する
+◎
+update display to mention our name is name
+</span> */
+     document.getElementsByTagName('h1')[0].textContent += ' ' + %name;
+     /* <span class="comment">
+この~listenerはもう不要
+◎
+no longer need this listener
+</span> */
+     %worker.port.removeEventListener('message', configure, false);
+   }
+   %worker.port.addEventListener('message', configure, false);
+
+   /* <span class="comment">
+マップ
+◎
+MAP
+</span> */
+   function paintMap(%event) {
+     if (%event.data.substr(0, 4) != 'map ') return;
+     var %data = %event.data.substr(4).split(',');
+     /* <span class="comment">
+<code >%data[0] .. %data[8]</code> の各升を表示する
+◎
+display tiles data[0] .. data[8]
+</span> */
+     var %canvas = document.getElementById('map');
+     var %context = %canvas.getContext('2d');
+     for (var %y = 0; %y &lt; 3; %y += 1) {
+       for (var %x = 0; %x &lt; 3; %x += 1) {
+         var %tile = data[%y * 3 + %x];
+         if (%tile == '0')
+           %context.fillStyle = 'green';
+         else 
+           %context.fillStyle = 'maroon';
+         %context.fillRect(x * 50, y * 50, 50, 50);
+       }
+     }
+   }
+   %worker.port.addEventListener('message', paintMap, false);
+
+   /* <span class="comment">
+~public~chat
+◎
+PUBLIC CHAT
+</span> */
+   function updatePublicChat(%event) {
+     if (%event.data.substr(0, 4) != 'txt ') return;
+     var %name = %event.data.substr(4).split(' ', 1)[0];
+     var %message = %event.data.substr(4 + %name.length + 1);
+     /* <span class="comment">
+~public~chatに "<code>&lt;%name&gt; %message</code>" を表示する
+◎
+display &quot;&lt;name&gt; message&quot; in public chat
+</span> */
+     var %public = document.getElementById('public');
+     var %p = document.createElement('p');
+     var %n = document.createElement('button');
+     %n.textContent = '&lt;' + %name + '&gt; ';
+     %n.onclick = function () { %worker.port.postMessage('msg ' + %name); };
+     %p.appendChild(%n);
+     var %m = document.createElement('span');
+     %m.textContent = %message;
+     %p.appendChild(%m);
+     %public.appendChild(%p);
+   }
+   %worker.port.addEventListener('message', updatePublicChat, false);
+
+   /* <span class="comment">
+~private~chat
+◎
+PRIVATE CHAT
+</span> */
+   function startPrivateChat(%event) {
+     if (%event.data.substr(0, 4) != 'msg ') return;
+     var %name = %event.data.substr(4).split(' ', 1)[0];
+     var %port = %event.ports[0];
+     /* <span class="comment">
+~private~chat~UIを表示する
+◎
+display a private chat UI
+</span> */
+     var %ul = document.getElementById('private');
+     var %li = document.createElement('li');
+     var %h3 = document.createElement('h3');
+     %h3.textContent = 'Private chat with ' + %name;
+     %li.appendChild(%h3);
+     var %div = document.createElement('div');
+     var %addMessage = function(%name, %message) {
+       var %p = document.createElement('p');
+       var %n = document.createElement('strong');
+       %n.textContent = '&lt;' + %name + '&gt; ';
+       %p.appendChild(%n);
+       var %t = document.createElement('span');
+       %t.textContent = %message;
+       %p.appendChild(%t);
+       %div.appendChild(%p);
+     };
+     %port.onmessage = function (%event) {
+       addMessage(%name, %event.data);
+     };
+     %li.appendChild(%div);
+     var %form = document.createElement('form');
+     var %p = document.createElement('p');
+     var %input = document.createElement('input');
+     %input.size = 50;
+     %p.appendChild(%input);
+     %p.appendChild(document.createTextNode(' '));
+     var %button = document.createElement('button');
+     %button.textContent = 'Post';
+     %p.appendChild(%button);
+     %form.onsubmit = function () {
+       %port.postMessage(%input.value);
+       addMessage('me', %input.value);
+       %input.value = '';
+       return false;
+     };
+     %form.appendChild(%p);
+     %li.appendChild(%form);
+     %ul.appendChild(%li);
+   }
+   %worker.port.addEventListener('message', startPrivateChat, false);
+
+   %worker.port.start();
+&lt;/script&gt;
+
+ &lt;/head&gt;
+ &lt;body&gt;
+  &lt;h1&gt;Viewer&lt;/h1&gt;
+  &lt;h2&gt;Map&lt;/h2&gt;
+  &lt;p&gt;&lt;canvas id="map" height=150 width=150&gt;&lt;/canvas&gt;&lt;/p&gt;
+  &lt;p&gt;
+   &lt;button type=button onclick="%worker.port.postMessage('mov left')"
+   &gt;Left&lt;/button&gt;
+   &lt;button type=button onclick="%worker.port.postMessage('mov up')"
+   &gt;Up&lt;/button&gt;
+   &lt;button type=button onclick="%worker.port.postMessage('mov down')"
+   &gt;Down&lt;/button&gt;
+   &lt;button type=button onclick="%worker.port.postMessage('mov right')"
+   &gt;Right&lt;/button&gt;
+   &lt;button type=button onclick="%worker.port.postMessage('set 0')"
+   &gt;Set 0&lt;/button&gt;
+   &lt;button type=button onclick="%worker.port.postMessage('set 1')"
+   &gt;Set 1&lt;/button&gt;
+  &lt;/p&gt;
+  &lt;h2&gt;Public Chat&lt;/h2&gt;
+  &lt;div id="public"&gt;&lt;/div&gt;
+  &lt;form onsubmit="%worker.port.postMessage('txt ' + %message.value);
+    %message.value = ''; return false;"
+  &gt;
+   &lt;p&gt;
+    &lt;input type="text" name="message" size="50"&gt;
+    &lt;button&gt;Post&lt;/button&gt;
+   &lt;/p&gt;
+  &lt;/form&gt;
+  &lt;h2&gt;Private Chat&lt;/h2&gt;
+  &lt;ul id="private"&gt;&lt;/ul&gt;
+ &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p>
+~viewerの書かれ方には注目すべき要点がいくつかある。
+◎
+There are several key things worth noting about the way the viewer is written.
+</p>
+
+<p>
+<strong>複数の~listener</strong>：
+単独の~message処理~関数の代わりに、この~codeでは，それぞれが~messageに関連するかどうかの~~簡単な検査を遂行するような，複数の~event~listenerを付け加えている。
+この例では，さほど大きな相違は生じないが、幾人かの作者~達が協同する中で，~workerとの通信に単独の~portの利用が求まれる~~状況においても、すべての変更を単独の~event取扱い関数に加えることなく，独立な~codeでそれが可能になる。
+◎
+Multiple listeners. Instead of a single message processing function, the code here attaches multiple event listeners, each one performing a quick check to see if it is relevant for the message. In this example it doesn't make much difference, but if multiple authors wanted to collaborate using a single port to communicate with a worker, it would allow for independent code instead of changes having to all be made to a single event handling function.
+</p>
+
+<p>
+このような仕方で~event~listenerを登録した場合、この例の `configure()^c ~methodのように，事を終えた~listenerを~~個別的に未登録にすることも可能になる。
+◎
+Registering event listeners in this way also allows you to unregister specific listeners when you are done with them, as is done with the configure() method in this example.
+</p>
+
+<p>
+最後に，~worker：
+◎
+Finally, the worker:
+</p>
+
+<pre class="lang-js">
+var %nextName = 0;
+function getNextName() {
+  /* <span class="comment">
+より~~親しみ易い名前にすることもできるが、今の所は単なる番号。
+◎
+this could use more friendly names but for now just return a number
+</span> */
+  return %nextName++;
+}
+
+var %map = [
+ [0, 0, 0, 0, 0, 0, 0],
+ [1, 1, 0, 1, 0, 1, 1],
+ [0, 1, 0, 1, 0, 0, 0],
+ [0, 1, 0, 1, 0, 1, 1],
+ [0, 0, 0, 1, 0, 0, 0],
+ [1, 0, 0, 1, 1, 1, 1],
+ [1, 1, 0, 1, 1, 0, 1],
+];
+
+function wrapX(%x) {
+  if (%x &lt; 0) return wrapX(%x + %map[0].length);
+  if (%x &gt;= %map[0].length) return wrapX(%x - %map[0].length);
+  return %x;
+}
+
+function wrapY(%y) {
+  if (%y &lt; 0) return wrapY(%y + %map.length);
+  if (%y &gt;= %map[0].length) return wrapY(%y - %map.length);
+  return %y;
+}
+
+function wrap(%val, %min, %max) {
+  if (%val &lt; %min)
+    return %val + (%max - %min) + 1;
+  if (%val &gt; %max)
+    return %val - (%max - %min) - 1;
+  return %val;
+}
+
+function sendMapData(%viewer) {
+  var %data = '';
+  for (var %y = %viewer.y - 1; y &lt;= %viewer.y + 1; %y += 1) {
+    for (var %x = %viewer.x - 1; %x &lt;= %viewer.x + 1; %x += 1) {
+      if (%data != '')
+        %data += ',';
+      %data += %map[wrap(%y, 0, %map[0].length-1)][wrap(%x, 0, %map.length-1)];
+    }
+  }
+  %viewer.port.postMessage('map ' + %data);
+}
+
+var %viewers = {};
+onconnect = function (%event) {
+  var %name = getNextName();
+  %event.ports[0]._data = { port: event.ports[0], name: %name, x: 0, y: 0, };
+  %viewers[%name] = %event.ports[0]._data;
+  %event.ports[0].postMessage('cfg ' + %name);
+  %event.ports[0].onmessage = getMessage;
+  sendMapData(event.ports[0]._data);
+};
+
+function getMessage(%event) {
+  switch (%event.data.substr(0, 4)) {
+    case 'mov ':
+      var %direction = %event.data.substr(4);
+      var %dx = 0;
+      var %dy = 0;
+      switch (%direction) {
+        case 'up': %dy = -1; break;
+        case 'down': %dy = 1; break;
+        case 'left': %dx = -1; break;
+        case 'right': %dx = 1; break;
+      }
+      %event.target._data.x = wrapX(%event.target._data.x + %dx);
+      %event.target._data.y = wrapY(%event.target._data.y + %dy);
+      sendMapData(%event.target._data);
+      break;
+    case 'set ':
+      var %value = %event.data.substr(4);
+      map[%event.target._data.y][%event.target._data.x] = %value;
+      for (var %viewer in %viewers)
+        sendMapData(%viewers[%viewer]);
+      break;
+    case 'txt ':
+      var %name = %event.target._data.name;
+      var %message = %event.data.substr(4);
+      for (var %viewer in %viewers)
+        %viewers[%viewer].port.postMessage('txt ' + %name + ' ' + %message);
+      break;
+    case 'msg ':
+      var %party1 = %event.target._data;
+      var %party2 = %viewers[%event.data.substr(4).split(' ', 1)[0]];
+      if (%party2) {
+        var %channel = new MessageChannel();
+        %party1.port.postMessage('msg ' + %party2.name, [%channel.port1]);
+        %party2.port.postMessage('msg ' + %party1.name, [%channel.port2]);
+      }
+      break;
+  }
+}</pre>
+
+<p>
+<strong>複数の~pageへの接続-法</strong>：
+この~scriptは、複数の接続を待ち受けるために，
+`onconnect$m ~event~listenerを利用している。
+◎
+Connecting to multiple pages. The script uses the onconnect event listener to listen for multiple connections.
+</p>
+
+<p>
+<strong>直通~channel</strong>：
+~workerが，一方の~viewerから他方の~viewerを~~指名する `msg^l ~messageを受信したときには、
+2 つの間に直接~接続が設定しておかれ、~workerがすべての~messageを代理しなくとも，
+2 つの~viewerは直に通信できる。
+◎
+Direct channels. When the worker receives a "msg" message from one viewer naming another viewer, it sets up a direct connection between the two, so that the two viewers can communicate directly without the worker having to proxy all the messages.
+</p>
+
+<p>
+<a href="~DEMO/multiviewer/page.html">この例を~onlineで見る</a>
+◎
+View this example online.
+</p>
+
+			</section>
+			<section id="delegation">
+<h4 title="Delegation">10.1.2.5. 委譲</h4>
+
+~INFORMATIVE
+
+<p>
+~multi~core CPU の普及に伴い、計算量の大きな仕事を複数の~workerに分業させて，より良い処理能が得されるようになっている。
+この例では、 1 〜 10,000,000 に付番された計算量の大きな仕事を 10 等分して， 10 個の下位workerに遂行させる。
+◎
+With multicore CPUs becoming prevalent, one way to obtain better performance is to split computationally expensive tasks amongst multiple workers. In this example, a computationally expensive task that is to be performed for every number from 1 to 10,000,000 is farmed out to ten subworkers.
+</p>
+
+<p>
+~main~pageは次で与えられる。
+これは単に結果を報告する：
+◎
+The main page is as follows, it just reports the result:
+</p>
+
+<pre class="lang-html">
+&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;title&gt;~worker例： ~multi~coreによる~~計算&lt;/title&gt;
+ &lt;/head&gt;
+ &lt;body&gt;
+  &lt;p&gt;Result: &lt;output id="result"&gt;&lt;/output&gt;&lt;/p&gt;
+
+&lt;script&gt;
+   var %worker = new Worker('worker.js');
+   %worker.onmessage = function (%event) {
+     document.getElementById('result').textContent = %event.data;
+   };
+&lt;/script&gt;
+
+ &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p>
+~worker自身は次のようになっている：
+◎
+The worker itself is as follows:
+</p>
+
+<pre class="lang-js">
+/* <span class="comment">
+設定
+◎
+settings
+</span> */
+var %num_workers = 10;
+var %items_per_worker = 1000000;
+
+/* <span class="comment">
+~workerを開始する
+◎
+start the workers
+</span> */
+var %result = 0;
+var %pending_workers = %num_workers;
+for (var %i = 0; %i &lt; %num_workers; %i += 1) {
+  var %worker = new Worker('core.js');
+  %worker.postMessage(%i * %items_per_worker);
+  %worker.postMessage((%i+1) * %items_per_worker);
+  %worker.onmessage = storeResult;
+}
+
+/* <span class="comment">
+結果を取扱う
+◎
+handle the results
+</span> */
+function storeResult(%event) {
+  %result += 1*%event.data;
+  %pending_workers -= 1;
+  if (%pending_workers &lt;= 0)
+    postMessage(%result); /* <span class="comment">
+完成！
+◎
+finished!
+</span> */
+}
+</pre>
+
+<p>
+一連の下位workerを開始させる~loopと, 各 下位workerから返される応答を待つ~handlerからなる。
+◎
+It consists of a loop to start the subworkers, and then a handler that waits for all the subworkers to respond.
+</p>
+
+<p>
+下位workerは次のように実装されている：
+◎
+The subworkers are implemented as follows:
+</p>
+
+<pre class="lang-js">
+var %start;
+onmessage = getStart;
+function getStart(%event) {
+  %start = 1*%event.data;
+  onmessage = getEnd;
+}
+
+var %end;
+function getEnd(%event) {
+  %end = 1*%event.data;
+  onmessage = null;
+  work();
+}
+
+function work() {
+  var %result = 0;
+  for (var %i = %start; i &lt; %end; %i += 1) {
+    /* <span class="comment">
+何か複階的な計算がここで遂行される
+◎
+perform some complex calculation here
+</span> */
+    %result += 1;
+  }
+  postMessage(%result);
+  close();
+}
+</pre>
+
+<p>
+これらはそれぞれ、 2 度の~eventで 2 個の番号を受信し,
+それにより指定される付番~範囲の~~計算を遂行し,
+結果を親に報告する。
+◎
+They receive two numbers in two events, perform the computation for the range of numbers thus specified, and then report the result back to the parent.
+</p>
+
+<p>
+<a href="~DEMO/multicore/page.html">この例を~onlineで見る</a>
+◎
+View this example online.
+</p>
+
+			</section>
+			<section id="providing-libraries">
+<h4 title="Providing libraries">10.1.2.6. ~libraryを供するとき</h4>
+
+~INFORMATIVE
+
+<p>
+次の 3 種の~taskを供する，暗号化~libraryが可用にされているとする：
+◎
+Suppose that a cryptography library is made available that provides three tasks:
+</p>
+
+<dl>
+	<dt>
+( 公開鍵, 私用鍵 ) ~pairを生成する：
+◎
+Generate a public/private key pair
+</dt>
+
+	<dd>
+渡された~portに， 2 個の~message
+— 最初に公開鍵，次に私用鍵 —
+を送信する。
+◎
+Takes a port, on which it will send two messages, first the public key and then the private key.
+</dd>
+
+	<dt>
+所与の ( 平文, 公開鍵 ) から，対応する暗号文を返す：
+◎
+Given a plaintext and a public key, return the corresponding ciphertext
+</dt>
+	<dd>
+渡された~portに，任意個数の~message
+— 最初に公開鍵，以降は平文 —
+を送信する。
+各 平文は、暗号化されてから暗号文と同じ~channelに送信される。
+内容を暗号化し終えたなら，~portを~closeできる。
+◎
+Takes a port, to which any number of messages can be sent, the first giving the public key, and the remainder giving the plaintext, each of which is encrypted and then sent on that same channel as the ciphertext. The user can close the port when it is done encrypting content.
+</dd>
+
+	<dt>
+所与の ( 暗号文, 私用鍵 ) 対応する平文を返す
+◎
+Given a ciphertext and a private key, return the corresponding plaintext
+</dt>
+	<dd>
+渡された~portに，任意個数の~message
+— 最初に私用鍵，以降は暗号文 —
+を送信する。
+各 暗号文は、復号化されてから平文と同じ~channelに送信される。
+内容を復号化し終えたなら，~portを~closeできる。
+◎
+Takes a port, to which any number of messages can be sent, the first giving the private key, and the remainder giving the ciphertext, each of which is decrypted and then sent on that same channel as the plaintext. The user can close the port when it is done decrypting content.
+</dd>
+</dl>
+
+<p>
+~library自身は、次のようになっている：
+◎
+The library itself is as follows:
+</p>
+
+<pre class="lang-js">
+function handleMessage(%e) {
+  if (%e.data == "genkeys")
+    genkeys(%e.ports[0]);
+  else if (%e.data == "encrypt")
+    encrypt(%e.ports[0]);
+  else if (%e.data == "decrypt")
+    decrypt(%e.ports[0]);
+}
+
+function genkeys(%p) {
+  var %keys = _generateKeyPair();
+  %p.postMessage(%keys[0]);
+  %p.postMessage(%keys[1]);
+}
+
+function encrypt(%p) {
+  var %key, %state = 0;
+  %p.onmessage = function (%e) {
+    if (%state == 0) {
+      %key = %e.data;
+      %state = 1;
+    } else {
+      %p.postMessage(_encrypt(%key, %e.data));
+    }
+  };
+}
+
+function decrypt(%p) {
+  var %key, %state = 0;
+  %p.onmessage = function (%e) {
+    if (%state == 0) {
+      %key = %e.data;
+      %state = 1;
+    } else {
+      %p.postMessage(_decrypt(%key, %e.data));
+    }
+  };
+}
+
+/* <span class="comment">
+~workerが共用／ 専用~のどちらとして利用されていても~supportする
+◎
+support being used as a shared worker as well as a dedicated worker
+</span> */
+if ('onmessage' in this) /* <span class="comment">専用~worker</span> */
+  onmessage = handleMessage;
+else /* <span class="comment">共用~worker</span> */
+  onconnect = function (%e) { %e.port.onmessage = handleMessage; }
+
+/* <span class="comment">
+“暗号” 関数：
+◎
+the "crypto" functions:
+</span> */
+
+function _generateKeyPair() {
+  return [Math.random(), Math.random()];
+}
+
+function _encrypt(%k, %s) {
+  return 'encrypted-' + %k + ' ' + %s;
+}
+
+function _decrypt(%k, %s) {
+  return %s.substr(%s.indexOf(' ')+1);
+}
+</pre>
+
+<p>
+ここでの暗号~関数は、単なる~stubであり，本当の暗号化は行わないことに注意。
+◎
+Note that the crypto functions here are just stubs and don't do real cryptography.
+</p>
+
+<p>
+この~libraryは、次のようにも利用できる：
+◎
+This library could be used as follows:
+</p>
+
+<pre class="lang-html">
+&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;title&gt;Worker example: Crypto library&lt;/title&gt;
+  &lt;script&gt;
+   const cryptoLib = new Worker('libcrypto-v1.js'); /* <span class="comment">
+あるいは 'libcrypto-v2.js' も利用できる
+◎
+or could use 'libcrypto-v2.js'
+</span> */
+   function startConversation(%source, %message) {
+     const %messageChannel = new MessageChannel();
+     %source.postMessage(%message, [%messageChannel.port2]);
+     return %messageChannel.port1;
+   }
+   function getKeys() {
+     let %state = 0;
+     startConversation(cryptoLib, "genkeys").onmessage = function (%e) {
+       if (%state === 0)
+         document.getElementById('public').value = %e.data;
+       else if (%state === 1)
+         document.getElementById('private').value = %e.data;
+       %state += 1;
+     };
+   }
+   function enc() {
+     const %port = startConversation(%cryptoLib, "encrypt");
+     %port.postMessage(document.getElementById('public').value);
+     %port.postMessage(document.getElementById('input').value);
+     %port.onmessage = function (%e) {
+       document.getElementById('input').value = %e.data;
+       %port.close();
+     };
+   }
+   function dec() {
+     const %port = startConversation(%cryptoLib, "decrypt");
+     %port.postMessage(document.getElementById('private').value);
+     %port.postMessage(document.getElementById('input').value);
+     %port.onmessage = function (%e) {
+       document.getElementById('input').value = %e.data;
+       %port.close();
+     };
+   }
+  &lt;/script&gt;
+  &lt;style&gt;
+   textarea { display: block; }
+  &lt;/style&gt;
+ &lt;/head&gt;
+ &lt;body onload="getKeys()"&gt;
+  &lt;fieldset&gt;
+   &lt;legend&gt;Keys&lt;/legend&gt;
+   &lt;p&gt;&lt;label&gt;Public Key: &lt;textarea id="public"&gt;&lt;/textarea&gt;&lt;/label&gt;&lt;/p&gt;
+   &lt;p&gt;&lt;label&gt;Private Key: &lt;textarea id="private"&gt;&lt;/textarea&gt;&lt;/label&gt;&lt;/p&gt;
+  &lt;/fieldset&gt;
+  &lt;p&gt;&lt;label&gt;Input: &lt;textarea id="input"&gt;&lt;/textarea&gt;&lt;/label&gt;&lt;/p&gt;
+  &lt;p&gt;&lt;button onclick="enc()"&gt;Encrypt&lt;/button&gt; &lt;button onclick="dec()"&gt;Decrypt&lt;/button&gt;&lt;/p&gt;
+ &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p>
+この~APIの後の~versionでは、すべての暗号~作業を下位workerに負荷分散するよう求まれるかもしれない。
+これは、次のように行うこともできる：
+◎
+A later version of the API, though, might want to offload all the crypto work onto subworkers. This could be done as follows:
+</p>
+
+<pre class="lang-js">
+function handleMessage(%e) {
+  if (%e.data == "genkeys")
+    genkeys(%e.ports[0]);
+  else if (%e.data == "encrypt")
+    encrypt(%e.ports[0]);
+  else if (%e.data == "decrypt")
+    decrypt(%e.ports[0]);
+}
+
+function genkeys(%p) {
+  var generator = new Worker('libcrypto-v2-generator.js');
+  generator.postMessage('', [%p]);
+}
+
+function encrypt(%p) {
+  %p.onmessage = function (%e) {
+    var %key = %e.data;
+    var encryptor = new Worker('libcrypto-v2-encryptor.js');
+    encryptor.postMessage(%key, [%p]);
+  };
+}
+
+function encrypt(%p) {
+  %p.onmessage = function (%e) {
+    var %key = %e.data;
+    var decryptor = new Worker('libcrypto-v2-decryptor.js');
+    decryptor.postMessage(%key, [%p]);
+  };
+}
+
+/* <span class="comment">
+~workerが共用／ 専用~のどちらとして利用されていても~supportする
+◎
+support being used as a shared worker as well as a dedicated worker
+</span> */
+if ('onmessage' in this) /* <span class="comment">
+専用~worker
+◎
+dedicated worker
+</span> */
+  onmessage = handleMessage;
+else /* <span class="comment">
+共用~worker
+◎
+shared worker
+</span> */
+  onconnect = function (%e) { %e.ports[0].onmessage = handleMessage };
+</pre>
+
+<p>
+小分けにされた下位workerは、次のようになる。
+◎
+The little subworkers would then be as follows.
+</p>
+
+<p>
+鍵~pairの生成-用：
+◎
+For generating key pairs:
+</p>
+
+<pre class="lang-js">
+onmessage = function (%e) {
+  var %k = _generateKeyPair();
+  %e.ports[0].postMessage(%k[0]);
+  %e.ports[0].postMessage(%k[1]);
+  close();
+}
+
+function _generateKeyPair() {
+  return [Math.random(), Math.random()];
+}
+</pre>
+
+<p>
+暗号化-用：
+◎
+For encrypting:
+</p>
+
+  
+<pre class="lang-js">
+onmessage = function (%e) {
+  var %key = %e.data;
+  %e.ports[0].onmessage = function (%e) {
+    var %s = %e.data;
+    postMessage(_encrypt(%key, %s));
+  }
+}
+
+function _encrypt(%k, %s) {
+  return 'encrypted-' + %k + ' ' + %s;
+}
+</pre>
+
+<p>
+復号化-用：
+◎
+For decrypting:
+</p>
+
+  
+<pre class="lang-js">
+onmessage = function (%e) {
+  var %key = %e.data;
+  %e.ports[0].onmessage = function (%e) {
+    var %s = %e.data;
+    postMessage(_decrypt(%key, %s));
+  }
+}
+
+function _decrypt(%k, %s) {
+  return %s.substr(%s.indexOf(' ')+1);
+}
+</pre>
+
+<p>
+~APIは変更されてないので、~APIの利用者は，これが起きていることを知る必要すらない。
+~libraryは、~message~channelを利用して~dataを受容しているが，自身の~APIを変更することなく下位workerに移譲できる。
+◎
+Notice how the users of the API don't have to even know that this is happening — the API hasn't changed; the library can delegate to subworkers without changing its API, even though it is accepting data using message channels.
+</p>
+
+<p>
+<a href="~DEMO/crypto/page.html">この例を~onlineで見る</a>
+。
+◎
+View this example online.
+</p>
+
+			</section>
+		</section>
+		<section id="tutorials">
+<h3 title="Tutorials">10.1.3. ~tutorial</h3>
+
+			<section id="creating-a-dedicated-worker">
+<h4 title="Creating a dedicated worker">10.1.3.1. 専用~workerの作成-法</h4>
+
+~INFORMATIVE
+
+<p>
+~workerを作成するためには~JS~fileの~URLを要する。
+その~fileの~URLのみを引数として `new Worker()$m 構築子を呼出せば、~workerが作成されて返される：
+◎
+Creating a worker requires a URL to a JavaScript file. The Worker() constructor is invoked with the URL to that file as its only argument; a worker is then created and returned:
+</p>
+
+<pre class="lang-js">
+var %worker = new Worker('helper.js');
+</pre>
+
+<p>
+`古典~script$でなく`~module~script$として解釈させたいときは、記し方を少し違える必要がある：
+◎
+If you want your worker script to be interpreted as a module script instead of the default classic script, you need to use a slightly different signature:
+</p>
+
+<pre class="lang-js">
+var %worker = new Worker('helper.mjs', { type: "module" });
+</pre>
+
+			</section>
+			<section id="communicating-with-a-dedicated-worker">
+<h4 title="Communicating with a dedicated worker">10.1.3.2. 専用~workerとの通信-法</h4>
+
+~INFORMATIVE
+
+<p>
+専用~workerは暗黙的に `MessagePort$I ~objを利用する。
+したがって、［
+有構造~dataの送信-法, ~binary~dataの転送-法, 他の~portへの転送-法
+］など、
+`MessagePort$I と同じ特能を~supportする。
+◎
+Dedicated workers use MessagePort objects behind the scenes, and thus support all the same features, such as sending structured data, transferring binary data, and transferring other ports.
+</p>
+
+<p>
+専用~workerから~messageを受信するためには、
+`Worker$I ~objの `onmessage$mW `~event~handler~IDL属性$を利用する：
+◎
+To receive messages from a dedicated worker, use the onmessage event handler IDL attribute on the Worker object:
+</p>
+
+<pre class="lang-js">
+%worker.onmessage = function (%event) { ... };
+</pre>
+
+<p>
+`addEventListener()$m
+~methodも利用できる。
+◎
+You can also use the addEventListener() method.
+</p>
+
+<p class="note">注記：
+専用~workerに利用される暗黙的な
+`MessagePort$I
+には、その作成-時に`~port~message~queue$が暗黙的に備わり，可能化される。
+したがって、
+`Worker$I ~interfaceには
+`MessagePort$I ~interfaceの `start()$m ~methodに等価なものはない。
+◎
+The implicit MessagePort used by dedicated workers has its port message queue implicitly enabled when it is created, so there is no equivalent to the MessagePort interface's start() method on the Worker interface.
+</p>
+
+<p>
+~dataを~workerへ送信するためには、 `postMessage()$mW ~methodを利用する。
+有構造~dataもこの通信~channelを通して送信できる。
+（何個かの） `ArrayBuffer$I ~objを効率的に送信する（~cloneせずに転送する）ためには、それらを配列にして 2 個目の引数に渡す。
+◎
+To send data to a worker, use the postMessage() method. Structured data can be sent over this communication channel. To send ArrayBuffer objects efficiently (by transferring them rather than cloning them), list them in an array in the second argument.
+</p>
+
+<pre class="lang-js">
+%worker.postMessage({
+  operation: 'find-edges',
+  input: %buffer, /* <span class="comment">
+`ArrayBuffer^I ~obj
+◎
+an ArrayBuffer object
+</span> */
+  threshold: 0.6,
+}, [%buffer]);
+</pre>
+
+<p>
+~workerの内側で~messageを受信するときは、
+`onmessage$m `~event~handler~IDL属性$を利用する。
+◎
+To receive a message inside the worker, the onmessage event handler IDL attribute is used.
+</p>
+
+<pre class="lang-js">
+onmessage = function (%event) { ... };
+</pre>
+
+<p>
+ここでもまた `addEventListener()$m ~methodを利用できる。
+◎
+You can again also use the addEventListener() method.
+</p>
+
+<p>
+いずれの場合も，~dataは~event~objの `data$m 属性に供される。
+◎
+In either case, the data is provided in the event object's data attribute.
+</p>
+
+<p>
+~messageの返信-時にも， `postMessage()$m を利用する。
+有構造~dataも同じように~supportされる。
+◎
+To send messages back, you again use postMessage(). It supports the structured data in the same manner.
+</p>
+
+<pre class="lang-js">
+postMessage(%event.data.input, [%event.data.input]); /* <span class="comment">
+~bufferを返送
+◎
+transfer the buffer back
+</span> */
+</pre>
+
+			</section>
+			<section id="shared-workers">
+<h4 title="Shared workers">10.1.3.3. 共用~worker</h4>
+
+~INFORMATIVE
+
+<p>
+共用~workerは、その作成-時に利用した~scriptの~URLにより識別され，名前（省略可）も明示的に付与できる。
+名前があれば、特定0の共用~workerに対し複数の~instanceを開始することも可能になる。
+◎
+Shared workers are identified by the URL of the script used to create it, optionally with an explicit name. The name allows multiple instances of a particular shared worker to be started.
+</p>
+
+<p>
+共用~workerは，生成元の~scopeに属する（生成元ごとに分別される）。
+別々の~siteが同じ名前のものを利用したとしても，衝突することはない。
+しかしながら、同じ~site内の 2 つの~pageで，同じ共用~worker名に異なる~script~URLを伴わせて利用した場合、失敗することになる。
+◎
+Shared workers are scoped by origin. Two different sites using the same names will not collide. However, if a page tries to use the same shared worker name as another page on the same site, but with a different script URL, it will fail.
+</p>
+
+<p>
+共用~workerの作成には、 `new SharedWorker()$m 構築子を利用する。
+この構築子は、最初の 2 個の引数に［
+利用する~scriptの~URL,  ~workerの名前（省略可）
+］をとる。
+◎
+Creating shared workers is done using the SharedWorker() constructor. This constructor takes the URL to the script to use for its first argument, and the name of the worker, if any, as the second argument.
+</p>
+
+<pre class="lang-js">
+var %worker = new SharedWorker('service.js');
+</pre>
+
+<p>
+共用~workerと通信するときは、明示的な `MessagePort$I ~objを通して行う。
+`new SharedWorker()$m 構築子から返される~objは、その~portへの参照を `port$mW 属性に保持する。
+◎
+Communicating with shared workers is done with explicit MessagePort objects. The object returned by the SharedWorker() constructor holds a reference to the port on its port attribute.
+</p>
+
+<pre class="lang-js">
+%worker.port.onmessage = function (%event) { ... };
+%worker.port.postMessage('some message');
+%worker.port.postMessage({
+   foo: 'structured',
+   bar: ['data', 'also', 'possible']
+});
+</pre>
+
+<p>
+共用~workerの内側では、 `connect$et ~eventを利用して，新たな~clientからの接続が告知される。
+新たな~client用の~portは、この~event~objの `source$m 属性により与えられる。
+◎
+Inside the shared worker, new clients of the worker are announced using the connect event. The port for the new client is given by the event object's source attribute.
+</p>
+
+<pre class="lang-js">
+onconnect = function (%event) {
+  var %newPort = %event.source;
+  /* <span class="comment">
+~listenerを設定しておく
+◎
+set up a listener
+</span> */
+  %newPort.onmessage = function (%event) { ... };
+  /* <span class="comment">
+~portに~messageを返信する
+◎
+send a message back to the port
+</span> */
+  %newPort.postMessage('ready!'); /* <span class="comment">
+もちろん、有構造~dataも返信できる
+◎
+can also send structured data, of course
+</span> */
+};
+</pre>
+
+			</section>
+		</section>
+	</section>
+
+	<section id="_conventions">
+<h3>【この訳に固有の表記規約】</h3>
+
+<p>
+この訳の~algoや定義の記述に利用されている各種記号（ ~LET, コレ, ~IF, ~THROW 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+	</section>
+	<section id="infrastructure-2">
+<h2 title="Infrastructure">10.2. 基盤</h2>
+
+<p>
+この仕様は、 2 種類の~worker
+— 専用~worker, 共用~worker —
+を定義する。
+専用~workerは、作成-時にその作成元に~linkされるが、~message~portを利用すれば，他の閲覧文脈や~workerに向けても通信できる。
+一方で，共用~workerは、名前を持ち，その作成-後に それへの参照を得しておけば、同じ`生成元$上で走っているどの~scriptとも通信できる。
+`Service Workers^cite は、また別の種類の~workerを定義する。
+`SW$r
+◎
+This standard defines two kinds of workers: dedicated workers, and shared workers. Dedicated workers, once created, are linked to their creator, but message ports can be used to communicate from a dedicated worker to multiple other browsing contexts or workers. Shared workers, on the other hand, are named, and once created any script running in the same origin can obtain a reference to that worker and communicate with it. Service Workers defines a third kind. [SW]
+</p>
+
+		<section id="the-global-scope">
+<h3 title="The global scope">10.2.1. 大域~scope</h3>
+
+<p>
+大域~scopeが~workerの “内側” である。
+◎
+The global scope is the "inside" of a worker.
+</p>
+
+<p class="trans-note">【
+すなわち，同じ~workerが、その内側で走っている~scriptに公開する `WorkerGlobalScope$I ~obj（大域~scope）と,
+その~workerを外側から利用する~scriptに公開する `Worker$I ~objの， “二つの顔” を持つ（共用~workerの場合、後者は，~workerを共有している大域~環境ごとに複数あり得る）。
+】</p>
+
+			<section id="the-workerglobalscope-common-interface">
+<h4 title="The WorkerGlobalScope common interface">10.2.1.1. `WorkerGlobalScope^I 共通~interface</h4>
+
+<pre class="idl">
+[Exposed=Worker]
+interface `WorkerGlobalScope@I : `EventTarget$I {
+  readonly attribute `WorkerGlobalScope$I `self$m;
+  readonly attribute `WorkerLocation$I `location$m;
+  readonly attribute `WorkerNavigator$I `navigator$m;
+  undefined `importScripts$m(USVString... %urls);
+
+  attribute `OnErrorEventHandler$I `onerror$m;
+  attribute `EventHandler$I `onlanguagechange$m;
+  attribute `EventHandler$I `onoffline$m;
+  attribute `EventHandler$I `ononline$m;
+  attribute `EventHandler$I `onrejectionhandled$m;
+  attribute `EventHandler$I `onunhandledrejection$m;
+};
+</pre>
+
+<p>
+`WorkerGlobalScope$I は、次を含む，特定の型の`~worker大域~scope$ ~objの基底~classとして~serveする
+⇒
+`DedicatedWorkerGlobalScope$I,
+`SharedWorkerGlobalScope$I,
+`ServiceWorkerGlobalScope$I
+◎
+WorkerGlobalScope serves as the base class for specific types of worker global scope objects, including DedicatedWorkerGlobalScope, SharedWorkerGlobalScope, and ServiceWorkerGlobalScope.
+</p>
+
+<p>
+各 `WorkerGlobalScope$I ~objには、次のものが結付けられる（括弧内は初期~値）：
+</p>
+
+<dl class="def-list">
+	<dt>`所有者~集合@wG （空）</dt>
+	<dd>
+［
+`Document$I ／ `WorkerGlobalScope$I
+］~objの`集合$。
+この~workerを［
+作成する／得する
+］ときに拡充される。
+◎
+A WorkerGlobalScope object has an associated owner set (a set of Document and WorkerGlobalScope objects). It is initially empty and populated when the worker is created or obtained.
+</dd>
+	<dd class="note">注記：
+単独の所有者ではなく`集合$にされているのは、
+`SharedWorkerGlobalScope$I ~objに適応するためである。
+◎
+It is a set, instead of a single owner, to accomodate SharedWorkerGlobalScope objects.
+</dd>
+
+	<dt>`~worker集合@wG （空）</dt>
+	<dd>
+`WorkerGlobalScope$I ~objの`集合$。
+この~workerが更なる~workerを［
+作成する／得する
+］ときに拡充される。
+◎
+A WorkerGlobalScope object has an associated worker set (a set of WorkerGlobalScope objects). It is initially empty and populated when the worker creates or obtains further workers.
+</dd>
+
+	<dt>`種別@wG</dt>
+	<dd>
+次のいずれかに，作成-時に設定される
+⇒
+`classic^l ／ `module^l
+◎
+A WorkerGlobalScope object has an associated type ("classic" or "module"). It is set during creation.
+</dd>
+
+	<dt>`~url@wG（ ~NULL ）</dt>
+	<dd>
+~NULL または `~URL$
+◎
+A WorkerGlobalScope object has an associated url (null or a URL). It is initially null.
+</dd>
+
+	<dt>`名前@wG</dt>
+	<dd>
+文字列
+— 作成-時に設定される。
+◎
+A WorkerGlobalScope object has an associated name (a string). It is set during creation.
+</dd>
+	<dd class="note">
+<p>注記：
+`名前$wGの意味論は、
+`WorkerGlobalScope$I の下位classごとに異なり得る：
+◎
+The name can have different semantics for each subclass of WorkerGlobalScope.＼
+</p>
+		<ul>
+			<li>
+`DedicatedWorkerGlobalScope$I の~instanceに対しては、単純に開発者が給する名前であり，ほぼ~debug目的に限り有用になる。
+◎
+For DedicatedWorkerGlobalScope instances, it is simply a developer-supplied name, useful mostly for debugging purposes.＼
+</li>
+			<li>
+`SharedWorkerGlobalScope$I ~instanceに対しては、共通な共用~workerへの参照を `new SharedWorker$m 構築子を介して得することを許容する。
+◎
+For SharedWorkerGlobalScope instances, it allows obtaining a reference to a common shared worker via the SharedWorker() constructor.＼
+</li>
+			<li>
+`ServiceWorkerGlobalScope$I ~objに対しては、イミを成さない（そのため、~JS~APIを通して公開されることもない）。
+◎
+For ServiceWorkerGlobalScope objects, it doesn't make sense (and as such isn't exposed through the JavaScript API at all).
+</li>
+		</ul>
+	</dd>
+
+	<dt>`~referrer施策@wG（空~文字列）</dt>
+	<dd>
+`~referrer施策$
+◎
+A WorkerGlobalScope object has an associated referrer policy (a referrer policy). It is initially the empty string.
+</dd>
+
+	<dt>`埋込元~施策@wG</dt>
+	<dd>
+`埋込元~施策$
+◎
+A WorkerGlobalScope object has an associated embedder policy (an embedder policy).
+</dd>
+
+	<dt>`~CSP~list@wG（空~list）</dt>
+	<dd>
+この~worker用に作動中のすべての`~CSP~obj$を包含している`~CSP~list$
+◎
+A WorkerGlobalScope object has an associated CSP list, which is a CSP list containing all of the Content Security Policy objects active for the worker. It is initially an empty list.
+</dd>
+
+	<dt>`~module~map@wG（空）</dt>
+	<dd>
+`~module~map$
+◎
+A WorkerGlobalScope object has an associated module map. It is a module map, initially empty.
+</dd>
+
+	<dt>`非同一-生成元~隔離-済み能力@wG（ ~F ）</dt>
+	<dd>
+真偽値
+◎
+A WorkerGlobalScope object has an associated cross-origin isolated capability boolean. It is initially false.
+</dd>
+</dl>
+
+<dl class="domintro">
+	<dt>%workerGlobal . `self$m</dt>
+	<dd>
+%workerGlobal 自身を返す。
+◎
+Returns workerGlobal.
+</dd>
+
+	<dt>%workerGlobal . `location$m</dt>
+	<dd>
+%workerGlobal の `WorkerLocation$I ~objを返す。
+◎
+Returns workerGlobal's WorkerLocation object.
+</dd>
+
+	<dt>%workerGlobal . `navigator$m</dt>
+	<dd>
+%workerGlobal の `WorkerNavigator$I ~objを返す。
+◎
+Returns workerGlobal's WorkerNavigator object.
+</dd>
+
+	<dt>%workerGlobal . `importScripts(urls...)$m</dt>
+	<dd>
+%urls 内の各`~URL$を、渡された順に一つずつ，~fetchして, 実行して, 結果を返すか例外を投出する。
+◎
+Fetches each URL in urls, executes them one-by-one in the order they are passed, and then returns (or throws if something went amiss).
+</dd>
+</dl>
+
+<div class="algo">
+`self@m
+取得子~手続きは
+⇒
+~RET コレ
+◎
+The self attribute must return the WorkerGlobalScope object itself.
+</div>
+
+<div class="algo">
+<p>
+`location@m
+取得子~手続きは
+⇒
+~RET `WorkerLocation$I ~objであって, ［
+その`~worker大域~scope$ ~EQ コレ
+］なるもの
+◎
+The location attribute must return the WorkerLocation object whose associated WorkerGlobalScope object is the WorkerGlobalScope object.
+</p>
+
+<p class="note">注記：
+`WorkerLocation$I ~objが作成されるのは，
+`WorkerGlobalScope$I ~objより後になるが、それは~scriptからは観測し得ないので，問題にはならない。
+◎
+While the WorkerLocation object is created after the WorkerGlobalScope object, this is not problematic as it cannot be observed from script.
+</p>
+</div>
+
+<hr>
+
+<p>
+`WorkerGlobalScope$I
+~interfaceを実装する~objにおいては、次の`~event~handler$（および，それらに対応する`~event~handler ~event型$）が`~event~handler~IDL属性$として~supportされるモノトスル：
+◎
+The following are the event handlers (and their corresponding event handler event types) that must be supported, as event handler IDL attributes, by objects implementing the WorkerGlobalScope interface:
+</p>
+
+<table>
+<thead><tr><th>~event~handler
+<th>~event~handler ~event型
+</thead>
+
+<tbody><tr><td>`onerror@m
+<td>`error$et
+
+<tr><td>`onlanguagechange@m
+<td>`languagechange$et
+
+<tr><td>`onoffline@m
+<td>`offline$et
+
+<tr><td>`ononline@m
+<td>`online$et
+
+<tr><td>`onrejectionhandled@m
+<td>`rejectionhandled$et
+
+<tr><td>`onunhandledrejection@m
+<td>`unhandledrejection$et
+
+</tbody></table>
+
+			</section>
+			<section id="dedicated-workers-and-the-dedicatedworkerglobalscope-interface">
+<h4 title="Dedicated workers and the DedicatedWorkerGlobalScope interface">10.2.1.2. 専用~workerと `DedicatedWorkerGlobalScope^I ~interface</h4>
+
+<pre class="idl">
+[Global=(Worker,DedicatedWorker),Exposed=DedicatedWorker]
+interface `DedicatedWorkerGlobalScope@I : `WorkerGlobalScope$I {
+  [Replaceable] readonly attribute DOMString `name$m;
+
+  undefined `postMessage$m(any %message, sequence&lt;`object$&gt; %transfer);
+  undefined `~postMessageO$m(any %message, optional `PostMessageOptions$I %options = {});
+  undefined `close$m();
+
+  attribute `EventHandler$I `onmessage$m;
+  attribute `EventHandler$I `onmessageerror$m;
+};
+</pre>
+
+<p>
+各 `DedicatedWorkerGlobalScope$I ~objは、
+`暗黙的な~port@
+が結付けられているかのように，動作するモノトスル。
+それは， `MessagePort$I ~objであり、~worker作成-時に設定しておかれた~channelの一部を成すが，公開されることはない。
+この~objは、決して `DedicatedWorkerGlobalScope$I ~objより先に~garbage収集されてはならない。
+◎
+DedicatedWorkerGlobalScope objects act as if they had an implicit MessagePort associated with them. This port is part of a channel that is set up when the worker is created, but it is not exposed. This object must never be garbage collected before the DedicatedWorkerGlobalScope object.
+</p>
+
+<p>
+`暗黙的な~port$から受信されるすべての~messageは、即時に
+`DedicatedWorkerGlobalScope$I
+~objに渡すモノトスル。
+◎
+All messages received by that port must immediately be retargeted at the DedicatedWorkerGlobalScope object.
+</p>
+
+<dl class="domintro">
+	<dt>%dedicatedWorkerGlobal . `name$m
+	<dd>
+%dedicatedWorkerGlobal の`名前$wG
+— すなわち， `new Worker()$m 構築子に与えた値 —
+を返す。
+主に、~debug時に有用になる。
+◎
+Returns dedicatedWorkerGlobal's name, i.e. the value given to the Worker constructor. Primarily useful for debugging.
+</dd>
+
+	<dt>%dedicatedWorkerGlobal . `postMessage(message, transfer)$m</dt>
+<!--＊ [, transfer] → transfer -->
+	<dt>%dedicatedWorkerGlobal . `~postMessageO(message [, options ])$m</dt>
+	<dd>
+~messageを~cloneして，それを
+%dedicatedWorkerGlobal に結付けられている `Worker$I ~objへ伝送する。
+［
+%transfer ／ ［
+%options の `transfer$m ~member
+］］に、~cloneせずに転送する~objの~listを渡せる。
+◎
+Clones message and transmits it to the Worker object associated with dedicatedWorkerGlobal. transfer can be passed as a list of objects that are to be transferred rather than cloned.
+</dd>
+
+	<dt>%dedicatedWorkerGlobal . `close()$m</dt>
+	<dd>
+%dedicatedWorkerGlobal を中止する。
+◎
+Aborts dedicatedWorkerGlobal.
+</dd>
+</dl>
+
+<div class="algo">
+<p>
+`name@m
+取得子~手続きは
+⇒
+~RET コレの`名前$wG
+◎
+The name attribute must return the DedicatedWorkerGlobalScope object's name.＼
+</p>
+
+<p>
+返される値は、 `new Worker$m 構築子を利用して~workerに与えた名前を表現する
+— これは首に、~debug目的に利用される。
+◎
+Its value represents the name given to the worker using the Worker constructor, used primarily for debugging purposes.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`postMessage(message, transfer)@m
+~method~手続きは
+⇒
+~RET コレの`暗黙的な~port$上の
+`postMessage$mMP ~method~手続き( %message, %transfer )
+</p>
+
+<p>
+`~postMessageO(message, options)@m
+~method~手続きは
+⇒
+~RET コレの`暗黙的な~port$上の
+`~postMessageO$mMP ~method~手続き( %message, %options )
+</p>
+◎
+The postMessage(message, transfer) and postMessage(message, options) methods on DedicatedWorkerGlobalScope objects act as if, when invoked, it immediately invoked the respective postMessage(message, transfer) and postMessage(message, options) on the port, with the same arguments, and returned the same return value.
+</div>
+
+<div class="algo">
+<p>
+`~workerを~closeする@
+ときは、所与の
+%~worker大域~scope
+に対し，次の手続きを走らす：
+◎
+To close a worker, given a workerGlobal, run these steps:
+</p>
+<ol>
+	<li>
+%~worker大域~scope に`関連な~agent$の`~event~loop$aGの`~task~queue$に追加された`~task$は、すべて破棄する
+◎
+Discard any tasks that have been added to workerGlobal's relevant agent's event loop's task queues.
+</li>
+	<li>
+%~worker大域~scope の`~close中~flag$ ~SET ~T
+（これにより、~taskがそれ以上~queueされることはなくなる。）
+◎
+Set workerGlobal's closing flag to true. (This prevents any further tasks from being queued.)
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`close()@m
+~method~手続きは
+⇒
+`~workerを~closeする$( コレ )
+◎
+The close() method, when invoked, must close a worker with this DedicatedWorkerGlobalScope object.
+</div>
+
+<hr>
+
+<p>
+`DedicatedWorkerGlobalScope$I
+~interfaceを実装する~objにおいては、次の`~event~handler$（および，それらに対応する`~event~handler ~event型$）が`~event~handler~IDL属性$として~supportされるモノトスル：
+◎
+The following are the event handlers (and their corresponding event handler event types) that must be supported, as event handler IDL attributes, by objects implementing the DedicatedWorkerGlobalScope interface:
+</p>
+
+<table>
+<thead><tr>
+<th>~event~handler
+<th>~event~handler ~event型
+</thead>
+
+<tbody><tr><td>`onmessage@m
+<td>`message$et
+
+<tr><td>`onmessageerror@m
+<td>`messageerror$et
+
+</tbody></table>
+
+<p>
+【`~app~cache用$の記述（この訳では省略する）。】
+◎
+For the purposes of the application cache networking model, a dedicated worker is an extension of the cache host from which it was created.
+</p>
+
+			</section>
+			<section id="shared-workers-and-the-sharedworkerglobalscope-interface">
+<h4 title="Shared workers and the SharedWorkerGlobalScope interface">10.2.1.3. 共用~workerと `SharedWorkerGlobalScope^I ~interface</h4>
+
+<pre class="idl">
+[Global=(Worker,SharedWorker),Exposed=SharedWorker]
+interface `SharedWorkerGlobalScope@I : `WorkerGlobalScope$I {
+  [Replaceable] readonly attribute DOMString `~nameS$m;
+
+  undefined `~closeS$m();
+
+  attribute `EventHandler$I `onconnect$m;
+};
+</pre>
+
+<p>
+各 `SharedWorkerGlobalScope$I ~objには、次のものが結付けられ，~objの作成-時に`~workerを走らす$~algoにて初期化される
+⇒＃
+`構築子~生成元@wG,
+`構築子~url@wG,
+`資格証@wG,
+◎
+A SharedWorkerGlobalScope object has an associated constructor origin, constructor url, and credentials. They are initialized when the SharedWorkerGlobalScope object is created, in the run a worker algorithm.
+</p>
+
+<p>
+共用~workerは、その `SharedWorkerGlobalScope$I ~obj上の
+`connect$et ~eventを通して，各~接続の~message~portを受信する。
+◎
+Shared workers receive message ports through connect events on their SharedWorkerGlobalScope object for each connection.
+</p>
+
+<dl class="domintro">
+	<dt>%sharedWorkerGlobal . `~nameS$m</dt>
+	<dd>
+%sharedWorkerGlobal の`名前$wG
+— すなわち， `new SharedWorker()$m 構築子に与えた値 —
+を返す。
+同じ名前を再利用すれば、同じ共用~worker（および `SharedWorkerGlobalScope$I ）に複数の `SharedWorker$I ~objを対応させれる。
+◎
+Returns sharedWorkerGlobal's name, i.e. the value given to the SharedWorker constructor. Multiple SharedWorker objects can correspond to the same shared worker (and SharedWorkerGlobalScope), by reusing the same name.
+</dd>
+
+	<dt>%sharedWorkerGlobal . `~closeS()$m</dt>
+	<dd>
+%sharedWorkerGlobal を中止する。
+◎
+Aborts sharedWorkerGlobal.
+</dd>
+</dl>
+
+<div class="algo">
+<p>
+`~nameS@m
+取得子~手続きは
+⇒
+~RET コレの`名前$wG
+◎
+The name attribute must return the SharedWorkerGlobalScope object's name.＼
+</p>
+
+<p>
+返される値は、 `new SharedWorker$m 構築子を利用して~workerへの参照を得するときに利用できる名前を表現する。
+◎
+Its value represents the name that can be used to obtain a reference to the worker using the SharedWorker constructor.
+</p>
+</div>
+
+<div class="algo">
+`~closeS()@m
+~method~手続きは
+⇒
+`~workerを~closeする$( コレ )
+◎
+The close() method, when invoked, must close a worker with this SharedWorkerGlobalScope object.
+</div>
+
+<hr>
+
+<p>
+`SharedWorkerGlobalScope$I
+~interfaceを実装する~objにおいては、次の`~event~handler$（および，それらに対応する`~event~handler ~event型$）が`~event~handler~IDL属性$として~supportされるモノトスル：
+◎
+The following are the event handlers (and their corresponding event handler event types) that must be supported, as event handler IDL attributes, by objects implementing the SharedWorkerGlobalScope interface:
+</p>
+
+<table>
+<thead><tr><th>~event~handler
+<th>~event~handler ~event型
+</thead>
+
+<tbody><tr><td>`onconnect@m
+<td>`connect$et
+
+</tbody></table>
+
+			</section>
+		</section>
+
+		<section id="worker-event-loop">
+<h3 title="The event loop">10.2.2. ~event~loop</h3>
+
+<p>
+`~worker~event~loop$の`~task~queue$内にあり得る`~task$は、［
+~event, ~callback, ~networking活動
+］に限られる。
+これらの`~worker~event~loop$は、`~workerを走らす$~algoにより作成される。
+◎
+A worker event loop's task queues only have events, callbacks, and networking activity as tasks. These worker event loops are created by the run a worker algorithm.
+</p>
+
+<p>
+各 `WorkerGlobalScope$I ~objは、
+`~close中~flag@
+を持つ：
+◎
+Each WorkerGlobalScope object has a closing flag,＼
+</p>
+
+<ul>
+	<li>
+初期~時には ~F になるモノトスル。
+下の処理~model節の~algoにより， ~T にされ得る。
+◎
+which must be initially false, but which can get set to true by the algorithms in the processing model section below.
+</li>
+	<li>
+~T にされたときは、`~event~loop$の`~task~queue$に追加される それ以降の`~task$は，破棄するモノトスル（~queue内にすでにある~taskは、特に指定されない限り，影響されない）。
+実質的には、~T になったら，~timerは発火を止め, 処理待ちにあるすべての~background演算の通知は取り除かれる, 等々が行われることになる。
+◎
+Once the WorkerGlobalScope's closing flag is set to true, the event loop's task queues must discard any further tasks that would be added to them (tasks already on the queue are unaffected except where otherwise specified). Effectively, once the closing flag is true, timers stop firing, notifications for all pending background operations are dropped, etc.
+</li>
+</ul>
+
+		</section>
+		<section id="the-worker's-lifetime">
+<h3 title="The worker's lifetime">10.2.3. ~workerの存続期間</h3>
+
+<p>
+~workerは、`~message~channel$とそれらの
+`MessagePort$I ~objを通して，他の~workerや`閲覧文脈$と通信する。
+◎
+Workers communicate with other workers and with browsing contexts through message channels and their MessagePort objects.
+</p>
+
+<p>
+各 `WorkerGlobalScope$I ~obj %G は、
+`~port~list@wG
+を持つ：
+◎
+Each WorkerGlobalScope object worker global scope has a list of the worker's ports,＼
+<ul>
+	<li>
+<p>
+それは、次を満たす `MessagePort$I ~obj %P すべてからなる
+⇒
+［
+%P は別の `MessagePort$I ~obj %Q と`連絡-$されている
+］~AND［
+%G は %P, %Q のうち %P のみを所有している†
+］
+◎
+which consists of all the MessagePort objects that are entangled with another port and that have one (but only one) port owned by worker global scope.＼
+</p>
+
+<p class="trans-note">【†
+おそらく，［
+%P に`関連な大域~obj$ ~EQ %G ~NEQ %Q に`関連な大域~obj$
+］を意味する。
+】</p>
+	</li>
+	<li>
+`専用~worker$の事例では、この~listは`暗黙的な~port$も含む。
+【前~項の条件を満たす限り】
+◎
+This list includes the implicit MessagePort in the case of dedicated workers.
+</li>
+</ul>
+
+<p>
+所与の`環境~設定群~obj$ %O の下で~workerを［
+作成する／得する
+］ときに，
+`関連な所有者として追加するもの@
+は、［
+%O により指定される`大域~obj$enV %G の型
+］に応じて［
+`WorkerGlobalScope$I （すなわち，入子の専用~workerを作成している）ならば %G ／
+`Window$I ならば %G により指定される`担当の文書$enV
+］になる。
+◎
+Given an environment settings object o when creating or obtaining a worker, the relevant owner to add depends on the type of global object specified by o. If o specifies a global object that is a WorkerGlobalScope object (i.e., if we are creating a nested dedicated worker), then the relevant owner is that global object. Otherwise, o specifies a global object that is a Window object, and the relevant owner is the responsible document specified by o.
+</p>
+
+<hr>
+
+<p>
+~workerは、その `WorkerGlobalScope$I を %G とするとき：
+◎
+↓</p>
+<ul>
+	<li>
+<p>
+次を満たしている間は、
+`許可-可能@
+（ `permissible^en ）とされる
+⇒
+［
+%G の`所有者~集合$wGは`空$でない
+］~OR［
+次がすべて満たされる
+］：
+◎
+A worker is said to be a permissible worker if its WorkerGlobalScope's owner set is not empty or:
+</p>
+
+<ul>
+	<li>
+%G の`所有者~集合$wGは空であり続けているが、`実装定義$な短い~timeout値は過ぎていない
+◎
+its owner set has been empty for no more than a short implementation-defined timeout value,
+</li>
+	<li>
+%G は `SharedWorkerGlobalScope$I ~objである（すなわち，~workerは共用~workerである）
+◎
+its WorkerGlobalScope object is a SharedWorkerGlobalScope object (i.e., the worker is a shared worker), and
+</li>
+	<li>
+~UAの ある`閲覧文脈$の`文書$【`作動中の文書$？】は、まだ`完全に読込まれ$ていない
+◎
+the user agent has a browsing context whose Document object is not completely loaded.
+</li>
+</ul>
+
+<p class="note">注記：
+上の定義の 2 番目の項は、読込まれている短い間に，~pageが共用~workerに再び繋がろうとしている下でも、共用~workerが生残れるようにする。
+これを利用すれば，~UAは、利用者が ある~siteの中で~pageから~pageへ~navigateするときに，その~siteが利用している共用~workerを開始し直す~costを避けれるようになる。
+◎
+The second part of this definition allows a shared worker to survive for a short time while a page is loading, in case that page is going to contact the shared worker again. This can be used by user agents as a way to avoid the cost of restarting a shared worker used by a site when the user is navigating from page to page within that site.
+</p>
+
+	</li>
+	<li>
+次を満たしている間は、
+`作動中のため必要@
+（ `active needed^en ）とされる
+⇒
+%G の`所有者~集合$wG内に次を満たす［
+`文書$／~worker
+］がある
+⇒
+［
+`全部的に作動中$／`作動中のため必要$
+］である
+◎
+A worker is said to be an active needed worker if any its owners are either Document objects that are fully active or active needed workers.
+</li>
+	<li>
+次を満たしている間は、
+`保護され@
+ている（ `protected^en ）とされる
+⇒
+［
+`作動中のため必要$である
+］~AND［
+次のいずれかが満たされる
+］
+⇒＃
+【%G 内に】待機中の~timerがある／
+【%G 内に】~database~transactionがある／
+【%G 内に】~network接続がある／
+%G の`~port~list$wGは空でない／
+%G は`SharedWorkerGlobalScope$I ~objである（すなわち，~workerは共用~workerである）
+◎
+A worker is said to be a protected worker if it is an active needed worker and either＼
+it has outstanding timers,＼
+database transactions, or＼
+network connections, or＼
+its list of the worker's ports is not empty, or＼
+its WorkerGlobalScope is actually a SharedWorkerGlobalScope object (i.e., the worker is a shared worker).
+</li>
+	<li>
+次を満たしている間は、
+`休止-可能@
+（ `suspendable^en ）とされる
+⇒
+［
+`作動中のため必要$ではない
+］~AND［
+`許可-可能$である
+］
+◎
+A worker is said to be a suspendable worker if it is not an active needed worker but it is a permissible worker.
+</li>
+</ul>
+
+		</section>
+		<section id="worker-processing-model">
+<h3 title="Processing model">10.2.4. 処理~model</h3>
+
+<div class="algo">
+<p>
+~UAは、ある~script用の
+`~workerを走らす@
+ときは、所与の
+⇒＃
+%~worker （ `Worker$I ／ `SharedWorker$I ~obj ）,
+%url （ `~URL$ ）,
+%外側~設定群 （ `環境~設定群~obj$ ）,
+%外側~port （ `MessagePort$I ~obj ）,
+%options （ `WorkerOptions$I 辞書 ）
+◎終
+に対し，次の手続きを走らすモノトスル：
+◎
+When a user agent is to run a worker for a script with Worker or SharedWorker object worker, URL url, environment settings object outside settings, MessagePort outside port, and a WorkerOptions dictionary options, it must run the following steps.
+</p>
+
+<ol>
+	<li>
+%共用？ ~LET ［
+%~worker は `SharedWorker$I ~objであるならば ~T ／
+~ELSE_ ~F
+］
+◎
+Let is shared be true if worker is a SharedWorker object, and false otherwise.
+</li>
+	<li>
+%所有者 ~LET
+%外側~設定群 から与えられる，`関連な所有者として追加するもの$
+◎
+Let owner be the relevant owner to add given outside settings.
+</li>
+	<li>
+%親~worker大域~scope ~LET ~NULL
+◎
+Let parent worker global scope be null.
+</li>
+	<li>
+~IF［
+%所有者 は `WorkerGlobalScope$I ~objである（すなわち、この手続きは入子の専用~workerを作成している）
+］
+⇒
+%親~worker大域~scope ~SET %所有者
+◎
+If owner is a WorkerGlobalScope object (i.e., we are creating a nested dedicated worker), then set parent worker global scope to owner.
+</li>
+	<li>
+<p>
+%~agent ~LET `専用／共用~worker~agentを得する$( %外側~設定群, %共用？ )
+◎
+Let agent be the result of obtaining a dedicated/shared worker agent given outside settings and is shared.＼
+</p>
+
+<p>
+この手続きの以降は， %~agent 内で走らすとする
+◎
+Run the rest of these steps in that agent.
+</p>
+
+<p>
+計時~APIの目的においては，これが~workerの
+`公式的な作成~時点@
+になる。
+◎
+For the purposes of timing APIs, this is the official moment of creation of the worker.
+</p>
+
+	</li>
+	<li>
+%~realm実行~文脈 ~LET 次のように~custom化する下で，
+%~agent 内で`新たな~JS~realmを作成する$
+⇒
+大域~obj用には， %共用？ に応じて次を作成する
+⇒＃
+~T ならば 新たな `SharedWorkerGlobalScope$I ~obj ／
+~F ならば 新たな `DedicatedWorkerGlobalScope$I ~obj
+◎
+Let realm execution context be the result of creating a new JavaScript realm given agent and the following customizations:
+• For the global object, if is shared is true, create a new SharedWorkerGlobalScope object. Otherwise, create a new DedicatedWorkerGlobalScope object.
+</li>
+	<li>
+<p>
+%~worker大域~scope ~LET %~realm実行~文脈 の`大域~obj$rM成分
+◎
+Let worker global scope be the global object of realm execution context's Realm component.
+</p>
+
+<p class="note">注記：
+これは、前~段で作成した［
+`SharedWorkerGlobalScope^I ／ `DedicatedWorkerGlobalScope^I
+］~objになる。
+◎
+This is the DedicatedWorkerGlobalScope or SharedWorkerGlobalScope object created in the previous step.
+</p>
+	</li>
+	<li>
+%内側~設定群 ~LET `~workerの環境~設定群~objを設定しておく$( %~realm実行~環境, %外側~設定群 )
+◎
+Set up a worker environment settings object with realm execution context and outside settings, and let inside settings be the result.
+</li>
+	<li>
+%~worker大域~scope の`名前$wG ~SET %options[ `name^l ]
+◎
+Set worker global scope's name to the value of options's name member.
+</li>
+	<li>
+%~worker大域~scope の`所有者~集合$wGに
+%所有者 を`付加する$set
+◎
+Append owner to worker global scope's owner set.
+</li>
+	<li>
+~IF［
+%親~worker大域~scope ~NEQ ~NULL
+］
+⇒
+%親~worker大域~scope の`~worker集合$wGに
+%~worker大域~scope を`付加する$set
+◎
+If parent worker global scope is not null, then append worker global scope to parent worker global scope's worker set.
+</li>
+	<li>
+~IF［
+%共用？ ~EQ ~T
+］
+⇒
+%~worker大域~scope の
+⇒＃
+`構築子~生成元$wG ~SET %外側~設定群 の`生成元$enV,
+`構築子~url$wG ~SET %url,
+`種別$wG ~SET %options[ `type^l ],
+`資格証$wG ~SET %options[ `credentials^l ]
+◎
+If is shared is true, then:
+• Set worker global scope's constructor origin to outside settings's origin.
+• Set worker global scope's constructor url to url.
+• Set worker global scope's type to the value of options's type member.
+• Set worker global scope's credentials to options's credentials member.
+</li>
+	<li>
+%行先 ~LET %共用？ に応じて
+⇒＃
+~T ならば `sharedworker^l ／
+~F ならば `worker^l
+◎
+Let destination be "sharedworker" if is shared is true, and "worker" otherwise.
+</li>
+	<li>
+<p>
+%options[ `type^l ] に応じて，次に従って~scriptを得する：
+◎
+Obtain script by switching on the value of options's type member:
+</p>
+		<dl class="switch">
+			<dt>`classic^l</dt>
+			<dd>
+`~worker用古典~scriptを~fetchする$( %~url, %外側~設定群, %行先, %内側~設定群 )
+◎
+Fetch a classic worker script given url, outside settings, destination, and inside settings.
+</dd>
+			<dt>`module^l</dt>
+			<dd>
+`~module~worker~script~graphを~fetchする$(
+%~url,
+%外側~設定群,
+%行先,
+%options[ `credentials^l ],
+%内側~設定群
+)
+◎
+Fetch a module worker script graph given url, outside settings, destination, the value of the credentials member of options, and inside settings.
+</dd>
+		</dl>
+<div class="algo">
+<p>
+いずれの場合も，上で`~fetchを遂行する$ときは、所与の
+( %要請, %~top-level内~flag )
+に対し，［
+%~top-level内~flag ~EQ `~top-level内$i
+］ならば†次の手続きを遂行する：
+◎
+In both cases, to perform the fetch given request, perform the following steps if the is top-level flag is set:
+</p>
+
+<p class="trans-note">【†
+%~top-level内~flag ~EQ ε になる所では（すなわち、~module~scriptが子孫を~fetchするとき）、`~fetchを遂行する$手続きは指定されなかったかのように挙動することになろう。
+】</p>
+		<ol>
+			<li>
+%要請 の`予約-済み~client$rq ~SET %内側~設定群
+◎
+Set request's reserved client to inside settings.
+</li>
+			<li>
+<p>
+%要請 を`~fetch$する
+— ~fetchし終えるまで非同期に待機した上で、`応答を処理する$一部として，所与の
+( `応答$ %応答 )
+に対し，次を走らす：
+◎
+Fetch request, and asynchronously wait to run the remaining steps as part of fetch's process response for the response response.
+</p>
+				<ol>
+					<li>
+%~worker大域~scope の`~url$wG ~SET %応答 の`~URL$rs
+◎
+Set worker global scope's url to response's url.
+</li>
+					<li>
+%~worker大域~scope の`~referrer施策$wG ~SET
+%応答 の
+<a href="~REFERRER-POLICY#parse-referrer-policy-from-header">`Referrer-Policy^h ~headerを構文解析-</a>
+した結果
+◎
+Set worker global scope's referrer policy to the result of parsing the `Referrer-Policy` header of response.
+</li>
+					<li>
+%~worker大域~scope の`埋込元~施策$wG ~SET ［
+%応答 の`~URL$rsの`~scheme$urlは`局所~scheme$であるならば %所有者 の`埋込元~施策$enV ／
+~ELSE_ `埋込元~施策を得する$( %応答 )
+］
+◎
+If response's url's scheme is a local scheme, then set worker global scope's embedder policy to owner's embedder policy.
+◎
+Otherwise, set worker global scope's embedder policy to the result of obtaining an embedder policy from response.
+</li>
+					<li>
+<p>
+~IF［
+%~worker大域~scope の`埋込元~施策$wG ~EQ `require-corp$l
+］~AND［
+%共用？ ~EQ ~T
+］
+⇒
+%~agent の`~agent~cluster$の`非同一-生成元~隔離-済み$ ~SET ~T
+◎
+If worker global scope's embedder policy is "require-corp" and is shared is true, then set agent's agent cluster's cross-origin isolated to true.
+</p>
+
+<p class="XXX">
+これは，本当は当の~agent~clusterが作成されるとき設定されるべきだが、この節を設計し直すことが要求される。
+◎
+This really ought to be set when the agent cluster is created, which requires a redesign of this section.
+</p>
+					</li>
+					<li>
+~IF［
+`大域~objの埋込元~施策を検査する$( %~worker大域~scope, %所有者, %応答 ) ~EQ ~F
+］
+⇒
+%応答 ~SET `~network~error$
+◎
+If the result of checking a global object's embedder policy with worker global scope, owner, and response is false, then set response to a network error.
+</li>
+					<li>
+%~worker大域~scope の`非同一-生成元~隔離-済み能力$wG ~SET %~agent の`~agent~cluster$の`非同一-生成元~隔離-済み$
+◎
+Set worker global scope's cross-origin isolated capability to agent's agent cluster's cross-origin isolated.
+</li>
+					<li>
+~IF［
+%共用？ ~EQ ~F
+］~AND［
+%所有者 の`非同一-生成元~隔離-済み能力$enV ~EQ ~F
+］
+⇒
+%~worker大域~scope の`非同一-生成元~隔離-済み能力$wG ~SET ~F
+◎
+If is shared is false and owner's cross-origin isolated capability is false, then set worker global scope's cross-origin isolated capability to false.
+</li>
+					<li>
+<p>
+~IF［
+%共用？ ~EQ ~F
+］~AND［
+%応答 の`~URL$rsの`~scheme$url ~EQ `data^l
+］
+⇒
+%~worker大域~scope の`非同一-生成元~隔離-済み能力$wG ~SET ~F
+◎
+If is shared is false and response's url's scheme is "data", then set worker global scope's cross-origin isolated capability to false.
+</p>
+
+<p class="note">注記：
+これは、今や所は保守的な既定である
+— 一般に~workerが, および
+特に `data$sc ~URL【から構築された】~worker（その所有者とは非同一-生成元になる）が，許可~施策の文脈において どう扱われることになるか、~~解明されるまでの間の。
+詳細は
+<a href="https://github.com/w3c/webappsec-permissions-policy/issues/207">w3c/webappsec-permissions-policy 課題 #207</a>
+を見よ。
+◎
+This is a conservative default for now, while we figure out how workers in general, and data: URL workers in particular (which are cross-origin from their owner), will be treated in the context of permissions policies. See w3c/webappsec-permissions-policy issue #207 for more details.
+</p>
+					</li>
+					<li>
+`大域~objの~CSP~listを初期化する$( %~worker大域~scope, %応答 )
+`CSP$r
+◎
+Execute the Initialize a global object's CSP list algorithm on worker global scope and response. [CSP]
+</li>
+					<li>
+%応答 を結果として`非同期に完了-$する
+◎
+Asynchronously complete the perform the fetch steps with response.
+</li>
+				</ol>
+			</li>
+		</ol>
+</div>
+	</li>
+	<li>
+前~段が %~script を結果として`非同期に完了-$するまで待機する
+◎
+↓</li>
+	<li>
+<p>
+~IF［
+%~script ~EQ ~NULL
+］~OR［
+%~script の`再投出-用~error$sC ~NEQ ~NULL
+］：
+◎
+If the algorithm asynchronously completes with null or with a script whose error to rethrow is non-null, then:
+</p>
+		<ol>
+			<li>
+次を走らす`大域~taskを~queueする$( `~DOM操作~task源$, %~worker に`関連な大域~obj$ )
+⇒
+%~worker に向けて，名前 `error$et の`~eventを発火する$
+◎
+Queue a global task on the DOM manipulation task source given worker's relevant global object to fire an event named error at worker.
+</li>
+			<li>
+%内側~設定群 用に`環境を破棄する手続き$を走らす
+◎
+Run the environment discarding steps for inside settings.
+</li>
+			<li>
+~RET
+◎
+Return.
+</li>
+		</ol>
+	</li>
+	<li>
+%~worker を %~worker大域~scope に結付ける
+◎
+Otherwise, continue the rest of these steps after the algorithm's asynchronous completion, with script being the asynchronous completion value.
+◎
+Associate worker with worker global scope.
+</li>
+	<li>
+%内側~port ~LET %内側~設定群 の`~Realm$enVに属する`新たな$ `MessagePort$I
+◎
+Let inside port be a new MessagePort object in inside settings's Realm.
+</li>
+	<li>
+%内側~port を %~worker大域~scope に結付ける
+◎
+Associate inside port with worker global scope.
+</li>
+	<li>
+`~portを連絡する$( %外側~port, %内側~port )
+◎
+Entangle outside port and inside port.
+</li>
+	<li>
+新たな `WorkerLocation$I ~objを作成して，それに %~worker大域~scope を結付ける
+◎
+Create a new WorkerLocation object and associate it with worker global scope.
+</li>
+	<li>
+<p>
+~workerの監視を開始する：
+◎
+↓</p>
+		<ul>
+			<li>
+<strong>孤立~workerは~close中</strong>
+⇒
+~workerが`保護され$なくなり次第、`許可-可能$であり続ける間まで，
+%~worker大域~scope の`~close中~flag$は ~T にする
+◎
+Closing orphan workers: Start monitoring the worker such that no sooner than it stops being a protected worker, and no later than it stops being a permissible worker, worker global scope's closing flag is set to true.
+</li>
+			<li>
+<strong>~workerの休止</strong>
+⇒
+次が満たされるようになったときは、満たされなくなるまで，~worker内の~scriptの実行を休止する
+⇒
+［
+%~worker大域~scope の`~close中~flag$ ~EQ ~F
+］~AND［
+~workerは`休止-可能$である
+］
+◎
+Suspending workers: Start monitoring the worker, such that whenever worker global scope's closing flag is false and the worker is a suspendable worker, the user agent suspends execution of script in that worker until such time as either the closing flag switches to true or the worker stops being a suspendable worker.
+</li>
+		</ul>
+	</li>
+	<li>
+%内側~設定群 の`実行~準備済み~flag$ ~SET ~T
+◎
+Set inside settings's execution ready flag.
+</li>
+	<li>
+
+<div>
+<p>
+%~script に応じて：
+</p>
+
+		<dl class="switch">
+			<dt>`古典~script$である</dt>
+			<dd>
+`古典~scriptを走らす$( %~script )
+</dd>
+			<dt>`~module~script$である</dt>
+			<dd>
+`~module~scriptを走らす$( %~script )
+</dd>
+		</dl>
+◎
+If script is a classic script, then run the classic script script. Otherwise, it is a module script; run the module script script.
+</div>
+
+<p class="note">注記：
+通例の［
+値を返す, 例外による失敗-
+］に加えて，これは、`~workerが終了され$たときも`尚早に中止され$得る。
+◎
+In addition to the usual possibilities of returning a value or failing due to an exception, this could be prematurely aborted by the terminate a worker algorithm defined below.
+</p>
+	</li>
+	<li>
+%外側~port の`~port~message~queue$を可能化する
+◎
+Enable outside port's port message queue.
+</li>
+	<li>
+~IF［
+%共用？ ~EQ ~F
+］
+⇒
+~workerの暗黙的な~portの`~port~message~queue$を可能化する
+◎
+If is shared is false, enable the port message queue of the worker's implicit port.
+</li>
+	<li>
+~ELSE
+⇒
+次を走らす`大域~taskを~queueする$( `~DOM操作~task源$, %~worker大域~scope )
+⇒
+%~worker大域~scope に向けて，名前 `connect$et の`~eventを発火する$
+— `MessageEvent$I を利用し，次のように初期化して
+⇒＃
+`data$m 属性 ~SET 空~文字列,
+`ports$m 属性 ~SET %内側~port のみを含む新たな`凍結d配列$,
+`source$m 属性 ~SET %内側~port
+◎
+If is shared is true, then queue a global task on DOM manipulation task source given worker global scope to fire an event named connect at worker global scope, using MessageEvent, with the data attribute initialized to the empty string, the ports attribute initialized to a new frozen array containing inside port, and the source attribute initialized to inside port.
+</li>
+	<li>
+［
+%~worker大域~scope に`関連な設定群~obj$を，`~sw~client$として結付けている
+`ServiceWorkerContainer$I ~obj
+］の`~client~message~queue$を可能化する
+◎
+Enable the client message queue of the ServiceWorkerContainer object whose associated service worker client is worker global scope's relevant settings object.
+</li>
+	<li>
+<p>
+［
+%内側~設定群 により指定される`担当の~event~loop$enV
+］を，破壊されるまで走らす
+◎
+Event loop: Run the responsible event loop specified by inside settings until it is destroyed.
+</p>
+
+<p class="note">注記：
+`~event~loop$が走らす`~task$による，~eventの取扱いや~callbackの実行は、`~workerが終了され$たときは，`尚早に中止され$得る。
+◎
+The handling of events or the execution of callbacks by tasks run by the event loop might get prematurely aborted by the terminate a worker algorithm defined below.
+</p>
+
+<p class="note">注記：
+この段における~workerの処理~modelは、`~event~loop$処理~modelに述べられるように，［
+`~close中~flag$が ~T にされた後の，~event~loopが破壊される
+］まで、残り続ける。
+◎
+The worker processing model remains on this step until the event loop is destroyed, which happens after the closing flag is set to true, as described in the event loop processing model.
+</p>
+
+	</li>
+	<li>
+%~worker大域~scope にて`作動中の~timerの~list$を空にする
+◎
+Empty the worker global scope's list of active timers.
+</li>
+	<li>
+%~worker大域~scope の`~port~list$wG内のすべての~portに対し、それぞれの`連絡-$を~~解く
+◎
+Disentangle all the ports in the list of the worker's ports.
+</li>
+	<li>
+%~worker大域~scope の`所有者~集合$wGを空にする
+◎
+Empty worker global scope's owner set.
+</li>
+</ol>
+</div>
+
+<hr>
+
+<div class="algo">
+<p>
+~UAが
+`~workerを終了させ@
+るときは、~workerの~main~loop
+— すなわち，上で定義した “`~workerを走らす$” 処理~model —
+とは`並列的$に，次の手続きを走らすモノトスル：
+◎
+When a user agent is to terminate a worker it must run the following steps in parallel with the worker's main loop (the "run a worker" processing model defined above):
+</p>
+
+<ol>
+	<li>
+%~worker大域~scope ~LET ~workerの `WorkerGlobalScope$I ~obj
+◎
+↓</li>
+	<li>
+%~worker大域~scope の`~close中~flag$ ~SET ~T
+◎
+Set the worker's WorkerGlobalScope object's closing flag to true.
+</li>
+	<li>
+%~worker大域~scope に`関連な~agent$の`~event~loop$の`~task~queue$内にある`~task$は、処理せずに，破棄する
+◎
+If there are any tasks queued in the WorkerGlobalScope object's relevant agent's event loop's task queues, discard them without processing them.
+</li>
+	<li>
+~worker内で現在`走っている~scriptを中止する$
+◎
+Abort the script currently running in the worker.
+</li>
+	<li>
+%~worker大域~scope が実際には `DedicatedWorkerGlobalScope$I ~objである場合（すなわち~workerは専用~worker）、
+~workerの暗黙的な~portの`~port~message~queue$を空にする
+◎
+If the worker's WorkerGlobalScope object is actually a DedicatedWorkerGlobalScope object (i.e. the worker is a dedicated worker), then empty the port message queue of the port that the worker's implicit port is entangled with.
+</li>
+</ol>
+</div>
+
+<p>
+~UAは、~workerが［
+`作動中のため必要$でなくなっていて，`~close中~flag$が ~T にされた後でも実行し続けている
+］ときは、`~workerを終了させ$てもヨイ。
+◎
+User agents may invoke the terminate a worker algorithm when a worker stops being an active needed worker and the worker continues executing even after its closing flag was set to true.
+</p>
+
+		</section>
+		<section id="runtime-script-errors-2">
+<h3 title="Runtime script errors">10.2.5. 稼働時の~script~error</h3>
+
+<p>
+~workerの~scriptのいずれかにおいて，~catchされない稼働時の~script~errorが生じた場合、その~errorが以前の~script~errorの取扱い時に生じたものでないならば，~UAは次を行うモノトスル：
+◎
+Whenever an uncaught runtime script error occurs in one of the worker's scripts, if the error did not occur while handling a previous script error, the user agent must＼
+</p>
+
+<ul>
+	<li>
+`WorkerGlobalScope$I ~objを target に、~errorが生じた位置（行~番号と列~番号）を伴う，当の`~script$の`~errorを報告-$するモノトスル。
+◎
+report the error for that script, with the position (line number and column number) where the error occurred, using the WorkerGlobalScope object as the target.
+</li>
+	<li>
+共用~workerに対しては、~errorが依然として`未取扱い$ならば，開発者~consoleに~errorを報告してもヨイ。
+◎
+For shared workers, if the error is still not handled afterwards, the error may be reported to a developer console.
+</li>
+	<li>
+<p>
+専用~workerに対しては、~errorが依然として`未取扱い$ならば，次を走らす`~taskを~queueする$モノトスル：
+◎
+For dedicated workers, if the error is still not handled afterwards, the user agent must queue a task to run these steps:
+</p>
+		<ol>
+			<li>
+~workerに結付けられている `Worker$I ~objに向けて，名前 `error$et の`~eventを発火する$
+— `ErrorEvent$I を利用し，次のように初期化して
+⇒＃
+`cancelable$m 属性 ~SET ~T,
+`error$m 属性 ~SET ~NULL,
+［ `message$m, `filename$m, `lineno$m, `colno$m ］属性 ~SET それぞれに適切な値
+◎
+Let notHandled be the result of firing an event named error at the Worker object associated with the worker, using ErrorEvent, with the cancelable attribute initialized to true, the message, filename, lineno, and colno attributes initialized appropriately, and the error attribute initialized to null.
+</li>
+			<li>
+~IF［
+前~段の結果 ~EQ ~T
+］
+⇒
+`Worker$I ~objが属する大域~scopeの中で，~catchされなかった稼働時の~script~errorが生じたかのように、動作する
+— したがって、一段上層においても，稼働時の~script~errorの報告ng処理-が繰返されることになる。
+◎
+If notHandled is true, then the user agent must act as if the uncaught runtime script error had occurred in the global scope that the Worker object is in, thus repeating the entire runtime script error reporting process one level up.
+</li>
+		</ol>
+	</li>
+</ul>
+
+<p>
+［
+~workerの `Worker$I ~objに接続している暗黙的な~port
+］の`連絡-$が~~解かれていた場合（すなわち，親の~workerが終了されていた場合）、~UAは［［
+`Worker$I ~objは `error$et ~event~handlerを持っていなかった
+］, かつ［
+~workerの `onerror$m 属性は ~NULL であった
+］］かのように，動作するモノトスル。
+他の場合、上述のように動作するモノトスル。
+◎
+If the implicit port connecting the worker to its Worker object has been disentangled (i.e. if the parent worker has been terminated), then the user agent must act as if the Worker object had no error event handler and as if that worker's onerror attribute was null, but must otherwise act as described above.
+</p>
+
+<p class="note">注記：
+したがって，~error報告-は、専用~workerの連鎖を伝播して
+— この連鎖に属する，いずれかの~workerが終了され, ~garbage収集されていたとしても — 
+元の`文書$まで伝播される。
+◎
+Thus, error reports propagate up to the chain of dedicated workers up to the original Document, even if some of the workers along this chain have been terminated and garbage collected.
+</p>
+
+<p>
+上で言及した~taskの`~task源$は、`~DOM操作~task源$とする。
+◎
+The task source for the task mentioned above is the DOM manipulation task source.
+</p>
+
+		</section>
+		<section id="creating-workers">
+<h3 title="Creating workers">10.2.6. ~workerの作成-法</h3>
+
+			<section id="the-abstractworker-mixin">
+<h4 title="The AbstractWorker mixin">10.2.6.1. `AbstractWorker^I ~mixin</h4>
+
+<pre class="idl">
+interface mixin `AbstractWorker@I {
+  attribute `EventHandler$I `onerror$mW;
+};
+</pre>
+
+<p>
+`AbstractWorker$I ~interfaceを実装する~objにおいては、次の`~event~handler$（および，それらに対応する`~event~handler ~event型$）が`~event~handler~IDL属性$として~supportされるモノトスル：
+◎
+The following are the event handlers (and their corresponding event handler event types) that must be supported, as event handler IDL attributes, by objects implementing the AbstractWorker interface:
+</p>
+
+<table>
+<thead><tr><th>`~event~handler$
+<th>~event~handler ~event型
+</thead>
+
+<tbody><tr><td>`onerror@mW
+<td>`error$et
+
+</tbody></table>
+
+			</section>
+			<section id="script-settings-for-workers">
+<h4 title="Script settings for workers">10.2.6.2. ~worker用の~script設定群</h4>
+
+<div class="algo">
+<p>
+~UAは，
+`~workerの環境~設定群~objを設定しておく@
+ときは、所与の
+( `~JS実行~文脈$ %実行~文脈, `環境~設定群~obj$ %外側~設定群 )
+に対し，次の手続きを走らすモノトスル：
+◎
+When the user agent is required to set up a worker environment settings object, given a JavaScript execution context execution context and environment settings object outside settings, it must run the following steps:
+</p>
+
+<ol>
+	<li>
+%継承した生成元 ~LET %外側~設定群 の`生成元$enV
+◎
+Let inherited origin be outside settings's origin.
+</li>
+	<li>
+%realm ~LET %実行~文脈 の Realm 成分の値
+◎
+Let realm be the value of execution context's Realm component.
+</li>
+	<li>
+%~worker大域~scope ~LET %realm の`大域~obj$rM
+◎
+Let worker global scope be realm's global object.
+</li>
+	<li>
+<p>
+%設定群~obj ~LET
+以下に定義される一連の~algoを備える，新たな`環境~設定群~obj$
+：
+◎
+Let settings object be a new environment settings object whose algorithms are defined as follows:
+</p>
+		<ul>
+			<li>
+`~realm実行~環境$
+⇒
+~RET %実行~文脈
+◎
+The realm execution context
+• Return execution context.
+</li>
+			<li>
+`~module~map$enV
+⇒
+~RET %~worker大域~scope の`~module~map$wG
+◎
+The module map
+• Return worker global scope's module map.
+</li>
+			<li>
+`担当の文書$enV
+⇒
+適用外（`担当の~event~loop$enVは `~window~event~loop$ではないので）
+◎
+The responsible document
+• Not applicable (the responsible event loop is not a window event loop).
+</li>
+			<li>
+`~API用~URL文字~符号化法$enV
+⇒
+~RET `UTF-8$
+◎
+The API URL character encoding
+• Return UTF-8.
+</li>
+			<li>
+`~API用~基底~URL$enV
+⇒
+~RET %~worker大域~scope の`~url$wG
+◎
+The API base URL
+• Return worker global scope's url.
+</li>
+			<li>
+`生成元$enV
+⇒
+~RET ［
+次が満たされるならば `不透明な生成元$ ／
+~ELSE_ %継承した生成元
+］
+⇒
+%~worker大域~scope の`~url$wGの`~scheme$url ~EQ `data^l
+◎
+The origin
+• Return a unique opaque origin if worker global scope's url's scheme is "data", and inherited origin otherwise.
+</li>
+			<li>
+`~referrer施策$enV
+⇒
+~RET %~worker大域~scope の`~referrer施策$wG
+◎
+The referrer policy
+• Return worker global scope's referrer policy.
+</li>
+			<li>
+`埋込元~施策$enV
+⇒
+~RET %~worker大域~scope の`埋込元~施策$wG
+◎
+The embedder policy
+• Return worker global scope's embedder policy.
+</li>
+			<li>
+`非同一-生成元~隔離-済み能力$enV
+⇒
+~RET %~worker大域~scope の`非同一-生成元~隔離-済み能力$wG
+◎
+The cross-origin isolated capability
+• Return worker global scope's cross-origin isolated capability.
+</li>
+		</ul>
+	</li>
+	<li>
+%設定群~obj の
+⇒＃
+`~id$enV ~SET 新たな一意かつ不透明な文字列,
+`作成時の~URL$enV ~SET %~worker大域~scope の`~URL$,
+`~top-level作成時の~URL$enV ~SET ~NULL,
+`~target閲覧文脈$enV ~SET ~NULL,
+`作動中の~sw$enV ~SET ~NULL
+◎
+Set settings object's id to a new unique opaque string, settings object's creation URL to worker global scope's url, settings object's top-level creation URL to null, settings object's target browsing context to null, and settings object's active service worker to null.
+</li>
+	<li>
+<p>
+%設定群~obj の`~top-level生成元$enV ~SET %~worker大域~scope に応じて
+⇒＃
+`DedicatedWorkerGlobalScope$I ~objであるならば %外側~設定群 の`~top-level生成元$enV ／
+~ELSE_ `実装定義$な値
+◎
+If worker global scope is a DedicatedWorkerGlobalScope object, then set settings object's top-level origin to outside settings's top-level origin.
+◎
+Otherwise, set settings object's top-level origin to an implementation-defined value.
+</p>
+
+<p class="XXX">
+これを適正に定義している最新情報は、
+<a href="https://privacycg.github.io/storage-partitioning/">~client側~storage仕切り法</a>
+を見よ。
+◎
+See Client-Side Storage Partitioning for the latest on properly defining this.
+</p>
+	</li>
+	<li>
+%realm の `HostDefined^sl ~field ~SET %設定群~obj
+◎
+Set realm's [[HostDefined]] field to settings object.
+</li>
+	<li>
+~RET %設定群~obj
+◎
+Return settings object.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="dedicated-workers-and-the-worker-interface">
+<h4 title="Dedicated workers and the Worker interface">10.2.6.3. 専用~workerと `Worker^I ~interface</h4>
+
+<pre class="idl">
+[Exposed=(Window,DedicatedWorker,SharedWorker)]
+interface `Worker@I : `EventTarget$I {
+  `Worker$mc(USVString %scriptURL, optional `WorkerOptions$I %options = {});
+
+  undefined `terminate$mW();
+
+  undefined `postMessage$mW(any %message, sequence&lt;`object$&gt; %transfer);
+  undefined `~postMessageO$mW(any %message, optional `PostMessageOptions$I %options = {});
+  attribute `EventHandler$I `onmessage$mW;
+  attribute `EventHandler$I `onmessageerror$mW;
+};
+
+dictionary `WorkerOptions@I {
+  `WorkerType$I type = "classic";
+  `RequestCredentials$I credentials = "same-origin"; // †
+  DOMString name = "";
+};
+
+enum `WorkerType@I { "classic", "module" };
+
+`Worker$I includes `AbstractWorker$I;
+</pre>
+
+<p class="note">注記：†
+`credentials^m （`資格証$wG）は、［
+`type^m （`種別$wG） ~EQ `module^l
+］の場合に限り，利用される。
+◎
+credentials is only used if type is "module"
+</p>
+
+<dl class="domintro">
+
+	<dt>%worker = `new Worker(scriptURL  [, options ])$m</dt>
+	<dd>
+新たな `Worker$I ~objを返す。
+%scriptURL は~backgroundで~fetchされ, 実行され、新たな大域~環境が作成される。
+返される %worker は、その大域~環境への通信~channelを表現する。
+◎
+Returns a new Worker object. scriptURL will be fetched and executed in the background, creating a new global environment for which worker represents the communication channel.＼
+</dd>
+	<dd>
+<p>
+%options を利用すれば：
+◎
+options can be used to＼
+</p>
+		<ul>
+			<li>
+`name^m ~memberを介して この大域~環境の`名前$wGを定義できる
+— これは首に、~debug目的にある。
+◎
+define the name of that global environment via the name option, primarily for debugging purposes.＼
+</li>
+			<li>
+`type^m ~memberに `module^l を指定すれば、この新たな大域~環境が~JS~moduleを~supportすることを確保できる
+— その場合、 `credentials^m ~memberを通して， %scriptURL がどう~fetchされるかも指定できる。
+◎
+It can also ensure this new global environment supports JavaScript modules (specify type: "module"), and if that is specified, can also be used to specify how scriptURL is fetched through the credentials option.
+</li>
+		</ul>
+	</dd>
+
+	<dt>%worker . `terminate()$mW</dt>
+	<dd>
+%worker に結付けられている大域~環境を中止する。
+◎
+Aborts worker's associated global environment.
+</dd>
+
+	<dt>%worker . `postMessage(message, transfer)$mW</dt>
+	<dt>%worker . `~postMessageO(message [, options ])$mW</dt>
+	<dd>
+%message を~cloneして %worker の大域~環境へ伝送する。
+［
+%transfer ／ ［
+%options の `transfer$m ~member
+］］には，一連の~objからなる~listを渡すことができ、それらは~cloneされずに転送される。
+◎
+Clones message and transmits it to worker's global environment. transfer can be passed as a list of objects that are to be transferred rather than cloned.
+</dd>
+</dl>
+
+<div class="algo">
+`terminate()@mW
+~method~手続きは
+⇒
+コレを結付けている~worker上で`~workerを終了させ$る
+◎
+The terminate() method, when invoked, must cause the terminate a worker algorithm to be run on the worker with which the object is associated.
+</div>
+
+<p>
+各 `Worker$I ~obj %worker は、
+`MessagePort$I ~objである
+`暗黙的な~port@1
+が結付けられているかのように，動作する。
+この~portは：
+◎
+Worker objects act as if they had an implicit MessagePort associated with them. This port is＼
+</p>
+
+<ul>
+	<li>
+%worker の作成-時に設定しておかれた~channelの一部をなすが，公開されることはない。
+◎
+part of a channel that is set up when the worker is created, but it is not exposed.＼
+</li>
+	<li>
+決して %worker より先に~garbage収集されてはならない。
+◎
+This object must never be garbage collected before the Worker object.
+</li>
+	<li>
+この~portから受信されるすべての~messageは、即時に %worker に渡されるモノトスル。
+◎
+All messages received by that port must immediately be retargeted at the Worker object.
+</li>
+</ul>
+
+<div class="algo">
+<p>
+`postMessage(message, transfer)@mW
+~method~手続きは
+⇒
+~RET コレの`暗黙的な~port$1上の
+`postMessage$mMP ~method~手続き( %message, %transfer )
+</p>
+
+<p>
+`~postMessageO(message, options)@mW
+~method~手続きは
+⇒
+~RET コレの`暗黙的な~port$1上の
+`~postMessageO$mMP ~method~手続き( %message, %options )
+</p>
+◎
+The postMessage(message, transfer) and postMessage(message, options) methods on Worker objects act as if, when invoked, they immediately invoked the respective postMessage(message, transfer) and postMessage(message, options) on the port, with the same arguments, and returned the same return value.
+</div>
+
+<div class="example">
+<p>
+この~methodの %message 引数は有構造~dataでもよい：
+◎
+The postMessage() method's first argument can be structured data:
+</p>
+
+<pre class="lang-js">
+worker.postMessage({
+   opcode: 'activate',
+   device: 1938,
+   parameters: [23, 102]
+});
+</pre>
+</div>
+
+<p>
+`Worker$I
+~interfaceを実装する~objにおいては、次の`~event~handler$（および，それらに対応する`~event~handler ~event型$）が`~event~handler~IDL属性$として~supportされるモノトスル：
+◎
+The following are the event handlers (and their corresponding event handler event types) that must be supported, as event handler IDL attributes, by objects implementing the Worker interface:
+</p>
+
+<table>
+<thead><tr><th>~event~handler
+<th>~event~handler ~event型
+</thead>
+
+<tbody><tr><td>`onmessage@mW
+<td> `message$et
+
+<tr><td>`onmessageerror@mW
+<td>`messageerror$et
+
+</tbody></table>
+
+<hr>
+
+<div class="algo">
+<p>
+`new Worker(scriptURL, options)@m
+構築子~手続きは：
+◎
+When the Worker(scriptURL, options) constructor is invoked, the user agent must run the following steps:
+</p>
+<ol>
+	<li>
+任意選択で
+⇒
+~IF［
+この~~要請は施策~裁定に違反している（例えば~pageに対し，専用~workerの開始-を許容しないように~UAが環境設定されているときなど）
+］
+⇒
+~THROW `SecurityError^E
+◎
+The user agent may throw a "SecurityError" DOMException if the request violates a policy decision (e.g. if the user agent is configured to not allow the page to start dedicated workers).
+</li>
+	<li>
+%外側~設定群 ~LET `現在の設定群~obj$
+◎
+Let outside settings be the current settings object.
+</li>
+	<li>
+%~worker~URL ~LET %scriptURL を %外側~設定群 に`相対的に構文解析-$した`結果の~URL~record$
+◎
+Parse the scriptURL argument relative to outside settings.
+</li>
+	<li>
+<p>
+~IF［
+%~worker~URL ~EQ `失敗^i
+］
+⇒
+~THROW `SyntaxError^E
+◎
+If this fails, throw a "SyntaxError" DOMException.
+◎
+Let worker URL be the resulting URL record.
+</p>
+
+<p class="note">注記：
+`blob$sc ~URLも含め，`同一-生成元$であれば どの~URLも利用できる。
+`data$sc ~URLも利用できるが、作成される~workerには`不透明な生成元$が伴われることになる。
+◎
+Any same-origin URL (including blob: URLs) can be used. data: URLs can also be used, but they create a worker with an opaque origin.
+</p>
+	</li>
+	<li>
+%外側~port ~LET %外側~設定群 の`~Realm$enVに属する`新たな$ `MessagePort$I
+◎
+Let worker be a new Worker object.
+◎
+Let outside port be a new MessagePort in outside settings's Realm.
+</li>
+	<li>
+コレの`暗黙的な~port$1 ~SET %外側~port
+◎
+Associate the outside port with worker.
+</li>
+	<li>
+この段は`並列的$に走らす
+⇒
+`~workerを走らす$(
+コレ,
+%~worker~URL,
+%外側~設定群,
+%外側~port,
+%options
+)
+◎
+Run this step in parallel:
+• Run a worker given worker, worker URL, outside settings, outside port, and options.
+◎
+Return worker.
+</li>
+</ol>
+</div>
+
+			</section>
+			<section id="shared-workers-and-the-sharedworker-interface">
+<h4 title="Shared workers and the SharedWorker interface">10.2.6.4. 共用~workerと `SharedWorker^I ~interface</h4>
+
+<pre class="idl">
+[Exposed=Window]
+interface `SharedWorker@I : `EventTarget$I {
+  `SharedWorker$mc(USVString %scriptURL, optional (DOMString or `WorkerOptions$I) %options = {});
+
+  readonly attribute `MessagePort$I `port$mW;
+};
+`SharedWorker$I includes `AbstractWorker$I;
+</pre>
+
+<dl class="domintro">
+	<dt>%sharedWorker = `new SharedWorker(scriptURL [, name ])$m</dt>
+	<dd>
+新たな `SharedWorker$I ~objを返す。
+%scriptURL は~backgroundで~fetchされ, 実行され、新たな大域~環境が作成される。
+返される %sharedWorker は、その大域~環境への通信~channelを表現する。
+%name を利用すれば，その大域~環境の`名前$wGを定義できる。
+◎
+Returns a new SharedWorker object. scriptURL will be fetched and executed in the background, creating a new global environment for which sharedWorker represents the communication channel. name can be used to define the name of that global environment.
+</dd>
+
+	<dt>%sharedWorker = `new SharedWorker(scriptURL [, options ]])$m</dt>
+	<dd>
+新たな `SharedWorker$I ~objを返す。
+%scriptURL は~backgroundで~fetchされ, 実行され、新たな大域~環境が作成される。
+返される %sharedWorker は、その大域~環境への通信~channelを表現する。
+◎
+Returns a new SharedWorker object. scriptURL will be fetched and executed in the background, creating a new global environment for which sharedWorker represents the communication channel.＼
+</dd>
+	<dd>
+<p>
+%options を利用すれば：
+◎
+options can be used to＼
+</p>
+		<ul>
+			<li>
+`name^m ~memberを介して この大域~環境の`名前$wGを定義できる。
+◎
+define the name of that global environment via the name option.＼
+</li>
+			<li>
+`type^m ~memberに `module^l を指定すれば、この新たな大域~環境が~JS~moduleを~supportすることを確保できる
+— その場合、 `credentials^m ~memberを通して， %scriptURL がどう~fetchされるかも指定できる。
+◎
+It can also ensure this new global environment supports JavaScript modules (specify type: "module"), and if that is specified, can also be used to specify how scriptURL is fetched through the credentials option.＼
+</li>
+		</ul>
+<p>
+%options の［
+`type^m ／ `credentials^m
+］いずれかの~memberに既存の共用~workerの［
+`種別$wG ／ `資格証$wG
+］と合致しない値を与える下で，共用~workerを構築しようと試みた場合、返される `SharedWorker$I に向けて `error$et ~eventを発火させ，既存の共用~workerには接続されないことに注意。
+◎
+Note that attempting to construct a shared worker with options whose type or credentials values mismatch an existing shared worker will cause the returned sharedWorker to fire an error event and not connect to the existing shared worker.
+</p>
+	</dd>
+
+	<dt>%sharedWorker . `port$mW</dt>
+	<dd>
+%sharedWorker の `MessagePort$I ~objを返す。
+それを利用して大域~環境と通信できる。
+◎
+Returns sharedWorker's MessagePort object which can be used to communicate with the global environment.
+</dd>
+</dl>
+
+<div class="algo">
+<p>
+`port@mW
+取得子~手続きは
+⇒
+~RET コレの構築子によりアテガわれた値【すなわち， %外側~port 】
+◎
+The port attribute must return the value it was assigned by the object's constructor.＼
+</p>
+
+<p>
+返される値は、共用~workerと通信するための `MessagePort$I を表現する。
+◎
+It represents the MessagePort for communicating with the shared worker.
+</p>
+</div>
+
+<p>
+~UAには
+`共用~worker~manager@
+が結付けられる
+— それは、`新たな並列~queueを開始-$した結果とする。
+◎
+A user agent has an associated shared worker manager which is the result of starting a new parallel queue.
+</p>
+
+<p class="note">注記：
+単純にするため、各~UAに結付けられる`共用~worker~manager$は 1 個だけとする。
+実装は、`生成元$ごとに 1 個ずつ利用して，同時並行性を高めることもできる
+— その相違は、観測され得ないので。
+◎
+Each user agent has a single shared worker manager for simplicity. Implementations could use one per origin; that would not be observably different and enables more concurrency.
+</p>
+
+<div class="algo">
+<p>
+`new SharedWorker(scriptURL, options)@m
+構築子~手続きは：
+◎
+When the SharedWorker(scriptURL, options) constructor is invoked:
+</p>
+<ol>
+	<li>
+任意選択で
+⇒
+~IF［
+この~~要請は施策~裁定に違反している（例えばその~pageに対し，共用~workerの開始-を許容しないように~UAが環境設定されているときなど）
+］
+⇒
+~THROW `SecurityError^E
+◎
+Optionally, throw a "SecurityError" DOMException if the request violates a policy decision (e.g. if the user agent is configured to not allow the page to start shared workers).
+</li>
+	<li>
+~IF［
+%options は `DOMString^I である
+］
+⇒
+%options ~SET 次のようにされた新たな `WorkerOptions^I 辞書
+⇒＃
+`name^m ~member ~SET %options の値；
+他の~member ~SET それぞれの既定~値
+◎
+If options is a DOMString, set options to a new WorkerOptions dictionary whose name member is set to the value of options and whose other members are set to their default values.
+</li>
+	<li>
+%外側~設定群 ~LET `現在の設定群~obj$
+◎
+Let outside settings be the current settings object.
+</li>
+	<li>
+%~URL~record ~LET %scriptURL を， %外側~設定群 に`相対的に構文解析-$した`結果の~URL~record$
+◎
+Parse scriptURL relative to outside settings.
+</li>
+	<li>
+~IF［
+%~URL~record ~EQ `失敗^i
+］
+⇒
+~THROW `SyntaxError^E
+◎
+If this fails, throw a "SyntaxError" DOMException.
+</li>
+	<li>
+<p>
+%~URL~record ~LET `結果の~URL~record$
+◎
+Otherwise, let urlRecord be the resulting URL record.
+</p>
+
+<p class="note">注記：
+`blob$sc ~URLも含め，`同一-生成元$であれば どの~URLも利用できる。
+`data$sc ~URLも利用できるが、作成される~workerには`不透明な生成元$が伴われることになる。
+◎
+Any same-origin URL (including blob: URLs) can be used. data: URLs can also be used, but they create a worker with an opaque origin.
+</p>
+	</li>
+	<li>
+%外側~port ~LET %外側~設定群 の`~Realm$enVに属する`新たな$ `MessagePort$I
+◎
+Let worker be a new SharedWorker object.
+◎
+Let outside port be a new MessagePort in outside settings's Realm.
+</li>
+	<li>
+コレの `port$mW 属性 ~SET %外側~port
+◎
+Assign outside port to the port attribute of worker.
+</li>
+	<li>
+%~call元は~secureな文脈？ ~LET ［
+次が満たされるならば ~T ／
+~ELSE_ ~F
+］
+⇒
+%外側~設定群 は`~secureな文脈$enVである
+◎
+Let callerIsSecureContext be true if outside settings is a secure context; otherwise, false.
+</li>
+	<li>
+<p>
+`共用~worker~manager$に，次に与える`手続きを~enqueueする$：
+◎
+Enqueue the following steps to the shared worker manager:
+</p>
+		<ol>
+			<li>
+<p>
+~IF［
+次の両者とも満たす `SharedWorkerGlobalScope$I ~obj %O は存在する
+］…
+◎
+Let worker global scope be null.
+</p>
+
+				<ul>
+					<li>
+<div class="p">
+<p>
+%O は次をすべてを満たす：
+</p>
+
+<ul ><li>%O の`~close中~flag$ ~EQ ~F
+</li><li>( %O の`構築子~生成元$wG, %外側~設定群 の`生成元$enV ) は，`同一-生成元$である
+</li><li>( %O の`構築子~url$wG, %~URL~record ) は，`同等な~URL$である
+</li><li>%O の`名前$wG ~EQ %options[ `name^l ]
+</li></ul>
+
+◎
+If there exists a SharedWorkerGlobalScope object whose closing flag is false, constructor origin is same origin with outside settings's origin, constructor url equals urlRecord, and name equals the value of options's name member, then set worker global scope to that SharedWorkerGlobalScope object.
+</div>
+
+<p class="note">注記：
+`data$sc ~URLは、`不透明な生成元$が伴われる~workerを作成することになる。
+`構築子~生成元$wG, `構築子~url$wG の両者とも比較されるので，同じ `data$sc ~URLを利用して ある`生成元$の中で同じ `SharedWorkerGlobalScope$I ~objを取得できるが、`同一-生成元$の制約を迂回することはできない。
+◎
+data: URLs create a worker with an opaque origin. Both the constructor origin and constructor url are compared so the same data: URL can be used within an origin to get to the same SharedWorkerGlobalScope object, but cannot be used to bypass the same origin restriction.
+</p>
+
+					</li>
+					<li>
+<p>
+~UAは、次を許容しないように環境設定されてはいない
+⇒
+%O が表現する~workerと［［
+`設定群~obj$ ~EQ %外側~設定群
+］なる`~script$たち
+］との間の通信
+◎
+If worker global scope is not null, but the user agent has been configured to disallow communication between the worker represented by the worker global scope and the scripts whose settings object is outside settings, then set worker global scope to null.
+</p>
+
+<p class="note">注記：
+例えば~UAが開発~mode下にあり、そこでは 特定0の`~top-level閲覧文脈$が 他のすべての~pageから隔離されていて、その開発~mode下の~scriptからは，通常の閲覧~modeで走っている~workerへ接続するのは阻止されているときなど。
+◎
+For example, a user agent could have a development mode that isolates a particular top-level browsing context from all other pages, and scripts in that development mode could be blocked from connecting to shared workers running in the normal browser mode.
+</p>
+					</li>
+				</ul>
+<p>
+…ならば：
+◎
+↓</p>
+				<ol>
+					<li>
+%~worker大域~scope ~LET 前述に該当した %O
+【該当するものは複数あり得るかも？】
+◎
+↑</li>
+					<li>
+<p>
+~IF［
+%~worker大域~scope の`種別$wG ~NEQ %options[ `type^l ]
+］~OR［
+%~worker大域~scope の`資格証$wG ~NEQ %options[ `credentials^l ]
+］：
+</p>
+						<ol>
+							<li>
+次を走らす`~taskを~queueする$
+⇒
+【コレに向けて】名前 `error$et の`~eventを発火する$
+</li>
+							<li>
+~RET
+</li>
+						</ol>
+◎
+If worker global scope is not null, then check if worker global scope's type and credentials match the options values. If not, queue a task to fire an event named error and abort these steps.
+◎
+If worker global scope is not null, then run these subsubsteps:
+</li>
+					<li>
+%設定群~obj ~LET %~worker大域~scope に`関連な設定群~obj$
+◎
+Let settings object be the relevant settings object for worker global scope.
+</li>
+					<li>
+%~workerは~secureな文脈？ ~LET ［
+次が満たされるならば ~T ／
+~ELSE_ ~F
+］
+⇒
+%設定群~obj は`~secureな文脈$enVである
+◎
+Let workerIsSecureContext be true if settings object is a secure context; otherwise, false.
+</li>
+					<li>
+<p>
+~IF［
+%~workerは~secureな文脈？ ~NEQ %~call元は~secureな文脈？
+］：
+</p>
+						<ol>
+							<li>
+次を走らす`~taskを~queueする$
+⇒
+コレに向けて，名前 `error$et の`~eventを発火する$
+</li>
+							<li>
+~RET
+</li>
+					</ol>
+`SECURE-CONTEXTS$r
+◎
+If workerIsSecureContext is not callerIsSecureContext, then queue a task to fire an event named error at worker and abort these steps. [SECURE-CONTEXTS]
+</li>
+					<li>
+コレを %~worker大域~scope に結付ける
+◎
+Associate worker with worker global scope.
+</li>
+					<li>
+%内側~port ~LET %設定群~obj の`~Realm$enVに属する`新たな$ `MessagePort$I
+◎
+Let inside port be a new MessagePort in settings object's Realm.
+</li>
+					<li>
+`~portを連絡する$( %外側~port, %内側~port )
+◎
+Entangle outside port and inside port.
+</li>
+					<li>
+<p>
+`~DOM操作~task源$から，次を走らす`~taskを~queueする$
+⇒
+%~worker大域~scope に向けて，名前 `connect$et の`~eventを発火する$
+— `MessageEvent$I を利用し，次のように初期化して
+⇒＃
+`data$m 属性 ~SET 空~文字列,
+`ports$m 属性 ~SET %内側~port のみを含む新たな`凍結d配列$,
+`source$m 属性 ~SET %内側~port
+
+◎
+Queue a task, using the DOM manipulation task source, to fire an event named connect at worker global scope, using MessageEvent, with the data attribute initialized to the empty string, the ports attribute initialized to a new frozen array containing only inside port, and the source attribute initialized to inside port.
+</li>
+					<li>
+%~worker大域~scope の`所有者~集合$wGに［
+%外側~設定群 から与えられる，`関連な所有者として追加するもの$
+］を`付加する$set
+◎
+Append the relevant owner to add given outside settings to worker global scope's owner set.
+</li>
+				</ol>
+			</li>
+			<li>
+~ELSE
+⇒
+`並列的$に，`~workerを走らす$(
+コレ,
+%~URL~record,
+%外側~設定群,
+%外側~port,
+%options
+)
+◎
+Otherwise, in parallel, run a worker given worker, urlRecord, outside settings, outside port, and options.
+</li>
+		</ol>
+<p>
+◎
+Return worker.
+</p>
+	</li>
+</ol>
+</div>
+
+			</section>
+		</section>
+		<section id="navigator.hardwareconcurrency">
+<h4 title="Concurrent hardware capabilities">10.2.7. 同時的~hardware能力</h4>
+
+<pre class="idl">
+interface mixin `NavigatorConcurrentHardware@I {
+  readonly attribute unsigned long long `hardwareConcurrency$m;
+};
+</pre>
+
+<dl class="domintro">
+	<dt>%self . `navigator$m . `hardwareConcurrency$m</dt>
+	<dd>
+~UAに可用になり得る論理CPU数を返す。
+◎
+Returns the number of logical processors potentially available to the user agent.
+</dd>
+</dl>
+
+<div class="algo">
+<p>
+~FINGERPRINTING
+`hardwareConcurrency@m
+取得子は：
+◎
+(This is a tracking vector.)
+The navigator.hardwareConcurrency attribute's getter must＼
+</p>
+<ul>
+	<li>
+1 以上, ［
+~UAに可用になり得る論理CPU数
+］以下の整数を返す
+— ~UAがこれを決定できない場合は 1 を返すとする。
+◎
+return a number between 1 and the number of logical processors potentially available to the user agent. If this cannot be determined, the getter must return 1.
+</li>
+	<li>
+~UAは、［
+特有な制限sがある場合（作成できる `Worker$I 数の上限など）や，指紋収集の可能性を制限したいと欲するとき
+］に限って，可用な論理CPU数としてより低い値を公開するべきである。
+<!-- err toward -->
+◎
+User agents should err toward exposing the number of logical processors available, using lower values only in cases where there are user-agent specific limits in place (such as a limitation on the number of workers that can be created) or when the user agent desires to limit fingerprinting possibilities.
+</li>
+</ul>
+</div>
+
+		</section>
+	</section>
+	<section id="apis-available-to-workers">
+<h2 title="APIs available to workers">10.3. ~workerから可用な~API</h2>
+
+		<section id="importing-scripts-and-libraries">
+<h3 title="Importing scripts and libraries">10.3.1. ~script／~libraryの取込み</h3>
+
+<div class="algo">
+`WorkerGlobalScope$I ~objの
+`importScripts(urls)@m
+~method~手続きは
+⇒
+`~scriptを~worker大域~scopeの中に取込む$( コレ, %urls )
+◎
+When a script invokes the importScripts(urls) method on a WorkerGlobalScope object, the user agent must import scripts into worker global scope given this WorkerGlobalScope object and urls.
+</div>
+
+<div class="algo">
+<p>
+`~scriptを~worker大域~scopeの中に取込む@
+ときは、所与の
+⇒＃
+`WorkerGlobalScope$I ~obj %~worker大域~scope,
+`sequence&lt;DOMString&gt;^I 型~値 %urls,
+◎終
+に対し，次の手続きを走らすモノトスル
+— この手続きには、任意選択で`~fetchを遂行する$~hookを給して，~custom化してもヨイ （供された場合、`~workerが取込んだ古典~scriptを~fetchする$ときに利用される）：
+◎
+To import scripts into worker global scope, given a WorkerGlobalScope object worker global scope and a sequence&lt;DOMString&gt; urls, run these steps. The algorithm may optionally be customized by supplying custom perform the fetch hooks, which if provided will be used when invoking fetch a classic worker-imported script.
+</p>
+
+<ol>
+	<li>
+~IF［
+%~worker大域~scope の`種別$wG ~EQ `module^l
+］
+⇒
+~THROW `TypeError^E
+◎
+If worker global scope's type is "module", throw a TypeError exception.
+</li>
+	<li>
+%設定群~obj ~LET `現在の設定群~obj$
+◎
+Let settings object be the current settings object.
+</li>
+	<li>
+~IF［
+%urls は空である
+］
+⇒
+~RET
+◎
+If urls is empty, return.
+</li>
+	<li>
+%~url~list ~LET 空~list
+◎
+↓</li>
+	<li>
+<p>
+%urls 内の ~EACH ( %~url ) に対し：
+</p>
+		<ol>
+			<li>
+%~url ~SET %~url を %設定群~obj に`相対的に構文解析-$した`結果の~URL~record$
+</li>
+			<li>
+~IF［
+%~url ~EQ `失敗^i
+］
+⇒
+~THROW `SyntaxError^E
+</li>
+			<li>
+%~url~list に %~url を付加する
+</li>
+		</ol>
+◎
+Parse each value in urls relative to settings object. If any fail, throw a "SyntaxError" DOMException.
+</li>
+	<li>
+<p>
+%~url~list 内の ~EACH ( %url ) に対し：
+◎
+For each url in the resulting URL records, run these substeps:
+</p>
+		<ol>
+			<li>
+%~script ~LET 
+`~workerが取込んだ古典~scriptを~fetchする$( %url, %設定群~obj )
+— `~fetchを遂行する$ ~custom手続きが供されていれば それも渡す
+（例外~投出あり）
+◎
+Fetch a classic worker-imported script given url and settings object, passing along any custom perform the fetch steps provided. If this succeeds, let script be the result. Otherwise, rethrow the exception.
+</li>
+			<li>
+<p>
+`古典~scriptを走らす$( %~script, %~errorは再投出する ~SET ~T )
+◎
+Run the classic script script, with the rethrow errors argument set to true.
+</p>
+
+<div class="note">
+<p>注記：
+~scriptは、次のいずれかが生じるまで走らすことになる：
+</p>
+
+<ul ><li>普通に返った
+</li><li>構文解析-に失敗した
+</li><li>投出された例外を~catchしなかった
+</li><li>`~workerが終了され$たため，`尚早に中止され$た
+</li></ul>
+◎
+script will run until it either returns, fails to parse, fails to catch an exception, or gets prematurely aborted by the terminate a worker algorithm defined above.
+</div>
+
+<p>
+［
+~scriptから例外が投出された ／
+~scriptは`尚早に中止され$た
+］ときは
+【普通に返らなかった場合】
+⇒
+この手続きすべてを中止した上で、~call元~の~scriptにて，その［
+例外／中止-
+］の処理を継続させる
+◎
+If an exception was thrown or if the script was prematurely aborted, then abort all these steps, letting the exception or aborting continue to be processed by the calling script.
+</p>
+			</li>
+		</ol>
+	</li>
+</ol>
+
+<p class="note">注記：
+<cite>Service Workers</cite> 
+仕様 `SW$r は、`~fetchを遂行する$ ~hookに自前の~optionを与えて この~algoを走らす仕様の例である。
+◎
+Service Workers is an example of a specification that runs this algorithm with its own options for the perform the fetch hook. [SW]
+</p>
+</div>
+
+		</section>
+		<section id="the-workernavigator-object">
+<h3 title="The WorkerNavigator interface">10.3.2. `WorkerNavigator^I ~interface</h3>
+
+<div class="algo">
+`WorkerGlobalScope$I ~interfaceの
+`navigator@m
+取得子~手続きは、~UA（~client）の同一性と状態を表現する，
+`WorkerNavigator$I ~interfaceの~instanceを返す
+◎
+The navigator attribute of the WorkerGlobalScope interface must return an instance of the WorkerNavigator interface, which represents the identity and state of the user agent (the client):
+</div>
+
+<pre class="idl">
+[Exposed=Worker]
+interface `WorkerNavigator@I {};
+`WorkerNavigator$I includes `NavigatorID$I;
+`WorkerNavigator$I includes `NavigatorLanguage$I;
+`WorkerNavigator$I includes `NavigatorOnLine$I;
+`WorkerNavigator$I includes `NavigatorConcurrentHardware$I;
+</pre>
+
+		</section>
+		<section id="worker-locations">
+<h3 title="The WorkerLocation interface">10.3.3. `WorkerLocation^I ~interface</h3>
+
+<pre class="idl">
+[Exposed=Worker]
+interface `WorkerLocation@I {
+  stringifier readonly attribute USVString `href$m;
+  readonly attribute USVString `origin$m;
+  readonly attribute USVString `protocol$m;
+  readonly attribute USVString `host$m;
+  readonly attribute USVString `hostname$m;
+  readonly attribute USVString `port$m;
+  readonly attribute USVString `pathname$m;
+  readonly attribute USVString `search$m;
+  readonly attribute USVString `hash$m;
+};
+</pre>
+
+<p>
+各 `WorkerLocation$I ~objには、［
+`WorkerGlobalScope$I ~objである
+`~worker大域~scope@
+］が結付けられる。
+◎
+A WorkerLocation object has an associated WorkerGlobalScope object (a WorkerGlobalScope object).
+</p>
+
+<p>
+この節を通して、
+`url@V
+は，当の `WorkerLocation$I ~objの`~worker大域~scope$の`~url$wGを表すとする。
+◎
+↓</p>
+
+<div class="algo">
+`href@m
+取得子~手続きは
+⇒
+~RET `~URLを直列化する$( `url$V )
+◎
+The href attribute's getter must return the associated WorkerGlobalScope object's url, serialized.
+</div>
+
+<div class="algo">
+`origin@m
+取得子~手続きは
+⇒
+~RET `生成元を直列化する$( `url$V の`生成元$url )
+◎
+The origin attribute's getter must return the serialization of the associated WorkerGlobalScope object's url's origin.
+</div>
+
+<div class="algo">
+`protocol@m
+取得子~手続きは
+⇒
+~RET 次を順に連結した結果
+⇒＃
+`url$V の`~scheme$url,
+`:^l
+◎
+The protocol attribute's getter must return the associated WorkerGlobalScope object's url's scheme, followed by ":".
+</div>
+
+<div class="algo">
+<p>
+`host@m
+取得子~手続きは：
+◎
+The host attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+%host ~LET `url$V の`~host$url
+◎
+↓</li>
+	<li>
+~IF［
+%host ~EQ ~NULL
+］
+⇒
+~RET 空~文字列
+◎
+Let url be the associated WorkerGlobalScope object's url.
+◎
+If url's host is null, return the empty string.
+</li>
+	<li>
+%host ~LET `~hostを直列化する$( %host )
+◎
+↓</li>
+	<li>
+%port ~LET `url$V の`~port$url
+◎
+↓</li>
+	<li>
+~IF［
+%port ~EQ ~NULL
+］
+⇒
+~RET %host
+◎
+If url's port is null, return url's host, serialized.
+</li>
+	<li>
+<p>
+~RET 次を順に連結した結果
+⇒＃
+%host,
+`:^l,
+`整数を直列化する$( %port )
+◎
+Return url's host, serialized, followed by ":" and url's port, serialized.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`hostname@m
+取得子~手続きは：
+◎
+The hostname attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+%host ~LET `url$V の`~host$url
+◎
+Let host be the associated WorkerGlobalScope object's url's host.
+</li>
+	<li>
+~IF［
+%host ~EQ ~NULL
+］
+⇒
+~RET 空~文字列
+◎
+If host is null, return the empty string.
+</li>
+	<li>
+~RET `~hostを直列化する$( %host )
+◎
+Return host, serialized.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`port@m
+取得子~手続きは：
+◎
+The port attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+%port ~LET `url$V の`~port$url
+◎
+Let port be the associated WorkerGlobalScope object's url's port.
+</li>
+	<li>
+~IF ［
+%port ~EQ ~NULL 
+］
+⇒
+~RET 空~文字列
+◎
+If port is null, return the empty string.
+</li>
+	<li>
+~RET `整数を直列化する$( %port )
+◎
+Return port, serialized.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`pathname@m
+取得子~手続きは：
+◎
+The pathname attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+~IF［
+`url$V の`基底~URL不可用~flag$url ~EQ ~T
+］
+⇒
+~RET `url$V の`~path$url内の最初の文字列
+◎
+Let url be the associated WorkerGlobalScope object's url.
+◎
+If url's cannot-be-a-base-URL flag is set, return the first string in url's path.
+</li>
+	<li>
+~RET 次を順に連結した結果
+⇒＃
+`/^l,
+`url$V の`~path$url内の各~文字列（空~文字列も含め）を， `/^l で区切って順に連結した結果
+◎
+Return "/", followed by the strings in url's path (including empty strings), separated from each other by "/".
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`search@m
+取得子~手続きは：
+◎
+The search attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+%query ~LET `url$V の`~query$url
+◎
+Let query be the associated WorkerGlobalScope object's url's query.
+</li>
+	<li>
+~IF［
+%query ~IN { ~NULL, 空~文字列 }
+］
+⇒
+~RET 空~文字列
+◎
+If query is either null or the empty string, return the empty string.
+</li>
+	<li>
+~RET 次を順に連結した結果
+⇒＃
+`?^l,
+%query
+◎
+Return "?", followed by query.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`hash@m
+取得子~手続きは：
+◎
+The hash attribute's getter must run these steps:
+</p>
+<ol>
+	<li>
+%fragment ~LET `url$V の`素片$url
+◎
+Let fragment be the associated WorkerGlobalScope object's url's fragment.
+</li>
+	<li>
+~IF［
+%fragment ~IN { ~NULL, 空~文字列 }
+］
+⇒
+~RET 空~文字列
+◎
+If fragment is either null or the empty string, return the empty string.
+</li>
+	<li>
+~RET 次を順に連結した結果
+⇒＃
+`#^l,
+%fragment
+◎
+Return "#", followed by fragment.
+</li>
+</ol>
+</div>
+
+		</section>
+	</section>
+</section>
+</main>

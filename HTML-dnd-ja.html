@@ -1,0 +1,4050 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — Drag and drop （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 'tE':
+case 'tD':
+case 'op':
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'a':
+	text = text.slice(text.indexOf('.') + 1);
+	break;
+case 'h':
+	text = `<code class="header">${text}</code>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+●●options
+
+spec_date:2020-09-02
+trans_update:2020-08-19
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/dnd.html
+site_nav:uievents,html
+nav_prev:HTMLinteraction
+nav_next:BROWSERS
+trans_1st_pub:2016-03-24
+
+
+●●class_map
+e:element
+a:attr
+et:event-type
+ps:pseudo
+P:production
+p:property
+st:attr-state
+css:css
+v:value
+E:error
+uc:unicode-category
+h:header
+cm:comment
+
+●●tag_map
+I:code
+m:code
+E:code
+hd:code
+c:code
+e:code
+a:code
+et:code
+ps:code
+st:span
+h:code
+P:code
+p:code
+css:code
+uc:span
+V:var
+v:code
+cm:span
+i:i
+
+●●original_id_map
+
+●●mdn_urls
+datatransfer:API/DataTransfer
+datatransferitem:API/DataTransferItem
+datatransferitemlist:API/DataTransferItemList
+dragevent:API/DragEvent
+	drageventinit:API/DragEventInit
+	functionstringcallback:API/FunctionStringCallback
+
+event-dnd-drag:Events/drag
+event-dnd-dragend:Events/dragend
+event-dnd-dragenter:Events/dragenter
+event-dnd-dragleave:Events/dragleave
+event-dnd-dragover:Events/dragover
+event-dnd-dragstart:Events/dragstart
+event-dnd-drop:Events/drop
+
+the-draggable-attribute:HTML/Global_attributes/draggable
+
+●●link_map
+
+I.DataTransfer:#datatransfer
+I.DataTransferItem:#datatransferitem
+I.DataTransferItemList:#datatransferitemlist
+I.DragEvent:#dragevent
+I.DragEventInit:#drageventinit
+I.Element:~DOM4#interface-element
+I.Document:~HTMLdom#document
+I.File:~FILEAPI#file
+I.FileList:~FILEAPI#filelist-section
+I.FunctionStringCallback:#functionstringcallback
+I.MouseEvent:~UIEVENTS#mouseevent
+I.MouseEventInit:~UIEVENTS#dictdef-mouseeventinit
+I.Text:~DOM4#interface-text
+E.InvalidStateError:~WEBIDL#invalidstateerror
+E.NotSupportedError:~WEBIDL#notsupportederror
+
+■DOM
+m.new DataTransfer:#dom-datatransfer
+m.add:#dom-datatransferitemlist-add
+m.clear:#dom-datatransferitemlist-clear
+m.clearData:#dom-datatransfer-cleardata
+m.dataTransfer:#dom-dragevent-datatransfer
+m.draggable:#dom-draggable
+m.dropEffect:#dom-datatransfer-dropeffect
+m.effectAllowed:#dom-datatransfer-effectallowed
+m.files:#dom-datatransfer-files
+m.getAsFile:#dom-datatransferitem-getasfile
+m.getAsString:#dom-datatransferitem-getasstring
+m.getData:#dom-datatransfer-getdata
+m.getter:#dom-datatransferitemlist-item
+
+m.items:#dom-datatransfer-items
+m.kind:#dom-datatransferitem-kind
+m.length:#dom-datatransferitemlist-length
+
+m.remove:#dom-datatransferitemlist-remove
+m.setData:#dom-datatransfer-setdata
+m.setDragImage:#dom-datatransfer-setdragimage
+m.type:#dom-datatransferitem-type
+m.types:#dom-datatransfer-types
+	m.type:~FILEAPI#dfn-type
+m.relatedTarget:~UIEVENTS#dom-mouseevent-relatedtarget
+m.view:~UIEVENTS#dom-uievent-view
+m.dataset:~HTMLdom#dom-dataset
+
+m.~type0:~DOM4#dom-event-type
+m.bubbles:~DOM4#dom-event-bubbles
+m.isTrusted:~DOM4#dom-event-istrusted
+m.cancelable:~DOM4#dom-event-cancelable
+
+
+tE.all:#dom-datatransfer-effectallowed-all
+tE.copy:#dom-datatransfer-effectallowed-copy
+tE.copyLink:#dom-datatransfer-effectallowed-copylink
+tE.copyMove:#dom-datatransfer-effectallowed-copymove
+tE.link:#dom-datatransfer-effectallowed-link
+tE.linkMove:#dom-datatransfer-effectallowed-linkmove
+tE.move:#dom-datatransfer-effectallowed-move
+tE.none:#dom-datatransfer-effectallowed-none
+tE.uninitialized:#dom-datatransfer-effectallowed-uninitialized
+
+tD.copy:#dom-datatransfer-dropeffect-copy
+tD.link:#dom-datatransfer-dropeffect-link
+tD.move:#dom-datatransfer-dropeffect-move
+tD.none:#dom-datatransfer-dropeffect-none
+
+op.copy:#concept-current-drag-operation-copy
+op.link:#concept-current-drag-operation-link
+op.move:#concept-current-drag-operation-move
+op.none:#concept-current-drag-operation-none
+
+	■elem
+e.a:~HEtextlevel#the-a-element
+e.div:~HEgrouping#the-div-element
+e.img:~HEimages#the-img-element
+e.input:~HEinput#the-input-element
+e.object:~HEembed#the-object-element
+e.textarea:~HEforms#the-textarea-element
+
+	■attr
+a.contenteditable:~HTMLinteraction#attr-contenteditable
+a.draggable:#the-draggable-attribute
+a.href:~HTMLlinks#attr-hyperlink-href
+a.src:~HEimages#attr-img-src
+a.title:~HTMLdom#attr-title
+a.type:~HEinput#attr-input-type
+
+■event
+et.drag:#event-dnd-drag
+et.dragend:#event-dnd-dragend
+et.dragenter:#event-dnd-dragenter
+et.dragleave:#event-dnd-dragleave
+et.dragover:#event-dnd-dragover
+et.dragstart:#event-dnd-dragstart
+et.drop:#event-dnd-drop
+	et.blur:~HTMLindex#event-blur
+et.mousedown:~UIEVENTS#event-type-mousedown
+et.mousemove:~UIEVENTS#event-type-mousemove
+
+st.Email:~HEinput#email-state-(type=email)
+st.Number:~HEinput#number-state-(type=number)
+st.Password:~HEinput#password-state-(type=password)
+st.Search:~HEinput#text-(type=text)-state-and-search-state-(type=search)
+st.Tel:~HEinput#telephone-state-(type=tel)
+st.Text:~HEinput#text-(type=text)-state-and-search-state-(type=search)
+st.Url:~HEinput#url-state-(type=url)
+
+l.application/microdata+json:~HTMLiana#application/microdata+json
+l.application/octet-stream:~RFCx/rfc2046#section-4.5.1
+l.text/plain:~RFCx/rfc2046#section-4.1.3
+l.text/uri-list:~HTMLindex#text/uri-list
+
+	●
+~text編集-域:#_text-edit
+正規化-:#_normalize-a-format
+~drag操作oの最終回~手続き:#_the-last-DND-steps
+~drag操作oの継続~手続き:#_continuation-DND-steps
+取消され:#_DND-canceled
+
+現在の標的~要素:#current-target-element
+有index~propを決定-:#dom-datatransferitemlist-item
+x.有index~propを決定-:~WEBIDL#dfn-determine-the-value-of-an-indexed-property
+
+~DnD操作oが起動され:#initiate-the-drag-and-drop-operation
+起動され:#initiate-the-drag-and-drop-operation
+~drag~data~store:#drag-data-store
+1.~drag~data~store:#_drag-data-store
+
+~types配列:#concept-datatransfer-types
+
+dS.作成-:#create-a-drag-data-store
+dS.許容される効果state:#drag-data-store-allowed-effects-state
+dS.既定の~feedback:#drag-data-store-default-feedback
+dS.~bitmap:#drag-data-store-bitmap
+dS.~hot-spot座標:#drag-data-store-hot-spot-coordinate
+dS.~item~list:#drag-data-store-item-list
+
+dS.~mode:#drag-data-store-mode
+~store~mode:#_store-mode
+1.~store~mode:#_item-list-mode
+~item~mode:#_item-mode
+外部のもの:#_external
+
+i.保護d~mode:#concept-dnd-p
+i.読専~mode:#concept-dnd-ro
+i.可書~mode:#concept-dnd-rw
+i.不能化~mode:#_dnd-disabled
+
+
+~drag~data~item:#_drag-data-item
+~item:#_drag-data-item
+	＊dI.~drag~data~item種類:#the-drag-data-item-kind
+dI.種類:#the-drag-data-item-kind
+	＊dI.~kind:#the-drag-data-item-kind
+	＊dI.~drag~data~item型~文字列:#the-drag-data-item-type-string
+dI.型~文字列:#the-drag-data-item-type-string
+	~type:#the-drag-data-item-type-string
+dI.実data:#_the-drag-data-item-actual-data
+
+~DND~eventを発火する:#fire-a-dnd-event
+現在の~drag操作o:#current-drag-operation
+V.~source~node:#source-node
+V.被~drag~node~list:#list-of-dragged-nodes
+V.~store:#_store
+代替-選択肢:#concept-platform-dropeffect-override
+直の利用者~選択:#immediate-user-selection
+
+~ASCII小文字~化:~INFRA#ascii-lowercase
+~ASCII小文字~化する:~INFRA#ascii-lowercase
+連結する:~INFRA#string-concatenate
+
+~HTML要素:~HTMLINFRA#html-elements
+~live:~HTMLINFRA#live
+
+相対的に構文解析-:~HTMLurl#parse-a-url
+結果の~URL文字列:~HTMLurl#resulting-url-string
+
+列挙d属性:~HTMLcms#enumerated-attribute
+値なし用の既定:~HTMLcms#missing-value-default
+妥当でない値~用の既定:~HTMLcms#invalid-value-default
+
+文書:~HTMLdom#document
+~body要素:~HTMLdom#the-body-element-2
+閲覧文脈:~BROWSERS#browsing-context
+
+~taskを~queueする:~WAPI#queue-a-task
+~queueする:~WAPI#queue-a-task
+関連な大域~obj:~WAPI#concept-relevant-global
+
+表現-:~HTMLdom#represents
+
+絶対~URL:~URL1#absolute-url-string
+相対~URL:~URL1#relative-url-string
+~node文書:~DOM4#concept-node-document
+~tree順序:~DOM4#concept-tree-order
+範囲~obj:~DOM4#concept-range
+配送-:~DOM4#concept-event-dispatch
+~eventを作成-:~DOM4#concept-event-create
+取消d~flag:~DOM4#canceled-flag
+
+内在的~size:~CSSIMAGE#intrinsic-dimensions
+表示域:~CSS2VISUREN#viewport
+~CSS~pixel単位:~CSSVAL#px
+
+編集中の~host:~HTMLinteraction#editing-host
+編集-可能:~EXEC-COMMAND#editable
+	作動範囲:~EXEC-COMMAND#active-range
+選択を削除-:~EXEC-COMMAND#delete-the-selection
+
+~supportする~prop~index:~WEBIDL#dfn-supported-property-indices
+凍結d配列を作成する:~WEBIDLjs#dfn-create-frozen-array
+凍結d配列:~WEBIDL#dfn-frozen-array-type
+
+~MIME型:~MIMESNIFF#mime-type
+
+
+●●words_table1
+
+type0:type
+
+
+●●words_table
+
+	●DnD
+DND::::
+DnD:drag-and-drop::drag＆drop
+drag:
+	~drag可能:draggable
+	~drag対象:dragged
+drop:
+実data:actual data::実 data:実データ
+操作o:operation:操作
+可書:read/write::~
+保護d:protected::保護
+store::::ストア
+	格納
+種類:kind:~
+hot-spot::::
+bitmap::::ビットマップ
+
+選択-:select::~
+選択:selection::~
+編集中の:editing::~
+編集-:edit::~
+	編集-域:edit 域
+
+	下層:that underlies
+
+	●UI／CSS
+cursor::::カーソル
+pointing::::ポインタ指示
+	~scroll可能:scrollable
+copy::::コピー
+paste::::ペースト
+領域:region::~
+解放-:release::~
+入力方式:input modality:~
+押下げら:depressさ:~
+押下げて:depressして:~
+通過-:cross:~
+直の:immediate:~
+	押しながら:hold
+	medium
+
+	●IDL／構造／型／操作
+	list:sequence
+
+	●処理／event
+composed:
+標的:target::~::ターゲット
+
+	取消~可否:cancelable
+	成功しなかった:unsuccessful
+	成功した:successful
+	-:ongoing
+	-:effectively "skipping missed frames"
+	作動化され得る:potentially active
+	反復:iteration
+
+	●保安
+XSS:cross-site scripting:XSS
+特権:privilege::~
+同意t:consent:同意（または黙認）
+傍受-:intercept::~
+被害:victim::~
+
+	安全でない:unsafe
+	既知かつ安全:known-safe
+	安全~list:safelist
+	予期されない:unexpected
+
+	●仕様
+選択肢:option:~
+効果state:effect state:効果
+	であろう:likely
+	可用にされず:unavailable
+協調-:coordinate:~
+意向:intention:~
+仕様化-:specify:~
+規定-:dictate:~
+要覧:summary:~
+
+	-:ignore
+	特別に扱われる:special-cased
+	かもしれない／し得る:potentially
+	~~実際に:indeed
+	いくつあろうが:irrespective
+	~~注意を払う:take care
+	~~由来する:comes from
+	定める:state
+	したい:wish
+	極力努める:make a best-effort attempt
+	転化-:turn into
+	最後の機会:final chance
+	-:regardless
+
+	●未分類
+types:
+body:
+microdata:
+有効:valid::~
+始点:starting point:~
+終点:end point:~
+地点:point:~
+省略可:optional:~
+形:form:~
+連結-:concatenate::~
+読取れる:readできる::読み取れる
+現在:currently:~
+自動:auto:~
+
+	-:stop
+	-:separate
+	変更されないまま:left unchanged
+	missed frame
+	ふるいにかける:filter
+	-:label
+	時点:moment
+	:time
+	-:non-web
+	-:mouse-and-window
+	表:table
+	見える~~範囲:purview
+	長い:long
+	文脈依存:Varies
+	存在:
+	未知:-
+	正規化:-
+	become
+	選んだ:pick した
+	叩いた:hit した
+	巡回-:cycle through
+	戻-:back
+	渡-:pass
+	置く:put
+	伝えた:told
+	cell
+	going
+	~text編集~program:~word-processor
+	-:finished
+	-:possibilities
+	-:convert-to-URL
+	-:miss
+	-:anyway
+	-:caused
+	-:stood
+	-:subsequent
+	-:chain
+	-:matched
+	-:per
+	-:cell
+	3 種／:three
+
+	●指示詞
+現-:current:~
+前-:previous:~
+
+	全体:entirely
+	また別の:third
+	両方とも:both altogether
+	以前の:previous
+	側:side
+	次回:next
+	残りの部分:remainder
+	残りの部分:rest
+	末尾:end
+	最初に:originally
+	同じ行の:row
+	一列目:first column
+	二列目:second column
+	~~下方:lower
+	中間的な:intermediate／middle
+	指す:point
+	後続-:follow
+	最終的に:finally
+	次第:as soon as
+	まったく:particularly
+	終え／終わる:end
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる HTML 仕様の
+<a href="~SPEC_URL">§ Drag and drop</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+</head>
+<body>
+
+<header id="head">
+	<hgroup>
+<h1>Drag and drop</h1>
+
+	</hgroup>
+
+</header>
+
+<main id="MAIN" hidden>
+
+		<section id="_conventions">
+<h3>【この訳に固有の表記規約】</h3>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, ε, ~IF, ~THROW, コレ, 等々）の意味や定義の詳細は，~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+		</section>
+		<section id="dnd">
+<h2 title="Drag and drop">6.9. ~DnD</h2>
+
+<p>
+この節では、~eventに基づく~DnDの仕組みを定義する。
+◎
+This section defines an event-based drag-and-drop mechanism.
+</p>
+
+<p>
+この仕様は、実際の<em>~DnD操作o</em>
+【 “引きずって~~落とす”】
+が正確に何であるかは，定義しない：
+◎
+This specification does not define exactly what a drag-and-drop operation actually is.
+</p>
+
+<ul>
+	<li>
+~pointing装置を備える視覚-媒体では、~drag操作oは［
+`mousedown$et ~eventに後続する一連の `mousemove$et ~event
+］に対する既定~動作で，~drop操作oは~mouseを解放して誘発すること
+— にもなり得る。
+◎
+On a visual medium with a pointing device, a drag operation could be the default action of a mousedown event that is followed by a series of mousemove events, and the drop could be triggered by the mouse being released.
+</li>
+	<li>
+~pointing装置~以外の入力方式を利用する下で~DnD操作oを遂行するためには、利用者はおそらく，何を~dragして，どこへ~dropしたいか定めるため，自身の意向を明示的に指示する必要がある。
+◎
+When using an input modality other than a pointing device, users would probably have to explicitly indicate their intention to perform a drag-and-drop operation, stating what they wish to drag and where they wish to drop it, respectively.
+</li>
+</ul>
+
+<p>
+どう実装されていようが、~DnD操作oでは：
+◎
+However it is implemented, drag-and-drop operations＼
+</p>
+
+<ol>
+	<li>
+まず、始点が~~存在するモノトスル（例：
+~mouseが~clickされた所 ／
+~dragに先立って選択されていた［
+要素, または［
+選択~部分の開始-
+］］）。
+◎
+must have a starting point (e.g. where the mouse was clicked, or the start of the selection or element that was selected for the drag),＼
+</li>
+	<li>
+次に， 0 回以上の中間的な段が生じるモノトスル（例：［
+~drag中に~mouseが~~重なった要素 ／
+利用者がアリな~drop地点を巡回するに伴い，選んだ要素
+］に対し）。
+◎
+may have any number of intermediate steps (elements that the mouse moves over during a drag, or elements that the user picks as possible drop points as they cycle through possibilities), and＼
+</li>
+	<li>
+最後に、取消されるか, または
+終点が~~存在するモノトスル（例：
+~mouse~buttonが解放された所の要素 ／
+最終的に選択された要素
+）。
+終点は、~dropが生じる前のアリな~drop地点として，最後の要素が選択されるモノトスル（よって，操作oが取消されなかった場合、前項の中間的な段が 1 回は生じるモノトスル）。
+◎
+must either have an end point (the element above which the mouse button was released, or the element that was finally selected), or be canceled. The end point must be the last element selected as a possible drop point before the drop occurs (so if the operation is not canceled, there must be at least one element in the middle step).
+</li>
+</ol>
+
+			<section id="event-drag">
+<h3 title="Introduction">6.9.1. 序論</h3>
+
+~INFORMATIVE
+
+<p>
+要素を~drag可能にするためには、要素に `draggable$a 属性を付与した上で，
+`dragstart$et ~event用に~event~listenerを設定する。
+~dragされている~dataは、この~eventに~storeされる。
+◎
+To make an element draggable, give the element a draggable attribute, and set an event listener for dragstart that stores the data being dragged.
+</p>
+
+<div class="p">
+<p>
+~event~handlerは、概して，次をする必要がある：
+</p>
+
+<ol ><li>~drag対象が~text選択でないことを検査して，
+</li><li>~dataを `DataTransfer$I ~objの中に~storeして，
+</li><li>許容される効果（複製-, 移動-, ~link, これらの組合n）を設定する。
+</li></ol>
+
+◎
+The event handler typically needs to check that it's not a text selection that is being dragged, and then needs to store data into the DataTransfer object and set the allowed effects (copy, move, link, or some combination).
+</div>
+
+<div class="example">
+<p>
+例えば：
+◎
+For example:
+</p>
+
+<pre class="lang-html">
+&lt;p&gt;好きな果物は？&lt;/p&gt;
+&lt;ol ondragstart="dragStartHandler(event)"&gt;
+ &lt;li draggable="true" data-value="果物.林檎"&gt;りんご&lt;/li&gt;
+ &lt;li draggable="true" data-value="果物.蜜柑"&gt;みかん&lt;/li&gt;
+ &lt;li draggable="true" data-value="果物.桃"&gt;もも&lt;/li&gt;
+&lt;/ol&gt;
+&lt;script&gt;
+  var %internalDNDType
+      = 'text/x-example'; // `~siteに特有な何かに設定する^cm
+  function dragStartHandler(%event) {
+    if (%event.target instanceof HTMLLIElement) {
+      // `要素の data-value 属性を，~dragされる値に利用する：^cm
+      %event.dataTransfer.setData(
+          %internalDNDType,
+          %event.target.`dataset$m.value
+      );
+      %event.dataTransfer.effectAllowed
+          = 'move'; // `移動-のみ許容する^cm
+    } else {
+      %event.preventDefault(); // `選択の~dragは許容しない^cm
+    }
+  }
+&lt;/script&gt;
+</pre>
+
+<!-- 
+What fruits do you like?
+data-value="fruit-apple">Apples</li>
+data-value="fruit-orange">Oranges</li>
+data-value="fruit-pear">Pears</li>
+// set this to something specific to your site
+// use the element's data-value="" attribute as the value to be moving:
+// only allow moves
+// don't allow selection to be dragged
+
+-->
+
+</div>
+
+<hr>
+
+<p>
+~drop標的が~dropを受容するためには、次に挙げる~eventを~listenする必要がある。
+◎
+To accept a drop, the drop target has to listen to the following events:
+</p>
+
+<ol>
+	<li>
+`dragenter$et ~event~handlerは、その~eventを取消すことにより，~drop標的は~dropを受容する用意があり得るかどうかを報告する。
+◎
+The dragenter event handler reports whether or not the drop target is potentially willing to accept the drop, by canceling the event.
+</li>
+	<li>
+`dragover$et ~event~handlerは、~eventに結付けられている `DataTransfer$I の `dropEffect$m 属性を設定することにより，利用者に示されることになる~feedbackを指定する。
+この~eventも取消される必要がある。
+◎
+The dragover event handler specifies what feedback will be shown to the user, by setting the dropEffect attribute of the DataTransfer associated with the event. This event also needs to be canceled.
+</li>
+	<li>
+`drop$et ~event~handlerは、その~dropを受容するか却下するかの，最後の機会になる。
+~dropが受容された場合、~event~handlerは，標的~上で~drop操作oを遂行するモノトスル。
+~sourceが `dropEffect$m 属性の値を利用できるようにするためには、この~eventは取消される必要がある。
+他の場合、~drop操作oは却下される。
+【代わりに，~UAによる既定の動作が行われるであろう — ~dropされた~fileを開く，~textを~text~controlに挿入するなど。】
+◎
+The drop event handler has a final chance to accept or reject the drop. If the drop is accepted, the event handler must perform the drop operation on the target. This event needs to be canceled, so that the dropEffect attribute's value can be used by the source. Otherwise, the drop operation is rejected.
+</li>
+</ol>
+
+<div class="example">
+
+<p>
+例えば:
+◎
+For example:
+</p>
+
+<pre class="lang-html">
+&lt;p&gt;好みの果物を下に~dropしてください。&lt;/p&gt;
+&lt;ol ondragenter="dragEnterHandler(%event)" ondragover="dragOverHandler(%event)"
+    ondrop="dropHandler(%event)"&gt;
+&lt;/ol&gt;
+&lt;script&gt;
+  var %internalDNDType = 'text/x-example'; // `~siteに特有な何かに設定する^cm
+  function dragEnterHandler(%event) {
+    var %items = %event.dataTransfer.items;
+    for (var %i = 0; %i &lt; %items.length; ++i) {
+      var %item = %items[%i];
+      if (%item.kind == 'string' &amp;&amp; %item.type == %internalDNDType) {
+        %event.preventDefault();
+        return;
+      }
+    }
+  }
+  function dragOverHandler(%event) {
+    %event.dataTransfer.dropEffect = 'move';
+    %event.preventDefault();
+  }
+  function dropHandler(%event) {
+    var %li = document.createElement('li');
+    var data = %event.dataTransfer.getData(%internalDNDType);
+    if (%data == '果物.林檎') {
+      %li.textContent = 'りんご';
+    } else if (%data == '果物.蜜柑') {
+      %li.textContent = 'みかん';
+    } else if (%data == '果物.桃') {
+      %li.textContent = 'もも';
+    } else {
+      %li.textContent = '未知な果物';
+    }
+    %event.target.appendChild(%li);
+  }
+&lt;/script&gt;
+</pre>
+
+<!-- 
+<p>Drop your favorite fruits below:</p>
+  var internalDNDType = 'text/x-example'; // set this to something specific to 
+
+'fruit-apple'
+'Apples'
+'fruit-orange'
+'Oranges'
+'fruit-pear'
+'Pears'
+'Unknown Fruit'
+    }
+-->
+
+</div>
+
+<hr>
+
+<p>
+`dragend$et ~eventを利用すれば、元の要素（~dragされていたもの）を表示から除去できる。
+◎
+To remove the original element (the one that was dragged) from the display, the dragend event can be used.
+</p>
+
+<div class="example">
+
+<p>
+これまでの例で言えば、その~eventを取扱うために，元の~markupを更新することを意味する：
+◎
+For our example here, that means updating the original markup to handle that event:
+</p>
+
+<pre class="lang-html">
+&lt;p&gt;好きな果物は？&lt;/p&gt;
+&lt;ol ondragstart="dragStartHandler(%event)" ondragend="dragEndHandler(%event)"&gt;
+ // `...前と同じ...^cm
+&lt;/ol&gt;
+&lt;script&gt;
+  function dragStartHandler(%event) {
+    // `...前と同じ...^cm
+  }
+  function dragEndHandler(%event) {
+    if (%event.dataTransfer.dropEffect == 'move') {
+      // `~dragされている要素を除去する^cm
+      %event.target.parentNode.removeChild(%event.target);
+    }
+  }
+&lt;/script&gt;
+</pre>
+
+<!-- 
+<p>What fruits do you like?</p>
+<ol ondragstart="dragStartHandler(event)" ondragend="dragEndHandler(event)">
+ ...as before...
+</ol>
+<script>
+  function dragStartHandler(event) {
+    // ...as before...
+  }
+  function dragEndHandler(event) {
+    if (event.dataTransfer.dropEffect == 'move') {
+      // remove the dragged element
+      event.target.parentNode.removeChild(event.target);
+    }
+  }
+</script>
+ -->
+ 
+</div>
+
+		</section>
+		<section id="the-drag-data-store">
+<h3 title="The drag data store">6.9.2. ~drag~data~store</h3>
+
+<p>
+~DnD操作oの下層~dataは，
+`~drag~data~store@
+と呼ばれ、次に挙げる各種~情報からなる
+【括弧内には対応する IDL 属性も示す】
+：
+◎
+The data that underlies a drag-and-drop operation, known as the drag data store, consists of the following information:
+</p>
+
+<dl class="def-list">
+	<dt>`~item~list@dS （ `items$m ）</dt>
+	<dd class="trans-note">【
+原文による正式な呼称は “drag data store item list” 。
+この訳では， “drag data store” の部分は省略する（この~pageの中では、 “~item~list” が他の意味に用いられることはない）。
+他の項目についても同様。
+】</dd>
+	<dd>
+<p>
+~dragされた~dataを表現している一連の
+`~item@
+（ ~drag~data~item ）からなる~listであり，各~itemは次の情報からなる：
+◎
+A drag data store item list, which is a list of items representing the dragged data, each consisting of the following information:
+</p>
+
+		<dl class="def-list">
+			<dt>`種類@dI （ `kind$m ）
+◎
+The drag data item kind
+</dt>
+			<dd>
+<p>
+~dataの種類を表す。
+次のいずれかを値にとる：
+</p>
+
+<dl class="def-list"><dt>`Text^i
+</dt><dd>~text
+</dd><dt>`File^i
+</dt><dd>~file名も伴われる~binary~data。
+</dd></dl>
+
+◎
+The kind of data:
+◎
+• Text
+•• Text.
+• File
+•• Binary data with a file name.
+</dd>
+			<dt>`型~文字列@dI （ `type$m ）
+◎
+The drag data item type string
+</dt>
+			<dd>
+~dataの型や形式を与える~Unicode文字列であり、一般には`~MIME型$で与えられる。
+`~MIME型$でない一部の値は、旧来の理由のため，特別に扱われる。
+~APIでは`~MIME型$の利用は施行されないので、他の値も利用できる。
+いずれにせよ、値は~APIにより`~ASCII小文字~化$される。
+◎
+A Unicode string giving the type or format of the data, generally given by a MIME type. Some values that are not MIME types are special-cased for legacy reasons. The API does not enforce the use of MIME types; other values can be used as well. In all cases, however, the values are all converted to ASCII lowercase by the API.
+</dd>
+			<dd>
+［
+`種類$dI ~EQ `Text^i
+］なる`~item$に対しては、その`型~文字列$dIごとに 1 個までとする制限-がある。
+【すなわち，この種類の~itemの`型~文字列$dIは、同じ`~item~list$dS内で一意になる。】
+◎
+There is a limit of one text item per item type string.
+</dd>
+
+			<dt>`実data@dI
+◎
+The actual data
+</dt>
+			<dd>
+~Unicodeまたは~binary文字列であり，
+一部の事例では、`~item$の`種類$dIに応じて，~file名（それ自体も~Unicode文字列）も伴われる。
+◎
+A Unicode or binary string, in some cases with a file name (itself a Unicode string), as per the drag data item kind.
+</dd>
+		</dl>
+
+<p>
+`~item~list$dSにおける各`~item$の順序は、`~item$が~listに追加された順序になる。
+◎
+The drag data store item list is ordered in the order that the items were added to the list; most recently added last.
+</p>
+	</dd>
+
+	<dt>`既定の~feedback@dS （ `dropEffect$m ）
+◎
+↓</dt>
+	<dd>
+~UAにより定義される，既定の~feedbackを~~供する情報。
+次項とともに，~drag中に~UI~feedbackを生成するときに利用される。
+◎
+The following information, used to generate the UI feedback during the drag:
+◎
+User-agent-defined default feedback information, known as the drag data store default feedback.
+</dd>
+
+	<dt>`~bitmap@dS と `~hot-spot座標@dS （ `setDragImage()$m ）
+◎
+↓</dt>
+	<dd>
+順に、~bitmap画像, および
+その中のある地点を指す座標。
+いずれも省略可。
+◎
+Optionally, a bitmap image and the coordinate of a point within that image, known as the drag data store bitmap and drag data store hot spot coordinate.
+</dd>
+	<dd class="trans-note">【
+例えば~cursor画像と，その~hot-spot。
+】</dd>
+
+	<dt>`~mode@dS
+◎
+A drag data store mode, which is one of the following:
+</dt>
+	<dd>
+<p>
+`~drag~data~store$に対し行える操作oは、~modeに依存する。
+次のいずれかを値にとる：
+◎
+↓</p>
+
+		<dl class="def-list">
+			<dt>`可書~mode@i
+◎
+Read/write mode
+</dt>
+			<dd>
+`dragstart$et ~event~~専用。
+この~modeの下では、新たな~dataを`~item~list$dSに追加できる。
+◎
+For the dragstart event. New data can be added to the drag data store.
+</dd>
+			<dt>`読専~mode@i
+◎
+Read-only mode
+</dt>
+			<dd>
+`drop$et ~event~~専用。
+この~modeの下では、`~item~list$dS内の各`~item$を，その`実data$dIも含め読取れるが，新たな~dataは追加できない。
+◎
+For the drop event. The list of items representing dragged data can be read, including the data. No new data can be added.
+</dd>
+
+			<dt>`保護d~mode@i
+◎
+Protected mode
+</dt>
+			<dd>
+他のすべての~event用。
+この~modeの下では、`~item~list$dS内の各`~item$の形式と種類は，列挙できるが、それらの`実data$dIは可用にされず，新たな~dataも追加できない。
+◎
+For all other events. The formats and kinds in the drag data store list of items representing dragged data can be enumerated, but the data itself is unavailable and no new data can be added.
+</dd>
+		</dl>
+	</dd>
+
+	<dt>`許容される効果state@dS （ `effectAllowed$m ）
+◎
+A drag data store allowed effects state, which is a string.
+</dt>
+	<dd>
+文字列。
+【<a href="#_allowed-effect">詳細</a>】
+</dd>
+</dl>
+
+<div class="algo">
+<p>
+どの`~drag~data~store$も，その
+`作成-@dS
+時には、次のように初期化されるモノトスル
+⇒＃
+`~item~list$dS ~SET 空,
+`既定の~feedback$dS ~SET ε（なし）,
+`~bitmap$dS ~SET ε,
+`~hot-spot座標$dS ~SET ε,
+`~mode$dS ~SET `保護d~mode$i,
+`許容される効果state$dS ~SET `uninitialized$tE
+◎
+When a drag data store is created, it must be initialized such that its drag data store item list is empty, it has no drag data store default feedback, it has no drag data store bitmap and drag data store hot spot coordinate, its drag data store mode is protected mode, and its drag data store allowed effects state is the string "uninitialized".
+</div>
+
+		</section>
+		<section id="the-datatransfer-interface">
+<h3 title="The DataTransfer interface">6.9.3. `DataTransfer^I ~interface</h3>
+
+<p>
+`DataTransfer$I ~objは、~DnD操作oの下層`~drag~data~store$を，（ `DragEvent$I ~obj上の `dataTransfer$m 属性を通して）公開する。
+◎
+DataTransfer objects are used to expose the drag data store that underlies a drag-and-drop operation.
+</p>
+
+<pre class="idl">
+[Exposed=Window]
+interface `DataTransfer@I {
+  <a href="#dom-datatransfer">constructor</a>();
+
+  attribute DOMString `dropEffect$m;
+  attribute DOMString `effectAllowed$m;
+
+  [SameObject] readonly attribute `DataTransferItemList$I `items$m;
+
+  undefined `setDragImage$m(Element %image, long %x, long %y);
+
+  /* old interface */
+  readonly attribute FrozenArray&lt;DOMString&gt; `types$m;
+  DOMString `getData$m(DOMString %format);
+  undefined `setData$m(DOMString %format, DOMString %data);
+  undefined `clearData$m(optional DOMString %format);
+  [SameObject] readonly attribute `FileList$I `files$m;
+};
+</pre>
+
+<dl class="domintro">
+	<dt>%dataTransfer = `new DataTransfer()$m</dt>
+	<dd>
+空な`~drag~data~store$を伴う，新たな `DataTransfer$I ~objを作成する。
+◎
+Creates a new DataTransfer object with an empty drag data store.
+</dd>
+
+	<dt>%dataTransfer . `dropEffect$m [ = %value ]</dt>
+	<dd>
+現在~選択されている操作oの種類を返す。
+操作oの種類が `effectAllowed$m 属性に許容されるものでない場合、操作oは失敗することになる。
+◎
+Returns the kind of operation that is currently selected. If the kind of operation isn't one of those that is allowed by the effectAllowed attribute, then the operation will fail.
+</dd>
+	<dd>
+設定して、選択されている操作oを変更できる。
+◎
+Can be set, to change the selected operation.
+</dd>
+	<dd>
+アリな値は
+⇒
+`none$tD, `copy$tD, `link$tD, `move$tD
+◎
+The possible values are "none", "copy", "link", and "move".
+</dd>
+
+	<dt>%dataTransfer . `effectAllowed$m [ = %value ]</dt>
+	<dd>
+許容されている操作oの種類を返す。
+◎
+Returns the kinds of operations that are to be allowed.
+</dd>
+	<dd>
+（ `dragstart$et ~eventの間に）設定して、許容される操作oを変更できる。
+◎
+Can be set (during the dragstart event), to change the allowed operations.
+</dd>
+	<dd>
+アリな値は
+⇒
+`none$tE, `copy$tE, `copyLink$tE, `copyMove$tE, `link$tE, `linkMove$tE, `move$tE, `all$tE, `uninitialized$tE,
+◎
+The possible values are "none", "copy", "copyLink", "copyMove", "link", "linkMove", "move", "all", and "uninitialized",
+</dd>
+
+	<dt>%dataTransfer . `items$m</dt>
+	<dd>
+~drag~dataが伴われている
+`DataTransferItemList$I ~objを返す。
+◎
+Returns a DataTransferItemList object, with the drag data.
+</dd>
+
+	<dt>%dataTransfer . `setDragImage(element, x, y)$m</dt>
+	<dd>
+所与の要素を~drag~feedbackを更新するために利用する
+— 以前に指定された~feedbackは置換される。
+◎
+Uses the given element to update the drag feedback, replacing any previously specified feedback.
+</dd>
+
+	<dt>%dataTransfer . `types$m</dt>
+	<dd>
+`dragstart$et ~eventにて設定された形式を~listする`凍結d配列$を返す。
+加えて，何らかの~fileが~dragされている場合、 ~list内の型のうちいずれかは文字列 `Files^l になる。
+◎
+Returns a frozen array listing the formats that were set in the dragstart event. In addition, if any files are being dragged, then one of the types will be the string "Files".
+</dd>
+
+	<dt>%data = %dataTransfer . `getData(format)$m</dt>
+	<dd>
+指定された形式の~dataを返す。
+そのような形式の~dataがなければ空~文字列を返す。
+◎
+Returns the specified data. If there is no such data, returns the empty string.
+</dd>
+
+	<dt>%dataTransfer . `setData(format, data)$m</dt>
+	<dd>
+指定された形式の~dataを追加する。
+◎
+Adds the specified data.
+</dd>
+
+	<dt>%dataTransfer . `clearData( [ format ] )$m</dt>
+	<dd>
+指定された形式の~dataを除去する。
+引数が省略された場合はすべての~dataを除去する。
+◎
+Removes the data of the specified formats. Removes all data if the argument is omitted.
+</dd>
+
+	<dt>%dataTransfer . `files$m</dt>
+	<dd>
+~fileたちが~dragされているならば，それらからなる `FileList$I を返す。
+◎
+Returns a FileList of the files being dragged, if any.
+</dd>
+</dl>
+
+<p>
+<a href="#dndevents">~DnD~event</a>
+の一環で作成された `DataTransfer$I ~objが有効なのは、当の~eventが発火されている間に限られ、その間に限り，`~drag~data~store$が結付けられる。
+◎
+DataTransfer objects that are created as part of drag-and-drop events are only valid while those events are being fired.
+◎
+A DataTransfer object is associated with a drag data store while it is valid.
+</p>
+
+<p class="trans-note">【
+~eventの配送-後は、特殊~値 ε が結付けられる（そのように、この訳では形式化して記述する）。
+】</p>
+
+<p>
+各 `DataTransfer$I ~objには
+`~types配列@
+が結付けられる。
+これは、
+<a href="~WEBIDL#dfn-frozen-array-type" >`FrozenArray&lt;DOMString&gt;^I</a>
+型であり，初期~時は空とする。
+◎
+A DataTransfer object has an associated types array, which is a FrozenArray&lt;DOMString&gt;, initially empty.＼
+</p>
+
+<div class="algo">
+<p>
+`DataTransfer$I ~obj %O に対し，［
+%O の`~item~list$dSの内容が変化したとき
+］, または［
+%O の`~drag~data~store$ ~SET ε にされたとき
+］は、次の手続きを走らす：
+◎
+When the contents of the DataTransfer object's drag data store item list change, or when the DataTransfer object becomes no longer associated with a drag data store, run the following steps:
+</p>
+
+<ol>
+	<li>
+%L ~LET 空~連列（ ~IDL `sequence&lt;DOMString&gt;^c 型）
+◎
+Let L be an empty sequence.
+</li>
+	<li>
+<p>
+~IF［
+%O の`~drag~data~store$ ~NEQ ε
+］：
+◎
+If the DataTransfer object is still associated with a drag data store, then:
+</p>
+		<ol>
+			<li>
+%~item~list ~LET %O の`~drag~data~store$の`~item~list$dS
+◎
+↓</li>
+			<li>
+%~item~list 内の
+~EACH ( %~item ) に対し
+⇒
+~IF［
+%~item の`種類$dI ~EQ `Text^i
+］
+⇒
+%L に~itemの`型~文字列$dIを追加する
+◎
+For each item in the DataTransfer object's drag data store item list whose kind is text, add an entry to L consisting of the item's type string.
+</li>
+			<li>
+~IF［
+%~item~list 内に［
+`種類$dI ~EQ `File^i
+］なる %~item がある
+］
+⇒
+%L に文字列 `Files^l を追加する（この値は、小文字でないので %L 内の他の値と判別できる）
+◎
+If there are any items in the DataTransfer object's drag data store item list whose kind is File, then add an entry to L consisting of the string "Files". (This value can be distinguished from the other values because it is not lowercase.)
+</li>
+		</ol>
+	</li>
+	<li>
+%O の`~types配列$ ~SET `凍結d配列を作成する$( %L )
+◎
+Set the DataTransfer object's types array to the result of creating a frozen array from L.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`DataTransfer$I ~obj %O の
+`~store~mode@
+は、［
+%O の`~drag~data~store$ ~NEQ ε ならば %O の`~mode$dS ／
+~ELSE_
+`不能化~mode@i
+］を返す。
+</p>
+</div>
+
+<div class="algo">
+<p>
+所与の文字列 %形式 を
+`正規化-@
+するときは、次を走らす：
+</p>
+<ol>
+	<li>
+%形式 ~SET `~ASCII小文字~化する$( %形式 )
+</li>
+	<li>
+~RET %形式 に応じて
+⇒＃
+`text^l ならば `text/plain^l ／
+`url^l ならば `text/uri-list^l ／
+~ELSE_ %形式
+</li>
+</ol>
+</div>
+
+<p class="trans-note">【
+`~store~mode$, `不能化~mode$i, `正規化-$は、共通な記述を整理集約するために、この訳に導入した定義である。
+】</p>
+
+<div class="algo">
+<p>
+`new DataTransfer()@m
+構築子~手続きは：
+</p>
+<ol>
+	<li>
+%~store ~LET 新たな`~drag~data~store$
+</li>
+	<li>
+%~store の`~item~list$dS ~SET 空~list
+</li>
+	<li>
+%~store の`~mode$dS ~SET `可書~mode$i
+</li>
+	<li>
+コレに %~store を結付ける
+</li>
+	<li>
+コレの `dropEffect$m ~SET `none^l
+</li>
+	<li>
+コレの `effectAllowed$m ~SET `none^l
+</li>
+</ol>
+◎
+The DataTransfer() constructor, when invoked, must return a newly created DataTransfer object initialized as follows:
+◎
+Set the drag data store's item list to be an empty list.
+◎
+Set the drag data store's mode to read/write mode.
+◎
+Set the dropEffect and effectAllowed to "none".
+</div>
+
+<p>
+`dropEffect@m
+属性は、~DnD操作oの間に利用者に示される~feedbackを制御する：
+◎
+The dropEffect attribute controls the drag-and-drop feedback that the user is given during a drag-and-drop operation.＼
+</p>
+<ul>
+	<li>
+この属性は、コレの作成-時に，ある文字列~値（下の “設定子” に示されるいずれか）に設定される。
+◎
+When the DataTransfer object is created, the dropEffect attribute is set to a string value.＼
+</li>
+	<li class="algo">
+その取得子~手続きは、最後に設定された値を返す。
+◎
+On getting, it must return its current value.＼
+	</li>
+	<li class="algo">
+<p>
+その設定子~手続きは：
+</p>
+		<ol>
+			<li>
+~IF［
+所与の値 ~NIN
+{
+`none@tD,
+`copy@tD,
+`link@tD,
+`move@tD
+}
+］
+⇒
+~RET
+</li>
+			<li>
+この属性の値 ~SET 所与の値
+</li>
+		</ol>
+◎
+On setting, if the new value is one of "none", "copy", "link", or "move", then the attribute's current value must be set to the new value. Other values must be ignored.
+</li>
+</ul>
+
+<p>
+`effectAllowed@m
+属性は、~DnD処理~modelにおいて［
+`dragenter$et ／ `dragover$et
+］~eventの間に，コレの `dropEffect$m 属性を初期化するときに利用される：
+【！この属性は、許容される効果state$dSを与える。】
+◎
+The effectAllowed attribute is used in the drag-and-drop processing model to initialize the dropEffect attribute during the dragenter and dragover events.＼
+</p>
+<ul>
+	<li>
+この属性は、コレの作成-時に，ある文字列~値（下の “設定子” に示されるいずれか）に設定される。
+◎
+When the DataTransfer object is created, the effectAllowed attribute is set to a string value.＼
+</li>
+	<li class="algo">
+その取得子~手続きは、最後に設定された値を返す。
+◎
+On getting, it must return its current value.＼
+</li>
+	<li class="algo">
+<p>
+その設定子~手続きは：
+</p>
+<ol>
+	<li>
+~IF［
+コレの`~store~mode$ ~NEQ `可書~mode$i
+］
+⇒
+~RET
+</li>
+	<li>
+~IF［
+所与の値 ~NIN
+{ `none@tE, `copy@tE, `copyLink@tE, `copyMove@tE, `link@tE, `linkMove@tE, `move@tE, `all@tE, `uninitialized@tE }
+］
+⇒
+~RET
+</li>
+	<li>
+この属性の値 ~SET 所与の値
+</li>
+</ol>
+◎
+On setting, if drag data store's mode is the read/write mode and the new value is one of "none", "copy", "copyLink", "copyMove", "link", "linkMove", "move", "all", or "uninitialized", then the attribute's current value must be set to the new value. Otherwise it must be left unchanged.
+</li>
+</ul>
+
+<div class="algo">
+`items@m
+取得子~手続きは
+⇒
+~RET コレに結付けられている `DataTransferItemList$I ~obj
+◎
+The items attribute must return a DataTransferItemList object associated with the DataTransfer object.
+</div>
+
+<div class="algo">
+<p>
+`setDragImage(element, x, y)@m
+~method~手続きは：
+◎
+The setDragImage(element, x, y) method must run the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+コレの`~store~mode$ ~NEQ `可書~mode$i
+］
+⇒
+~RET
+◎
+If the DataTransfer object is no longer associated with a drag data store, return. Nothing happens.
+◎
+If the drag data store's mode is not the read/write mode, return. Nothing happens.
+</li>
+	<li>
+%~store ~LET コレの`~drag~data~store$
+◎
+↓</li>
+	<li>
+%~store の`~bitmap$dS ~SET［
+%element は `img$e 要素であるならば %element の画像（その~sizeは画像の`内在的~size$による）／
+~ELSE_  %element から生成される画像（そうするための正確な仕組みは、まだ仕様化されていない）
+］
+◎
+If element is an img element, then set the drag data store bitmap to the element's image (at its intrinsic size); otherwise, set the drag data store bitmap to an image generated from the given element (the exact mechanism for doing so is not currently specified).
+</li>
+	<li>
+%~store の`~hot-spot座標$dS ~SET 座標 ( %x, %y )
+◎
+Set the drag data store hot spot coordinate to the given x, y coordinate.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`types@m
+取得子~手続きは
+⇒
+~RET コレの`~types配列$
+◎
+The types attribute must return this DataTransfer object's types array.
+</div>
+
+<div class="algo">
+<p>
+`getData(format)@m
+~method~手続きは：
+◎
+The getData(format) method must run the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+コレの`~store~mode$ ~IN { `不能化~mode$i, `保護d~mode$i }
+］
+⇒
+~RET 空~文字列
+◎
+If the DataTransfer object is no longer associated with a drag data store, then return the empty string.
+◎
+If the drag data store's mode is the protected mode, then return the empty string.
+</li>
+	<li>
+%~item ~LET コレの`~drag~data~store$の`~item~list$dS内に次を満たす`~item$は［
+在るならば それ（一意に定まる） ／
+無いならば ε
+］
+⇒
+［
+`種類$dI ~EQ `Text^i【！原文更新漏れ Plain Unicode string 】
+］~AND［
+`型~文字列$dI ~EQ %format を`正規化-$した結果
+］
+◎
+Let format be the first argument, converted to ASCII lowercase.
+◎
+Let convert-to-URL be false.
+◎
+If format equals "text", change it to "text/plain".
+◎
+If format equals "url", change it to "text/uri-list" and set convert-to-URL to true.
+◎
+If there is no item in the drag data store item list whose kind is text and whose type string is equal to format, return the empty string.
+◎
+Let result be the data of the item in the drag data store item list whose kind is Plain Unicode string and whose type string is equal to format.
+</li>
+	<li>
+~IF［
+%~item ~EQ ε
+］
+⇒
+~RET 空~文字列
+◎
+↑</li>
+	<li>
+%結果 ~LET %~item の`実data$dI
+◎
+↑</li>
+	<li>
+~IF［
+`~ASCII小文字~化する$( %format ) ~EQ `url^l
+］
+⇒
+~RET ［［
+%結果 を `RFC2483$r に則って， `text/uri-list^l に対し適切に構文解析した結果の~list
+］が空でなければ その中の最初の~URL ／
+~ELSE_ 空~文字列
+］†
+◎
+If convert-to-URL is true, then parse result as appropriate for text/uri-list data, and then set result to the first URL from the list, if any, or the empty string otherwise. [RFC2483]
+</li>
+	<li>
+~RET %結果
+◎
+Return result.
+</li>
+</ol>
+
+<p class="trans-note">【†
+%format に `text/uri-list^l が渡された場合と（`正規化-$した結果は同じでも）ふるまいが異なる。
+】</p>
+
+</div>
+
+<div class="algo">
+<p>
+`setData(format, data)@m
+~method~手続きは：
+◎
+The setData(format, data) method must run the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+コレの`~store~mode$ ~NEQ `可書~mode$i
+］
+⇒
+~RET
+◎
+If the DataTransfer object is no longer associated with a drag data store, return. Nothing happens.
+◎
+If the drag data store's mode is not the read/write mode, return. Nothing happens.
+</li>
+	<li>
+%形式 ~LET %format を`正規化-$した結果
+◎
+Let format be the first argument, converted to ASCII lowercase.
+◎
+If format equals "text", change it to "text/plain".
+◎
+If format equals "url", change it to "text/uri-list".
+</li>
+	<li>
+%~item~list ~LET コレの`~drag~data~store$の`~item~list$dS
+◎
+↓</li>
+	<li>
+%~item~list から次を満たす`~item$を除去する
+⇒
+［
+`種類$dI ~EQ `Text^i
+］~AND［
+`型~文字列$dI ~EQ %形式
+］
+◎
+Remove the item in the drag data store item list whose kind is text and whose type string is equal to format, if there is one.
+</li>
+	<li>
+%~item~list に，次のようにされた新たな`~item$を追加する
+⇒＃
+`種類$dI ~SET `Text^i；
+`型~文字列$dI ~SET %形式；
+`実data$dI ~SET %data
+◎
+Add an item to the drag data store item list whose kind is text, whose type string is equal to format, and whose data is the string given by the method's second argument.
+</li>
+</ol>
+
+<p class="trans-note">【
+除去した上で，追加するので、
+%~item~list 内での当の~itemの~indexも変化することになる（本当か？）。
+】</p>
+</div>
+
+<div class="algo">
+<p>
+`clearData(format)@m
+~method~手続きは：
+◎
+The clearData() method must run the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+コレの`~store~mode$ ~NEQ `可書~mode$i
+］
+⇒
+~RET
+◎
+If the DataTransfer object is no longer associated with a drag data store, return. Nothing happens.
+◎
+If the drag data store's mode is not the read/write mode, return. Nothing happens.
+</li>
+	<li>
+~IF［
+%format ~EQ ε
+］
+⇒
+コレの`~drag~data~store$の`~item~list$dSから次を満たす`~item$をすべて除去する
+⇒
+`種類$dI ~EQ `Text^i【！原文更新漏れ Plain Unicode string → text 】
+◎
+If the method was called with no arguments, remove each item in the drag data store item list whose kind is Plain Unicode string, and return.
+</li>
+	<li>
+~ELSE
+⇒
+コレの`~drag~data~store$の`~item~list$dSから次を満たす`~item$をすべて除去する
+⇒
+［
+`種類$dI ~EQ `Text^i
+］~AND［
+`型~文字列$dI ~EQ %format を`正規化-$した結果
+］
+◎
+Let format be the first argument, converted to ASCII lowercase.
+◎
+If format equals "text", change it to "text/plain".
+◎
+If format equals "url", change it to "text/uri-list".
+◎
+Remove the item in the drag data store item list whose kind is text and whose type string is equal to format, if there is one.
+</li>
+</ol>
+
+<p class="note">注記：
+~drag内に~fileが含まれている場合、この~methodを~callしても それらの~fileには影響しないので， `types$m 属性が返す~listは依然として 文字列 `Files^l を包含することになる。
+◎
+The clearData() method does not affect whether any files were included in the drag, so the types attribute's list might still not be empty after calling clearData() (it would still contain the "Files" string if any files were included in the drag).
+</p>
+</div>
+
+<div class="algo">
+<p>
+`files@m
+取得子~手続きは：
+◎
+The files attribute must＼
+↓↓return a live FileList sequence consisting of File objects representing the files found by the following steps. Furthermore, for a given FileList object and a given underlying file, the same File object must be used each time.
+</p>
+<ol>
+	<li>
+%L ~LET 空~list
+◎
+Start with an empty list L.
+</li>
+	<li>
+~IF［
+コレの`~store~mode$ ~NIN { `不能化~mode$i, `保護d~mode$i }
+］
+⇒
+コレの`~drag~data~store$の`~item~list$dS内の~EACH( `~item$ %~item ) に対し
+⇒
+~IF［
+%~item の`種類$dI ~EQ `File^i
+］
+⇒
+%~item の`実data$dI（ ~file, 特にその名前と内容, および
+その`型~文字列$dI）を表現する `File$I ~objを %L に追加する
+◎
+If the DataTransfer object is no longer associated with a drag data store, the FileList is empty. Return the empty list L.
+◎
+If the drag data store's mode is the protected mode, Return the empty list L.
+◎
+For each item in the drag data store item list whose kind is File , add the item's data (the file, in particular its name and contents, as well as its type) to the list L.
+</li>
+	<li>
+~RET %L を表現する，`~live$な `FileList$I ~obj
+◎
+The files found by these steps are those in the list L.
+◎
+↑↑</li>
+</ol>
+
+<p>
+結果の `FileList$I ~objにおいては、同じ下層の~fileに対し，毎回~同じ `File$I ~objを利用するモノトスル。
+◎
+↑↑</p>
+
+<p class="note">注記：
+この~versionの~APIは、~drag中は，~fileの型を公開しない。
+◎
+This version of the API does not expose the types of the files during the drag.
+</p>
+</div>
+
+			<section id="the-datatransferitemlist-interface">
+<h4 title="The DataTransferItemList interface">6.9.3.1. `DataTransferItemList^I ~interface</h4>
+
+<p>
+各 `DataTransfer$I ~objには、
+`DataTransferItemList$I ~objが結付けられる。
+◎
+Each DataTransfer object is associated with a DataTransferItemList object.
+</p>
+
+<pre class="idl">
+[Exposed=Window]
+interface `DataTransferItemList@I {
+  readonly attribute unsigned long `length$m;
+  `getter$m `DataTransferItem$I (unsigned long %index);
+  `DataTransferItem$I? `add$m(DOMString %data, DOMString %type);
+  `DataTransferItem$I? `add$m(`File$I %data);
+  undefined `remove$m(unsigned long %index);
+  undefined `clear$m();
+};
+</pre>
+
+<dl class="domintro">
+	<dt>%items . `length$m</dt>
+	<dd>
+`~drag~data~store$内の`~item$数を返す。
+◎
+Returns the number of items in the drag data store.
+</dd>
+
+	<dt>%items[%index]</dt>
+	<dd>
+`~drag~data~store$内の %index 番の~entryを表現している
+`DataTransferItem$I
+~objを返す。
+◎
+Returns the DataTransferItem object representing the indexth entry in the drag data store.
+</dd>
+
+	<dt>%items . `remove(index)$m</dt>
+	<dd>
+`~drag~data~store$内の
+%~index 番の~entryを除去する。
+◎
+Removes the indexth entry in the drag data store.
+</dd>
+
+	<dt>%items . `clear()$m</dt>
+	<dd>
+`~drag~data~store$内のすべての~entryを除去する。
+◎
+Removes all the entries in the drag data store.
+</dd>
+
+	<dt>%items . `add(data)$m</dt>
+	<dt>%items . `add(data, type)$m</dt>
+	<dd>
+所与の %data に対する新たな~entryを，`~drag~data~store$に追加する。
+%data が素な~textの場合は， %type 文字列も供される必要がある。
+◎
+Adds a new entry for the given data to the drag data store. If the data is plain text then a type string has to be provided also.
+</dd>
+</dl>
+
+<p>
+`DataTransferItemList$I ~obj %L の
+`~store~mode@1
+は、 %L を結付けている `DataTransfer$I ~objの`~store~mode$を参照する。
+◎
+While the DataTransferItemList object's DataTransfer object is associated with a drag data store, the DataTransferItemList object's mode is the same as the drag data store mode. When the DataTransferItemList object's DataTransfer object is not associated with a drag data store, the DataTransferItemList object's mode is the disabled mode. The drag data store referenced in this section (which is used only when the DataTransferItemList object is not in the disabled mode) is the drag data store with which the DataTransferItemList object's DataTransfer object is associated.
+</p>
+
+<div class="algo">
+<p>
+`length@m
+取得子~手続きは：
+</p>
+<ol>
+	<li>
+~IF［
+コレの`~store~mode$1 ~EQ `不能化~mode$i
+］
+⇒
+~RET 0
+</li>
+	<li>
+~RET コレが表現する`~item~list$dS内の`~item$数
+</li>
+</ol>
+◎
+The length attribute must return zero if the object is in the disabled mode; otherwise it must return the number of items in the drag data store item list.
+</div>
+
+<p>
+`getter@m
+においては：
+</p>
+<ul>
+	<li>
+コレが`~supportする~prop~index$は、
+0 以上［
+コレの `length$m 属性を~~取得した結果
+］未満とする。
+◎
+When a DataTransferItemList object is not in the disabled mode, its supported property indices are the numbers in the range 0 .. n-1, where n is the number of items in the drag data store item list.
+</li>
+	<li>
+<p>
+`DataTransferItemList$I ~obj %L 上の~index %i に対し，`有index~propを決定-$するときは、次の拘束に従うような， `DataTransferItem$I ~obj %I を返すモノトスル：
+◎
+To determine the value of an indexed property i of a DataTransferItemList object, the user agent must return a DataTransferItem object＼
+</p>
+		<ul>
+			<li>
+%I は、`~item~list$dS内の %i 番の`~item$を表現する。
+◎
+representing the ith item in the drag data store.＼
+</li>
+			<li>
+同じ`~item$に対しては，毎回 %I として同じ~objを返す。
+◎
+The same object must be returned each time a particular item is obtained from this DataTransferItemList object.＼
+</li>
+			<li>
+%I に結付けられている `DataTransfer$I ~obj ~EQ %L を結付けているそれ。
+◎
+The DataTransferItem object must be associated with the same DataTransfer object as the DataTransferItemList object when it is first created.
+</li>
+		</ul>
+	</li>
+</ul>
+
+<div class="algo">
+<p>
+［
+`add(data, type)@m
+／
+`add(data)$m
+］~method~手続きは：
+◎
+The add() method must run the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+コレの`~store~mode$1 ~NEQ `可書~mode$i
+］
+⇒
+~RET ~NULL
+◎
+If the DataTransferItemList object is not in the read/write mode, return null.
+</li>
+	<li>
+%~item~list ~LET コレが表現する`~item~list$dS
+◎
+↓</li>
+	<li>
+%新~item ~LET ε
+◎
+↓</li>
+	<li>
+<p>
+%data の型に応じて：
+◎
+Jump to the appropriate set of steps from the following list:
+</p>
+
+		<dl class="switch">
+		<dt>文字列
+◎
+If the first argument to the method is a string
+</dt>
+		<dd>
+			<ol>
+				<li>
+%type ~SET `~ASCII小文字~化する$( %type )
+◎
+↓</li>
+		<li>
+~IF［
+%~item~list 内に［［
+`種類$dI ~EQ `Text^i
+］~AND［
+`型~文字列$dI ~EQ %type
+］］を満たす`~item$がある
+］
+⇒
+~THROW `NotSupportedError$E
+◎
+If there is already an item in the drag data store item list whose kind is text and whose type string is equal to the value of the method's second argument, converted to ASCII lowercase, then throw a "NotSupportedError" DOMException.
+</li>
+		<li>
+<p>
+%新~item ~SET 次のようにされた`~item$：
+</p>
+
+<ul ><li>`種類$dI ~SET `Text^i
+</li><li>`型~文字列$dI ~SET %type
+</li><li>`実data$dI ~SET %data
+</li></ul>
+
+◎
+Otherwise, add an item to the drag data store item list whose kind is text, whose type string is equal to the value of the method's second argument, converted to ASCII lowercase, and whose data is the string given by the method's first argument.
+</li>
+			</ol>
+		</dd>
+
+		<dt>`File$I
+◎
+If the first argument to the method is a File
+</dt>
+		<dd>
+<p>
+%新~item ~SET 次のようにされた`~item$：
+</p>
+
+<ul ><li>`種類$dI ~SET `File^i
+</li><li>`型~文字列$dI ~SET `~ASCII小文字~化する$( %data の <a href="~FILEAPI#dfn-type">`type^m</a> )
+</li><li>`実data$dI ~SET %data の~data
+</li></ul>
+
+◎
+Add an item to the drag data store item list whose kind is File, whose type string is the type of the File, converted to ASCII lowercase, and whose data is the same as the File's data.
+</dd>
+		</dl>
+	</li>
+	<li>
+%新~item を %~item~list に追加する
+◎
+↑</li>
+	<li>
+~RET %新~item を表現する，新たな `DataTransferItem$I ~obj
+— `有index~propを決定-$するときは、この~objが利用されることになる。
+◎
+Determine the value of the indexed property corresponding to the newly added item, and return that value (a newly created DataTransferItem object).
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`remove(index)@m
+~method~手続きは：
+◎
+The remove() method, when invoked with the argument i, must run these steps:
+</p>
+<ol>
+	<li>
+~IF［
+コレの`~store~mode$1 ~NEQ `可書~mode$i
+］
+⇒
+~THROW `InvalidStateError$E
+◎
+If the DataTransferItemList object is not in the read/write mode, throw an "InvalidStateError" DOMException.
+</li>
+	<li>
+コレが表現する`~item~list$dSから %index 番の`~item$を除去する
+◎
+Remove the ith item from the drag data store.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`clear()@m
+~method~手続きは：
+</p>
+<ol>
+	<li>
+~IF［
+コレの`~store~mode$1 ~NEQ `可書~mode$i
+］
+⇒
+~RET
+</li>
+	<li>
+コレが表現する`~item~list$dSからすべての`~item$を除去する
+</li>
+</ol>
+◎
+The clear() method, if the DataTransferItemList object is in the read/write mode, must remove all the items from the drag data store. Otherwise, it must do nothing.
+</div>
+
+			</section>
+			<section id="the-datatransferitem-interface">
+<h4 title="The DataTransferItem interface">6.9.3.2. `DataTransferItem^I ~interface</h4>
+
+<p>
+各 `DataTransferItem$I ~objには `DataTransfer$I ~objが結付けられる。
+◎
+Each DataTransferItem object is associated with a DataTransfer object.
+</p>
+
+<pre class="idl">
+[Exposed=Window]
+interface `DataTransferItem@I {
+  readonly attribute DOMString `kind$m;
+  readonly attribute DOMString `type$m;
+  undefined `getAsString$m(`FunctionStringCallback$I? %_callback);
+  `File$I? `getAsFile$m();
+};
+
+callback `FunctionStringCallback@I = undefined (DOMString %data);
+</pre>
+
+<dl class="domintro">
+	<dt>%item . `kind$m</dt>
+	<dd>
+`~item$の`種類$dI
+を返す。
+次のいずれか
+⇒
+`string^l, `file^l
+◎
+Returns the drag data item kind, one of: "string", "file".
+</dd>
+
+	<dt>%item . `type$m</dt>
+	<dd>
+`~item$の`型~文字列$dIを返す。
+◎
+Returns the drag data item type string.
+</dd>
+
+	<dt>%item . `getAsString(callback)$m</dt>
+	<dd>
+`~item$の`種類$dI ~EQ `Text^i ならば、文字列~dataを引数に %callback を呼出す。
+◎
+Invokes the callback with the string data as the argument, if the drag data item kind is text.
+</dd>
+
+	<dt>%file = %item . `getAsFile()$m</dt>
+	<dd>
+`~item$の`種類$dI ~EQ `File^i であれば
+`File$I ~objを返す。
+◎
+Returns a File object, if the drag data item kind is File.
+</dd>
+</dl>
+
+<div class="p">
+<p>
+`DataTransferItem$I ~obj %I の
+`~item~mode@
+は、次を走らせた結果を返す：
+</p>
+
+<ol>
+	<li>
+%L ~LET %I に結付けられている `DataTransfer$I ~objに結付けられている `DataTransferItemList$I ~obj
+</li>
+	<li>
+~IF［
+%L の`~store~mode$1 ~EQ `不能化~mode$i
+］~OR［
+%I が表現する`~item$は %L が表現する`~item~list$dSから除去されている
+］
+⇒
+~RET `不能化~mode$i
+</li>
+	<li>
+~RET %L の`~store~mode$1
+</li>
+</ol>
+
+◎
+While the DataTransferItem object's DataTransfer object is associated with a drag data store and that drag data store's drag data store item list still contains the item that the DataTransferItem object represents, the DataTransferItem object's mode is the same as the drag data store mode. When the DataTransferItem object's DataTransfer object is not associated with a drag data store, or if the item that the DataTransferItem object represents has been removed from the relevant drag data store item list, the DataTransferItem object's mode is the disabled mode. The drag data store referenced in this section (which is used only when the DataTransferItem object is not in the disabled mode) is the drag data store with which the DataTransferItem object's DataTransfer object is associated.
+</div>
+
+<div class="algo">
+`kind@m
+取得子~手続きは
+⇒
+~RET コレの`~item~mode$に応じて
+⇒
+`不能化~mode$i ならば 空~文字列 ／
+~ELSE_ コレが表現する`~item$の`種類$dIに応じて
+⇒
+`Text^i ならば `string^l ／
+`File^i ならば `file^l
+◎
+The kind attribute must return the empty string if the DataTransferItem object is in the disabled mode; otherwise it must return the string given in the cell from the second column of the following table from the row whose cell in the first column contains the drag data item kind of the item represented by the DataTransferItem object:
+
+Kind 	String
+Text 	"string"
+File 	"file"
+</div>
+
+<div class="algo">
+`type@m
+取得子~手続きは
+⇒
+~RET コレの`~item~mode$に応じて
+⇒＃
+`不能化~mode$i ならば 空~文字列 ／
+~ELSE_ コレが表現する`~item$の`型~文字列$dI
+◎
+The type attribute must return the empty string if the DataTransferItem object is in the disabled mode; otherwise it must return the drag data item type string of the item represented by the DataTransferItem object.
+</div>
+
+<div class="algo">
+<p>
+`getAsString(callback)@m
+~method~手続きは：
+◎
+The getAsString(callback) method must run the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+%callback ~EQ ~NULL
+］
+⇒
+~RET
+◎
+If the callback is null, return.
+</li>
+	<li>
+~IF［
+コレの`~item~mode$ ~NIN { `可書~mode$i, `読専~mode$i }
+］
+⇒
+~RET
+◎
+If the DataTransferItem object is not in the read/write mode or the read-only mode, then return. The callback is never invoked.
+</li>
+	<li>
+~IF［
+コレが表現する`~item$の`種類$dI ~NEQ `Text^i
+］
+⇒
+~RET
+— %callback が呼出されることは、決して無い
+◎
+If the drag data item kind is not text, then return. The callback is never invoked.
+</li>
+	<li>
+次を走らす`~taskを~queueする$
+⇒
+コレが表現する`~item$の`実data$dIを引数に渡して %callback を呼出す
+◎
+Otherwise, queue a task to invoke callback, passing the actual data of the item represented by the DataTransferItem object as the argument.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`getAsFile()@m
+~method~手続きは：
+◎
+The getAsFile() method must run the following steps:
+</p>
+<ol>
+	<li>
+~IF［
+コレの`~item~mode$ ~NIN { `可書~mode$i, `読専~mode$i }
+］
+⇒
+~RET ~NULL
+◎
+If the DataTransferItem object is not in the read/write mode or the read-only mode, return null.
+</li>
+	<li>
+~IF［
+コレが表現する`~item$の`種類$dI ~NEQ `File^i
+］
+⇒
+~RET ~NULL
+◎
+If the drag data item kind is not File, then return null.
+</li>
+	<li>
+~RET コレが表現する`~item$の`実data$dIを表現している，新たな `File$I ~obj
+【毎回~新たな~objを返すことになる。】
+◎
+Return a new File object representing the actual data of the item represented by the DataTransferItem object.
+</li>
+</ol>
+</div>
+
+			</section>
+		</section>
+		<section id="the-dragevent-interface">
+<h3 title="The DragEvent interface">6.9.4. `DragEvent^I ~interface</h3>
+
+<p>
+~DnD処理~modelには、いくつかの~eventが孕まれる。
+それらはいずれも `DragEvent$I ~interfaceを利用する。
+◎
+The drag-and-drop processing model involves several events. They all use the DragEvent interface.
+</p>
+
+<pre class="idl">
+[Exposed=Window]
+interface `DragEvent@I : `MouseEvent$I {
+  constructor(DOMString %type, optional `DragEventInit$I %eventInitDict = {});
+
+  readonly attribute `DataTransfer$I? `dataTransfer$m;
+};
+
+dictionary `DragEventInit@I : `MouseEventInit$I {
+  `DataTransfer$I? dataTransfer = null;
+};
+</pre>
+
+<dl class="domintro">
+	<dt>%event . `dataTransfer$m</dt>
+	<dd>
+~eventに対する
+`DataTransfer$I ~objを返す。
+◎
+Returns the DataTransfer object for the event.
+</dd>
+</dl>
+
+<p class="note">注記：
+他の~event~interfaceとの一貫性をとるため，
+`DragEvent$I ~interfaceには構築子があるが、それはまったく有用でない。
+特に、~scriptが有用な `DataTransfer$I ~objを作成する仕方はない
+— `DataTransfer$I ~objには、~DnDの間に，~browserが その処理と~security~modelを協調する~~仕組みがあるので。
+◎
+Although, for consistency with other event interfaces, the DragEvent interface has a constructor, it is not particularly useful. In particular, there's no way to create a useful DataTransfer object from script, as DataTransfer objects have a processing and security model that is coordinated by the browser during drag-and-drops.
+</p>
+
+<div class="algo">
+<p>
+`dataTransfer@m
+取得子~手続きは、初期化-時の値を返す。
+それは、当の~eventの文脈~情報を表現する。
+◎
+The dataTransfer attribute of the DragEvent interface must return the value it was initialized to. It represents the context information for the event.
+</div>
+
+<div class="algo">
+<p>
+`~DND~eventを発火する@
+ときは、所与の
+( %要素, %~event型, %関係する標的 （省略時は ~NULL ） )
+に対し，次の手続きを走らすモノトスル：
+◎
+When a user agent is required to fire a DND event named e at an element, using a particular drag data store, and optionally with a specific related target, the user agent must run the following steps:
+</p>
+
+<p class="trans-note">【
+~DnD操作oに関わるすべての~eventは、この手続きを通して発火される。
+】【
+以下における `~store$V は、
+<a href="#drag-and-drop-processing-model">§ ~DnD処理~model</a>
+にて作成される`~drag~data~store$を指す（同じ~DnD操作oから生じる各~event間で共有される）。
+】</p>
+
+<ol>
+	<li>
+%~storeは変化した ~LET ~F
+◎
+Let dataDragStoreWasChanged be false.
+</li>
+	<li>
+%~window ~LET %要素 の `Document$I ~objに`関連な大域~obj$
+◎
+↑If no specific related target was provided, set related target to null.
+◎
+Let window be the relevant global object of the Document object of the specified target element.
+</li>
+	<li>
+~IF［
+%~event型 ~EQ `dragstart$et
+］
+⇒
+%~storeは変化した ~SET ~T
+◎
+↓</li>
+	<li>
+`~store$V の`~mode$dS ~SET %~event型 に応じて
+⇒
+`dragstart$et ならば `可書~mode$i ／
+`drop$et ならば `読専~mode$i ／
+~ELSE_ `保護d~mode$i（`作成-$dS時のまま）
+◎
+If e is dragstart, then set the drag data store mode to the read/write mode and set dataDragStoreWasChanged to true.
+◎
+If e is drop, set the drag data store mode to the read-only mode.
+</li>
+	<li>
+<p>
+%dataTransfer ~LET 新たな `DataTransfer$I ~obj
+</p>
+
+<p class="trans-note">【
+同じ `DataTransfer$I ~objが複数の~event間で共有されることはなく、毎回~新たに作成されることになる。
+】</p>
+◎
+↓</li>
+	<li>
+%dataTransfer の`~drag~data~store$ ~SET `~store$V
+◎
+Let dataTransfer be a newly created DataTransfer object associated with the given drag data store.
+</li>
+	<li id="effectAllowed-initialisation">
+%dataTransfer の `effectAllowed$m 属性 ~SET `~store$V に`許容される効果state$dS
+◎
+Set the effectAllowed attribute to the drag data store's drag data store allowed effects state.
+</li>
+	<li>
+
+<div>
+<p id="dropEffect-initialisation">
+%dataTransfer の `dropEffect$m 属性 ~SET %~event型 に応じて，次で与えられる値：
+</p>
+
+<dl class="switch"
+	><dt>`dragstart$et
+</dt><dt>`drag$et
+</dt><dt>`dragleave$et
+</dt><dd>
+`none$tD
+
+</dd><dt>`drop$et
+</dt><dt>`dragend$et
+</dt><dd>`現在の~drag操作o$
+
+</dd><dt>`dragenter$et
+</dt><dt>`dragover$et
+</dt><dd id="_allowed-effect">
+
+<p>
+下の表の［
+1 列目に示される `effectAllowed$m 属性の値
+］に応じて、同じ行の：
+</p>
+
+<ul ><li>2 列目に示される値, または、場合によっては
+</li><li>3 列目の`代替-選択肢$に与えられるいずれかの値（空欄は選択肢なし）
+</li></ul>
+
+</dd></dl>
+
+◎
+Set the dropEffect attribute to "none" if e is dragstart, drag, or dragleave; to the value corresponding to the current drag operation if e is drop or dragend; and to a value based on the effectAllowed attribute's value and the drag-and-drop source, as given by the following table, otherwise (i.e. if e is dragenter or dragover):
+</div>
+
+<table><thead><tr><th>`effectAllowed$m
+<th>`dropEffect$m
+<th>`代替-選択肢$
+</thead>
+
+<tbody><tr><td>`none$tE
+<td>`none$tD
+<td>
+
+<tr><td>`copy$tE
+<td>`copy$tD
+<td>
+
+<tr><td>`copyLink$tE
+<td>`copy$tD
+<td>`link$tD
+
+<tr><td>`copyMove$tE
+<td>`copy$tD
+<td>`move$tD
+
+<tr><td>`all$tE
+<td>`copy$tD
+<td>`link$tD, `move$tD
+
+<tr><td>`link$tE
+<td>`link$tD
+<td>
+
+<tr><td>`linkMove$tE
+<td>`link$tD
+<td>`move$tD
+
+<tr><td>`move$tE
+<td>`move$tD
+<td>
+
+<tr><td>`uninitialized$tE (1)
+◎
+"uninitialized" when what is being dragged is a selection from a text control
+<td>`move$tD
+<td>`copy$tD, `link$tD
+
+<tr><td>`uninitialized$tE (2)
+◎
+"uninitialized" when what is being dragged is a selection
+<td>`copy$tD
+<td>`link$tD, `move$tD
+
+<tr><td>`uninitialized$tE (3)
+◎
+"uninitialized" when what is being dragged is an a element with an href attribute
+<td>`link$tD
+<td>`copy$tD, `move$tD
+
+<tr><td>他の場合
+◎
+Any other case
+<td>`copy$tD
+<td>`link$tD, `move$tD
+
+</tbody></table>
+
+<div >
+<p>
+`uninitialized$tE に対する
+(1), (2), (3) は、順に，~DnD~sourceが次に該当する場合に限られる：
+</p>
+
+<ul ><li>(1) ~text~controlからの選択
+</li><li>(2) 選択の場合
+</li><li>(3) `href$a 属性を有する `a$e 要素
+</li></ul>
+
+◎
+↑</div>
+
+<p>
+上の表にて
+`代替-選択肢@
+が供されている所では、［
+~platform規約から，［
+利用者が，挙げられたいずれかの代替による効果を要請した
+］ことが規定される
+］ならば，~UAはその代替~値を代わりに利用してもヨイ。
+◎
+Where the table above provides possibly appropriate alternatives, user agents may instead use the listed alternative values if platform conventions dictate that the user has requested those alternate effects.
+</p>
+
+<p class="example">
+例えば、Windows ~platform規約では、
+"alt" ~Keyを押しながら~dragしたときは、移動-や複製-でなく，~dataへ~linkすることが選好されている。
+したがって Windows ~system上では、`代替-選択肢$に `link$tD がある所では、
+"alt" ~Keyが押下げられている間，~UAは `copy$tD や `move$tD の代わりにそれを選択することもできる。
+◎
+For example, Windows platform conventions are such that dragging while holding the "alt" key indicates a preference for linking the data, rather than moving or copying it. Therefore, on a Windows system, if "link" is an option according to the table above while the "alt" key is depressed, the user agent could select that instead of "copy" or "move".
+</p>
+	</li>
+	<li>
+%~event ~LET `DragEvent$I を用いて`~eventを作成-$した結果：
+◎
+Let event be the result of creating an event using DragEvent.
+</li>
+	<li>
+<p>
+%~event の各種~属性を次に従って初期化する：
+</p>
+
+<ol><li>`~type0$m ~SET %~event型
+</li><li>`bubbles$m ~SET ~T
+</li><li>`view$m ~SET %~window
+</li><li>`relatedTarget$m ~SET %関係する標的
+</li><li>`dataTransfer$m ~SET %dataTransfer
+</li><li>~IF［
+%~event型 ~NIN { `dragleave$et, `dragend$et }
+］
+⇒
+`cancelable$m ~SET ~T
+</li><li>各種~mouse／~Key属性は、入力~装置の状態に則って，利用者~対話~event `UIEVENTS$r に対するときと同様に初期化する
+</li><li>関連な~pointing装置がない場合は、次の属性も初期化する
+⇒
+( `screenX^m, `screenY^m, `clientX^m, `clientY^m, `button^m )
+~SET ( 0, 0, 0, 0, 0 )
+</li></ol>
+
+◎
+Initialize event's type attribute to e, its bubbles attribute to true, its view attribute to window, its relatedTarget attribute to related target, and its dataTransfer attribute to dataTransfer.
+◎
+If e is not dragleave or dragend, then initialize event's cancelable attribute to true.
+◎
+Initialize event's mouse and key attributes initialized according to the state of the input devices as they would be for user interaction events.
+◎
+If there is no relevant pointing device, then initialize event's screenX, screenY, clientX, clientY, and button attributes to 0.
+</li>
+	<li>
+%要素 に向けて %~event を`配送-$する
+◎
+Dispatch event at the specified target element.
+</li>
+	<li>
+`~store$V に`許容される効果state$dS ~SET %dataTransfer の`effectAllowed$m 属性の現在の値（この属性の値が変更されるのは、 %~event型 ~EQ `dragstart$et のときに限られる）
+◎
+Set the drag data store allowed effects state to the current value of dataTransfer's effectAllowed attribute. (It can only have changed value if e is dragstart.)
+</li>
+	<li>
+~IF［
+%~storeは変化した ~EQ ~T
+］
+⇒
+`~store$V の`~mode$dS ~SET `保護d~mode$i
+◎
+If dataDragStoreWasChanged is true, then set the drag data store mode back to the protected mode.
+</li>
+	<li>
+%dataTransfer の`~drag~data~store$ ~SET ε
+◎
+Break the association between dataTransfer and the drag data store.
+</li>
+	<li>
+~RET %~event †
+</li>
+</ol>
+
+<p class="trans-note">【†
+配送された~eventは、この手続きを呼出している箇所からも参照されているので、この訳では %~event を返す段を追記している。
+それらの箇所における
+“%~event は
+`取消され@
+た”
+という記述は、おそらく［
+`配送-$した結果 ~EQ ~F
+］（
+%~event の `取消d~flag$ ~EQ ~T
+）になったことを意味する。
+】</p>
+
+</div>
+
+		</section>
+		<section id="drag-and-drop-processing-model">
+<h3 title="Processing model">6.9.5. 処理~model</h3>
+
+<div class="algo">
+<p>
+利用者が~drag操作oを始めようと試みたときは、~UAは，次の手続きを走らすモノトスル。
+~UAは、当の~dragが実際には別の文書または~app内から開始されていて，［
+自身から見える~~範囲の下で，~dragが文書に交差する
+］まで それを自覚できなかった場合でも、この手続きが走っていたかのように動作するモノトスル：
+◎
+When the user attempts to begin a drag operation, the user agent must run the following steps. User agents must act as if these steps were run even if the drag actually started in another document or application and the user agent was not aware that the drag was occurring until it intersected with a document under the user agent's purview.
+</p>
+
+<ol>
+	<li>
+<p>
+次に従って， %~drag対象 を決定する：
+◎
+Determine what is being dragged, as follows:
+</p>
+
+		<ol>
+			<li>
+~IF［
+~drag操作oは、選択~上で呼出された
+］
+⇒
+%~drag対象 ~SET その選択
+◎
+If the drag operation was invoked on a selection, then it is the selection that is being dragged.
+</li>
+			<li>
+<p>
+~ELIF［
+~drag操作oは、 `Document$I 上で呼出された
+］：
+</p>
+				<ol>
+					<li>
+%~node ~LET 利用者が~dragし始めようとしている~node
+</li>
+					<li>
+~IF［［
+%~node, および その先祖
+］のうち［
+`draggable$m ~IDL属性 ~EQ ~T
+］なる要素はある
+］
+⇒
+%~drag対象 ~SET そのような要素のうち， %~node に最も近いもの
+</li>
+					<li>
+~ELSE
+⇒
+~RET 
+— 何も~dragされていないので、~DnD操作oは開始されない。
+</li>
+				</ol>
+
+◎
+Otherwise, if the drag operation was invoked on a Document, it is the first element, going up the ancestor chain, starting at the node that the user tried to drag, that has the IDL attribute draggable set to true. If there is no such element, then nothing is being dragged; return, the drag-and-drop operation is never started.
+</li>
+			<li>
+~ELSE（ ~drag操作oは、~UAの外側から呼出された）
+⇒
+%~drag対象 ~SET
+~dragが開始された所の~app（または，その中の文書~等）により定義されるもの
+— 以下、
+`外部のもの@
+と記すことにする。
+◎
+Otherwise, the drag operation was invoked outside the user agent's purview. What is being dragged is defined by the document or application where the drag was started.
+</li>
+		</ol>
+
+<p class="note">注記：
+次に該当する要素の `draggable$m 属性 は、既定で ~T に設定される
+⇒
+`img$e 要素 ／
+`href$a 属性を有する `a$e 要素
+◎
+img elements and a elements with an href attribute have their draggable attribute set to true by default.
+</p>
+
+	</li>
+	<li>
+`~store@V ~LET 新たな`~drag~data~store$を`作成-$dSした結果
+— この節の手続きにて発火される すべての~DND~eventは、この `~store$V を利用するモノトスル。
+◎
+Create a drag data store. All the DND events fired subsequently by the steps in this section must use this drag data store.
+</li>
+	<li>
+<p>
+`~source~node@V ~SET %~drag対象 に応じて、次で与えられる~node：
+◎
+Establish which DOM node is the source node, as follows:
+</p>
+
+		<dl class="switch">
+			<dt>選択</dt>
+			<dd>
+利用者が~dragを開始した `Text$I ~node
+◎
+↓</dd>
+			<dd>
+これは概して，利用者が最初に~clickした `Text$I ~nodeになるが、利用者が特定0の~nodeを指定しなかった場合には（例えば利用者は、単に， “現在の選択” を~dragし始めるよう~UAに伝えた場合）、
+“現在の選択”
+のある部分を包含しているような，最初の `Text$I ~nodeになる。
+◎
+If it is a selection that is being dragged, then the source node is the Text node that the user started the drag on (typically the Text node that the user originally clicked). If the user did not specify a particular node, for example if the user just told the user agent to begin a drag of "the selection", then the source node is the first Text node containing a part of the selection.
+</dd>
+			<dd class="trans-note">【
+何が選択を表現するのか定義されていないが、選択されている範囲を表現する~DOM`範囲~obj$と考えればよいであろう。
+】</dd>
+
+			<dt>要素</dt>
+			<dd>
+%~drag対象
+◎
+Otherwise, if it is an element that is being dragged, then the source node is the element that is being dragged.
+</dd>
+
+			<dt>`外部のもの$</dt>
+			<dd>
+なし（ %~drag対象 は別の~appの一部である ）
+— この仕様が `~source~node$V に向けて~eventを発火するよう要求する所では、~UAは，代わりに その状況に関連な~platformに特有な規約に従うモノトスル。
+◎
+Otherwise, the source node is part of another document or application. When this specification requires that an event be dispatched at the source node in this case, the user agent must instead follow the platform-specific conventions relevant to that situation.
+</dd>
+		</dl>
+
+<p class="note">注記：
+~DnD操作oの最中には、 `~source~node$V に向けて複数の~eventが発火される。
+◎
+Multiple events are fired on the source node during the course of the drag-and-drop operation.
+</p>
+
+	</li>
+	<li>
+<p>
+`被~drag~node~list@V
+~SET %~drag対象 に応じて、次で与えられる~list：
+◎
+Determine the list of dragged nodes, as follows:
+</p>
+
+		<dl class="switch">
+			<dt>選択</dt>
+			<dd>
+［
+その選択~内に部分的にまたは完全に含まれている†
+］すべての~nodeを包含する，`~tree順序$による~list。
+◎
+If it is a selection that is being dragged, then the list of dragged nodes contains, in tree order, every node that is partially or completely included in the selection (including all their ancestors).
+</dd>
+			<dd class="trans-note">【†
+その選択を表現する`範囲~obj$に
+<a href="~DOM4#partially-contained">部分的に</a>
+または
+<a href="~DOM4#contained">全部的に</a>
+包含されている~node。
+】</dd>
+			<dt>要素</dt>
+			<dd>
+`~source~node$V のみを包含する~list
+◎
+Otherwise, the list of dragged nodes contains only the source node, if any.
+</dd>
+
+			<dt>`外部のもの$</dt>
+			<dd>
+空~list
+◎
+↑</dd>
+		</dl>
+	</li>
+	<li>
+<p>
+%~drag対象 に応じて：
+</p>
+
+		<dl class="switch">
+			<dt>選択</dt>
+			<dd>
+<p>
+次のようにされた`~item$を `~store$V の`~item~list$dSに追加する：
+</p>
+
+<ul><li>`型~文字列$dI ~SET `text/plain$l
+</li><li>`種類$dI ~SET `Text^i
+</li><li>`実data$dI ~SET 選択の~text
+</li></ul>
+
+◎
+If it is a selection that is being dragged, then add an item to the drag data store item list, with its properties set as follows:
+• The drag data item type string
+•• "text/plain"
+• The drag data item kind
+•• Text
+• The actual data
+•• The text of the selection
+</dd>
+
+			<dt>~fileたち（`外部のもの$）</dt>
+			<dd>
+<p>
+次のようにされた`~item$を `~store$V の`~item~list$dSに追加する：
+</p>
+
+<ul><li>`型~文字列$dI ~SET ~fileの~MIME型が既知ならば それ ／
+~ELSE_ `application/octet-stream$l
+</li><li>`種類$dI ~SET `File^i
+</li><li>`実data$dI ~SET ~fileの内容と名前
+</li></ul>
+
+◎
+Otherwise, if any files are being dragged, then add one item per file to the drag data store item list, with their properties set as follows:
+• The drag data item type string
+•• The MIME type of the file, if known, or "application/octet-stream" otherwise.
+• The drag data item kind
+•• File
+• The actual data
+•• The file's contents and name.
+</dd>
+			<dd class="note">注記：
+~fileたちが~dragされるのは、現在の`閲覧文脈$の外側から
+— 例えば ~file~system~~管理~appから —
+に限られる。
+◎
+Dragging files can currently only happen from outside a browsing context, for example from a file system manager application.
+</dd>
+		</dl>
+
+<div class="p">
+<p>
+%~drag対象 が`外部のもの$である場合、次が~UAに要求される：
+</p>
+
+		<ul>
+			<li>
+~platform規約を適切に尊守する下で、~dragされている~dataに適切な`~item$を， `~store$V の`~item~list$dSに追加する。
+</li>
+			<li>
+~platform規約が［
+~dragされた~dataの型として`~MIME型$を利用していない
+］場合、その型から~MIME型へ対応付けるよう極力努める。
+</li>
+			<li>
+いずれにせよ、`~item$の`型~文字列$dIは，`~ASCII小文字~化$されるモノトスル。
+</li>
+		</ul>
+
+◎
+If the drag initiated outside of the application, the user agent must add items to the drag data store item list as appropriate for the data being dragged, honoring platform conventions where appropriate; however, if the platform conventions do not use MIME types to label dragged data, the user agent must make a best-effort attempt to map the types to MIME types, and, in any case, all the drag data item type strings must be converted to ASCII lowercase.
+</div>
+
+<p>
+~UAは、選択／~dragされた要素（たち）を表現するような，他の形による
+— 例：~HTMLとして —
+いくつかの`~item$を追加してもヨイ。
+◎
+User agents may also add one or more items representing the selection or dragged element(s) in other forms, e.g. as HTML.
+</p>
+
+	</li>
+	<li>
+<p>
+~IF［
+`被~drag~node~list$V は空でない
+］：
+</p>
+		<ol>
+			<li>
+%~JSON文字列 ~LET ~list内の~nodeから
+<a href="~HTMLLS/microdata.html#extracting-json">~microdataを抽出して~JSON形に</a>
+した結果
+</li>
+			<li>
+<p>
+次のようにされた`~item$を `~store$V の`~item~list$dSに追加する：
+</p>
+
+<ul><li>`型~文字列$dI ~SET `application/microdata+json$l
+</li><li>`種類$dI ~SET `Text^i
+</li><li>`実data$dI ~SET %~JSON文字列
+</li></ul>
+
+			</li>
+		</ol>
+◎
+If the list of dragged nodes is not empty, then extract the microdata from those nodes into a JSON form, and add one item to the drag data store item list, with its properties set as follows:
+• The drag data item type string
+•• application/microdata+json
+• The drag data item kind
+•• Text
+• The actual data
+•• The resulting JSON string.
+</li>
+	<li>
+<p>
+`(A)^i：
+◎
+Run the following substeps:
+</p>
+		<ol>
+			<li>
+%~url~list ~LET 空~list
+◎
+Let urls be an empty list of absolute URLs.
+</li>
+			<li>
+<p>
+`被~drag~node~list$V 内の ~EACH( %~node ) に対し：
+</p>
+				<ol>
+					<li>
+%~url ~LET ［
+%~node は `a$e 要素であって `href$a 内容~属性を有するならば その属性の値 ／
+~ELSE_ %~node は `img$e 要素であって `src$a 内容~属性を有するならば その属性の値 ／
+~ELSE_ ε
+］
+</li>
+					<li>
+~IF［
+%~url ~EQ ε
+］
+⇒
+~CONTINUE
+</li>
+					<li>
+%~url ~SET %~url を要素の`~node文書$に`相対的に構文解析-$した`結果の~URL文字列$
+</li>
+					<li>
+~IF［
+%~url ~EQ `失敗^i
+］
+⇒
+~CONTINUE
+【この段は、この訳による補完（原文は、この場合にどうするか述べていない）。】
+</li>
+					<li>
+%~url~list に %~url を付加する
+</li>
+				</ol>
+◎
+For each node in the list of dragged nodes:
+• If the node is an a element with an href attribute
+•• Add to urls the result of parsing the element's href content attribute relative to the element's node document.
+• If the node is an img element with a src attribute
+•• Add to urls the result of parsing the element's src content attribute relative to the element's node document.
+</li>
+			<li>
+~IF［
+%~url~list は空である
+］
+⇒
+~BREAK `(A)^i
+◎
+If urls is still empty, then return.
+</li>
+			<li>
+%~url文字列 ~LET %~url~list を［
+<span class="code-point">U+000D</span> <span class="cp-name">CARRIAGE RETURN</span>,
+<span class="code-point">U+000A</span> <span class="cp-name">LINE FEED</span>
+並び（ CRLF ）
+］で`連結する$
+◎
+Let url string be the result of concatenating the strings in urls, in the order they were added, separated by a U+000D CARRIAGE RETURN U+000A LINE FEED character pair (CRLF).
+</li>
+			<li>
+<p>
+次のようにされた`~item$を `~store$V の`~item~list$dSに追加する：
+</p>
+
+<ul><li>`型~文字列$dI ~SET `text/uri-list$l
+</li><li>`種類$dI ~SET `Text^i
+</li><li>`実data$dI ~SET %~url文字列
+</li></ul>
+
+◎
+Add one item to the drag data store item list, with its properties set as follows:
+• The drag data item type string
+•• "text/uri-list"
+• The drag data item kind
+•• Text
+• The actual data
+•• url string
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+`~store$V の`既定の~feedback$dSを，適切に更新する
+— %drag~対象 に応じて：
+</p>
+
+<ul ><li>選択である場合、~feedbackは，その選択に基づくことになるであろう。
+</li><li>要素である場合、その要素の描画が利用されることになるであろう。
+</li><li>`外部のもの$である場合、~UAは，~platform規約を利用して~feedbackを決定するべきである。
+</li>
+</ul>
+
+◎
+Update the drag data store default feedback as appropriate for the user agent (if the user is dragging the selection, then the selection would likely be the basis for this feedback; if the user is dragging an element, then that element's rendering would be used; if the drag began outside the user agent, then the platform conventions for determining the drag feedback should be used).
+</li>
+	<li>
+%~event ~LET `~DND~eventを発火する$( `~source~node$V, `dragstart$et )
+◎
+Fire a DND event named dragstart at the source node.
+</li>
+	<li>
+<p>
+~IF［
+%~event は`取消され$た
+］
+⇒
+~RET
+— ~DnD操作oは生じるべきでない
+◎
+If the event is canceled, then the drag-and-drop operation should not occur; return.
+</p>
+
+<p class="note">注記：
+~event~listenerが登録されていない~eventは、ほぼ定義により，決して取消されないので、~DnDは，作者が特定的に防止しない限り常に利用者に可用になる。
+◎
+Since events with no event listeners registered are, almost by definition, never canceled, drag-and-drop is always available to the user if the author does not specifically prevent it.
+</p>
+
+	</li>
+	<li>
+<p>
+~platform規約に整合な方式で，下に述べるように`~DnD操作oが起動され$る：
+◎
+Initiate the drag-and-drop operation in a manner consistent with platform conventions, and as described below.
+</p>
+
+<p id="base-dnd-feedback">
+~DnD~feedbackは、［
+`~store$V の`~bitmap$dSが可用ならば それ ／
+~ELSE_ `~store$V の`既定の~feedback$dS
+］から生成されるモノトスル
+⇒
+前者の場合、 `~store$V の`~hot-spot座標$dSも，結果の画像の中で~cursorをどこに置くかの~hintとして利用されるべきである。
+値は、画像の ( 左端, 上端 ) からの `~CSS~pixel単位$による距離で表出されるとする。
+`CSS$r
+◎
+The drag-and-drop feedback must be generated from the first of the following sources that is available:
+◎
+The drag data store bitmap, if any. In this case, the drag data store hot spot coordinate should be used as hints for where to put the cursor relative to the resulting image. The values are expressed as distances in CSS pixels from the left side and from the top side of the image respectively. [CSS]
+◎
+The drag data store default feedback.
+</p>
+	</li>
+</ol>
+</div>
+
+<p>
+~UAは、
+`~DnD操作oが起動され@
+た時点から それが終わるまでの間は：
+◎
+From the moment that the user agent is to initiate the drag-and-drop operation, until the end of the drag-and-drop operation,＼
+</p>
+
+<ul>
+	<li>
+装置~入力~event（例： ~mouseや~keyboard~event）は、抑止するモノトスル。
+◎
+device input events (e.g. mouse and keyboard events) must be suppressed.
+</li>
+	<li>
+<p>
+次に挙げるものを保持する
+— これらは、以下に与える手続きに述べるように，~UAにより更新される：
+◎
+↓</p>
+
+		<dl class="def-list">
+			<dt>`現在の標的~要素@</dt>
+			<dd>
+~DnD操作oの~drop先として，現在~選択されている要素。
+初期~時は ~NULL。
+◎
+↓</dd>
+
+			<dt>`直の利用者~選択@</dt>
+			<dd>
+~drag操作oの間に，利用者により直に~drop標的として指示されている要素
+【初期~時は~NULL。】
+（利用者が選択できるのは要素のみであり、他の~nodeは~drop標的として可用にしないモノトスル）。
+しかしながら，`直の利用者~選択$は、`現在の標的~要素$になるとは限らない。
+◎
+During the drag operation, the element directly indicated by the user as the drop target is called the immediate user selection. (Only elements can be selected by the user; other nodes must not be made available as drop targets.) However, the immediate user selection is not necessarily the current target element, which is the element currently selected for the drop part of the drag-and-drop operation.
+</dd>
+
+			<dd>
+`直の利用者~選択$は、利用者が異なる要素を選択するに伴い変化する（~pointing装置によりそれらを指すことにより, あるいは他の何らかの仕方で選択することにより）。
+`直の利用者~選択$が変化するに伴い、下に述べるように，文書~内の~event~listenerによる結果に基づいて，`現在の標的~要素$も変化する。
+◎
+The immediate user selection changes as the user selects different elements (either by pointing at them with a pointing device, or by selecting them in some other way). The current target element changes when the immediate user selection changes, based on the results of event listeners in the document, as described below.
+</dd>
+			<dd>
+`現在の標的~要素$, `直の利用者~選択$
+の両者とも，途中で ~NULL になり得る
+— その場合、どの標的~要素も選択されていないことを意味する。
+また、いずれも［
+同じ~UA内の他の（~DOMに基づく）文書~内の要素, あるいは
+~UA外の~program内の何か
+］にもなり得る（例えば利用者は、~textを~text編集~programに~dragすることもできる。）
+◎
+Both the current target element and the immediate user selection can be null, which means no target element is selected. They can also both be elements in other (DOM-based) documents, or other (non-web) programs altogether. (For example, a user could drag text to a word-processor.) The current target element is initially null.
+</dd>
+
+			<dt>`現在の~drag操作o@</dt>
+			<dd>
+とり得る値は、次のいずれか：
+`none@op （初期~時の値）,
+`copy@op,
+`link@op,
+`move@op
+◎
+In addition, there is also a current drag operation, which can take on the values "none", "copy", "link", and "move". Initially, it has the value "none". It is updated by the user agent as described in the steps below.
+</dd>
+		</dl>
+	</li>
+</ul>
+
+<div class="algo">
+<p>
+~UAは、`~DnD操作oが起動され$たときは，次の手続きを並列的に走らすモノトスル：
+</p>
+
+<p class="trans-note">【
+明確化するため、この訳では，原文の条文的な記述を~algo化して記述している。
+それに伴い、いくつかの用語も導入している。
+】</p>
+
+<ol>
+	<li>
+%停止 ~LET ~F
+</li>
+	<li>
+<p>
+%~task ~LET 次の手続きを遂行する~task：
+</p>
+		<ol>
+			<li>
+~IF［
+利用者は~DnD操作oを終わらせた（例：~mouse駆動な~DnD~UIの下で ~mouse~buttonを解放したなど）
+］
+⇒
+%停止 ~SET ~T
+</li>
+			<li>
+<p>
+~ELSE：
+</p>
+				<ol>
+					<li>
+%~event ~LET `~DND~eventを発火する$( `~source~node$V, `drag$et )
+</li>
+					<li>
+<p >
+~IF［
+%~event は`取消され$た
+］
+</p>
+<ol><li>`現在の~drag操作o$ ~SET `none$op
+</li><li>%停止 ~SET ~T
+</li></ol>
+					</li>
+				</ol>
+			</li>
+			<li>
+~IF［
+%停止 ~EQ ~T
+］
+⇒
+`~drag操作oの最終回~手続き$を走らす
+</li>
+			<li>
+~ELSE
+⇒
+`~drag操作oの継続~手続き$を走らす
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+~WHILE 無条件：
+</p>
+		<ol>
+			<li>
+%~task を`~queueする$
+</li>
+			<li>
+%~task を遂行し終えるまで待機する
+</li>
+			<li>
+~IF［
+%停止 ~EQ ~T
+］
+⇒
+~BREAK
+</li>
+			<li>
+この反復の開始時から約 350ms（±200ms）以上 経過するまで待機する
+</li>
+		</ol>
+	</li>
+</ol>
+
+◎
+User agents must, as soon as the drag operation is initiated and every 350ms (±200ms) thereafter for as long as the drag operation is ongoing, queue a task to perform the following steps in sequence:
+• If the user agent is still performing the previous iteration of the sequence (if any) when the next iteration becomes due, return for this iteration (effectively "skipping missed frames" of the drag-and-drop operation).
+• Fire a DND event named drag at the source node. If this event is canceled, the user agent must set the current drag operation to "none" (no drag operation).
+• If the drag event was not canceled and the user has not ended the drag-and-drop operation, check the state of the drag-and-drop operation, as follows:
+↓
+</div>
+
+<div class="algo">
+<p>
+`~drag操作oの継続~手続き@
+は、次を走らす：
+◎
+↑</p>
+
+<ol>
+	<li>
+%直の選択 ~LET 利用者が現在~drop標的として指示しているもの（何もなければ ~NULL ）
+◎
+↓
+</li>
+	<li>
+~IF［
+%直の選択 は、前回までの`直の利用者~選択$から変化していない
+］
+⇒
+~RET
+◎
+↓</li>
+	<li>
+`直の利用者~選択$ ~SET %直の選択
+◎
+↓</li>
+	<li>
+%前-標的 ~SET `現在の標的~要素$
+◎
+↓</li>
+	<li>
+~IF［
+%直の選択 ~EQ %前-標的
+］
+⇒
+~RET
+◎
+↓</li>
+	<li>
+<p>
+`現在の標的~要素$ ~SET 次の下位手続きを走らせた結果：
+◎
+If the user is indicating a different immediate user selection than during the last iteration (or if this is the first iteration), and if this immediate user selection is not the same as the current target element, then update the current target element as follows:
+</p>
+		<ol>
+			<li>
+~IF［
+%直の選択 は~DOM要素でない
+］
+⇒
+~RET %直の選択
+◎
+If the new immediate user selection is null
+• Set the current target element to null also.
+◎
+If the new immediate user selection is in a non-DOM document or application
+• Set the current target element to the immediate user selection.
+</li>
+			<li>
+%~event ~LET `~DND~eventを発火する$( %直の選択, `dragenter$et )
+◎
+Otherwise
+◎
+Fire a DND event named dragenter at the immediate user selection.
+</li>
+			<li>
+~IF［
+%~event は`取消され$た
+］
+⇒
+~RET %直の選択
+◎
+If the event is canceled, then set the current target element to the immediate user selection.
+◎
+Otherwise, run the appropriate step from the following list:
+</li>
+			<li>
+<p>
+~IF［
+次のいずれも満たされる
+］…：
+</p>
+
+<ul ><li>%直の選択 は`~text編集-域$である
+</li><li>`~store$V の`~item~list$dS内に次を満たす`~item$は在る
+⇒
+［
+`型~文字列$dI ~EQ `text/plain$l
+］~AND［
+`種類$dI ~EQ `Text^i
+］
+</li></ul>
+
+<p>
+…ならば
+⇒
+~RET %直の選択
+</p>
+◎
+If the immediate user selection is a text control (e.g., textarea, or an input element whose type attribute is in the Text state) or an editing host or editable element, and the drag data store item list has an item with the drag data item type string "text/plain" and the drag data item kind text
+• Set the current target element to the immediate user selection anyway.
+</li>
+			<li>
+%文書 ~LET %直の選択 が属する `Document$I ~obj
+◎
+↓</li>
+			<li>
+%body ~LET %文書 の`~body要素$
+◎
+↓</li>
+			<li>
+~IF［
+%直の選択 ~EQ %body
+］
+⇒
+~RET %前-標的
+◎
+If the immediate user selection is the body element
+• Leave the current target element unchanged.
+</li>
+			<li>
+`~DND~eventを発火する$( ［
+%body ~NEQ ~NULL ならば %body ／
+~ELSE_ %文書
+］, `dragenter$et )
+◎
+Otherwise
+• Fire a DND event named dragenter at the body element, if there is one, or at the Document object, if not. Then, set the current target element to the body element, regardless of whether that event was canceled or not.
+</li>
+			<li>
+~RET %body
+</li>
+		</ol>
+	</li>
+	<li>
+%現-標的 ~SET `現在の標的~要素$
+◎
+↓</li>
+	<li>
+~IF［
+%前-標的 は~DOM要素である
+］~AND［
+%現-標的 ~NEQ %前-標的 
+］
+⇒
+`~DND~eventを発火する$( %前-標的, `dragleave$et, %現-標的 )
+◎
+If the previous step caused the current target element to change, and if the previous target element was not null or a part of a non-DOM document, then fire a DND event named dragleave at the previous target element, with the new current target element as the specific related target.
+</li>
+	<li>
+<p>
+~IF［
+%現-標的 は~DOM要素である
+］：
+◎
+If the current target element is a DOM element, then＼
+</p>
+		<ol>
+			<li>
+%~event ~LET `~DND~eventを発火する$( %現-標的, `dragover$et )
+◎
+fire a DND event named dragover at this current target element.
+</li>
+			<li>
+<p>
+~IF［
+%~event は`取消され$なかった
+］：
+◎
+If the dragover event is not canceled, run the appropriate step from the following list:
+</p>
+				<ol>
+					<li>
+<p>
+~IF［
+次のいずれも満たされる
+］…：
+</p>
+
+<ul ><li>%現-標的 は`~text編集-域$である
+</li><li>`~store$V の`~item~list$dS内に次を満たす`~item$は在る
+⇒
+［
+`型~文字列$dI ~EQ `text/plain$l
+］~AND［
+`種類$dI ~EQ `Text^i
+］
+</li></ul>
+
+<p>
+…ならば
+⇒
+`現在の~drag操作o$ ~SET ［
+`copy$op, `move$op
+］のうち，~platform規約に適切な方
+</p>
+
+◎
+If the current target element is a text control (e.g. textarea, or an input element whose type attribute is in the Text state) or an editing host or editable element, and the drag data store item list has an item with the drag data item type string "text/plain" and the drag data item kind text
+• Set the current drag operation to either "copy" or "move", as appropriate given the platform conventions.
+</li>
+					<li>
+~ELSE
+⇒
+`現在の~drag操作o$ ~SET `none$op
+◎
+Otherwise
+• Reset the current drag operation to "none".
+</li>
+				</ol>
+			</li>
+			<li>
+<p>
+~ELSE（ %~event は`取消され$た）
+⇒
+`現在の~drag操作o$ ~SET
+%~event の `dataTransfer$m 属性~値の
+( `effectAllowed$m, `dropEffect$m )
+属性~値に応じて，次の表の 3 列目に与えられる値：
+◎
+Otherwise (if the dragover event is canceled), set the current drag operation based on the values of the effectAllowed and dropEffect attributes of the DragEvent object's dataTransfer object as they stood after the event dispatch finished, as per the following table:
+</p>
+
+<table><thead><tr><th>`effectAllowed$m
+<th>`dropEffect$m
+<th>~drag操作o
+</thead>
+
+<tbody><tr><td>`uninitialized$tE, `copy$tE, `copyLink$tE, `copyMove$tE, `all$tE
+<td>`copy$tD
+<td>`copy$op
+
+<tr><td>`uninitialized$tE, `link$tE, `copyLink$tE, `linkMove$tE, `all$tE
+<td>`link$tD
+<td>`link$op
+
+<tr><td>`uninitialized$tE, `move$tE, `copyMove$tE, `linkMove$tE, `all$tE
+<td>`move$tD
+<td>`move$op
+
+<tr><td colspan="2">
+その他の場合
+◎
+Any other case
+<td>`none$op
+
+</tbody></table>
+
+			</li>
+		</ol>
+	</li>
+	<li>
+~ELSE（ %現-標的 は~DOM要素でない）
+⇒
+`現在の~drag操作o$ ~SET
+~platformに特有な仕組みを利用して，どの~drag操作oを遂行するかを決定した結果（ `none^l, `copy^l, `link^l, `move^l のいずれか）
+◎
+Otherwise, if the current target element is not a DOM element, use platform-specific mechanisms to determine what drag operation is being performed (none, copy, link, or move), and set the current drag operation accordingly.
+</li>
+<li>
+<p>
+次に従って、`現在の~drag操作o$に合致するように
+~drag~feedback（例： ~mouse~cursor）を更新する：
+◎
+Update the drag feedback (e.g. the mouse cursor) to match the current drag operation, as follows:
+</p>
+
+<table><thead><tr><th>
+~drag操作o
+◎
+Drag operation
+<th>
+~feedback
+◎
+Feedback
+</thead>
+
+<tbody><tr><td>`copy$op
+<td>
+ここに~dropされた~dataは複製される。
+◎
+Data will be copied if dropped here.
+
+<tr><td>`link$op
+<td>
+ここに~dropされた~dataは~linkされる。
+◎
+Data will be linked if dropped here.
+
+<tr><td>`move$op
+<td>
+ここに~dropされた~dataは移動される。
+◎
+Data will be moved if dropped here.
+
+<tr><td>`none$op
+<td>
+許容される操作oはない。
+ここに~dropされたときには，~DnD操作oは取消される。
+◎
+No operation allowed, dropping here will cancel the drag-and-drop operation.
+
+</tbody></table>
+
+	</li>
+</ol>
+</div>
+
+<div class="p">
+<p>
+この節に述べる~DnD操作oの［
+継続／最終回
+］手続きの目的においては、次のいずれかに該当するものが
+`~text編集-域@
+とされる：
+</p>
+
+<ul ><li>~text~control（例：
+`textarea$e 要素, ［
+`input$e 要素のうち［
+その `type$a 属性の状態 ~EQ `Text$st
+］なるもの
+］など）
+</li><li>`編集中の~host$
+</li><li>`編集-可能$な要素
+</li></ul>
+◎
+↑↓</div>
+
+<div class="algo">
+<p>
+`~drag操作oの最終回~手続き@
+は、次を走らす：
+◎
+Otherwise, if the user ended the drag-and-drop operation (e.g. by releasing the mouse button in a mouse-driven drag-and-drop interface), or if the drag event was canceled, then this will be the last iteration. Run the following steps, then stop the drag-and-drop operation:
+</p>
+
+<ol>
+	<li>
+%現-標的 ~SET `現在の標的~要素$
+◎
+↓</li>
+	<li>
+<p >
+%~dropされた ~LET ［
+次のいずれかが満たされる（~drag操作oは失敗した）ならば ~F ／
+~ELSE_ ~T
+］
+</p>
+
+<ul><li>`現在の~drag操作o$ ~EQ `none$op
+</li><li>利用者が~DnD操作oを取消して終わらせた（例：
+<kbd><kbd>Escape</kbd></kbd> ~Keyを叩いたなど）
+</li><li>%現-標的 ~EQ ~NULL
+</ul>
+
+◎
+If the current drag operation is "none" (no drag operation), or, if the user ended the drag-and-drop operation by canceling it (e.g. by hitting the Escape key), or if the current target element is null, then the drag operation failed. Run these substeps:
+</li>
+	<li>
+<p>
+~IF［
+%~dropされた ~EQ ~F
+］：
+◎
+Let dropped be false.
+</p>
+
+		<ol>
+			<li>
+~IF［
+%現-標的 は~DOM要素である
+］
+⇒
+`~DND~eventを発火する$( %現-標的, `dragleave$et )
+◎
+If the current target element is a DOM element, fire a DND event named dragleave at it;＼
+</li>
+			<li>
+~ELIF［
+%現-標的 ~NEQ ~NULL
+］
+⇒
+~drag取消n用の~platformに特有な規約を利用する
+◎
+otherwise, if it is not null, use platform-specific conventions for drag cancelation.
+</li>
+			<li>
+`現在の~drag操作o$ ~SET `none$op
+◎
+Set the current drag operation to "none".
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+~ELSE（~drag操作oはおよそ成功した）：
+◎
+Otherwise, the drag operation might be a success; run these substeps:
+◎
+Let dropped be true.
+</p>
+		<ol>
+			<li>
+~IF［
+%現-標的 は ~DOM要素でない
+］
+⇒
+~platformに特有な規約を利用して，~dropを指示する
+◎
+↓</li>
+			<li>
+<p>
+~ELSE
+◎
+If the current target element is a DOM element,＼
+</p>
+				<ol>
+					<li>
+%~event ~LET `~DND~eventを発火する$( %現-標的, `drop$et )
+◎
+fire a DND event named drop at it; otherwise, use platform-specific conventions for indicating a drop.
+</li>
+					<li>
+~IF［
+%~event は`取消され$た
+］
+⇒
+`現在の~drag操作o$ ~SET %~event の `dataTransfer$m 属性~値の `dropEffect$m 属性~値
+◎
+If the event is canceled, set the current drag operation to the value of the dropEffect attribute of the DragEvent object's dataTransfer object as it stood after the event dispatch finished.
+</li>
+					<li>
+<p>
+~ELIF［
+次のいずれも満たされる
+］：
+◎
+Otherwise, the event is not canceled; perform the event's default action, which depends on the exact target as follows:
+</p>
+
+<div >
+<ul ><li>%現-標的 は`~text編集-域$である
+</li><li>`~store$V の`~item~list$dS内に次を満たす`~item$は在る
+⇒
+［
+`型~文字列$dI ~EQ `text/plain$l
+］~AND［
+`種類$dI ~EQ `Text^i
+］
+</li></ul>
+
+◎
+If the current target element is a text control (e.g., textarea, or an input element whose type attribute is in the Text state) or an editing host or editable element, and the drag data store item list has an item with the drag data item type string "text/plain" and the drag data item kind text
+</div>
+
+<p>
+…ならば（ %~event の既定~動作を遂行する）
+⇒
+［
+そのような`~item$のうち，`~store$V の`~item~list$dS内で最初のもの
+］の`実data$dIを，~platformに特有な規約に整合な方式で， %現-標的 の中に挿入する
+（例： 現在の~mouse~cursor位置-の所に挿入する ／ ~fieldの末尾に挿入する。）
+◎
+Insert the actual data of the first item in the drag data store item list to have a drag data item type string of "text/plain" and a drag data item kind that is text into the text control or editing host or editable element in a manner consistent with platform-specific conventions (e.g. inserting it at the current mouse cursor position, or inserting it at the end of the field).
+</p>
+					</li>
+					<li>
+~ELSE
+⇒
+`現在の~drag操作o$ ~SET `none$op
+◎
+Otherwise
+• Reset the current drag operation to "none".
+</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+	<li>
+<p >
+`~DND~eventを発火する$( `~source~node$V, `dragend$et )
+— ~eventの既定~動作として以下を行う：
+◎
+Fire a DND event named dragend at the source node.
+◎
+Run the appropriate steps from the following list as the default action of the dragend event:
+</p>
+		<ol>
+			<li>
+<p>
+~IF［
+次のいずれも満たされる
+］…
+</p>
+
+<ul ><li>%~dropされた ~EQ ~T
+</li><li>`現在の~drag操作o$ ~EQ `move$op
+</li><li>%現-標的 は~text~controlである（下を見よ）
+</li></ul>
+
+<p>
+…ならば：
+</p>
+				<ol>
+					<li>
+~IF［
+~DnD操作oの~sourceは，ある`編集中の~host$の中に全体が包含されているような，~DOM内の選択である
+］
+⇒
+`選択を削除-$する
+</li>
+					<li>
+~ELIF［
+~DnD操作oの~sourceは ある~text~control内の選択である
+］
+⇒
+~UAは~dragされた選択を，当の~text~controlから削除するべきである
+</li>
+				</ol>
+◎
+If dropped is true, the current target element is a text control (see below), the current drag operation is "move", and the source of the drag-and-drop operation is a selection in the DOM that is entirely contained within an editing host
+• Delete the selection.
+◎
+If dropped is true, the current target element is a text control (see below), the current drag operation is "move", and the source of the drag-and-drop operation is a selection in a text control
+• The user agent should delete the dragged selection from the relevant text control.
+</li>
+			<li>
+~ELIF［
+%~dropされた ~EQ ~F
+］~OR［
+`現在の~drag操作o$ ~EQ `none$op
+］
+⇒
+~dragは取消された
+— ~platform規約にて，取消されたことを利用者に向けて表現する（例： ~dragされた選択を，~DnD操作oの~sourceに戻すように~animateするなど）ものと規定されているならば、そうする
+◎
+If dropped is false or if the current drag operation is "none"
+◎
+The drag was canceled. If the platform conventions dictate that this be represented to the user (e.g. by animating the dragged selection going back to the source of the drag-and-drop operation), then do so.
+</li>
+			<li>
+~ELSE
+⇒
+（既定~動作なし）
+◎
+Otherwise
+◎
+The event has no default action.
+</li>
+		</ol>
+
+<p>
+この段の目的においては、次のいずれかに該当するものが~text~controlであるとされる
+⇒
+`textarea$e 要素 ／［
+`input$e 要素のうち，その `type$a 属性の状態 ~IN
+{ `Text$st, `Search$st, `Tel$st, `Url$st, `Email$st, `Password$st, `Number$st }
+］なるもの
+］
+【！この~text~controlと~text編集-域$の~text~controlが同じものを指すのかどうかは、はっきりしない。】
+◎
+For the purposes of this step, a text control is a textarea element or an input element whose type attribute is in one of the Text, Search, Tel, URL, Email, Password, or Number states.
+</p>
+	</li>
+</ol>
+</div>
+
+<p class="note">注記：
+~UAには、~scroll可能な領域の辺に近い~dragに対し，どう反応するか考慮することが奨励される。
+例えば、利用者がある~drag対象を長い~pageの`表示域$の下端~近くに~dragした場合、~pageを~scrollして，利用者がその対象を~pageの~~下方へ~dropできるようにすることはイミを成すであろう。
+◎
+User agents are encouraged to consider how to react to drags near the edge of scrollable regions. For example, if a user drags a link to the bottom of the viewport on a long page, it might make sense to scroll the page so that the user can drop the link lower on the page.
+</p>
+
+<p class="note">注記：
+この~modelは、~nodeを孕んでいる `Document$I ~objからは，独立である
+— 操作oに孕まれる文書がいくつあろうが、上述したとおりに，~eventは発火され，処理~modelを走らす。
+◎
+This model is independent of which Document object the nodes involved are from; the events are fired as described above and the rest of the processing model runs as described above, irrespective of how many documents are involved in the operation.
+</p>
+
+		</section>
+		<section id="dndevents">
+<h3 title="Events summary">6.9.6. ~event要覧</h3>
+
+~INFORMATIVE
+
+<p>
+~DnD~modelに孕まれる~eventを次の一覧に~~要約する：
+◎
+The following events are involved in the drag-and-drop model.
+</p>
+
+<div >
+<table><thead><tr><th>~event名
+<th>標的
+<th>取消~可否
+<th>`~mode$dS
+<th>`dropEffect$m
+<th>既定~動作
+</thead>
+
+<tbody><tr><td>`dragstart@et
+<td>`~source~node$V
+<td>可
+<td>`可書~mode$i
+<td>`none$tD
+<td>~DnD操作oを起動する
+
+<tr><td>`drag@et
+<td>`~source~node$V
+<td>可
+<td>`保護d~mode$i
+<td>`none$tD
+<td>~DnD操作oを継続する
+
+<tr><td>`dragenter@et
+<td>`直の利用者~選択$, または`~body要素$
+<td>可
+<td>`保護d~mode$i
+<td>`effectAllowed$m の<a href="#dropEffect-initialisation">値に基づく</a>
+<td>`現在の標的~要素$になり得るものとして，`直の利用者~選択$は却下する
+
+<tr><td>`dragleave@et
+<td>前回の，`現在の標的~要素$
+<td>不可
+<td>`保護d~mode$i
+<td>`none$tD
+<td>なし
+
+<tr><td>`dragover@et
+<td>`現在の標的~要素$
+<td>可
+<td>`保護d~mode$i
+<td>`effectAllowed$m の<a href="#dropEffect-initialisation">値に基づく</a>
+<td>`現在の~drag操作o$を `none$op に設定し直す
+
+<tr><td>`drop@et
+<td>`現在の標的~要素$
+<td>可
+<td>`読専~mode$i
+<td>`現在の~drag操作o$
+<td>文脈依存
+
+<tr><td>`dragend@et
+<td>`~source~node$V
+<td>不可
+<td>`保護d~mode$i
+<td>`現在の~drag操作o$
+<td>文脈依存
+
+</tbody></table>
+
+◎
+Event name 	Target 	Cancelable? 	Drag data store mode 	dropEffect 	Default Action
+dragstart	Source node	✓ Cancelable	Read/write mode 	"none"	Initiate the drag-and-drop operation
+drag	Source node	✓ Cancelable	Protected mode 	"none"	Continue the drag-and-drop operation
+dragenter	Immediate user selection or the body element	✓ Cancelable	Protected mode 	Based on effectAllowed value	Reject immediate user selection as potential target element
+dragleave	Previous target element	—	Protected mode 	"none"	None
+dragover	Current target element	✓ Cancelable	Protected mode 	Based on effectAllowed value	Reset the current drag operation to "none"
+drop	Current target element	✓ Cancelable	Read-only mode 	Current drag operation	Varies
+dragend	Source node	—	Protected mode 	Current drag operation	Varies
+</div>
+
+<div class="p">
+
+<p>
+これらのどの~eventも：
+</p>
+
+<ul ><li>浮上する。
+</li><li>~composed。
+</li><li>`effectAllowed$m 属性の値は、
+`dragstart$et ~eventを配送した結果の値をとり続ける。
+配送-前は既定の `uninitialized$tE をとる。
+</li></ul>
+◎
+Not shown in the above table: all these events bubble, are composed, and the effectAllowed attribute always has the value it had after the dragstart event, defaulting to "uninitialized" in the dragstart event.
+</div>
+
+		</section>
+		<section id="the-draggable-attribute">
+<h3 title="The draggable attribute">6.9.7. `draggable^a 属性</h3>
+
+<p>
+`draggable$a 内容~属性は、すべての`~HTML要素$に設定できる。
+この属性は`列挙d属性$であり、次の~keyword, および対応する状態をとり得る：
+◎
+All HTML elements may have the draggable content attribute set. The draggable attribute is an enumerated attribute. It has three states.＼
+</p>
+
+<div class="p">
+
+<dl>
+	<dt>`true^v</dt>
+	<dd>
+`~T^st 状態に対応し、要素は~drag可能になることを意味する。
+</dd>
+
+	<dt>`false^v</dt>
+	<dd>
+`~F^st 状態に対応し、要素は~drag可能にならないことを意味する。
+</dd>
+
+	<dt>`値なし用の既定$</dt>
+	<dt>`妥当でない値~用の既定$</dt>
+	<dd>
+`自動^st 状態に対応し、~UAによる既定の挙動を利用することを意味する。
+</dd>
+</dl>
+
+◎
+The first state is true and it has the keyword true. The second state is false and it has the keyword false. The third state is auto; it has no keywords but it is the missing value default and the invalid value default.
+◎
+The true state means the element is draggable; the false state means that it is not. The auto state uses the default behavior of the user agent.
+</div>
+
+<p>
+`draggable$a 属性を有する要素は、視覚的でない対話~用に，
+`title$a 属性で命名されるべきである。
+◎
+An element with a draggable attribute should also have a title attribute that names the element for the purpose of non-visual interactions.
+</p>
+
+<dl class="domintro">
+	<dt>%element . `draggable$m [ = %value ]</dt>
+	<dd>
+［
+要素は~drag可能ならば ~T ／
+~ELSE_ ~F
+］を返す。
+◎
+Returns true if the element is draggable; otherwise, returns false.
+</dd>
+	<dd>
+設定して既定の値を上書きした上で
+`draggable$a 内容~属性を設定できる。
+◎
+Can be set, to override the default and set the draggable content attribute.
+</dd>
+</dl>
+
+<p>
+`draggable@m
+~IDL属性は、要素が~drag可能になるかどうかを制御する：
+◎
+The draggable IDL attribute,＼
+</p>
+<ul>
+	<li>
+その値は、下に述べるように要素の `draggable$a 内容~属性に依存する。
+~drag可能になるものは，一般には~text選択に限られるが、この~IDL属性が ~T に設定された要素も~drag可能になる。
+◎
+whose value depends on the content attribute's in the way described below, controls whether or not the element is draggable. Generally, only text selections are draggable, but elements whose draggable IDL attribute is true become draggable as well.
+</li>
+	<li class="algo">
+その取得子~手続きは
+⇒
+~RET コレの `draggable$a 内容~属性の状態に応じて
+⇒＃
+`~T^st ならば ~T ／
+`~F^st ならば ~F ／
+`自動^st ならば［ コレは次のいずれかに該当するならば ~T ／ ~ELSE_ ~F ］ ⇒＃
+`img$e 要素である ／
+画像を`表現-$する `object$e 要素である ／
+`href$a 内容~属性を有する `a$e 要素である
+◎
+If an element's draggable content attribute has the state true, the draggable IDL attribute must return true.
+◎
+Otherwise, if the element's draggable content attribute has the state false, the draggable IDL attribute must return false.
+◎
+Otherwise, the element's draggable content attribute has the state auto. If the element is an img element, an object element that represents an image, or an a element with an href content attribute, the draggable IDL attribute must return true; otherwise, the draggable IDL attribute must return false.
+</li>
+	<li class="algo">
+その設定子~手続きは
+⇒
+コレの `draggable$a 内容~属性を，所与の値に応じて［
+~F ならば `false^l ／
+~T ならば `true^l
+］に設定する
+◎
+If the draggable IDL attribute is set to the value false, the draggable content attribute must be set to the literal value "false". If the draggable IDL attribute is set to the value true, the draggable content attribute must be set to the literal value "true".
+</li>
+</ul>
+
+		</section>
+		<section id="security-risks-in-the-drag-and-drop-model">
+<h3 title="Security risks in the drag-and-drop model">6.9.8. ~DnD~modelにおける~security~risk</h3>
+
+<p>
+~UAは、 `drop$et ~eventを配送するまで，［
+`dragstart$et ~eventの間に `DataTransfer$I ~objに追加された~data
+］を~scriptから可用にしないモノトスル
+— さもなければ、利用者がある文書から別の文書へ敏感な情報を~dragしていて，その途上で また別の敵対的な文書を通過するときに、~dataが傍受され得ることになるので。
+◎
+User agents must not make the data added to the DataTransfer object during the dragstart event available to scripts until the drop event, because otherwise, if a user were to drag sensitive information from one document to a second document, crossing a hostile third document in the process, the hostile document could intercept the data.
+</p>
+
+<p>
+同じ理由から，~UAは、利用者が特定的に~drag操作oを終わらせた場合に限り，~dropは成功したと見なすことが要求される。
+— ~scriptが終わらせたどの~drag操作oも，成功しなかった（取消された）ものと見なした上で、 `drop$et ~eventは発火しないことが要求される。
+◎
+For the same reason, user agents must consider a drop to be successful only if the user specifically ended the drag operation — if any scripts end the drag operation, it must be considered unsuccessful (canceled) and the drop event must not be fired.
+</p>
+
+<p>
+~UAは、~DnD操作oが，~script動作に呼応して開始されないように~~注意を払うべきである。
+例えば、~mouseと~windowを備える環境の下で，利用者が~mouse~button押下げている間に ~scriptが~windowを移動させた場合、~UAはそれを~dragの開始-と見なさないようにすることが重要になる。
+さもなければ、利用者の同意tなしに，敏感な~sourceから~dataが~dragされ，敵対的な文書の中へ~dropされかねないので。
+◎
+User agents should take care to not start drag-and-drop operations in response to script actions. For example, in a mouse-and-window environment, if a script moves a window while the user has their mouse button depressed, the UA would not consider that to start a drag. This is important because otherwise UAs could cause data to be dragged from sensitive sources and dropped into hostile documents without the user's consent.
+</p>
+
+<p>
+~UAは、~drag／~drop時に、既知かつ安全な特能~listを利用して，（~scriptなどが）作動化され得る内容（例：~HTML）をふるいにかけるべきである。
+同様に，`相対~URL$に対しては、その参照~先が予期されない仕方で変化しないよう，`絶対~URL$に転化するべきである。
+この仕様は、これをどう遂行するかについては指定しない。
+◎
+User agents should filter potentially active (scripted) content (e.g. HTML) when it is dragged and when it is dropped, using a safelist of known-safe features. Similarly, relative URLs should be turned into absolute URLs to avoid references changing in unexpected ways. This specification does not specify how this is performed.
+</p>
+
+<p class="example">
+敵対的な~pageが、ある内容を供していて，利用者にその内容を選択させた上で 被害~pageの `contenteditable$a 領域へ ~DnDさせる（または ~~実際に~copy＆~pasteする）ことを考える。
+~browserが，安全な内容のみが~dragされることを確保しなかった場合、被害~siteの中に~dropされた（または ~pasteされた）選択~内の~scriptや~event~handlerなど，安全でないかもしれない内容は、被害~siteの特権を取得することになり、~XSS攻撃を可能化することになる。
+◎
+Consider a hostile page providing some content and getting the user to select and drag and drop (or indeed, copy and paste) that content to a victim page's contenteditable region. If the browser does not ensure that only safe content is dragged, potentially unsafe content such as scripts and event handlers in the selection, once dropped (or pasted) into the victim site, get the privileges of the victim site. This would thus enable a cross-site scripting attack.
+</p>
+
+		</section>
+	</section>
+</main>

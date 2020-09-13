@@ -1,0 +1,1118 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>Paint Timing 1（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-w3c.css" type="text/css" />
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w一-鿆~あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'I':
+	href = `#${key}`;
+	break;
+case 'm':
+	key = key.replace(/\(.+/, '');
+	text = key + text.replace(/^[^\(]+/, '').replace(/\w+/g, '<var>$&</var>' );
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+spec_title:Paint Timing 1
+spec_date:2020-04-20
+trans_update:2020-04-02
+source_checked:180401
+page_state_key:TIMING
+original_url:https://w3c.github.io/paint-timing/
+	abbr_url:
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+	conformance:w3c
+copyright:2020,permissive
+trans_1st_pub:2018-05-12
+
+
+●●class_map
+e:element
+a:attr
+p:property
+t:type
+v:value
+
+●●tag_map
+I:code
+m:code
+e:code
+a:code
+p:code
+v:code
+i:i
+t:var
+
+●●original_id_map
+
+●●mdn_urls
+performancepainttiming:API/PerformancePaintTiming
+
+●●link_map
+
+Exposed:~WEBIDLjs#Exposed
+
+I.PerformancePaintTiming:#performancepainttiming
+I.DOMHighResTimeStamp:~HRTIME#dom-domhighrestimestamp
+	I.DOMString:~WEBIDL#idl-DOMString
+I.PerformanceEntry:~TIMELINE#the-performanceentry-interface
+~window:~WINDOW#the-window-object
+	I.Window:~WINDOW#window
+
+m.duration:~TIMELINE#dom-performanceentry-duration
+m.entryType:~TIMELINE#dom-performanceentry-entrytype
+m.name:~TIMELINE#dom-performanceentry-name
+m.startTime:~TIMELINE#dom-performanceentry-starttime
+m.supportedEntryTypes:~TIMELINE#dom-performanceobserver-supportedentrytypes
+	~TIMELINE#supportedentrytypes-attribute
+
+m.getBoundingClientRect:~CSSOMVIEW#dom-element-getboundingclientrect
+
+
+p.background-image:~CSSBG#propdef-background-image
+p.background-size:~CSSBG#propdef-background-size
+	p.background-size:~TR/css-backgrounds-3/#background-size
+p.visibility:~CSS2VISUFX#propdef-visibility
+p.opacity:~CSSCOLOR#propdef-opacity
+	~TR/css-color-3#opacity
+p.overflow:~CSSOVERFLOW3#propdef-overflow
+p.display:~CSSDISP#propdef-display
+
+t.image:~CSSIMAGE#typedef-image
+t.url:~CSSVAL#url-value
+
+e.canvas:~HEcanvas#the-canvas-element
+	~canvas:~HEcanvas#canvas
+e.video:~HEmedia#the-video-element
+e.svg:~SVGstruct#elementdef-svg
+e.input:~HEinput#the-input-element
+
+a.value:~HEinput#attr-input-value
+
+塗り:#paint
+塗り計時に適格:#paint-timing-eligible
+最初の塗り:#first-paint
+最初の有内容な塗り:#first-contentful-paint
+以前に報告した塗り:#previously-reported-paints
+最初の有内容な塗りを報告するべき:#should-report-first-contentful-paint
+
+有内容:#contentful
+有内容な画像:#contentful-image
+塗り可能な限界~矩形:#paintable-bounding-rect
+塗り可能:#paintable
+塗り可能な疑似要素:#paintable-pseudo-element
+
+塗り計時を報告する:#report-paint-timing
+塗り計時を刻む:#mark-paint-timing
+
+空でない~text:#non-empty
+
+	●用語（外部
+新たな:~WEBIDLjs#new
+
+集合:~INFRA#sets
+付加する:~INFRA#list-append
+
+処理能~entryを~queueする:~TIMELINE#dfn-queue-a-performanceentry
+	現在の高分解能~時刻:~HRTIME#dfn-current-high-resolution-time
+
+~top-level閲覧文脈:~BROWSERS#top-level-browsing-context
+入子の閲覧文脈:~BROWSERS#nested-browsing-context
+閲覧文脈:~BROWSERS#browsing-context
+
+描画を更新する段:~WAPI#update-the-rendering
+	:~WAPI#event-loop-processing-model
+~event~loop処理~model:~WAPI#event-loop-processing-model
+関連な~Realm:~WAPI#concept-relevant-realm
+rM.大域~obj:~WAPI#concept-realm-global
+関連な設定群~obj:~WAPI#relevant-settings-object
+enV.担当の閲覧文脈:~WAPI#responsible-browsing-context
+
+
+文書:~DOM4#concept-document
+
+~box:~CSSDISP#box
+~text~node:~CSSDISP#text-nodes
+使用~値:~CASCADE#used-value
+	使用~値:~CASCADE#used
+~scroll用~区画:~CSSOMVIEW#scrolling-area
+空白:~CSSTEXT#white-space
+出自の要素:~SELECTORS4#originating-element
+
+要素:~HTMLdom#element
+表現-:~HTMLdom#represents
+具現化されて:~HTMLrendering#being-rendered
+置換d要素:~HTMLrendering#replaced-elements
+画像:~HEimages#images
+~canvas文脈~mode:~HEcanvas#concept-canvas-context-mode
+	可用:~HEimages#img-available
+可用な画像:~HEimages#img-available
+~poster~frame:~HEmedia#poster-frame
+
+●●words_table1
+
+
+●●words_table
+
+	●呈示／CSS
+iframe:
+封入-:enclose:~
+知覚-:perceive::~
+背景:background:~
+切取る:clipする::切り取る
+切取られ:clipされ::切り取られ
+拡縮-:scale::~
+限界:bounding::~
+矩形:rectangle::~
+	%限界~矩形:boundingRect
+	矩形:rect／Rect
+zoom::::ズーム
+出自の:originating::~
+色:color::~
+poster::::ポスター
+typographic::::タイポグラフィック
+	typographicな:typographical
+不透明度:opacity::~
+
+	●計時／塗り／perf
+
+	時点:moments
+	時点:the point
+	時点:time when
+	時点:the time at which
+	時点:the points
+	時点:when
+	時点:when the point
+	起こる:happen
+
+計量:metric::~
+捕捉-:capture::~
+	~page読込:pageload
+刻む:markする::~
+刻まな:markしな::~
+有内容:contentful::~
+塗り:paint::~
+	塗り可能:paintable
+	最初の有内容な塗り:first contentful paint／:FCP
+	最初の塗り:first paint／:FP
+	塗りの種別:minimal frame attribution
+	塗り計時:paint-timing／paint timing
+	処理能~entryを~queueする:Add the PerformanceEntry
+	-:record
+	~~記録可能:able to note
+	報告-法:reporting
+
+	●処理一般
+pipeline:
+	何もしない:do nothing
+
+	●仕様
+
+問い:question:~
+答える:answerする:~
+主要な:key:~
+適格:eligible:~
+
+	関知する:aware of
+	対照的に:By contrast
+	とても:very
+	導いた:lead した
+	~~意見:input
+	満たす:apply
+	注記-:note
+
+	●未分類
+解析:analytics:~
+白紙:blank:~
+露呈-:reveal:露わに
+
+	含まれない:exclude
+	文字列:DOMString
+	後続する:followed by
+	長い:long
+	%文書:Document
+	既定でない:non-default
+	最善な労の下で:best effort
+	-:docs
+	-:instance
+	-:possible
+	-:target
+	転換-:turn into
+	%報告した塗り:reportedPaints
+	%閲覧文脈:ctx
+	初期~時:initiallize
+	満たす:apply
+	-:choose
+	-:know
+	含める:includeする
+
+	●指示語
+main:
+	一連の:a series of
+	何であれ:anything
+	-:何かを
+	直後:immediately after
+	前に:prior to
+	あったもの:what was
+	互いの:and vice versa
+	最新の:latest
+	〜以外の:excluding
+	〜個以上は:at least
+	〜の他に:in addition to
+	少なくとも，:at the very least
+
+●●ref_normative
+
+[CSS-BACKGROUNDS-3]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. 17 October 2017. CR. URL: https://www.w3.org/TR/css-backgrounds-3/ 
+[CSS-COLOR-3]
+    Tantek Çelik; Chris Lilley; David Baron. CSS Color Module Level 3. 19 June 2018. REC. URL: https://www.w3.org/TR/css-color-3/ 
+[CSS-DISPLAY-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Display Module Level 3. 11 July 2019. CR. URL: https://www.w3.org/TR/css-display-3/ 
+[CSS-TEXT-3]
+    Elika Etemad; Koji Ishii; Florian Rivoal. CSS Text Module Level 3. 13 November 2019. WD. URL: https://www.w3.org/TR/css-text-3/ 
+[DOM]
+    Anne van Kesteren. DOM Standard. Living Standard. URL: https://dom.spec.whatwg.org/ 
+[HR-TIME-2]
+    Ilya Grigorik. High Resolution Time Level 2. 21 November 2019. REC. URL: https://www.w3.org/TR/hr-time-2/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[PERFORMANCE-TIMELINE-2]
+    Ilya Grigorik. Performance Timeline Level 2. 24 October 2019. WD. URL: https://www.w3.org/TR/performance-timeline-2/ 
+[SELECTORS-4]
+    Elika Etemad; Tab Atkins Jr.. Selectors Level 4. 21 November 2018. WD. URL: https://www.w3.org/TR/selectors-4/ 
+[WebIDL]
+    Boris Zbarsky. Web IDL. 15 December 2016. ED. URL: https://heycam.github.io/webidl/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより，副題に日付にて編集者草案として公開された
+<a href="~SPEC_URL">Paint Timing 1</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/paint-timing/
+最新の課題
+	<a href="https://github.com/w3c/paint-timing/issues/">GitHub</a>
+編集
+	<a href="npm@chromium.org">Nicolás Peña Moreno</a> (Google)
+	<a href="noam@webkit.org">Noam Rosenthal</a> (Invited Expert)
+前任編集者
+	<a href="mailto:panicker@google.com">Shubhie Panicker</a> (Google)
+Mailing list
+	<a href="mailto:public-web-perf@w3.org?subject=%5Bpaint-timing%5D">public-web-perf@w3.org</a> (<a href="mailto:public-web-perf-request@w3.org?subject=subscribe">subscribe</a>, <a href="https://lists.w3.org/Archives/Public/public-web-perf/">archives</a>)
+commit 履歴
+	https://github.com/w3c/paint-timing/commits/master
+発行者
+	<a href="https://www.w3.org/webperf/">Web Performance</a> Working Group
+
+</script>
+
+</head>
+<body>
+
+<header>
+
+	<hgroup>
+<h1 id="title">塗りの計時 — Paint Timing 1</h1>
+	</hgroup>
+
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この文書は、［
+開発者が~page読込nの間に~careする，一連の主要な時点（`最初の塗り$, `最初の有内容な塗り$）
+］を捕捉するために利用できる~APIを定義する。
+◎
+This document defines an API that can be used to capture a series of key moments (first paint, first contentful paint) during pageload which developers care about.
+</p>
+
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公の複製です…
+【以下、この節の他の内容は <a href="w3c-common-ja.html#status">W3C 日本語訳 共通ページ</a>／冒頭の仕様メタデータに委譲。】
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+~pageの読込nは、~~時間軸における単独の時点ではない
+— それは、ある 1 つの計量で全部的に捕捉できる体験ではない。
+読込n体験の間には、［
+利用者が “速い”, “遅い” どちらに知覚するか
+］に影響し得るような，複数の時点がある。
+◎
+Load is not a single moment in time — it’s an experience that no one metric can fully capture. There are multiple moments during the load experience that can affect whether a user perceives it as "fast" or "slow".
+</p>
+
+<p>
+`最初の塗り$は，これらの主要な時点のうち最初のものであり、`最初の有内容な塗り$が，それに後続する。
+これらの計量は、~browserが所与の文書を描画する時点を刻む。
+これは、 “起きているのか？” の問いに答えるので，利用者にとって重要になる。
+◎
+First paint (FP) is the first of these key moments, followed by first contentful paint (FCP). These metrics mark the points in time when the browser renders a given document. This is important to the user because it answers the question: is it happening?
+</p>
+
+<p>
+2 つの計量の首な相違は：
+`最初の塗り$は、［
+~browserが所与の文書~用に初めて何かを描画する時点
+］を刻む。
+対照的に，`最初の有内容な塗り$は、［
+~browserが~DOMからの画像や~text内容を成す最初の~bitを描画する時点
+］を刻む。
+◎
+The primary difference between the two metrics is FP marks the first time the browser renders anything for a given document. By contrast, FCP marks the time when the browser renders the first bit of image or text content from the DOM.
+</p>
+
+		<section id="example">
+<h3 title="Usage example">1.1. 用法~例</h3>
+
+<pre class="example lang-js">
+var %observer = new PerformanceObserver(function(%list) {
+    var %perfEntries = %list.getEntries();
+    for (var %i = 0; %i &lt; %perfEntries.length; %i++) {
+        /* <span class="comment">
+解析と監視~用に，~entryたちを処理して報告する…
+◎
+Process entries report back for analytics and monitoring ...
+</span> */
+    }
+});
+
+/* <span class="comment">
+塗り計時の通知~用に観測器を登録する
+◎
+register observer for paint timing notifications
+</span> */
+%observer.observe({entryTypes: ["paint"]});
+</pre>
+
+		</section>
+	</section>
+	<section id="sec-terminology">
+<h2 title="Terminology">2. 各種用語</h2>
+
+<dl>
+	<dt>
+`塗り@
+（ `paint^en ）
+◎
+Paint:
+</dt>
+	<dd>
+~UAが描画-~treeを~screen上の画素に変換したときに遂行した “塗り” （あるいは “描画-” ）。
+正式には、`~event~loop処理~model$において`描画を更新する段$を遂行したとき，~UAは文書を “描画した” と見なされる。
+◎
+the user agent has performed a "paint" (or "render") when it has converted the render tree to pixels on the screen. Formally, we consider the user agent to have "rendered" a document when it has performed the update the rendering steps of the event loop.
+</dd>
+	<dd class="note">注記：
+描画~pipelineは とても複階的なので、そのときを指す時刻印は，~UAが この~pipelineにおいて~~記録可能な最新の時刻印になるべきである（最善な労の下で）。
+この~API用には、概して，表示-用の~frameが~OSに提出される時点が推奨される。
+◎
+NOTE: The rendering pipeline is very complex, and the timestamp should be the latest timestamp the user agent is able to note in this pipeline (best effort). Typically the time at which the frame is submitted to the OS for display is recommended for this API.
+</dd>
+
+	<dt>
+`塗り可能な疑似要素@
+（ `paintable pseudo-element^en ）
+◎
+A generated content pseudo-element is a paintable pseudo-element＼
+</dt>
+	<dd>
+<p>
+<a href="~CSSPSEUDO#generated-content">生成d内容~疑似要素</a>であって，次に挙げるすべてを満たすもの：
+◎
+when all of the following apply:
+</p>
+		<ul>
+			<li>
+`visibility$p の`使用~値$ ~EQ `visible^v
+◎
+The pseudo-element’s used visibility is visible.
+</li>
+			<li>
+`opacity$p の`使用~値$ ~GT 0
+◎
+The pseudo-element’s used opacity is greater than zero.
+</li>
+			<li>
+空でない`~box$を生成する
+◎
+The pseudo-element generates a non-empty box.
+</li>
+		</ul>
+	</dd>
+
+	<dt>
+`有内容な画像@
+（ `contentful image^en ）
+◎
+A CSS image img is a contentful image＼
+</dt>
+	<dd>
+<p>
+`image$t による~CSS画像であって，次に挙げるすべてを満たすもの：
+◎
+when all of the following apply:
+</p>
+
+		<ul>
+			<li>
+`image$t は `url$t である
+◎
+img is url valued.
+</li>
+			<li>
+`可用な画像$を表現している
+◎
+img is available.
+</li>
+		</ul>
+	</dd>
+
+	<dt>
+`空でない~text@
+</dt>
+	<dd>
+1 個~以上の`空白$でない文字を包含する文字列【！DOMString】。
+◎
+A DOMString is non-empty if it contains at least one character excluding document white space characters.
+</dd>
+
+	<dt>
+`有内容@
+（ `contentful^en ）な要素
+◎
+An element target is contentful＼
+</dt>
+	<dd>
+<p>
+次に挙げるいずれかを満たす`要素$：
+◎
+when one or more of the following apply:
+</p>
+		<ul>
+			<li>
+<p>
+次を満たす`~text~node$が子に在る
+⇒
+［
+`空でない~text$を表現している
+］~AND［
+`opacity$p の`使用~値$ ~GT 0 †
+］
+◎
+target has a text node child, representing non-empty text, and the node’s used opacity is greater than zero.
+</p>
+
+<p class="note">注記：†
+これは、ある
+<a href="~CSSPSEUDO#typographic-pseudos">~typographicな疑似要素</a>
+が，この~text~nodeの不透明度を上書きする事例を受持つ。
+◎
+NOTE: this covers the case where a typographical pseudo-element would override the opacity of the text node.
+</p>
+			</li>
+			<li>
+`可用な画像$【！`画像$】を表現している`置換d要素$である
+◎
+target is a replaced element representing an available image.
+</li>
+			<li>
+［
+`background-image$p は`有内容な画像$である
+］~AND［
+`background-size$p の`使用~値$の横幅, 縦幅とも 0 でない
+］
+◎
+target has a background-image which is a contentful image, and its used background-size has non-zero width and height values.
+</li>
+			<li>
+次を満たす `canvas$e 要素である
+⇒
+`~canvas文脈~mode$ ~NEQ `none^v
+◎
+target is a canvas with its context mode set to any value other than none.
+</li>
+			<li>
+次を満たす `video$e 要素である
+⇒
+その［
+`~poster~frame$／最初の動画~frame
+］を`表現-$していて，当の~frameは可用である
+◎
+target is a video element that represents its poster frame or the first video frame and the frame is available.
+</li>
+			<li>
+次を満たす `svg$e 要素である
+⇒
+<a href="~SVGrender#Rendered-vs-NonRendered">描画される子孫がある</a>
+◎
+target is an svg element with rendered descendants.
+</li>
+			<li>
+次を満たす `input$e 要素である
+⇒
+`value$a 属性を有していて, その値は`空でない~text$である
+◎
+target is an input element with a non-empty value attribute.
+</li>
+			<li>
+［
+次のいずれかを表現する`塗り可能な疑似要素$
+］の`出自の要素$である
+⇒＃
+`有内容な画像$／
+`空でない~text$
+◎
+target is an originating element for a paintable pseudo-element that represents a contentful image or non-empty text.
+</li>
+		</ul>
+	</dd>
+	<dd class="trans-note">【
+語義的には，［
+子孫に`有内容$な要素が在る要素も`有内容$である
+］と見なしたくなる所だが、上の定義はそうなっていない。
+とはいえ，そのように定義を改めても結果は同じになる（現時点では, および この仕様に限るなら）。
+】</dd>
+
+	<dt>
+`塗り可能な限界~矩形@
+（ `paintable bounding rect^en ）
+◎
+＼
+</dt>
+	<dd>
+<p>
+`要素$ %要素 の`塗り可能な限界~矩形$を算出するときは、次の手続きを走らす：
+◎
+To compute the paintable bounding rect of element target, run the following steps:
+</p>
+		<ol>
+			<li>
+%限界~矩形 ~LET 次を走らせた結果
+⇒
+%要素 上の `getBoundingClientRect()$m の手続き()
+◎
+Let boundingRect be the result of running the getBoundingClientRect on target.
+</li>
+			<li>
+%限界~矩形 を`文書$の`~scroll用~区画$で切取る
+◎
+Clip boundingRect with the document's scrolling area.
+</li>
+			<li>
+~RET %限界~矩形
+◎
+Return boundingRect.
+</li>
+</ol>
+
+<p class="note">注記：
+要素が［
+`overflow$p が［
+`scroll^v ／ `hidden^v
+］にされた~box
+］に包含されている場合、`塗り可能な限界~矩形$は切取られない
+— 両~事例とも，`要素$を~scrollすることで可視になり得るので。
+◎
+NOTE: elements contained by boxes with overflow: scroll or overflow: hidden don’t have their paintable bounding rect clipped, as in both cases the element can become visible by scrolling.
+</p>
+
+	</dd>
+
+	<dt>
+`塗り可能@
+（ `paintable^en ）な要素
+◎
+An element el is paintable＼
+</dt>
+	<dd>
+<p>
+次に挙げるすべてを満たす`要素$
+◎
+when all of the following apply:
+</p>
+		<ul>
+			<li>
+`具現化されて$いる
+◎
+el is being rendered.
+</li>
+			<li>
+`visibility$p の`使用~値$ ~EQ `visible^v
+◎
+el’s used visibility is visible.
+</li>
+			<li>
+<p>
+自身, および そのどの先祖も，次を満たす
+⇒
+`opacity$p の`使用~値$ ~GT 0
+◎
+el and all of its ancestors' used opacity is greater than zero.
+</p>
+
+<p class="note">注記：
+例えば，~textがその背景と同じ色である事例など、塗り可能な`要素$が利用者から可視にならない事例もある。
+それらの要素は、`最初の有内容な塗り$を算出する目的においては，依然として塗り可能と見なされる。
+◎
+NOTE: there could be cases where a paintable element would not be visible to the user, for example in the case of text that has the same color as its background. Those elements would still considered as paintable for the purpose of computing first contentful paint.
+</p>
+			</li>
+			<li>
+<p>
+その`塗り可能な限界~矩形$は、`文書$の`~scroll用~区画$と交差する
+◎
+el’s paintable bounding rect intersects with the scrolling area of the document.
+</p>
+
+<p class="note">注記：
+これは、次に挙げるような，内容【区画】が空な矩形に解決される事例を受持つ
+⇒＃
+要素は~size 0 に拡縮される／
+`display$p は `none^v または `contents^v
+◎
+NOTE: This covers the cases where the element is scaled to zero size, has display: none, or display: contents where the contents resolve to an empty rect.
+</p>
+
+<p class="note">注記：
+一般~規則として，`要素$は、表示域の中にあるか［
+~scrollする／~zoomする
+］ことでそうなり得るならば塗り可能である。
+◎
+NOTE: As a general rule, an element is paintable if it is within the viewport, or can potentially be in the viewport as a result of scrolling or zooming.
+</p>
+			</li>
+		</ul>
+	</dd>
+
+	<dt>
+`最初の塗り@
+（ `first paint^en ／ <abbr>FP</abbr> ）
+◎
+First paint
+</dt>
+	<dd>
+これに対応する~entryは、
+`DOMHighResTimeStamp$I 値を包含する
+— それは、~UAが~navi後に最初に何かを描画した時点を報告する。
+これには、既定の背景~塗りは含まれないが，［
+既定でない背景 ／ ~iframeを封入している~box
+］の塗りは含まれる。
+これは、開発者が~pageの読込nについて~careする最初の主要な時点
+— ~UAが~pageの描画を開始したとき —
+を表す。
+◎
+entry contains a DOMHighResTimeStamp reporting the time when the user agent first rendered after navigation. This excludes the default background paint, but includes non-default background paint and the enclosing box of an iframe. This is the first key moment developers care about in page load – when the user agent has started to render the page.
+</dd>
+
+	<dt>
+`塗り計時に適格@
+（ `paint-timing eligible^en ）
+◎
+↓</dt>
+	<dd>
+<p>
+`閲覧文脈$は、次のいずれかを満たすならば，`塗り計時に適格$であるとされる：
+◎
+A browsing context ctx is paint-timing eligible when one of the following apply:
+</p>
+		<ul>
+			<li>
+`~top-level閲覧文脈$である
+◎
+ctx is a top-level browsing context.
+</li>
+			<li>
+<p>
+［
+`入子の閲覧文脈$である
+］~AND［
+~UAは、［
+この閲覧文脈が塗り計時を報告する
+］よう環境設定されている
+］
+◎
+ctx is a nested browsing context, and the user agent has configured ctx to report paint timing.
+</p>
+
+<p class="note">注記：
+これは、［
+~main~frameの他に，塗り計時を可能化する~frameは、一部に限る
+］ことを，~UAに許容する。
+例えば，~UAは、非同一-生成元に属する~iframe用には，塗り計時を不能化するよう裁定してもヨイ
+— 一部の局面においては、それらの塗り計時は~main~frameについての情報を露呈するかもしれないので。
+◎
+NOTE: this allows user agents to enable paint-timing only for some of the frames, in addition to the main frame, if they so choose. For example, a user agent may decide to disable paint-timing for cross-origin iframes, as in some scenarios their paint-timing might reveal information about the main frame.
+</p>
+			</li>
+		</ul>
+	</dd>
+</dl>
+
+	</section>
+	<section id="sec-PerformancePaintTiming">
+<h2 title="The PerformancePaintTiming interface">3. `PerformancePaintTiming^I ~interface</h2>
+
+<pre class="idl">
+[`Exposed$=Window]
+interface `PerformancePaintTiming@I : `PerformanceEntry$I {};
+</pre>
+
+<p>
+`PerformancePaintTiming$I は、 `PerformanceEntry$I ~interfaceの以下に挙げる属性を拡張する：
+◎
+PerformancePaintTiming extends the following attributes of PerformanceEntry interface:
+</p>
+
+<ul>
+	<li class="algo">
+`name$m 取得子~手続きは
+⇒
+~RET 生じた塗りの種別に応じて，次に与える文字列
+⇒＃
+`最初の塗り$用には `first-paint^l ／
+`最初の有内容な塗り$用には `first-contentful-paint^l
+◎
+The name attribute’s getter must return a DOMString for minimal frame attribution. Possible values of name are:
+• "first-paint": for first paint
+• "first-contentful-paint": for first contentful paint
+</li>
+	<li class="algo">
+`entryType$m 取得子~手続きは
+⇒
+~RET `paint^l
+◎
+The entryType attribute’s getter must return "paint".
+</li>
+	<li class="algo">
+`startTime$m 取得子~手続きは
+⇒
+~RET 塗りが生じた時点を表す `DOMHighResTimeStamp$I 値
+◎
+The startTime attribute’s getter must return a DOMHighResTimeStamp of when the paint occured.
+</li>
+	<li class="algo">
+`duration$m 取得子~手続きは
+⇒
+~RET 0
+◎
+The duration attribute’s getter must return 0.
+</li>
+</ul>
+
+<p class="note">注記：
+`PerformancePaintTiming$I を実装している~UAは、`大域~obj$rMのうち［
+それに`関連な設定群~obj$の`担当の閲覧文脈$enVは`塗り計時に適格$であるもの
+］には，その `supportedEntryTypes$m 内に `paint^l を含める必要がある。
+これは、［
+特定0の`閲覧文脈$に対し塗り計時~用の~supportを検出すること
+］を，開発者に許容する。
+◎
+NOTE: A user agent implementing PerformancePaintTiming would need to include "paint" in supportedEntryTypes of a global object whose relevant settings object's responsible browsing context is paint-timing eligible. This allows developers to detect support for paint timing for a particular browsing context.
+</p>
+
+	</section>
+	<section id="sec-processing-model">
+<h2 title="Processing model">4. 処理~model</h2>
+
+		<section id="sec-reporting-paint-timing">
+<h3 title="Reporting paint timing">4.1. 塗り計時の報告-法</h3>
+
+<p>
+どの`文書$にも，
+`以前に報告した塗り@
+が結付けられる
+— それは`集合$であり，初期~時には空とする。
+◎
+Every Document has an associated set of previously reported paints, initiallized to an empty set.
+</p>
+
+			<section id="first-contentful-paint">
+<h4 title="First Contentful Paint">4.1.1. 最初の有内容な塗り</h4>
+
+<p>
+次を満たす`文書$ %文書 は
+`最初の有内容な塗りを報告するべき@
+であるとされる
+⇒
+［
+`first-contentful-paint^l ~NIN %文書 の`以前に報告した塗り$
+］~AND［
+%文書 は`塗り可能$かつ`有内容$な`要素$を 1 個は包含する
+］
+◎
+To know whether Document document should report first contentful paint, perform the following steps:
+• If document’s previously reported paints contains "first-contentful-paint", then return false.
+• If document contains at least one element that is both paintable and contentful, then return true.
+• Otherwise, return false.
+</p>
+
+			</section>
+			<section id="mark-paint-timing">
+<h4 title="Mark paint timing">4.1.2. 塗り計時を刻む</h4>
+
+<div class="algorithm">
+
+<p>
+`塗り計時を刻む$ときは、所与の
+( `文書$ %文書, 時刻印 %塗り時刻印 )
+に対し，次の手続きを遂行する：
+◎
+When asked to mark paint timing given a Document document as input, perform the following steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+%文書 の`担当の閲覧文脈$enVは`塗り計時に適格$でない
+］
+⇒
+~RET
+◎
+If the document's responsible browsing context is not paint-timing eligible, return.
+◎
+Let paintTimestamp be the current high resolution time.（ paintTimestamp は描画を更新する段から渡されるので不要）
+</li>
+	<li>
+%報告した塗り ~LET %文書 の`以前に報告した塗り$
+◎
+Let reportedPaints be the previously reported paints associated with document.
+</li>
+	<li>
+<p>
+~IF［
+`first-paint^l ~NIN %報告した塗り
+］~AND［
+~UAは`最初の塗り$を刻むよう環境設定されている
+］
+⇒
+`塗り計時を報告する$( %文書, `first-paint^l, %塗り時刻印 )
+◎
+If reportedPaints does not contain "first-paint", and the user agent is configured to mark first paint, then invoke the § 4.1.3 Report paint timing algorithm with document, "first-paint", and paintTimestamp.
+</p>
+
+<p class="note">注記：
+`最初の塗り$には、既定の背景~塗りは含まれないが，既定でない背景~塗りは含まれる。
+◎
+NOTE: First paint excludes the default background paint, but includes non-default background paint.
+</p>
+
+<p class="issue">
+これは、規範的な注記に転換されるベキである。
+◎
+This should be turned into a normative note.
+</p>
+	</li>
+	<li>
+<p>
+~IF［
+%文書 は`最初の有内容な塗りを報告するべき$である
+］
+⇒
+`塗り計時を報告する$( %文書, `first-contentful-paint^l, %塗り時刻印 )
+◎
+If document should report first contentful paint, then:
+• Invoke the § 4.1.3 Report paint timing algorithm with document, "first-contentful-paint", and paintTimestamp as arguments.
+</p>
+
+<p class="note">注記：
+親~frameと子~iframeは、互いの塗り~eventに関知するべきでない。
+したがって，ある~frameが包含している~iframeは、~frameに対し（~iframeを封入している~boxがあることに因り）`最初の塗り$は生じさせ得るが，`最初の有内容な塗り$を生じさせることはない。
+◎
+NOTE: A parent frame should not be aware of the paint events from its child iframes, and vice versa. This means that a frame that contains just iframes will have first paint (due to the enclosing boxes of the iframes) but no first contentful paint.
+</p>
+
+<p class="note">注記：
+`文書$が［
+`first-paint^l ／ `first-contentful-paint^l
+］を刻むことは保証されない。
+完全に白紙な`文書$は、`最初の塗り$を決して刻まないであろう。
+`有内容$でない要素しか包含しない`文書$は、`最初の有内容な塗り$を決して刻まないであろう。
+◎
+NOTE: A document is not guaranteed to mark "first-paint" or "first-contentful-paint". A completely blank document may never mark first paint, and a document containing only elements that are not contentful, may never mark first contentful paint.
+</p>
+	</li>
+</ol>
+
+<p class="note">注記：
+`最初の塗り$を刻むことは、任意選択~である。
+塗り計時を実装している~UAは、少なくとも，`最初の有内容な塗り$は刻むベキである
+◎
+NOTE: The marking of first paint is optional. User-agents implementing paint timing should at the very least mark first contentful paint .
+</p>
+
+</div>
+
+			</section>
+			<section id="report-paint-timing">
+<h4 data-dfn-type="dfn" data-noexport="" title="Report paint timing">4.1.3. 塗り計時を報告する</h4>
+
+<div class="algorithm">
+<p>
+`塗り計時を報告する$ときは、所与の
+( %文書, %塗り種別, %塗り時刻印 )
+に対し，次の手続きを遂行する：
+◎
+When asked to report paint timing given document, paintType, and paintTimestamp as arguments, perform the following steps:
+</p>
+<ol>
+	<li>
+%新たな~entry ~LET %文書 に`関連な~Realm$内の`新たな$ `PerformancePaintTiming$I ~obj
+◎
+Create a new PerformancePaintTiming object newEntry with document’s relevant realm＼
+</li>
+	<li>
+%新たな~entryの
+⇒＃
+`name$m 属性 ~SET %塗り種別
+`entryType$m 属性 ~SET `paint^l
+`startTime$m 属性 ~SET %塗り時刻印
+`duration$m 属性 ~SET 0
+◎
+and set its attributes as follows:
+• Set newEntry’s name attribute to paintType.
+• Set newEntry’s entryType attribute to "paint".
+• Set newEntry’s startTime attribute to paintTimestamp.
+• Set newEntry’s duration attribute to 0.
+</li>
+	<li>
+`処理能~entryを~queueする$( %新たな~entry )
+◎
+Add the PerformanceEntry newEntry object.
+</li>
+	<li>
+%文書 の`以前に報告した塗り$に %塗り種別 を`付加する$
+◎
+Append paintType to document’s associated previously reported paints.
+</li>
+</ol>
+</div>
+
+			</section>
+		</section>
+	</section>
+	<section id="acknowledgements">
+<h2 title="Acknowledgements">謝辞</h2>
+
+<p>
+技術的な~~意見, 示唆を寄せられ、この仕様を改善へ導いた
+<a href="https://github.com/w3c/paint-timing/graphs/contributors">すべての貢献者</a>
+に，特別な謝意を。
+◎
+Special thanks to all the contributors for their technical input and suggestions that led to improvements to this specification.
+</p>
+	</section>
+</main></div>

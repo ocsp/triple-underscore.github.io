@@ -1,0 +1,1898 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>RFC 6902 - JavaScript Object Notation (JSON) Patch （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="http-common.css" type="text/css" />
+<script src="common0.js"></script>
+<script src="common1.js" async></script>
+
+<script>
+Util.ready = function(){
+	const source_data = {
+		generate: expand,
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/`(.+?)([$\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#ref-${key}`;
+	break;
+case 'l':
+	text = `"<code>${key}</code>"`;
+	break;
+case 's':
+	text = `"<samp>${key}</samp>"`;
+	break;
+case 'X': // byte value
+	text = '%x' + text;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+trans_update:2018-09-24
+original_url:https://tools.ietf.org/html/rfc6902.html
+spec_status:IETFPR
+page_state_key:JSON
+no_original_dfn:true
+no_index:true
+ref_id_prefix:ref-
+ref_rfc:true
+main:MAIN
+toc:toc
+trans_1st_pub:2013-05-19
+
+●●class_map
+P:production
+X:hex-value
+h:header
+m:method
+
+●●tag_map
+P:code
+c:code
+X:span
+h:code
+m:code
+i:i
+mk:mark
+
+●●link_map
+
+m.PATCH:~HTTPpatch#patch
+
+
+●●words_table1
+RFC6901:RFC6901-ja.html
+HTTPpatch:http-patch-ja.html
+ベキ:<em class="rfc2119">べき</em>
+ナラナイ:<em class="rfc2119">ならない</em>
+
+●●words_table
+
+JSON-Pointer:JSON Pointer
+Patch:
+
+	●データ／操作
+地点:location::~
+標的:target::目的
+数-:number::~
+数量的:numerical:~
+root::::ルート
+追加ng:adding::追加
+置換ng:replacing::置換
+置換用の:replacement::~
+除去ng:removing::除去
+移動ng:moving::移動
+
+	●構文
+展開-:unescape:~
+
+	●処理
+比較規則:rule:~
+	連結:containing
+条態:condition::~
+patch::::パッチ
+	成功する:to be successful／:to be considered successful
+	等しい:equal
+応答:responce::~::レスポンス
+無視ng:ignoring:無視
+	逐次的
+終了-:terminate:~
+不可分:atomic:~
+
+
+	●仕様
+同意:consensus:~
+	-:specific
+	加えて:Additionally
+機能的:functional:~
+
+	認識できない:unrecognized
+	~~無関係:undefined
+	適する:suitable
+	制約条項
+	則って
+	則り
+	寄せられた
+	~~影響:influenced
+	受けて
+	単に
+	句
+	含まれ
+	含む
+	含め
+	含んで
+	告知
+	言い回し
+	基づく
+	基に
+	従って
+	必要
+	必要とされ
+	書かれ
+	見よ
+	見られ
+	記され
+	関する
+	関わる
+	真の
+	知られ
+	下位節
+	下記
+	用例集:examples
+	注意
+
+	●メタ（位置付け／著作権
+位置付け:status:~
+Internet Standards Track
+成果物:product:~
+発行:publication:~
+取り出され
+
+	著作権の告知:Copyright Notice
+	権利
+	日付
+	有効な:in effect
+	対象に
+	無保証
+	メモ
+
+	●IANA
+Internet
+下位型:subtype::~
+	必須:Required
+	Optional:オプション
+発行-:publish:~
+	変更管理
+	連絡先:email address to contact
+	用途:usage
+	制約Restrictions
+	著作者:Author
+
+	●保安
+認証-:authenticate::~
+CSRF
+市場:market:~
+見積もら:estimateさ:~
+
+	少数の
+	旧式:older
+	広く:widely
+	利用率
+	満たない
+	にも拘らず:nevertheless
+	勧める:advised
+
+	●未分類
+交換:exchange::~
+現れる:appearする:~
+現れな:appearしな:~
+
+	置き換わる:become
+	表す:index
+	遭遇した
+	遭遇する
+	重複の
+	開始され
+	集合
+	~~位置
+	位置する
+	加え
+	型~名
+	子の
+	子孫:children
+	指して
+	指す
+	挙げられ
+	対応する
+	後ろへずらされる
+	得られ
+	得る
+	応じて
+	持つ
+	最初は
+	有する
+	無かったか
+	示す
+	等し
+	終わら
+	行う
+	行われ
+	限られ
+	順に
+
+	●指示語
+	際
+	同じに:identical
+	種別
+	種類
+	結果
+	自身
+	任意の
+	一方
+	一連の
+	上
+	下
+	下
+	与える
+	中で
+	中の
+	互い
+	他の
+	以上
+	伴う
+	例
+	例えば
+	個
+	個数
+	元
+	先の
+	先頭
+	先頭一致する
+	先頭部分
+	内
+	各
+	各種
+	合間
+	同じ
+	場合
+	当の
+	後続
+	後続
+	対し
+	対する
+	度に
+	後
+	時点
+	方
+	更なる
+	次の
+	末尾
+	直後
+	種
+	節
+	超えて
+
+	●訳注
+	明確
+	排除され
+	概念
+	正準等価
+	符号単位
+	等価性
+	残され
+	記述
+	特に
+	状態
+	状況下
+	合法
+	中途半端
+	選択
+	余地
+
+
+●●ref_normative
+
+[RFC2119]
+    Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, ~RFC2119, March 1997. 
+[RFC4627]
+    Crockford, D., "The application/json Media Type for JavaScript Object Notation (JSON)", ~RFC4627, July 2006.
+[RFC6901]
+    Bryan, P., Ed., Zyp, K., and M. Nottingham, Ed., "JavaScript Object Notation (JSON) Pointer", ~RFC6901, April 2013. 
+
+●●ref_informative
+
+[CSRF]
+    Barth, A., Jackson, C., and J. Mitchell, "Robust Defenses for Cross-Site Request Forgery", ACM Conference on Computer and Communications Security, October 2008
+    URL: http://seclab.stanford.edu/websec/csrf/csrf.pdf
+[RFC2616]
+    Fielding, R., Gettys, J., Mogul, J., Frystyk, H., Masinter, L., Leach, P., and T. Berners-Lee, "Hypertext Transfer Protocol -- HTTP/1.1", ~RFC2616, June 1999. 
+[RFC5261]
+    Urpalainen, J., "An Extensible Markup Language (XML) Patch Operations Framework Utilizing XML Path Language (XPath) Selectors", ~RFC5261, September 2008. 
+[RFC5789]
+    Dusseault, L. and J. Snell, "PATCH Method for HTTP", ~RFC5789, March 2010. 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、
+~IETF により PROPOSED STANDARD として発行された，
+RFC 6902
+<a href="~SPEC_URL">JavaScript Object Notation (JSON) Patch</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+
+●●spec_metadata
+
+発行
+	Internet Engineering Task Force (IETF)
+RFC
+	6902
+分類
+	Standards Track
+ISSN
+	2070-1721
+編集
+	P. Bryan, Ed. Salesforce.com
+	M. Nottingham, Ed. Akamai
+日付
+	2013 年 4 月
+
+</script>
+
+</head>
+
+<body>
+
+<header>
+	<hgroup>
+<h1>JavaScript Object Notation (JSON) Patch</h1>
+<h2>RFC 6902</h2>
+	</hgroup>
+
+</header>
+
+<div id="MAIN" hidden>
+
+~ABSTRACT
+
+<p>
+~JSON~Patchは、~JSON（ `JavaScript Object Notation^en ）文書に適用する
+一連の演算を表出するための~JSON文書~構造を定義する。
+これは~HTTP `PATCH$m ~methodでの利用に適するものである。
+その種の~patch文書は、~MIME型
+`application/json-patch+json^l
+を利用して識別される。
+◎
+JSON Patch defines a JSON document structure for expressing a sequence of operations to apply to a JavaScript Object Notation (JSON) document; it is suitable for use with the HTTP PATCH method. The "application/json-patch+json" media type is used to identify such patch documents.
+</p>
+
+<h2 title="Status of This Memo">このメモの位置付け</h2>
+
+<p>
+これは、 Internet Standards Track 文書である。
+◎
+This is an Internet Standards Track document.
+</p>
+
+<p>
+この文書は、
+<abbr title="Internet Engineering Task Force">IETF</abbr>
+よる成果物であり，
+IETF ~communityの同意を表現するものである。
+それは、公な考査を受け，
+<abbr title="Internet Engineering Steering Group">IESG</abbr>
+から発行が認可されたものである。
+Internet 標準についての更なる情報は
+<a href="~RFCx/rfc5741#section-2">RFC5741 § 2</a>
+に見られる。
+◎
+This document is a product of the Internet Engineering Task Force (IETF). It represents the consensus of the IETF community. It has received public review and has been approved for publication by the Internet Engineering Steering Group (IESG). Further information on Internet Standards is available in Section 2 of RFC 5741.
+</p>
+
+<p>
+この文書の現在の位置付け, 正誤表, ~feedbackの方法についての情報は、
+<a href="https://www.rfc-editor.org/info/rfc6902">https://www.rfc-editor.org/info/rfc6902</a>
+から得られる。
+◎
+Information about the current status of this document, any errata, and how to provide feedback on it may be obtained at http://www.rfc-editor.org/info/rfc6902.
+</p>
+
+<h5 title="Copyright Notice">著作権の告知</h5>
+
+<p lang="en-x-a0">
+Copyright (c) 2013 IETF Trust and the persons identified as the document authors. All rights reserved.
+</p>
+
+<p>
+この文書は、その発行の日付から有効な、
+<a href="https://tools.ietf.org/html/bcp78">BCP 78</a>,
+および IETF Trust の IETF Documents に対する Legal Provisions Relating の対象になる（
+<a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a>
+）。
+これらの文書には，この文書に関するあなたの権利と制約条項が述べらているので、注意深く考査されたし。
+この文書から取り出された Code Components は、
+Trust Legal Provisions の Section 4.e
+に述べられるように， Simplified BSD License ~textを含んでいなければならず、
+Simplified BSD License に記されるように，無保証で供される。
+◎
+This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document. Please review these documents carefully, as they describe your rights and restrictions with respect to this document. Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.
+</p>
+
+<main id="MAIN0">
+
+	<section id="section-1">
+<h2 title="Introduction">1. 序論</h2>
+
+<p>
+JavaScript Object Notation （~JSON）
+`RFC4627$r
+は、構造~dataの交換と格納のための共通な形式である。
+~HTTP `PATCH$m `RFC5789$r は、資源に対し部分的な改変を遂行する~methodで，~HTTP（ Hypertext Transfer Protocol ） `RFC2616$r を拡張する。
+◎
+JavaScript Object Notation (JSON) [RFC4627] is a common format for the exchange and storage of structured data. HTTP PATCH [RFC5789] extends the Hypertext Transfer Protocol (HTTP) [RFC2616] with a method to perform partial modifications to resources.
+</p>
+
+<p>
+~JSON~Patchは、標的~JSON文書に適用する一連の演算を表出するための（~MIME型
+`application/json-patch+json^l
+により識別される）文書~形式である。
+これは~HTTP `PATCH$m ~methodでの利用に適するものである。
+◎
+JSON Patch is a format (identified by the media type "application/json-patch+json") for expressing a sequence of operations to apply to a target JSON document; it is suitable for use with the HTTP PATCH method.
+</p>
+
+<p>
+この形式は、~JSON文書, あるいは類似な拘束がある~data構造（すなわち，~JSON文法を利用して，~objや配列に直列化し得るもの）に対し 部分的な更新が必要とされるような，他の事例にも有用になり得る。
+◎
+This format is also potentially useful in other cases in which it is necessary to make partial updates to a JSON document or to a data structure that has similar constraints (i.e., they can be serialized as an object or an array using the JSON grammar).
+</p>
+
+	</section>
+	<section id="section-2">
+<h2 title="Conventions">2. 表記規約</h2>
+
+<p>
+この文書における句［
+“〜しなければナラナイ（ `MUST^en ／ `SHALL^en ）”,
+“〜するベキである（ `SHOULD^en ）”
+］は、 `RFC2119$r に述べるように解釈されるものとする。
+◎
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119 [RFC2119].
+</p>
+
+	</section>
+	<section id="section-3">
+<h2 title="Document Structure">3. 文書~構造</h2>
+
+<p>
+~JSON~Patch文書は、~objの配列を表現する~JSON文書 `RFC4627$r である。
+各~objは、標的~JSON文書に適用される 1 個の演算を表現する。
+◎
+A JSON Patch document is a JSON [RFC4627] document that represents an array of objects. Each object represents a single operation to be applied to the target JSON document.
+</p>
+
+<div class="example">
+
+<p>
+~HTTP `PATCH$m 要請により転送される~JSON~Patch文書の例を示す：
+◎
+The following is an example JSON Patch document, transferred in an HTTP PATCH request:
+</p>
+
+<pre class="lang-http">
+PATCH /my/data HTTP/1.1
+Host: example.org
+Content-Length: 326
+Content-Type: application/json-patch+json
+If-Match: "abc123"
+</pre>
+
+<pre class="lang-json">
+[
+  { "op": "test", "path": "/a/b/c", "value": "foo" },
+  { "op": "remove", "path": "/a/b/c" },
+  { "op": "add", "path": "/a/b/c", "value": [ "foo", "bar" ] },
+  { "op": "replace", "path": "/a/b/c", "value": 42 },
+  { "op": "move", "from": "/a/b/c", "path": "/a/b/d" },
+  { "op": "copy", "from": "/a/b/d", "path": "/a/b/e" }
+]
+</pre>
+
+</div>
+
+<p>
+~JSON~Patch文書の評価は、最初は標的~JSON文書に対するものとして開始される。
+各~演算は、配列~内に現れる順に，逐次的に適用され、適用される度に，その結果の文書が次の演算の標的~文書になる。
+評価は、すべての演算が成功裡に適用されるか, または~error条態に遭遇するまで継続される。
+◎
+Evaluation of a JSON Patch document begins against a target JSON document. Operations are applied sequentially in the order they appear in the array. Each operation in the sequence is applied to the target document; the resulting document becomes the target of the next operation. Evaluation continues until all operations are successfully applied or until an error condition is encountered.
+</p>
+
+	</section>
+	<section id="section-4">
+<h2 title="Operations">4. 演算</h2>
+
+<p>
+演算~objは、きっかり 1 個の `op^l ~memberを持たなければナラナイ。
+この~memberは，標的~文書にて遂行される演算の種類を指示するものであり、その値は
+`add^l,
+`remove^l,
+`replace^l,
+`move^l,
+`copy^l,
+`test^l
+のいずれかでなければナラナイ
+— 他の値は~errorである。
+各種~objの意味論は後続の節にて定義される。
+◎
+Operation objects MUST have exactly one "op" member, whose value indicates the operation to perform. Its value MUST be one of "add", "remove", "replace", "move", "copy", or "test"; other values are errors. The semantics of each object is defined below.
+</p>
+
+<p>
+加えて、演算~objは，きっかり 1 個の `path^l ~memberを持たなければナラナイ。
+その~memberの値は、標的~文書の中で演算が遂行される地点（ “標的~地点” ）を指す，~JSON-Pointer値
+`RFC6901$r
+を与える文字列である。
+◎
+Additionally, operation objects MUST have exactly one "path" member. That member's value is a string containing a JSON-Pointer value [RFC6901] that references a location within the target document (the "target location") where the operation is performed.
+</p>
+
+<p>
+演算~objの他の~memberの意味は，演算の~~種別ごとに定義される（後続の下位節にて述べる）。
+明示的に 当の演算に関わるものと定義されていない~memberは、無視されなければナラナイ（すなわち，演算は、その演算に~~無関係な~memberについては ~objに元々現れなかったかのように，完了することになる）。
+◎
+The meanings of other operation object members are defined by operation (see the subsections below). Members that are not explicitly defined for the operation in question MUST be ignored (i.e., the operation will complete as if the undefined member did not appear in the object).
+</p>
+
+<p>
+~JSON~objの中での~memberの順序付けは、有意でないことに注意。
+したがって、次の演算~objは，いずれも等価である：
+◎
+Note that the ordering of members in JSON objects is not significant; therefore, the following operation objects are equivalent:
+</p>
+
+<pre class="lang-json">
+{ "op": "add", "path": "/a/b/c", "value": "foo" }
+{ "path": "/a/b/c", "op": "add", "value": "foo" }
+{ "value": "foo", "path": "/a/b/c", "op": "add" }
+</pre>
+
+<p>
+演算は、~JSON文書が表現する~data構造に（すなわち ~escape（
+<a href="~RFCx/rfc4627#section-2.5">[RFC4627] § 2.5</a>
+）が展開された後に），適用される。
+◎
+Operations are applied to the data structures represented by a JSON document, i.e., after any unescaping (see [RFC4627], Section 2.5) takes place.
+</p>
+		<section id="section-4.1">
+<h3 title="add">4.1. `add^c</h3>
+
+<p>
+`add^l 演算は、標的~地点が指しているものに応じて，次のいずれかを遂行する：
+◎
+The "add" operation performs one of the following functions, depending upon what the target location references:
+</p>
+<ul>
+	<li>
+標的~地点が 配列~indexを指定している場合、その配列の中の 指定された~indexの~~位置に，新たな値が挿入される。
+<span class="trans-note">【
+~index 0 が先頭を指す：
+<a href="~RFC6901#section-4">~JSON-Pointerの評価</a>
+`RFC6901$r
+】</span>
+◎
+If the target location specifies an array index, a new value is inserted into the array at the specified index.
+</li>
+	<li>
+標的~地点が 存在しない~obj~memberを指定している場合、その~objに新たな~memberが追加される。
+◎
+If the target location specifies an object member that does not already exist, a new member is added to the object.
+</li>
+	<li>
+標的~地点が 存在する~obj~memberを指定している場合、その~memberの値が置換される。
+◎
+If the target location specifies an object member that does exist, that member's value is replaced.
+</li>
+</ul>
+
+<p>
+演算~objは、追加-用の値をとる， `value^l ~memberを持っていなければナラナイ。
+◎
+The operation object MUST contain a "value" member whose content specifies the value to be added.
+</p>
+
+<div class="example">
+<p>
+例：
+◎
+For example:
+</p>
+<pre class="lang-json">
+{ "op": "add", "path": "/a/b/c", "value": [ "foo", "bar" ] }
+</pre>
+</div>
+
+<p>
+標的~地点は、演算が適用される時点で，次のいずれかを参照していなければナラナイ：
+◎
+When the operation is applied, the target location MUST reference one of:
+</p>
+<ul>
+	<li>
+<p>
+標的~文書の~root
+— その結果，標的~文書の内容~全体が，指定された値に置き換わる。
+◎
+The root of the target document - whereupon the specified value becomes the entire content of the target document.
+</p>
+
+<p class="trans-note">【
+指定された値が~objでも配列でもない場合の結果は，この仕様が参照する `RFC4627$r に従うなら合法でない~JSON文書になるが、それを廃用にした RFC 7159 に従えば
+<a href="~RFCx/rfc7159#appendix-A">合法になる</a>。
+】</p>
+
+	</li>
+	<li>
+既存の~objに追加する~member
+—
+その結果、その~objの中の指示された地点に，指定された値が追加される。
+その~memberが既存のものであった場合、それは指定された値に置換される。
+◎
+A member to add to an existing object - whereupon the supplied value is added to that object at the indicated location. If the member already exists, it is replaced by the specified value.
+</li>
+	<li>
+既存の配列に追加する要素
+—
+その結果、その配列の中の指示された地点に，指定された値が追加される。
+指定された~index以上に~~位置する要素は， 1 つずつ後ろへずらされる。
+指定された~indexが配列の要素~数を超えてはナラナイ
+【~indexが要素~数に等しければ，末尾に付加する】
+。
+配列の末尾~indexを表す文字 `-^l が利用された場合（ `RFC6901$r を見よ）、値は配列の末尾に付加されることになる。
+◎
+An element to add to an existing array - whereupon the supplied value is added to the array at the indicated location. Any elements at or above the specified index are shifted one position to the right. The specified index MUST NOT be greater than the number of elements in the array. If the "-" character is used to index the end of the array (see [RFC6901]), this has the effect of appending the value to the array.
+</li>
+</ul>
+
+<p>
+この演算は，既存の~objや配列に値を追加するためにあるので、標的~地点に値が存在しないことも度々あり得る。
+したがって，
+【 `RFC6901$r の定義により】
+~pointerの~errorを取扱う~algoが呼出されることになるが、この仕様は，［
+`add^l の下での，~pointerの~errorを取扱う挙動は、その~errorを無視して，指定された値を追加する
+］ものと定義する。
+◎
+Because this operation is designed to add to existing objects and arrays, its target location will often not exist. Although the pointer's error handling algorithm will thus be invoked, this specification defines the error handling behavior for "add" pointers to ignore that error and add the value as specified.
+</p>
+
+<p>
+しかしながら、それを含む~obj自身または配列は，存在する必要があり、さもなければ~errorになる。
+◎
+However, the object itself or an array containing it does need to exist, and it remains an error for that not to be the case.＼
+</p>
+
+<div class="example">
+
+<p>
+例えば、次の文書から演算が開始されるときの，標的~地点 `/a/b^s による `add^l は：
+◎
+For example, an "add" with a target location of "/a/b" starting with this document:
+</p>
+
+<pre class="lang-json">
+{ "a": { "foo": 1 } }
+</pre>
+
+<p>
+`a^s が存在するので~errorではなく，その値に `b^s に追加されることになる一方、次の文書の場合は：
+◎
+is not an error, because "a" exists, and "b" will be added to its value. It is an error in this document:
+</p>
+
+<pre class="lang-json">
+{ "q": { "bar": 2 } }
+</pre>
+
+<p>
+`a^s が存在しないので~errorになる。
+◎
+because "a" does not exist.
+</p>
+
+</div>
+
+		</section>
+		<section id="section-4.2">
+<h3 title="remove">4.2. `remove^c</h3>
+
+<p>
+`remove^l 演算は、標的~地点から値を除去する。
+◎
+The "remove" operation removes the value at the target location.
+</p>
+
+<p>
+演算が成功するためには、標的~地点が存在しなければナラナイ。
+◎
+The target location MUST exist for the operation to be successful.
+</p>
+
+<div class="example">
+<p>
+例：
+◎
+For example:
+</p>
+<pre class="lang-json">
+{ "op": "remove", "path": "/a/b/c" }
+</pre>
+</div>
+
+<p>
+配列から要素が除去される際には、指定された~indexより先の要素は 1 つずつ先頭へずらされる。
+◎
+If removing an element from an array, any elements above the specified index are shifted one position to the left.
+</p>
+
+		</section>
+		<section id="section-4.3">
+<h3 title="replace">4.3. `replace^c</h3>
+
+<p>
+`replace^l 演算は、標的~地点の値を新たな値で置換する。
+演算~objは、置換用の値をとる `value^l ~memberを持っていなければナラナイ。
+◎
+The "replace" operation replaces the value at the target location with a new value. The operation object MUST contain a "value" member whose content specifies the replacement value.
+</p>
+
+<p>
+演算が成功するためには、標的~地点が存在しなければナラナイ。
+◎
+The target location MUST exist for the operation to be successful.
+</p>
+
+<div class="example">
+<p>
+例：
+◎
+For example:
+</p>
+<pre class="lang-json">
+{ "op": "replace", "path": "/a/b/c", "value": 42 }
+</pre>
+</div>
+
+<p>
+この演算は、 `remove^l 演算の直後に，同じ地点に，置換用の値を `add^l 演算により追加するのと、機能的に同じになる。
+◎
+This operation is functionally identical to a "remove" operation for a value, followed immediately by an "add" operation at the same location with the replacement value.
+</p>
+
+		</section>
+		<section id="section-4.4">
+<h3 title="move">4.4. `move^c</h3>
+
+<p>
+`move^l 演算は、指定された地点から値を除去して，標的~地点にその値を追加する。
+◎
+The "move" operation removes the value at a specified location and adds it to the target location.
+</p>
+
+<p>
+演算~objは、標的~文書~内の，値の移動-元~の地点を指す~JSON-Pointer文字列~値をとる， `from^l ~memberを含んでいなければナラナイ。
+◎
+The operation object MUST contain a "from" member, which is a string containing a JSON Pointer value that references the location in the target document to move the value from.
+</p>
+
+<p>
+演算が成功するためには、 "from" 地点が存在しなければナラナイ。
+◎
+The "from" location MUST exist for the operation to be successful.
+</p>
+
+<div class="example">
+<p>
+例：
+◎
+For example:
+</p>
+<pre class="lang-json">
+{ "op": "move", "from": "/a/b/c", "path": "/a/b/d" }
+</pre>
+</div>
+
+<p>
+この演算は、 "from" 地点に対する `remove^l 演算の直後に，その除去された値を， `add^l 演算により標的~地点に追加するのと、機能的に同じになる。
+◎
+This operation is functionally identical to a "remove" operation on the "from" location, followed immediately by an "add" operation at the target location with the value that was just removed.
+</p>
+
+<p class="trans-note">【
+したがって、移動-先の標的~地点は，除去した結果を基に適用されることになる（特に配列~要素を移動させる場合に注意：用例集 <a href="#appendix-A.7">A.7</a> を見よ）。
+】</p>
+
+<p>
+値をその子孫へ移動させることはできない。
+すなわち， `from^l が指す地点が `path^l が指す地点の適正な接頭辞になってはナラナイ。
+◎
+The "from" location MUST NOT be a proper prefix of the "path" location; i.e., a location cannot be moved into one of its children.
+</p>
+
+<p class="trans-note">【
+“適正な接頭辞” （ `proper prefix^en ） —
+上の例で述べるなら， `from^l が `path^l の先頭部分 `/a/b^s や `/a^s になってはならないが， `path^l と同じ `/a/b/d^s は許容される。
+（文字列として先頭一致する場合でも，例えば `from^l が `/a^s で `path^l が `/ab/c^s のような場合は、子孫ではないので “真の接頭辞” とはみなされない。）
+】</p>
+
+		</section>
+		<section id="section-4.5">
+<h3 title="copy">4.5. `copy^c</h3>
+
+<p>
+`copy^l 演算は、指定された地点から標的~地点へ値を複製する。
+◎
+The "copy" operation copies the value at a specified location to the target location.
+</p>
+
+<p>
+演算~objには、標的~文書の中の複製-元~の値の地点を指す~JSON-Pointer文字列~値をとる， `from^l ~memberが含まれていなければナラナイ。
+◎
+The operation object MUST contain a "from" member, which is a string containing a JSON Pointer value that references the location in the target document to copy the value from.
+</p>
+
+<p>
+演算が成功するためには、 "from" 地点が存在しなければナラナイ。
+◎
+The "from" location MUST exist for the operation to be successful.
+</p>
+
+<div class="example">
+<p>
+例：
+◎
+For example:
+</p>
+<pre class="lang-json">
+{ "op": "copy", "from": "/a/b/c", "path": "/a/b/e" }
+</pre>
+</div>
+
+<p>
+この演算は、 `from^l ~memberにより指定される値を， `add^l 演算により標的~地点に追加するのと、機能的に同じになる。
+◎
+This operation is functionally identical to an "add" operation at the target location using the value specified in the "from" member.
+</p>
+
+		</section>
+		<section id="section-4.6">
+<h3 title="test">4.6. `test^c</h3>
+
+<p>
+`test^l 演算は、標的~地点の値が指定された値に `等しい^i かどうか~testする。
+◎
+The "test" operation tests that a value at the target location is equal to a specified value.
+</p>
+
+<p>
+演算~objには、標的~地点の値と比較するための値をとる， `value^l ~memberが含まれていなければナラナイ。
+◎
+The operation object MUST contain a "value" member that conveys the value to be compared to the target location's value.
+</p>
+
+<p>
+演算が成功するためには、標的~地点の値が `value^l の値と等しくなければナラナイ。
+◎
+The target location MUST be equal to the "value" value for the operation to be considered successful.
+</p>
+
+<p>
+ここで `等しい^i とは、標的~地点の値と `value^l の値が同じ~JSON型であって, かつ［
+その型に応じて，以下に与える規則を満たす
+］ことを意味する：
+◎
+Here, "equal" means that the value at the target location and the value conveyed by "value" are of the same JSON type, and that they are considered equal by the following rules for that type:
+</p>
+
+<dl class="switch">
+	<dt>文字列の場合</dt>
+	<dd>
+［
+互いに同じ個数の~Unicode文字からなる
+］かつ［
+互いの符号位置~並びは~byteごとに等しい
+］。
+◎
+strings: are considered equal if they contain the same number of Unicode characters and their code points are byte-by-byte equal.
+</dd>
+	<dd class="trans-note">【
+~byteごとに（ `byte-by-byte^en ） —
+~Unicodeの正準等価などの文字の等価性についての概念は適用せずに，単に符号単位に基づいて比較することを意味するものと見受けられる。
+】</dd>
+
+	<dt>数-の場合</dt>
+	<dd>
+互いの値は数量的に等しい。
+◎
+numbers: are considered equal if their values are numerically equal.
+</dd>
+
+	<dt>配列の場合</dt>
+	<dd>
+［
+互いの要素~数は同じである
+］かつ［
+一方の配列~内にあるどの値も他方の配列~内の同じ~indexにある値と `等しい^i
+］。
+◎
+arrays: are considered equal if they contain the same number of values, and if each value can be considered equal to the value at the corresponding position in the other array, using this list of type-specific rules.
+</dd>
+
+	<dt>~objの場合</dt>
+	<dd>
+［
+同じ個数の~memberからなる
+］かつ［
+それらの~memberの（文字列としての）~key名の集合は同じである
+］かつ［
+それらの~memberの同じ名前の~keyに対応する値は `等しい^i
+］。
+◎
+objects: are considered equal if they contain the same number of members, and if each member can be considered equal to a member in the other object, by comparing their keys (as strings) and their values (using this list of type-specific rules).
+</dd>
+	<dd class="trans-note">【
+同じ名前の~keyが重複して存在する場合の扱いは、述べられていない。
+】</dd>
+
+	<dt>~literal（ `false^c, `true^c, `null^c ）の場合</dt>
+	<dd>
+互いの値は同じである。
+◎
+literals (false, true, and null): are considered equal if they are the same.
+</dd>
+
+</dl>
+
+<p>
+比較は論理的に【すなわち，~JSON~objとして解釈された後に】行われることに注意。
+例えば、配列を成す各~member値の合間にある空白は，比較においては有意でない。
+◎
+Note that the comparison that is done is a logical comparison; e.g., whitespace between the member values of an array is not significant.
+</p>
+
+<p>
+~obj~memberの直列化における順序付けも有意でないことに注意。
+◎
+Also, note that ordering of the serialization of object members is not significant.
+</p>
+
+<div class="example">
+<p>
+例：
+◎
+For example:
+</p>
+<pre class="lang-json">
+{ "op": "test", "path": "/a/b/c", "value": "foo" }
+</pre>
+</div>
+
+		</section>
+	</section>
+	<section id="section-5">
+<h2 title="Error Handling">5. ~errorの取扱い</h2>
+
+<p>
+~JSON~Patch文書の規範的な要件に違反している場合, あるいは
+演算が成功裡に終わらなかった場合、~JSON~Patch文書の評価は終了されるベキであり，~patch文書全体の適用は成功と判断されてはナラナイ。
+◎
+If a normative requirement is violated by a JSON Patch document, or if an operation is not successful, evaluation of the JSON Patch document SHOULD terminate and application of the entire patch document SHALL NOT be deemed successful.
+</p>
+
+<p class="trans-note">【
+“ベキ” —
+~HTTP `PATCH$m ~methodの下での利用では，下記により “中途半端な成功” は明確に排除されているが、他の状況下では，選択の余地が残された記述になっている。
+】</p>
+
+<p>
+`RFC5789$r
+<a href="~HTTPpatch#error.handling">§ ~errorの取扱い</a>
+にて、~JSON~Patchが~HTTP `PATCH$m ~methodに利用されたときに，~error条態に遭遇した際の取扱いが（種々の~error条態を指示するための，示唆される応答~codeなども含め）挙げられている。
+◎
+See [RFC5789], Section 2.2 for considerations regarding handling errors when JSON Patch is used with the HTTP PATCH method, including suggested status codes to use to indicate various conditions.
+</p>
+
+<p>
+`RFC5789$r
+に則り，~HTTP `PATCH$m ~methodは不可分になることに注意。
+したがって，次のような~patchでは、いかなる変更も文書に加えられないことになる（ `test^l 演算の結果が~errorになるので）：
+◎
+Note that the HTTP PATCH method is atomic, as per [RFC5789]. Therefore, the following patch would result in no changes being made to the document at all (because the "test" operation results in an error):
+</p>
+
+<pre class="lang-json">
+[
+  { "op": "replace", "path": "/a/b/c", "value": 42 },
+  { "op": "test", "path": "/a/b/c", "value": "C" }
+]
+</pre>
+
+	</section>
+	<section id="section-6">
+<h2 title="IANA Considerations">6. IANA 考慮点</h2>
+
+<p>
+~JSON~Patch文書の~MIME型は
+`application/json-patch+json^c
+である。
+◎
+The Internet media type for a JSON Patch document is application/ json-patch+json.
+</p>
+
+<dl>
+	<dt>
+型~名
+◎
+Type name
+</dt>
+	<dd>
+`application^c
+◎
+application
+</dd>
+
+	<dt>
+下位型~名
+◎
+Subtype name
+</dt>
+	<dd>
+`json-patch+json^c
+◎
+json-patch+json
+</dd>
+
+	<dt>
+必須~parameter
+◎
+Required parameters
+</dt>
+	<dd>
+なし
+◎
+none
+</dd>
+
+	<dt>
+オプションの~parameter
+◎
+Optional parameters
+</dt>
+	<dd>
+なし
+◎
+none
+</dd>
+
+	<dt>
+符号化法についての考慮点
+◎
+Encoding considerations
+</dt>
+	<dd>
+~binary
+◎
+binary
+</dd>
+
+	<dt>
+~securityの考慮点
+◎
+Security considerations
+</dt>
+	<dd>
+<a href="#section-7">§ 7</a>，~securityの考慮点を見よ。
+◎
+See Security Considerations in Section 7.
+</dd>
+
+	<dt>
+相互運用能の考慮点
+◎
+Interoperability considerations
+</dt>
+	<dd>
+N/A
+</dd>
+
+	<dt>
+発行された仕様
+◎
+Published specification
+</dt>
+	<dd>
+<a href="~RFCx/rfc6902">RFC 6902</a>
+</dd>
+
+	<dt>
+この~MIME型の応用
+◎
+Applications that use this media type
+</dt>
+	<dd>
+~JSON文書を操作する応用。
+◎
+Applications that manipulate JSON documents.
+</dd>
+
+	<dt>
+追加的な情報
+◎
+Additional information
+</dt>
+	<dd>
+<ul><li>Magic number(s):  N/A
+</li><li>File extension(s):  `.json-patch^c
+</li><li>Macintosh file type code(s): `TEXT^c
+</li></ul>
+	</dd>
+
+	<dt>
+更なる情報についての連絡先
+◎
+Person &amp; email address to contact for further information
+</dt>
+	<dd>
+Paul C. Bryan &lt;pbryan@anode.ca&gt;
+</dd>
+
+	<dt>
+意図されている用途
+◎
+Intended usage
+</dt>
+	<dd>
+COMMON
+</dd>
+
+	<dt>
+利用における制約
+◎
+Restrictions on usage
+</dt>
+	<dd>
+なし
+◎
+none
+</dd>
+
+	<dt>
+著作者
+◎
+Author
+</dt>
+	<dd>
+Paul C. Bryan &lt;pbryan@anode.ca&gt;
+</dd>
+
+	<dt>
+変更管理
+◎
+Change controller
+</dt>
+	<dd>
+IETF
+</dd>
+</dl>
+
+	</section>
+	<section id="section-7">
+<h2 title="Security Considerations">7. ~securityの考慮点</h2>
+
+<p>
+この仕様の~securityの考慮点は、
+~JSON `RFC4627$r と~JSON-Pointer `RFC6901$r
+と同じである。
+◎
+This specification has the same security considerations as JSON [RFC4627] and JSON-Pointer [RFC6901].
+</p>
+
+<p>
+少数の旧式~Web~browserにおいては、~accessが認証されている下でも，~rootが配列であるような任意の~JSON文書の読込ngにおいて，敏感な情報が含まれている~JSON~Patch文書が攻撃者に公開され得る。
+これは CSRF （ `Cross-Site Request Forgery^en, `CSRF$r ）として知られている。
+◎
+A few older Web browsers can be coerced into loading an arbitrary JSON document whose root is an array, leading to a situation in which a JSON Patch document containing sensitive information could be exposed to attackers, even if access is authenticated. This is known as a Cross-Site Request Forgery (CSRF) attack [CSRF].
+</p>
+
+<p>
+しかしながら、その種の~browserは広く利用されていない（この仕様が書かれた時点では、利用率は市場の 1% に満たないものと見積もられている）。
+にも拘らず，この攻撃が懸念されるならば、その種の文書が~HTTP `GET^m から可用になるのを避けるよう勧める。
+◎
+However, such browsers are not widely used (at the time of writing, it is estimated that they are used in less than 1% of the market). Publishers who are nevertheless concerned about this attack are advised to avoid making such documents available with HTTP GET.
+</p>
+
+	</section>
+	<section id="section-8">
+<h2 title="Acknowledgements">8. 謝辞</h2>
+
+<p>
+この仕様に案, ~feedback, 言い回しを寄せられた次の方々に：
+◎
+The following individuals contributed ideas, feedback and wording to this specification:
+</p>
+
+<p lang="en-x-a0">
+Mike Acar, Mike Amundsen, Cyrus Daboo, Paul Davis, Stefan Koegl,
+Murray S. Kucherawy, Dean Landolt, Randall Leeds, James Manger,
+Julian Reschke, James Snell, Eli Stevens, and Henry S. Thompson.
+</p>
+
+<p>
+~JSON~Patch文書の構造は、 XMLPatch 文書~仕様
+`RFC5261$r
+からの~~影響を受けている。
+◎
+The structure of a JSON Patch document was influenced by the XML Patch document specification [RFC5261].
+</p>
+
+	</section>
+	<section id="appendix-A">
+<h2 title="Appendix A. Examples">付録 A. 用例集</h2>
+
+		<section id="appendix-A.1">
+<h3 title="Adding an Object Member">A.1. ~obj~memberの追加ng</h3>
+
+<p>
+標的~JSON文書の例：
+◎
+An example target JSON document:
+</p>
+
+<pre class="lang-json">
+{ "foo": "bar"}
+</pre>
+
+<p>
+~JSON~Patch文書：
+◎
+A JSON Patch document:
+</p>
+
+<pre class="lang-json">
+[
+  { "op": "add", "path": "/baz", "value": "qux" }
+]
+</pre>
+
+<p>
+結果の~JSON文書：
+◎
+The resulting JSON document:
+</p>
+
+<pre class="lang-json">
+{
+  `"baz": "qux",^mk
+  "foo": "bar"
+}
+</pre>
+
+		</section>
+		<section id="appendix-A.2">
+<h3 title="Adding an Array Element">A.2. 配列~要素の追加ng</h3>
+
+<p>
+標的~JSON文書の例：
+◎
+An example target JSON document:
+</p>
+
+<pre class="lang-json">
+{ "foo": [ "bar", "baz" ] }
+</pre>
+
+<p>
+~JSON~Patch文書：
+◎
+A JSON Patch document:
+</p>
+
+<pre class="lang-json">
+[
+  { "op": "add", "path": "/foo/`1^mk", "value": "qux" }
+]
+</pre>
+
+<p>
+結果の~JSON文書：
+◎
+The resulting JSON document:
+</p>
+
+<pre class="lang-json">
+{ "foo": [ "bar", `"qux"^mk, "baz" ] }
+</pre>
+
+		</section>
+		<section id="appendix-A.3">
+<h3 title="Removing an Object Member">A.3. ~obj~memberの除去ng</h3>
+
+<p>
+標的~JSON文書の例：
+◎
+An example target JSON document:
+</p>
+
+<pre class="lang-json">
+{
+  `"baz": "qux"^mk,
+  "foo": "bar"
+}
+</pre>
+
+<p>
+~JSON~Patch文書：
+◎
+A JSON Patch document:
+</p>
+
+<pre class="lang-json">
+[
+  { "op": "remove", "path": "`/baz^mk" }
+]
+</pre>
+
+<p>
+結果の~JSON文書：
+◎
+The resulting JSON document:
+</p>
+
+<pre class="lang-json">
+{ "foo": "bar" }
+</pre>
+
+		</section>
+		<section id="appendix-A.4">
+<h3 title="Removing an Array Element">A.4. 配列~要素の除去ng</h3>
+
+<p>
+標的~JSON文書の例：
+◎
+An example target JSON document:
+</p>
+
+<pre class="lang-json">
+{ "foo": [ "bar", `"qux"^mk, "baz" ] }
+</pre>
+
+<p>
+~JSON~Patch文書：
+◎
+A JSON Patch document:
+</p>
+
+<pre class="lang-json">
+[
+  { "op": "remove", "path": "/foo/`1^mk" }
+]
+</pre>
+
+<p>
+結果の~JSON文書：
+◎
+The resulting JSON document:
+</p>
+
+<pre class="lang-json">
+{ "foo": [ "bar", "baz" ] }
+</pre>
+
+		</section>
+		<section id="appendix-A.5">
+<h3 title="Replacing a Value">A.5. 値の置換ng</h3>
+
+<p>
+標的~JSON文書の例：
+◎
+An example target JSON document:
+</p>
+
+<pre class="lang-json">
+{
+  "baz": `"qux"^mk,
+  "foo": "bar"
+}
+</pre>
+
+<p>
+~JSON~Patch文書：
+◎
+A JSON Patch document:
+</p>
+
+<pre class="lang-json">
+[
+  { "op": "replace", "path": "/baz", "value": `"boo"^mk }
+]
+</pre>
+
+<p>
+結果の~JSON文書：
+◎
+The resulting JSON document:
+</p>
+
+<pre class="lang-json">
+{
+  "baz": `"boo"^mk,
+  "foo": "bar"
+}
+</pre>
+
+		</section>
+		<section id="appendix-A.6">
+<h3 title="Moving a Value">A.6. 値の移動ng</h3>
+
+<p>
+標的~JSON文書の例：
+◎
+An example target JSON document:
+</p>
+
+<pre class="lang-json">
+{
+  "foo": {
+    "bar": "baz",
+    `"waldo": "fred"^mk
+  },
+  "qux": {
+    "corge": "grault"
+  }
+}
+</pre>
+
+<p>
+~JSON~Patch文書：
+◎
+A JSON Patch document:
+</p>
+
+<pre class="lang-json">
+[
+  { "op": "move", "from": "`/foo/waldo^mk", "path": "`/qux/thud^mk" }
+]
+</pre>
+
+<p>
+結果の~JSON文書：
+◎
+The resulting JSON document:
+</p>
+
+<pre class="lang-json">
+{
+  "foo": {
+    "bar": "baz"
+  },
+  "qux": {
+    "corge": "grault",
+    `"thud": "fred"^mk
+  }
+}
+</pre>
+
+		</section>
+		<section id="appendix-A.7">
+<h3 title="Moving an Array Element">A.7. 配列~要素の移動ng</h3>
+
+<p>
+標的~JSON文書の例：
+◎
+An example target JSON document:
+</p>
+
+<pre class="lang-json">
+{ "foo": [ "all", `"grass"^mk, "cows", "eat" ] }
+</pre>
+
+<p>
+~JSON~Patch文書：
+◎
+A JSON Patch document:
+</p>
+
+<pre class="lang-json">
+[
+  { "op": "move", "from": "/foo/`1^mk", "path": "/foo/`3^mk" }
+]
+</pre>
+
+<p>
+結果の~JSON文書：
+◎
+The resulting JSON document:
+</p>
+
+<pre class="lang-json">
+{ "foo": [ "all", "cows", "eat", `"grass"^mk ] }
+</pre>
+
+		</section>
+		<section id="appendix-A.8">
+<h3 title="Testing a Value: Success">A.8. 値の~test（成功）</h3>
+
+<p>
+標的~JSON文書の例：
+◎
+An example target JSON document:
+</p>
+
+<pre class="lang-json">
+{
+  "baz": `"qux"^mk,
+  "foo": [ "a", `2^mk, "c" ]
+}
+</pre>
+
+<p>
+次の~JSON~Patch文書は成功裡に評価される：
+◎
+A JSON Patch document that will result in successful evaluation:
+</p>
+
+<pre class="lang-json">
+[
+  { "op": "test", "path": "/baz", "value": `"qux"^mk },
+  { "op": "test", "path": "/foo/1", "value": `2^mk }
+]
+</pre>
+
+		</section>
+		<section id="appendix-A.9">
+<h3 title="Testing a Value: Error">A.9. 値の~test（~error）</h3>
+
+<p>
+標的~JSON文書の例：
+◎
+An example target JSON document:
+</p>
+
+<pre class="lang-json">
+{ "baz": `"qux"^mk }
+</pre>
+
+<p>
+次の~JSON~Patch文書は~error条態になる：
+◎
+A JSON Patch document that will result in an error condition:
+</p>
+
+<pre class="lang-json">
+[
+  { "op": "test", "path": "/baz", "value": `"bar"^mk }
+]
+</pre>
+
+		</section>
+		<section id="appendix-A.10">
+<h3 title="Adding a Nested Member Object">A.10. 入子の~member~objの追加ng</h3>
+
+<p>
+標的~JSON文書の例：
+◎
+An example target JSON document:
+</p>
+
+<pre class="lang-json">
+{ "foo": "bar" }
+</pre>
+
+<p>
+~JSON~Patch文書：
+◎
+A JSON Patch document:
+</p>
+
+<pre class="lang-json">
+[
+  { "op": "add", "path": "`/child^mk", "value": { "`grandchild^mk": { } } }
+]
+</pre>
+
+<p>
+結果の~JSON文書：
+◎
+The resulting JSON document:
+</p>
+
+<pre class="lang-json">
+{
+  "foo": "bar",
+  "`child^mk": {
+    "`grandchild^mk": {
+    }
+  }
+}
+</pre>
+
+		</section>
+		<section id="appendix-A.11">
+<h3 title="Ignoring Unrecognized Elements">A.11. 認識できない要素の無視ng</h3>
+
+<p>
+標的~JSON文書の例：
+◎
+An example target JSON document:
+</p>
+
+<pre class="lang-json">
+{ "foo": "bar" }
+</pre>
+
+<p>
+~JSON~Patch文書：
+◎
+A JSON Patch document:
+</p>
+
+<pre class="lang-json">
+[
+  { "op": "add", "path": "/baz", "value": "qux", `"xyz": 123^mk }
+]
+</pre>
+
+<p>
+結果の~JSON文書：
+◎
+The resulting JSON document:
+</p>
+
+<pre class="lang-json">
+{
+  "foo": "bar",
+  "baz": "qux"
+}
+</pre>
+
+		</section>
+		<section id="appendix-A.12">
+<h3 title="Adding to a Nonexistent Target">A.12. 存在しない標的~地点への追加ng</h3>
+
+<p>
+標的~JSON文書の例：
+◎
+An example target JSON document:
+</p>
+
+<pre class="lang-json">
+{ "foo": "bar" }
+</pre>
+
+<p>
+~JSON~Patch文書：
+◎
+A JSON Patch document:
+</p>
+
+<pre class="lang-json">
+[
+  { "op": "add", "path": "`/baz/bat^mk", "value": "qux" }
+]
+</pre>
+
+<p>
+この ~JSON~Patch文書が上の標的~JSON文書に適用されたときの結果は，~errorになる（したがって，適用されない）。
+`add^l 演算の標的~地点は［
+文書の~root,
+既存の~objの~member,
+既存の配列の~member
+］のいずれも指していないので。
+◎
+This JSON Patch document, applied to the target JSON document above, would result in an error (therefore, it would not be applied), because the "add" operation's target location that references neither the root of the document, nor a member of an existing object, nor a member of an existing array.
+</p>
+
+		</section>
+		<section id="appendix-A.13">
+<h3 title="Invalid JSON Patch Document">A.13. 無効な~JSON~Patch文書</h3>
+
+<p>
+~JSON~Patch文書：
+◎
+A JSON Patch document:
+</p>
+
+<pre class="lang-json">
+[
+  { "`op^mk": "add", "path": "/baz", "value": "qux", "`op^mk": "remove" }
+]
+</pre>
+
+<p>
+この~JSON~Patch文書は、 `add^l 演算として扱えない。
+後続に <samp>"op":"remove"</samp> があるので。
+~JSONの~obj~member名は一意である “ベキ” とされているおり、~member名の重複における~errorの取扱いは標準~化されていない。
+◎
+This JSON Patch document cannot be treated as an "add" operation, because it contains a later "op":"remove" element. JSON requires that object member names be unique with a "SHOULD" requirement, and there is no standard error handling for duplicates.
+</p>
+
+		</section>
+		<section id="appendix-A.14">
+<h3 title="~ Escape Ordering">A.14. `~^l による~escapeの取扱い</h3>
+
+<p>
+標的~JSON文書の例：
+◎
+An example target JSON document:
+</p>
+
+<pre class="lang-json">
+{
+  "/": 9,
+  "`~1^mk": 10
+}
+</pre>
+
+<p>
+~JSON~Patch文書：
+◎
+A JSON Patch document:
+</p>
+
+<pre class="lang-json">
+[
+  {"op": "test", "path": "`/~01^mk", "value": 10}
+]
+</pre>
+
+<p>
+結果の~JSON文書：
+◎
+The resulting JSON document:
+</p>
+
+<pre class="lang-json">
+{
+  "/": 9,
+  "`~1^mk": 10
+}
+</pre>
+
+<p class="trans-note">【
+~JSON-Pointer `/~01^s の “`~^c” による~escapeは `~0^s のみが展開され，それ以上は展開されない。
+<a href="~RFC6901#section-4">~JSON-Pointerの評価</a>
+`RFC6901$r
+により， `~0^l は `~1^l より後に展開されるので。
+】</p>
+
+		</section>
+		<section id="appendix-A.15">
+<h3 title="Comparing Strings and Numbers">A.15. 文字列と数-の比較</h3>
+
+<p>
+標的~JSON文書の例：
+◎
+An example target JSON document:
+</p>
+
+<pre class="lang-json">
+{
+  "/": 9,
+  "~1": `10^mk
+}
+</pre>
+
+<p>
+~JSON~Patch文書：
+◎
+A JSON Patch document:
+</p>
+
+<pre class="lang-json">
+[
+  {"op": "test", "path": "/~01", "value": `"10"^mk}
+]
+</pre>
+
+<p>
+この結果は~testが失敗するので~errorになる。
+文書の方の値は数-である一方，~testされる値は文字列なので。
+◎
+This results in an error, because the test fails. The document value is numeric, whereas the value being tested for is a string.
+</p>
+
+		</section>
+		<section id="appendix-A.16">
+<h3 title="Adding an Array Value">A.16. 配列~値の追加ng</h3>
+
+<p>
+標的~JSON文書の例：
+◎
+An example target JSON document:
+</p>
+
+<pre class="lang-json">
+{ "foo": ["bar"] }
+</pre>
+
+<p>
+~JSON~Patch文書：
+◎
+A JSON Patch document:
+</p>
+
+<pre class="lang-json">
+[
+  { "op": "add", "path": "/foo/`-^mk", "value": ["abc", "def"] }
+]
+</pre>
+
+<p>
+結果の~JSON文書：
+◎
+The resulting JSON document:
+</p>
+
+<pre class="lang-json">
+{ "foo": ["bar"`, ["abc", "def"]^mk] }
+</pre>
+
+		</section>
+	</section>
+</main></div>
+

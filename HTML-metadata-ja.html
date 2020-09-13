@@ -1,0 +1,5811 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>HTML Standard — The document element, Document metadata（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		persisted_parts: Util.collectHtmlCodeList(),
+		collectParts: Util.collectParts,
+		toc_main: 'MAIN',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/❝.|%[\w\-~一-鿆]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {
+	switch(match[0]) {
+	case '❝':
+		return (
+`<span class="code-point">U+00${match[1].charCodeAt(0).toString(16).toUpperCase()}</span> (<span class="char-symbol">${match[1]}</span>)`
+		);
+	default: //'%'
+		return `<var>${match.slice(1)}</var>`
+	}
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `HTML-references.html#refs${key}`;
+	break;
+case 't':
+	text = `&lt;${text}&gt;`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'h':
+	text = `\`<code class="header">${text}</code>\``;
+	break;
+case 'sl':
+	text = `[[${key}]]`;
+	break;
+case 'at':
+	text = `@${key}`;
+	break;
+case 'xCode':
+	return `<a id="_ex-${key}">＊</a>`;
+	break;
+case 'AA':
+	return `<a href="~HTMLARIA#el-${key}">作者~向け</a>／<a href="~HTMLAAM#el-${key}">実装者~向け</a>`;
+	break;
+case 'obsMb':
+	text = '廃用にされた~memberもある';
+	href= `~HTMLLS/obsolete.html#${key}-partial`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-09-02
+trans_update:2020-08-26
+source_checked:191126
+page_state_key:HTML
+spec_status:LS
+original_url:https://html.spec.whatwg.org/multipage/semantics.html
+	abbr_url:HEmetadata
+nav_prev:HTMLdom
+nav_next:HEsections
+trans_1st_pub:2016-09-03
+
+●●class_map
+e:element
+a:attr
+aL:attr
+et:event-type
+P:production
+dir:directive
+t:type
+st:attr-state
+v:value
+sl:js-slot
+at:css
+obsMb:comment
+
+●●tag_map
+I:code
+m:code
+mL:code
+c:code
+et:code
+e:code
+a:code
+aL:code
+P:code
+dir:code
+st:span
+t:var
+v:code
+V:var
+sl:span
+i:i
+at:code
+cite:cite
+obsMb:span
+em:em
+
+●●original_id_map
+
+●●mdn_urls
+the-base-element:HTML/Element/base
+the-head-element:HTML/Element/head
+the-html-element:HTML/Element/html
+the-link-element:HTML/Element/link
+the-meta-element:HTML/Element/meta
+the-style-element:HTML/Element/style
+the-title-element:HTML/Element/title
+
+htmlhtmlelement:API/HTMLHtmlElement
+htmlheadelement:API/HTMLHeadElement
+htmltitleelement:API/HTMLTitleElement
+htmlbaseelement:API/HTMLBaseElement
+htmllinkelement:API/HTMLLinkElement
+htmlmetaelement:API/HTMLMetaElement
+htmlstyleelement:API/HTMLStyleElement
+
+
+●●link_map
+
+CEReactions:~HEcustom#cereactions
+HTMLConstructor:~HTMLdom#htmlconstructor
+
+h.Link:~HTTPweblink#field.link
+h.Content-Language:~HTTPsem#field.content-language
+	h.Content-Language:~RFC7231#section-3.1.3.2
+h.Refresh:~HTMLiana#refresh
+
+I.HTMLHtmlElement:#htmlhtmlelement
+I.HTMLHeadElement:#htmlheadelement
+I.HTMLTitleElement:#htmltitleelement
+I.HTMLBaseElement:#htmlbaseelement
+I.HTMLLinkElement:#htmllinkelement
+I.HTMLMetaElement:#htmlmetaelement
+I.HTMLStyleElement:#htmlstyleelement
+
+I.DOMTokenList:~DOM4#interface-domtokenlist
+I.Document:~HTMLdom#document
+I.HTMLElement:~HTMLdom#htmlelement
+I.LinkStyle:~CSSOM1#the-linkstyle-interface
+
+m.content:#dom-meta-content
+m.document.title:~HTMLdom#dom-document-title
+m.href:#dom-base-href
+m.httpEquiv:#dom-meta-httpequiv
+m.media:#dom-style-media
+m.name:#dom-meta-name
+m.target:#dom-base-target
+m.text:#dom-title-text
+m.value:~DOM4#dom-domtokenlist-value
+
+mL.as:#dom-link-as
+mL.crossOrigin:#dom-link-crossorigin
+mL.disabled:#dom-link-disabled
+mL.href:#dom-link-href
+mL.hreflang:#dom-link-hreflang
+mL.media:#dom-link-media
+mL.integrity:#dom-link-integrity
+mL.referrerPolicy:#dom-link-referrerpolicy
+mL.rel:#dom-link-rel
+mL.relList:#dom-link-rellist
+mL.sizes:#dom-link-sizes
+mL.imageSrcset:#dom-link-imagesrcset
+mL.imageSizes:#dom-link-imagesizes
+mL.type:#dom-link-type
+
+e.html:#the-html-element
+e.head:#the-head-element
+e.title:#the-title-element
+e.base:#the-base-element
+e.link:#the-link-element
+e.meta:#the-meta-element
+	e.meta:#meta
+e.style:#the-style-element
+
+e.a:~HEtextlevel#the-a-element
+e.body:~HEsections#the-body-element
+e.img:~HEimages#the-img-element
+e.noscript:~HEscripting#the-noscript-element
+e.picture:~HEimages#the-picture-element
+e.script:~HEscripting#the-script-element
+e.area:~HEimages#the-area-element
+e.iframe:~HEembed#the-iframe-element
+e.form:~HEforms#the-form-element
+
+
+a.charset:#attr-meta-charset
+a.content:#attr-meta-content
+a.href:#attr-base-href
+a.http-equiv:#attr-meta-http-equiv
+a.lang:~HTMLdom#attr-lang
+a.manifest:#attr-html-manifest
+a.name:#attr-meta-name
+a.rel:~HTMLlinks#attr-hyperlink-rel
+a.target:#attr-base-target
+a.title:~HTMLdom#attr-title
+a.~titleS:#attr-style-title
+a.type:~HTMLobs#attr-style-type
+a.media:#attr-style-media
+a.hreflang:~HTMLlinks#attr-hyperlink-hreflang
+a.srcset:~HEimages#attr-img-srcset
+a.sizes:~HEimages#attr-img-sizes
+
+aL.as:#attr-link-as
+aL.color:#attr-link-color
+aL.crossorigin:#attr-link-crossorigin
+aL.disabled:#attr-link-disabled
+aL.href:#attr-link-href
+aL.hreflang:#attr-link-hreflang
+aL.imagesizes:#attr-link-imagesizes
+aL.imagesrcset:#attr-link-imagesrcset
+aL.integrity:#attr-link-integrity
+aL.media:#attr-link-media
+aL.referrerpolicy:#attr-link-referrerpolicy
+aL.rel:#attr-link-rel
+aL.sizes:#attr-link-sizes
+aL.title:#attr-link-title
+aL.type:#attr-link-type
+
+a.itemprop:~HTMLLS/microdata.html#names:-the-itemprop-attribute
+
+v.application-name:#meta-application-name
+v.author:#meta-author
+v.description:#meta-description
+v.generator:#meta-generator
+v.keywords:#meta-keywords
+v.referrer:#meta-referrer
+v.theme-color:#meta-theme-color
+
+v.content-language:#attr-meta-http-equiv-keyword-content-language
+v.content-type:#attr-meta-http-equiv-keyword-content-type
+v.default-style:#attr-meta-http-equiv-keyword-default-style
+v.refresh:#attr-meta-http-equiv-keyword-refresh
+v.set-cookie:#attr-meta-http-equiv-keyword-set-cookie
+v.x-ua-compatible:#attr-meta-http-equiv-keyword-x-ua-compatible
+v.content-security-policy:#attr-meta-http-equiv-keyword-content-security-policy
+
+v.any:~HTMLlinks#attr-link-sizes-any
+v.alternate:~HTMLlinks#rel-alternate
+v.canonical:~HTMLlinks#link-type-canonical
+v.dns-prefetch:~HTMLlinks#link-type-dns-prefetch
+v.icon:~HTMLlinks#rel-icon
+v.next:~HTMLlinks#link-type-next
+v.pingback:~HTMLlinks#link-type-pingback
+v.preconnect:~HTMLlinks#link-type-preconnect
+v.prefetch:~HTMLlinks#link-type-prefetch
+v.preload:~HTMLlinks#link-type-preload
+v.manifest:~HTMLlinks#link-type-manifest
+v.modulepreload:~HTMLlinks#link-type-modulepreload
+v.prerender:~HTMLlinks#link-type-prerender
+v.search:~HTMLlinks#link-type-search
+v.stylesheet:~HTMLlinks#link-type-stylesheet
+
+v.no-referrer:~REFERRER-POLICY#referrer-policy-no-referrer
+v.no-referrer-when-downgrade:~REFERRER-POLICY#referrer-policy-no-referrer-when-downgrade
+v.origin-when-cross-origin:~REFERRER-POLICY#referrer-policy-origin-when-cross-origin
+v.unsafe-url:~REFERRER-POLICY#referrer-policy-unsafe-url
+
+
+
+et.error:~HTMLindex#event-error
+et.load:~HTMLindex#event-load
+
+dir.frame-ancestors:~CSP3#frame-ancestors
+dir.report-uri:~CSP3#report-uri
+dir.sandbox:~CSP3#sandbox
+
+c.text/css:~HTMLindex#text/css
+c.text/plain:~RFCx/rfc2046#section-4.1.3
+
+t.color:~CSSCOLOR#typedef-color
+
+h.Set-Cookie:~HTTPcookie#sane-set-cookie
+
+sl.CryptographicNonce:~HTMLurl#cryptographicnonce
+
+V.meta:#_meta-elem
+V.content:#_content-attr-value
+
+	●用語
+st.内容~言語:#attr-meta-http-equiv-content-language
+st.~CSP:#attr-meta-http-equiv-content-security-policy
+st.Set-Cookie:#attr-meta-http-equiv-set-cookie
+st.既定の~style:#attr-meta-http-equiv-default-style
+st.符号化法~宣言:#attr-meta-http-equiv-content-type
+st.~refresh:#attr-meta-http-equiv-refresh
+st.~X-UA-Compatible:#attr-meta-http-equiv-x-ua-compatible
+
+明示的に可能化？:#explicitly-enabled
+
+~scriptを阻んでいる~stylesheetを供与して:#contributes-a-script-blocking-style-sheet
+~scriptを阻んでいる~stylesheet~counter:#script-blocking-style-sheet-counter
+~scriptを阻んでいる~stylesheetは在る:#has-a-style-sheet-that-is-blocking-scripts
+~scriptを阻んでいる~stylesheetは無い:#has-no-style-sheet-that-is-blocking-scripts
+
+~body内に許容され:#allowed-in-the-body
+符号化法~宣言:#character-encoding-declaration
+
+凍結d基底~URL:#frozen-base-url
+凍結d基底~URLを設定-:#set-the-frozen-base-url
+	set:#set-the-frozen-base-url
+
+~link先の資源を~fetchして処理する:#fetch-and-process-the-linked-resource
+~link先の資源~fetch用に設定しておく:#linked-resource-fetch-setup-steps
+~link先の資源を~fetchして処理する既定の~algo:#default-fetch-and-process-the-linked-resource
+~link先の資源を処理する:#process-the-linked-resource
+~link先の資源を処理する既定の~algo:#default-process-the-linked-resource
+
+~pragma集合の既定の言語:#pragma-set-default-language
+~style~blockを更新する:#update-a-style-block
+宣言的に~refreshする？:#will-declaratively-refresh
+共用~宣言的~refresh手続き:#shared-declarative-refresh-steps
+要素の~targetを取得する:#get-an-element's-target
+	'
+
+	＊廃（TODO
+	~stylesheet準備済み~flag:#style-sheet-ready
+	~scriptを阻んで:#a-style-sheet-that-is-blocking-scripts
+	#obtaining-a-resource-from-a-link-element
+
+
+	●HTML
+~hyperlinkを追う:~HTMLlinks#following-hyperlinks-2
+~HTML~link型:~HTMLlinks#linkTypes
+外部~資源~link:~HTMLlinks#external-resource-link
+他種の~link型:~HTMLlinks#other-link-types
+~body-ok:~HTMLlinks#body-ok
+~hyperlink:~HTMLlinks#hyperlink
+
+~ASCII大小無視:~INFRA#ascii-case-insensitive
+~ASCII小文字~化する:~INFRA#ascii-lowercase
+~ASCII空白を読飛ばす:~INFRA#skip-ascii-whitespace
+~ASCII空白:~INFRA#ascii-whitespace
+前後の~ASCII空白~列を剥ぐ:~INFRA#strip-leading-and-trailing-ascii-whitespace
+~ASCII数字:~INFRA#ascii-digit
+符号位置~並びを収集する:~INFRA#collect-a-sequence-of-code-points
+~commaで分割する:~INFRA#split-on-commas
+位置~変数:~INFRA#string-position-variable
+符号位置:~INFRA#code-point
+
+並列的:~HTMLINFRA#in-parallel
+即時:~HTMLINFRA#immediately
+接続されたとき:~HTMLINFRA#becomes-connected
+必須の下位資源:~HTMLINFRA#critical-subresources
+切断されたとき:~HTMLINFRA#becomes-disconnected
+即時に:~HTMLINFRA#immediately
+文書の中へ挿入された:~HTMLINFRA#insert-an-element-into-a-document
+文書から除去された:~HTMLINFRA#remove-an-element-from-a-document
+
+反映する:~HTMLcdom#reflect
+既知な値のみに制限され:~HTMLcdom#limited-to-only-known-values
+
+~referrer施策~属性:~HTMLurl#referrer-policy-attribute
+~CORSになり得る要請を作成する:~HTMLurl#create-a-potential-cors-request
+~CORS設定群~属性:~HTMLurl#cors-settings-attribute
+~Content-Type~metadata:~HTMLurl#content-type
+相対的に構文解析-:~HTMLurl#parse-a-url
+文書~基底~URL:~HTMLurl#document-base-url
+~fallback基底~URL:~HTMLurl#fallback-base-url
+結果の~URL~record:~HTMLurl#resulting-url-record
+前後~空白~可の妥当な~URL:~HTMLurl#valid-url-potentially-surrounded-by-spaces
+前後~空白~可の妥当かつ空でない~URL:~HTMLurl#valid-non-empty-url-potentially-surrounded-by-spaces
+
+真偽-属性:~HTMLcms#boolean-attribute
+列挙d属性:~HTMLcms#enumerated-attribute
+環境に合致して:~HTMLcms#matches-the-environment
+負でない整数として構文解析する:~HTMLcms#rules-for-parsing-non-negative-integers
+~comma区切りの~token集合:~HTMLcms#set-of-comma-separated-tokens
+空白区切りの一意な~token集合:~HTMLcms#_set-of-unique-space-separated-tokens
+妥当な媒体~query~list:~HTMLcms#valid-media-query-list
+妥当な負でない整数:~HTMLcms#valid-non-negative-integer
+値なし用の既定:~HTMLcms#missing-value-default
+妥当でない値~用の既定:~HTMLcms#invalid-value-default
+
+~CSS色~値として構文解析する:~HTMLdep#parsed-as-a-css-color-value
+
+作動中の文書:~BROWSERS#active-document
+閲覧文脈:~BROWSERS#browsing-context
+属する閲覧文脈:~BROWSERS#concept-document-bc
+容器~文書:~BROWSERS#bc-container-document
+妥当な閲覧文脈~名または~keyword:~BROWSERS#valid-browsing-context-name-or-keyword
+
+作動中の~sandbox法~flag集合:~ORIGIN#active-sandboxing-flag-set
+閲覧文脈~sandbox化( 自動~特能 )~flag:~ORIGIN#sandboxed-automatic-features-browsing-context-flag
+
+~navigate:~NAVI#navigate
+~navi:~NAVI#navigate
+完全に読込まれた時刻:~NAVI#completely-loaded-time
+V.履歴~取扱い:~NAVI#navigation-hh
+i.置換-:~NAVI#hh-replace
+~source閲覧文脈:~NAVI#source-browsing-context
+
+分類:~HTMLdom#concept-element-categories
+内容~属性:~HTMLdom#concept-element-attributes
+内容~model:~HTMLdom#concept-element-content-model
+この要素を利用できる文脈:~HTMLdom#concept-element-contexts
+~accessibilityの考慮点:~HTMLdom#concept-element-accessibility-considerations
+~DOM~interface:~HTMLdom#concept-element-dom
+大域~属性:~HTMLdom#global-attributes
+~metadata内容:~HTMLdom#metadata-content-2
+句ng内容:~HTMLdom#phrasing-content-2
+~flow内容:~HTMLdom#flow-content-2
+見出し内容:~HTMLdom#heading-content-2
+なし:~HTMLdom#concept-content-nothing
+text/html における~tag省略:~HTMLdom#concept-element-tag-omission
+~text:~HTMLdom#text-content
+文書:~HTMLdom#the-document-object
+要素間~空白:~HTMLdom#inter-element-whitespace
+言語:~HTMLdom#language
+doc.~referrer施策:~HTMLdom#concept-document-referrer-policy
+表現-:~HTMLdom#represents
+方向性:~HTMLdom#the-directionality
+~head要素:~HTMLdom#the-head-element-2
+
+
+~network用~task源:~WAPI#networking-task-source
+関連な設定群~obj:~WAPI#relevant-settings-object
+~event~loop:~WAPI#event-loop
+~taskを~queueする:~WAPI#queue-a-task
+要素~taskを~queueする:~WAPI#queue-an-element-task
+	step 1:~WAPI#step1
+描画を更新する:~WAPI#update-the-rendering
+
+~HTML構文解析器:~HTMLparsing#html-parser
+~XML構文解析器:~HTMLxml#xml-parser
+
+~iframe-srcdoc文書:~HEembed#an-iframe-srcdoc-document
+
+文字~参照:~HTMLwriting#syntax-charref
+~comment:~HTMLwriting#syntax-comments
+終了tag:~HTMLwriting#syntax-end-tag
+開始tag:~HTMLwriting#syntax-start-tag
+
+遅延-:~HTMLparsing#delay-the-load-event
+~open要素~stack:~HTMLparsing#stack-of-open-elements
+
+~form提出:~HTMLforms#form-submission
+~form:~HEforms#the-form-element
+
+画像~候補~文字列:~HEimages#image-candidate-string
+画像~source:~HEimages#image-source
+~sizes属性:~HEimages#sizes-attribute
+~source集合:~HEimages#source-set
+~source~size:~HEimages#source-size-2
+~srcset属性:~HEimages#srcset-attribute
+横幅~記述子:~HEimages#width-descriptor
+~art-direction:~HEimages#art-direction
+
+	●外部
+~CSS~stylesheet集合:~CSSOM1#css-style-sheet-set
+~CSS~stylesheet集合~名:~CSSOM1#css-style-sheet-set-name
+選好される~CSS~stylesheet集合~名を変更する:~CSSOM1#change-the-preferred-css-style-sheet-set-name
+~CSS~stylesheetを作成する:~CSSOM1#create-a-css-style-sheet
+~CSS~stylesheetを除去する:~CSSOM1#remove-a-css-style-sheet
+~CSS~stylesheetが結付けられ:~CSSOM1#associated-css-style-sheet
+ss.代替-~flag:~CSSOM1#concept-css-style-sheet-alternate-flag
+ss.不能化~flag:~CSSOM1#concept-css-style-sheet-disabled-flag
+ss.所在:~CSSOM1#concept-css-style-sheet-location
+ss.媒体:~CSSOM1#concept-css-style-sheet-media
+ss.生成元clean~flag:~CSSOM1#concept-css-style-sheet-origin-clean-flag
+ss.所有者~CSS規則:~CSSOM1#concept-css-style-sheet-owner-css-rule
+ss.所有者~node:~CSSOM1#concept-css-style-sheet-owner-node
+ss.親~CSS~stylesheet:~CSSOM1#concept-css-style-sheet-parent-css-style-sheet
+ss.~title:~CSSOM1#concept-css-style-sheet-title
+ss.種別:~CSSOM1#concept-css-style-sheet-type
+ss.~CSS規則~list:~CSSOM1#concept-css-style-sheet-css-rules
+
+適合t~stylesheet:~CSSSNAPSHOT#conform-classes
+	~CSSSYN#conform-classes
+
+
+~CSP:~CSP3#content-security-policy-object
+施策を施行-:~CSP3#enforced
+文書に対する基底は許容されるか？:~CSP3#allow-base-for-document
+要素における~inline型の挙動は~CSPにより阻止されるべきか？:~CSP3#should-block-inline
+指令:~CSP3#directives
+施行-:~CSP3#enforced
+直列形の~CSPを構文解析する:~CSP3#parse-serialized-policy
+妥当な~CSP:~CSP3#grammardef-serialized-policy
+
+~fetch:~FETCH#concept-fetch
+要請:~FETCH#concept-request
+応答:~FETCH#concept-response
+~network~error:~FETCH#concept-network-error
+rq.~client:~FETCH#concept-request-client
+rq.行先:~FETCH#concept-request-destination
+rq.暗号用~nonce~metadata:~FETCH#concept-request-nonce-metadata
+rq.~referrer施策:~FETCH#concept-request-referrer-policy
+rq.完全性~metadata:~FETCH#concept-request-integrity-metadata
+rq.同期~flag:~FETCH#synchronous-flag
+~ok状態s:~FETCH#ok-status
+rs.状態s:~FETCH#concept-response-status
+
+行先の素:~FETCH#concept-potential-destination
+行先に翻訳-:~FETCH#concept-potential-destination-translate
+~scriptに類する行先:~FETCH#request-destination-script-like
+
+~node文書:~DOM4#concept-node-document
+~tree順序:~DOM4#concept-tree-order
+~HTML文書:~DOM4#html-document
+~XML文書:~DOM4#xml-document
+doc.~URL:~DOM4#concept-document-url
+doc.符号化法:~DOM4#concept-document-encoding
+文書~要素:~DOM4#document-element
+文書~tree内:~DOM4#in-a-document-tree
+根:~DOM4#concept-tree-root
+~shadow根:~DOM4#concept-shadow-root
+~supportする~token:~DOM4#concept-supported-tokens
+作動化の挙動:~DOM4#eventtarget-activation-behavior
+~eventを発火する:~DOM4#concept-event-fire
+子~text内容:~DOM4#concept-child-text-content
+子たち変更-時の手続き:~DOM4#concept-node-children-changed-ext
+全~内容を文字列に置換する:~DOM4#string-replace-all
+
+~UTF-8:~ENCODING#utf-8
+符号化法:~ENCODING#encoding
+符号化法~label:~ENCODING#label
+
+~URL:~URL1#concept-url
+妥当な~URL文字列:~URL1#valid-url-string
+~URL構文解析する:~URL1#concept-url-parser
+~URLを直列化する:~URL1#concept-url-serializer
+
+~referrer施策:~REFERRER-POLICY#referrer-policy
+
+
+~MIME型:~MIMESNIFF#mime-type
+妥当な~MIME型~文字列:~MIMESNIFF#valid-mime-type
+算出された資源~型:~MIMESNIFF#computed-mime-type
+画像を特定的に~sniffするための規則:#rules-for-sniffing-images-specifically
+
+c.~xml-stylesheet:https://www.w3.org/TR/xml-stylesheet/#the-xml-stylesheet-processing-instruction
+
+
+	WHATWG Wiki MetaExtensions page:https://wiki.whatwg.org/wiki/MetaExtensions
+	WHATWG Wiki PragmaExtensions page:https://wiki.whatwg.org/wiki/PragmaExtensions
+
+定義済み~metadata名の集合に対する拡張:#concept-meta-extensions
+定義済み~link型の集合に対する拡張:~HTMLlinks#concept-rel-extensions
+	~metadata名:#concept-meta-extensions
+	~style付け~modelに供与する外部~資源~link:~HTMLlinks#link-type-stylesheet
+
+	●
+
+●●words_table1
+
+titleS:title
+xml-stylesheet:&lt;?xml-stylesheet?&gt;
+
+●●words_table
+
+	●network／保安／navi
+DNS:
+Content-Type:
+XSS:cross-site scripting:XSS
+body-ok:
+refresh:
+directory::::ディレクトリ
+追う:followする:~
+manifest::::マニフェスト
+sniff:
+spam::::スパム
+timer::::タイマー
+時限:timed::~
+offline::::オフライン
+load:
+事前読込み:preload::事前読み込み::プリロード
+読込直す:reloadする::読み込み直す::リロードする
+読込直-:reload::読み込み直::リロード
+低速:slow:~
+	crossorigin
+生成元clean:origin-clean::生成元-clean::オリジン-clean
+暗号用:cryptographic::~
+nonce::::ナンス
+探索:search::検索
+探索-:search::検索
+ok:
+	阻止される^i:blocked
+
+	●構文
+comma::::カンマ
+BOM:
+	-:literal
+開始tag:start tag::開始 tag:開始タグ
+終了tag:end tag::終了 tag:終了タグ
+直列形の:serialized::~::シリアル形の
+自由形の:free-form:~
+
+部分文字列:substring::~
+空白区切りの:space-separated::~
+	符号化法:character encoding
+読飛ばす:skipする:読み飛ばす
+分割-:split:~
+剥ぐ:stripする::~
+数字:digit:~
+省略:omission:~
+要素間:inter-element:~
+省略不可:omissibleでない:~
+
+
+	●型／構造／操作
+	文書~level:document-level
+give-up:give up
+名値:name-value::名-値
+
+切断-:disconnect::~
+body:
+head:
+shadow:
+	子たち:children
+
+	●一般処理
+切替器:switcher::~
+経過-:elapse::~
+時刻:time:~
+
+	●内容／意味論／呈示／UI
+必須の:critical::~
+microdata:
+	スライドショー:slide
+	最上位の:top-level／first
+	-:cell
+	列:column
+分類:categories:~
+句ng:phrasing::句::フレージング
+art-direction:art direction::art 演出:アート演出
+見出し:heading:~
+編集:edit:~
+翻訳-:translate:~
+翻訳:translation:~
+英語:English:~
+license::::ライセンス
+強勢:stress emphasis:~
+周囲の:surrounding:~
+bar::::バー
+bookmark::::ブックマーク
+italic:
+強調:highlight:~
+閲覧履歴:history:~
+発話合成:speech-synthesis:~
+発音:pronunciation:~
+	~style付け:styling
+
+背景:background:~
+色:color:~
+	緑:green
+	黒:black
+高解像度:high-resolution:~
+display::::ディスプレイ
+monitor::::モニタ
+contrast::::コントラスト
+sizes:
+srcset:
+
+	●仕様
+theme::::テーマ
+必要十分:adequate:~
+最適:optimum:~
+自由:free:~
+自立的:stand-alone:~
+同義語:synonym:~
+有害:harmful:~
+概略的な:brief::~
+地位:status::~
+Wiki:
+理論的:theoretic:~
+適理:reasonable:~
+	主題:subject matter
+	-:reason
+	かぶる:redundant
+	:criteria
+	得る:possible
+	semantic
+	ought to:されるべき
+	まずない:quite unlikely
+	より高~level:higher-level
+	必要とされ:necessitate 
+	紛らわしい:confusingly similar
+	時期が来た:have come due
+	対照的に／:contrast
+	対比-:contrasted with
+	:~insufficient
+	見込みが高い:likely
+	単に:merely
+	:nothing
+	:official
+	~~規範的に:prescriptive
+	相当するもの:counterpart
+	くまなく:thoroughly
+	し易くするため:helps
+
+
+伝えて:informして:~
+戸惑う:wonderする:~
+準拠:compliant:~
+読者:reader:~
+査読:peer review:~
+重複:duplicate:~
+使用中止:discontinued::~
+批准-:ratify:~
+	批准-済み:ratified
+	提案-済み:proposed
+付帯-:accompany:~
+衝突-:clash:~
+究明-:investigate:~
+アタる:consultする:あたる
+help
+helpful
+
+	approval
+	期待-:with the expectation that
+	期待されない:unexpected
+	ただし:exception
+	あてにならない／:unreliable
+	水準に満たない:wanting
+	満たす:satisfy／
+	判明した:found
+	~~落とし込まれる:kick in
+	移行し易く:to facilitate migration
+	誤解させる:misleading
+	ことにする:opt
+	:~say
+	:written
+	結果になる:end up
+	道を誤る:make poor choice
+	:~meet
+
+	●未分類（動詞
+供与-:contribute:~
+editor::::エディタ
+open:
+集積者:aggregator::~
+	指定-:present
+	deployment
+	暗くした:darker
+	-:leaving
+	指す:refer
+	現れる:seen
+	受けて:receive して
+	-:deciding
+	~~検索する:look for
+	選ぶ:choose
+	取り出され:take out
+	とされ:mark
+
+	●未分類
+PNG:
+X-UA-Compatible:
+pragma:
+	~pragma集合:pragma-set
+
+自動:automatic:~
+	担当する:responsible な
+ranking::::ランキング
+処理命令:PI:~
+
+disk::::ディスク
+email::::メール
+iframe-srcdoc:iframe srcdoc
+package::::パッケージ
+tab::::タブ
+	~link先の:target
+候補:candidate:~
+種類:kind:~
+
+	American:米国
+	British:英国
+	Latin
+	Salsa
+	Waltz
+	件名:Subject-line
+	aforementioned
+	anything
+
+	ダンス:dance
+	サルサ:Salsa
+	ワルツ:Waltz
+
+	become
+	用の:aim
+	-:authoritative
+	閉じら:close さ
+	現れ:come
+	数えられ:count
+
+	扉:front
+	ような:labeled
+	大規模:large-scale
+	:~moment
+	高速道路:motorway
+	news-organization:news organization:::ニュース配信組織
+
+	〜以上〜ままにある:period
+	:~point
+	:potential
+	すでに:previously
+	事前に:pro-actively
+	対応する:respective
+	~styleをあてがい直す:restyling
+	:site-specific
+	-:typeface
+	~network接続の不確実性:use of unreliable network connectivity
+	:very
+	広くから:wide
+	数:number
+	明るい:bright
+	短い:short
+	近く:closely
+	2 種類:Two categories
+	形:form
+	に代えて:in preference to
+	終わるまで何もしない:doing nothing while waiting for 〜 to finish
+	兼ね合いを図る:balance the likelihood of
+	他のものに加えて:as with anything
+	~rankingを不当に操ろうと:game its ranking mechanism
+	近いうち:soon will be
+	表:table
+	挙げる:list
+	あてになるかどうか疑わしい:there is insufficient confidence in the reliability
+
+	秒数:time
+	後に生じた方の時点:as soon as the later of
+	ニュース配信サイトの第一面:A news organization's front page
+	'
+	他の~markupに先立つ冒頭:very top
+	総量に上限は無い:large or small
+	項:entry::::エントリ
+	に等しい:just an
+	~~整数:number
+	狭い:small
+
+	●指示語
+	-:certain
+
+	最終的:eventual
+	:against
+	とは逆に:as opposed
+	誰か:someone
+	全くではないが，:almost, but not quite
+	まるっきり異なる:entirely unlike
+	誰もが:anyone
+	先頭近く:the top of
+	1 ヶ月:a month
+	一方で:whereas
+	:next
+	一つ:one
+	一体として:whole
+	後の:later
+	早々に:prematurely
+	各種／異なる:different
+	種々の:various kinds
+	する際に:upon
+	前述した／:aforementioned
+	いずれにせよ:nonetheless
+	部位:part
+	一連の:sequence
+	~link先:in question
+	当の:in question
+
+
+●●html_code_list
+
+
+
+■html-1
+<!DOCTYPE html>
+＜<html lang="ja">＞
+<head>
+<title>歌の交換</title>
+</head>
+<body>
+％<h1>歌の交換</h1>
+<p>今夜は、友人たちとの間で各自が書いた歌を交換しあった。書いた歌が共有されるのはうれしい。</p>
+</body>
+＜</html>＞
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Swapping Songs</title>
+</head>
+<body>
+<h1>Swapping Songs</h1>
+<p>Tonight I swapped some of the songs I wrote with some friends, who
+gave me some of the songs they wrote. I love sharing my music.</p>
+</body>
+</html>
+
+■head-1
+<!doctype html>
+<html lang=ja>
+ <head>
+  <title>head が短い文書</title>
+ </head>
+ <body>
+ ...
+
+  <title>A document with a short head</title>
+
+■head-2
+<!doctype html>
+<html lang="ja">
+ <head>
+  <meta charset="utf-8">
+  <base href="https://www.example.com/">
+  <title>もうちょい head が長いアプリ</title>
+  <link rel="stylesheet" href="default.css">
+  <link rel="stylesheet alternate" href="big.css" title="big text">
+  <％script src="support.js"><％/script>
+  <meta name="application-name" content="もうちょい head が長いアプリ">
+ </head>
+ <body>
+ ...
+
+  <TITLE>An application with a long head</TITLE>
+
+
+■title-1
+<title>ミツバチの仲間どうしの儀式的ダンス — 序説</title>
+  ...
+％<h1>序</h1>
+<p>はじめに、著名な本
+<cite>中世の養蜂 — 序説</cite> をとり挙げよう...
+
+  <title>Introduction to The Mating Rituals of Bees</title>
+    ...
+  <h1>Introduction</h1>
+  <p>This companion guide to the highly successful
+  <cite>Introduction to Medieval Bee-Keeping</cite> book is...
+
+■title-2
+<title>ミツバチの仲間どうしの儀式的ダンス</title>
+  ...
+％<h1>ダンス</h1>
+
+  <title>Dances used during bee mating rituals</title>
+    ...
+  <h1>The Dances</h1>
+
+■base-1
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <title>&lt;base&gt; 要素の例</title>
+        <base href="https://www.example.com/news/index.html">
+    </head>
+    <body>
+        <p><a href="archives.html">アーカイブ</a>もあります。</p>
+    </body>
+</html>
+
+<title>This is an example for the &lt;base&gt; element</title>
+<p>Visit the <a href="archives.html">archives</a>.</p>
+
+■link-1
+<link rel="author license" href="/about">
+
+■link-2
+<link rel="preload" as="image"
+      imagesrcset="wolf_400px.jpg 400w, wolf_800px.jpg 800w, wolf_1600px.jpg 1600w"
+      imagesizes="50vw">
+％
+<!-- ... たぶん、後で動的に挿入される ... -->
+<img src="wolf.jpg" alt="A rad wolf"
+     srcset="wolf_400px.jpg 400w, wolf_800px.jpg 800w, wolf_1600px.jpg 1600w"
+     sizes="50vw">
+
+later, or perhaps inserted dynamically
+
+■link-3
+<link rel="preload" as="image"
+      imagesrcset="dog-cropped-1x.jpg, dog-cropped-2x.jpg 2x"
+      media="(max-width: 800px)">
+<link rel="preload" as="image"
+      imagesrcset="dog-wide-1x.jpg, dog-wide-2x.jpg 2x"
+      media="(min-width: 801px)">
+％
+<!-- ... たぶん、後で動的に挿入される ... -->
+<picture>
+  <source srcset="dog-cropped-1x.jpg, dog-cropped-2x.jpg 2x"
+          media="(max-width: 800px)">
+  <img src="dog-wide-1x.jpg" srcset="dog-wide-2x.jpg 2x"
+       alt="An awesome dog">
+</picture>
+
+■link-4
+<link disabled rel="alternate stylesheet" href="css/pooh">
+
+
+■link-stylesheet-1
+<link rel="stylesheet" href="A" type="text/plain">
+<link rel="stylesheet" href="B" type="text/css">
+<link rel="stylesheet" href="C">
+
+■meta-generator-1
+<meta name=generator content="Frontweaver 8.2">
+
+■meta-keywords-1
+<!DOCTYPE HTML>
+<html lang="ja">
+ <head>
+  <title>日本の高速道路標識</title>
+  <meta name="keywords"
+    content="道路,高速,標識,本標識,補助標識,案内,予告,方面"
+  >
+ </head>
+ <body>
+  ...
+
+<!DOCTYPE HTML>
+<html lang="en-GB">
+ <head>
+  <title>Typefaces on UK motorways</title>
+  <meta name="keywords"
+    content="british,type face,font,fonts,highway,highways"
+  >
+ </head>
+ <body>
+  ...
+
+■meta-theme-color-1
+<!DOCTYPE HTML>
+<title>HTML Standard</title>
+<meta name="theme-color" content="#3c790a">
+...
+
+■meta-refresh-1
+<meta http-equiv="Refresh" content="300">
+
+■meta-refresh-2
+<meta http-equiv="Refresh" content="20; URL=page4.html">
+
+■meta-csp-1
+<meta
+   http-equiv="Content-Security-Policy"
+   content="script-src 'self'; object-src 'none'"
+>
+
+■meta-charset-1
+<meta charset="utf-8">
+
+■xml-encoding-1
+<?xml version="1.0" encoding="utf-8"?>
+
+■style-1
+<!DOCTYPE html>
+<html lang="ja">
+ <head>
+  <title>好きな本</title>
+  <style>
+   body { color: black; background: white; }
+   em { font-style: normal; color: red; }
+  </style>
+ </head>
+ <body>
+  <p><em>今まで</em>で最も<em>好きな</em>本は、 P. ラーメルさんが書いた<cite>ネコの一生</cite>です。その本には、人間社会における<i>イエネコ</i>について述べられています。</p>
+ </body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en-US">
+ <head>
+  <title>My favorite book</title>
+  <style>
+   body { color: black; background: white; }
+   em { font-style: normal; color: red; }
+  </style>
+ </head>
+ <body>
+  <p>My <em>favorite</em> book of all time has <em>got</em> to be
+  <cite>A Cat's Life</cite>. It is a book by P. Rahmel that talks
+  about the <i lang="la">Felis Catus</i> in modern human society.</p>
+ </body>
+</html>
+	'
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる HTML 仕様の
+<a href="~SPEC_URL">§ The document element, および § Document metadata</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+</script>
+
+ </head>
+
+<body>
+
+<header id="head">
+	<hgroup>
+<h1>文書要素, 文書メタデータ — The document element, Document metadata</h1>
+
+	</hgroup>
+</header>
+
+<main id="MAIN" hidden>
+
+			<section id="_conventions">
+<h3>【この訳に固有の表記規約】</h3>
+
+<p>
+この訳の，~algoの記述に利用されている各種記号（此れ, ~LET, ~IF, ~RET, 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+			</section>
+
+		<section id="the-root-element">
+<h2 title="The document element">4.1. 文書~要素</h2>
+
+			<section id="the-html-element">
+<h3 title="The html element">4.1.1. `html^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+なし。
+◎
+None.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+文書の`文書~要素$として。
+◎
+As document's document element.
+</dd>
+	<dd>
+`Wherever a subdocument fragment is allowed in a compound document.^en†
+</dd>
+	<dd class="trans-note">【†
+訳すなら、
+“複合~文書~内で，下位文書片が許容されている所。”
+となるが，意図不明。
+~inline~SVGにおける
+<a href="~SVGembedded#ForeignObjectElement">`foreignObject^e</a>
+要素~内での利用を指しているのかもしれない。
+（ “複合~文書” とは
+<a href="https://www.w3.org/TR/CDR/">Compound Document</a>
+仕様のそれを指すようにも思われるが、その仕様の策定は放棄されている。）
+】</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+1 個の `head$e 要素,
+1 個の `body$e 要素
+からなる並び。
+◎
+A head element followed by a body element.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+`html$e 要素の`開始tag$は、要素の内側にある最初のものが`~comment$でないならば，省略できる。
+◎
+An html element's start tag can be omitted if the first thing inside the html element is not a comment.
+</dd>
+	<dd>
+`html$e 要素の`終了tag$は、要素の直後に`~comment$が続かないならば，省略できる。
+◎
+An html element's end tag can be omitted if the html element is not immediately followed by a comment.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+`manifest$a
+— ~app~cache~manifestを与える。
+◎
+manifest — Application cache manifest
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`html$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLHtmlElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  // `HTMLHtmlElement$obsMb
+};
+</pre>
+
+	</dd>
+</dl>
+
+<p>
+`html$e 要素は、~HTML文書の根を`表現-$する。
+◎
+The html element represents the root of an HTML document.
+</p>
+
+<p>
+作者には、根 `html$e 要素に `lang$a 属性を指定して，文書の言語を与えることが奨励される。
+これは、発話合成~toolが利用する発音を決定する,
+翻訳~toolが利用する規則を決定する,
+等々を援助する。
+◎
+Authors are encouraged to specify a lang attribute on the root html element, giving the document's language. This aids speech synthesis tools to determine what pronunciations to use, translation tools to determine what rules to use, and so forth.
+</p>
+
+<div >
+<p>
+`manifest@a
+属性は…
+【以下、この箇所の和訳は，次の段落を除いて省略する。】
+</p>
+
+<p class="critical">
+`manifest$a 属性は，旧来の
+“<a href="~HTMLLS/offline.html#offline">~offline~web~app</a>”
+特能の一部であり、~web~platformから除去されつつある過程にある（何年もかかるであろう）。
+現時点では、 `manifest$a 属性は利用しないことが~~強く奨励される。
+代わりに~swを利用するように。`SW$r
+</p>
+
+◎
+The manifest attribute gives the address of the document's application cache manifest, if there is one. If the attribute is present, the attribute's value must be a valid non-empty URL potentially surrounded by spaces.
+◎
+The manifest attribute is part of the legacy "offline web applications" feature, which is in the process of being removed from the web platform. (This is a long process that takes many years.) Using the manifest attribute at this time is highly discouraged. Use service workers instead. [SW]
+◎
+The manifest attribute only has an effect during the early stages of document load. Changing the attribute dynamically thus has no effect (and thus, no DOM API is provided for this attribute).
+◎
+For the purposes of application cache selection, later base elements cannot affect the parsing of URLs in manifest attributes, as the attributes are processed before those elements are seen.
+◎
+The window.applicationCache IDL attribute provides scripted access to the offline application cache mechanism.
+</div>
+
+<div class="example">
+
+<p>
+次の例における `html$e 要素は、文書の言語が日本語であることを宣言する。
+◎
+The html element in the following example declares that the document's language is English.
+</p>
+
+`html-1^xCode
+
+</div>
+
+			</section>
+		</section>
+		<section id="document-metadata">
+<h2 title="Document metadata">4.2. 文書~metadata</h2>
+
+			<section id="the-head-element">
+<h3 title="The head element">4.2.1. `head^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+なし。
+◎
+None.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`html$e 要素~内の最初の要素として。
+◎
+As the first element in an html element.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+文書が`~iframe-srcdoc文書$である場合 ／
+~title情報がより高~levelな~protocolから可用である場合：
+0 個~以上の`~metadata内容$要素
+— そのうち `title$e, `base$e 要素は各 1 個まで。
+◎
+If the document is an iframe srcdoc document or if title information is available from a higher-level protocol: Zero or more elements of metadata content, of which no more than one is a title element and no more than one is a base element.
+</dd>
+	<dd>
+他の場合：
+1 個以上の`~metadata内容$要素
+— そのうち `title$e, `base$e 要素は各 1 個まで。
+◎
+Otherwise: One or more elements of metadata content, of which exactly one is a title element and no more than one is a base element.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+`head$e 要素の`開始tag$は、要素は空であるか, または
+要素の内側にある最初のものは要素であるならば，省略できる。
+◎
+A head element's start tag can be omitted if the element is empty, or if the first thing inside the head element is an element.
+</dd>
+	<dd>
+`head$e 要素の`終了tag$は、要素の直後に［
+`~ASCII空白$／`~comment$
+］が続かないならば，省略できる。
+◎
+A head element's end tag can be omitted if the head element is not immediately followed by ASCII whitespace or a comment.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`head$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLHeadElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`head$e 要素は、`文書$に対する~metadataからなる~collectionを`表現-$する。
+◎
+The head element represents a collection of metadata for the Document.
+</p>
+
+<div class="example">
+
+<p>
+`head$e 要素~内の~metadataの総量に上限は無い。
+ごく短い例：
+◎
+The collection of metadata in a head element can be large or small. Here is an example of a very short one:
+</p>
+
+`head-1^xCode
+
+<p>
+より長い例：
+◎
+Here is an example of a longer one:
+</p>
+
+`head-2^xCode
+
+</div>
+
+<p class="note">注記：
+ほとんどの状況では `title$e 要素が子に要求されるが、より高~levelな~protocolが~title情報を供している場合は， `title$e 要素を省略できる
+— 例えば、~email著作~形式として~HTMLが利用されている下で，~emailの `件名^i が~title情報を供している場合など。
+◎
+The title element is a required child in most situations, but when a higher-level protocol provides title information, e.g. in the Subject line of an email when HTML is used as an email authoring format, the title element can be omitted.
+</p>
+
+			</section>
+			<section id="the-title-element">
+<h3 title="The title element">4.2.2. `title^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+`~metadata内容$。
+◎
+Metadata content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+他の `title$e 要素を包含していない `head$e 要素~内。
+◎
+In a head element containing no other title elements.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`要素間~空白$でない`~text$。
+◎
+Text that is not inter-element whitespace.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`title$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLTitleElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [`CEReactions$] attribute DOMString `text$m;
+};
+</pre>
+	</dd>
+</dl>
+
+<p>
+`title$e 要素は、文書の~titleあるいは名前を`表現-$する。
+作者は、文書を識別するときには，文書が文脈の外で利用されるとき
+— 例えば 利用者の閲覧履歴や~bookmark, 探索-結果において —
+でも，~titleを利用するベキである。
+文書の~titleは、最上位の見出し（文書~全体に適用される`見出し内容$）と異なることが多い
+— 最上位の見出しは、文脈の外に取り出されたときに自立的である必要はないので。
+◎
+The title element represents the document's title or name. Authors should use titles that identify their documents even when they are used out of context, for example in a user's history or bookmarks, or in search results. The document's title is often different from its first heading, since the first heading does not have to stand alone when taken out of context.
+</p>
+
+<p>
+`title$e 要素は文書ごとに 1 個まででなければナラナイ。
+◎
+There must be no more than one title element per document.
+</p>
+
+<p class="note">注記：
+`文書$が~titleを持たないことが適理な場合、
+`title$e 要素はおそらく要求されない。
+`head$e 要素の内容~modelにおける，この要素がいつ要求されるかの記述を見よ。
+◎
+If it's reasonable for the Document to have no title, then the title element is probably not required. See the head element's content model for a description of when the element is required.
+</p>
+
+<dl class="domintro">
+
+	<dt>%~title . `text$m [ = %値 ]</dt>
+	<dd>
+要素の`子~text内容$を返す。
+◎
+Returns the child text content of the element.
+</dd>
+	<dd>
+設定して，要素の子たちを所与の値に置換できる。
+◎
+Can be set, to replace the element's children with the given value.
+</dd>
+</dl>
+
+<div class="algo">
+`text@m
+取得子~手続きは
+⇒
+~RET 此れの`子~text内容$
+◎
+The text attribute's getter must return this title element's child text content.
+</div>
+
+<div class="algo">
+`text$m 設定子~手続きは
+⇒
+此れの`全~内容を文字列に置換する$( 所与の値 )
+◎
+The text attribute's setter must string replace all with the given value within this title element.
+</div>
+
+<div class="example">
+
+<p>
+以下に、適切な~titleの例を，最上位の見出しと対比させながら挙げる。
+◎
+Here are some examples of appropriate titles, contrasted with the top-level headings that might be used on those same pages.
+</p>
+
+`title-1^xCode
+
+<p>
+同じ~siteには、次のような~pageもあるかもしれない。
+~titleが当の主題を一義的に述べていることに注意。
+一方で，最上位の見出しは、読者が当の文脈が何であるかすでに知っている
+— ダンスがサルサやワルツかも…などと戸惑うことはない —
+ものと見做している：
+◎
+The next page might be a part of the same site. Note how the title describes the subject matter unambiguously, while the first heading assumes the reader knows what the context is and therefore won't wonder if the dances are Salsa or Waltz:
+</p>
+
+`title-2^xCode
+
+</div>
+
+<p>
+文書の~titleとして利用する文字列は、
+`document.title$m ~IDL属性により与えられる。
+◎
+The string to use as the document's title is given by the document.title IDL attribute.
+</p>
+
+<p>
+~UAは、~UIにて文書を指すときは，文書の~titleを利用するベキである。
+`title$e 要素の内容を~UIに利用する場合、その方向性には，要素の`方向性$が利用されるベキである。
+◎
+User agents should use the document's title when referring to the document in their user interface. When the contents of a title element are used in this way, the directionality of that title element should be used to set the directionality of the document's title in the user interface.
+</p>
+
+			</section>
+			<section id="the-base-element">
+<h3 title="The base element">4.2.3. `base^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+`~metadata内容$。
+◎
+Metadata content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+他の `base$e 要素を包含していない `head$e 要素~内。
+◎
+In a head element containing no other base elements.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`なし$
+◎
+Nothing.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+`終了tag$はない。
+◎
+No end tag.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+`href$a
+— `文書~基底~URL$を与える。
+◎
+href — Document base URL
+</dd>
+	<dd>
+`target$a
+— ［
+`~hyperlink$による`~navigate$ ／ `~form提出$
+］に対する，既定の`閲覧文脈$を与える。
+◎
+target — Default browsing context for hyperlink navigation and form submission
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`base$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLBaseElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [`CEReactions$] attribute USVString `href$m;
+  [`CEReactions$] attribute DOMString `target$m;
+};
+</pre>
+
+	</dd>
+</dl>
+
+<div >
+<p>
+`base$e 要素により、作者は，次が可能になる：
+</p>
+
+<ul ><li>~URLを`相対的に構文解析-$する目的において `文書~基底~URL$を指定する。
+</li><li>`~hyperlinkを追う$目的において 既定の`閲覧文脈$の名前を指定する。
+</li></ul>
+
+<p>
+この要素は、これ以外の内容は`表現-$しない。
+</p>
+◎
+The base element allows authors to specify the document base URL for the purposes of parsing URLs, and the name of the default browsing context for the purposes of following hyperlinks. The element does not represent any content beyond this information.
+</div>
+
+<p>
+同じ文書~内に複数の `base$e 要素が在ってはナラナイ。
+◎
+There must be no more than one base element per document.
+</p>
+
+<p>
+`base$e 要素は、［
+`href$a, `target$a
+］いずれかの属性は有していなければナラナイ。
+◎
+A base element must have either an href attribute, a target attribute, or both.
+</p>
+
+<p>
+`href@a
+内容~属性に指定する値は、`前後~空白~可の妥当な~URL$でなければナラナイ。
+◎
+The href content attribute, if specified, must contain a valid URL potentially surrounded by spaces.
+</p>
+
+<p>
+`href$a 属性を有する `base$e 要素は、文書~tree内の［
+`~URL$を値にとるものと定義されている属性を有するような，他のどの要素
+］よりも先に現れなければナラナイ
+— `html$e 要素は別として（その `manifest$a 属性は、 `base$e 要素からは影響されない）。
+◎
+A base element, if it has an href attribute, must come before any other elements in the tree that have attributes defined as taking URLs, except the html element (its manifest attribute isn't affected by base elements).
+</p>
+
+<p class="note">注記：
+`href$a 属性を有する `base$e 要素が複数個ある場合、最初のそれ以外はすべて無視される。
+◎
+If there are multiple base elements with href attributes, all but the first are ignored.
+</p>
+
+<p>
+`target@a
+属性に指定する値は、`妥当な閲覧文脈~名または~keyword$を包含していなければナラナイ。
+それは、`文書$内の`~hyperlink$や`~form$により`~navi$が生じるときに，既定で利用される`閲覧文脈$を指定する。
+◎
+The target attribute, if specified, must contain a valid browsing context name or keyword, which specifies which browsing context is to be used as the default when hyperlinks and forms in the Document cause navigation.
+</p>
+
+<p>
+`target$a 属性を有する `base$e 要素は、文書~tree内の`~hyperlink$を表現するどの要素よりも先に現れなければナラナイ。
+◎
+A base element, if it has a target attribute, must come before any elements in the tree that represent hyperlinks.
+</p>
+
+<p class="note">注記：
+`target$a 属性を有する `base$e 要素が複数ある場合、最初のそれ以外はすべて無視される。
+◎
+If there are multiple base elements with target attributes, all but the first are ignored.
+</p>
+
+<div class="algorithm">
+<p>
+`要素の~targetを取得する@
+ときは、所与の
+( ［
+`a$e ／ `area$e ／ `form$e
+］要素 %要素 )
+に対し，次を走らす：
+◎
+To get an element's target, given an a, area, or form element element, run these steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+%要素 は `target^a 属性を有する
+］
+⇒
+~RET その属性~値
+◎
+If element has a target attribute, then return that attribute's value.
+</li>
+	<li>
+~IF［
+%要素 の`~node文書$は
+`target$a 属性を有するような `base$e 要素を包含する
+］
+⇒
+~RET そのような最初の要素の `target$a 属性の値
+◎
+If element's node document contains a base element with a target attribute, then return the value of the target attribute of the first such base element.
+</li>
+	<li>
+~RET 空~文字列
+◎
+Return the empty string.
+</li>
+</ol>
+</div>
+
+<hr>
+
+<div class="p">
+<p>
+次の条件を満たす `base$e 要素は、
+`凍結d基底~URL@
+を持つとされる：
+</p>
+
+<ul ><li>`href$a 内容~属性を有する, かつ
+</li><li>`文書~tree内$にある, かつ
+</li><li>前 2 条件を満たす `base$e 要素のうち，`~tree順序$で最初のものである
+</li></ul>
+◎
+A base element that is the first base element with an href content attribute in a document tree has a frozen base URL.＼
+</div>
+
+<p>
+~UAは、
+`base$e 要素において，次のいずれかの状況が生じたとき、`即時に$，要素の`凍結d基底~URLを設定-$するモノトスル：
+◎
+The frozen base URL must be immediately set for an element whenever any of the following situations occur:
+</p>
+
+<ul>
+	<li>
+上の条件を満たしていない `base$e 要素が，上の条件を満たすようになったとき。
+◎
+The base element becomes the first base element in tree order with an href content attribute in its Document.
+</li>
+	<li>
+上の条件を満たしている `base$e 要素の `href$a 内容~属性が変化したとき。
+◎
+The base element is the first base element in tree order with an href content attribute in its Document, and its href content attribute is changed.
+</li>
+</ul>
+
+<div class="algorithm">
+<p>
+`base$e 要素 %要素 の
+`凍結d基底~URLを設定-@
+するときは：
+◎
+To set the frozen base URL for an element element:
+</p>
+<ol>
+	<li>
+%文書 ~LET %要素 の`~node文書$
+◎
+Let document be element's node document.
+</li>
+	<li>
+<p>
+%~url~record ~LET 
+`~URL構文解析する$( %要素 の `href$a 内容~属性の値, %文書 の`~fallback基底~URL$, %文書 の`符号化法$doc )
+</p>
+<p>
+（したがって， `base$e 要素の `href$a 内容~属性は、自他の `base$e 要素からは影響されない）
+</p>
+◎
+Let urlRecord be the result of parsing the value of element's href content attribute with document's fallback base URL, and document's character encoding. (Thus, the base element isn't affected by itself.)
+</li>
+	<li>
+~IF［
+%~url~record ~EQ `失敗^i
+］~OR［
+`文書に対する基底は許容されるか？$( %~url~record, %文書 )
+~EQ `阻止される^i
+］
+⇒
+%~url~record ~SET %文書 の`~fallback基底~URL$
+◎
+Set element's frozen base URL to document's fallback base URL, if urlRecord is failure or running Is base allowed for Document? on the resulting URL record and document returns "Blocked", and to urlRecord otherwise.
+</li>
+	<li>
+%要素 の`凍結d基底~URL$ ~SET %~url~record
+◎
+↑</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`href@m
+取得子~手続きは：
+◎
+The href IDL attribute, on getting, must return the result of running the following algorithm:
+</p>
+<ol>
+	<li>
+%文書 ~LET 此れの`~node文書$
+◎
+Let document be element's node document.
+</li>
+	<li>
+%~url ~LET 此れは `href$a 属性を［
+有するならば その値 ／
+有さないならば 空~文字列
+］
+◎
+Let url be the value of the href attribute of this element, if it has one, and the empty string otherwise.
+</li>
+	<li>
+<p>
+%~url~record ~LET
+`~URL構文解析する$( %~url, %文書 の`~fallback基底~URL$, %文書 の`符号化法$doc )
+</p>
+<p>
+（したがって，此れ自身の `href$a 内容~属性は、自他の `base$e 要素からは影響されない。）
+</p>
+◎
+Let urlRecord be the result of parsing url with document's fallback base URL, and document's character encoding. (Thus, the base element isn't affected by other base elements or itself.)
+</li>
+	<li>
+~IF［
+%~url~record ~EQ `失敗^i
+］
+⇒
+~RET %~url
+◎
+If urlRecord is failure, return url.
+</li>
+	<li>
+~RET `~URLを直列化する$( %~url~record )
+◎
+Return the serialization of urlRecord.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+`href$m 設定子~手続きは
+⇒
+`href$a 内容~属性を所与の値に設定する
+◎
+The href IDL attribute, on setting, must set the href content attribute to the given new value.
+</div>
+
+<p>
+`target@m
+~IDL属性は、
+`target$a 内容~属性を`反映する$モノトスル。
+◎
+The target IDL attribute must reflect the content attribute of the same name.
+</p>
+
+<div class="example">
+
+<p>
+`base$e 要素を利用して，`文書~基底~URL$を設定する例：
+◎
+In this example, a base element is used to set the document base URL:
+</p>
+
+`base-1^xCode
+
+<p>
+上の例の~linkは、
+`https://www.example.com/news/archives.html^l
+を指すことになる。
+◎
+The link in the above example would be a link to "https://www.example.com/news/archives.html".
+</p>
+
+</div>
+
+			</section>
+			<section id="the-link-element">
+<h3 title="The link element">4.2.4. `link^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+`~metadata内容$。
+◎
+Metadata content.
+</dd>
+	<dd>
+要素が`~body内に許容され$る場合に限り：
+`~flow内容$／`句ng内容$。
+◎
+If the element is allowed in the body: flow content.
+◎
+If the element is allowed in the body: phrasing content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`~metadata内容$が期待される所。
+◎
+Where metadata content is expected.
+</dd>
+	<dd>
+`head$e 要素の子である `noscript$e 要素~内。
+◎
+In a noscript element that is a child of a head element.
+</dd>
+	<dd>
+要素が`~body内に許容され$る場合に限り：
+`句ng内容$が期待される所。
+◎
+If the element is allowed in the body: where phrasing content is expected.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`なし$。
+◎
+Nothing.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+`終了tag$はない。
+◎
+No end tag.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+`href$aL
+— `~hyperlink$の~addressを与える。
+◎
+href — Address of the hyperlink
+</dd>
+	<dd>
+`crossorigin$aL
+— 要素が非同一-生成元の要請をどう取扱うかを与える。
+◎
+crossorigin — How the element handles crossorigin requests
+</dd>
+	<dd>
+`rel$aL
+— ~hyperlinkを包含している文書と行先~資源との関係性を与える。
+◎
+rel — Relationship between the document containing the hyperlink and the destination resource
+</dd>
+	<dd>
+`media$aL
+— 適用-可能な媒体を与える。
+◎
+media — Applicable media
+</dd>
+	<dd>
+`integrity$aL
+— `Subresource Integrity^cite（下位資源の完全性）検査に利用される完全性~metadataを与える。
+`SRI$r
+◎
+integrity — Integrity metadata used in Subresource Integrity checks [SRI]
+</dd>
+	<dd>
+`hreflang$aL
+— ~link先~資源の言語を与える。
+◎
+hreflang — Language of the linked resource
+</dd>
+	<dd>
+`type$aL
+— 参照-先~資源の型に関する~hintを与える。
+◎
+type — Hint for the type of the referenced resource
+</dd>
+	<dd>
+`referrerpolicy$aL
+— 要素により起動される`~fetch$用の`~referrer施策$を与える。
+◎
+referrerpolicy — Referrer policy for fetches initiated by the element
+</dd>
+	<dd>
+`sizes$aL
+— ~iconの~sizeを与える。
+（ <code>`rel$aL="`icon$v"</code> 用）
+◎
+sizes — Sizes of the icons (for rel="icon")
+</dd>
+	<dd>
+`imagesrcset$aL
+— 種々の状況（例：高解像度~display, 狭い~monitor, 等々）に応じて利用する一連の画像
+◎
+imagesrcset — Images to use in different situations (e.g., high-resolution displays, small monitors, etc.)
+</dd>
+	<dd>
+`imagesizes$aL
+— 種々の~page~layout用の画像~size
+◎
+imagesizes — Image sizes for different page layouts
+</dd>
+	<dd>
+`as$aL
+— 事前読込み要請~用の`行先の素$を与える。
+（
+<code>`rel$aL="`preload$v"</code> ／
+<code>`rel$aL="`modulepreload$v"</code>
+用）
+◎
+as — Potential destination for a preload request (for rel="preload" and rel="modulepreload")
+</dd>
+	<dd>
+`color$aL
+— ~siteの~iconを~custom化するときに利用する色
+（ <code>`rel$aL="`mask-icon^v"</code> 用）
+◎
+color — Color to use when customizing a site's icon (for rel="mask-icon")
+</dd>
+	<dd>
+`disabled$aL
+— ~linkは不能化されるかどうか
+◎
+disabled — Whether the link is disabled
+</dd>
+	<dd>
+この要素の `title$aL 属性には
+<a href="#attr-link-title">特別な意味論</a>
+もあり、~linkの~title ／ `~CSS~stylesheet集合~名$を与える。
+◎
+Also, the title attribute has special semantics on this element: Title of the link; CSS style sheet set name.
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`link$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLLinkElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [`CEReactions$] attribute USVString `href$mL;
+  [`CEReactions$] attribute DOMString? `crossOrigin$mL;
+  [`CEReactions$] attribute DOMString `rel$mL;
+  [`CEReactions$] attribute DOMString `as$mL; // (default "")
+  [SameObject, PutForwards=`value$m] readonly attribute `DOMTokenList$I `relList$mL;
+  [`CEReactions$] attribute DOMString `media$mL;
+  [`CEReactions$] attribute DOMString `integrity$mL;
+  [`CEReactions$] attribute DOMString `hreflang$mL;
+  [`CEReactions$] attribute DOMString `type$mL;
+  [SameObject, PutForwards=`value$m] readonly attribute `DOMTokenList$I `sizes$mL;
+  [`CEReactions$] attribute USVString `imageSrcset$mL;
+  [`CEReactions$] attribute DOMString `imageSizes$mL;
+  [`CEReactions$] attribute DOMString `referrerPolicy$mL;
+  [`CEReactions$] attribute DOMString `disabled$mL;
+
+  // `HTMLLinkElement$obsMb
+};
+
+`HTMLLinkElement$I includes `LinkStyle$I;
+</pre>
+
+	</dd>
+</dl>
+
+<p>
+`link$e 要素により、作者は，自身の文書から他の資源への~linkをあてがえるようになる。
+◎
+The link element allows authors to link their document to other resources.
+</p>
+
+<p>
+`href@aL
+属性が，~link（たち）の~addressを与える。
+在るならば、その値は`前後~空白~可の妥当かつ空でない~URL$でなければナラナイ。
+`link$e 要素は、この属性か `imagesrcset$aL 属性を有していなければナラナイ。
+◎
+The address of the link(s) is given by the href attribute. If the href attribute is present, then its value must be a valid non-empty URL potentially surrounded by spaces. One or both of the href or imagesrcset attributes must be present.
+</p>
+
+<p>
+［
+`href$aL, `imagesrcset$aL
+］両~属性とも無い場合、当の要素は~linkを定義しない。
+◎
+If both the href and imagesrcset attributes are absent, then the element does not define a link.
+</p>
+
+<p>
+`crossorigin@aL
+属性は`~CORS設定群~属性$であり、外部~資源~link用に意図される。
+◎
+The crossorigin attribute is a CORS settings attribute. It is intended for use with external resource links.
+</p>
+
+<p>
+`rel@aL
+属性の値が，~linkの型（関係性）を指示する。
+在るならば、その値は`空白区切りの一意な~token集合$でなければナラナイ。
+許容される~keywordと, それらの意味は、
+§ `~HTML~link型$にて定義される。
+要素が `rel$aL 属性を有さないか, 有するが［
+この仕様による定義に則って許容される~keyword
+］を一つも含まない場合、要素は~linkを作成しない。
+◎
+The types of link indicated (the relationships) are given by the value of the rel attribute, which, if present, must have a value that is a unordered set of unique space-separated tokens. The allowed keywords and their meanings are defined in a later section. If the rel attribute is absent, has no keywords, or if none of the keywords used are allowed according to the definitions in this specification, then the element does not create any links.
+</p>
+
+<div>
+<p>
+次をすべて満たすものが `rel$aL が`~supportする~token$であるとされる：
+</p>
+
+<ul ><li>§ `~HTML~link型$にて定義される~keywordのうち，
+`link$e 要素に許容されるものである。
+</li><li>~UAが~supportする。
+</li><li>~UAによる処理~modelに影響iする。
+</li></ul>
+
+<p>
+`~supportする~token$は、アリなものとして次が挙げられるが，これらのうち~UAが処理~modelを実装するものに限るモノトスル
+⇒＃
+`alternate$v,
+`dns-prefetch$v,
+`icon$v,
+`manifest$v,
+`modulepreload$v,
+`next$v,
+`pingback$v,
+`preconnect$v,
+`prefetch$v,
+`preload$v,
+`prerender$v,
+`search$v,
+`stylesheet$v
+</p>
+
+◎
+rel's supported tokens are the keywords defined in HTML link types which are allowed on link elements, impact the processing model, and are supported by the user agent. The possible supported tokens are alternate, dns-prefetch, icon, manifest, modulepreload, next, pingback, preconnect, prefetch, preload, prerender, search, and stylesheet. rel's supported tokens must only include the tokens from this list that the user agent implements the processing model for.
+</div>
+
+<p class="note">注記：
+理論的には、~UAは `canonical$v ~keyword用の処理~modelも~supportできる
+— ~UAが~JSを実行する探索~engineであったなら。
+が，そのような実施はまずないので、ほとんどの事例では，
+`canonical$v は `rel$aL が`~supportする~token$に含めるべきでない。
+◎
+Theoretically a user agent could support the processing model for the canonical keyword — if it were a search engine that executed JavaScript. But in practice that's quite unlikely. So in most cases, canonical ought not be included in rel's supported tokens.
+</p>
+
+<p>
+`link$e 要素は、［
+`rel$aL, `itemprop$a
+］属性のうち，片方のみを有していなければナラナイ。
+◎
+A link element must have either a rel attribute or an itemprop attribute, but not both.
+</p>
+
+<div >
+<p>
+次のいずれかを満たす `link$e 要素は、
+`~body内に許容され@
+るという
+— これは、`句ng内容$が期待される所で要素を利用できることを意味する：
+</p>
+
+<ul ><li>`itemprop$a 属性を有する。
+</li><li>`rel$aL 属性を有していて，その値は`~body-ok$なる~keywordのみを包含する。
+</li></ul>
+
+◎
+If a link element has an itemprop attribute, or has a rel attribute that contains only keywords that are body-ok, then the element is said to be allowed in the body. This means that the element can be used where phrasing content is expected.
+</div>
+
+<p class="note">注記：
+要素が `rel$aL 属性を有する場合、`その値によっては^note
+要素が利用できる所が，~pageの `body$e 内に限られる場合もある。
+要素が `itemprop$a 属性を有する場合、要素は ~pageの `head$e 要素~内にも `body$e 内にも利用できるようになり，~microdata~modelによる拘束の~subjectになる。
+◎
+If the rel attribute is used, the element can only sometimes be used in the body of the page. When used with the itemprop attribute, the element can be used both in the head element and in the body of the page, subject to the constraints of the microdata model.
+</p>
+
+<p>
+`link$e 要素を利用して， 2 種類の~link
+— `外部~資源~link$, `~hyperlink$ —
+を作成できる。
+特定0の~link型がこのどちらになるかは、
+§ `~HTML~link型$にて定義される。
+1 個の `link$e 要素から，複数の~linkを作成できる（それらには、外部~資源~linkと~hyperlinkを~~混在させられる）。
+作成される~linkの正確な個数は、 `rel$aL 属性~内に与えられる~keywordたちに依存する。
+~UAは、その各~linkを，要素ごとにではなく, ~linkごとに処理するモノトスル。
+◎
+Two categories of links can be created using the link element: links to external resources and hyperlinks. The link types section defines whether a particular link type is an external resource or a hyperlink. One link element can create multiple links (of which some might be external resource links and some might be hyperlinks); exactly which and how many links are created depends on the keywords given in the rel attribute. User agents must process the links on a per-link basis, not a per-element basis.
+</p>
+
+<p class="note">注記：
+`link$e 要素により作成される各~linkは、別々に取扱われる。
+一例として、
+`rel="stylesheet"^c
+を伴う 2 個の `link$e 要素がある場合、
+【それらが同じ資源を指していようが】
+互いに別々の外部~資源として数えられ, 各~要素の自前の属性により独立に影響される。
+同様に、単独の `link$e 要素が `rel$aL 属性を有していて，その値が `next stylesheet^v であれば、
+（~keyword `next$v に対する）`~hyperlink$と,
+（~keyword `stylesheet$v に対する）`外部~資源~link$
+が作成され、それぞれは，他の属性（ `media$aL や `title$aL など）から別々に影響される。
+◎
+Each link created for a link element is handled separately. For instance, if there are two link elements with rel="stylesheet", they each count as a separate external resource, and each is affected by its own attributes independently. Similarly, if a single link element has a rel attribute with the value next stylesheet, it creates both a hyperlink (for the next keyword) and an external resource link (for the stylesheet keyword), and they are affected by other attributes (such as media or title) differently.
+</p>
+
+<div class="example">
+
+<p>
+例えば次の `link$e 要素は、（同じ~pageを指す） 2 個の~hyperlinkを作成する：
+◎
+For example, the following link element creates two hyperlinks (to the same page):
+</p>
+
+`link-1^xCode
+
+<p>
+この要素により、次の意味論を持つ 2 つの~linkが作成される：
+`author^v に対しては，~link先の~pageには現在の~pageの作者についての情報があること、および
+`license^v に対しては，現在の~pageが~link先の~pageに与えられる~licenseの下で供されていること。
+◎
+The two links created by this element are one whose semantic is that the target page has information about the current page's author, and one whose semantic is that the target page has information regarding the license under which the current page is provided.
+</p>
+
+</div>
+
+<p class="note">注記：
+`link$e 要素とその `rel$aL 属性で作成される各~hyperlinkは、文書に一体として適用される。
+対照的に［
+`a$e ／ `area$e
+］要素の `rel$a 属性
+— それらも~linkの型を指示するが —
+の文脈は、文書の中での当の~linkの所在により与えられる。
+◎
+Hyperlinks created with the link element and its rel attribute apply to the whole document. This contrasts with the rel attribute of a and area elements, which indicates the type of a link whose context is given by the link's location within the document.
+</p>
+
+<p>
+外部~資源~linkの正確な挙動は、関連な~link型に定義される正確な関係性に依存する。
+◎
+The exact behavior for links to external resources depends on the exact relationship, as defined for the relevant link type.
+</p>
+
+<p>
+`media@aL
+属性は、資源がどの媒体に適用されるかを述べる。
+その値は、`妥当な媒体~query~list$でなければナラナイ。
+◎
+The media attribute says which media the resource applies to. The value must be a valid media query list.
+</p>
+
+<p>
+`integrity@aL
+属性は、［
+この要素が担当する要請
+］の`完全性~metadata$rq `SRI$r を表現する。
+値は~textである。
+この属性は、次を満たさない `link$e 要素には，指定してはナラナイ
+⇒
+`rel$aL 属性を有していて，その値は［
+`stylesheet$v ／ `preload$v ／ `modulepreload$v
+］~keywordを包含する。
+◎
+The integrity attribute represents the integrity metadata for requests which this element is responsible for. The value is text. The attribute must only be specified on link elements that have a rel attribute that contains the stylesheet, preload, or modulepreload keyword. [SRI]
+</p>
+
+<p>
+`link$e 要素の
+`hreflang@aL
+属性の意味論は、
+`a$e 要素の `hreflang$a 属性と同じである。
+◎
+The hreflang attribute on the link element has the same semantics as the hreflang attribute on the a element.
+</p>
+
+<p>
+`type@aL
+属性は、~link先の資源の`~MIME型$を与える
+— この属性は：
+◎
+The type attribute gives the MIME type of the linked resource.＼
+</p>
+
+<ul>
+	<li>
+純粋に助言的である。
+◎
+It is purely advisory.＼
+</li>
+	<li>
+指定する値は、`妥当な~MIME型~文字列$でなければナラナイ。
+◎
+The value must be a valid MIME type string.
+</li>
+	<li>
+`外部~資源~link$に対しては、その値は，~UAへの~hintとして利用され、~UAが~supportしない資源に対し，その~fetchingを避けれるようにする。
+◎
+For external resource links, the type attribute is used as a hint to user agents so that they can avoid fetching resources they do not support.
+</li>
+</ul>
+
+<p>
+`referrerpolicy@aL
+属性は、`~referrer施策~属性$であり，外部~資源~link用に意図される。
+それは、［
+`~link先の資源を~fetchして処理する$際に利用する`~referrer施策$
+］を設定し易くするためにある。
+`REFERRERPOLICY$r
+◎
+The referrerpolicy attribute is a referrer policy attribute. It is intended for use with external resource links, where it helps set the referrer policy used when fetching and processing the linked resource. [REFERRERPOLICY].
+</p>
+
+<p>
+`title@aL
+属性は、~linkの~titleを与える。
+値は~textである。
+それは、純粋に助言的である
+— ただし，`文書~tree内$にある~stylesheet~linkに対しては、この属性は `~CSS~stylesheet集合$を定義する。
+◎
+The title attribute gives the title of the link. With one exception, it is purely advisory. The value is text. The exception is for style sheet links that are in a document tree, for which the title attribute defines CSS style sheet sets.
+</p>
+
+<p class="note">注記：
+`title$aL 属性を有さない `link$e 要素は、親~要素の~titleを継承せず, 要素による~linkは，単に~titleを持たなくなる
+— この `title$aL 属性は、その点で，他のほとんどの要素の大域~属性である `title$a 属性から相違する。
+◎
+The title attribute on link elements differs from the global title attribute of most other elements in that a link without a title does not inherit the title of the parent element: it merely has no title.
+</p>
+
+<hr>
+
+<p>
+`imagesrcset@aL
+属性は、`~srcset属性$である。
+在るならば、 `href$aL 属性とともに，`~source集合$に`画像~source$を供与する（`横幅~記述子$を利用していないならば）。
+◎
+The imagesrcset attribute may be present, and is a srcset attribute.
+◎
+The imagesrcset and href attributes (if width descriptors are not used) together contribute the image sources to the source set.
+</p>
+
+<p>
+`imagesizes@aL
+属性は、`~sizes属性$であり，`~source集合$に`~source~size$を供与する。
+この属性は、次を満たす `link$e 要素には，指定しなければナラナイ
+⇒
+`imagesrcset$aL 属性を有していて，その値は［
+`横幅~記述子$を利用している`画像~候補~文字列$
+］である
+◎
+If the imagesrcset attribute is present and has any image candidate strings using a width descriptor, the imagesizes attribute must also be present, and is a sizes attribute. The imagesizes attribute contributes the source size to the source set.
+</p>
+
+<p>
+［
+`imagesrcset$aL,
+`imagesizes$aL
+］属性は、次を満たさない `link$e 要素には，指定してはナラナイ
+⇒
+［
+`rel$aL 属性を有していて，その値は `preload$v ~keywordを指定している
+］~AND［
+`as$aL 属性は `image^l 状態にある
+］
+◎
+The imagesrcset and imagesizes attributes must only be specified on link elements that have both a rel attribute that specifies the preload keyword, as well as an as attribute in the "image" state.
+</p>
+
+<div class="example">
+
+<p>
+これらの属性は、［
+`img$e 要素のうち［
+`srcset$a, `sizes$a
+］属性~用に対応する値を有するもの
+］により［
+後で利用される適切な資源を事前読込みする
+］ことを許容する：
+◎
+These attributes allow preloading the appropriate resource that is later used by an img element that has the corresponding values for its srcset and sizes attributes:
+</p>
+
+`link-2^xCode
+
+<p>
+`href$aL 属性は省略されていることに注意
+— それが関連するのは， `imagesrcset$aL を~supportしない~browser用に限られ、そのような事例では，不正な画像を事前読込みさせる見込みが高い。
+◎
+Note how we omit the href attribute, as it would only be relevant for browsers that do not support imagesrcset, and in those cases it would likely cause the incorrect image to be preloaded.
+</p>
+</div>
+
+<div class="example">
+<p>
+`imagesrcset$aL 属性を `media$aL 属性と組合せれば、`~art-direction$用に，［
+`picture$e 要素の~sourceから選定される適切な資源
+］を事前読込みできる：
+◎
+The imagesrcset attribute can be combined with the media attribute to preload the appropriate resource selected from a picture element's sources, for art direction:
+</p>
+
+`link-3^xCode
+
+</div>
+
+<hr>
+
+<p>
+`sizes@aL
+属性は、視覚-媒体~用の~iconの~sizeたちを与える
+— この属性は：
+◎
+The sizes attribute gives the sizes of icons for visual media.＼
+</p>
+
+<ul>
+	<li>
+在るとしても、その値は助言的でしかない。
+◎
+Its value, if present, is merely advisory.＼
+</li>
+	<li>
+~UAは、複数の~iconが可用なときは，その値を利用して利用する~icon（たち）を決めてもヨイ。
+◎
+User agents may use the value to decide which icon(s) to use if multiple icons are available.＼
+</li>
+	<li>
+<p>
+指定する値は、`空白区切りの一意な~token集合$（大小無視）であって，その各~tokenは次のいずれかを満たしていなければナラナイ：
+◎
+If specified, the attribute must have a value that is an unordered set of unique space-separated tokens which are ASCII case-insensitive. Each value must be either＼
+</p>
+
+		<ul>
+			<li>
+`~ASCII大小無視$で文字列 `any$v に合致する
+◎
+an ASCII case-insensitive match for the string "any", or＼
+</li>
+			<li>
+<p>
+次をいずれも満たすような，文字列［
+%w, %x, %h
+］の並びである：
+</p>
+
+<ul><li>%w, %h とも `妥当な負でない整数$である
+</li><li>%w, %h とも 先頭の文字 ~NEQ ❝0
+</li><li>%x ~IN { ❝x, ❝X }
+</li></ul>
+◎
+a value that consists of two valid non-negative integers that do not have a leading U+0030 DIGIT ZERO (0) character and that are separated by a single U+0078 LATIN SMALL LETTER X or U+0058 LATIN CAPITAL LETTER X character.＼
+</li>
+		</ul>
+	</li>
+	<li>
+<p>
+次を満たさない `link$e 要素には，指定してはナラナイ
+⇒
+`rel$aL 属性を有していて，その値は［
+`icon$v ／ `apple-touch-icon^v
+］~keywordを指定している
+◎
+The attribute must only be specified on link elements that have a rel attribute that specifies the icon keyword or the apple-touch-icon keyword.
+</p>
+
+<p class="note">注記：
+`apple-touch-icon^v ~keywordは，`定義済み~link型の集合に対する拡張$に登録されてはいるが、~UAには，その~supportは要求されない。
+◎
+The apple-touch-icon keyword is a registered extension to the predefined set of link types, but user agents are not required to support it in any way.
+</p>
+	</li>
+</ul>
+
+<hr>
+
+<p>
+`as@aL
+属性は、［
+`href$aL 属性に所与の資源
+］に対する事前読込み要請~用の`行先の素$ `FETCH$r を指定する。
+この属性は、`列挙d属性$である
+— 各 `行先の素$は、この属性~用の~keywordを与え，同じ名前の状態に対応付けられる。
+この属性は、当の `link$e 要素が：
+◎
+The as attribute specifies the potential destination for a preload request for the resource given by the href attribute. It is an enumerated attribute. Each potential destination is a keyword for this attribute, mapping to a state of the same name.＼
+</p>
+<ul>
+	<li>
+次を満たすならば指定しなければナラナイ
+⇒
+`rel$aL 属性を有していて，その値は `preload$v ~keywordを包含する
+◎
+The attribute must be specified on link elements that have a rel attribute that contains the preload keyword.＼
+</li>
+	<li>
+次を満たすならば指定してもヨイ
+— この事例では、その値は`~scriptに類する行先$でなければナラナイ
+⇒
+`rel$aL 属性を有していて，その値は `modulepreload$v ~keywordを包含する
+◎
+It may be specified on link elements that have a rel attribute that contains the modulepreload keyword; in such cases it must have a value which is a script-like destination.＼
+</li>
+	<li>
+他の場合、指定してはナラナイ。
+◎
+For other link elements, it must not be specified.
+</li>
+</ul>
+
+<p>
+`as$aL 属性がどう利用されるかの処理~modelは、個々の~link型の［
+`~link先の資源を~fetchして処理する$
+］~algoにて与えられる。
+◎
+The processing model for how the as attribute is used is given in an individual link type's fetch and process the linked resource algorithm.
+</p>
+
+<p class="note">注記：
+この属性には［
+`値なし用の既定$／`妥当でない値~用の既定$
+］状態はない
+— すなわち、［
+値なし／妥当でない値
+］に対応付けられる状態は ε になる。
+このことは、処理~modelに織り込まれる。
+`preload$v ~linkに対しては，状態 ε は~errorであり、
+`modulepreload$v ~linkに対しては，値なしは `script^l として扱われる。
+◎
+The attribute does not have a missing value default or invalid value default, meaning that invalid or missing values for the attribute map to no state. This is accounted for in the processing model. For preload links, both conditions are an error; for modulepreload links, a missing value will be treated as "script".
+</p>
+
+<hr>
+
+<p>
+`color@aL
+属性は、~link型 `mask-icon^v と併用される。
+この属性は：
+◎
+The color attribute is used with the mask-icon link type.＼
+</p>
+
+<ul>
+	<li>
+次を満たさない `link$e 要素には，指定してはナラナイ。
+⇒
+`rel$aL 属性を有していて，その値は `mask-icon^v ~keywordを包含する
+◎
+The attribute must only be specified on link elements that have a rel attribute that contains the mask-icon keyword.＼
+</li>
+	<li>
+その値は、~CSS `color$t 生成規則に合致する文字列でなければナラナイ。
+◎
+The value must be a string that matches the CSS &lt;color&gt; production,＼
+</li>
+	<li>
+その値は、［
+次の表示を~custom化するとき，~UAが利用できる色
+］として示唆するものを定義する
+⇒
+利用者が、当の~siteをどこかに留めた（ `pin^en した）ときに見ることになる~icon
+◎
+defining a suggested color that user agents can use to customize the display of the icon that the user sees when they pin your site.
+</li>
+</ul>
+
+<p class="note">注記：
+この仕様は、~UAに対しては，
+`color$aL 属性~用の要件は何も課さない。
+◎
+This specification does not have any user agent requirements for the color attribute.
+</p>
+
+<p class="note">注記：
+~keyword `mask-icon^v は、`定義済み~link型の集合に対する拡張$に登録されてはいるが、~UAには，その~supportは要求されない。
+◎
+The mask-icon keyword is a registered extension to the predefined set of link types, but user agents are not required to support it in any way.
+</p>
+
+<hr>
+
+<p>
+各 `link$e 要素には、真偽値をとる
+`明示的に可能化？@
+が結付けられ，初期~時には ~F とする。
+◎
+link elements have an associated explicitly enabled boolean. It is initially false.
+</p>
+
+<p>
+`disabled@aL
+属性は、`真偽-属性$であり，
+`stylesheet$v ~link型に伴って利用される。
+この属性は、次を満たさない `link$e 要素には，指定してはナラナイ
+⇒
+`rel$aL 属性を有していて，その値は `stylesheet$v ~keywordを包含する
+◎
+The disabled attribute is a boolean attribute that is used with the stylesheet link type. The attribute must only be specified on link elements that have a rel attribute that contains the stylesheet keyword.
+</p>
+
+<p>
+`link$e 要素 %link の `disabled$aL 属性が除去されたときは
+⇒
+%link の`明示的に可能化？$ ~SET ~T
+◎
+Whenever the disabled attribute is removed, set the link element's explicitly enabled attribute to true.
+</p>
+
+
+<div class="example">
+<p>
+`disabled$aL 属性を動的に除去すれば（例：
+`document.querySelector("link").removeAttribute("disabled")^c
+を利用して）、~stylesheetを~fetchして適用することになる：
+◎
+Removing the disabled attribute dynamically, e.g., using document.querySelector("link").removeAttribute("disabled"), will fetch and apply the style sheet:
+</p>
+
+`link-4^xCode
+
+</div>
+
+<hr>
+
+<div>
+<p>
+`href@mL
+~IDL属性は、
+`href$aL 内容~属性を`反映する$モノトスル。
+</p>
+
+<p>
+`hreflang@mL
+~IDL属性は、
+`hreflang$aL 内容~属性を`反映する$モノトスル。
+</p>
+
+<p>
+`integrity@mL
+~IDL属性は、
+`integrity$aL 内容~属性を`反映する$モノトスル。
+</p>
+
+<p>
+`media@mL
+~IDL属性は、
+`media$aL 内容~属性を`反映する$モノトスル。
+</p>
+
+<p>
+`rel@mL
+~IDL属性は、
+`rel$aL 内容~属性を`反映する$モノトスル。
+</p>
+
+<p>
+`sizes@mL
+~IDL属性は、
+`sizes$aL 内容~属性を`反映する$モノトスル。
+</p>
+
+<p>
+`type@mL
+~IDL属性は、
+`type$aL 内容~属性を`反映する$モノトスル。
+</p>
+
+<p>
+`disabled@mL
+~IDL属性は、
+`disabled$aL 内容~属性を`反映する$モノトスル。
+</p>
+◎
+The IDL attributes href, hreflang, integrity, media, rel, sizes, type, and disabled each must reflect the respective content attributes of the same name.
+</div>
+
+<p class="note">注記：
+`color$aL 属性を反映する~IDL属性は無いが、後で追加されるかもしれない。
+◎
+There is no reflecting IDL attribute for the color attribute, but this might be added later.
+</p>
+
+<p>
+`as@mL
+~IDL属性は、`既知な値のみに制限され$る下で，
+`as$aL 内容~属性を`反映する$モノトスル。
+◎
+The as IDL attribute must reflect the as content attribute, limited to only known values.
+</p>
+
+<p>
+`crossOrigin@mL
+~IDL属性は、`既知な値のみに制限され$る下で，
+`crossorigin$aL 内容~属性を`反映する$モノトスル。
+◎
+The crossOrigin IDL attribute must reflect the crossorigin content attribute, limited to only known values.
+</p>
+
+<p>
+`referrerPolicy@mL
+~IDL属性は、`既知な値のみに制限され$る下で，
+`referrerpolicy$aL 内容~属性を`反映する$モノトスル。
+◎
+The referrerPolicy IDL attribute must reflect the referrerpolicy content attribute, limited to only known values.
+</p>
+
+<p>
+`imageSrcset@mL
+~IDL属性は、
+`imagesrcset$aL 内容~属性を`反映する$モノトスル。
+◎
+The imageSrcset IDL attribute must reflect the imagesrcset content attribute.
+</p>
+
+<p>
+`imageSizes@mL
+~IDL属性は、
+`imagesizes$aL 内容~属性を`反映する$モノトスル。
+◎
+The imageSizes IDL attribute must reflect the imagesizes content attribute.
+</p>
+
+<p>
+`relList@mL
+~IDL属性は、
+`rel$aL 内容~属性を`反映する$モノトスル。
+◎
+The relList IDL attribute must reflect the rel content attribute.
+</p>
+
+				<section id="processing-the-media-attribute">
+<h4 title="Processing the media attribute">4.2.4.1. `media^aL 属性の処理</h4>
+
+<p>
+~linkが`~hyperlink$である場合、
+`media$aL 属性は純粋に助言的であり，~link先の文書が どの媒体~用に設計されていたかを述べる。
+◎
+If the link is a hyperlink then the media attribute is purely advisory, and describes for which media the document in question was designed.
+</p>
+
+<p>
+しかしながら，~linkが`外部~資源~link$である場合、
+`media$aL 属性は，~~規範的になる。
+~UAは、［
+この属性の値が`環境に合致して$いて, かつ関連な他の条件にも該当する
+］ときは，外部~資源を適用し、他の場合は適用しないモノトスル。
+◎
+However, if the link is an external resource link, then the media attribute is prescriptive. The user agent must apply the external resource when the media attribute's value matches the environment and the other relevant conditions apply, and must not apply it otherwise.
+</p>
+
+<p id="default-media">
+`media$aL 属性が省略された場合の既定は `all^l であり、その~linkは既定で すべての媒体に適用されることを意味する。
+◎
+The default, if the media attribute is omitted, is "all", meaning that by default links apply to all media.
+</p>
+
+<p class="note">注記：
+外部~資源には、その適用能を制限するような更なる制約も定義され得る。
+例えば，~CSS~stylesheetは、 `media^at ~blockを有することもある。
+この仕様は、そのような更なる制約や要件は，上書きしない。
+◎
+The external resource might have further restrictions defined within that limit its applicability. For example, a CSS style sheet might have some @media blocks. This specification does not override such further restrictions or requirements.
+</p>
+
+				</section>
+				<section id="processing-the-type-attribute">
+<h4 title="Processing the type attribute">4.2.4.2. `type^aL 属性の処理</h4>
+
+<div class="algorithm">
+<p>
+`type$aL 属性に対しては、~UAは，次に従って処理するモノトスル：
+◎
+If the type attribute is present, then the user agent must＼
+</p>
+
+<ol>
+	<li>
+<p>
+資源の型 %型 を，次で与えられる型と見做す：
+</p>
+
+		<dl class="switch">
+			<dt>`type$aL 属性が在る場合</dt>
+			<dd>
+属性の値が与える型（空~文字列など，それが`妥当な~MIME型~文字列$でない場合でも）。
+</dd>
+			<dt>`type$aL 属性が無い場合</dt>
+			<dd>
+外部~資源~link型に既定の型が定義されている場合、その既定の型。
+</dd>
+			<dd>
+他の場合は `未知^i とする。
+</dd>
+		</dl>
+◎
+assume that the resource is of the given type (even if that is not a valid MIME type string, e.g. the empty string). If the attribute is omitted, but the external resource link type has a default type defined, then the user agent must assume that the resource is of that type.＼
+</li>
+	<li>
+<p>
+%型 が `未知^i でない場合、~UAが %型 を~supportするかどうかに応じて：
+</p>
+		<ul>
+			<li>
+~supportしない場合、~UAは，`~link先の資源を~fetchして処理する$ベキではない。
+</li>
+			<li>
+~supportする場合、~UAは， %型 により指定される適切な時点に `~link先の資源を~fetchして処理する$ベキである。
+【！の特定0の型に対し】
+</li>
+		</ul>
+◎
+If the UA does not support the given MIME type for the given link relationship, then the UA should not fetch and process the linked resource; if the UA does support the given MIME type for the given link relationship, then the UA should fetch and process the linked resource at the appropriate time as specified for the external resource link's particular type.＼
+</li>
+	<li>
+%型 が `未知^i の場合、［
+仮に，~UAが %型 を~supportするとした場合に `~link先の資源を~fetchして処理する$ことになる
+］ならば
+⇒
+~UAは、資源の実際の型も~supportすることになると見做して，`~link先の資源を~fetchして処理する$ベキである。
+◎
+If the attribute is omitted, and the external resource link type does not have a default type defined, but the user agent would fetch and process the linked resource if the type was known and supported, then the user agent should fetch and process the linked resource under the assumption that it will be supported.
+</li>
+</ol>
+</div>
+
+<p>
+~UAは、［
+`type$aL 属性は，資源の実際の型を与えるとは限らない
+【！＊authoritative】
+］ものと見なした上で、実際の型を決定するときには，この属性は利用しないモノトスル。
+資源を`適用する^emかどうか決定するときには、前述した見做された型ではなく，次に定義する実際の型のみを利用すること。
+◎
+User agents must not consider the type attribute authoritative — upon fetching the resource, user agents must not use the type attribute to determine its actual type. Only the actual type (as defined in the next paragraph) is used to determine whether to apply the resource, not the aforementioned assumed type.
+</p>
+
+<div class="algorithm">
+<p id="concept-link-type-sniffing">
+~UAは、資源の実際の型を次に従って決定するモノトスル：
+◎
+↓</p>
+
+<ol>
+	<li>
+外部~資源~link型に，資源の`~Content-Type~metadata$を処理する規則が定義されている場合
+⇒
+それらの規則を適用する。
+◎
+If the external resource link type defines rules for processing the resource's Content-Type metadata, then those rules apply.＼
+</li>
+	<li>
+<p>
+他の場合，資源は画像であると期待されるならば：
+</p>
+		<ol>
+			<li>
+任意選択で，`画像を特定的に~sniffするための規則$を適用する
+— 資源の`~Content-Type~metadata$から決定される型を `official type^V として
+【 <a href="~MIMESNIFF#image-type">image type</a> ？】
+</li>
+			<li>
+前段により`算出された資源~型$を，それが実際の型であったかのように利用する。
+</li>
+		</ol>
+◎
+Otherwise, if the resource is expected to be an image, user agents may apply the image sniffing rules, with the official type being the type determined from the resource's Content-Type metadata, and use the resulting computed type of the resource as if it was the actual type.＼
+</li>
+	<li>
+他の場合（画像を特定的に~sniffするための規則を適用しなかった場合も含め），資源に`~Content-Type~metadata$があるならば
+⇒
+それ利用して，資源の型を決定する。
+◎
+Otherwise, if neither of these conditions apply or if the user agent opts not to apply the image sniffing rules, then the user agent must use the resource's Content-Type metadata to determine the type of the resource.＼
+</li>
+	<li>
+他の場合、外部~資源~link型に既定の型が定義されているならば
+⇒
+資源はその型であるものと見做す。
+◎
+If there is no type metadata, but the external resource link type has a default type defined, then the user agent must assume that the resource is of that type.
+</li>
+	<li>
+【他の場合、下の記述に従って，資源を無視することになる。】
+</li>
+</ol>
+</div>
+
+<p class="note">注記：
+`stylesheet$v ~link型については、資源の`~Content-Type~metadata$を処理するための規則が定義されている。
+◎
+The stylesheet link type defines rules for processing the resource's Content-Type metadata.
+</p>
+
+<p>
+資源の型が確立されたなら、~UAは［
+その型を~supportする, かつ
+関連な他の条件にも該当する
+］ならば，資源を適用するモノトスル。
+他の場合，その資源を無視するモノトスル。
+◎
+Once the user agent has established the type of the resource, the user agent must apply the resource if it is of a supported type and the other relevant conditions apply, and must ignore the resource otherwise.
+</p>
+
+<div class="example">
+
+<p>
+文書が次のような~stylesheet~linkを包含する場合：
+◎
+If a document contains style sheet links labeled as follows:
+</p>
+
+`link-stylesheet-1^xCode
+
+<p>
+~CSS~stylesheetのみを~supportする準拠~UAは、~file B, C を~fetchして，~file A は飛ばすことになる（ `text/plain$c は，~CSS~stylesheetに対する`~MIME型$ではないので）。
+◎
+...then a compliant UA that supported only CSS style sheets would fetch the B and C files, and skip the A file (since text/plain is not the MIME type for CSS style sheets).
+</p>
+
+<p>
+次に、~file B, C に対し，~serverから返された実際の型を検査することになる。
+それらのうち
+`text/css$c として送信されたものに対しては，~styleを適用する一方で、
+`text/plain$c など他の型に対しては，適用しないことになる。
+◎
+For files B and C, it would then check the actual types returned by the server. For those that are sent as text/css, it would apply the styles, but for those labeled as text/plain, or any other type, it would not.
+</p>
+
+<p>
+返された~fileのうち， `~Content-Type~metadata$が［
+伴われない ／
+伴われるが構文上は不正な型である（例 `Content-Type:&nbsp;"null"^c ）
+］ものは、 `stylesheet$v ~linkに対する既定の型 `text/css$c に~~落とし込まれ、いずれにせよ，~stylesheetは`適用される^emことになる。
+◎
+If one of the two files was returned without a Content-Type metadata, or with a syntactically incorrect type like Content-Type: "null", then the default type for stylesheet links would kick in. Since that default type is text/css, the style sheet would nonetheless be applied.
+</p>
+
+</div>
+
+				</section>
+				<section id="fetching-and-processing-a-resource-from-a-link-element">
+<h5 title="Fetching and processing a resource from a link element">4.2.4.3. `link^e 要素から資源を~fetchして処理する</h5>
+
+<p id="concept-link-obtain">
+すべての`外部~資源~link$には、
+`~link先の資源を~fetchして処理する@
+~algoがあり，
+( `link$e 要素 )
+が渡される。
+また、
+`~link先の資源~fetch用に設定しておく@
+~algoもあり，
+( `link$e 要素, `要請$ )
+が渡される。
+個々の~link型には，自前の`~link先の資源を~fetchして処理する$
+~algoを供するものもあるが、明示的に言明されない限り，`~link先の資源を~fetchして処理する既定の~algo$を利用する。
+同様に，個々の~link型には，自前の`~link先の資源~fetch用に設定しておく$
+~algoを供するものもあるが、明示的に言明されない限り，その手続きは単に ~T を返すとする。
+◎
+All external resource links have a fetch and process the linked resource algorithm, which takes a link element el. They also have linked resource fetch setup steps which take a link element el and request request. Individual link types may provide their own fetch and process the linked resource algorithm, but unless explicitly stated, they use the default fetch and process the linked resource algorithm. Similarly, individual link types may provide their own linked resource fetch setup steps, but unless explicitly stated, these steps just return true.
+</p>
+
+<div class="algorithm">
+<p>
+`~link先の資源を~fetchして処理する既定の~algo@
+は、所与の
+( `link$e 要素 %link )
+に対し，以下に従う：
+◎
+The default fetch and process the linked resource, given a link element el, is as follows:
+</p>
+
+<ol>
+	<li>
+%~url ~LET %link の `href$aL 属性の値
+◎
+↓</li>
+	<li>
+~IF［
+%~url ~EQ 空~文字列
+］
+⇒
+~RET
+◎
+If el's href attribute's value is the empty string, then return.
+</li>
+	<li>
+%~url ~SET %~url を %link の`~node文書$に`相対的に構文解析-$した`結果の~URL~record$
+◎
+Parse the URL given by el's href attribute, relative to el's node document. If that fails, then return. Otherwise, let url be the resulting URL record.
+</li>
+	<li>
+~IF［
+%~url ~EQ `失敗^i
+］
+⇒
+~RET
+◎
+↑</li>
+	<li>
+%~CORS属性~状態 ~LET 
+%link の `crossorigin$aL 内容~属性の現在の状態
+◎
+Let corsAttributeState be the current state of the el's crossorigin content attribute.
+</li>
+	<li>
+%要請 ~LET
+`~CORSになり得る要請を作成する$( %~url, 空~文字列, %~CORS属性~状態 )
+◎
+Let request be the result of creating a potential-CORS request given url, the empty string, and corsAttributeState.
+</li>
+	<li>
+%要請 の
+⇒＃
+`同期~flag$rq ~SET ~T,
+`~client$rq ~SET %link の`~node文書$に`関連な設定群~obj$,
+`暗号用~nonce~metadata$rq ~SET %link の `CryptographicNonce$sl 内部~slotの現在の値,
+`完全性~metadata$rq ~SET %link の `integrity$aL 内容~属性の現在の値,
+`~referrer施策$rq ~SET %link の `referrerpolicy$aL 属性の現在の状態
+◎
+Set request's synchronous flag.
+◎
+Set request's client to el's node document's relevant settings object.
+◎
+Set request's cryptographic nonce metadata to the current value of el's [[CryptographicNonce]] internal slot.
+◎
+Set request's integrity metadata to the current value of el's integrity content attribute.
+◎
+Set request's referrer policy to the current state of the el's referrerpolicy attribute.
+</li>
+	<li>
+~IF［
+`~link先の資源~fetch用に設定しておく$( %link, %要請 ) ~EQ ~F
+］
+⇒
+~RET
+◎
+Run the linked resource fetch setup steps, given el and request. If the result is false, then return.
+</li>
+	<li>
+<p>
+この段は`並列的$に走らす：
+◎
+Run the following steps in parallel:
+</p>
+		<ol>
+			<li>
+%応答 ~LET %要請 を用いて`~fetch$した結果
+◎
+Let response be the result of fetching request.
+</li>
+			<li>
+%成功 ~LET ~T
+◎
+Let success be true.
+</li>
+			<li>
+<p>
+~IF［
+%応答 は`~network~error$である
+~OR
+%応答 の`状態s$rs は`~ok状態s$でない
+］
+⇒
+%成功 ~SET ~F
+◎
+If response is a network error or its status is not an ok status, set success to false.
+</p>
+
+<p class="note">注記：
+内容に特有な~error
+— 例：~CSS構文解析-時や~PNG復号-時の~errorなど —
+は、 %成功 には影響しない。
+◎
+Note that content-specific errors, e.g., CSS parse errors or PNG decoding errors, do not affect success.
+</p>
+			</li>
+			<li>
+<p>
+~IF［
+%成功 ~EQ ~T
+］
+⇒
+`外部~資源~link$の`必須の下位資源$が読込ngを完遂するまで待機する
+◎
+If success is true, wait for the link resource's critical subresources to finish loading.
+</p>
+
+<p class="XXX">
+~link型の`必須の下位資源$を定義する仕様（例：~CSS）には、［
+これらの下位資源がどう~fetchされ, 処理されるか述べる
+］ものと期待される。
+しかしながらこれは，現時点では明示的でないので、この仕様は，［
+`外部~資源~link$の`必須の下位資源$が~fetchされ処理されるのを待機して，それが正しく行われる
+］ものとしか述べない。
+◎
+The specification that defines a link type's critical subresources (e.g., CSS) is expected to describe how these subresources are fetched and processed. However, since this is not currently explicit, this specification describes waiting for a link resource's critical subresources to be fetched and processed, with the expectation that this will be done correctly.
+</p>
+			</li>
+			<li>
+次を走らす`要素~taskを~queueする$( `~network用~task源$, %link )
+⇒
+`~link先の資源を処理する$( %link, %成功, %応答 )
+◎
+Queue an element task on the networking task source given el to process the linked resource given el, success, and response.
+
+Queue a task on the networking task source 
+
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<p>
+~UAは、そのような資源を，［
+必要なときに限り，
+<a href="#fetch-and-process-the-linked-resource">~fetchして処理-</a>しようと試行する
+］ことにしてもヨイ
+— 適用されていないものも含め，すべての`外部~資源~link$を事前に~fetchする代わりに。
+◎
+User agents may opt to only try to fetch and process such resources when they are needed, instead of pro-actively fetching all the external resources that are not applied.
+</p>
+
+<p>
+`~link先の資源を~fetchして処理する$
+~algoと類似に、すべての`外部~資源~link$には
+`~link先の資源を処理する@
+~algoがあり，
+( `link$e 要素, 真偽値, `応答$ )
+が渡される。
+個々の~link型が自前の`~link先の資源を処理する$~algoを供さない限り，`~link先の資源を処理する既定の~algo$が利用される。
+◎
+Similar to the fetch and process the linked resource algorithm, all external resource links have a process the linked resource algorithm which takes a link element el, boolean success, and response response.＼
+</p>
+
+<div class="algorithm">
+<p>
+`~link先の資源を処理する既定の~algo@
+は、所与の
+( `link$e 要素 %link, 真偽値 %成功 )
+に対し，次を走らす（応答は無視される）：
+◎
+Unless an individual link type provides its own process the linked resource algorithm, the default process the linked resource algorithm, given a link element el, and boolean success (ignoring response) is used:
+</p>
+
+<ol>
+	<li>
+~IF［
+%成功 ~EQ ~T
+］
+⇒
+%link に向けて名前 `load$et の`~eventを発火する$
+◎
+If success is true, fire an event named load at el.
+</li>
+	<li>
+~ELSE
+⇒
+%link に向けて名前 `error$et の`~eventを発火する$
+◎
+Otherwise, fire an event named error at el.
+</li>
+</ol>
+</div>
+
+<p>
+`rel$aL に与えられた~keyword用に他が指定されない限り，要素の`~node文書$に対する~load~eventは、要素による`~link先の資源を~fetchして処理する$試み, および その`必須の下位資源$がすべて完了するまで，`遅延-$されるモノトスル。
+（~UAがまだ~fetchして処理しようと試みていない資源
+— 例えば 資源が必要になるまで待機しているためなど —
+により、~load~eventが`遅延-$されることはない。）
+◎
+Unless otherwise specified for a given rel keyword, the element must delay the load event of the element's node document until all the attempts to fetch and process the linked resource and its critical subresources are complete. (Resources that the user agent has not yet attempted to fetch and process, e.g., because it is waiting for the resource to be needed, do not delay the load event.)
+</p>
+
+				</section>
+				<section id="processing-link-headers">
+<h4 title="Processing Link headers">4.2.4.4. `Link^h ~headerの処理</h4>
+
+<p>
+~HTTP `Link$h ~headerは、~UAが~supportするならば，
+文書~内のどの~linkよりも先に現れると見做すモノトスル
+— ~HTTP~message内に与えられる順序で。
+これらの~headerは、関連な仕様が与える規則に則って処理されることになる。
+`HTTP$r
+`WEBLINK$r
+◎
+HTTP `Link` headers, if supported, must be assumed to come before any links in the document, in the order that they were given in the HTTP message. These headers are to be processed according to the rules given in the relevant specifications. [HTTP] [WEBLINK]
+</p> 
+
+<p class="note">注記：
+~HTTP `Link$h ~headerにおける関係~型の登録は，`~HTML~link型$とは別個であり、したがってそれらの意味論は，同じ名前の~HTML~link型と異なり得る。
+◎
+Registration of relation types in HTTP `Link` headers is distinct from HTML link types, and thus their semantics can be different from same-named HTML types.
+</p>
+
+<p class="XXX">
+`Link$h ~headerの処理
+— 特に `文書$の`~scriptを阻んでいる~stylesheet~counter$に対し，どう波及するか —
+は、定義されていない。
+これを仕様に統合することに関する論点は
+<a href="~HTMLissue/4224">issue #4224</a>
+を見よ。
+◎
+The processing of `Link` headers, in particular their influence on a Document's script-blocking style sheet counter, is not defined. See issue #4224 for discussion on integrating this into the spec.
+</p>
+
+				</section>
+				<section id="providing-users-with-a-means-to-follow-hyperlinks-created-using-the-link-element">
+<h4 title="Providing users with a means to follow hyperlinks created using the link element">4.2.4.5. `link^e 要素を用いて作成された~hyperlinkを追う手段を利用者に供するとき</h4>
+
+<p id="linkui">
+対話的~UAは、文書~内の 各 `link$e 要素に対し，それを利用して作成された`~hyperlinkを追う$手段を，~UIの中のどこかで利用者に供してもヨイ。
+正確な~UIは，この仕様では定義されないが、何らかの形による（場合によっては単純~化して），次の情報（要素の各種~属性から得されるそれ（下に定義される））も含み得る（以下， %資源 は当の~hyperlinkが指している資源とする）：
+◎
+Interactive user agents may provide users with a means to follow the hyperlinks created using the link element, somewhere within their user interface. The exact interface is not defined by this specification, but it could include the following information (obtained from the element's attributes, again as defined below), in some form or another (possibly simplified), for each hyperlink created with each link element in the document:
+</p>
+
+<ul>
+	<li>
+この文書と %資源 との関係性（ `rel$aL 属性により与えられる）
+◎
+The relationship between this document and the resource (given by the rel attribute)
+</li>
+	<li>
+%資源 の~title（ `title$aL 属性により与えられる）
+◎
+The title of the resource (given by the title attribute).
+</li>
+	<li>
+%資源 の~address（ `href$aL 属性により与えられる）
+◎
+The address of the resource (given by the href attribute).
+</li>
+	<li>
+%資源 の言語（ `hreflang$aL 属性により与えられる）
+◎
+The language of the resource (given by the hreflang attribute).
+</li>
+	<li>
+%資源 用の最適な媒体（ `media$aL 属性により与えられる）
+◎
+The optimum media for the resource (given by the media attribute).
+</li>
+</ul>
+
+<p>
+~UAは、他の情報も含ませれる
+— 資源の型など（ `type$aL 属性により与えられる）。
+◎
+User agents could also include other information, such as the type of the resource (as given by the type attribute).
+</p>
+
+<p>
+`~hyperlink$を作成する `link$e 要素の`作動化の挙動$は
+⇒
+要素が作成した`~hyperlinkを追う$
+◎
+The activation behavior of link elements that create hyperlinks is to follow the hyperlink created by the link element.
+</p>
+
+				</section>
+			</section>
+			<section id="the-meta-element">
+<h3 title="The meta element">4.2.5. `meta^e 要素</h3>
+
+<span id="meta"></span>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+`~metadata内容$。
+◎
+Metadata content.
+</dd>
+	<dd>
+`itemprop$a 属性を有する場合に限り：
+`~flow内容$／`句ng内容$
+◎
+If the itemprop attribute is present: flow content.
+◎
+If the itemprop attribute is present: phrasing content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`charset$a 属性を有する場合に限り：
+`head$e 要素~内。
+◎
+↓</dd>
+	<dd>
+`http-equiv$a 属性を有する場合に限り：
+`head$e 要素~内。
+◎
+If the charset attribute is present, or if the element's http-equiv attribute is in the Encoding declaration state: in a head element.
+◎
+If the http-equiv attribute is present but not in the Encoding declaration state: in a head element.
+</dd>
+	<dd>
+［
+`http-equiv$a 属性を有していて，その状態 ~NEQ `符号化法~宣言$st
+］の場合に限り：
+`head$e 要素の子である `noscript$e 要素~内。
+◎
+If the http-equiv attribute is present but not in the Encoding declaration state: in a noscript element that is a child of a head element.
+</dd>
+	<dd>
+`name$a 属性を有する場合に限り：
+`~metadata内容$が期待される所。
+◎
+If the name attribute is present: where metadata content is expected.
+</dd>
+	<dd>
+`itemprop$a 属性を有する場合に限り：
+［
+`~metadata内容$ ／ `句ng内容$
+］が期待される所。
+◎
+If the itemprop attribute is present: where metadata content is expected.
+◎
+If the itemprop attribute is present: where phrasing content is expected.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`なし$。
+◎
+Nothing.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+`終了tag$はない。
+◎
+No end tag.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+`name$a
+— ~metadata名を与える。
+◎
+name — Metadata name
+</dd>
+	<dd>
+`http-equiv$a
+— ~pragma指令を与える。
+◎
+http-equiv — Pragma directive
+</dd>
+	<dd>
+`content$a
+— 要素の値を与える。
+◎
+content — Value of the element
+</dd>
+	<dd>
+`charset$a
+— `符号化法~宣言$を与える。
+◎
+charset — Character encoding declaration
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`meta$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLMetaElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [`CEReactions$] attribute DOMString `name$m;
+  [`CEReactions$] attribute DOMString `httpEquiv$m;
+  [`CEReactions$] attribute DOMString `content$m;
+};
+
+  // `HTMLMetaElement$obsMb
+</pre>
+	</dd>
+</dl>
+
+<p>
+`meta$e 要素は、［
+`title$e ／ `base$e ／ `link$e ／ `style$e ／ `script$e
+］要素では表出できないような，種々の~metadataを`表現-$する。
+◎
+The meta element represents various kinds of metadata that cannot be expressed using the title, base, link, style, and script elements.
+</p>
+
+<div class="p">
+<p>
+`meta$e 要素は、その各種 属性により，次を表現できる：
+</p>
+
+<ul ><li>`name$a 属性による文書~levelの~metadata
+</li><li>`http-equiv$a 属性による~pragma指令
+</li><li>`charset$a 属性による，~HTML文書が文字列~形に直列化されるとき（例：~network越しの伝送 ／ ~disk~storage用）の~fileの`符号化法~宣言$。
+</li></ul>
+
+◎
+The meta element can represent document-level metadata with the name attribute, pragma directives with the http-equiv attribute, and the file's character encoding declaration when an HTML document is serialized to string form (e.g. for transmission over the network or for disk storage) with the charset attribute.
+</div>
+
+<p>
+この要素には、［
+`name$a, `http-equiv$a, `charset$a, `itemprop$a
+］属性のうち，どれか 1 つだけ指定しなければナラナイ。
+◎
+Exactly one of the name, http-equiv, charset, and itemprop attributes must be specified.
+</p>
+
+<p>
+［
+`name$a, `http-equiv$a, `itemprop$a
+］のいずれかが指定されている場合、
+`content$a 属性も指定しなければナラナイ。
+他の場合、省略しなければナラナイ。
+◎
+If either name, http-equiv, or itemprop is specified, then the content attribute must also be specified. Otherwise, it must be omitted.
+</p>
+
+<p>
+`charset@a
+属性は、文書に利用される符号化法を指定する。
+これは、`符号化法~宣言$である。
+属性が在るならば、その値は文字列 `utf-8^l に`~ASCII大小無視$で合致しなければナラナイ。
+◎
+The charset attribute specifies the character encoding used by the document. This is a character encoding declaration. If the attribute is present, its value must be an ASCII case-insensitive match for the string "utf-8".
+</p>
+
+<p class="note">注記：
+`meta$e 要素の `charset$a 属性は、~XML文書には効果はないが，
+~XMLから／へ移行し易くするためとして~XML文書に許容される。
+◎
+The charset attribute on the meta element has no effect in XML documents, but is allowed in XML documents in order to facilitate migration to and from XML.
+</p>
+
+<p>
+同じ文書~内に 次を満たす複数の `meta$e 要素が在ってはナラナイ
+⇒
+`charset$a 属性を有する
+◎
+There must not be more than one meta element with a charset attribute per document.
+</p>
+
+<p>
+`content@a
+属性は、要素が［
+文書~metadata／~pragma指令
+］目的に利用されるときに，その値を与える。
+許容される値は、後続の各~節にて述べるように，正確な文脈に依存する。
+◎
+The content attribute gives the value of the document metadata or pragma directive when the element is used for those purposes. The allowed values depend on the exact context, as described in subsequent sections of this specification.
+</p>
+
+<p>
+`meta$e 要素が
+`name@a
+属性を有する場合、それは文書~metadataを設定する。
+文書~metadataは、名値~pairを通して表出される。
+要素の［
+`name$a, `content$a
+］属性が，順に［
+名前, 値
+］を与える。
+名前は、~metadataのどの側面が設定されているかを指定する。
+妥当な名前, および それらの値の意味は、以下の各~節に述べる。
+`meta$e 要素が `content$a 属性を有さない場合、その~metadataの名値~pairの値~~成分は，空~文字列になる。
+◎
+If a meta element has a name attribute, it sets document metadata. Document metadata is expressed in terms of name-value pairs, the name attribute on the meta element giving the name, and the content attribute on the same element giving the value. The name specifies what aspect of metadata is being set; valid names and the meaning of their values are described in the following sections. If a meta element has no content attribute, then the value part of the metadata name-value pair is the empty string.
+</p>
+
+<div>
+<p>
+`name@m
+~IDL属性は、
+`name$a 内容~属性を`反映する$モノトスル。
+</p>
+
+<p>
+`content@m
+~IDL属性は、
+`content$a 内容~属性を`反映する$モノトスル。
+</p>
+◎
+The name and content IDL attributes must reflect the respective content attributes of the same name.＼
+</div>
+
+<p>
+`httpEquiv@m
+~IDL属性は、
+`http-equiv$a 内容~属性を`反映する$モノトスル。
+◎
+The IDL attribute httpEquiv must reflect the content attribute http-equiv.
+</p>
+
+
+				<section id="standard-metadata-names">
+<h4 title="Standard metadata names">4.2.5.1. 標準な~metadata名</h4>
+
+<p>
+この仕様は、 `meta$e 要素に対する `name$a 属性に対し，少数の名前を定義する。
+◎
+This specification defines a few names for the name attribute of the meta element.
+</p>
+
+<p>
+各 名前は、`~ASCII大小無視$で比較するモノトスル。
+◎
+Names are case-insensitive, and must be compared in an ASCII case-insensitive manner.
+</p>
+
+<dl>
+	<dt>`application-name@v</dt>
+	<dd>
+値は、~pageが表現する~web~app名を与える短い自由形の
+【すなわち，特に追加的な制約はない】
+文字列でなければナラナイ。
+~pageが~web~appでない場合、~metadata名として `application-name$v を利用してはナラナイ。
+名前の言語を指定する `lang$a 属性を利用して，~web~app名の翻訳を与えてもヨイ。
+◎
+The value must be a short free-form string giving the name of the web application that the page represents. If the page is not a web application, the application-name metadata name must not be used. Translations of the web application's name may be given, using the lang attribute to specify the language of each name.
+</dd>
+	<dd>
+同じ文書~内に 次を満たす複数の `meta$e 要素が在ってはナラナイ
+⇒
+［
+互いに同じ`言語$を伴う
+］~AND［
+`name$a 属性を有していて，その値は`~ASCII大小無視$で `application-name$v に合致する
+］
+◎
+There must not be more than one meta element with a given language and where the name attribute value is an ASCII case-insensitive match for application-name per document.
+</dd>
+	<dd>
+~UAは、~UIにおいて，~pageの `title$e に代えて~app名を利用してもヨイ
+—
+~titleは、~app名のみならず，［
+特定0の時点における~pageの状態sに関連な様な~message
+］も含むかもしれないので。
+◎
+User agents may use the application name in UI in preference to the page's title, since the title might include status messages and the like relevant to the status of the page at a particular moment in time instead of just being the name of the application.
+</dd>
+	<dd class="algorithm">
+<p>
+~UAは、所与の［
+いくつかの言語からなる有順序~list %言語~list （例： 英国~英語, 米国~英語, 英語 ）
+］から，利用する~app名を見出すときは、次の手続きを走らすモノトスル：
+◎
+To find the application name to use given an ordered list of languages (e.g. British English, American English, and English), user agents must run the following steps:
+</p>
+		<ol>
+			<li>
+~IF［
+`文書$ の`文書~要素$の`言語$があって，それは~UAに未知でない
+］
+⇒
+%言語~list にその言語を付加する
+◎
+Let languages be the list of languages.
+◎
+Let default language be the language of the Document's document element, if any, and if that language is not unknown.
+◎
+If there is a default language, and if it is not the same language as any of the languages in languages, append it to languages.
+</li>
+			<li>
+<p>
+%言語~list 内の~EACH( %言語 ) に対し
+⇒
+~IF［
+`文書$ 内に下に与える条件をいずれも満たすような `meta$e 要素はある
+］
+⇒
+~RET ［
+該当する要素のうち，`~tree順序$で最初のもの
+］の `content$a 属性の値
+</p>
+
+<p>
+条件は
+⇒
+［
+要素の`言語$ ~EQ %言語
+］~AND［
+要素は `name$a 属性を有していて，その値は`~ASCII大小無視$で `application-name$v に合致する
+］
+</p>
+
+◎
+Let winning language be the first language in languages for which there is a meta element in the Document where the name attribute value is an ASCII case-insensitive match for application-name and whose language is the language in question.
+◎
+If none of the languages have such a meta element, then return; there's no given application name.
+◎
+Return the value of the content attribute of the first meta element in the Document in tree order where the name attribute value is an ASCII case-insensitive match for application-name and whose language is winning language.
+</li>
+			<li>
+~RET ε （~app名は与えられない）
+◎
+↑</li>
+		</ol>
+
+<p class="note">注記：
+この~algoは、~pageの名前
+— 一例として，~bookmarkの~labelなど —
+を必要とする~browserにより利用されることになる。
+~algoには、利用者が選好する言語が供されることになる。
+◎
+This algorithm would be used by a browser when it needs a name for the page, for instance, to label a bookmark. The languages it would provide to the algorithm would be the user's preferred languages.
+</p>
+
+	</dd>
+
+	<dt>`author@v</dt>
+	<dd>
+値は、~pageの いずれかの作者~名を与える自由形の文字列でなければナラナイ。
+◎
+The value must be a free-form string giving the name of one of the page's authors.
+</dd>
+
+	<dt>`description@v</dt>
+	<dd>
+値は、~pageについて述べる自由形の文字列でなければナラナイ。
+値は、~pageの~directory
+— 例えば探索~engine用 —
+における利用に適切でなければナラナイ。
+◎
+The value must be a free-form string that describes the page. The value must be appropriate for use in a directory of pages, e.g. in a search engine.＼
+</dd>
+	<dd>
+同じ文書~内に 次を満たす複数の `meta$e 要素が在ってはナラナイ
+⇒
+`name$a 属性を有していて，その値は`~ASCII大小無視$で `description$v に合致する
+◎
+There must not be more than one meta element where the name attribute value is an ASCII case-insensitive match for description per document.
+</dd>
+
+	<dt>`generator@v</dt>
+	<dd>
+値は、文書を生成するために利用された~software~packageのうちいずれかを識別するような，自由形の文字列でなければナラナイ。
+この値は、~softwareから~markupが生成されていない~page
+— 例えば~text~editorで書かれた~pageなど —
+には，利用してはナラナイ。
+◎
+The value must be a free-form string that identifies one of the software packages used to generate the document. This value must not be used on pages whose markup is not generated by software, e.g. pages whose markup was written by a user in a text editor.
+</dd>
+	<dd class="example">
+
+<p>
+“Frontweaver” と称される~toolが、~pageの `head$e 要素~内に，~pageを生成した~toolを識別する名前として，自身のそれを出力する例：
+◎
+Here is what a tool called "Frontweaver" could include in its output, in the page's head element, to identify itself as the tool used to generate the page:
+</p>
+
+`meta-generator-1^xCode
+
+	</dd>
+
+	<dt>`keywords@v</dt>
+	<dd>
+値は、~pageに関連な~keywordたちからなる，`~comma区切りの~token集合$でなければナラナイ。
+◎
+The value must be a set of comma-separated tokens, each of which is a keyword relevant to the page.
+</dd>
+	<dd class="example">
+<p>
+次の，高速道路標識についての~pageでは、
+`meta$e 要素を利用して，利用者が~page内を~~検索するときに利用し得る，いくつかの~keywordを指定している：
+◎
+This page about typefaces on British motorways uses a meta element to specify some keywords that users might use to look for the page:
+</p>
+
+`meta-keywords-1^xCode
+
+</dd>
+	<dd class="note">注記：
+多くの探索~engineは、これらの~keywordを考慮しない。
+この特能は、歴史的に，結果として利用者の助けにならなくなるような，あてにならない, あるいは探索~engineに誤解させるような~spamにすら利用されてきたので。
+◎
+Many search engines do not consider such keywords, because this feature has historically been used unreliably and even misleadingly as a way to spam search engine results in a way that is not helpful for users.
+</dd>
+	<dd class="algorithm">
+<p>
+作者が~pageに適用-可能として指定した~keywordの~listを得するときは、~UAは，次の手続きを走らすモノトスル：
+◎
+To obtain the list of keywords that the author has specified as applicable to the page, the user agent must run the following steps:
+</p>
+
+		<ol>
+			<li>
+%~keyword~list ~LET 空~list
+◎
+Let keywords be an empty list.
+</li>
+			<li>
+文書~内の ~EACH ( `meta$e 要素 %要素 ) に対し
+⇒
+~IF［
+%要素 は `name$a 属性を有していて，その値は`~ASCII大小無視$で `keywords$v に合致する
+］~AND［
+%要素 は `content$a を有する
+］
+⇒
+%~keyword~list に次の結果を連結する
+⇒
+`~commaで分割する$( %要素 の `content^a 属性の値 )
+◎
+For each meta element with a name attribute and a content attribute and where the name attribute value is an ASCII case-insensitive match for keywords:
+◎
+Split the value of the element's content attribute on commas.
+◎
+Add the resulting tokens, if any, to keywords.
+</li>
+			<li>
+%~keyword~list から重複するものを除去する
+◎
+Remove any duplicates from keywords.
+</li>
+			<li>
+~RET %~keyword~list
+◎
+Return keywords. This is the list of keywords that the author has specified as applicable to the page.
+</li>
+		</ol>
+	</dd>
+	<dd>
+<p>
+~UAは、この値があてになるかどうか疑わしいときは，この情報を利用するベキでない。
+◎
+User agents should not use this information when there is insufficient confidence in the reliability of the value.
+</p>
+
+<p class="example">
+一例として、内容~管理~systemにとっては，［
+~siteに特有な探索~engine用~indexを拡充するために，~systemの中で~pageの~keyword情報を利用する
+］ことは適理になろう。
+一方で、この情報を利用する大規模な内容~集積者は，［
+不適切な~keywordの利用を通して~rankingを不当に操ろうと試行する利用者
+］を見出す見込みが高いであろう。
+◎
+For instance, it would be reasonable for a content management system to use the keyword information of pages within the system to populate the index of a site-specific search engine, but a large-scale content aggregator that used this information would likely find that certain users would try to game its ranking mechanism through the use of inappropriate keywords.
+</p>
+
+	</dd>
+
+	<dt>`referrer@v</dt>
+	<dd>
+値は、`~referrer施策$でなければナラナイ。
+それは、`文書$に対する既定の`~referrer施策$を定義する。
+`REFERRERPOLICY$r
+◎
+The value must be a referrer policy, which defines the default referrer policy for the Document. [REFERRERPOLICY]
+</dd>
+	<dd class="algorithm">
+<p>
+ある `meta$e 要素が［
+`文書の中へ挿入された$ ／ `文書から除去された$
+］とき, または
+既存の `meta$e 要素の［
+`name$a ／ `content$a 
+］属性が変化したときは、~UAは次の~algoを走らすモノトスル：
+◎
+If any meta elements are inserted into the document or removed from the document, or existing meta elements have their name or content attributes changed, user agents must run the following algorithm:
+</p>
+
+		<ol>
+			<li>
+<p>
+%候補~要素~list ~LET
+次をすべて満たす `meta$e 要素からなる`~tree順序$による~list：
+◎
+Let candidate elements be the list of all meta elements that meet the following criteria, in tree order:
+</p>
+
+				<ul>
+					<li>
+`文書~tree内$にある
+◎
+The element is in a document tree
+</li>
+					<li>
+`name$a 属性を有していて，その値は`~ASCII大小無視$で `referrer$v に合致する
+◎
+The element has a name attribute, whose value is an ASCII case-insensitive match for referrer
+</li>
+					<li>
+`content$a 属性を有していて，その値 ~NEQ 空~文字列
+◎
+The element has a content attribute, whose value is not the empty string
+</li>
+					<li>
+文書の`~head要素$の子である
+◎
+The element is a child of the head element of the document
+</li>
+				</ul>
+			</li>
+			<li>
+<p>
+%候補~要素~list 内の ~EACH ( %要素 ) に対し：
+◎
+For each element in candidate elements:
+</p>
+
+				<ol>
+					<li>
+%値 ~LET `~ASCII小文字~化する$( %要素 の`content$a 属性の値 )
+◎
+Let value be the value of element's content attribute, converted to ASCII lowercase.
+</li>
+					<li>
+<p>
+~IF［
+%値 は次の表の左列に挙げるいずれかである
+］
+⇒
+%値 ~SET 同じ行の右列に与える値
+◎
+If value is one of the values given in the first column of the following table, then set value to the value given in the second column:
+</p>
+
+<table>
+<thead><tr><th>旧来の値◎ Legacy value
+<th>~referrer施策◎ Referrer policy
+</thead>
+
+<tbody><tr><td>`never^v
+<td>`no-referrer$v
+
+<tr><td>`default^v
+<td>`no-referrer-when-downgrade$v
+
+<tr><td>`always^v
+<td>`unsafe-url$v
+
+<tr><td>`origin-when-crossorigin^v
+<td>`origin-when-cross-origin$v
+
+</tbody></table>
+
+<p class="note">注記：
+この段は、
+<a href="~REFERRER-POLICY#unknown-policy-values">古い~UA向けに~fallback値を配備できるようにする</a>
+ためにある。
+`REFERRERPOLICY$r
+◎
+↓</p>
+					</li>
+					<li>
+<p>
+~IF［
+%値 は`~referrer施策$である
+］
+⇒
+%要素 の`~node文書$ の`~referrer施策$doc ~SET %値
+］
+◎
+If value is a referrer policy, then set element's node document's referrer policy to policy.
+◎
+The fact that these steps are applied for each element enables deployment of fallback values for older user agents. [REFERRERPOLICY]
+</li>
+				</ol>
+			</li>
+		</ol>
+	</dd>
+
+	<dt>`theme-color@v</dt>
+	<dd>
+値は、~CSS `color$t 生成規則に合致する文字列でなければナラナイ
+— これは、~UAが~pageや周囲の~UIの表示を~custom化するときに利用すべきと示唆される色を定義する。
+例えば~browserは、指定された色を，~pageの~title~barに利用したり，~tab~barや~task切替器における強調~色に利用するかもしれない。
+◎
+The value must be a string that matches the CSS &lt;color&gt; production, defining a suggested color that user agents should use to customize the display of the page or of the surrounding user interface. For example, a browser might color the page's title bar with the specified value, or use it as a color highlight in a tab bar or task switcher.
+</dd>
+	<dd>
+同じ文書~内に 次を満たす複数の `meta$e 要素が在ってはナラナイ
+⇒
+`name$a 属性を有していて，その値は`~ASCII大小無視$で `theme-color$v に合致する
+◎
+There must not be more than one meta element with its name attribute value set to an ASCII case-insensitive match for theme-color per document.
+</dd>
+	<dd class="example">
+
+<p>
+この標準~自身【すなわち，この和訳の原文】も、~theme色として
+“WHATWG green”
+を利用している：
+◎
+This standard itself uses "WHATWG green" as its theme color:
+</p>
+
+`meta-theme-color-1^xCode
+
+	</dd>
+	<dd class="algorithm">
+<p>
+~pageの~theme色を得するときは、次の手続きを走らすモノトスル：
+◎
+To obtain a page's theme color, user agents must run the following steps:
+</p>
+
+		<ol>
+			<li>
+<p>
+%候補~要素~list ~LET 
+次を満たす `meta$e 要素すべてからなる`~tree順序$による~list：
+◎
+Let candidate elements be the list of all meta elements that meet the following criteria, in tree order:
+</p>
+
+				<ul>
+					<li>
+`文書~tree内$にある
+◎
+The element is in a document tree
+</li>
+					<li>
+`name$a 属性を有していて，その値は`~ASCII大小無視$で `theme-color$v に合致する
+◎
+The element has a name attribute, whose value is an ASCII case-insensitive match for theme-color
+</li>
+					<li>
+`content$a 属性を有する
+◎
+The element has a content attribute
+</li>
+				</ul>
+			</li>
+			<li>
+<p>
+%候補~要素~list 内の ~EACH ( %要素 ) に対し：
+◎
+For each element in candidate elements:
+</p>
+
+				<ol>
+					<li>
+%値 ~LET `前後の~ASCII空白~列を剥ぐ$( %要素 の`content$a 属性の値 )
+◎
+Let value be the result of stripping leading and trailing ASCII whitespace from the value of element's content attribute.
+</li>
+					<li>
+%色 ~LET `~CSS色~値として構文解析する$( %値 )
+◎
+Let color be the result of parsing value.
+</li>
+					<li>
+~IF［
+%色 ~NEQ `失敗^i
+］
+⇒
+~RET %色
+◎
+If color is not failure, then return color.
+</li>
+				</ol>
+			</li>
+			<li>
+~RET ε
+（~pageには~theme色はない。）
+◎
+Return nothing (the page has no theme color).
+</li>
+		</ol>
+	</dd>
+	<dd>
+ある `meta$e 要素が［
+`文書の中へ挿入された$ ／ `文書から除去された$
+］とき, または
+既存の `meta$e 要素の［
+`name$a ／ `content$a
+］属性が変化したときは、~UAは上の~algoを再度~走らせて，その結果を影響される~UIに適用するモノトスル
+◎
+If any meta elements are inserted into the document or removed from the document, or existing meta elements have their name or content attributes changed, user agents must re-run the above algorithm and apply the result to any affected UI.
+</dd>
+	<dd>
+~UAは、~theme色を~UIに利用するときは、より相応しくなるように，実装に特有な仕方で調整してもヨイ。
+例えば、~UAが~theme色を背景に利用していて，その上に白い~textで表示することを意図する場合、必要十分な~contrastを確保するため，~UIのその部位には~theme色を暗くした色を利用するなど。
+◎
+When using the theme color in UI, user agents may adjust it in implementation-specific ways to make it more suitable for the UI in question. For example, if a user agent intends to use the theme color as a background and display white text over it, it might use a darker variant of the theme color in that part of the UI, to ensure adequate contrast.
+</dd>
+
+</dl>
+
+				</section>
+				<section id="other-metadata-names">
+<h4 title="Other metadata names">4.2.5.2. 他の~metadata名</h4>
+
+<p>
+誰もが、自前の
+`定義済み~metadata名の集合に対する拡張@
+を作成して利用できる。
+そのような拡張を登録するための要件はない。
+◎
+Anyone can create and use their own extensions to the predefined set of metadata names. There is no requirement to register such extensions.
+</p>
+
+<p>
+しかしながら，次のいずれかに該当する場合、新たな~metadata名は作成されるベキでない：
+◎
+However, a new metadata name should not be created in any of the following cases:
+</p>
+
+<ul>
+	<li>
+［
+当の名前, または それに付帯する `content$a 属性の値
+］は`~URL$である場合。
+この事例では、`定義済み~link型の集合に対する拡張$として登録することが奨励される（新たな~metadata名は作成せずに）。
+◎
+If either the name is a URL, or the value of its accompanying content attribute is a URL; in those cases, registering it as an extension to the predefined set of link types is encouraged (rather than creating a new metadata name).
+</li>
+	<li>
+当の名前には、~UAにおける何らかの処理~要件が期待される場合。
+この事例では、標準~化されるべきである。
+◎
+If the name is for something expected to have processing requirements in user agents; in that case it ought to be standardized.
+</li>
+</ul>
+
+<p>
+また、新たな~metadata名を作成して利用する前に，
+<a href="https://wiki.whatwg.org/wiki/MetaExtensions">WHATWG Wiki MetaExtensions ~page</a>
+にアタることが奨励される
+— すでに利用~中にある~metadata名を選んでしまったり，それらの目的と重複するのを避けるため, および
+選んだ名前が 新たな標準~化された名前と衝突するのを避けるため。
+`WHATWGWIKI$r
+◎
+Also, before creating and using a new metadata name, consulting the WHATWG Wiki MetaExtensions page is encouraged — to avoid choosing a metadata name that's already in use, and to avoid duplicating the purpose of any metadata names that are already in use, and to avoid new standardized names clashing with your chosen name. [WHATWGWIKI]
+</p>
+
+<p>
+誰もが，いつでも
+WHATWG Wiki MetaExtensions
+~pageを編集して，~metadata名を自由に追加できる。
+新たな名前は、次の情報も伴わせて指定できる：
+◎
+Anyone is free to edit the WHATWG Wiki MetaExtensions page at any time to add a metadata name. New metadata names can be specified with the following information:
+</p>
+
+<dl>
+	<dt>~keyword （ `Keyword^en ）</dt>
+	<dd>
+定義される実際の~metadata名。
+定義-済みの他の名前と紛らわしいもの（例： 文字大小のみ相違するなど）は、避けるベキである。
+◎
+The actual name being defined. The name should not be confusingly similar to any other defined name (e.g. differing only in case).
+</dd>
+
+	<dt>概略的な記述 （ `Brief description^en ）</dt>
+	<dd>
+~metadata名の意味についての，規範的でない短い記述
+— 値に要求される形式も含め。
+◎
+A short non-normative description of what the metadata name's meaning is, including the format the value is required to be in.
+</dd>
+
+	<dt>仕様 （ `Specification^en ）</dt>
+	<dd>
+~metadata名の意味論と要件についての詳細な記述への~link。
+この~Wikiの別の~pageや外部~pageへの~linkにもなり得る。
+◎
+A link to a more detailed description of the metadata name's semantics and requirements. It could be another page on the Wiki, or a link to an external page.
+</dd>
+
+	<dt>同義語 （ `Synonyms^en ）</dt>
+	<dd>
+処理~要件が正確に同じであるような，他の~metadata名からなる~list。
+作者は、同義語による名前を定義して利用するベキでない（その意図は、~UAが旧来の内容を~supportできるようにするために限られる）。
+誰もが、実施に利用されていない同義語を除去してもヨイ。
+この仕方で登録されるのは、旧来の内容との互換性のため，同義語として処理される必要がある~metadata名に限られる。
+◎
+A list of other names that have exactly the same processing requirements. Authors should not use the names defined to be synonyms (they are only intended to allow user agents to support legacy content). Anyone may remove synonyms that are not used in practice; only names that need to be processed as synonyms for compatibility with legacy content are to be registered in this way.
+</dd>
+
+	<dt>地位 （ `Status^en ）</dt>
+	<dd>
+<p>
+次のいずれか：
+◎
+One of the following:
+</p>
+		<dl>
+			<dt>提案-済み （ `Proposed^en ）</dt>
+			<dd>
+~metadata名は、まだ，広くから査読を受けてないか認可されていない。
+誰かがそれを提案していて、それを利用しているか，近いうちに利用することになる。
+◎
+The name has not received wide peer review and approval. Someone has proposed it and is, or soon will be, using it.
+</dd>
+			<dt>批准-済み （ `Ratified^en ）</dt>
+			<dd>
+~metadata名は、広くから査読を受け，認可された。
+~metadata名を利用している~pageを取扱う方法を
+— 不正な仕方で利用された場合も含め —
+一義的に定義する仕様がある。
+◎
+The name has received wide peer review and approval. It has a specification that unambiguously defines how to handle pages that use the name, including when they use it in incorrect ways.
+</dd>
+
+			<dt>使用中止 （ `Discontinued^en ）</dt>
+			<dd>
+この~metadata名は、広くから査読を受けた上で，水準に満たないものと判明した。
+既存の~pageが この~metadata名を利用していても、新たな~pageには避けるベキである。
+作者が代わりに利用すベキものは、（もしあれば）
+“概略的な記述 ” と “仕様”
+の項に詳細が与えられることになる。
+◎
+The metadata name has received wide peer review and it has been found wanting. Existing pages are using this metadata name, but new pages should avoid it. The "brief description" and "specification" entries will give details of what authors should use instead, if anything.
+</dd>
+		</dl>
+
+	</dd>
+	<dd>
+~metadata名が，既存の値とかぶると判明した場合、除去された上で，既存の値に対する同義語として~listされるベキである。
+◎
+If a metadata name is found to be redundant with existing values, it should be removed and listed as a synonym for the existing value.
+</dd>
+	<dd>
+~metadata名が “提案-済み” の地位で追加されてから， 1 ヶ月~以上
+利用されない／指定されない
+ままにある場合、
+WHATWG Wiki MetaExtensions
+から除去されてヨイ。
+◎
+If a metadata name is added in the "proposed" state for a period of a month or more without being used or specified, then it may be removed from the WHATWG Wiki MetaExtensions page.
+</dd>
+	<dd>
+“提案-済み” の地位で追加された~metadata名が，既存の値とかぶるものと判明した場合、除去された上で，既存の値に対する同義語として~listされるベキである。
+“提案-済み” の地位で追加された~metadata名が，有害と判明した場合、
+“使用中止” の地位に変更されるベキである。
+◎
+If a metadata name is added with the "proposed" status and found to be redundant with existing values, it should be removed and listed as a synonym for the existing value. If a metadata name is added with the "proposed" status and found to be harmful, then it should be changed to "discontinued" status.
+</dd>
+	<dd>
+誰もがいつでも地位を変更できるが、上の定義に則る限りにおいて，そうするベキである。
+◎
+Anyone can change the status at any time, but should only do so in accordance with the definitions above.
+</dd>
+</dl>
+
+				</section>
+				<section id="pragma-directives">
+<h4 title="Pragma directives">4.2.5.3. ~pragma指令</h4>
+
+<p>
+`http-equiv@a
+属性が指定されている `meta$e 要素は、~pragma指令になる。
+◎
+When the http-equiv attribute is specified on a meta element, the element is a pragma directive.
+</p>
+
+<p>
+`http-equiv$a 属性は、`列挙d属性$である。
+次の表の二列目に，この属性~用に定義されている各種~keywordを挙げる。
+~keywordは、同じ行の一列目に与える状態に対応付けられる。
+一部の~keywordは、三列目に注記されるように，不適合とされる。
+◎
+The http-equiv attribute is an enumerated attribute. The following table lists the keywords defined for this attribute. The states given in the first cell of the rows with keywords give the states to which those keywords map. Some of the keywords are non-conforming, as noted in the last column.
+</p>
+
+<table id="table-http-equiv">
+
+<thead><tr><th>状態
+<th>~keyword
+<th>備考◎ Notes
+</thead>
+
+<tbody><tr><td>`内容~言語$st
+<td>`content-language@v
+<td>不適合
+
+<tr><td>`符号化法~宣言$st
+<td>`content-type@v
+<td>
+
+<tr><td>`既定の~style$st
+<td>`default-style@v
+<td>
+
+<tr><td>`~refresh$st
+<td>`refresh@v
+<td>
+
+<tr><td>`Set-Cookie$st
+<td>`set-cookie@v
+<td>不適合
+
+<tr><td>`~X-UA-Compatible$st
+<td>`x-ua-compatible@v
+<td>【無視される】
+
+<tr><td>`~CSP$st
+<td>`content-security-policy@v
+<td>
+</tbody></table>
+
+<div class="p">
+<p>
+`meta$e 要素が`文書の中へ挿入された$とき，要素が［
+上のいずれかの状態を表現するような `http-equiv$a 属性
+］を有する場合、~UAは，その状態に応じて，以下の~listに述べる適切な~algoを走らすモノトスル：
+</p>
+
+<p>
+以下、この節においては：
+</p>
+
+<ul>
+	<li>
+`meta@V
+は、当の `meta$e 要素を表すとする。
+</li>
+	<li>
+`content@V
+は、 `meta$V が `content$a 属性を［
+有するならば その値 ／
+有さないならば ε
+］とする。
+</li>
+</ul>
+
+◎
+When a meta element is inserted into the document, if its http-equiv attribute is present and represents one of the above states, then the user agent must run the algorithm appropriate for that state, as described in the following list:
+</div>
+
+<dl>
+	<dt>`内容~言語@st （
+<code>`http-equiv^a="`content-language$v"</code>
+）</dt>
+	<dd class="note">注記：
+この特能は不適合である。
+作者には、代わりに `lang$a 属性を利用することが奨励される。
+◎
+This feature is non-conforming. Authors are encouraged to use the lang attribute instead.
+</dd>
+	<dd class="algorithm">
+<p>
+この状態にある~pragmaは、
+`~pragma集合の既定の言語@
+を設定する。
+この~pragmaが成功裡に処理されるまでは、`~pragma集合の既定の言語$はない：
+◎
+This pragma sets the pragma-set default language. Until such a pragma is successfully processed, there is no pragma-set default language.
+</p>
+		<ol>
+			<li>
+~IF［
+`content$V ~EQ ε
+］
+⇒
+~RET
+◎
+If the meta element has no content attribute, then return.
+</li>
+			<li>
+~IF［
+`content$V は ❝, を包含する
+］
+⇒
+~RET
+◎
+If the element's content attribute contains a U+002C COMMA character (,) then return.
+</li>
+			<li>
+%入力 ~LET `content$V
+◎
+Let input be the value of the element's content attribute.
+</li>
+			<li>
+%位置 ~LET %入力 の最初の文字を指している`位置~変数$
+◎
+Let position point at the first character of input.
+</li>
+			<li>
+%入力 内の %位置 から`~ASCII空白を読飛ばす$
+◎
+Skip ASCII whitespace within input given position.
+</li>
+			<li>
+%候補 ~LET
+%入力 内の %位置 から
+`~ASCII空白$以外の`符号位置~並びを収集する$
+◎
+Collect a sequence of code points that are not ASCII whitespace from input given position.
+◎
+Let candidate be the string that resulted from the previous step.
+</li>
+			<li>
+~IF［
+%候補 ~EQ 空~文字列
+］
+⇒
+~RET
+◎
+If candidate is the empty string, return.
+</li>
+			<li>
+<p>
+`~pragma集合の既定の言語$ ~SET %候補
+◎
+Set the pragma-set default language to candidate.
+</p>
+
+<p class="note">注記：
+値が，空白区切りの複数の~tokenからなる場合、最初の~tokenを除くすべての~tokenは無視される。
+◎
+If the value consists of multiple space-separated tokens, tokens after the first are ignored.
+</p>
+			</li>
+		</ol>
+	</dd>
+	<dd class="note">注記：
+この~pragmaは、全くではないが，
+同じ名前の ~HTTP `Content-Language$h ~headerと まるっきり異なる。
+`HTTP$r
+◎
+This pragma is almost, but not quite, entirely unlike the HTTP `Content-Language` header of the same name. [HTTP]
+</dd>
+
+	<dt>`符号化法~宣言@st （
+<code>`http-equiv^a="`content-type$v"</code>
+）</dt>
+	<dd>
+この状態は、 `charset$a 属性の代替~形であり，その属性を設定することに等しい。
+すなわち、`符号化法~宣言$を与える。
+この状態に課される~UA要件すべては、この仕様の § 構文解析により取扱われる。
+◎
+The Encoding declaration state is just an alternative form of setting the charset attribute: it is a character encoding declaration. This state's user agent requirements are all handled by the parsing section of the specification.
+</dd>
+	<dd>
+`http-equiv$a 属性が`符号化法~宣言$st状態にある下では、
+`content$V は［
+次の並びに`~ASCII大小無視$で合致する文字列
+］でなければナラナイ
+⇒＃
+`text/html;^l,
+0 個~以上の`~ASCII空白$,
+`charset=utf-8^l
+◎
+For meta elements with an http-equiv attribute in the Encoding declaration state, the content attribute must have a value that is an ASCII case-insensitive match for a string that consists of: the literal string "text/html;", optionally followed by any number of ASCII whitespace, followed by the literal string "charset=utf-8".
+</dd>
+	<dd>
+同じ文書~内に 次を満たす 2 つの `meta$e 要素が在ってはナラナイ
+⇒
+一方は［
+`符号化法~宣言$st状態にある `http-equiv$a 属性
+］を有していて,
+他方は `charset$a 属性を有する
+◎
+A document must not contain both a meta element with an http-equiv attribute in the Encoding declaration state and a meta element with the charset attribute present.
+</dd>
+	<dd>
+［
+`符号化法~宣言$st状態にある `http-equiv$a 属性を有する `meta$e 要素
+］は、`~HTML文書$には利用してもヨイが，`~XML文書$に利用してはナラナイ。
+◎
+The Encoding declaration state may be used in HTML documents, but elements with an http-equiv attribute in that state must not be used in XML documents.
+</dd>
+
+	<dt>`既定の~style@st （
+<code>`http-equiv^a="`default-style$v"</code>
+）</dt>
+	<dd class="algorithm">
+<p>
+この~pragmaは、既定の`~CSS~stylesheet集合~名$を設定する：
+◎
+This pragma sets the name of the default CSS style sheet set.
+</p>
+		<ol>
+			<li>
+~IF［
+`content$V ~IN { ε,  空~文字列 }
+］
+⇒
+~RET
+◎
+If the meta element has no content attribute, or if that attribute's value is the empty string, then return.
+</li>
+			<li>
+`選好される~CSS~stylesheet集合~名を変更する$( `content$V )
+`CSSOM$r
+◎
+Change the preferred CSS style sheet set name with the name being the value of the element's content attribute. [CSSOM]
+</li>
+		</ol>
+	</dd>
+
+	<dt>`~refresh@st （
+<code>`http-equiv^a="`refresh$v"</code>
+）</dt>
+	<dd>
+この~pragmaは、時限~redirectとして動作する。
+◎
+This pragma acts as timed redirect.
+</dd>
+	<dd>
+各 `文書$には、真偽値
+`宣言的に~refreshする？@
+が結付けられ、初期~時は ~F とする。
+◎
+A Document object has an associated will declaratively refresh (a boolean). It is initially false.
+</dd>
+	<dd class="algorithm">
+		<ol>
+			<li>
+~IF［
+`content$V ~IN { ε,  空~文字列 }
+］
+⇒
+~RET
+◎
+If the meta element has no content attribute, or if that attribute's value is the empty string, then return.
+</li>
+			<li>
+`共用~宣言的~refresh手続き$( `meta$V の`~node文書$, `content$V, `meta$V )
+を走らす
+◎
+Let input be the value of the element's content attribute.
+◎
+Run the shared declarative refresh steps with the meta element's node document, input, and the meta element.
+</li>
+		</ol>
+	</dd>
+	<dd class="algorithm">
+<p>
+`共用~宣言的~refresh手続き@
+は、所与の
+( `文書$ %文書, 文字列 %入力, `meta$e 要素 %meta （省略時は ε ） )
+に対し，次に従う：
+◎
+The shared declarative refresh steps, given a Document object document, string input, and optionally a meta element meta, are as follows:
+</p>
+		<ol>
+			<li>
+~IF［
+%文書 の`宣言的に~refreshする？$ ~EQ ~T
+］
+⇒
+~RET
+◎
+If document's will declaratively refresh is true, then return.
+</li>
+			<li>
+%位置 ~LET %入力 の最初の`符号位置$を指している`位置~変数$
+◎
+Let position point at the first code point of input.
+</li>
+			<li>
+%入力 内の %位置 から`~ASCII空白を読飛ばす$
+◎
+Skip ASCII whitespace within input given position.
+</li>
+			<li>
+%秒数 ~LET 0
+◎
+Let time be 0.
+</li>
+			<li>
+%秒数~文字列 ~LET
+%入力 内の %位置 から
+`~ASCII数字$からなる`符号位置~並びを収集する$
+◎
+Collect a sequence of code points that are ASCII digits from input given position, and let the result be timeString.
+</li>
+			<li>
+~IF［
+%秒数~文字列 ~EQ 空~文字列
+］
+⇒
+~IF［
+%位置↗ ~NEQ ❝.
+］
+⇒
+~RET
+◎
+If timeString is the empty string, then:
+◎
+• If the code point in input pointed to by position is not U+002E (.), then return.
+</li>
+			<li>
+~ELSE
+⇒
+%秒数 ~LET `負でない整数として構文解析する$( %秒数~文字列 )
+◎
+Otherwise, set time to the result of parsing timeString using the rules for parsing non-negative integers.
+</li>
+			<li>
+%入力 内の %位置 から
+{ `~ASCII数字$, ❝. }
+からなる`符号位置~並びを収集する$
+— 結果は無視する。
+◎
+Collect a sequence of code points that are ASCII digits and U+002E FULL STOP characters (.) from input given position. Ignore any collected characters.
+</li>
+			<li>
+%~url~record ~LET %文書 の`~URL$doc
+◎
+Let urlRecord be document's URL.
+</li>
+			<li>
+<p>
+~IF［
+%位置↗ ~NEQ ε
+］：
+◎
+If position is not past the end of input, then:
+</p>
+				<ol>
+					<li>
+~IF［
+%位置↗ ~NIN { ❝;, ❝,, `~ASCII空白$ }
+］
+⇒
+~RET
+◎
+If the code point in input pointed to by position is not U+003B (;), U+002C (,), or ASCII whitespace, then return.
+</li>
+					<li>
+%入力 内の %位置 から`~ASCII空白を読飛ばす$
+◎
+Skip ASCII whitespace within input given position.
+</li>
+					<li>
+~IF［
+%位置↗ ~IN { ❝;, ❝, }
+］
+⇒
+%位置 ~INCBY 1
+◎
+If the code point in input pointed to by position is U+003B (;) or U+002C (,), then advance position to the next code point.
+</li>
+					<li>
+%入力 内の %位置 から`~ASCII空白を読飛ばす$
+◎
+Skip ASCII whitespace within input given position.
+</li>
+				</ol>
+			</li>
+			<li>
+<p>
+~IF［
+%位置↗ ~NEQ ε
+］：
+◎
+If position is not past the end of input, then:
+</p>
+				<ol>
+					<li>
+%~url文字列 ~LET
+%入力 内の %位置 以降の`符号位置$からなる部分文字列
+◎
+Let urlString be the substring of input from the code point at position to the end of the string.
+</li>
+					<li>
+~IF［
+%位置↗ ~NIN { ❝U, ❝u }
+］
+⇒
+~GOTO `引用符を飛ばす^i
+◎
+If the code point in input pointed to by position is U+0055 (U) or U+0075 (u), then advance position to the next code point. Otherwise, jump to the step labeled skip quotes.
+</li>
+					<li>
+~IF［
+( %位置 + 1 )↗ ~NIN { ❝R, ❝r }
+］
+⇒
+~GOTO `構文解析-^i
+◎
+If the code point in input pointed to by position is U+0052 (R) or U+0072 (r), then advance position to the next code point. Otherwise, jump to the step labeled parse.
+</li>
+					<li>
+~IF［
+( %位置 + 2 ) ↗ ~NIN { ❝L, ❝l }
+］
+⇒
+~GOTO `構文解析-^i
+◎
+If the code point in input pointed to by position is U+004C (L) or U+006C (l), then advance position to the next code point. Otherwise, jump to the step labeled parse.
+</li>
+					<li>
+%位置 ~INCBY 3
+◎
+↑</li>
+					<li>
+%入力 内の %位置 から`~ASCII空白を読飛ばす$
+◎
+Skip ASCII whitespace within input given position.
+</li>
+					<li>
+~IF［
+%位置↗ ~NEQ ❝=
+］
+⇒
+~GOTO `構文解析-^i
+◎
+If the code point in input pointed to by position is U+003D (=), then advance position to the next code point. Otherwise, jump to the step labeled parse.
+</li>
+					<li>
+%位置 ~INCBY 1
+◎
+↑</li>
+					<li>
+%入力 内の %位置 から`~ASCII空白を読飛ばす$
+◎
+Skip ASCII whitespace within input given position.
+</li>
+					<li>
+<p>
+`引用符を飛ばす^i：<br>
+~IF［
+%位置↗ ~IN { ❝', ❝" }
+］：
+</p>
+						<ol>
+							<li>
+%引用符 ~LET %位置↗
+</li>
+							<li>
+%位置 ~INCBY 1
+</li>
+							<li>
+%~url文字列 ~SET
+%入力 内の %位置 から
+%引用符 以外の`符号位置~並びを収集する$
+</li>
+						</ol>
+
+◎
+Skip quotes: If the code point in input pointed to by position is U+0027 (') or U+0022 ("), then let quote be that code point, and advance position to the next code point. Otherwise, let quote be the empty string.
+◎
+Set urlString to the substring of input from the code point at position to the end of the string.
+◎
+If quote is not the empty string, and there is a code point in urlString equal to quote, then truncate urlString at that code point, so that it and all subsequent code points are removed.
+</li>
+					<li>
+`構文解析-^i：<br>
+%~url~record ~LET %~url文字列 を %文書 に`相対的に構文解析-$した`結果の~URL~record$
+◎
+Parse: Parse urlString relative to document.＼
+</li>
+					<li>
+~IF［
+%~url~record ~EQ `失敗^i
+］
+⇒
+~RET
+◎
+If that fails, return. Otherwise, set urlRecord to the resulting URL record.
+</li>
+				</ol>
+			</li>
+			<li>
+%文書 の`宣言的に~refreshする？$ ~SET ~T
+◎
+Set document's will declaratively refresh to true.
+</li>
+			<li>
+%B ~LET %文書 が`属する閲覧文脈$
+◎
+↓</li>
+			<li>
+<p>
+任意選択で、次の手続き (A) 〜 (D) のうち，いずれか一つを遂行する：
+◎
+Perform one or more of the following steps:
+</p>
+				<ul>
+					<li>
+(A) ：
+						<ol>
+							<li>
+~IF［
+`閲覧文脈~sandbox化( 自動~特能 )~flag$ ~IN %文書 の`作動中の~sandbox法~flag集合$
+］
+⇒
+~RET
+</li>
+							<li>
+<p>
+次のうち，`後に^em生じた方の時点から，ある秒数だけ経過するまで待機する：
+</p>
+
+<ul ><li>%文書 が`完全に読込まれた時刻$
+</li><li>%meta ~NEQ ε の場合に限り， %meta がこの`文書の中へ挿入された$とき
+</li></ul>
+
+<p>
+この段における秒数は、利用者／~UA による選好も織り込んで，調整された結果とする。
+【！ある秒数が 2 つの時点ごとに個別に調整されるとしても、調整に統合されると見なせば論理的に同じ】
+</p>
+
+<p class="note">注記：
+ここでは、 %文書 
+— すなわち、この手続きの初期~時における %meta の`~node文書$ —
+を利用するのが重要になる。
+この時点の %meta の~node文書は、来たる~refreshに備えて，すでに変化しているかもしれず、
+%meta は常に与えられるとは限らない（~HTTP `Refresh$h ~headerの事例では）。
+</p>
+
+<p class="trans-note">【
+%~url~record が %文書 自身の~URLの場合、同じ文書~資源の~refreshが際限なく繰り~~返され得ることになる。
+】</p>
+
+							</li>
+							<li>
+~IF［
+%meta ~NEQ ε
+］~AND［
+利用者は~redirectを取消した
+］
+⇒
+~RET
+</li>
+							<li>
+%B を %~url~record へ`~navigate$する
+— 次を与える下で
+⇒＃
+`履歴~取扱い$V ~SET `置換-$i,
+`~source閲覧文脈$ ~SET %B
+</li>
+						</ol>
+
+◎
+After the refresh has come due (as defined below), if the user has not canceled the redirect and, if meta is given, document's active sandboxing flag set does not have the sandboxed automatic features browsing context flag set, then navigate document's browsing context to urlRecord, with historyHandling set to "replace" and the source browsing context set to document's browsing context.
+◎
+For the purposes of the previous paragraph, a refresh is said to have come due as soon as the later of the following two conditions occurs:
+◎
+• At least time seconds have elapsed since document's completely loaded time, adjusted to take into account user or user agent preferences.
+◎
+• If meta is given, at least time seconds have elapsed since meta was inserted into the document document, adjusted to take into account user or user agent preferences.
+◎
+It is important to use document here, and not meta's node document, as that might have changed between the initial set of steps and the refresh coming due and meta is not always given (in case of the HTTP `Refresh` header).
+</li>
+					<li>
+(B) ：
+利用者に~~許可を請う~UIを供した上で，利用者から~~許可されたなら次を行う
+⇒
+%B を %~url~record へ`~navigate$する
+— 次を与える下で
+⇒
+`~source閲覧文脈$ ~SET %B
+◎
+Provide the user with an interface that, when selected, navigates a browsing context to urlRecord, with document's browsing context as the source browsing context.
+</li>
+					<li>
+(C) ：
+手続き (A) を遂行しつつ，待機している間に並行して (B) も遂行する。
+◎
+↑</li>
+					<li>
+(D) ：
+何もしない。
+◎
+Do nothing.
+</li>
+				</ul>
+
+<p>
+加えて，~UAは、利用者に その演算の一部または全部の側面を（他のものに加えて）伝えてもヨイ
+— 例えば、~timerの状態, ~redirectの行先, 等々。
+◎
+In addition, the user agent may, as with anything, inform the user of any and all aspects of its operation, including the state of any timers, the destinations of any timed redirects, and so forth.
+</p>
+
+<p>
+`http-equiv$a 属性が`~refresh$st状態にある下では、
+`content$V は次のいずれかでなければナラナイ：
+◎
+For meta elements with an http-equiv attribute in the Refresh state, the content attribute must have a value consisting either of:
+</p>
+
+				<ul>
+					<li>
+(1) `妥当な負でない整数$
+◎
+just a valid non-negative integer, or
+</li>
+					<li>
+(2) 次の並び：
+<ol ><li>`妥当な負でない整数$
+</li><li>1 個の ❝;
+</li><li>1 個~以上の`~ASCII空白$
+</li><li>文字列 `URL^l に`~ASCII大小無視$で合致する文字列
+</li><li>1 個の ❝=
+</li><li>`妥当な~URL文字列$であって，その先頭の文字 ~NIN { ❝', ❝" } なるもの
+</li></ol>
+
+◎
+a valid non-negative integer, followed by a U+003B SEMICOLON character (;), followed by one or more ASCII whitespace, followed by a substring that is an ASCII case-insensitive match for the string "URL", followed by a U+003D EQUALS SIGN character (=), followed by a valid URL string that does not start with a literal U+0027 APOSTROPHE (') or U+0022 QUOTATION MARK (") character.
+</li>
+</ul>
+
+<p>
+上の (1), (2) における整数は、現在の~pageが［
+(1) の場合は 読込直されるまで ／
+(2) の場合は 並びの最後に与えられる`~URL$にある~pageに置換されるまで
+］の秒~数を表現する。
+◎
+In the former case, the integer represents a number of seconds before the page is to be reloaded; in the latter case the integer represents a number of seconds before the page is to be replaced by the page at the given URL.
+</p>
+			</li>
+		</ol>
+	</dd>
+	<dd class="example">
+<p>
+毎 5 分ごとに ~pageを~serverから自動的に読込直すようにする，
+`head$e 要素~内の~markup例（ニュース配信サイトの第一面など）：
+◎
+A news organization's front page could include the following markup in the page's head element, to ensure that the page automatically reloads from the server every five minutes:
+</p>
+
+`meta-refresh-1^xCode
+
+	</dd>
+	<dd class="example">
+<p>
+別の~pageに自動的に~refreshさせる~markup例（スライドショー用に，一連の~pageを順々に示すときなど）：
+◎
+A sequence of pages could be used as an automated slide show by making each page refresh to the next page in the sequence, using markup such as the following:
+</p>
+
+`meta-refresh-2^xCode
+
+	</dd>
+
+	<dt>`Set-Cookie@st （
+<code>`http-equiv^a="`set-cookie$v"</code>
+）</dt>
+	<dd>
+この~pragmaは不適合であり、効果は無い。
+◎
+This pragma is non-conforming and has no effect.
+</dd>
+	<dd>
+~UAには、この~pragmaを無視することが要求される。
+◎
+User agents are required to ignore this pragma.
+</dd>
+
+	<dt>`~X-UA-Compatible@st （
+<code>`http-equiv^a="`x-ua-compatible$v"</code>
+）</dt>
+	<dd>
+この~pragmaは、実施においては，
+Internet Explorer が より仕様に近くふるまうよう促すものである。
+◎
+In practice, this pragma encourages Internet Explorer to more closely follow the specifications.
+</dd>
+	<dd>
+`http-equiv$a 属性が`~X-UA-Compatible$st状態にある下では、
+`content$V は，［
+`IE=edge^l に`~ASCII大小無視$で合致する文字列
+］でなければナラナイ。
+◎
+For meta elements with an http-equiv attribute in the X-UA-Compatible state, the content attribute must have a value that is an ASCII case-insensitive match for the string "IE=edge".
+</dd>
+	<dd>
+~UAには、この~pragmaを無視することが要求される。
+◎
+User agents are required to ignore this pragma.
+</dd>
+
+	<dt>`~CSP@st （
+<code>`http-equiv^a="`content-security-policy$v"</code>
+）</dt>
+	<dd class="algorithm">
+<p>
+この~pragmaは、`文書$上の`~CSP$を`施行-$する：
+`CSP$r
+◎
+This pragma enforces a Content Security Policy on a Document. [CSP]
+</p>
+		<ol>
+			<li>
+~IF［
+`meta$V は `head$e 要素の子でない
+］
+⇒
+~RET
+◎
+If the meta element is not a child of a head element, return.
+</li>
+			<li>
+~IF［
+`content$V ~IN { ε,  空~文字列 }
+］
+⇒
+~RET
+◎
+If the meta element has no content attribute, or if that attribute's value is the empty string, then return.
+</li>
+			<li>
+%施策 ~LET `直列形の~CSPを構文解析する$( `content$V, `meta^l, `enforce^l )
+◎
+Let policy be the result of executing Content Security Policy's parse a serialized Content Security Policy algorithm on the meta element's content attribute's value, with a source of "meta", and a disposition of "enforce".
+</li>
+			<li>
+%施策 からすべての［
+`report-uri$dir,
+`frame-ancestors$dir,
+`sandbox$dir
+］`指令$を除去する
+◎
+Remove all occurrences of the report-uri, frame-ancestors, and sandbox directives from policy.
+</li>
+			<li>
+%施策 を`施行-$する
+◎
+Enforce the policy policy.
+</li>
+		</ol>
+	</dd>
+	<dd>
+`http-equiv$a 属性が`~CSP$st状態にある下では、
+`content$V は、`妥当な~CSP$でなければナラナイ
+— 加えて，［
+`report-uri$dir ／ `frame-ancestors$dir ／ `sandbox$dir
+］`指令$を包含してはナラナイ。
+この属性に与える`~CSP$は、現在の文書に対し`施行-$されることになる。
+`CSP$r
+◎
+For meta elements with an http-equiv attribute in the Content security policy state, the content attribute must have a value consisting of a valid Content Security Policy, but must not contain any report-uri, frame-ancestors, or sandbox directives. The Content Security Policy given in the content attribute will be enforced upon the current document. [CSP]
+	</dd>
+	<dd class="example">
+<p>
+`meta$e 要素による施策を利用して，［
+~inline~JSの実行を防止する ／ すべての~plugin内容を阻止する
+］ことにより、~XSS攻撃の~riskを軽減する例：
+◎
+A page might choose to mitigate the risk of cross-site scripting attacks by preventing the execution of inline JavaScript, as well as blocking all plugin content, using a policy such as the following:
+</p>
+
+`meta-csp-1^xCode
+
+</dd>
+</dl>
+
+<p>
+同じ文書~内の複数の `meta$e 要素が同時に次を満たしてはナラナイ
+⇒
+`http-equiv$a 属性を有していて，互いに同じ状態にある
+◎
+There must not be more than one meta element with any particular state in the document at a time.
+</p>
+
+				</section>
+				<section id="charset">
+<h4 title="Specifying the document's character encoding">4.2.5.4. 文書の符号化法の指定-法</h4>
+
+<p>
+`符号化法~宣言@
+は、［
+文書を格納する／伝送するために利用される`符号化法$
+］を指定する仕組みである。
+【この訳では、 “文字~符号化法” を，単に “符号化法” と略記する。】
+◎
+A character encoding declaration is a mechanism by which the character encoding used to store or transmit a document is specified.
+</p>
+
+<p>
+Encoding 標準は、
+`~UTF-8$`符号化法$の利用，および
+それを識別するためとして `utf-8^l `符号化法~label$の利用を要求する。
+それらの要件により、文書の`符号化法~宣言$は，存在するならば［
+`~ASCII大小無視$で `utf-8^l に合致する`符号化法~label$を指定する
+］ことが必要とされる。
+この宣言の有無に関わらず，文書を符号化するときに利用される実際の`符号化法$docは、`~UTF-8$でなければナラナイ。
+`ENCODING$r
+◎
+The Encoding standard requires use of the UTF-8 character encoding and requires use of the "utf-8" encoding label to identify it. Those requirements necessitate that the document's character encoding declaration, if it exists, specifies an encoding label using an ASCII case-insensitive match for "utf-8". Regardless of whether a character encoding declaration is present or not, the actual character encoding used to encode the document must be UTF-8. [ENCODING]
+</p>
+
+<p>
+上の規則を施行するためには、著作~toolは，新たに作成する文書に 既定で`~UTF-8$を利用しなければナラナイ。
+◎
+To enforce the above rules, authoring tools must default to using UTF-8 for newly-created documents.
+</p>
+
+<p>
+次の制約も適用される：
+◎
+The following restrictions also apply:
+</p>
+
+  <ul>
+	<li>
+符号化法~宣言は、いかなる種類の`文字~参照$や文字~escapeも利用することなく，直列化しなければナラナイ。
+◎
+The character encoding declaration must be serialized without the use of character references or character escapes of any kind.
+</li>
+	<li id="charset1024">
+<span id="charset512">
+符号化法~宣言を包含している要素~全体を、文書の先頭から 1024 ~byteまでの中に直列化しなければナラナイ。
+</span>
+◎
+The element containing the character encoding declaration must be serialized completely within the first 1024 bytes of the document.
+</li>
+</ul>
+
+<p>
+加えて、 `meta$e 要素に課される制約に因り，文書~内の `meta$e による符号化法~宣言は 1 個までに限られる。
+◎
+In addition, due to a number of restrictions on meta elements, there can only be one meta-based character encoding declaration per document.
+</p> 
+
+<div class="p">
+<p>
+`~HTML文書$が次をいずれも満たす場合…：
+</p>
+
+<ul ><li>その~fileは，~BOMから開始されていない
+</li><li>その`符号化法$は`~Content-Type~metadata$により明示的に与えられていない
+</li><li>`~iframe-srcdoc文書$でない
+</li></ul>
+
+<p>
+その文書には、次のいずれかの属性を有する `meta$e 要素を利用して，符号化法を指定しなければナラナイ
+⇒
+`charset$a 属性 ／
+`符号化法~宣言$st 状態にある `http-equiv$a 属性
+</p>
+
+◎
+If an HTML document does not start with a BOM, and its encoding is not explicitly given by Content-Type metadata, and the document is not an iframe srcdoc document, then the encoding must be specified using a meta element with a charset attribute or a meta element with an http-equiv attribute in the Encoding declaration state.
+</div>
+
+<div class="note">
+<p>注記：
+すべての文字が~ASCII範囲に符号化されている場合でも，符号化法~宣言は要求される（`~Content-Type~metadata$内に, または明示的に~file内に）。
+符号化法は、利用者が~formに手入力した非~ASCII文字や
+~scriptにより生成される~URL, 等々
+を処理するために必要になるので。
+◎
+A character encoding declaration is required (either in the Content-Type metadata or explicitly in the file) even when all characters are in the ASCII range, because a character encoding is needed to process non-ASCII characters entered by the user in forms, in URLs generated by scripts, and so forth.
+</p>
+
+<p>
+~UTF-8でない符号化法を利用した場合、~form提出や~URLの符号化-時に，期待されない結果をもたらし得る
+— それらは、既定で文書の`符号化法$docを利用するので。
+◎
+Using non-UTF-8 encodings can have unexpected results on form submission and URL encodings, which use the document's character encoding by default.
+</p>
+</div>
+
+<p>
+`~iframe-srcdoc文書$である文書には、`符号化法~宣言$が在ってはナラナイ（この事例では、文書はその `iframe$e を包含した文書の一部を成すので，その~sourceはすでに復号されている）。
+◎
+If the document is an iframe srcdoc document, the document must not have a character encoding declaration. (In this case, the source is already decoded, since it is part of the document that contained the iframe.)
+</p>
+
+<p>
+~XMLにおいては、必要とされるなら，~XML宣言を利用して 符号化法の情報を~inlineに与えるベキである。
+◎
+In XML, the XML declaration should be used for inline character encoding information, if necessary.
+</p>
+
+<div class="example">
+
+<p>
+~HTMLにおいては、作者は，次の~markupを文書の先頭近く（の `head$e 要素~内）に含ませれば、符号化法を`~UTF-8$に宣言できる：
+◎
+In HTML, to declare that the character encoding is UTF-8, the author could include the following markup near the top of the document (in the head element):
+</p>
+
+`meta-charset-1^xCode
+
+<p>
+~XMLにおいては、他の~markupに先立つ冒頭に，~XML宣言を利用することになる：
+◎
+In XML, the XML declaration would be used instead, at the very top of the markup:
+</p>
+
+`xml-encoding-1^xCode
+
+</div>
+
+				</section>
+			</section>
+			<section id="the-style-element">
+<h3 title="The style element">4.2.6. `style^e 要素</h3>
+
+<dl class="element-def">
+
+	<dt>`分類$</dt>
+	<dd>
+`~metadata内容$。
+◎
+Metadata content.
+</dd>
+
+	<dt>`この要素を利用できる文脈$</dt>
+	<dd>
+`~metadata内容$が期待される所。
+◎
+Where metadata content is expected.
+</dd>
+	<dd>
+`head$e 要素の子である `noscript$e 要素~内。
+◎
+In a noscript element that is a child of a head element.
+</dd>
+
+	<dt>`内容~model$</dt>
+	<dd>
+`適合t~stylesheet$を与える`~text$。
+◎
+Text that gives a conformant style sheet.
+</dd>
+
+	<dt>`text/html における~tag省略$</dt>
+	<dd>
+両~tagとも省略不可。
+◎
+Neither tag is omissible.
+</dd>
+
+	<dt>`内容~属性$</dt>
+	<dd>
+`大域~属性$
+◎
+Global attributes
+</dd>
+	<dd>
+`media$a
+— 適用-可能な媒体を与える。
+◎
+media — Applicable media
+</dd>
+	<dd>
+この要素の `~titleS$a 属性には
+<a href="#attr-style-title">特別な意味論</a>
+もあり，`~CSS~stylesheet集合~名$を与える。
+◎
+Also, the title attribute has special semantics on this element: CSS style sheet set name.
+</dd>
+
+	<dt>`~accessibilityの考慮点$</dt>
+	<dd>
+`style$AA
+◎
+For authors.
+For implementers.
+</dd>
+
+	<dt>`~DOM~interface$</dt>
+	<dd>
+
+<pre class="idl">
+[Exposed=Window]
+interface `HTMLStyleElement@I : `HTMLElement$I {
+  [`HTMLConstructor$] constructor();
+
+  [`CEReactions$] attribute DOMString `media$m;
+
+  // `HTMLStyleElement$obsMb
+};
+
+`HTMLStyleElement$I includes `LinkStyle$I;
+</pre>
+
+	</dd>
+</dl>
+
+<p>
+`style$e 要素により、作者は，~CSS~stylesheetを文書~内に埋込むことが可能になる。
+この要素は、~style付け処理~modelへの入力の一種であり，利用者向けの内容は`表現-$しない。
+◎
+The style element allows authors to embed CSS style sheets in their documents. The style element is one of several inputs to the styling processing model. The element does not represent content for the user.
+</p>
+
+<p>
+`media@a
+属性は、~styleをどの媒体に適用するかを述べる。
+この属性に指定する値は、`妥当な媒体~query~list$でなければナラナイ。
+~UAは、［
+`media$a 属性の値が`環境に合致して$いて, かつ関連な他の条件にも該当する
+］ならば，~styleを適用し、他の場合は適用しないモノトスル。
+◎
+The media attribute says which media the styles apply to. The value must be a valid media query list. The user agent must apply the styles when the media attribute's value matches the environment and the other relevant conditions apply, and must not apply them otherwise.
+</p>
+
+<p class="note">注記：
+~styleの視野は、例えば ~CSS内の `media^at ~blockの利用により，更に制限され得る。
+この仕様は、そのような更なる制約や要件は上書きしない。
+◎
+The styles might be further limited in scope, e.g. in CSS with the use of @media blocks. This specification does not override such further restrictions or requirements.
+</p>
+
+<p id="style-default-media">
+`media$a 属性が省略された場合の既定は、値 `all^l であり，~styleはすべての媒体に既定で適用されることを意味する。
+◎
+The default, if the media attribute is omitted, is "all", meaning that by default styles apply to all media.
+</p>
+
+<p id="title-on-style">
+`style$e 要素の
+`~titleS@a
+属性は、`~CSS~stylesheet集合$ `CSSOM$r を定義する†。
+要素が `~titleS$a 属性を有さない場合，その~titleもない††。
+`style$e 要素には、先祖の `title$a 属性は適用されない。
+また，要素が`文書~tree内$にない場合、その `~titleS$a 属性は無視される。
+◎
+The title attribute on style elements defines CSS style sheet sets. If the style element has no title attribute, then it has no title; the title attribute of ancestors does not apply to the style element. If the style element is not in a document tree, then the title attribute is ignored. [CSSOM]
+</p>
+
+<p class="trans-note">【†
+すなわち、要素が表現する~stylesheetの`~CSS~stylesheet集合~名$を与える。
+この記述は、要素に指定された~style付け言語は~CSSであることを前提にしている。
+】【††
+~style付け言語が~CSSならば、 “~titleがない” とは［
+~stylesheetの`~title$ss ~EQ 空~文字列
+］を意味する。
+】</p>
+
+<p class="note">注記：
+`link$e 要素の `title$aL 属性と同様、
+`~titleS$a 属性を有さない `style$e 要素は、親の `title$a 属性を継承せず，その~style~blockは単に~titleを持たなくなる
+— この `~titleS$a 属性は、その点で，他のほとんどの要素の大域~属性である `title$a 属性から相違する。
+◎
+The title attribute on style elements, like the title attribute on link elements, differs from the global title attribute in that a style block without a title does not inherit the title of the parent element: it merely has no title.
+</p>
+
+<p>
+`style$e 要素の`子~text内容$は、`適合t~stylesheet$を与えなければナラナイ。
+◎
+The child text content of a style element must be that of a conformant style sheet.
+</p>
+
+<hr>
+
+<p>
+`style$e 要素 %要素 に対し，次のいずれかが生じたときは、~UAは，
+%要素 の`~style~blockを更新する$~algoを走らすモノトスル：
+◎
+The user agent must run the update a style block algorithm whenever one of the following conditions occur:
+</p>
+
+<ul>
+	<li>
+<p>
+%要素 は、ある`~stack^iから~popされたとき。
+</p>
+
+<p>
+`~stack^iとは、次項のそれも含め，［
+`~HTML構文解析器$ ／ `~XML構文解析器$
+］の`~open要素~stack$を表すとする。
+</p>
+
+◎
+The element is popped off the stack of open elements of an HTML parser or XML parser.
+</li>
+	<li>
+%要素 は どの`~stack^i上にもない下で、［
+`接続されたとき$ ／ `切断されたとき$
+］。
+◎
+The element is not on the stack of open elements of an HTML parser or XML parser, and it becomes connected or disconnected.
+</li>
+	<li>
+%要素 の`子たち変更-時の手続き$が走るとき。
+◎
+The element's children changed steps run.
+</li>
+</ul>
+
+<div class="algorithm">
+<p>
+`~style~blockを更新する@
+~algoは、次に従うとする：
+◎
+The update a style block algorithm is as follows:
+</p>
+
+<ol>
+	<li>
+%要素 ~LET 当の `style$e 要素
+◎
+Let element be the style element.
+</li>
+	<li>
+~IF［
+%要素 には`~CSS~stylesheetが結付けられ$ている
+］
+⇒
+当の`~CSS~stylesheetを除去する$
+◎
+If element has an associated CSS style sheet, remove the CSS style sheet in question.
+</li>
+	<li>
+~IF［
+%要素 の`根$は`~shadow根$でも`文書$でもない
+］
+⇒
+~RET
+◎
+If element's root is neither a shadow root nor a document, then return.
+</li>
+	<li>
+<p>
+~IF［
+%要素 は `type$a 属性を有していて，その値は `~ASCII大小無視$で［
+空~文字列,  `text/css^l
+］いずれにも合致しない
+］
+⇒
+~RET
+◎
+If element's type attribute is present and its value is neither the empty string nor an ASCII case-insensitive match for "text/css", then return.
+</p>
+
+<p class="note">注記：
+特に、~parameterを伴う `type$a 値
+— `text/css; charset=utf-8^l など —
+は、この~algoを早くに ~RET させる。
+◎
+In particular, a type value with parameters, such as "text/css; charset=utf-8", will cause this algorithm to return early.
+</p>
+	</li>
+	<li>
+~IF［
+`要素における~inline型の挙動は~CSPにより阻止されるべきか？$
+( %要素, `style^l, %要素 の`子~text内容$ )
+の結果 ~EQ `阻止される^i
+`CSP$r
+］
+⇒
+~RET
+◎
+If the Should element's inline behavior be blocked by Content Security Policy? algorithm returns "Blocked" when executed upon the style element, "style", and the style element's child text content, then return. [CSP]
+</li>
+	<li>
+<p>
+次の~propを伴うように，`~CSS~stylesheetを作成する$：
+◎
+Create a CSS style sheet with the following properties:
+</p>
+		<dl>
+			<dt>`種別$ss</dt>
+			<dd>
+`text/css$c
+</dd>
+
+			<dt>`所有者~node$ss</dt>
+			<dd>
+%要素
+</dd>
+
+			<dt>`媒体$ss</dt>
+			<dd>
+<p>
+%要素 の `media$a 属性
+◎
+The media attribute of element.
+</dd>
+			<dd class="note">注記：
+これは、属性の現在の値の複製ではなく，（場合によってはこの時点では無い）属性への参照である。
+`CSSOM^cite が，属性が動的に［
+設定- ／ 変更- ／ 除去-
+］されたときに何が起こるかを定義する。
+◎
+This is a reference to the (possibly absent at this time) attribute, rather than a copy of the attribute's current value. CSSOM defines what happens when the attribute is dynamically set, changed, or removed.
+</dd>
+
+			<dt id="the-style-element:concept-css-style-sheet-title">`~title$ss</dt>
+			<dd>
+%要素 は`文書~tree内$に［
+あるならば %要素 の `~titleS$a 属性 ／
+ないならば 空~文字列
+］
+◎
+The title attribute of element, if element is in a document tree, or the empty string otherwise.
+</dd>
+			<dd class="note">注記：
+これも属性への`参照^emである。
+◎
+Again, this is a reference to the attribute.
+</dd>
+
+			<dt>`代替-~flag$ss</dt>
+			<dd>
+~F
+◎
+Unset.
+</dd>
+
+			<dt>`生成元clean~flag$ss</dt>
+			<dd>
+~T
+◎
+Set.
+</dd>
+
+			<dt>`所在$ss</dt>
+			<dt>`親~CSS~stylesheet$ss</dt>
+			<dt>`所有者~CSS規則$ss</dt>
+			<dd>
+いずれも ~NULL
+</dd>
+
+			<dt>`不能化~flag$ss</dt>
+			<dd>
+その既定の値
+【すなわち，~F】
+◎
+Left at its default value.
+</dd>
+
+			<dt>`~CSS規則~list$ss</dt>
+			<dd>
+初期化されないまま。
+◎
+Left uninitialized.
+</dd>
+			<dd class="XXX">
+これは~~正しく見えない。
+%要素 の`子~text内容$を利用しているはずなので。
+<a href="~HTMLissue/2997">issue #2997</a>
+◎
+This doesn't seem right. Presumably we should be using the element's child text content? Tracked as issue #2997.
+</dd>
+		</dl>
+	</li>
+</ol>
+</div>
+
+<div class="algorithm">
+<p>
+［
+~stylesheetに`必須の下位資源$が在る下で それを得する試みが完了するか,
+~stylesheetに`必須の下位資源$は無い下で ~stylesheetは構文解析され処理された
+］なら、~UAは，次の手続きを走らすモノトスル：
+◎
+Once the attempts to obtain the style sheet's critical subresources, if any, are complete, or, if the style sheet has no critical subresources, once the style sheet has been parsed and processed, the user agent must run these steps:
+</p>
+
+<ol>
+	<li>
+%要素 ~LET 当の~stylesheetに結付けられている `style$e 要素
+◎
+Let element be the style element associated with the style sheet in question.
+</li>
+	<li>
+%成功 ~LET ~T
+◎
+Let success be true.
+</li>
+	<li>
+<p>
+~IF［
+~stylesheetの ある`必須の下位資源$を得する試みは、何らかの理由により失敗した（例：
+~DNS~error ／ ~HTTP 404 応答 ／ 接続が早々に閉じられた ／ ~Content-Typeは~supportされていない）
+］
+⇒
+%成功 ~SET ~F
+◎
+If the attempts to obtain any of the style sheet's critical subresources failed for any reason (e.g., DNS error, HTTP 404 response, a connection being prematurely closed, unsupported Content-Type), set success to false.
+</p>
+
+<p class="note">注記：
+内容に特有な~error
+— 例：~CSS構文解析-時や~PNG復号-時の~errorなど —
+は、 %成功 には影響しない。
+◎
+Note that content-specific errors, e.g., CSS parse errors or PNG decoding errors, do not affect success.
+</p>
+	</li>
+	<li>
+<p>
+次を走らす`要素~taskを~queueする$( `~network用~task源$, %要素 )：
+◎
+Queue an element task on the networking task source given element and the following steps:
+</p>
+		<ol>
+			<li>
+~IF［
+%成功 ~EQ ~T
+］
+⇒
+%要素 に向けて名前 `load$et の`~eventを発火する$
+◎
+If success is true, fire an event named load at element.
+</li>
+			<li>
+~ELSE
+⇒
+%要素 に向けて名前 `error$et の`~eventを発火する$
+◎
+Otherwise, fire an event named error at element.
+</li>
+			<li>
+<p>
+~IF［
+%要素 は`~scriptを阻んでいる~stylesheetを供与して$いる
+］：
+◎
+If element contributes a script-blocking style sheet:
+</p>
+
+				<ol>
+					<li>
+~Assert:
+%要素 の`~node文書$の`~scriptを阻んでいる~stylesheet~counter$ ~GT 0
+◎
+Assert: element's node document's script-blocking style sheet counter is greater than 0.
+</li>
+					<li>
+%要素 の`~node文書$の`~scriptを阻んでいる~stylesheet~counter$ ~DECBY 1
+◎
+Decrement element's node document's script-blocking style sheet counter by 1.
+</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<p>
+`style$e 要素に対しては、~stylesheetに`必須の下位資源$があれば，それを得するすべての試みが完了するまで、要素の`~node文書$に対する~load~eventを`遅延-$するモノトスル。
+◎
+The element must delay the load event of the element's node document until all the attempts to obtain the style sheet's critical subresources, if any, are complete.
+</p>
+
+<p class="note">注記：
+この仕様は，~style~systemを指定しないが、ほとんどの~web~browserは，~CSSを~supportするものと期待される。
+`CSS$r
+◎
+This specification does not specify a style system, but CSS is expected to be supported by most web browsers. [CSS]
+</p>
+
+<p>
+`media@m
+~IDL属性は、
+`media$a 内容~属性を`反映する$モノトスル。
+◎
+The media IDL attribute must reflect the content attribute of the same name.
+</p>
+
+<p>
+この要素も `LinkStyle$I ~interface `CSSOM$r を実装する。
+◎
+The LinkStyle interface is also implemented by this element. [CSSOM]
+</p>
+
+<div class="example">
+
+<p>
+適切な要素を利用すれば、文書に~styleをあてがい直すことも容易になる。
+次の文書では、他の部分は既定の~styleに保ちながら，
+`em^e で強勢された~textには，~italicでなくした上で明るい赤にする~styleがあてがわれている。
+◎
+The following document has its stress emphasis styled as bright red text rather than italics text, while leaving titles of works and Latin words in their default italics. It shows how using appropriate elements enables easier restyling of documents.
+</p>
+
+`style-1^xCode
+
+</div>
+
+			</section>
+			<section id="interactions-of-styling-and-scripting">
+<h3 title="Interactions of styling and scripting">4.2.7.~style付けと~scriptingとの相互作用</h3>
+
+<p>
+~stylesheetは他の資源を参照していない場合（例： `style$e 要素に与された内部~stylesheetであって， `import^at 規則を含んでいない）、
+~style規則は，`即時$に~scriptに可用にされるモノトスル。
+他の場合、~style規則は、`~event~loop$が`描画を更新する$ 段に達した時点で~scriptに可用にされるモノトスル。
+◎
+If the style sheet referenced no other resources (e.g., it was an internal style sheet given by a style element with no @import rules), then the style rules must be immediately made available to script; otherwise, the style rules must only be made available to script once the event loop reaches its update the rendering step.
+</p>
+
+<p id="a-style-sheet-that-is-blocking-scripts">
+［
+`~HTML構文解析器$／`~XML構文解析器$
+］の`文書$に文脈~下にある要素 %要素 は、次に挙げる条件をすべて満たすならば
+`~scriptを阻んでいる~stylesheetを供与して@
+いるとされる：
+◎
+An element el in the context of a Document of an HTML parser or XML parser contributes a script-blocking style sheet if all of the following conditions are true:
+</p>
+
+<ul>
+	<li>
+%要素 は、 %構文解析器 により作成された
+◎
+el was created by that Document's parser.
+</li>
+	<li>
+<p>
+次のいずれかが満たされる：
+</p>
+		<ul>
+			<li>
+%要素 は `style$e 要素である
+</li>
+			<li>
+<p>
+%要素 は、次をいずれも満たす `link$e 要素である：
+</p>
+				<ul>
+					<li>
+%要素 は、その作成-時には
+<a href="~HTMLlinks#link-type-stylesheet">~style付け~modelに供与する外部~資源~link</a>であった
+</li>
+					<li>
+%要素 の `media$aL 属性の値は、`環境に合致して$いる
+</li>
+				</ul>
+			</li>
+		</ul>
+◎
+el is either a style element or a link element that was an external resource link that contributes to the styling processing model when the el was created by the parser.
+◎
+If the el is a link element, it's media attribute's value matches the environment.
+</li>
+	<li>
+%構文解析器 が %要素 を作成した時点で、 %要素 による~stylesheetは可能化された
+◎
+el's style sheet was enabled when the element was created by the parser.
+</li>
+	<li>
+`~event~loop$の
+<a href="~WAPI#step1">最初の段</a>
+に最後に達した時点で［
+%要素 の`根$ ~EQ %文書
+］であった
+◎
+The last time the event loop reached step 1, el's root was that Document.
+</li>
+	<li>
+<p>
+~UAは %要素 による~stylesheetの読込ngをまだを~give-upしていない
+— ~UAは、~stylesheetの読込ngをいつでも~give-upしてヨイ。
+【“~give-up” とは、下の注記から，~stylesheetの処理を放棄するとは限らず，後回しにすることも含むようだ。】
+◎
+The user agent hasn't given up on loading that particular style sheet yet. A user agent may give up on loading a style sheet at any time.
+</p>
+
+<p class="note">注記：
+~stylesheetの読込nを終える前に~give-upすることは、それが最終的に読込まれるとするなら，~scriptが不正な情報で演算する結果になることを意味する。
+例えば、その~stylesheetは，ある要素の色を緑に設定するとする。
+結果の~styleを検分する~scriptは，~stylesheetが読込まれる前に実行され，その要素は黒（あるいは何か既定の色）であると見出すことになる結果、道を誤るかもしれない（~pageの他所に用いる色を緑でなく黒にしてしまうなど）。
+実装者は、~scriptが不正な情報を利用することと，低速な~network要請が終わるまで何もしないことによる処理能への影響iとの兼ね合いを図る必要がある。
+◎
+Giving up on a style sheet before the style sheet loads, if the style sheet eventually does still load, means that the script might end up operating with incorrect information. For example, if a style sheet sets the color of an element to green, but a script that inspects the resulting style is executed before the sheet is loaded, the script will find that the element is black (or whatever the default color is), and might thus make poor choices (e.g., deciding to use black as the color elsewhere on the page, instead of green). Implementers have to balance the likelihood of a script using incorrect information with the performance impact of doing nothing while waiting for a slow network request to finish.
+</p>
+	</li>
+</ul>
+
+<p class="XXX">
+上の規則に相当するものは［
+`~xml-stylesheet$c 処理命令 ／~HTTP `Link$h ~header
+］にも適用するものと期待される。
+しかしながら、まだ くまなく究明されていない。
+◎
+It is expected that counterparts to the above rules also apply to &lt;?xml-stylesheet?&gt; PIs and HTTP `Link` headers. However, this has not yet been thoroughly investigated.
+</p>
+
+<p>
+各 `文書$には
+`~scriptを阻んでいる~stylesheet~counter@
+を持つ
+— それは~~整数であり，初期~時には 0 とする。
+◎
+A Document has a script-blocking style sheet counter, which is a number, initially 0.
+</p>
+
+<p>
+所与の`文書$ %文書 は、次のいずれかを満たす間は
+`~scriptを阻んでいる~stylesheetは在る@
+とされる：
+◎
+A Document has a style sheet that is blocking scripts＼
+</p>
+<ul>
+	<li>
+%文書 の`~scriptを阻んでいる~stylesheet~counter$ ~GT 0
+◎
+if its script-blocking style sheet counter is greater than 0, or＼
+</li>
+	<li>
+［
+%文書 が`属する閲覧文脈$ %B ~NEQ ~NULL
+］~AND［
+%B の`容器~文書$ %D ~NEQ ~NULL
+］~AND［
+%D の`~scriptを阻んでいる~stylesheet~counter$ ~GT 0
+］
+◎
+if that Document has a non-null browsing context whose container document is non-null and has a script-blocking style sheet counter greater than 0.
+</li>
+</ul>
+
+<p>
+`~scriptを阻んでいる~stylesheetは無い@
+は、
+`~scriptを阻んでいる~stylesheetは在る$
+の否定である。
+◎
+A Document has no style sheet that is blocking scripts if it does not have a style sheet that is blocking scripts as defined in the previous paragraph.
+</p>
+
+			</section>
+		</section>
+</main>

@@ -1,0 +1,2578 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>Permissions（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-w3c.css" type="text/css" />
+
+<style>
+samp {
+	white-space: nowrap;
+	background: #F0F0F0;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+}
+
+i {
+	text-decoration: underline;
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN0',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r': // 文献
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'l': //literal
+case 'pS':
+case 'pN':
+	text = `"<code class="literal">${key}</code>"`;
+	break;
+case 'mPsP':
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'sl': // js slot
+	text = `[[${key}]]`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:Permissions
+spec_date:2020-07-24
+trans_update:2020-07-24
+source_checked:191030
+page_state_key:WEBAPPSEC
+original_url:https://w3c.github.io/permissions/
+	abbr_url:PERMISSIONS
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+conformance:w3c
+copyright:2020,use
+trans_1st_pub:2017-03-14
+
+
+●●class_map
+et:event-type
+M:method
+a:attr
+sl:js-slot
+
+●●tag_map
+p:var
+a:code
+I:code
+m:code
+mPsP:code
+et:code
+M:code
+sl:span
+c:code
+i:i
+
+●●original_id_map
+
+●●mdn_urls
+permissions:API/Permissions
+permissionstatus:API/PermissionStatus
+	dictdef-permissionsetparameters:API/PermissionSetParameters
+	dictdef-permissiondescriptor:API/PermissionDescriptor
+	dictdef-pushpermissiondescriptor:API/PushPermissionDescriptor
+	dictdef-midipermissiondescriptor:API/MidiPermissionDescriptor
+	dictdef-devicepermissiondescriptor:API/DevicePermissionDescriptor
+	enumdef-permissionname:API/PermissionName
+	enumdef-permissionstate:API/PermissionState
+
+●●link_map
+
+	●IDL
+SameObject:~WEBIDLjs#SameObject
+Exposed:~WEBIDLjs#Exposed
+
+object:~WEBIDL#idl-object
+boolean:~WEBIDL#idl-boolean
+DOMString:~WEBIDL#idl-DOMString
+
+pN.geolocation:#dom-permissionname-geolocation
+pN.notifications:#dom-permissionname-notifications
+pN.push:#dom-permissionname-push
+pN.midi:#dom-permissionname-midi
+pN.camera:#dom-permissionname-camera
+pN.microphone:#dom-permissionname-microphone
+pN.speaker-selection:#dom-permissionname-speaker-selection
+pN.device-info:#dom-permissionname-device-info
+pN.background-fetch:#dom-permissionname-background-fetch
+pN.background-sync:#dom-permissionname-background-sync
+pN.bluetooth:https://webbluetoothcg.github.io/web-bluetooth/#dom-permissionname-bluetooth
+pN.persistent-storage:~STORAGE#dom-permissionname-persistent-storage
+pN.ambient-light-sensor:#dom-permissionname-ambient-light-sensor
+pN.accelerometer:#dom-permissionname-accelerometer
+pN.gyroscope:#dom-permissionname-gyroscope
+pN.magnetometer:#dom-permissionname-magnetometer
+pN.clipboard-read:#dom-permissionname-clipboard-read
+pN.clipboard-write:#dom-permissionname-clipboard-write
+pN.display-capture:#dom-permissionname-display-capture
+pN.nfc:#dom-permissionname-nfc
+
+pS.denied:#dom-permissionstate-denied
+pS.granted:#dom-permissionstate-granted
+pS.prompt:#dom-permissionstate-prompt
+
+I.PermissionDescriptor:#dictdef-permissiondescriptor
+I.PermissionName:#enumdef-permissionname
+I.PermissionState:#enumdef-permissionstate
+I.PermissionStatus:#permissionstatus
+I.Permissions:#permissions
+I.PermissionSetParameters:#dictdef-permissionsetparameters
+I.PushPermissionDescriptor:#dictdef-pushpermissiondescriptor
+I.MidiPermissionDescriptor:#dictdef-midipermissiondescriptor
+I.DevicePermissionDescriptor:#dictdef-devicepermissiondescriptor
+I.CameraDevicePermissionDescriptor:#dictdef-cameradevicepermissiondescriptor
+
+I.BluetoothLEScanFilterInit:https://webbluetoothcg.github.io/web-bluetooth/#dictdef-bluetoothlescanfilterinit
+I.BluetoothServiceUUID:https://webbluetoothcg.github.io/web-bluetooth/#typedefdef-bluetoothserviceuuid
+I.Document:~DOM4#document
+I.EventHandler:~WAPI#eventhandler
+I.EventTarget:~DOM4#eventtarget
+I.Navigator:~HTMLnavigator#navigator
+I.Promise:~WEBIDL#idl-promise
+I.WorkerNavigator:~WORKERS#workernavigator
+
+
+m.getUserMedia:https://w3c.github.io/mediacapture-main/#dom-mediadevices-getusermedia
+m.deviceId:#dom-devicepermissiondescriptor-deviceid
+m.panTiltZoom:#dom-cameradevicepermissiondescriptor-pantiltzoom
+m.name:#dom-permissiondescriptor-name
+m.onchange:#dom-permissionstatus-onchange
+m.query:#dom-permissions-query
+m.state:#dom-permissionstatus-state
+
+m.permissions:#dom-navigator-permissions
+m.~permissions0:#dom-workernavigator-permissions
+m.userVisibleOnly:#dom-pushpermissiondescriptor-uservisibleonly
+m.sysex:#dom-midipermissiondescriptor-sysex
+
+mPsP.descriptor:#dom-permissionsetparameters-descriptor
+mPsP.oneRealm:#dom-permissionsetparameters-onerealm
+mPsP.state:#dom-permissionsetparameters-state
+
+sl.query:#dom-permissionstatus-query-slot
+c.deviceId:https://w3c.github.io/mediacapture-main/#deviceid
+et.devicechange:https://w3c.github.io/mediacapture-main/#devicechange
+
+	●用語
+適切な記述子~型の値に変換する:#_convert-object-to-descriptor-value
+汎用~sensor許可~revocation~algo:~SENSORS#generic-sensor-permission-revocation-algorithm
+
+	Examples~section:#examples
+~PermissionStatus更新~手続き:#PermissionStatus-update
+許可~task源:#permission-task-source
+許可を~queryする:#query-a-permission
+~secureでない文脈にて許容される~flag:#allowed-in-non-secure-contexts
+~secureでない文脈にて許容されて:#allowed-in-non-secure-contexts
+側面:#aspects
+真偽-特能:#boolean-feature
+
+真偽-許可を~queryする:#boolean-permission-query-algorithm
+~PermissionStatusを作成する:#create-a-permissionstatus
+~extra許可~data拘束:#extra-permission-data-constraints
+~extra許可~data型:#extra-permission-data-type
+~extra許可~data:#extra-permission-data
+利用者の意図についての新たな情報:#new-information-about-the-users-intent
+許可~記述子~型:#permission-descriptor-type
+許可~query~algo:#permission-query-algorithm
+許可~結果型:#permission-result-type
+許可~revocation~algo:#permission-revocation-algorithm
+許可~状態~拘束:#permission-state-constraints
+許可~状態:#permission-state
+強力な特能:#powerful-feature
+識別される特能:#_powerful-feature-by-name
+選ぶよう利用者に~prompt:#prompt-the-user-to-choose
+利用する許可を要請-:#request-permission-to-use
+より強い:#permissiondescriptor-stronger-than
+暗黙的な兆候:#implicit-signals
+
+設定-許可:#set-permission
+
+	●用語（外部
+	~UA:~INFRA#user-agent
+~list:~INFRA#list
+付加する:~INFRA#list-append
+
+現在の~realm:~TC39#current-realm
+~realm:~TC39#sec-code-realms
+
+~IDL値に変換-:~WEBIDLjs#dfn-convert-ecmascript-to-idl-value
+
+新たな~promise:~WEBIDLjs#a-new-promise
+却下される~promise:~WEBIDLjs#a-promise-rejected-with
+解決する:~WEBIDLjs#resolve
+
+~eventを発火する:~DOM4#concept-event-fire
+
+並列的:~HTMLINFRA#in-parallel
+
+利用は許容されて:~HEembed#allowed-to-use
+
+同一-生成元:~ORIGIN#same-origin
+
+結付けられている文書:~WINDOW#concept-document-window
+対応する閲覧文脈:~WINDOW#window-bc
+
+作動中の文書:~BROWSERS#active-document
+
+現在の大域~obj:~WAPI#current-global-object
+設定群~obj:~WAPI#concept-realm-settings-object
+関連な設定群~obj:~WAPI#relevant-settings-object
+現在の設定群~obj:~WAPI#current-settings-object
+環境~設定群~obj:~WAPI#environment-settings-object
+いくつかアリな設定群~obj:~WAPI#realms-settings-objects-global-objects
+enV.生成元:~WAPI#concept-settings-object-origin
+enV.大域~obj:~WAPI#concept-settings-object-global
+enV.担当の~event~loop:~WAPI#responsible-event-loop
+enV.~secureな文脈:~WAPI#secure-context
+	enV.~secureでない文脈:~WAPI#non-secure-context
+
+~event~handler~event型:~WAPI#event-handler-event-type
+~event~handler:~WAPI#event-handlers
+~task:~WAPI#concept-task
+~taskを~queueする:~WAPI#queue-a-task
+暗黙の~event~loop:~WAPI#implied-event-loop
+
+~secureでない文脈:~SECURE-CONTEXT#non-secure-contexts
+~secureな文脈:~SECURE-CONTEXT#secure-contexts
+
+施策により制御される特能:~PERMISSIONS-POLICY#policy-controlled-feature
+
+i.~error:~WEBDRIVER#dfn-error
+i.成功:~WEBDRIVER#dfn-success
+拡張~command:~WEBDRIVER#dfn-extension-commands
+URI Template:~WEBDRIVER#dfn-extension-command-uri-template
+現在の閲覧文脈:~WEBDRIVER#dfn-current-browsing-context
+~error~code:~WEBDRIVER#dfn-error-code
+妥当でない引数:~WEBDRIVER#dfn-invalid-argument
+局所端:~WEBDRIVER#dfn-local-ends
+	＊原文誤 dfn-local-end
+遠隔端の手続き:~WEBDRIVER#dfn-remote-end-steps
+~session:~WEBDRIVER#dfn-session
+
+許可~要請~algo:https://wicg.github.io/permissions-request/#permission-request-algorithm
+
+●●words_table1
+WEBDRIVER:https://w3c.github.io/webdriver/
+permissions0:permissions
+
+●●words_table
+
+	●仕様
+下位型:subtype::~
+	による:reason
+意向:intention:~
+推定-:infer:~
+曖昧:vague:~
+未指定の:unspecifiedな:~
+末端利用者:end user:~:::エンドユーザ
+枠組み:framework:~
+略記:shorthand:~
+選択的:selective:~
+選択肢:option:~
+見越して:anticipateして:~
+集成-:aggregate:~
+探求-:explore:~
+学習-:learn:~
+解決策:solution:~
+暫定的:provisional:~
+模倣-:simulate:~
+申請-:file:~
+	省略時は:optional
+	~web~site:website
+	視点で:notion
+	視点による:impression
+	testing
+	責を負う:responsible
+	適切でない:inappropriate
+	裁定を下した:made 〜 decision
+	至る:lead
+	満た:satisfy
+	previous:
+	whichever
+	〜も満たす:taking into account
+	-:aware
+	~~判明する:the client knows
+	収まらな:fit
+	~~伝える:contact
+	~solution
+	処する:deal with
+
+	●IDL／event／処理
+
+main::::メイン
+
+	~call元:caller
+	~call元:calling
+	invocation
+	設定群:target
+
+	●許可／保安
+revokeされ::取り消され
+revocation::取り消し
+PermissionStatus:
+結果型:result type::~
+指紋:fingerprint::~
+排他的:exclusive:~
+敵対者:adversary:~
+install::::インストール
+兆候:signals::~
+頻繁:frequent:~
+	frequency
+近過去:recent:~
+extra::追加の
+	recency
+	可能性が高い:more likely to
+	勧める:advised
+	~~注意深くあたる:exercise caution
+
+	●許可対象
+chat::::チャット
+clipboard::::クリップボード
+screen-capture:screen capture:::スクリーンキャプチャ
+
+Bluetooth:
+Geolocation:
+Notifications:
+Permissions:
+Background:
+MIDI:
+NFC:
+地理所在:geolocation:~
+環境光:ambient light:~
+camera::::カメラ
+磁力計:magnetometer::~
+gyroscope::::ジャイロスコープ
+加速度計:accelerometer::~
+sensor::::センサ
+地域news:local news:::地域ニュース:ローカルニュース
+読取n:read::読み取り
+書込n:write::書き込み
+
+	●未分類（動詞
+track::::トラック
+自動化:automation:~
+
+	続ける:keep
+	在る:exist
+	増やす:increase する
+	-:contain
+	指す:refer
+	-:made
+
+	●未分類
+prompt:
+退ける:dismissする:~
+半順序:partial order:~
+log::::ログ
+command::::コマンド
+局所端:local end::~::ローカルエンド
+遠隔端:remote end::~::リモートエンド
+オン:on::~
+
+	類別される:class
+	-:client
+	-:parameter
+	目立たない:discreet
+	選ぶ:choose
+	選んだもの:choice
+	終わる:finish
+	読み取り法:reading
+	渡す:pass
+	enum
+	geolocation
+	midi
+	-:moment
+
+	根~記述子:rootDesc
+	前回~結果:previousResult
+	有型~記述子:typedDescriptor
+	許可~記述子:permissionDesc
+	記述子 A:descriptorA
+	記述子 B:descriptorB
+
+	●指示語
+	一つ:one
+	いくつも:many
+	当の:relevant
+	近い:close to
+	この時点で:now has
+	後続の:subsequent
+	数多の:lots of
+	前もって:beforehand
+	単に:merely
+	何もしない:doing nothing 
+	他の部分:any other parts
+	最後に:latest
+
+
+
+●●ref_normative
+
+[DOM]
+    Anne van Kesteren. DOM Standard. Living Standard. URL: https://dom.spec.whatwg.org/ 
+[ECMASCRIPT]
+    ECMAScript Language Specification. URL: https://tc39.es/ecma262/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[INFRA]
+    Anne van Kesteren; Domenic Denicola. Infra Standard. Living Standard. URL: https://infra.spec.whatwg.org/ 
+[PERMISSIONS-POLICY-1]
+    Ian Clelland. Permissions Policy. 16 July 2020. WD. URL: https://www.w3.org/TR/permissions-policy-1/ 
+[PERMISSIONS-REQUEST]
+    Requesting Permissions. cg-draft. URL: https://wicg.github.io/permissions-request/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[SECURE-CONTEXTS]
+    Mike West. Secure Contexts. 15 September 2016. CR. URL: https://www.w3.org/TR/secure-contexts/ 
+[STORAGE]
+    Anne van Kesteren. Storage Standard. Living Standard. URL: https://storage.spec.whatwg.org/ 
+[WEB-BLUETOOTH]
+    Jeffrey Yasskin. Web Bluetooth. Draft Community Group Report. URL: https://webbluetoothcg.github.io/web-bluetooth/ 
+[WebDriver]
+    Simon Stewart; David Burns. WebDriver. 5 June 2018. REC. URL: https://www.w3.org/TR/webdriver1/ 
+[WebIDL]
+    Boris Zbarsky. Web IDL. 15 December 2016. ED. URL: https://heycam.github.io/webidl/ 
+
+●●ref_informative
+
+[ACCELEROMETER]
+    Anssi Kostiainen. Accelerometer. 12 December 2019. CR. URL: https://www.w3.org/TR/accelerometer/ 
+[AMBIENT-LIGHT]
+    Anssi Kostiainen. Ambient Light Sensor. 7 March 2019. WD. URL: https://www.w3.org/TR/ambient-light/ 
+[AUDIO-OUTPUT]
+    Justin Uberti; Guido Urdaneta. Audio Output Devices API. 3 October 2017. CR. URL: https://www.w3.org/TR/audio-output/ 
+[BACKGROUND-FETCH]
+    Background Fetch. cg-draft. URL: https://wicg.github.io/background-fetch/ 
+[CLIPBOARD-APIS]
+    Gary Kacmarcik; Grisha Lyukshin. Clipboard API and events. 3 June 2020. WD. URL: https://www.w3.org/TR/clipboard-apis/ 
+[geolocation-API]
+    Andrei Popescu. Geolocation API Specification 2nd Edition. 8 November 2016. REC. URL: https://www.w3.org/TR/geolocation-API/ 
+[GETUSERMEDIA]
+    Daniel Burnett; et al. Media Capture and Streams. 2 July 2019. CR. URL: https://www.w3.org/TR/mediacapture-streams/ 
+[GYROSCOPE]
+    Anssi Kostiainen. Gyroscope. 12 December 2019. CR. URL: https://www.w3.org/TR/gyroscope/ 
+[MAGNETOMETER]
+    Anssi Kostiainen; Rijubrata Bhaumik. Magnetometer. 7 March 2019. WD. URL: https://www.w3.org/TR/magnetometer/ 
+[NOTIFICATIONS]
+    Anne van Kesteren. Notifications API Standard. Living Standard. URL: https://notifications.spec.whatwg.org/ 
+[PUSH-API]
+    Peter Beverloo; Martin Thomson. Push API. 4 February 2020. WD. URL: https://www.w3.org/TR/push-api/ 
+[SCREEN-CAPTURE]
+    Martin Thomson; et al. Screen Capture. 19 November 2019. WD. URL: https://www.w3.org/TR/screen-capture/ 
+[WEB-BACKGROUND-SYNC]
+    Web Background Synchronization. cg-draft. URL: https://wicg.github.io/background-sync/spec/ 
+[WEB-NFC]
+    Web NFC API. ED. URL: https://w3c.github.io/web-nfc/ 
+[WEBMIDI]
+    Chris Wilson; Jussi Kalliokoski. Web MIDI API. 17 March 2015. WD. URL: https://www.w3.org/TR/webmidi/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">Permissions</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/permissions/
+
+編集者草案
+	https://w3c.github.io/permissions/
+
+以前のバージョン
+	https://www.w3.org/TR/2017/WD-permissions-20170925/
+	https://www.w3.org/TR/2015/WD-permissions-20150407/
+
+フィードバック
+	<a href="mailto:public-webappsec@w3.org?subject=%5Bpermissions%5D%20YOUR%20TOPIC%20HERE">public-webappsec@w3.org</a> with subject line “<kbd>[permissions] <i>… message topic …</i></kbd>”
+
+最新の課題
+	<a href="https://github.com/w3c/permissions/issues/">GitHub</a>
+
+編集
+	Mounir Lamouri (Google Inc.)
+	Marcos Cáceres (Mozilla)
+	Jeffrey Yasskin (Google Inc.)
+
+Participate:
+	<a href="https://github.com/w3c/permissions">We are on Github.</a>
+	<a href="https://github.com/w3c/permissions/issues">File a bug.</a>
+	<a href="https://github.com/w3c/permissions/commits/master">Commit history.</a>
+
+実装状況
+	<a href="https://code.google.com/p/chromium/issues/detail?id=437770">Blink/Chromium</a>
+	<a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1105827">Gecko</a>
+
+
+</script>
+
+
+
+<body>
+
+<header>
+
+
+	<hgroup>
+<h1 id="title">Permissions</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+<cite>Permissions Standard</cite>
+（ “許可~標準” ）は、［
+~browser許可とヤリトリする必要がある他の仕様
+］のための，共通な基盤を定義する。
+それはまた、~web~appが所与の許可に対する［
+状態s変化を~queryする ／
+状態s変更を要請できるようにする
+］ための~APIを定義する。
+◎
+The Permissions Standard defines common infrastructure for other specifications that need to interact with browser permissions. It also defines an API to allow web applications to query and request changes to the status of a given permission.
+</p>
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+<!-- 
+この節では、発行時点における…
+ -->
+これは編集者草案の公の複製です…
+【以下、この節の他の内容は <a href="w3c-common-ja.html#status" >W3C 日本語訳 共通ページ</a>に委譲。】
+</p>
+
+<p>
+<strong>
+この文書に対する変更点は
+<a href="https://github.com/w3c/webappsec">https://github.com/w3c/webappsec</a>
+にて追跡できます。
+</strong>
+◎
+Changes to this document may be tracked at https://github.com/w3c/webappsec.
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="scope-of-this-document">
+<h2 title="Scope of this document">1. この文書の視野</h2>
+
+~INFORMATIVE
+
+<p>
+この文書は、~APIが~Web~platform上の強力な特能を利用する許可のための~model, およびそのような特能の現在の許可~状態を~queryする~APIを指定する。
+◎
+This document specifies a model for permissions to use powerful features on the Web platform and an API to query the current permission state of those features.
+</p>
+
+<p>
+現在の~web~APIには、許可を処する仕方が異なるものがいくつかある。
+例えば `notifications$r ~APIは、開発者が明示的に許可を要請して，許可~状態sを検査できるようにする。
+~APIを利用しようと試行したときに限り，状態sを~web~pageに公開するものもある。
+例えば `geolocation-API$r は、開発者が前もって検査するのを許容することなく，許可が是認されていなければ失敗する。
+◎
+Current Web APIs have different ways to deal with permissions. For example, the [notifications] API allows developers to request a permission and check the permission status explicitly. Others expose the status to web pages when they try to use the API, like the [geolocation-API] which fails if the permission was not granted without allowing the developer to check beforehand.
+</p>
+
+<p>
+`query()$m 関数は、許可~promptがいつ示されるかを制御する~toolを開発者に供する。
+◎
+The query() function provides a tool for developers to control when permission prompts are shown.
+</p>
+
+<p>
+この文書に述べる解決策は，拡張できるように意味されているが、~web~platformにて可用な［
+現在の／将来の
+］許可~すべてに適用-可能になるとは期待されてはいない。
+許可~modelを孕む仕様を策定している~WGは、その~modelが この文書に述べる~modelに収まらないときには，
+<a href="https://github.com/w3c/permissions/issues">課題を申請して</a>
+そのことを編集者に~~伝えるべきである。
+◎
+The solution described in this document is meant to be extensible, but isn’t expected to be applicable to all the current and future permissions available in the web platform. Working Groups that are creating specifications whose permission model doesn’t fit in the model described in this document should contact the editors by filing an issue.
+</p>
+
+	</section>
+	<section id="privacy-considerations">
+<h2 title="Privacy considerations">2. ~privacyの考慮点 </h2>
+
+~INFORMATIVE
+<p>
+ある敵対者は、末端利用者に対応する “指紋” を作成するための要素として，`許可~状態$も利用できる。
+敵対者は，実際に~APIを利用して すでに許可の状態を決定できるが、それは，末端利用者に対し許可~要請~UIが呈示される結果に至ることが多い（その許可が すでに是認されている（ `granted$pS ）場合は除き）。
+したがって，この~APIは、~web~siteに新たな指紋収集~情報を公開することはないが，敵対者にとって この情報への目立たない~accessを容易にする。
+したがって，実装には、`許可~状態$を~queryするのを（大域的に, または選択的に）阻止する選択肢を，利用者に与えることが奨励される。
+◎
+An adversary could use a permission state as an element in creating a "fingerprint" corresponding to an end-user. Although an adversary can already determine the state of a permission by actually using the API, that often leads to a permission request UI being presented to the end-user (if the permission was not already "granted"). Thus, even though this API doesn’t expose new fingerprinting information to websites, it makes it easier for an adversary to have discreet access to this information. Thus, implementations are encouraged to have an option for users to block (globally or selectively) the querying of permission states.
+</p>
+
+	</section>
+	<section id="definitions">
+<h2 title="Definitions">3. 定義</h2>
+
+<dl class="def-list">
+	<dt>
+`利用者の意図についての新たな情報@
+◎
+New information about the user’s intent
+</dt>
+	<dd>
+~UAは、利用者の意向についての情報を収集してもヨイ
+— ~UA作者が適切と予見する仕方で。
+この情報は、次を集成して得ることができる
+⇒＃
+利用者による明示的な動作,
+当の利用者や他の利用者たちの挙動,
+この仕様が見越していない`暗黙的な兆候$
+◎
+The UA may collect information about a user’s intentions in any way its authors believe is appropriate. This information can come from explicit user action, aggregate behavior of both the relevant user and other users, or implicit signals this specification hasn’t anticipated.
+</dd>
+	<dd class="note">注記：
+`暗黙的な兆候@
+には，例えば、どの~web~appを~installしていて, どの程度［
+頻繁／近過去
+］に訪問しているか，などが挙げられる
+— 利用者が、自身が~installした~web~appを より近過去かつ頻繁に利用しているほど，それを信用している可能性が高い。
+実装には、暗黙的な兆候に依拠するときには，~~注意深くあたることを勧める。
+◎
+The implicit signals could be, for example, the install status of a web application or frequency and recency of visits. A user that has installed a web application and used it frequently and recently is more likely to trust it. Implementations are advised to exercise caution when relying on implicit signals.
+</dd>
+
+	<dt>
+`強力な特能@
+◎
+Powerful feature
+</dt>
+	<dd>
+~UAが備える特能のうち，ある~codeからの~accessは許容しない場合もあるもの
+— 例えば、その~codeに対する`環境~設定群~obj$は 何らかの判定基準を満たしていない，あるいは 利用者が許可を与えなかったなどにより。
+◎
+A feature of a UA that some code might not be allowed to access, for example because its environment settings object doesn’t satisfy some criteria, or because the user hasn’t given permission.
+</dd>
+	<dd>
+この仕様の処理~modelにおいては、個々の`強力な特能$は，その名前を表す文字列（ `PermissionName$I 列挙~値）で識別される。
+所与の文字列 %名前 で
+`識別される特能@
+とは、そのように識別される`強力な特能$を指す。
+【この段落, およびこの用語は、明確化するための，この訳による追加。】
+</dd>
+</dl>
+
+	</section>
+	<section id="permission-descriptor">
+<h2 title="Descriptions of permission requests">4. 許可~要請の記述</h2>
+
+<pre class="idl">
+dictionary `PermissionDescriptor@I {
+  required `PermissionName$I `name@m;
+};
+</pre>
+
+<p>
+各 `強力な特能$は、~accessする許可を要請できるような 1 つ以上の
+`側面@
+を備える。
+そのような特能は、［
+`PermissionDescriptor$I または その下位型
+］を，自身に備わる`側面$を述べる`許可~記述子~型$として定義する。
+◎
+Each powerful feature has one or more aspects that websites can request permission to access. To describe these aspects, each feature defines a subtype of PermissionDescriptor to be its permission descriptor type.
+</p>
+
+<div class="example">
+
+<p>
+`midi$pN で`識別される特能$は、 2 つの`側面$
+— 通常の~messageへの~access, ~system排他的な
+【system exclusive = sysex】
+~messageへの~access —
+を備える。
+そのための`許可~記述子~型$は、次で与えられる：
+◎
+The "midi" feature has two aspects: access to normal messages, and access to system exclusive messages. Thus, its permission descriptor type is:
+</p>
+
+<pre class="idl">
+dictionary MidiPermissionDescriptor : PermissionDescriptor {
+ boolean sysex = false;
+};
+</pre>
+
+<p>
+`bluetooth$pN で`識別される特能$は、［
+利用者の機器に近い何らかの~Bluetooth機器
+］への~accessを，~siteが要請できるようにする。
+そのための`許可~記述子~型$は、次で与えられる：
+◎
+The "bluetooth" feature lets sites request to access whatever Bluetooth devices are close to to the user’s device. Thus, its permission descriptor type is:
+</p>
+
+<pre class="idl">
+dictionary BluetoothPermissionDescriptor : PermissionDescriptor {
+  DOMString deviceId;
+  sequence&lt;`BluetoothLEScanFilterInit$I&gt; filters;
+  sequence&lt;`BluetoothServiceUUID$I&gt; optionalServices = [];
+ boolean acceptAllDevices = false;
+};
+</pre>
+
+<div>
+
+<p>
+~Bluetooth機器への各種~accessを表現する許可~記述子の例：
+</p>
+
+<ul><li>一般~accessは，
+<samp>{name: `bluetooth$pN}</samp>
+により表現される。
+</li><li>特定0の機器への~accessは，
+<samp>{name: `bluetooth$pN, deviceId: %id }</samp>
+により表現される。
+</li><li>特定0の~serviceを伴う機器への~accessは，
+<samp>{name: `bluetooth$pN, filters: [{services: [ %service ]}]}</samp>
+により表現される。
+</li></ul>
+
+◎
+General access to Bluetooth devices is represented by {name: 'bluetooth'}; access to a particular device is represented by {name: 'bluetooth', deviceId: "id"}; and access to a device with a particular service is represented by {name: 'bluetooth', filters: [{services: ['service']}]}
+</div>
+
+</div>
+
+	</section>
+	<section id="permission-operations">
+<h2 title="Permission states">5. 許可~状態</h2>
+
+<p>
+~UAは、［
+利用者が、`強力な特能$のうち，どれに利用する許可を与えているか
+］を，各`~realm$ごとに追跡する責を負う。
+他の仕様は、この節に定義する各種 演算を利用して，どの許可が~UA視点で［
+是認-／否認-
+］されているかを検索取得でき，利用者に更なる許可を［
+是認するか否認するか
+］依頼することがでる。
+◎
+The user agent is responsible for tracking what powerful features each realm has the user’s permission to use. Other specifications can use the operations defined in this section to retrieve the UA’s notion of what permissions are granted or denied, and to ask the user to grant or deny more permissions.
+</p>
+
+<p>
+他の仕様はまた、これらの~algoにおける~UAの挙動に，拘束を追加できる。
+◎
+Other specifications can also add more constraints on the UA’s behavior in these algorithms.
+</p>
+
+<p>
+この節の中では、 %記述子 は，ある %名前 で`識別される特能$の`許可~記述子~型$の~instanceを表すとする（すなわち，その `name$m ~EQ %名前 ）。
+◎
+Within this section, descriptor is an instance of the permission descriptor type of the powerful feature named by descriptor.name.
+</p>
+
+		<section id="reading-current-states">
+<h3 title="Reading the current permission state">5.1. 現在の許可~状態の読み取り法</h3>
+
+<div class="algorithm">
+<p>
+`許可~状態@
+は、所与の
+( `PermissionDescriptor$I %記述子, `環境~設定群~obj$ %設定群 （省略時は ε ） )
+に対し，次を走らせた結果で与えられる
+— それは［
+`granted$pS,
+`prompt$pS,
+`denied$pS
+］のいずれかを返す：
+◎
+A descriptor’s permission state for an optional environment settings object settings is the result of the following algorithm, which returns one of "granted", "prompt", or "denied":
+</p>
+
+<ol>
+	<li>
+~IF［
+%設定群 ~EQ ε
+］
+⇒
+%設定群 ~SET `現在の設定群~obj$
+◎
+If settings wasn’t passed, set it to the current settings object.
+</li>
+	<li>
+%特能 ~LET %記述子 の `name$m で`識別される特能$
+◎
+↓</li>
+	<li>
+~IF［
+%設定群 は`~secureな文脈$enVでない
+
+］~AND［
+%特能 は，`~secureでない文脈にて許容されて$いない
+］
+⇒
+~RET `denied$pS
+◎
+If settings is a non-secure context and descriptor.name isn’t allowed in non-secure contexts, then return "denied".
+</li>
+	<li>
+~IF［
+%特能 は`施策により制御される特能$である
+］~AND［
+%設定群 【の`大域~obj$enV】に`結付けられている文書$は在って†、その文書に %特能 の`利用は許容されて$いない
+【† 大域~objは~windowでない場合、そのような文書は定義されない】
+］
+⇒
+~RET `denied$pS
+◎
+If there exists a policy-controlled feature identified by descriptor.name and settings has an associated Document named document, run the following step:
+• If document is not allowed to use the feature identified by descriptor.name return "denied". 
+</li>
+	<li>
+~IF［
+この~algoは、以前に，同じ
+( %記述子, %設定群 )
+で呼出されている
+］~AND［
+~UAは、まだ 以前の時点から`利用者の意図についての新たな情報$を受取ってない
+］
+⇒
+~RET 以前の時点における結果
+◎
+If there was a previous invocation of this algorithm with the same descriptor and settings, returning previousResult, and the UA has not received new information about the user’s intent since that invocation, return previousResult.
+</li>
+	<li>
+<p>
+~RET 
+次の選択肢のうち、~call元~の~algoに対し，利用者の意図を最も正確aに反映しつつ,
+%特能 の`許可~状態~拘束$も満たすもの：
+◎
+Return whichever of the following options most accurately reflects the user’s intent for the calling algorithm, taking into account any permission state constraints for descriptor.name:
+</p>
+		<dl class="switch">
+			<dt>
+利用者に~promptすることなく成功する
+◎
+succeed without prompting the user
+</dt>
+			<dd>`granted$pS</dd>
+
+			<dt>
+利用者に~promptを示して，成功するかどうか裁定してもらう
+◎
+show the user a prompt to decide whether to succeed
+</dt>
+			<dd>`prompt$pS</dd>
+
+			<dt>
+利用者に~promptすることなく失敗する
+◎
+fail without prompting the user
+</dt>
+			<dd>`denied$pS</dd>
+		</dl>
+	</li>
+</ol>
+
+<p class="issue">
+Safari のみが、［
+この~algoが、同じ生成元に属する異なる設定群~objに対し，異なる結果を返す
+］ような，既知な~UAである。
+`いくつかアリな設定群~obj$のうち，どれを利用するか~testするべきである。
+◎
+Safari is the only known UA that returns different results from this algorithm for different settings objects with the same origin. We should test which of the several possible settings objects it uses.
+</p>
+</div>
+
+<p>
+所与の `PermissionName$I 列挙~値  %名前 に対する`許可~状態$は、次の略記である
+⇒
+`許可~状態$( 次のようにされた `PermissionDescriptor$I )
+⇒
+`name$m ~member ~SET %名前
+◎
+As a shorthand, a PermissionName name’s permission state is the permission state of a PermissionDescriptor with its name member set to name.
+</p>
+
+<p>
+一部の`強力な特能$には、 `PermissionState$I 以外の情報も結付けられる。
+例えば， `getUserMedia()$m は、［
+利用者が、<em>どの~camera</em>に~accessする許可を，`現在の~realm$に是認しているか
+］を決定する必要がある。
+そのような特能のそれぞれは、`~extra許可~data型$を定義する。
+◎
+Some powerful features have more information associated with them than just a PermissionState. For example, getUserMedia() needs to determine which cameras the user has granted the current realm permission to access. Each of these features defines an extra permission data type.＼
+</p>
+
+<div class="algorithm">
+<p>
+ある `PermissionName$I 列挙~値 %名前 で`識別される特能$ %特能 用の
+`~extra許可~data@
+は、所与の`環境~設定群~obj$ %設定群 （省略時は ε ）に対し，次を走らせた結果で与えられる：
+◎
+If a PermissionName name names one of these features, then name’s extra permission data for an optional environment settings object settings is the result of the following algorithm:
+</p>
+
+<ol>
+	<li>
+~IF［
+%設定群 ~EQ ε
+］
+⇒
+%設定群 ~SET `現在の設定群~obj$
+◎
+If settings wasn’t passed, set it to the current settings object.
+</li>
+	<li>
+~IF［
+この~algoは、以前に，同じ
+( %名前, %設定群 )
+で呼出されている
+］~AND［
+~UAは まだ 以前の時点から`利用者の意図についての新たな情報$を受取ってない
+］
+⇒
+~RET 以前の時点における結果
+◎
+If there was a previous invocation of this algorithm with the same name and settings, returning previousResult, and the UA has not received new information about the user’s intent since that invocation, return previousResult.
+</li>
+	<li>
+~RET ［
+~UA視点による利用者の意図に合致しつつ,
+%特能 の`~extra許可~data拘束$も満たす
+］ような，［
+%特能 `~extra許可~data型$
+］の~instance
+◎
+Return the instance of name’s extra permission data type that matches the UA’s impression of the user’s intent, taking into account any extra permission data constraints for name.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="requesting-more-permission">
+<h3 title="Requesting more permission">5.2. 更なる許可の要請-法</h3>
+
+<p class="note">注記：
+仕様の策定者は、この節に与える~algoが 利用者からの入力を待機し得ることに注意されたし
+— ~main~threadで走っている~algoからは利用されるべきでない。
+◎
+Spec authors, please note that algorithms in this section can wait for user input; so they shouldn’t be used from other algorithms running on the main thread.
+</p>
+
+<div class="algorithm">
+<p>
+所与の %記述子 を
+`利用する許可を要請-@
+するときは、次の手続きを遂行するモノトスル
+— この~algoは［
+`granted$pS, `denied$pS
+］のいずれかを返す：
+◎
+To request permission to use a descriptor, the UA must perform the following steps. This algorithm returns either "granted" or "denied".
+</p>
+
+<ol>
+	<li>
+%現~状態 ~LET `許可~状態$( %記述子 )
+◎
+Let current state be the descriptor’s permission state.
+</li>
+	<li>
+~IF［
+%現~状態 ~NEQ `prompt$pS
+］
+⇒
+~RET %現~状態
+◎
+If current state is not "prompt", return current state and abort these steps.
+</li>
+	<li>
+<p>
+［
+~call元~の~algoが［
+%記述子 が述べる`強力な特能$
+］を利用する
+］ための許可を，利用者に依頼した上で：
+◎
+Ask the user’s permission for the calling algorithm to use the powerful feature described by descriptor.
+</p>
+		<ul>
+			<li>
+~RET ［
+利用者は許可を是認したならば  `granted$pS ／
+~ELSE_ `denied$pS
+］
+◎
+If the user grants permission, return "granted"; otherwise return "denied".＼
+</li>
+			<li>
+利用者からの~~回答は、［［
+この`~realm$,
+および`同一-生成元$に属する他の`~realm$
+］用の，`利用者の意図についての新たな情報$
+］を供するものとしてヨイ。
+◎
+The user’s interaction may provide new information about the user’s intent for this realm and other realms with the same origin.
+</li>
+		</ul>
+
+<p class="note">注記：
+ここでの［
+許可~UI ／ ~UAが利用者の意図をどう推定するか
+］の詳細~については、意図的に曖昧にしてある。
+~UAは、この枠組みの下で数多の~UIを探求するべきである。
+【例えば，利用者が是認せず，明示的に否認することもなく~UIを退けた場合、`利用者の意図についての新たな情報$としては扱わないことも考えられる。】
+◎
+This is intentionally vague about the details of the permission UI and how the UA infers user intent. UAs should be able to explore lots of UI within this framework.
+</p>
+	</li>
+</ol>
+
+<p>
+`PermissionName$I %名前 を`利用する許可を要請-$するとは、［
+`name$m ~memberが %名前 に設定された `PermissionDescriptor$I
+］を`利用する許可を要請-$することの略記である。
+◎
+As a shorthand, requesting permission to use a PermissionName name, is the same as requesting permission to use a PermissionDescriptor with its name member set to name.
+</p>
+</div>
+
+<div class="algorithm">
+<p>
+%記述子 に結付けられている %選択肢~群
+の中から一つを
+`選ぶよう利用者に~prompt@
+するときは、~UAは，次の手続きを遂行するモノトスル
+— この~algoは、［
+`denied$pS, または
+選択肢のうち一つ
+］を返す：
+◎
+To prompt the user to choose one of several options associated with a descriptor, the UA must perform the following steps. This algorithm returns either "denied" or one of the options.
+</p>
+
+<ol>
+	<li>
+~IF［
+`許可~状態$( %記述子 ) ~EQ `denied$pS
+］
+⇒
+~RET `denied$pS
+◎
+If descriptor’s permission state is "denied", return "denied" and abort these steps.
+</li>
+	<li>
+任意選択で
+⇒
+~IF［
+`許可~状態$( %記述子 ) ~EQ `granted$pS
+］
+⇒
+~RET %選択肢~群 の中のいずれかの選択肢
+— 利用者に~promptすることなく
+⇒
+この場合，~UAは、後続の同じ
+( %記述子, 選択肢の集合 )
+から`選ぶよう利用者に~prompt$するときも、~UAが`利用者の意図についての新たな情報$を受取っていない限り，同じ選択肢を返すモノトスル。
+◎
+If descriptor’s permission state is "granted", the UA may return one of options and abort these steps. If the UA returns without prompting, then subsequent prompts for the user to choose from the same set of options with the same descriptor must return the same option, unless the UA receives new information about the user’s intent.
+</li>
+	<li>
+<p>
+利用者に［
+%選択肢~群 の中から一つの選択肢を選ぶか, 許可を否認するか
+］依頼した上で
+— ~call元~の~algoが［
+~prompt内に含める~extra情報
+］を指定した場合は，それも含めた上で —
+選ばれるまで待機する：
+◎
+Ask the user to choose one of the options or deny permission, and wait for them to choose. If the calling algorithm specified extra information to include in the prompt, include it.
+</p>
+		<ul>
+			<li>
+~RET ［
+利用者は ある選択肢を選んだならば それ ／
+~ELSE_ `denied$pS
+］
+◎
+If the user chose an option, return it; otherwise return "denied".＼
+</li>
+			<li>
+利用者から［
+選んだものを，他の~realmにも適用するよう意図する
+］ことが指示された場合は、それを，［
+この~realm,
+および`同一-生成元$に属する他の`~realm$
+］用の`利用者の意図についての新たな情報$として扱うとする。
+◎
+If the user’s interaction indicates they intend this choice to apply to other realms, then treat this this as new information about the user’s intent for other realms with the same origin.
+</li>
+		</ul>
+
+<p class="note">注記：
+ここでの［
+許可~UI ／
+~UAが利用者の意図をどう推定するか
+］についての詳細は、意図的に曖昧にしてある。
+~UAは、この枠組みの下で数多の~UIを探求するべきである。
+◎
+This is intentionally vague about the details of the permission UI and how the UA infers user intent. UAs should be able to explore lots of UI within this framework.
+</p>
+	</li>
+</ol>
+
+<p>
+`PermissionName$I %名前 に結付けられている選択肢~群から`選ぶよう利用者に~prompt$するとは、［
+`name$m ~memberが %名前 に設定された`PermissionDescriptor$I 
+］に結付けられている選択肢~群から`選ぶよう利用者に~prompt$することの略記である。
+◎
+As a shorthand, prompting the user to choose from options associated with a PermissionName name, is the same as prompting the user to choose from those options associated with a PermissionDescriptor with its name member set to name.
+</p>
+</div>
+
+		</section>
+		<section id="reacting-to-revocation">
+<h3 title="Reacting to users revoking permission">5.3. 利用者から許可が~revokeされたときの反応-法</h3>
+
+<p>
+~UAは、［
+利用者が［
+ある`~realm$ %~Realm において，`強力な特能$ %特能 を利用する許可を是認する
+］ことを，もはや意図しない
+］ことを学習したときは、次を行うモノトスル
+⇒
+%~Realm の`設定群~obj$の`担当の~event~loop$enV 上に，［
+%特能 の`許可~revocation~algo$
+］を走らす`~taskを~queueする$
+◎
+When the UA learns that the user no longer intends to grant permission for a realm to use a feature, it must queue a task on the Realm’s settings object’s responsible event loop to run that feature’s permission revocation algorithm.
+</p>
+
+		</section>
+	</section>
+	<section id="status-of-a-permission">
+<h2 title="Status of a permission">6. 許可の状態s</h2>
+
+<pre class="idl">
+enum `PermissionState@I {
+  `granted$pS,
+  `denied$pS,
+  `prompt$pS,
+};
+</pre>
+
+<dl class="idl-def">
+	<dt>`granted@pS</dt>
+	<dd>
+“是認されている”
+</dd>
+	<dd>
+この状態は、［
+~UAが許可を利用者に依頼することなく，~call元が成功裡に当の特能に~accessできる
+］ことを表現する。
+◎
+The "granted" state represents that the caller will be able to successfuly access the feature without having the user agent asking the user’s permission.
+</dd>
+
+	<dt>`denied@pS</dt>
+	<dd>
+“否認されている”
+</dd>
+	<dd>
+この状態は、［
+~call元は，当の特能に~accessできない
+］ことを表現する。
+◎
+The "denied" state represents that the caller will not be able to access the feature.
+</dd>
+
+	<dt>`prompt@pS</dt>
+	<dd>
+この状態は、［
+~call元が当の特能に~accessしようと試行した場合には，~UAは利用者に許可を依頼することになる
+］ことを表現する。
+利用者は、その要請を［
+是認することも, 否認することも, 退けることも
+］ある。
+◎
+The "prompt" state represents that the user agent will be asking the user’s permission if the caller tries to access the feature. The user might grant, deny or dismiss the request.
+</dd>
+</dl>
+
+<pre class="idl">
+[`Exposed$=(Window,Worker)]
+interface `PermissionStatus@I : `EventTarget$I {
+  readonly attribute `PermissionState$I `state$m;
+  attribute `EventHandler$I `onchange$m;
+};
+</pre>
+
+<p>
+`PermissionStatus$I の各~instanceは、
+`query@sl
+内部~slotを伴って作成される。
+それは、［
+ある`強力な特能$の`許可~記述子~型$
+］の~instanceを~~保持する。
+◎
+PermissionStatus instances are created with a [[query]] internal slot, which is an instance of a feature’s permission descriptor type.
+</p>
+
+<div class="algorithm">
+<p>
+`~PermissionStatusを作成する@
+ときは、所与の
+( `PermissionDescriptor$I %許可~記述子 )
+に対し，次を走らす：
+</p>
+
+<ol><li>%特能 ~LET %許可~記述子 の `name$m 値で`識別される特能$
+</li><li>%結果 ~LET 新たな［
+%特能 の`許可~結果型$
+］の~instance
+</li><li>%結果 の `query$sl 内部~slot ~SET %許可~記述子
+</li><li>~RET %結果
+</li></ol>
+
+◎
+To create a PermissionStatus for a given PermissionDescriptor permissionDesc, return a new instance of the permission result type for the feature named by permissionDesc.name, with the [[query]] internal slot initialized to permissionDesc.
+</div>
+
+<div class="algo">
+`state@m
+取得子~手続きは、最後に設定された値を返す。
+◎
+The state attribute MUST return the latest value that was set on the current instance.
+</div>
+
+<p>
+`onchange@m
+属性は、`~event~handler~event型$ `change^et に対応する`~event~handler$である。
+◎
+The onchange attribute is an event handler whose corresponding event handler event type is change.
+</p>
+
+<div class="algorithm">
+<p id="PermissionStatus-update">
+~UAは， `PermissionStatus$I ~instance %状態s の状態が変化したときは、いつでも，次の手続きを非同期的に走らすモノトスル：
+◎
+Whenever the user agent is aware that the state of a PermissionStatus instance status has changed, it MUST asynchronously run the following steps:
+</p>
+
+<ol>
+	<li>
+%名前 ~LET %状態s の `query$sl 内部~slot の `name$m 値
+◎
+↓</li>
+	<li>
+( %名前,  %状態s )
+を渡して， %名前 で`識別される特能$の`許可~query~algo$を走らす
+◎
+Run status@[[query]].name’s permission query algorithm, passing status@[[query]] and status.
+</li>
+	<li>
+`許可~task源@
+から，次を走らす`~taskを~queueする$
+⇒
+%状態s に向けて，名前 `change^et の`~eventを発火する$
+◎
+Queue a task on the permission task source to fire an event named change at status.
+</li>
+</ol>
+</div>
+
+	</section>
+	<section id="navigator-and-workernavigator-extension">
+<h2 title="Navigator and WorkerNavigator extension">7. `Navigator^I, `WorkerNavigator^I に対する拡張</h2>
+
+<pre class="idl">
+[`Exposed$=(Window)]
+partial interface `Navigator$I {
+  [`SameObject$] readonly attribute `Permissions$I `permissions@m;
+};
+</pre>
+
+<pre class="idl">
+[`Exposed$=(Worker)]
+partial interface `WorkerNavigator$I {
+  [`SameObject$] readonly attribute `Permissions$I `~permissions0@m;
+};
+</pre>
+
+	</section>
+	<section id="permissions-interface">
+<h2 title="Permissions interface">8. `Permissions^I ~interface</h2>
+
+<pre class="idl">
+[`Exposed$=(Window,Worker)]
+interface `Permissions@I {
+  `Promise$I&lt;`PermissionStatus$I&gt; `query$m(`object$ %permissionDesc);
+};
+</pre>
+
+<div class="algo">
+`query(permissionDesc)@m
+~method~手続きは
+⇒
+`許可を~queryする$( %permissionDesc )
+◎
+When the query(permissionDesc) method is invoked, the user agent MUST run the following＼
+</div>
+
+<div class="algo">
+<p>
+`許可を~queryする@
+ときは、所与の
+( %許可~記述子 )
+に対し：
+◎
+query a permission algorithm, passing the parameter permissionDesc:
+</p>
+<ol>
+	<li>
+<p>
+%有型~記述子 ~LET 次の下位手続きを走らせた結果：
+</p>
+		<ol>
+			<li>
+%根~記述子 ~LET %許可~記述子 を `PermissionDescriptor$I 型の`~IDL値に変換-$した結果
+</li>
+			<li>
+%特能 ~LET %根~記述子 の `name$m 値で`識別される特能$
+</li>
+			<li>
+~RET %許可~記述子 を［
+%特能 の`許可~記述子~型$
+］の`~IDL値に変換-$した結果
+</li>
+		</ol>
+<p>
+この段で例外が投出されたときは
+⇒
+~RET その例外で`却下される~promise$
+</p>
+
+◎
+Let rootDesc be the object permissionDesc refers to, converted to an IDL value of type PermissionDescriptor. If this throws an exception, return a promise rejected with that exception and abort these steps.
+◎
+Let typedDescriptor be the object permissionDesc refers to, converted to an IDL value of rootDesc.name’s permission descriptor type. If this throws an exception, return a promise rejected with that exception and abort these steps.
+</li>
+	<li>
+%~promise ~LET `新たな~promise$
+◎
+Let promise be a newly-created Promise.
+</li>
+	<li>
+~RET %~promise
+— ただし、以降の手続きも`並列的$に走らす
+◎
+Return promise and continue the following steps asynchronously.
+</li>
+	<li>
+%状態s ~LET `~PermissionStatusを作成する$( %有型~記述子 )
+◎
+Run the steps to create a PermissionStatus for typedDescriptor, and let status be the result.
+</li>
+	<li>
+%名前 ~LET %状態s の `query$sl 内部~slot の `name$m 値
+◎
+↓</li>
+	<li>
+( %名前,  %状態s )
+を渡して， %名前 で`識別される特能$の`許可~query~algo$を走らす
+◎
+Run status@[[query]].name’s permission query algorithm, passing status@[[query]] and status.
+</li>
+	<li>
+%状態s で %~promise を`解決する$
+◎
+Resolve promise with status.
+</li>
+</ol>
+
+<p class="note">注記：
+一度に複数の許可を検査したいと求める開発者には、
+`Promise$I の `all()^m 関数の利用-を推奨する。
+<a href="#examples">各種 用例もある</a>
+。
+◎
+If a developer wants to check multiple permissions at once, the editors recommend the use of Promise.all(). An example can be found in the Examples section.
+</p>
+</div>
+
+	</section>
+	<section id="common-permission-algorithms">
+<h2 title="Common permission algorithms">9. 共通な各種 許可~algo</h2>
+
+<div class="algorithm">
+<p>
+`真偽-許可を~queryする@
+ときは、所与の
+( `PermissionDescriptor$I %許可~記述子, `PermissionStatus$I %状態s )
+に対し，次の手続きを走らす：
+◎
+The boolean permission query algorithm, given a PermissionDescriptor permissionDesc and a PermissionStatus status, runs the following steps:
+</p>
+
+<ol>
+	<li>
+%状態s の `state$m ~SET `許可~状態$( %許可~記述子 )
+◎
+Set status.state to permissionDesc’s permission state.
+</li>
+</ol>
+</div>
+
+	</section>
+	<section id="permission-registry">
+<h2 title="Permission Registry">10. 許可~registry</h2>
+
+<pre class="idl">
+enum `PermissionName@I {
+  `geolocation$pN,
+  `notifications$pN,
+  `push$pN,
+  `midi$pN,
+  `camera$pN,
+  `microphone$pN,
+  `speaker-selection$pN,
+  `device-info$pN,
+  `background-fetch$pN,
+  `background-sync$pN,
+  `bluetooth$pN,
+  `persistent-storage$pN,
+  `ambient-light-sensor$pN,
+  `accelerometer$pN,
+  `gyroscope$pN,
+  `magnetometer$pN,
+  `clipboard-read$pN,
+  `clipboard-write$pN,
+  `display-capture$pN,
+  `nfc$pN,
+};
+</pre>
+
+<p class="note">注記：
+列挙~値［
+`accelerometer$pN, `gyroscope$pN,  `magnetometer$pN
+］は、暫定的であり，早期の実装からの~feedbackに基づいて変更され得る。
+更なる情報は
+<a href="https://github.com/w3c/sensors/issues/22">w3c/sensors#22</a>
+を見よ。
+◎
+The enumeration values "accelerometer", "gyroscope" and "magnetometer" are considered provisional and are subject to change based on feedback from early implementations. See w3c/sensors#22 issue for more information.
+</p>
+
+<p>
+`PermissionName$I の各~列挙~値は、ある`強力な特能$を識別する。
+各 `強力な特能$ %特能 は、次に挙げる，許可に関係する各種［
+~flag, ~algo, 型
+］を備える：
+◎
+Each enumeration value in the PermissionName enum identifies a powerful feature. Each powerful feature has the following permission-related flags, algorithms, and types:
+</p>
+
+<dl class="def-list">
+	<dt>
+`~secureでない文脈にて許容される~flag@
+◎
+An allowed in non-secure contexts flag
+</dt>
+	<dd>
+~T にされている場合
+— 以下では、
+“`~secureでない文脈にて許容されて$いる”
+とも称される—
+~UAは，`~secureでない文脈$においても %特能 への~accessを是認してヨイ。
+◎
+By default, only secure contexts can use powerful features. If this flag is set for a feature, the UA may grant access to it in non-secure contexts too.
+</dd>
+	<dd>
+未指定の場合の既定は、 ~F をとるとする
+— すなわち， %特能 を利用できるのは、`~secureな文脈$に限られる。
+◎
+↑</dd>
+
+	<dt>
+`許可~記述子~型@
+◎
+A permission descriptor type
+</dt>
+	<dd>
+`PermissionDescriptor$I, または その下位型。
+◎
+PermissionDescriptor or one of its subtypes.＼
+</dd>
+	<dd>
+未指定の場合の既定は、 `PermissionDescriptor$I とする。
+◎
+If unspecified, this defaults to PermissionDescriptor.
+</dd>
+	<dd>
+<p>
+%特能 は、記述子の各~instance間において
+`より強い@
+と称される
+<a href="https://en.wikipedia.org/wiki/Partially_ordered_set">半順序</a>
+を定義できる。
+［
+記述子 %A は記述子 %B `より強い$
+］ならば、次が満たされなければナラナイ：
+</p>
+	<ul>
+			<li>
+［
+`許可~状態$( %A ) ~EQ `granted$pS
+］ならば［
+`許可~状態$( %B ) ~EQ  `granted$pS
+］
+</li>
+			<li>
+［
+`許可~状態$( %B ) ~EQ `denied$pS
+］ならば［
+`許可~状態$( %A ) ~EQ  `denied$pS
+］
+</li>
+		</ul>
+◎
+The feature can define a partial order on descriptor instances. If descriptorA is stronger than descriptorB, then if descriptorA’s permission state is "granted", descriptorB’s permission state must also be "granted", and if descriptorB’s permission state is "denied", descriptorA’s permission state must also be "denied".
+</dd>
+	<dd class="example">
+<samp>{name: `midi$pN, sysex: true}</samp>
+— “sysex ありの~MIDI” —
+は
+<samp>{name: `midi$pN, sysex: false}</samp>
+— “sysex なしの~MIDI” —
+`より強い$ので、利用者が
+“sysex なしの~MIDI” への~accessを否認した場合、~UAは
+“sysex ありの~MIDI” への~accessも否認しなければならない。
+同様に，利用者が
+“sysex ありの~MIDI”
+への~accessを是認した場合、~UAは
+“sysex なしの~MIDI”
+への~accessも是認しなければならない。
+◎
+{name: "midi", sysex: true} ("midi-with-sysex") is stronger than {name: "midi", sysex: false} ("midi-without-sysex"), so if the user denies access to midi-without-sysex, the UA must also deny access to midi-with-sysex, and similarly if the user grants access to midi-with-sysex, the UA must also grant access to midi-without-sysex.
+</dd>
+
+	<dt>
+`許可~状態~拘束@
+◎
+Optional permission state constraints
+</dt>
+	<dd>
+~UAが`許可~状態$( 記述子 ) として返せる値を拘束する。
+◎
+Constraints on the values that the UA can return as a descriptor’s permission state.＼</dd>
+	<dd>
+既定では（省略時）、利用者の意図を超える拘束はないとする。
+◎
+Defaults to no constraints beyond the user’s intent.
+</dd>
+
+	<dt>
+`~extra許可~data型@
+◎
+An optional extra permission data type
+</dt>
+	<dd>
+指定された場合、 %特能 用の`~extra許可~data$を利用-可能になる。
+◎
+If specified, the extra permission data algorithm is usable for this feature.
+</dd>
+	<dd class="trans-note">【
+すなわち，既定では（省略時）、`~extra許可~data$はない。
+】【
+この “型” には、何らかの~IDLが含意されるわけではないようだ。
+】</dd>
+
+	<dt>
+`~extra許可~data拘束@
+◎
+Optional extra permission data constraints
+</dt>
+	<dd>
+~UAが %特能 用の`~extra許可~data$として返せる値を拘束する。
+◎
+Constraints on the values that the UA can return as a PermissionName's extra permission data.＼
+</dd>
+	<dd>
+既定では（省略時）、利用者の意図を超える拘束はないとする。
+◎
+Defaults to no constraints beyond the user’s intent.
+</dd>
+
+	<dt>
+`許可~結果型@
+◎
+A permission result type
+</dt>
+	<dd>
+`PermissionStatus$I
+または，その下位型。
+◎
+PermissionStatus or one of its subtypes.＼
+</dd>
+	<dd>
+未指定の場合の既定は、 `PermissionStatus$I とする。
+◎
+If unspecified, this defaults to PermissionStatus.
+</dd>
+
+	<dt>
+`許可~query~algo@
+◎
+A permission query algorithm
+</dt>
+	<dd>
+<p>
+次の 2 つの引数：
+</p>
+
+<ol><li>%特能 の`許可~記述子~型$の~instance
+</li><li>%特能 の`許可~結果型$の 新たな または既存の~instance
+</li></ol>
+
+<p>
+に対する~query結果で，後者の引数を更新する。
+［
+`Permissions$I の `query()$m ~method ／
+`~PermissionStatus更新~手続き$
+］で利用される。
+</p>
+
+◎
+Takes an instance of the permission descriptor type and a new or existing instance of the permission result type, and updates the permission result type instance with the query result. Used by Permissions' query(permissionDesc) method and the PermissionStatus update steps.＼
+</dd>
+	<dd>
+未指定の場合の既定は、`真偽-許可を~queryする$。
+◎
+If unspecified, this defaults to the boolean permission query algorithm.
+</dd>
+
+	<dt>
+`許可~revocation~algo@
+◎
+A permission revocation algorithm
+</dt>
+	<dd>
+引数はとらない。
+［
+`許可~状態$ ／ `~extra許可~data$
+］の結果における変化と同期cさせ続ける必要があるような，実装における他の部分があれば、それを更新する。
+<a href="#reacting-to-revocation">利用者から許可が~revokeされたときの反応-法</a>
+により走らされる。
+◎
+Takes no arguments. Updates any other parts of the implementation that need to be kept in sync with changes in the results of permission states or extra permission data. Run by § 5.3 Reacting to users revoking permission.＼
+</dd>
+	<dd>
+未指定の場合の既定は、何もしないとする。
+◎
+If unspecified, this defaults to doing nothing.
+</dd>
+
+</dl>
+
+<p>
+`真偽-特能@
+とは、`強力な特能$のうち，上の各種［
+型／~algo
+］すべて†が既定のそれらにされたものをいう。
+【†`~secureでない文脈にて許容される~flag$は除外されていることに注意。】
+◎
+A boolean feature is a powerful feature with all of the above types and algorithms defaulted.
+</p>
+
+		<section id="geolocation">
+<h3 title="Geolocation">10.1. 地理所在~API（ `geolocation^l ）</h3>
+
+<p>
+`geolocation@pN
+で`識別される特能$に対する許可は、
+`geolocation-API$r の用法に結付けられている。
+それは`真偽-特能$であり、
+`~secureでない文脈にて許容されて$いる。
+◎
+The "geolocation" permission is the permission associated with the usage of the [geolocation-API]. It is a boolean feature and is allowed in non-secure contexts.
+</p>
+
+		</section>
+		<section id="notifications">
+<h3 title="Notifications">10.2. 通知~API（ `notifications^l ）</h3>
+
+<p>
+`notifications@pN
+で`識別される特能$に対する許可は、
+`notifications$r ~API の用法に結付けられている。
+それは、`真偽-特能$であり，`~secureでない文脈にて許容されて$いる。
+◎
+The "notifications" permission is the permission associated with the usage of the [notifications] API. It is a boolean feature and is allowed in non-secure contexts.
+</p>
+
+		</section>
+		<section id="push">
+<h3 title="Push">10.3. ~push~API（ `push^l ）</h3>
+
+<p>
+`push@pN
+で`識別される特能$に対する許可は、 `push-api$r の用法に結付けられている。
+◎
+The "push" permission is the permission associated with the usage of the [push-api].
+</p>
+
+<dl>
+	<dt>
+`許可~記述子~型$
+◎
+permission descriptor type
+</dt>
+	<dd>
+
+<pre class="idl">
+dictionary `PushPermissionDescriptor@I : `PermissionDescriptor$I {
+ `boolean$ `userVisibleOnly@m = false;
+};
+</pre>
+
+<p>
+<samp>{name: `push$pN, userVisibleOnly: false}</samp>
+は
+<samp>{name: `push$pN, userVisibleOnly: true}</samp>
+`より強い$とする。
+◎
+{name: "push", userVisibleOnly: false} is stronger than {name: "push", userVisibleOnly: true}.
+</p></dd>
+
+</dl>
+
+		</section>
+		<section id="midi">
+<h3 title="Midi">10.4. ~MIDI~API（ `midi^l ）</h3>
+
+<p>
+`midi@pN
+で`識別される特能$に対する許可は、
+`webmidi$r の用法に結付けられている。
+`midi$pN は`~secureでない文脈にて許容されて$いる。
+◎
+The "midi" permission is the permission associated with the usage of [webmidi]. "midi" is allowed in non-secure contexts.
+</p>
+
+<dl>
+	<dt>
+`許可~記述子~型$
+◎
+permission descriptor type
+</dt>
+	<dd>
+
+<pre class="idl">
+dictionary `MidiPermissionDescriptor@I : `PermissionDescriptor$I {
+ `boolean$ `sysex@m = false;
+};
+</pre>
+
+<p>
+<samp>{name: `midi$pN, sysex: true}</samp>
+は
+<samp>{name: `midi$pN, sysex: false}</samp>
+`より強い$とする。
+◎
+{name: "midi", sysex: true} is stronger than {name: "midi", sysex: false}.
+</p>
+	</dd>
+</dl>
+
+		</section>
+		<section id="media-devices">
+<h3 title="Media Devices">10.5. 各種~media機器</h3>
+
+<p>
+［
+`camera@pN ／
+`microphone@pN ／
+`speaker-selection@pN
+］で`識別される特能$に対する許可は、
+`GETUSERMEDIA$r, `audio-output$r
+に指定される~media機器の用-法に結付けられている。
+◎
+The "camera", "microphone" , and "speaker-selection" permissions are associated with permission to use media devices as specified in [GETUSERMEDIA] and [audio-output].
+</p>
+<dl>
+	<dt>
+`許可~記述子~型$
+◎
+permission descriptor type
+</dt>
+	<dd>
+
+<pre class="idl">
+dictionary `DevicePermissionDescriptor@I : `PermissionDescriptor$I {
+  `DOMString$ `deviceId@m;
+};
+
+dictionary `CameraDevicePermissionDescriptor@I : `DevicePermissionDescriptor$I {
+  `boolean$ `panTiltZoom@m = false;
+};
+</pre>
+	</dd>
+	<dd>
+許可は、記述子に与えられた機器への~accessを受持つ。
+◎
+A permission covers access to the device given in the associated descriptor.
+</dd>
+	<dd>
+<p>
+記述子が `deviceId$m を伴わない場合、記述子の `name$m で`識別される特能$に類別される すべての機器への~accessを~queryすることになる。
+したがって， `camera$pN で`識別される特能$に対する `deviceId$m を伴わない許可~queryに対しては：
+◎
+If the descriptor does not have a deviceId, its semantic is that it queries for access to all devices of that class. Thus, if a query for the "camera" permission with no deviceId＼
+</p>
+		<ul>
+			<li>
+結果が `granted$pS ならば、~camera用の許可~promptは決して生じないことが~~判明することになる。
+◎
+returns "granted", the client knows that there will never be a permission prompt for a camera, and＼
+</li>
+			<li>
+結果が `denied$pS ならば、~camera用に `getUserMedia()^m で要請しても成功しないことが~~判明することになる。
+◎
+if "denied" is returned, it knows that no getUserMedia request for a camera will succeed.
+</li>
+			<li>
+~accessに対する許可~状態が一部の~cameraのみに在る場合、
+`prompt$pS が返されることになる。
+◎
+If a permission state is present for access to some, but not all, cameras, a query without the deviceId will return "prompt".
+</li>
+		</ul>
+	</dd>
+	<dd>
+<samp>{name: `camera$pN, panTiltZoom: true}</samp>
+は
+<samp>{name: `camera$pN, panTiltZoom: false}</samp>
+`より強い$とする。
+◎
+{name: "camera", panTiltZoom: true} is stronger than {name: "camera", panTiltZoom: false}.
+</dd>
+	<dd>
+結果が `granted$pS であっても， `getUserMedia()^m の成功-が保証されるわけではないことに注意。
+保証されるのは、許可を得る際に利用者に~promptされないことに限られる。
+`getUserMedia()^m を失敗させ得るものは，他にいくつもある（利用-中にある~cameraに対する拘束など）。
+<!-- constraints or = constraints on＊？ -->
+◎
+Note that a "granted" permission is no guarantee that getUserMedia will succeed. It only guarantees that the user will not be prompted for permission. There are many other things (such as constraints or the camera being in use) that can cause getUserMedia to fail.
+</dd>
+
+	<dt>
+`~extra許可~data型$
+◎
+extra permission data type
+</dt>
+	<dd>
+利用者が~accessに関して既定でない裁定を下した各 機器に対応する `deviceId$c 値からなる~list。
+◎
+A list of deviceId values for the devices the user has made a non-default decision on access to.
+</dd>
+
+	<dt>
+`許可~query~algo$
+◎
+permission query algorithm
+</dt>
+	<dd>
+<p>
+次の手続きを走らす：
+◎
+The permission query algorithm runs the following steps:
+</p>
+		<ol>
+			<li>
+<p>
+~IF［
+`~extra許可~data$内に %許可~記述子 の `deviceId^m は在る
+］：
+</p>
+
+<ol ><li>%状態s の `state$m ~SET `許可~状態$( %許可~記述子 )
+</li><li>~RET
+</li></ol>
+◎
+If permissionDesc.deviceId exists in the extra permission data, set status.state to permissionDesc’s permission state and terminate these steps.
+</li>
+			<li>
+%大域~記述子 ~LET %許可~記述子 の複製から `deviceId$m ~memberを除去した結果
+◎
+Let global be a copy of permissionDesc with the deviceId member removed.
+</li>
+			<li>
+%状態s の `state$m ~SET `許可~状態$( %大域~記述子 )
+◎
+Set status.state to global’s permission state.
+</li>
+		</ol>
+	</dd>
+
+	<dt>
+`許可~要請~algo$
+◎
+permission request algorithm
+</dt>
+	<dd class="trans-note">【
+この~algoは、その利用が
+<a href="https://github.com/w3c/permissions/commit/1a76db18563282946c789a61354dd9b1c334f90e">仕様から除去された</a>
+ため，もはや利用されていない（削除漏れ？）。
+なので、和訳は省略する。
+】
+◎
+The permission request algorithm runs the following steps:
+
+• Let result be the result of running the boolean permission request algorithm.
+• If result is "granted", the UA MUST set the "device-info" permission to "granted" for this realm.
+• The UA MAY treat result as new information about the user’s intent with respect to the "device-info" permission for this realm and other realms with the same origin, provided it doesn’t violate the previous step.
+• Return result. 
+</dd>
+
+	<dt>
+`許可~revocation~algo$
+◎
+permission revocation algorithm
+</dt>
+	<dd>
+機器に対する許可が~revokeされたときは、~UAは
+~trackを停止する~algo 【参照先不明】
+を走らすモノトスル
+— ただし、その機器を源とする各 `MediaStreamTrack^I 上の `stop()^m ~methodが呼出されたことによる場合は除く。
+◎
+When permission for a device is revoked, the UA MUST run the algorithm to stop the track for any other reason than the stop() method being invoked for each MediaStreamTrack sourced from that device.
+</dd>
+
+</dl>
+
+<div class="p">
+<p>
+`device-info@pN
+で`識別される特能$に対する許可は、次を制御する：
+</p>
+
+<ul ><li>`deviceId$c に結付けられた名前と能力への~access
+</li><li>現在の閲覧文脈が~focusされていないときに `devicechange$et ~eventが発火されるかどうか
+</li></ul>
+
+<p>
+`device-info$pN 許可は、生成元~用の `deviceId$c が設定し直されたときは~revokeされるモノトスル。
+</p>
+◎
+The "device-info" permission controls access to the name and capabilities associated with a deviceId, as well as whether devicechange events fire when the current browsing context is not in focus. The "device-info" permission MUST be revoked when deviceIds for an origin are reset. 
+</div>
+
+		</section>
+		<section id="background-fetch">
+<h3 title="Background Fetch">10.6. ~Background~fetch（ `background-fetch^l ）</h3>
+
+<p>
+`background-fetch@pN
+で`識別される特能$に対する許可は、
+`background-fetch$r
+の用法に結付けられている。
+◎
+The "background-fetch" permission is the permission associated with the usage of [background-fetch].
+</p>
+
+		</section>
+		<section id="background-sync">
+<h3 title="Background Sync">10.7. ~Background同期c~API（ `background-sync^l ）</h3>
+
+<p>
+`background-sync@pN
+で`識別される特能$に対する許可は、
+`web-background-sync$r
+の用法に結付けられている。
+◎
+The "background-sync" permission is the permission associated with the usage of [web-background-sync].
+</p>
+
+		</section>
+		<section id="ambient-light-sensor">
+<h3 title="Ambient Light Sensor">10.8. 環境光~sensor~API（ `ambient-light-sensor^l ）</h3>
+
+<p>
+`ambient-light-sensor@pN
+で`識別される特能$に対する許可は、
+`ambient-light$r ~APIの用法に結付けられている。
+◎
+The "ambient-light-sensor" permission is the permission associated with the usage of the [ambient-light] API.
+</p>
+
+<p>
+その`許可~revocation~algo$は、次を走らす
+⇒
+`汎用~sensor許可~revocation~algo$( `ambient-light-sensor$pN )
+◎
+Its permission revocation algorithm is the result of calling generic sensor permission revocation algorithm passing it "ambient-light-sensor" as argument.
+</p>
+
+		</section>
+		<section id="accelerometer">
+<h3 title="Accelerometer ">10.9. 加速度計（ `accelerometer^l ）</h3>
+
+<p>
+`accelerometer@pN
+で`識別される特能$に対する許可は、
+`accelerometer$r ~APIの用法に結付けられている。
+◎
+The "accelerometer" permission is the permission associated with the usage of the [accelerometer] API.
+</p>
+
+<p>
+その`許可~revocation~algo$は、次を走らす
+⇒
+`汎用~sensor許可~revocation~algo$( `accelerometer$pN )
+◎
+Its permission revocation algorithm is the result of calling generic sensor permission revocation algorithm passing it "accelerometer" as argument.
+</p>
+
+		</section>
+		<section id="gyroscope">
+<h3 title="Gyroscope ">10.10. ~gyroscope（ `gyroscope^l ）</h3>
+
+<p>
+`gyroscope@pN
+で`識別される特能$に対する許可は、
+`gyroscope$r ~APIの用法に結付けられている。
+◎
+The "gyroscope" permission is the permission associated with the usage of the [gyroscope] API.
+</p>
+
+<p>
+その`許可~revocation~algo$は、次を走らす
+⇒
+`汎用~sensor許可~revocation~algo$( `gyroscope$pN )
+◎
+Its permission revocation algorithm is the result of calling generic sensor permission revocation algorithm passing it "gyroscope" as argument.
+</p>
+
+		</section>
+		<section id="magnetometer">
+<h3 title="Magnetometer ">10.11. 磁力計（ `magnetometer^l ）</h3>
+
+<p>
+`magnetometer@pN
+で`識別される特能$に対する許可は、
+`magnetometer$r ~APIの用法に結付けられている。
+◎
+The "magnetometer" permission is the permission associated with the usage of the [magnetometer] API.
+</p>
+
+<p>
+その`許可~revocation~algo$は、次を走らす
+⇒
+`汎用~sensor許可~revocation~algo$( `magnetometer$pN )
+◎
+Its permission revocation algorithm is the result of calling generic sensor permission revocation algorithm passing it "magnetometer" as argument.
+</p>
+
+		</section>
+		<section id="clipboard-read">
+<h3 title="Clipboard Read">10.12. ~clipboard読取n（ `clipboard-read^l ）</h3>
+
+<p>
+`clipboard-read@pN
+で`識別される特能$に対する許可は、
+`clipboard-apis$r における非同期的な読取n~methodの用法に結付けられている。
+◎
+The "clipboard-read" permission is the permission associated with the usage of the asynchronous read methods in the [clipboard-apis].
+</p>
+
+		</section>
+		<section id="clipboard-write">
+<h3 title="Clipboard Write">10.13. ~clipboard書込n（ `clipboard-write^l ）</h3>
+
+<p>
+`clipboard-write@pN
+で`識別される特能$に対する許可は、
+`clipboard-apis$r における非同期的な書込n~methodの用法に結付けられている。
+◎
+The "clipboard-write" permission is the permission associated with the usage of the asynchronous write methods in the [clipboard-apis].
+</p>
+
+		</section>
+		<section id="screen-capture">
+<h3 title="Screen Capture">10.14. ~screen-capture（ `display-capture^l ）</h3>
+
+<p>
+`display-capture@pN
+で`識別される特能$に対する許可は、
+`screen-capture$r の用法に結付けられている。
+◎
+The "display-capture" permission is the permission associated with the usage of [screen-capture].
+</p>
+
+<dl>
+	<dt>`許可~状態~拘束$</dt>
+	<dd>
+この記述子の`許可~状態$用の妥当な値は［
+`prompt$pS ／ `denied$pS
+］に限るとする。
+~UAは、この記述子の`許可~状態$を `granted$pS に設定しないモノトスル。
+◎
+permission state constraints
+• Valid values for this descriptor’s permission state are "prompt" and "denied". The user agent MUST NOT ever set this descriptor’s permission state to "granted".
+</dd>
+</dl>
+
+		</section>
+		<section id="nfc">
+<h3 title="NFC">10.15. ~NFC（ `nfc^l ）</h3>
+
+<p>
+`nfc@pN
+で`識別される特能$に対する許可は、
+`web-nfc$r の用法に結付けられている。
+◎
+The "nfc" permission is the permission associated with the usage of the [web-nfc] API. 
+</p>
+
+		</section>
+	</section>
+	<section id="automation">
+<h2 title="Automation ">11. 自動化</h2>
+
+<p>
+この文書は、［
+~UAの自動化 ／ ~appを~testする
+］目的において，
+`WebDriver$r 仕様~用に次の`拡張~command$を定義する。
+◎
+For the purposes of user-agent automation and application testing, this document defines the following extension command for the [WebDriver] specification.
+</p>
+
+<pre class="idl">
+dictionary `PermissionSetParameters@I {
+  required `PermissionDescriptor$I `descriptor@mPsP;
+  required `PermissionState$I `state@mPsP;
+  `boolean$ `oneRealm@mPsP = false;
+};
+</pre>
+
+		<section id="set-permission-command">
+<h3 title="Set Permission ">11.1. 設定-許可</h3>
+
+<table><thead><tr><th>~HTTP~method
+</th><th>`URI Template$
+</th></tr></thead>
+
+<tbody><tr><td>`POST^M
+</td><td>`/session/{session id}/permissions^c
+</td></tr></tbody></table>
+
+<p>
+`拡張~command$
+`設定-許可@
+は、［
+`PermissionDescriptor$I の`許可~状態$に対する，利用者による改変
+］を模倣する。
+◎
+The Set Permission extension command simulates user modification of a PermissionDescriptor's permission state.
+</p>
+
+<div class="algorithm">
+<p>
+`遠隔端の手続き$は、次で与えられる：
+◎
+The remote end steps are:
+</p>
+
+<ol>
+	<li>
+%~error ~LET 
+( `~error~code$ `妥当でない引数$ )
+を伴う `~error$i
+◎
+↓</li>
+	<li>
+%parameters ~LET %parameters 引数を型 `PermissionSetParameters$I の`~IDL値に変換-$した結果
+⇒
+例外が投出されたときは
+⇒
+~RET %~error
+◎
+Let parameters be the parameters argument, converted to an IDL value of type PermissionSetParameters. If this throws an exception, return a WebDriver error with WebDriver error code invalid argument.
+</li>
+	<li>
+%根~記述子 ~LET %parameters . `descriptor$mPsP
+◎
+Let rootDesc be parameters.descriptor.
+</li>
+	<li>
+%特能 ~LET %根~記述子 の `name$m 値で`識別される特能$
+◎
+↓</li>
+	<li>
+%有型~記述子 ~LET %根~記述子 が指す~objを［
+%特能 の`許可~記述子~型$
+］の`~IDL値に変換-$に変換した結果
+⇒
+例外が投出されたときは
+⇒
+~RET %~error
+◎
+Let typedDescriptor be the object rootDesc refers to, converted to an IDL value of rootDesc.name’s permission descriptor type. If this throws an exception, return a WebDriver error with WebDriver error code invalid argument.
+</li>
+	<li>
+<p>
+~IF［
+%parameters . `state$mPsP は［
+実装により定義される何らかの理由により，適切でない`許可~状態$
+］である
+］
+⇒
+~RET %~error
+◎
+If parameters.state is an inappropriate permission state for any implementation-defined reason, return a WebDriver error with WebDriver error code invalid argument.
+</p>
+
+<p class="note">注記：
+例えば `midi$pN で`識別される特能$を “常にオン” として定義する~UAは、この段で`許可~状態$を `denied$pS に設定するために，~commandを却下することを選んでもヨイ。
+◎
+For example, user agents that define the "midi" feature as "always on" may choose to reject command to set the permission state to "denied" at this step.
+</p>
+	</li>
+	<li>
+%設定群 ~LET `現在の閲覧文脈$にて`作動中の文書$の`環境~設定群~obj$
+【文書に`関連な設定群~obj$】
+◎
+Let settings be the environment settings object of the current browsing context’s active document.
+</li>
+	<li>
+~IF［
+%設定群 は`~secureな文脈$enVでない
+］~AND［
+%特能 は`~secureでない文脈にて許容されて$いない
+］
+⇒
+~RET %~error
+◎
+If settings is a non-secure context and rootDesc.name isn’t allowed in non-secure contexts, return a WebDriver error with WebDriver error code invalid argument.
+</li>
+	<li>
+%設定群~list ~LET 新たな`~list$
+</li>
+	<li>
+~IF［
+%parameters . `oneRealm$mPsP ~EQ ~T
+］
+⇒
+%設定群~list に %設定群 を`付加する$
+◎
+If parameters.oneRealm is true, let targets be a list whose sole member is settings.
+</li>
+	<li>
+~ELSE
+⇒
+%設定群~list に次を満たす各 `環境~設定群~obj$を`付加する$【順序は述べられていない】
+⇒
+( その`生成元$enV, %設定群 の`生成元$enV ) は`同一-生成元$である
+◎
+Otherwise, let targets be a list containing all environment settings objects whose origin is the same as the origin of settings.
+</li>
+	<li>
+<p>
+%設定群~list 内の
+~EACH( `環境~設定群~obj$ %設定群 )
+に対し
+⇒
+%設定群 【！に`関連な設定群~obj$（余計）】の`大域~obj$enVに`対応する閲覧文脈$の`許可~task源$†から，次を遂行する`~taskを~queueする$
+⇒
+%parameters . `state$mPsP を それが次の結果であったかのように解釈する
+⇒
+`許可~状態$( %有型~記述子, %設定群 )
+</p>
+
+<p class="trans-note">【†
+`許可~task源$は，各 閲覧文脈ごとにあるかのような記述だが、単に`暗黙の~event~loop$を示唆する記述のようにも見受けられる。
+】</p>
+◎
+Let tasks be an empty list.
+◎
+For each environment settings object target in targets:
+• Queue a task task on the permission task source of target’s relevant settings object's global object's browsing context to perform the following step:
+•• Interpret parameters.state as if it were the result of an invocation of permission state for typedDescriptor with the argument target made at this moment.
+• ↓Append task to tasks.
+</li>
+	<li>
+前~段で~queueしたすべての`~task$が実行されるまで待機する
+◎
+Wait for all tasks in tasks to have executed.
+</li>
+	<li>
+~RET ( ~data `null^c ) を伴う`成功$i
+◎
+Return success with data null.
+</li>
+</ol>
+</div>
+
+<div class="example">
+<p>
+~ID 23 を伴う`~session$の`現在の閲覧文脈$の
+<samp>{name: `midi$pN, sysex: true}</samp>
+用に許可を `granted^l に設定するためには、`局所端$は，次の本体を伴わせて
+<samp>/session/23/permissions</samp>
+に `POST^M することになる：
+◎
+To set permission for {name: "midi", sysex: true} of the current browsing context of the session with ID 23 to "granted", the local end would POST to /session/23/permissions with the body:
+</p>
+
+<pre class="lang-json">
+{
+  "descriptor": {
+    "name": "midi",
+    "sysex": true
+  },
+  "state": "granted"
+}
+</pre>
+</div>
+		</section>
+	</section>
+	<section id="examples">
+<h2 title="Examples">12. 各種 例</h2>
+
+<div class="example">
+
+<p>
+次の例は、~Permissions~APIを利用して，［
+~Geolocation~APIを利用して地域newsを示すべき
+］か, または［
+当の特能を追加する~buttonを提供する
+］かどうかを裁定する。
+◎
+This example uses the Permissions API to decide whether local news should be shown using the Geolocation API or with a button offering to add the feature.
+</p>
+
+<pre class="lang-js">
+%navigator.permissions.query({ name: "geolocation" }).then(({ %state }) =&gt; {
+  switch (%state) {
+    case `granted$pS:
+      showLocalNewsWithGeolocation();
+      break;
+    case `prompt$pS:
+      showButtonToEnableLocalNews();
+      break;
+    default:
+      /* <span class="comment">
+許可が否認されたときは何もしないこと。
+◎
+Don’t do anything if the permission was denied.
+</span> */
+      break;
+  }
+});
+</pre>
+
+</div>
+
+<div class="example">
+
+<p>
+次の例は， `notifications$pN 許可を利用して、許可~状態に依存して，~chat~app用に通知~buttonを示す。
+◎
+This example is using the "notifications" permission for a chat application to show a notification button depending on the permission state.
+</p>
+
+<pre class="lang-js">
+function updateNotificationButton(%state) {
+  document.getElementById('chat-notification-button')
+    .disabled = (%state === `denied$pS);
+}
+
+navigator.permissions.query({ name: 'notifications' }).then((%result) =&gt; {
+  updateNotificationButton(%result.state);
+  %result.addEventListener('change', () =&gt; {
+    updateNotificationButton(%result.state);
+  });
+});
+</pre>
+
+</div>
+
+<div class="example">
+
+<p>
+次の例は、~pageは［
+`geolocation$pN, `notifications$pN
+］両~許可を有するかどうかを検査する
+— ここでは `Promise$I の `all()^m 関数を利用する。
+◎
+This example is checking whether the page has the "geolocation" and the "notifications" permissions using Promise.all.
+</p>
+
+<pre class="lang-js">
+Promise.all([
+  navigator.permissions.query({ name: "geolocation" }),
+  navigator.permissions.query({ name: "notifications" })
+])
+.then(([{ state: %geoState }, { state: %notifState }]) =&gt; {
+  console.log("~Geolocationの許可~状態：", %geoState);
+  console.log("~Notificationsの許可~状態：", %notifState);
+});
+</pre>
+<!-- 
+  console.log("Geolocation permission state is:", geoState);
+  console.log("Notifications permission state is:", notifState);
+ -->
+</div>
+
+<div class="example">
+
+<p>
+次の例は、可用な~cameraたちの許可~状態を検査する。
+◎
+This example is checking the permission state of the available cameras.
+</p>
+
+<pre class="lang-js">
+navigator.mediaDevices
+  .enumerateDevices()
+  .then(%devices =&gt; {
+    return Promise.all(%devices
+      /* <span class="comment">
+動画~入力に絞り込む
+◎
+filter on video inputs
+</span> */
+      .filter(({ %kind }) =&gt; %kind === "videoinput")
+      /* <span class="comment">
+~query~objに対応付ける
+◎
+map to query object
+</span> */
+      .map(({ %deviceId }) =&gt; ({ name: "camera", %deviceId }))
+      /* <span class="comment">
+~query~promiseに対応付ける
+◎
+map to query promise
+</span> */
+      .map(%queryObj =&gt; navigator.permissions.query(%queryObj))
+    );
+  })
+  /* <span class="comment">
+状態や各~cameraの~logをとる
+◎
+log the state or each camera
+</span> */
+  .then(%results =&gt; results.forEach(
+    ({ %state }, %i) =&gt; console.log( "${%i} 番~cameraの許可~状態： ${%state}")
+  ))
+  .catch(
+    %err =&gt; console.error(%err.stack)
+  );
+</pre>
+</div>
+
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p>
+~API設計と編集作業に助力された、次の方々に：
+</p>
+
+<div lang="en-x-a0">
+The editors would like to thank Adrienne Porter Felt, Anne van Kesteren, Domenic Denicola, Jake Archibald and Wendy Seltzer for their help with the API design and editorial work.
+</div>
+
+	</section>
+</main></div>
+

@@ -1,0 +1,1606 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS Conditional Rules Module Level 3 （日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-css.css" type="text/css" />
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'ps': 
+	text = `:${key}`;
+	break;
+case 'at': 
+	text = `@${key}`;
+	break;
+case 't':
+	text = `&lt;${key}&gt;`;
+	break;
+case 'm':
+	const n = text.indexOf('(');
+	if(n > 0){
+		key = text.slice(0, n);
+		text = key + text.slice(n).replace(/\w+/g, '<var>$&</var>');
+	}
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'sl':
+	text = `[[${key}]]`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	default:
+		console.log(match);
+		return match;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_title:CSS Conditional Rules Module Level 3
+spec_date:2019-08-09
+trans_update:2019-07-24
+source_checked:180810
+page_state_key:CSS
+original_url:https://drafts.csswg.org/css-conditional-3/
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+conformance:css
+copyright:2019,permissive
+trans_1st_pub:2012-07-09
+
+
+●●class_map
+p:property
+at:at-rule
+css:css
+e:element
+a:attr
+v:value
+t:type
+E:error
+sl:js-slot
+
+●●tag_map
+p:code
+t:var
+P:code
+css:code
+e:code
+a:code
+at:code
+v:code
+I:code
+E:code
+m:code
+c:code
+V:var
+i:i
+sl:span
+em:em
+
+●●original_id_map
+
+
+●●mdn_urls
+at-ruledef-media:CSS/@media
+at-ruledef-supports:CSS/@supports
+
+cssconditionrule:API/CSSConditionRule
+cssmediarule:API/CSSMediaRule
+csssupportsrule:API/CSSSupportsRule
+
+●●link_map
+
+
+	●IDL
+SameObject:~WEBIDLjs#SameObject
+PutForwards:~WEBIDLjs#PutForwards
+Exposed:~WEBIDLjs#Exposed
+CSSOMString:~CSSOM1#cssomstring
+I.CSSConditionRule:#cssconditionrule
+I.CSSMediaRule:#cssmediarule
+I.CSSSupportsRule:#csssupportsrule
+I.CSSGroupingRule:~CSSOM1#cssgroupingrule
+I.CSS:~CSSOM1#namespacedef-css
+I.CSSRule:~CSSOM1#cssrule
+I.MediaList:~CSSOM1#medialist
+
+m.SUPPORTS_RULE:#dom-cssrule-supports_rule
+m.conditionText:#dom-cssconditionrule-conditiontext
+m.media:#dom-cssmediarule-media
+m.supports:#dom-css-supports
+m.~supports0:#dom-css-supports-conditiontext
+m.mediaText:~CSSOM1#dom-medialist-mediatext
+
+	●CSS
+
+p.display:~CSSDISP#propdef-display
+p.width:~CSS2VISUDET#propdef-width
+p.box-shadow:~CSSBG#propdef-box-shadow
+p.border:~CSSBG#propdef-border
+p.color:~CSSCOLOR#propdef-color
+
+at.media:#at-ruledef-media
+at.supports:#at-ruledef-supports
+at.import:~CASCADE#at-ruledef-import
+
+t.supports-condition:#typedef-supports-condition
+t.supports-in-parens:#typedef-supports-in-parens
+t.supports-feature:#typedef-supports-feature
+t.supports-decl:#typedef-supports-decl
+t.general-enclosed:~MQ4#typedef-general-enclosed
+t.media-query-list:~MQ4#typedef-media-query-list
+t.media-condition:~MQ4#typedef-media-condition
+t.stylesheet:~CSSSYN#typedef-stylesheet
+t.declaration:~CASCADE#typedef-declaration
+
+e.link:~HEmetadata#the-link-element
+
+	css.or:#or
+	css.not:~MQ4#valdef-media-not
+
+	●用語（外部
+媒体~query:~MQ4#media-query
+媒体~query~list:~MQ4#media-query-list
+条件付き~group規則:#conditional-group-rule
+~support:#dfn-support
+
+~at-rule:~CSSSYN#at-rule
+~custom~prop名~文字列:~CSSTOM1#custom-property-name-string
+~ASCII大小無視:~INFRA#ascii-case-insensitive
+文法に則って構文解析-:~CSSSYN#css-parse-something-according-to-a-css-grammar
+
+●●words_table1
+
+
+supports0:supports
+
+
+
+●●words_table
+
+
+
+	●CSS
+at-:
+flex:
+
+
+	●構文
+comma::::カンマ
+space::::スペース
+semicolon::::セミコロン
+minimizer:
+項:term::~
+導入部:prelude::~
+簡約:simplification::~
+下位式:subexpression::~
+式:expression::~
+丸括弧:parenthesis::~
+括弧:parentheses::~
+	~NEQ `失敗^i:successful
+簡約-:reduce:~
+削る:trimする:~
+演算子:operator::~
+
+	~token化:tokenization
+	接頭辞~付き:prefixed
+	開き:opening
+	先頭に:leading
+	末尾の:trailing
+	followed by
+	で括っ:wrapped in
+
+	●条件
+	~group化:grouping
+	unsupported
+上品:graceful::~
+退行-:degrade::~
+	degradation
+条件付き:conditional::~
+条件付けら:conditionさ::~
+真:true::~
+偽:false::~
+真偽:true/false::~
+
+論理積:conjunction::~
+論理和:disjunction::~
+否定:negation::~
+複合的:compound::~
+
+合致:match::~
+
+●保安
+集成-:aggregate:~
+稼働-:run:~
+
+	●IDL
+ns:namespace::名前空間
+派生d:derived::派生
+
+
+	●仕様
+存続期間:lifetime:~
+融通性:flexibility:~
+	代替の
+緩い:looseな:~
+緩く:looseに:~
+優先順位:precedence:~
+実用:usable:~
+	既定でない:non-default
+	将来との互換性:future-compatibility
+	開発者~用の:developer-facing
+	謎めいた:arcane
+	-:purpose
+	分別可能に:sensibly
+	ときどき:sometimes
+	他に:elsewhere
+	害を及ぼし:harmful
+	目的に:purposely
+	格段に〜し易く:much easier
+	相応のもの:substantial
+	に足るものではない:not sufficient
+	advancement
+	され過ぎ:too much of 
+	ある程度:some degree
+
+	●仕様（動詞
+受理-:accept:~
+強いら:forceさ:~
+	許容される場所:placement
+	要する:requireする
+	束ねる:tied
+	進行-:advance
+	不要な:unneeded
+	余分な:extra 〜 not needed
+
+	●未分類（動詞
+持続-:persist:~
+混在-:mix:~
+
+	置かれ:placeされ
+	残り続ける:remain
+	見当たら:found
+	逆になる:reversed
+	過ぎて:pastして
+	-:invisible
+	-:inclusion
+	-:exact
+
+	●未分類
+contrast::::コントラスト
+	高~contrast:high-contrast
+等価性:equivalence:~
+	-:equivalent
+色:color:~
+	現れ:appear
+
+	●指示語
+	並び:sequence
+	種:type
+	旧:older
+	所:location
+	より速やかに:faster
+	より大きい:greater
+	〜倍:times
+	%index
+	instead
+	consists
+	開始部分:beginning
+	部分:part
+	一部分:parts of
+	前の／以前に:previously
+	随時:at any time
+	主に:mainly
+	始まる所:beginning
+	もう一つの:the other
+
+
+●●ref_normative
+
+[CSS-CASCADE-4]
+    Elika Etemad; Tab Atkins Jr.. CSS Cascading and Inheritance Level 4. 28 August 2018. CR. URL: https://www.w3.org/TR/css-cascade-4/ 
+[CSS-SYNTAX-3]
+    Tab Atkins Jr.; Simon Sapin. CSS Syntax Module Level 3. 16 July 2019. CR. URL: https://www.w3.org/TR/css-syntax-3/ 
+[CSS-TYPED-OM-1]
+    Shane Stephens; Tab Atkins Jr.; Naina Raisinghani. CSS Typed OM Level 1. 10 April 2018. WD. URL: https://www.w3.org/TR/css-typed-om-1/ 
+[CSS-VALUES-4]
+    Tab Atkins Jr.; Elika Etemad. CSS Values and Units Module Level 4. 31 January 2019. WD. URL: https://www.w3.org/TR/css-values-4/ 
+[CSS21]
+    Bert Bos; et al. Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification. 7 June 2011. REC. URL: https://www.w3.org/TR/CSS2/ 
+[CSS3-ANIMATIONS]
+    Dean Jackson; et al. CSS Animations Level 1. 11 October 2018. WD. URL: https://www.w3.org/TR/css-animations-1/ 
+[CSSOM-1]
+    Simon Pieters; Glenn Adams. CSS Object Model (CSSOM). 17 March 2016. WD. URL: https://www.w3.org/TR/cssom-1/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[INFRA]
+    Anne van Kesteren; Domenic Denicola. Infra Standard. Living Standard. URL: https://infra.spec.whatwg.org/ 
+[MEDIAQUERIES-4]
+    Florian Rivoal; Tab Atkins Jr.. Media Queries Level 4. 5 September 2017. CR. URL: https://www.w3.org/TR/mediaqueries-4/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[WebIDL]
+    Boris Zbarsky. Web IDL. 15 December 2016. ED. URL: https://heycam.github.io/webidl/ 
+
+●●ref_informative
+
+[CSS-BACKGROUNDS-3]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. 17 October 2017. CR. URL: https://www.w3.org/TR/css-backgrounds-3/ 
+[CSS-COLOR-4]
+    Tab Atkins Jr.; Chris Lilley. CSS Color Module Level 4. 5 March 2019. WD. URL: https://www.w3.org/TR/css-color-4/ 
+[CSS-DISPLAY-3]
+    Tab Atkins Jr.; Elika Etemad. CSS Display Module Level 3. 11 July 2019. CR. URL: https://www.w3.org/TR/css-display-3/ 
+[CSS1]
+    Håkon Wium Lie; Bert Bos. Cascading Style Sheets, level 1. 13 September 2018. REC. URL: https://www.w3.org/TR/CSS1/ 
+[CSS3-TRANSITIONS]
+    David Baron; et al. CSS Transitions. 11 October 2018. WD. URL: https://www.w3.org/TR/css-transitions-1/ 
+
+
+●●trans_metadata
+
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">CSS Conditional Rules Module Level 3</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/css3-conditional/
+編集者草案
+	https://drafts.csswg.org/css3-conditional/
+以前のバージョン
+	https://www.w3.org/TR/2013/CR-css3-conditional-20130404/
+
+テスト一式
+	http://test.csswg.org/suites/css-conditional-3_dev/nightly-unstable/
+編集
+	<a href="https://dbaron.org/">L. David Baron</a> (Mozilla)
+
+Suggest an Edit for this Spec
+	<a href="https://github.com/w3c/csswg-drafts/blob/master/css-conditional-3/Overview.bs">GitHub Editor</a>
+最新の課題
+	<a href="https://github.com/w3c/csswg-drafts/labels/css3-conditional-3">GitHub Issues</a>
+commit 履歴
+	https://github.com/w3c/csswg-drafts/commits/master/css-conditional-3
+</script>
+
+</head>
+
+<body>
+
+<header>
+	<hgroup>
+<h1>CSS 条件付き規則 — CSS Conditional Rules Module Level 3</h1>
+	</hgroup>
+
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この~moduleには、~stylesheetの一部分を，処理器の能力や~stylesheetが適用される文書など, 一定の条件に基づいて処理するための~CSS特能が含まれている。
+これは、~CSS~level 1 `CSS1$r の上に築かれた ~CSS~level 2 `CSS21$r の機能性を包含し，それを拡張する。
+~level 2 に対する主な拡張には、
+`media$at の内側に 一定の~at-ruleを入子にできるようにすること，および
+条件付き処理~用に `supports$at 規則の追加がある。
+◎
+This module contains the features of CSS for conditional processing of parts of style sheets, conditioned on capabilities of the processor or the document the style sheet is being applied to. It includes and extends the functionality of CSS level 2 [CSS21], which builds on CSS level 1 [CSS1]. The main extensions compared to level 2 are allowing nesting of certain at-rules inside @media, and the addition of the @supports rule for conditional processing.
+</p>
+
+~CSSisaLANG
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+これは編集者草案の公の複製です…
+【以下，この節の他の内容は <a href="css-common-ja.html#status">CSS 日本語訳 共通ページ</a>に委譲。】
+</p>
+
+<!--end-status-->
+
+<p>
+次の特能は
+<a href="css-common-ja.html#at-risk">~risk下</a>
+にあり，勧告候補の期間中に取り下げられるかもしれません：
+◎
+The following features are at-risk, and may be dropped during the CR period:
+</p>
+
+<ul>
+	<li>
+単に仕様~策定の進捗状況に相対的な理由によるものですが、この仕様が与える すべての~at-ruleの中で許容される［
+`font-face^at ／ `keyframes^at
+］規則の包含は~risk下にあります。
+この仕様の策定が、これらの規則を定義する仕様より速やかに進行したならば、これらの規則の包含は、この仕様から これらの規則を定義する仕様に移動されることになります。
+◎
+The inclusion of @font-face rules and @keyframes rules as allowed within all of the at-rules in this specification is at risk, though only because of the relative rates of advancement of specifications. If this specification is able to advance faster than one or both of the specifications defining those rules, then the inclusion of those rules will move from this specification to the specification defining those rules.
+</li>
+	<li>
+［
+条件付き~group化~規則の内側の~at-rule
+］の~supportは、~risk下にあります。
+相互運用可能な実装が見当たらなければ、この仕様の中の他の特能を勧告案の段階に進めるため，除去される可能性があります。
+◎
+The addition of support for @-rules inside of conditional grouping rules is at risk; if interoperable implementations are not found, it may be removed to advance the other features in this specification to Proposed Recommendation.
+</li>
+</ul>
+
+	</section>
+
+<main id="MAIN0">
+	<section id="introduction">
+<h2 title="Introduction">1. 序論</h2>
+
+		<section id="context">
+<h3 title="Background">1.1. 背景</h3>
+
+~INFORMATIVE
+
+<p>
+`CSS21$r では、`条件付き~group規則$の一種として
+`media$at 規則が定義されており，その内側には（他の~at-ruleでない）~style規則のみが許容されている。
+`media$at 規則は、媒体に特有な~stylesheetを持つ能を供する。
+それは、 `import^at や `link$e などの，~stylesheetへ~linkする特能でも供されている。
+しかしながら， `media$at 規則の内容に課される制約があるため、媒体に特有な~stylesheetの中で~at-ruleを孕む~CSS特能を利用するときには，媒体ごとに別々の~stylesheetを利用することを強いられる。
+◎
+[CSS21] defines one type of conditional group rule, the @media rule, and allows only style rules (not other @-rules) inside of it. The @media rule provides the ability to have media-specific style sheets, which is also provided by style sheet linking features such as @import and link. The restrictions on the contents of @media rules made them less useful; they have forced authors using CSS features involving @-rules in media-specific style sheets to use separate style sheets for each medium.
+</p>
+
+<p>
+この仕様は、`条件付き~group規則$を，その内容として 他の~at-ruleも許容するように拡張する。
+これにより，作者は、単独の~stylesheetの中で，~at-ruleを孕む~CSS特能と, 媒体に特有な~stylesheetとを組合わすことが可能になる。
+◎
+This specification extends the rules for the contents of conditional group rules to allow other @-rules, which enables authors to combine CSS features involving @-rules with media specific style sheets within a single style sheet.
+</p>
+
+<p>
+この仕様は、作者と利用者からの要件に取組むための，別種の`条件付き~group規則$
+— `supports$at —
+も定義する。
+◎
+This specification also defines an additional type of conditional group rule, @supports, to address author and user requirements.
+</p>
+
+<p>
+`supports$at
+規則により，
+~CSS~propとその値に対する実装~supportの有無についての条件が加味された~CSSが可能になる。
+この規則は、新たな~CSS特能を 作者にとり格段に利用し易くし，それらの特能を~supportしない実装~用に良好な~fallbackを供する。
+これは特に、新たな~layoutの仕組みを供する~CSS特能，あるいは
+関係する~styleの集合が~propの~supportの有無に基づいて条件付けられる必要がある事例において、重要になる。
+◎
+The @supports rule allows CSS to be conditioned on implementation support for CSS properties and values. This rule makes it much easier for authors to use new CSS features and provide good fallback for implementations that do not support those features. This is particularly important for CSS features that provide new layout mechanisms, and for other cases where a set of related styles needs to be conditioned on property support.
+</p>
+		</section>
+		<section id="placement">
+<h3 title="Module Interactions">1.2. ~module間の相互作用</h3>
+
+<p>
+この~moduleは、 `CSS21$r § 7.2.1 にて定義される `media$at 規則の特能を置換し，それを拡張する。
+また、以前の `MEDIAQUERIES-4$r § 1 による規範的でない改変を組入れる。
+◎
+This module replaces and extends the @media rule feature defined in [CSS21] section 7.2.1 and incorporates the modifications previously made non-normatively by [MEDIAQUERIES-4] section 1.
+</p>
+
+		</section>
+	</section>
+	<section id="processing">
+<h2 title="Processing of conditional group rules">2. 条件付き~group規則の処理</h2>
+
+<p>
+この仕様は、
+`条件付き~group規則@
+と呼ばれる~CSS`~at-rule$を定義する。
+それは、いくつかの~CSS規則からなる~groupに，条件を結付ける。
+~testする条件には様々なものが許容されるが、［
+内容が，条件の真偽に基づいてどう利用されるか
+］については，共通な挙動を共有する。
+◎
+This specification defines some CSS at-rules, called conditional group rules, that associate a condition with a group of other CSS rules. These different rules allow testing different types of conditions, but share common behavior for how their contents are used when the condition is true and when the condition is false.
+</p>
+
+<div class="example">
+<p>
+例えば次の規則：
+◎
+For example, this rule:
+</p>
+
+<pre class="lang-css">
+@media print {
+  /* <span class="comment">
+印刷~時には、~navi~controlを隠す
+◎
+hide navigation controls when printing
+</span> */
+  #navigation { display: none }
+}
+</pre>
+
+<p>
+では、当の~stylesheetが印刷~媒体に利用されるときに限り，特定0の~CSS規則が適用されるようにする（ここでは ID "<samp>navigation</samp>" の要素を
+<code class="css">`display$p: `none^v</code>
+にする）。
+◎
+causes a particular CSS rule (making elements with ID “navigation” be display:none) apply only when the style sheet is used for a print medium.
+</p>
+</div>
+
+<p>
+各 `条件付き~group規則$は、随時, `真^i または `偽^i に評価される条件を持つ。
+~CSS処理器は、条件が `真^i のときは，~group規則の内側の規則を それらが~group規則の所に在ったかのように 適用するモノトスル。
+~CSS処理器は、条件が `偽^i のときは，~group規則の内側のどの規則も 適用しないモノトスル。
+条件の現在の状態が ~CSS~obj~modelに影響することはない — ~group規則の内容は常に~group規則の中に残り続ける。
+◎
+Each conditional group rule has a condition, which at any time evaluates to true or false. When the condition is true, CSS processors must apply the rules inside the group rule as though they were at the group rule’s location; when the condition is false, CSS processors must not apply any of rules inside the group rule. The current state of the condition does not affect the CSS object model, in which the contents of the group rule always remain within the group rule.
+</p>
+
+<p>
+これは，`条件付き~group規則$が複数段にわたって入子にされているときは、それらの~group規則の条件すべてが `真^i になるときに限り，その末端の内側の規則が適用されることを意味する。
+◎
+This means that when multiple conditional group rules are nested, a rule inside of both of them applies only when all of the rules' conditions are true.
+</p>
+
+<div class="example"><p>
+例えば，規則の集合が 次の様に入子にされている場合：
+◎
+For example, with this set of nested rules:
+</p>
+
+<pre class="lang-css">
+@media print { /* 規則 (1) */
+  /* <span class="comment">
+印刷~時には、~navi~controlを隠す
+◎
+hide navigation controls when printing
+</span> */
+  #navigation { display: none }
+  @media (max-width: 12cm) { /* 規則 (2) */
+    /* <span class="comment">
+狭い~pageに印刷するときは、 `.note^css を~flow内に保つ
+◎
+keep notes in flow when printing to narrow pages
+</span> */
+    .note { float: none }
+  }
+}
+</pre>
+
+<p>
+規則 (1) の条件は印刷~媒体に対しては `真^i であり，
+規則 (2) の条件は表示~区画（印刷~媒体の場合は~page~box）の横幅が 12 cm 以下のときに `真^i になる。
+したがって、規則
+<samp class="css">#navigation { `display$p: `none^v }</samp>
+は，この~stylesheetが印刷~媒体に適用されているときに適用され、規則
+<samp class="css">.note { `float^p: `none^v }</samp>
+は，~stylesheetが印刷~媒体に適用されていて, `かつ^em ~page~boxの横幅が 12 cm 以下のときに限り適用される。
+◎
+the condition of the rule marked (1) is true for print media, and the condition of the rule marked (2) is true when the width of the display area (which for print media is the page box) is less than or equal to 12cm. Thus the rule #navigation { display: none } applies whenever this style sheet is applied to print media, and the rule .note { float: none } is applied only when the style sheet is applied to print media and the width of the page box is less than or equal to 12 centimeters.
+</p>
+</div>
+
+<p>
+~CSS処理器は、`条件付き~group規則$の条件が
+【例えば~scriptにより， CSSOM を通して】
+変更されたときには、その真偽に応じて，その規則の適用-可否を反映するモノトスル。
+ただし、内側にある~propのうち，その算出d値の効果が その値の存続期間を過ぎても持続するものと定義されているものは除く（例えば
+`CSS3-TRANSITIONS$r や `CSS3-ANIMATIONS$r
+の一部の~prop）。
+◎
+When the condition for a conditional group rule changes, CSS processors must reflect that the rules now apply or no longer apply, except for properties whose definitions define effects of computed values that persist past the lifetime of that value (such as for some properties in [CSS3-TRANSITIONS] and [CSS3-ANIMATIONS]).
+</p>
+	</section>
+	<section id="contents-of">
+<h2 title="Contents of conditional group rules">3. 条件付き~group規則の内容</h2>
+
+<p>
+どの`条件付き~group規則$も、自身の~block内に `stylesheet$t をとるものと定義される。
+すなわち、通常は~stylesheetの~top-levelに許容される，どの規則も受容できることを意味する
+— 他から制約されない限り。
+（例えば、 `import$at 規則は，~stylesheetが実際に始まる所に現れなければナラナイので、別の規則の内側では妥当でない。）
+◎
+All conditional rules are defined to take a &lt;stylesheet&gt; in their block, which means they can accept any rule that is normally allowed at the top-level of a stylesheet, and not otherwise restricted. (For example, an @import rule must appear at the actual beginning of a stylesheet, and so is not valid inside of another rule.)
+</p>
+
+<p>
+`stylesheet$t の内側にある規則のうち，妥当でない, または未知なものは、無効であり，無視されるものと見なされるモノトスル。
+が、`条件付き~group規則$を無効~化することはない。
+◎
+Invalid or unknown rules inside the &lt;stylesheet&gt; must be considered invalid and ignored, but do not invalidate the conditional rule.
+</p>
+
+	</section>
+	<section id="use">
+<h2 title="Placement of conditional group rules">4. 条件付き~group規則が許容される場所</h2>
+
+<p>
+`条件付き~group規則$は、~stylesheetの~top-level, および
+他の`条件付き~group規則$の内側にて許容される。
+~CSS処理器は、それらを
+<a href="#processing">§ 条件付き~group規則の処理</a>
+に従って処理するモノトスル。
+◎
+Conditional group rules are allowed at the top-level of a style sheet, and inside other conditional group rules. CSS processors must process such rules as described above.
+</p>
+
+<p>
+~style規則より後には許容されない規則（例えば
+`charset^at, `import^at, `namespace^at
+規則など）は、`条件付き~group規則$の後でも許容されない。
+したがって、~stylesheetの中では，そのような規則が`条件付き~group規則$の後に置かれてはナラナイ。
+また、~CSS処理器は，そのような規則を無視するモノトスル。
+◎
+Any rules that are not allowed after a style rule (e.g., @charset, @import, or @namespace rules) are also not allowed after a conditional group rule. Therefore, style sheets must not place such rules after a conditional group rules, and CSS processors must ignore such rules.
+</p>
+
+	</section>
+	<section id="at-media">
+<h2 title="Media-specific style sheets: the @media rule">5. 媒体に特有な~stylesheet： `media^at 規則</h2>
+
+<p>
+`media@at
+規則は、条件が`媒体~query$であるような `条件付き~group規則$である。
+その構文は：
+◎
+The @media rule is a conditional group rule whose condition is a media query. Its syntax is:
+</p>
+
+<pre class="prod">
+@media `media-query-list$t {
+  `stylesheet$t
+}
+</pre>
+
+<p>
+それは，［
+at-~keyword `media$at,
+`媒体~query~list$（空もとり得る, `MEDIAQUERIES-4$r にて定義される）,
+任意な規則を包含する~block
+］の並びからなる。
+規則の条件は，`媒体~query$の結果で与えられる。
+◎
+It consists of the at-keyword @media followed by a (possibly empty) media query list (as defined in [MEDIAQUERIES-4]), followed by a block containing arbitrary rules. The condition of the rule is the result of the media query.
+</p>
+
+<div class="example">
+<p>
+次の `media$at 規則：
+◎
+This @media rule:
+</p>
+
+<pre class="lang-css">
+@media screen and (min-width: 35em),
+       print and (min-width: 40em) {
+  #section_navigation { float: left; width: 10em; }
+}
+</pre>
+
+<p>
+は、［
+~screen表示であって, かつ その表示域の横幅が初期~font~sizeの 35 倍以上である
+］, または［
+印刷~表示であって, かつ その表示域の横幅が初期~font~sizeの 40 倍以上である
+］ときに、 `真^i になる条件
+<samp class="css">screen and (`min-width^p: `35em^v), print and (`min-width^p: `40em^v)</samp>
+を持つ。
+これらのいずれかが成立するとき，規則の条件は `真^i になり、規則
+<samp class="css">#section_navigation { `float^p: `left^v; `width^p: `10em^v; }</samp>
+が適用される。
+◎
+has the condition screen and (min-width: 35em), print and (min-width: 40em), which is true for screen displays whose viewport is at least 35 times the initial font size and for print displays whose viewport is at least 40 times the initial font size. When either of these is true, the condition of the rule is true, and the rule #section_navigation { float: left; width: 10em; } is applied.
+</p>
+
+</div>
+
+	</section>
+	<section id="at-supports">
+<h2 title="Feature queries: the @supports rule">6. 特能~query： `supports^at 規則</h2>
+
+<p>
+`supports@at
+規則は、~UAが ［ ~CSS~prop: その値 ］の組を`~support$するかどうかを~testする，`条件付き~group規則$である。
+これを，［
+新たな特能が~supportされていて可用なときは それを利用し，そうでなければ 上品に退行する
+］ような~stylesheetを記すときに、利用できる。
+~CSSには、未~supportな［
+~prop／~propの値
+］を無視するなど，上品に退行するための既存の仕組みも備わっているが、［
+新たな~layout~systemによる特能
+］を利用するときなど，［
+~styleの巨大な~groupを，一定の特能の~supportに束ねる
+］に足るものではない。
+◎
+The @supports rule is a conditional group rule whose condition tests whether the user agent supports CSS property:value pairs. Authors can use it to write style sheets that use new features when available but degrade gracefully when those features are not supported. CSS has existing mechanisms for graceful degradation, such as ignoring unsupported properties or values, but these are not always sufficient when large groups of styles need to be tied to the support for certain features, as is the case for use of new layout system features.
+</p>
+
+<p>
+`supports$at 規則~内の条件の構文は、 `MEDIAQUERIES-4$r における `media-condition$t のそれに類似する：
+◎
+The syntax of the condition in the @supports rule is similar to that defined for &lt;media-condition&gt; in [MEDIAQUERIES-4]:
+</p>
+
+<ul>
+	<li>
+新たな特能による~styleと, ~fallbackの~styleを，［
+（~at-ruleの構文~用の前方-互換な文法の規則の中で）分離できるようにする
+］ため, および［
+互いが相手を上書きしないようにする
+］ためには、否定（ `negation^en — `not^css ）が必要になる。
+◎
+negation is needed so that the new-feature styles and the fallback styles can be separated (within the forward-compatible grammar’s rules for the syntax of @-rules), and not required to override each other.
+</li>
+	<li>
+複数の特能が要求されるときに，それを~testするためには、論理積（ `conjunction^en — `and^css ）が必要になる。
+◎
+conjunction (and) is needed so that multiple required features can be tested.
+</li>
+	<li>
+~style集合~用の，代替の特能が複数あるときには、論理和（ `disjunction^en — `or^css ）が必要になる。
+特に、それらの代替の一部が，~vendor接頭辞~付きの~prop名／値であるとき。
+◎
+disjunction (or) is needed when there are multiple alternative features for a set of styles, particularly when some of those alternatives are vendor-prefixed properties or values.
+</li>
+	<li>
+将来との互換性を許容するため，（ `真^i でも `偽^i でもない） `未知^i 値が必要になる。
+なので、新たな型の~support~queryを追加でき，旧~UAからも分別可能に扱われる。
+◎
+"unknown" values (neither true nor false) are needed to allow for future-compatibility, so new types of support queries can be added and treated sensibly in older UAs.
+</li>
+</ul>
+
+<p>
+したがって， `supports$at 規則の構文では、~propの［名前:値］の組, および
+それらを［
+論理積（ `and^css ）, 論理和（ `or^css ）, 否定（ `not^css ）
+］により任意に組み合わせる~testが許容される。
+◎
+Therefore, the syntax of the @supports rule allows testing for property:value pairs, and arbitrary conjunctions (and), disjunctions (or), and negations (not) of them.
+</p>
+
+<p>
+`supports$at 規則の構文は：
+◎
+The syntax of the @supports rule is:
+</p>
+
+<pre class="prod">
+@supports `supports-condition$t {
+  `stylesheet$t
+}
+</pre>
+
+<p>
+ここで、 `supports-condition$t は次で定義される：
+◎
+with &lt;supports-condition&gt; defined as:
+</p>
+
+<pre class="prod">
+`supports-condition@t
+    = not `supports-in-parens$t
+    | `supports-in-parens$t [ and `supports-in-parens$t ]*
+    | `supports-in-parens$t [ or `supports-in-parens$t ]*
+`supports-in-parens@t
+    = ( `supports-condition$t )
+    | `supports-feature$t
+    | `general-enclosed$t
+`supports-feature@t
+    = `supports-decl$t
+`supports-decl@t
+    = ( `declaration$t )
+</pre>
+
+<p>
+上の文法は、前方-互換性の理由を目的に，ごく緩くされている
+— `general-enclosed$t 生成規則が，将来の拡張能を得るために相応のものを許容しているので。
+上の文法に則って構文解析できない `supports$at 規則（すなわち `general-enclosed$t 生成規則を含みつつ，この緩い文法に合致しない規則）は、妥当でない。
+~stylesheetには、そのような規則を利用してはナラナイ。
+処理器は、そのような規則を（そのすべての内容も含め）無視するモノトスル。
+◎
+The above grammar is purposely very loose for forwards-compatibility reasons, since the &lt;general-enclosed&gt; production allows for substantial future extensibility. Any @supports rule that does not parse according to the grammar above (that is, a rule that does not match this loose grammar which includes the &lt;general-enclosed&gt; production) is invalid. Style sheets must not use such a rule and processors must ignore such a rule (including all of its contents).
+</p>
+
+<p>
+これらの文法~項のそれぞれは、次に従って真偽値による結果に結付けられる：
+◎
+Each of these grammar terms is associated with a boolean result, as follows:
+</p>
+
+<dl class="valdef">
+	<dt>`supports-condition$t</dt>
+	<dt>`supports-in-parens$t</dt>
+	<dd>
+結果は、子~下位式の結果になる。
+◎
+The result is the result of the child subexpression.
+</dd>
+
+	<dt>not `supports-in-parens$t</dt>
+	<dd>
+結果は、子 `supports-in-parens$t 項の `否定^em になる。
+`未知^i の否定は `未知^i になるとする。
+◎
+The result is the negation of the &lt;supports-in-parens&gt; term. The negation of unknown is unknown.
+</dd>
+
+	<dt>`supports-in-parens$t [ and `supports-in-parens$t ]*</dt>
+	<dd>
+結果は、子 `supports-in-parens$t 項のうち
+⇒＃
+すべてが `真^i ならば `真^i になる ／
+どれか一つでも `偽^i ならば `偽^i になる ／
+他の場合は `未知^i になる
+◎
+The result is true if all of the &lt;supports-in-parens&gt; child terms are true, false if at least one of the &lt;supports-in-parens&gt; is false, and unknown otherwise.
+</dd>
+
+	<dt>`supports-in-parens$t [ or `supports-in-parens$t ]*</dt>
+	<dd>
+結果は、子 `supports-in-parens$t 項のうち
+⇒＃
+すべてが `偽^i ならば `偽^i になる ／
+どれか一つでも `真^i ならば `真^i になる ／
+他の場合は `未知^i になる
+◎
+The result is false if all of the &lt;supports-in-parens&gt; child terms are false, true if at least one of the &lt;supports-in-parens&gt; is true, and unknown otherwise.
+</dd>
+
+	<dt>`supports-decl$t</dt>
+	<dd>
+結果は、~UAが 括弧~内の宣言を`~support$するならば `真^i, 他の場合は `偽^i になる。
+◎
+The result is true if the UA supports the declaration within the parentheses.
+</dd>
+
+	<dt>`general-enclosed$t</dt>
+	<dd>
+結果は `未知^i になる。
+◎
+The result is unknown.
+</dd>
+	<dd>
+作者は、 `general-enclosed$t を利用してはナラナイ。
+これは、新たな構文が追加されても，旧~UAにおいて `supports-condition$t が無効~化され過ぎないよう，将来の互換性を得るために限り存在する。
+◎
+Authors must not use &lt;general-enclosed&gt; in their stylesheets. It exists only for future-compatibility, so that new syntax additions do not invalidate too much of a &lt;supports-condition&gt; in older user agents.
+</dd>
+</dl>
+
+<p>
+`supports$at 規則の条件は、その導入部を成す `supports-condition$t 項の結果で与えられる。
+◎
+The condition of the @supports rule is the result of the &lt;supports-condition&gt; in its prelude.
+</p>
+
+
+<div class="example">
+
+<p>
+例えば，次の規則：
+◎
+For example, the following rule
+</p>
+
+<pre class="lang-css">
+@supports ( display: flex ) {
+  body, #navigation, #content { display: flex; }
+  #navigation { background: blue; color: white; }
+  #article { background: white; color: black; }
+}
+</pre>
+
+<p>
+は、
+<samp class="css">`display$p: `flex^v</samp>
+が`~support$されるときにのみ，
+`supports$at 規則の内側の規則を適用する。
+◎
+applies the rules inside the @supports rule only when display: flex is supported.
+</p>
+
+</div>
+
+<div class="example">
+<p>
+次の例に
+<samp class="css">`display$p: `flex^v</samp>
+が`~support$されないときに代替を供する，追加的な `supports$at 規則を示す：
+◎
+The following example shows an additional @supports rule that can be used to provide an alternative for when display: flex is not supported:
+</p>
+
+<pre class="lang-css">
+@supports not ( display: flex ) {
+  body { width: 100%; height: 100%; background: white; color: black; }
+  #navigation { width: 25%; }
+  #article { width: 75%; }
+}
+</pre>
+
+<p>
+`width$p 宣言は，~flexに基づく~layoutには害を及ぼし得るので、非~flex~style内に限り在ることが重要になることに注意。
+◎
+Note that the width declarations may be harmful to the flex-based layout, so it is important that they be present only in the non-flex styles.
+</p>
+
+</div>
+
+<div class="example">
+<p>
+次の例では、 `box-shadow$p ~propの`~support$の有無を，その~vendor接頭辞（ `-foo-^css ）付き~versionも含め，検査する。
+それは、（接頭辞~付きの~versionも含め）`~support$されるときには，~boxの
+`border$p に代わって影（ `box-shadow$p ）が見えるように指定する。
+◎
+The following example checks for support for the box-shadow property, including checking for support for vendor-prefixed versions of it. When the support is present, it specifies both box-shadow (with the prefixed versions) and border in a way what would cause the box to become invisible were box-shadow not supported.
+</p>
+
+<pre class="lang-css">
+.noticebox {
+  border: 1px solid black;
+  padding: 1px;
+}
+@supports ( box-shadow: 0 0 2px black inset ) or
+          ( -foo-box-shadow: 0 0 2px black inset ) {
+  .noticebox {
+    -foo-box-shadow: 0 0 2px black inset;
+    box-shadow: 0 0 2px black inset;
+    /* <span class="comment">
+上の規則を `supports$at 規則の中で上書きする
+◎
+override the rule above the @supports rule
+</span> */
+    border: none;
+    padding: 2px;
+  }
+}
+</pre>
+
+</div>
+
+<p>
+構文においては，混同を避けるため、
+`and^css と `or^css の両者とも，明示的に指定することが要求される（~commaや~spaceで代用するのではなく）。
+同様に，優先順位の混同を避けるため、［
+`and^css,`or^css, `not^css
+］演算子が混在するときは，括弧の利用が要求される。
+◎
+To avoid confusion between and and or, the syntax requires that both and and or be specified explicitly (rather than, say, using commas or spaces for one of them). Likewise, to avoid confusion caused by precedence rules, the syntax does not allow and, or, and not operators to be mixed without a layer of parentheses.
+</p>
+
+<div class="example">
+<p>
+例えば，次の規則は妥当でない：
+◎
+For example, the following rule is not valid:
+</p>
+
+<pre class="lang-css illegal">
+@supports (transition-property: color) or
+          (animation-name: foo) and
+          (transform: rotate(10deg)) {
+  /* ... */
+}
+</pre>
+
+<p>
+代わりに，次の様に書かれなければナラナイ：
+◎
+Instead, authors must write one of the following:
+</p>
+
+<pre class="lang-css">
+@supports ((transition-property: color) or
+           (animation-name: foo)) and
+          (transform: rotate(10deg)) {
+  /* ... */
+}
+</pre>
+
+<p >あるいは</p>
+
+<pre class="lang-css">
+@supports (transition-property: color) or
+          ((animation-name: foo) and
+           (transform: rotate(10deg))) {
+  /* ... */
+}
+</pre>
+
+</div>
+
+<p>
+~testされている宣言は、式を成す唯一の~~成分であるときは，括弧で括られなければナラナイ。
+◎
+The declaration being tested must always occur within parentheses, when it is the only thing in the expression.
+</p>
+
+<div class="example">
+<p>
+例えば，次の規則は妥当でない：
+◎
+For example, the following rule is not valid:
+</p>
+
+<pre class="lang-css illegal">
+@supports display: flex {
+  /* ... */
+}
+</pre>
+
+<p>
+代わりに次の様に書かれなければナラナイ：
+◎
+Instead, authors must write:
+</p>
+
+<pre class="lang-css">
+@supports (display: flex) {
+  /* ... */
+}
+</pre>
+
+</div>
+
+<p>
+構文では、余分な括弧も許容される。
+この融通性は、作者にとりときどき有用になる（例えば，式の一部分を~commentで外すとき）。
+また、著作~toolにとっても有用になる。
+◎
+The syntax allows extra parentheses when they are not needed. This flexibility is sometimes useful for authors (for example, when commenting out parts of an expression) and may also be useful for authoring tools.
+</p>
+
+<div class="example">
+<p>
+例えば，次の様に書かれてもよい：
+◎
+For example, authors may write:
+</p>
+
+<pre class="lang-css">
+@supports ((display: flex)) {
+  /* ... */
+}
+</pre>
+
+</div>
+
+<p>
+~testされる宣言の末尾の `!important^css は許容される。
+宣言の妥当性には影響しないが。
+◎
+A trailing !important on a declaration being tested is allowed, though it won’t change the validity of the declaration.
+</p>
+
+<div class="example">
+<p>
+例えば，次の規則は妥当である：
+◎
+For example, the following rule is valid:
+</p>
+
+<pre class="lang-css">
+@supports (display: flex !important) {
+  /* ... */
+}
+</pre>
+
+</div>
+
+		<section id="support-definition">
+<h3 title="Definition of support">6.1. ~supportの定義</h3>
+
+<p>
+前方-互換性を得るため、
+`CSS21$r <a href="~CSS22/syndata.html#declaration">§ 4.1.8</a>
+（宣言と~prop）には，~propや値が妥当でないときの取扱い規則が定義されている。
+仕様を実装しない あるいは部分的に実装する~CSS処理器は、自身が実装しない, あるいは実用~levelで~supportしない値のどの部分も，この［
+~propや値が妥当でないときの取扱い規則
+］に則って妥当でないものとして扱うモノトスル
+— したがって，その宣言を構文解析-~errorとして破棄するモノトスル。
+◎
+For forward-compatibility, section 4.1.8 (Declarations and properties) of [CSS21] defines rules for handling invalid properties and values. CSS processors that do not implement or partially implement a specification must treat any part of a value that they do not implement, or do not have a usable level of support for, as invalid according to this rule for handling invalid properties and values, and therefore must discard the declaration as a parse error.
+</p>
+
+<p>
+~CSS処理器は、（~propと値からなる）宣言を（構文解析-~errorとして破棄せずに）受理するとき，その宣言を
+`~support@
+するとされる。
+所与の値を実装しない, あるいは実用~levelで~supportしない処理器は、その宣言を受理したり, それを~supportすると主張してはナラナイ。
+◎
+A CSS processor is considered to support a declaration (consisting of a property and value) if it accepts that declaration (rather than discarding it as a parse error). If a processor does not implement, with a usable level of support, the value given, then it must not accept the declaration or claim support for it.
+</p>
+
+<p class="note">注記：
+利用者の選好により~supportが実質的に不能化された~propや値は、依然として，この定義の下では`~support$するものと見なされることに注意。
+例えば、利用者が 色を上書きする高~contrast~modeを可能化したために，
+`color$p ~propの宣言による効果が失われたとしても、依然として，~CSS処理器はその~propを`~support$するものと見なされる。
+他方、試験的な~CSS特能の~supportを可能化-／不能化するような，開発者~用の選好は、この`~support$の定義に影響する。
+◎
+Note: Note that properties or values whose support is effectively disabled by user preferences are still considered as supported by this definition. For example, if a user has enabled a high-contrast mode that causes colors to be overridden, the CSS processor is still considered to support the color property even though declarations of the color property may have no effect. On the other hand, a developer-facing preference whose purpose is to enable or disable support for an experimental CSS feature does affect this definition of support.
+</p>
+
+<p>
+これらの規則（およびそれらの間の等価性）により、実装されている特能が正しく働くような，作者による~fallbackの利用が可能になる（
+先に現れた宣言を後の宣言で上書きする
+`CSS1$r 宣言のイミにおいても，あるいは
+この仕様の `supports$at 規則が供する新たな能力が伴われている~~状況においても）。
+このことは、とりわけ，複合的な値にも適用される — すなわち，［
+~style規則の内側, あるいは
+`supports$at 規則の宣言~条件の中
+］の宣言が`~support$されると見なされるためには、その値のすべての部分が実装されなければナラナイ。
+◎
+These rules (and the equivalence between them) allow authors to use fallback (either in the [CSS1] sense of declarations that are overridden by later declarations or with the new capabilities provided by the @supports rule in this specification) that works correctly for the features implemented. This applies especially to compound values; implementations must implement all parts of the value in order to consider the declaration supported, either inside a style rule or in the declaration condition of an @supports rule.
+</p>
+
+		</section>
+	</section>
+	<section id="apis">
+<h2 title="APIs">7. API</h2>
+
+		<section id="extentions-to-cssrule-interface">
+<h3 title="Extensions to the CSSRule interface">7.1. `CSSRule^I ~interfaceに対する拡張</h3>
+
+<p>
+`CSSRule$I ~interfaceは次に従って拡張される：
+◎
+The CSSRule interface is extended as follows:
+</p>
+
+<pre class="idl">
+partial interface `CSSRule$I {
+    const unsigned short `SUPPORTS_RULE@m = 12;
+    <!--
+    const unsigned short DOCUMENT_RULE = 13;
+    -->
+};
+</pre>
+
+
+		</section>
+		<section id="the-cssconditionrule-interface">
+<h3 title="The CSSConditionRule interface">7.2. `CSSConditionRule^I ~interface</h3>
+
+<p>
+`CSSConditionRule$I ~interfaceは、条件と［文の~block］からなる，すべての種類の “条件付き” ~at-ruleを表現する【基底~interfaceである】。
+◎
+The CSSConditionRule interface represents all the “conditional” at-rules, which consist of a condition and a statement block.
+</p>
+
+<pre class="idl">
+[`Exposed$=Window]
+interface `CSSConditionRule@I : `CSSGroupingRule$I {
+    attribute `CSSOMString$ `conditionText$m;
+};
+</pre>
+
+<dl class="idl-def">
+	<dt>`conditionText@m</dt>
+	<dd>
+<p>
+この属性は、規則の条件を表現する。
+この条件は `CSSConditionRule$I の派生d~interfaceによって様々であり、それらの派生d~interfaceはこの属性に対し，異なる挙動を指定し得る（例えば，下の `CSSMediaRule$I ）。
+その種の規則に特有な挙動が無い下では、次の規則が適用される：
+◎
+The conditionText attribute represents the condition of the rule. Since what this condition does varies between the derived interfaces of CSSConditionRule, those derived interfaces may specify different behavior for this attribute (see, for example, CSSMediaRule below). In the absence of such rule-specific behavior, the following rules apply:
+</p>
+		<ul>
+			<li>
+取得子は、結付けられている条件を直列化した結果を返すモノトスル。
+◎
+The conditionText attribute, on getting, must return the result of serializing the associated condition.
+</li>
+			<li>
+<p>
+設定子は、次を走らすモノトスル：
+◎
+On setting the conditionText attribute these steps must be run:
+</p>
+
+				<ol>
+					<li>
+所与の値の前後の空白 並びを削る。
+◎
+Trim the given value of white space.
+</li>
+					<li>
+所与の値が、所与の規則に対する適切な条件 生成規則の文法に合致する場合、結付けられている~CSS条件を所与の値で置換する。
+◎
+If the given value matches the grammar of the appropriate condition production for the given rule, replace the associated CSS condition with the given value.
+</li>
+					<li>
+他の場合、何もしない。
+◎
+Otherwise, do nothing.
+</li>
+				</ol>
+			</li>
+		</ul>
+	</dd>
+</dl>
+
+		</section>
+		<section id="the-cssmediarule-interface">
+<h3 title="The CSSMediaRule interface">7.3. `CSSMediaRule^I ~interface</h3>
+
+<p>
+`CSSMediaRule$I ~interfaceは `media$at ~at-ruleを表現する：
+◎
+The CSSMediaRule interface represents a @media at-rule:
+</p>
+
+<pre class="idl">
+[`Exposed$=Window]
+interface `CSSMediaRule@I : `CSSConditionRule$I {
+    [`SameObject$, `PutForwards$=`mediaText$m] readonly attribute `MediaList$I `media$m;
+};
+</pre>
+
+<dl class="idl-def">
+	<dt>`media@m</dt>
+	<dd>
+取得子は、［
+`media$at ~at-ruleで指定された，`媒体~query$の~list
+］に対する `MediaList$I ~objを返すモノトスル。
+◎
+The media attribute must return a MediaList object for the list of media queries specified with the @media at-rule.
+</dd>
+
+	<dt>`conditionText$m</dt>
+<!-- 
+(CSSMediaRule-specific definition for attribute on CSSConditionRule) 
+-->
+	<dd>
+<p>
+基底~interface `CSSConditionRule$I にて定義される，この属性には、この~interfaceに特有な挙動が定義される：
+</p>
+		<ul>
+			<li>
+取得子は、この規則の `media$m 上の `mediaText$m 属性の値を返すモノトスル。
+◎
+The conditionText attribute (defined on the CSSConditionRule parent rule), on getting, must return the value of media.mediaText on the rule.
+</li>
+			<li>
+設定子は、この規則の `media$m 上の `mediaText$m 属性に所与の値を設定するモノトスル。
+◎
+Setting the conditionText attribute must set the media.mediaText attribute on the rule.
+</li>
+		</ul>
+	</dd>
+</dl>
+
+		</section>
+		<section id="the-csssupportsrule-interface">
+<h3 title="The CSSSupportsRule interface">7.4. `CSSSupportsRule^I ~interface</h3>
+
+<p>
+`CSSSupportsRule$I ~interfaceは `supports$at 規則を表現する。
+◎
+The CSSSupportsRule interface represents a @supports rule.
+</p>
+
+<pre class="idl">
+[`Exposed$=Window]
+interface `CSSSupportsRule@I : `CSSConditionRule$I {
+};
+</pre>
+
+<dl class="idl-def">
+	<dt>`conditionText$m</dt>
+	<dd>
+<p>
+基底~interface `CSSConditionRule$I にて定義される，この属性には、この~interfaceに特有な挙動が定義される：
+</p>
+		<ul>
+			<li>
+取得子は、指定されている条件を返すモノトスル。
+</li>
+			<li>
+指定されている条件が、この仕様に適合するどの実装の下でも同じ結果に評価されるようにするため、返される条件には，いかなる論理的な簡約も施されてはならない（［
+`general-enclosed$t による，この仕様における拡張能の仕組み
+］により許容される，将来の拡張を実装する実装も含め）。
+言い換えれば、~token~streamの簡約は許容されるが（空白を， 1 個の~spaceに簡約したり, 省略できる所では省略するなど）、論理的な簡約（不要な括弧の除去や, 評価-結果に基づく，簡約など）は許容されない。
+</li>
+		</ul>
+◎
+The conditionText attribute (defined on the CSSConditionRule parent rule), on getting, must return the condition that was specified, without any logical simplifications, so that the returned condition will evaluate to the same result as the specified condition in any conformant implementation of this specification (including implementations that implement future extensions allowed by the &lt;general-enclosed&gt; extensibility mechanism in this specification). In other words, token stream simplifications are allowed (such as reducing whitespace to a single space or omitting it in cases where it is known to be optional), but logical simplifications (such as removal of unneeded parentheses, or simplification based on evaluating results) are not allowed.
+</dd>
+</dl>
+
+		</section>
+		<section id="the-css-namespace">
+<h3 title="The CSS namespace, and the supports() function">7.5. `CSS^I ~nsと `supports()^m 関数</h3>
+
+
+<p>
+`CSS$I ~nsは、他に属さない有用な~CSSに関係する関数を保持する。
+◎
+The CSS namespace holds useful CSS-related functions that do not belong elsewhere.
+</p>
+
+<pre class="idl">
+partial namespace `CSS$I {
+  boolean `supports$m(`CSSOMString$ %property, `CSSOMString$ %value);
+  boolean `~supports0$m(`CSSOMString$ %conditionText);
+};
+</pre>
+
+<dl class="idl-def">
+	<dt>`supports(property, value)@m</dt>
+	<dd>
+<p>
+被呼出時には、次を走らす：
+◎
+When the supports(property, value) method is invoked with two arguments property and value:
+</p>
+		<ol>
+			<li>
+~IF［
+%property は、ある定義-済みの~CSS~propに`~ASCII大小無視$で合致する
+］~AND［
+~UAは %property を~supportする
+］~AND［
+%value を %property の`文法に則って構文解析-$した結果 ~NEQ `失敗^i
+］
+⇒
+~RET ~T
+◎
+If property is an ASCII case-insensitive match for any defined CSS property that the UA supports, and value successfully parses according to that property’s grammar, return true.
+</li>
+			<li>
+~IF［
+%property は`~custom~prop名~文字列$である
+］
+⇒
+~RET ~T
+◎
+Otherwise, if property is a custom property name string, return true.
+</li>
+			<li>
+~RET ~F
+◎
+Otherwise, return false.
+</li>
+		</ol>
+	</dd>
+	<dd class="note">注記：
+~prop名前に対し，~CSS~escapeや空白~処理は遂行されないので、
+`CSS.supports(" width", "5px")^c
+は ~F を返すことになる
+— 先頭に~spaceがあることに因り，` width^l は どの~propの名前でもないので。
+◎
+Note: No CSS escape or whitespace processing is performed on the property name, so CSS.supports(" width", "5px") will return false, as " width" isn’t the name of any property due to the leading space.
+</dd>
+
+	<dt>`~supports0(conditionText)@m</dt>
+	<dd>
+<p>
+被呼出時には、次を走らす：
+◎
+When the supports(conditionText) method is invoked with a single conditionText argument:
+</p>
+		<ol>
+			<li>
+<p>
+« %conditionText, %conditionText を丸括弧で括った文字列 »
+を成す
+~EACH( %文字列 )
+に対し：
+</p>
+				<ol>
+					<li>
+%結果 ~LET %conditionText を `supports-condition$t の`文法に則って構文解析-$した結果
+</li>
+					<li>
+~IF［
+%結果 ~EQ `失敗^i
+］
+⇒
+~CONTINUE
+</li>
+					<li>
+~IF［
+%結果 を `supports-condition$t として評価した結果 ~EQ `真^i
+］
+⇒
+~RET ~T
+</li>
+				</ol>
+◎
+If conditionText, parsed and evaluated as a &lt;supports-condition&gt;, would return true, return true.
+◎
+Otherwise, If conditionText, wrapped in parentheses and then parsed and evaluated as a &lt;supports-condition&gt;, would return true, return true.
+</li>
+			<li>
+~RET ~F
+◎
+Otherwise, return false.
+</li>
+		</ol>
+	</dd>
+</dl>
+
+		</section>
+	</section>
+	<section id="priv-sec">
+<h2 title="Privacy and Security Considerations">~privacyと~securityの考慮点</h2>
+
+<p>
+この仕様により，新たな~securityの考慮点が導入されることはない。
+◎
+This spec introduces no new security considerations.
+</p>
+
+<p>
+この仕様における様々な特能は、主に `media$at 規則に結付けられるが，ある程度 `supports$at 規則にも結付けられ、利用者の［
+~hardwareと~software, および
+環境設定と状態
+］についての情報を，~Web内容に供する。
+そのような情報のほとんどは、この仕様~内の特能ではなく
+`MEDIAQUERIES-4$r 内の特能を通して供される。
+しかしながら， `supports$at 規則は、利用者の~software, および それが［
+ある種の特能を［
+可能化-／不能化-
+］し得るような，既定でない設定群の下で稼働しているかどうか
+］について，何らかの追加的な詳細を供するかもしれない。
+◎
+Various features in this specification, associated mainly with the @media rule but also to some degree with the @supports rule, provide information to Web content about the user’s hardware and software and their configuration and state. Most of the information is provided through the features in [MEDIAQUERIES-4] rather than through the features in this specification. However, the @supports rule may provide some additional details about the user’s software and whether it is running with non-default settings that may enable or disable certain features.
+</p>
+
+<p>
+そのような情報のほとんどは、他の~APIを通しても決定できる。
+しかしながら、この仕様における特能も，この情報を~Web上に公開する仕方の一つになる。
+◎
+Most of this information can also be determined through other APIs. However, the features in this specification are one of the ways this information is exposed on the Web.
+</p>
+
+<p>
+この情報は、集成することにより，利用者の
+<a href="https://www.w3.org/2001/tag/doc/unsanctioned-tracking/">指紋収集</a>
+の正確度を向上するためにも利用され得る。
+◎
+This information can also, in aggregate, be used to improve the accuracy of fingerprinting of the user.
+</p>
+
+	</section>
+	<section id="changes">
+<h2 title="Changes">8. 変更点</h2>
+
+<p>
+この仕様に加えられた
+<a href="~TR/2013/CR-css3-conditional-20130404/">2013 年 4月 4日 勧告候補</a>
+からの主要な変更点は：
+◎
+The following (non-editorial) changes were made to this specification since the 4 April 2013 Candidate Recommendation:
+</p>
+
+<ul>
+	<li>
+<a href="~TR/css3-mediaqueries/">Media Queries</a>
+との一貫性を得るため、
+`and^css ／`or^css ／ `not^css
+~keywordの前後に空白を要求する要件を外した。
+（それら自体は CSS の~token化における より謎めいたある側面に依拠する，ある CSS ~minimizerの出力との互換性により拘束される）。
+空白（または~comment）は、これらの~keywordの`後には^em，依然として要求されることに注意
+— さもなければ、それらの~keywordと それに続く開き丸括弧は，関数の~~開始~tokenに~token化されることになるので。
+◎
+Drop requirement for spaces around and, or, and not keywords for consistency with Media Queries (which are themselves constrained by compatibility with the output of some CSS minimizers that rely on some of the more arcane aspects of CSS tokenization). Note that white space--or a comment--is still required after these keywords, since without it they and the ensuing opening parenthesis will be tokenized as a function opening token.
+</li>
+	<li>
+`~supports0()$m ~methodにおいて、単純な宣言に対する暗黙の丸括弧も許容した
+— `import$at 規則の `supports()^css 関数との一貫性を得るため。
+◎
+Allow the supports() method to imply parentheses for simple declarations, for consistency with the @import rule’s supports() function.
+</li>
+	<li>
+IDL ~codeに抜けていた~semicolonを修正した。
+◎
+Fixed missing semicolons in IDL code.
+</li>
+	<li>
+他の~moduleの変更に呼応して，~link, 各種用語, 例示~codeを更新した。
+◎
+Updated links, terminology, and example code in response to changes to other modules.
+</li>
+	<li>
+<a href="#priv-sec">§ ~privacyと~securityの考慮点</a>
+を追加した。
+◎
+Added section on privacy and security considerations.
+</li>
+</ul>
+
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p lang="en-x-a0">
+Thanks to the ideas and feedback from Tab Atkins, Arthur Barstow, Ben
+Callahan, <span lang="tr">Tantek Çelik</span>, Alex Danilo, Elika Etemad,
+Pascal Germroth, <span lang="de">Björn Höhrmann</span>, Paul Irish, Brad
+Kemper, <span lang="nl">Anne van Kesteren</span>, Vitor Menezes, Alex
+Mogilevsky, Chris Moschini, James Nurthen, Simon Pieters, <span lang="fr">Florian Rivoal</span>, <span lang="fr">Simon Sapin</span>, Nicholas
+Shanks, Ben Ward, Zack Weinberg, Estelle Weyl, Boris Zbarsky, and all the
+rest of the <a href="https://lists.w3.org/Archives/Public/www-style/">www-style</a>
+community.
+</p>
+
+	</section>
+</main></div>

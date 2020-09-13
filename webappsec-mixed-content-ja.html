@@ -1,0 +1,2230 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>Mixed Content（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-w3c.css" type="text/css" />
+
+<style>
+
+.report {
+	color: var(--text-color-2);
+}
+
+samp {
+	white-space: nowrap;
+	background: #F0F0F0;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+}
+
+i {
+	color: var(--text-color-1);
+}
+
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+<script>
+
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN0',
+		generate: expand
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆]+|`(.*?)([$@^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!indicator) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'sec':
+	text = `§ ${key}`;
+	klass = '';
+	break;
+case 'l':
+	return `"<code class="literal">${key}</code>"`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+if(indicator !== '^'){
+	href = link_map[ klass ? `${klass}.${key}` : key ] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+	}
+}
+</script>
+
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-09-10
+trans_update:2020-09-13
+source_checked:160523
+page_state_key:WEBAPPSEC
+original_url:https://w3c.github.io/webappsec-mixed-content/
+spec_status:ED
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+conformance:w3c
+copyright:2020,use
+trans_1st_pub:2016-05-30
+
+
+●●class_map
+P:production
+dir:directive
+h:header
+e:element
+a:attr
+et:event-type
+css:css
+E:error
+
+●●tag_map
+P:code
+dir:code
+h:code
+e:code
+a:code
+et:code
+css:code
+I:code
+m:code
+E:code
+v:var
+c:code
+s:samp
+i:i
+em:em
+
+●●words_table1
+
+	SW:https://www.w3.org/TR/service-workers/
+RFC6455:RFC6455-ja.html
+	http://tools.ietf.org/html/rfc6455
+data_scheme:<code class="scheme">data:</code>
+
+●●words_table
+
+Service-Worker:Service Worker
+Worker:
+	Working Group
+	ABNF:
+	Document:
+	NPAPI
+	Integrity
+
+	●network
+Fetch:
+Internet:
+WebSocket:
+	~web~site:website
+TLS:
+流れる:flowする:~
+handshake::::ハンドシェイク
+	~TLS~handshake:TLS-handshake
+service-worker:service worker
+伝送路:wire::~
+読取っ:readし:読み取っ
+	やりとり:communication
+経由-:hop::~
+為す:makeする:~
+為した:makeした:~
+絞込み:filtered::絞り込み
+昇格-:upgrade::~::アップグレード
+昇格:upgrade::~::アップグレード
+	越しに:over
+
+	●mixed／CSP
+混在:mixed::~
+	検査-法:checking
+	継承-法:inheriting
+埋込元:embedder::埋め込み元
+	embedding
+先天的:a priori:~
+後天的:a posteriori:~
+処置先:disposition:~
+随意:optional::~
+禁制-:prohibit:~
+
+	随意に:optionally-
+	阻止される^i:Blocked
+
+	●保安
+property::::プロパティ
+alert:
+
+主体:entity:~
+中間者:man-in-the-middle:~
+介在者:middlemen:~
+仲介-:mediate:~
+
+	~secureでない:insecure
+被保護:protected:~
+弱めら:weakenさ:~
+弱体化-:compromise:~
+	強制的に
+強度:strength:~
+強要-:coerce:~
+暗号化-:encrypt::~
+暗号化:encryption::~
+
+盗聴-:eavesdrop:~
+確約-:assure:~
+確約:assurance:~
+能動的:active:~
+脅威:threat:~
+裏口:back door:~
+自明:trivial:~
+証明書:certificate:~
+認証:authentication::~
+認証-:authenticate::~
+	認証-済み:authenticated
+未認証:unauthenticated::~
+	未認証な:unauthenticated
+警告-:warn:~
+迂回-:bypass:~
+重視-:outweigh:~
+破滅的:catastrophic:~
+危険:dangerous:~
+無防備:wide open:~
+	平文で:in the clear
+実害:real impact:~
+傍受:interception:~
+
+	●仕様
+team:
+critical:
+申請-:file:~
+opt-in::::オプトイン
+	取り入れる
+	opting-in
+不作為:inadvertent:~
+不用意:accidental:~
+世界:world:~
+
+中心的な:central:~
+今日:today:~
+保つ:keepする:~
+実施上は:practicalには:実施においては
+広範:wide:~
+念頭:mind:~
+指図-:instruct:~
+	~~供
+支援技術:assistive technologies:~
+熟慮:careful consideration:~
+
+相当:substantial:~
+健全:sane:~
+利点:advantage:~
+制作-:produce:~
+劣化-:degrade:~
+
+通常時は:normalには:~
+降格-:downgrade:~
+分類法:categorization:~
+分類:category:~
+分類-:categorize:~
+按配よく:nuancedに:~
+立場-:position:~
+利用率:usage:~
+理想:perfect:~
+
+	使われ続け:usage
+	hooking
+	混同-:confusion
+	おそれ:risk
+	利する:behalf of
+	-:cover
+	ほぼ至る所:near ubiquitious
+	最終的な:the end
+	今の所は:for now
+	形作る:carve out
+	carve-out
+	carve
+	もちろん:of course
+	~~対処する:deal with
+	選択肢:choice
+	confusing
+	〜過ぎ:too
+	時を経るに伴い:as time goes on
+	好例:good example
+	該当する:falls into
+	頃から:around
+	およそ、〜ことになる:presumably
+	である限り:provided
+	されるべき:ought
+	計り知れなく~~寄与された:invaluable
+	集め:gather
+	特に:really:
+	手入れ:trim
+	してくれる:upheld
+	ごく:very
+	禁じられる:banned from
+	そのようなわけで:To this end
+	一部:part of
+	済ますわけにはいかない:can’t get away
+	以上の:above and beyond
+	それ自体:in and of itself
+	のみならず:not only
+	年月にわたり:over the years
+	向けの:-facing
+	特別に~~扱う:special-case
+	filed
+	注目:focused
+	強制的に失敗させ:force-failing
+	shocking amounts of work
+	help
+	賞賛すべき:wonderful
+	~risk下:at-risk:
+	note
+	おそれ:fear
+	ごく:quite
+	それも，:caveat
+	べく:intent
+
+	●未分類（動詞
+捕えれ:catchでき:~
+合成-:synthesize:~
+実行ng:executing:実行
+続行-:proceed:~
+壊す:breakする:~
+叩かな:hitしな:~
+剥取っ:stripし:剥ぎ取っ
+
+	encrypted
+	現れ:appear
+	終えた:finish
+	逆に:reverse
+	選ぶ:choose
+	found
+	gave
+	goes
+	said
+	seem
+	もの:signal
+	know
+	失われ:lost
+	made
+	moving
+	place
+	準備:preparing
+
+	●未分類
+console-message:console message:::コンソールメッセージ
+id:
+	framed
+email::::メール
+	もれなく:exception
+	満たす
+	名前
+十分:sufficient:~
+細かい:granularな:~
+担当の:responsible:~
+
+	数:number
+	高く／高:high
+	Chrome
+	~data ~bit~s
+	低い:low
+	“~~削除” “~~返信”:"Delete email" and "Reply"
+
+	we
+	低い~less
+	CORS が可能化:CORS-enabled
+
+	10 年:decade
+	-:indeed
+	-:informative
+	past
+	potentially
+
+	●指示語
+部位:portion:範囲
+早期の:early:~
+
+	toward
+	一体として／:together
+	数多の:many, many
+	across
+	最後の方:at the bottom
+	最初の方:at the top
+	end
+	everything
+	part
+	no longer
+	lots of
+	nor
+	nothing
+
+
+●●original_id_map
+
+●●mdn_urls
+block-all-mixed-content:HTTP/Headers/Content-Security-Policy/block-all-mixed-content
+
+●●link_map
+
+
+文書:#_document
+I.Document:~HTMLdom#document
+I.EventSource:~HTMLsse#eventsource
+I.ServiceWorker:~SW1#serviceworker
+I.WebSocket:~WEBSOCKET#websocket
+I.XMLHttpRequest:~XHR#xmlhttprequest
+
+m.WebSocket():~WEBSOCKET#dom-websocket
+m.onerror:~WEBSOCKET#handler-websocket-onerror
+m.fetch():~FETCH#dom-global-fetch
+
+et.fetch:~SW1#service-worker-global-scope-fetch-event
+
+e.meta:~HEmetadata#the-meta-element
+e.form:~HEforms#the-form-element
+e.img:~HEimages#the-img-element
+e.source:~HEimages#the-source-element
+e.video:~HEmedia#the-video-element
+e.audio:~HEmedia#the-audio-element
+
+a.action:~HTMLforms#attr-fs-action
+a.crossorigin:~HEimages#attr-img-crossorigin
+
+l.block-all-mixed-content:#block-all-mixed-content
+dir.block-all-mixed-content:#block-all-mixed-content
+dir.img-src:~CSP3#directive-img-src
+
+h.Content-Security-Policy:~CSP3#header-content-security-policy
+P.directive-name:~CSP3#grammardef-directive-name
+P.directive-value:~CSP3#grammardef-directive-value
+
+css.background-image:~CSSBG#propdef-background-image
+css.border-image:~CSSBG#propdef-border-image
+
+	●用語
+	If a request proceeds:#should-block-fetch
+
+先天的に認証-済み:#a-priori-authenticated-url
+	a priori authenticated URLs:#a-priori-authenticated-url
+	a priori authenticated:#a-priori-authenticated-url
+埋込んでいる文書:#embedding-document
+	埋込んでいる:#embedding-document
+混在~内容:#mixed-content
+	混在:#mixed-content
+阻止-可能:#blockable-mixed-content
+阻止-可能な内容:#category-blockable
+随意に阻止-可能:#optionally-blockable-mixed-content
+随意に阻止-可能な内容:#category-optionally-blockable
+
+	＊混在~内容の検査~厳密化~flag:
+混在~内容の厳密な検査-法~flag
+厳密~検査~flag:#strict-mixed-content-checking-flag
+厳密~mode:#strict-mode
+未認証な応答:#unauthenticated-response
+未認証:#unauthenticated-response
+
+	●§
+設定群は混在~security文脈を禁制するか？:#categorize-settings-object
+要請の~fetchingは混在~内容として阻止されるべきか？:#should-block-fetch
+要請に対する応答は混在~内容として阻止されるべきか？:#should-block-response
+	~§6~Modifications~to~WebSocket~sに対する改変:#websockets-integration
+
+~opt-inの継承-法:#strict-nesting
+	:#intro
+	:#strict-opt-in
+~UIに課される要件:#requirements-ux
+利用者による制御:#requirements-user-controls
+更なる動作:#further-action
+
+	●外部
+	~REALLYベキ~NOT:http://tools.ietf.org/html/rfc6919#section-3
+	~bug~#28841:https://www.w3.org/Bugs/Public/show_bug.cgi?id=28841
+	正誤表#4398:http://www.rfc-editor.org/errata_search.php?rfc=6455&amp;eid=4398
+	節~5.3:https://www.w3.org/TR/wsc-ui/#securepage
+	“混在~内容”:~TR/2008/REC-xml-20081126/#sec-mixed-content
+
+信用に価し得る~URL:~SECURE-CONTEXT#potentially-trustworthy-url
+
+rq.~URL:~FETCH#concept-request-url
+rq.~client:~FETCH#concept-request-client
+rq.~mode:~FETCH#concept-request-mode
+rq.~URL:~FETCH#concept-request-url
+rq.行先:~FETCH#concept-request-destination
+rq.起動元:~FETCH#concept-request-initiator
+rq.予約-済み~client:~FETCH#concept-request-reserved-client
+
+rs.~URL:~FETCH#concept-response-url
+
+~navi要請:~FETCH#navigation-request
+不透明な絞込み応答:~FETCH#concept-filtered-response-opaque
+応答:~FETCH#concept-response
+要請:~FETCH#concept-request
+
+~scheme:~URL1#concept-url-scheme
+
+~plugin:~HTMLINFRA#plugin
+~CSP~list:~HTMLdom#concept-document-csp-list
+	EV status:https://cabforum.org/about-ev-ssl/
+~WebSocket接続を確立する~algo:~RFC6455#section-4.1
+~WebSocket接続を失敗させ:~RFC6455#section-7.1.7
+混在~security文脈:~RFCx/rfc6797#section-12.4
+
+	頃から:https://twitter.com/ericlaw/status/469813922908758016
+	version 4:https://support2.microsoft.com/default.aspx?scid=kb;EN-US;Q261188
+
+生成元:~ORIGIN#concept-origin
+
+大域~obj:~WAPI#global-object
+環境~設定群~obj:~WAPI#environment-settings-object
+関連な設定群~obj:~WAPI#relevant-settings-object
+enV.大域~obj:~WAPI#concept-settings-object-global
+enV.担当の文書:~WAPI#responsible-document
+enV.~target閲覧文脈:~WAPI#concept-environment-target-browsing-context
+enV.生成元:~WAPI#concept-settings-object-origin
+
+~top-level閲覧文脈:~BROWSERS#top-level-browsing-context
+入子の閲覧文脈:~BROWSERS#nested-browsing-context
+親~閲覧文脈:~BROWSERS#parent-browsing-context
+容器~文書:~BROWSERS#bc-container-document
+閲覧文脈:~BROWSERS#browsing-context
+属する閲覧文脈:~BROWSERS#concept-document-bc
+
+新たな文書の初期化-時:~NAVI#initialise-the-document-object
+
+新たな違反~obj:~CSP3#create-violation-for-global
+指令:~CSP3#directives
+	~CSP3#directive
+指令~集合:~CSP3#policy-directive-set
+指令~名:~CSP3#directive-name
+施行-:~CSP3#enforced
+	~CSP3#enforce
+資源:~CSP3#violation-resource
+違反を報告する:~CSP3#report-violation
+~CSP施策:~CSP3#content-security-policy-object
+初期化~algo:~CSP3#directive-initialization
+処置先:~CSP3#policy-disposition
+
+●●ref_normative
+
+[CSP3]
+    Mike West. Content Security Policy Level 3. 15 October 2018. WD. URL: https://www.w3.org/TR/CSP3/ 
+[DOM]
+    Anne van Kesteren. DOM Standard. Living Standard. URL: https://dom.spec.whatwg.org/ 
+[FETCH]
+    Anne van Kesteren. Fetch Standard. Living Standard. URL: https://fetch.spec.whatwg.org/ 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[RFC6455]
+    I. Fette; A. Melnikov. The WebSocket Protocol. December 2011. Proposed Standard. URL: https://tools.ietf.org/html/rfc6455 
+[RFC6797]
+    J. Hodges; C. Jackson; A. Barth. HTTP Strict Transport Security (HSTS). November 2012. Proposed Standard. URL: https://tools.ietf.org/html/rfc6797 
+[RFC7762]
+    M. West. Initial Assignment for the Content Security Policy Directives Registry. January 2016. Informational. URL: https://tools.ietf.org/html/rfc7762 
+[SECURE-CONTEXTS]
+    Mike West. Secure Contexts. 15 September 2016. CR. URL: https://www.w3.org/TR/secure-contexts/ 
+[URL]
+    Anne van Kesteren. URL Standard. Living Standard. URL: https://url.spec.whatwg.org/ 
+[WEBSOCKETS]
+    Ian Hickson. The WebSocket API. 20 September 2012. CR. URL: https://www.w3.org/TR/websockets/ 
+[XHR]
+    Anne van Kesteren. XMLHttpRequest Standard. Living Standard. URL: https://xhr.spec.whatwg.org/ 
+
+●●ref_informative
+
+[CAB]
+    CA/Browser Forum Baseline Requirements v1.3.7. 8 July, 2016. URL: https://cabforum.org/baseline-requirements-documents/ 
+[CSS-BACKGROUNDS-3]
+    Bert Bos; Elika Etemad; Brad Kemper. CSS Backgrounds and Borders Module Level 3. 17 October 2017. CR. URL: https://www.w3.org/TR/css-backgrounds-3/ 
+[RFC6919]
+    R. Barnes; S. Kent; E. Rescorla. Further Key Words for Use in RFCs to Indicate Requirement Levels. 1 April 2013. Experimental. URL: https://tools.ietf.org/html/rfc6919 
+[SRI]
+    Devdatta Akhawe; et al. Subresource Integrity. 23 June 2016. REC. URL: https://www.w3.org/TR/SRI/ 
+[WSC-UI]
+    Thomas Roessler; Anil Saldhana. Web Security Context: User Interface Guidelines. 12 August 2010. REC. URL: https://www.w3.org/TR/wsc-ui/ 
+[XML]
+    Tim Bray; et al. Extensible Markup Language (XML) 1.0 (Fifth Edition). 26 November 2008. REC. URL: https://www.w3.org/TR/xml/ 
+
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~W3Cにより編集者草案として公開された
+<a href="~SPEC_URL">Mixed Content</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+
+●●spec_metadata
+
+最新発行バージョン
+	https://www.w3.org/TR/mixed-content/
+
+編集者草案
+	https://w3c.github.io/webappsec-mixed-content/
+
+以前のバージョン
+	https://www.w3.org/TR/2016/CR-mixed-content-20160802/
+
+バージョン履歴
+	https://github.com/w3c/webappsec-mixed-content/commits/master/index.src.html
+
+フィードバック
+	<span><a href="mailto:public-webappsec@w3.org?subject=%5Bmixed-content%5D%20YOUR%20TOPIC%20HERE">public-webappsec@w3.org</a> with subject line “<kbd>[mixed-content] <i>… message topic …</i></kbd>” (<a href="https://lists.w3.org/Archives/Public/public-webappsec/" rel="discussion">archives</a>)</span>
+
+編集
+	<a href="mailto:mkwst@google.com">Mike West</a> (Google Inc.)
+
+Participate:
+	<a href="https://github.com/w3c/webappsec-mixed-content/issues/new">File an issue</a> (<a href="https://github.com/w3c/webappsec-mixed-content/issues">open issues</a>)
+
+</script>
+
+
+
+
+
+
+</head>
+
+<body>
+
+<header>
+
+
+	<hgroup>
+<h1 id="title">混在内容 — Mixed Content</h1>
+	</hgroup>
+</header>
+
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この仕様は、［
+暗号化され, かつ認証-済みの
+］文書の文脈~下で、~UAが［
+暗号化されていない, または未認証な
+］接続~越しに［
+内容の~fetching
+］をどう取扱うべきかについて述べる。
+◎
+This specification describes how a user agent should handle fetching of content over unencrypted or unauthenticated connections in the context of an encrypted and authenticated document.
+</p>
+
+
+
+	</section>
+	<section id="status">
+~STATUSofTHIS
+
+<p>
+この節では、発行時点における…
+【以下、この節の他の内容は <a href="w3c-common-ja.html#status" >W3C 日本語訳 共通ページ</a>に委譲。】
+</p>
+
+<p>
+<strong>
+この文書に対する変更点は、
+<a href="https://github.com/w3c/webappsec">https://github.com/w3c/webappsec</a>
+に。
+</strong>
+◎
+Changes to this document may be tracked at https://github.com/w3c/webappsec.
+</p>
+
+<p>
+この文書は
+<a href="https://www.w3.org/2011/webappsec/">Web Application Security Working Group</a>
+により制作されました。
+◎
+This document was produced by the Web Application Security Working Group.
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="intro">
+<h2 title="Introduction">1. 序論</h2>
+
+~INFORMATIVE
+
+<p>
+利用者が、~secure~channel（例えば~HTTPS）越しに，成功裡に
+`example.com^s から資源を読込んだとき、~UAは，利用者の
+~security／~privacy
+に~criticalな，次の 3 つを表明できる：
+◎
+When a user successfully loads a resource from example.com over a secure channel (HTTPS, for example), the user agent is able to make three assertions critical to the user’s security and privacy:
+</p>
+
+<ul>
+	<li>
+利用者が通信している~serverは、紛れもなく，利用者の要請が経由した数多の~serverのどれでもない， `example.com^s であると主張することが許容される。
+接続は、<strong>認証-済み</strong>になれる。
+◎
+The user is communicating with a server that is allowed to claim to be example.com, and not one of the many, many servers through which her request has hopped. The connection can be authenticated.
+</li>
+	<li>
+利用者と `example.com^s との通信は、介在者により自明に盗聴され得ない。
+利用者が［
+為した要請, 受信した応答
+］のいずれも<strong>暗号化されている</strong>ので。
+◎
+The user’s communications with example.com cannot be trivially eavesdropped upon by middlemen, because the requests she makes and the responses she receives are encrypted.
+</li>
+	<li>
+暗号化と認証は，<strong>~dataの完全性</strong>を保証するので、利用者と `example.com^s との通信は，介在者により自明に改変され得ない。
+◎
+The user’s communications with example.com cannot be trivially modified by middlemen, the encryption and authentication provide a guarantee of data integrity.
+</li>
+</ul>
+
+<div class="p">
+<p>
+これらの表明は一体として、利用者に次の二点を確約する：
+</p>
+
+<ul ><li>`example.com^s が，利用者の要請を読取って応答できる唯一の主体であること（
+caveat: without shocking amounts of work
+【それも，多量の仕事をこなす必要なく？】
+）
+</li><li>利用者が受信する~dataは，`example.com^s が実際に送信したものであること
+</li></ul>
+
+◎
+Together, these assertions give the user some assurance that example.com is the only entity that can read and respond to her requests (caveat: without shocking amounts of work) and that the bits she’s received are indeed those that example.com actually sent.
+</div>
+
+<p>
+しかしながら、これらの表明の強度は，暗号化され，かつ認証された当の資源が，~secureでない~channel越しに下位資源（~script, 画像, 等々）を要請したときには、相当に弱められる。
+~secureでない要請は，中間者~攻撃に無防備になるので、それらの資源~要請による結果，状態sが混在することになる。
+あいにく，このような局面はごく共通にある。
+◎
+The strength of these assertions is substantially weakened, however, when the encrypted and authenticated resource requests subresources (scripts, images, etc) over an insecure channel. Those resource requests result in a resource whose status is mixed, as insecure requests are wide open for man-in-the-middle attacks. This scenario is unfortunately quite common.
+</p>
+
+<p>
+この仕様は、［
+~UAが不作為に平文で通信する資源の能を制限する
+］ことにより，これらの~securityと~privacyの~riskを軽減できる方法について詳細を述べる。
+◎
+This specification details how a user agent can mitigate these risks to security and privacy by limiting a resource’s ability to inadvertently communicate in the clear.
+</p>
+
+<p class="note">注記：
+この文書に述べるどれもが、特に新しいものではなく，年月にわたり一つ以上の~UAに現れたものばかりである
+—
+~version 4 の<a href="https://twitter.com/ericlaw/status/469813922908758016">頃から</a>の Internet Explorer を始めとして、混在~内容に対し利用者に~alertしている。
+◎
+Note: Nothing described in this document is really new; everything covered here has appeared in one or more user agents over the years: Internet Explorer led the way, alerting users to mixed content since around version 4.
+</p>
+
+	</section>
+	<section id="_conventions">
+<h2>【この訳に特有な表記規約】</h2>
+
+<p>
+この訳の，~algoや定義の記述に利用されている各種記号（ ~LET, ~EQ, ~IN, ~IF, ~RET, 等々）の意味や定義の詳細は、~SYMBOL_DEF_REFを~~参照されたし。
+</p>
+
+<p>
+用語
+`文書@
+は、［
+`Document$I ~interfaceを実装する~obj
+］の略記である。
+</p>
+
+	</section>
+	<section id="terms">
+<h2 title="Key Concepts and Terminology">2. ~~主要な概念と各種用語</h2>
+
+<dl>
+	<dt>
+`混在~内容@
+（ `mixed content^en ）
+</dt>
+	<dd>
+<p>
+次の両者を満たす`要請$は、`混在~内容$とされる：
+</p>
+
+<ul><li>その`~URL$rqは`先天的に認証-済み$でない
+</li><li>その読込ngを担当する文脈は、混在~security文脈を禁制している†
+</li></ul>
+
+◎
+A request is mixed content if its url is not a priori authenticated, and the context responsible for loading it prohibits mixed security contexts (see § 5.1 Does settings prohibit mixed security contexts? for a normative definition of the latter).
+</dd>
+	<dd>
+<p>
+次の両者を満たす`応答$は、`混在~内容$とされる：
+</p>
+
+<ul><li>`未認証な応答$である
+</li><li>その読込ngを担当する文脈は、混在~security文脈を禁制している†
+</li></ul>
+
+◎
+A response is mixed content if it is an unauthenticated response, and the context responsible for loading it prohibits mixed security contexts.
+</dd>
+	<dd>†
+規範的な定義は、`設定群は混在~security文脈を禁制するか？$を見よ。
+◎
+↑</dd>
+
+
+	<dd class="example">
+<p>
+混在~内容を制約する文脈（例：
+`https://secure.example.com/^s
+）の内側では：
+◎
+Inside a context that restricts mixed content (https://secure.example.com/, for example):
+</p>
+		<ul>
+			<li>
+`http://example.com/script.js^s にある~scriptに対する要請は`混在~内容$になる。
+この`要請$は`阻止-可能$になるので、~UAは，資源を読込む代わりに~network~errorを返すことになる。
+◎
+A request for the script http://example.com/script.js is mixed content. As script requests are blockable, the user agent will return a network error rather than loading the resource.
+</li>
+			<li>
+`http://example.com/image.png^s にある画像に対する要請は`混在~内容$になる。
+この`要請$は`随意に阻止-可能$になるので、~UAは
+その画像を読込むかもしれない
+— その場合、画像~資源~自身は`混在~内容$になる。
+◎
+A request for the image http://example.com/image.png is mixed content. As image requests are optionally-blockable, the user agent might load the image, in which case the image resource itself would be mixed content.
+</li>
+		</ul>
+	</dd>
+	<dd>
+混在~内容を制約する文脈の中に，混在~内容が読込まれた場合（上の例の 2 番目に示したように）、その文脈は（ `RFC6797$r に定義されるように）`混在~security文脈$と見なされる。
+◎
+If mixed content is loaded into a context that restricts mixed content (as in #2 above), that context is considered a mixed security context (as defined in [RFC6797]).
+</dd>
+	<dd class="leaf note">注記：
+“混在~内容” は、元々は
+`WSC-UI$r の
+<a href="~TR/wsc-ui/#securepage">§ 5.3</a>
+にて定義された。
+この文書は、それによる初期の定義を更新する。
+◎
+Note: "Mixed content" was originally defined in section 5.3 of [WSC-UI]. This document updates that initial definition.
+</dd>
+	<dd class="leaf note">注記：
+`XML$r も無関係な
+<a href="~TR/2008/REC-xml-20081126/#sec-mixed-content">混在~内容</a>
+の概念を定義しているが、この用語は，各~UAにわたる~security文脈のほぼ至る所で 10 年以上 使われ続けているので、実用的には混同されるおそれは少ないであろう。
+◎
+Note: [XML] also defines an unrelated "mixed content". concept. This is potentially confusing, but given the term’s near ubiquitious usage in a security context across user agents for more than a decade, the practical risk of confusion seems low.
+</dd>
+
+	<dt>
+`先天的に認証-済み@
+な~URL
+（ `a priori authenticated URL^en ）
+</dt>
+	<dd>
+<p>
+特定0の~URL %url への要請は、次のいずれかが満たされるならば，
+傍受と改変の~riskを軽減する仕方で送達されることが`先天的に^em既知となる：
+◎
+We know a priori that a request to a particular URL (url) will be delivered in a way that mitigates the risks of interception and modifications if either of the following statements is true:
+</p>
+		<ul>
+			<li>
+%url は`信用に価し得る~URL$である
+`SECURE-CONTEXTS$r
+◎
+url is a potentially trustworthy URL [SECURE-CONTEXTS].
+</li>
+			<li>
+<p>
+%url の`~scheme$ ~EQ `data^l
+◎
+url’s scheme is "data".
+</p>
+
+<p class="note">注記：
+ここでは `data^c ~URLは特別に~~扱う
+— それらは特に信用に価し得るとは見なされないが、~networkは決して叩かないので，混在~内容として阻止したいと望まれてもいない。
+◎
+Note: We special case data URLs here, as we don’t consider them particularly trustworthy, but we also don’t wish to block them as mixed content, as they never hit the network.
+</p>
+			</li>
+		</ul>
+	</dd>
+	<dd class="trans-note">【
+この用語は、`生成元$に対しても利用されているが，その場合：
+最初の条件は，実際には生成元に対する条件として定義されているので、そのように解釈する。
+その次の条件は，生成元の~scheme成分に対し適用することになる。
+】</dd>
+
+	<dt>
+`未認証な応答@
+（ `unauthenticated response^en ）
+</dt>
+	<dd>
+`応答$は、［
+その`~URL$rsが`先天的に認証-済み$でない
+］ならば，未認証であることが`後天的^emに既知となる
+◎
+We know a posteriori that a response (response) is unauthenticated if response’s url is not a priori authenticated.
+</dd>
+
+	<dt>
+`埋込んでいる文書@
+（ `embedding document^en ）
+</dt>
+	<dd>
+文書を埋込んでいる文書は、文書が`属する閲覧文脈$の`容器~文書$を指す（ ~NULL でなければ）。
+`HTML$r
+◎
+Given a Document A, the embedding document of A is A’s browsing context's container document [HTML].
+</dd>
+</dl>
+
+	</section>
+	<section id="categories">
+<h2 title="Content Categories">3. 内容の分類</h2>
+
+<p>
+理想~世界では、各~UAには，あらゆる`混在~内容$をもれなく阻止することが要求されることになるが、あいにく今日の~Internetにおいては，それは実用的でない。
+~UAは、より按配よく制約しなければ，相当~数の~web~siteで利用者~体験の劣化は避けれなくなる。
+◎
+In a perfect world, each user agent would be required to block all mixed content without exception. Unfortunately, that is impractical on today’s Internet; a user agent needs to be more nuanced in its restrictions to avoid degrading the experience on a substantial number of websites.
+</p>
+
+<p>
+そのことを念頭に、ここでは，混在~内容を［
+`随意に阻止-可能な内容$, `阻止-可能な内容$
+］の 2 つに分類する。
+◎
+With that in mind, we here split mixed content into two categories: § 3.1 Optionally-blockable Content and § 3.2 Blockable Content.
+</p>
+
+<p class="note">注記：
+この仕様の将来~versionは、世界の`混在~内容$すべてが阻止される方へ進むべく，この分類法を更新することになる
+— それが最終的な目標であるが、今の所は，ここまでが最善である。
+◎
+Note: Future versions of this specification will update this categorization with the intent of moving towards a world where all mixed content is blocked; that is the end goal, but this is the best we can do for now.
+</p>
+
+
+		<section id="category-optionally-blockable">
+<h3 title="Optionally-blockable Content">3.1. 随意に阻止-可能な内容</h3>
+
+<p>
+混在~内容は、［
+`混在~内容$としての用法を許容する~risk
+］より［
+~webの有意な部位を壊す~risk
+］の方が重視されるとき，
+`随意に阻止-可能@
+（ `optionally-blockable^en ）とされる。
+これは、当の資源~種別の混在~利用率が十分に高いこと，および
+資源それ自体は低~riskであることによる。
+この種の資源が随意に阻止-可能である事実が，`安全である^emことを意味するわけではない
+— 単純に，他の種別の資源より破滅的な危険~度は低いことを意味する。
+例えば画像や~iconは、~appの~interfaceにおいて中心的な~UI要素になることが多い。
+攻撃者が~emailの［
+“~~削除”, “~~返信”
+］を表す~iconを逆にした場合、利用者に実害が及ぶことになる。
+◎
+Mixed content is optionally-blockable when the risk of allowing its usage as mixed content is outweighed by the risk of breaking significant portions of the web. This could be because mixed usage of the resource type is sufficiently high, and because the resource is low-risk in and of itself. The fact that these resource types are optionally-blockable does not mean that they are safe, simply that they’re less catastrophically dangerous than other resource types. For example, images and icons are often the central UI elements in an application’s interface. If an attacker reversed the "Delete email" and "Reply" icons, there would be real impact to users.
+</p>
+
+<p>
+これに分類されるものには次が挙げられる：
+◎
+This category includes:
+</p>
+
+<ul>
+	<li>
+<p>
+次を満たす要請
+⇒
+［
+`起動元$rq ~EQ 空~文字列
+］~AND［
+`行先$rq ~EQ `image^l
+］
+◎
+Requests whose initiator is the empty string, and whose destination is "image".
+</p>
+
+
+<p class="note">注記：
+`img$e や~CSS （ `background-image$css, `border-image$css, 等々）を介して読込まれるほとんどの画像は、これに対応する（画像として読込まれる~SVG文書も含まれる
+— それらによる［
+~scriptの実行ng／下位資源の~fetching
+］は阻止されるので）。
+`img$e 要素のうち
+<a href="~HEimages#use-srcset-or-picture">`srcset^a または `picture^e を利用して</a>
+いるものは含まれない。
+◎
+Note: This corresponds to most images loaded via img (including SVG documents loaded as images, as those are blocked from executing script or fetching subresources) and CSS (background-image, border-image, etc). It does not include img elements that use srcset or picture.
+</p>
+	</li>
+	<li>
+<p>
+次を満たす要請
+⇒
+`行先$rq ~EQ `video^l
+◎
+Requests whose destination is "video".
+</p>
+
+<p class="note">注記：
+`video$e ／ `source$e
+を介して読込まれる動画は、これに対応する。
+◎
+Note: This corresponds to video loaded via video and source.
+</p>
+	</li>
+	<li>
+<p>
+次を満たす要請
+⇒
+`行先$rq ~EQ `audio^l
+◎
+Requests whose destination is "audio".
+</p>
+
+
+<p class="note">注記：
+`audio$e ／ `source$e
+を介して読込まれる音声は、これに対応する。
+◎
+Note: This corresponds to audio loaded via audio and source.
+</p>
+	</li>
+</ul>
+
+<p class="note">注記：
+この分類は、`要請の~fetchingは混在~内容として阻止されるべきか？$において，［
+CORS が可能化された要請は 強制的に失敗させる
+］ことにより、更に制限される。
+これは例えば、
+<samp >&lt;`img$e `crossorigin$a ...&gt;</samp>
+を介して読込まれる混在~内容~画像は阻止されることを意味する。
+上に挙げたものは、［
+この分類に該当する内容は，［
+全面的に阻止するには，広範に利用され過ぎている
+］ものに`限られる^em
+］とする、一般~原則の好例である。
+Working Group は、時を経るに伴い，より阻止-可能な下位集合を形作ることを意図している。
+◎
+We further limit this category in § 5.2 Should fetching request be blocked as mixed content? by force-failing any CORS-enabled request. This means, for example, that mixed content images loaded via &lt;img crossorigin ...&gt; will be blocked. This is a good example of the general principle that content falls into this category only when it is too widely used to be blocked outright. The Working Group intends to carve out more blockable subsets as time goes on.
+</p>
+
+		</section>
+		<section id="category-blockable">
+<h3 title="Blockable Content">3.2. 阻止-可能な内容</h3>
+
+<p>
+上に定義した`随意に阻止-可能$でない，どの混在~内容も
+`阻止-可能@
+（ `blockable^en ）と見なされる。
+この種の内容の代表的な例には、
+~script,
+`~plugin$~data,
+`XMLHttpRequest$I を介して要請される~data,
+等々がある。
+◎
+Any mixed content that is not optionally-blockable as defined above is considered to be blockable. Typical examples of this kind of content include scripts, plugin data, data requested via XMLHttpRequest, and so on.
+</p>
+
+<p class="note">注記：
+`~navi要請$は、`~top-level閲覧文脈$を~targetすることもあるが，混在~内容とは見なされない。
+詳細は、`要請の~fetchingは混在~内容として阻止されるべきか？$を見よ。
+◎
+Note: Navigation requests might target top-level browsing contexts; these are not considered mixed content. See § 5.2 Should fetching request be blocked as mixed content? for details.
+</p>
+
+<p class="note">注記：
+~pluginが自身に利するために為す要請は、阻止-可能になる。
+しかしながら、~UAが常に，そのような要請を仲介する立場にあるとは限らないことも認識されている。
+一例として、 NPAPI ~pluginは，直接的な~network~accessを有することが多く、一般に~UAをまるごと迂回できる。
+~UAには、アリなときは，これらの要請を阻止することが推奨される。
+~plugin~vendorには、自身における混在~内容の検査-法を実装して，この文書に要旨する~riskを軽減することが推奨される。
+◎
+Note: Note that requests made on behalf of a plugin are blockable. We recognize, however, that user agents aren’t always in a position to mediate these requests. NPAPI plugins, for instance, often have direct network access, and can generally bypass the user agent entirely. We recommend that user agents block these requests when possible, and that plugin vendors implement mixed content checking themselves to mitigate the risks outlined in this document.
+</p>
+
+
+		</section>
+	</section>
+	<section id="strict-checking">
+<h2 title="Strict Mixed Content Checking">4. 混在~内容の厳密な検査-法</h2>
+
+<p>
+作者は、［
+`随意に阻止-可能$, `阻止-可能$
+］の両~混在~内容とも阻止するような，より厳密な混在~内容の検査-法を可能化することを選んでもヨイ。
+これにより、利用者による上書き~option（`利用者による制御$sec）も抑止され、利用者に呈示される~security~UIが混在~内容により劣化することは
+— `~UIに課される要件$secに述べるように —
+決してないことが確約される。
+◎
+In order to give authors assurance that mixed content will never degrade the security UI presented to their users (as described in § 7.3 UI Requirements), authors may choose to enable a stricter variant of mixed content checking which will both block optionally-blockable and blockable mixed content, and suppress the user override options discussed in § 7.4 User Controls.
+</p>
+
+<p>
+そのようなわけで、各［
+`文書$／`閲覧文脈$
+］は，
+`厳密~検査~flag@
+（
+`strict mixed content checking flag^en,
+“混在~内容に対し厳密に検査するかどうかを指示する~flag”
+）を有する。
+それは、他が指定されない限り ~F をとるとする。
+この~flagは、［
+`要請の~fetchingは混在~内容として阻止されるべきか？$ ／
+`要請に対する応答は混在~内容として阻止されるべきか？$
+］にて`文書$が
+`厳密~mode@
+（ `strict mode^en ）下にあるかどうか決定するときに検査される。
+◎
+To this end, Document objects and browsing contexts have a strict mixed content checking flag which is set to false unless otherwise specified. This flag is checked in both § 5.2 Should fetching request be blocked as mixed content? and § 5.3 Should response to request be blocked as mixed content? to determine whether the Document is in strict mode.
+</p>
+
+<div class="example">
+
+<p>
+`文書$は、次のいずれかにより，自身の中に厳密~modeを~opt-inしてもヨイ：
+</p>
+
+<ul>
+	<li>
+<p>
+次の様な `Content-Security-Policy$h ~HTTP~headerを送達するか：
+◎
+A Document may opt itself into strict mode by either delivering a Content-Security-Policy HTTP header, like:
+</p>
+
+<pre class="lang-http">
+Content-Security-Policy: `block-all-mixed-content$dir
+</pre>
+
+	</li>
+	<li>
+<p>
+または、`埋込んでいる文書$の `meta$e 要素に次の様な施策を与える：
+◎
+or by embedding the policy in a meta element, like:
+</p>
+
+<pre class="lang-html">
+&lt;meta http-equiv="Content-Security-Policy"
+      content="`block-all-mixed-content$dir"&gt;
+</pre>
+
+	</li>
+</ul>
+
+</div>
+
+
+<p class="note">注記：
+混在~内容の厳密な検査-法は、埋込d内容にも継承される。
+ある~pageが厳密~modeを~opt-inした場合、~frame内に入子にされた~pageにおいても
+— `~opt-inの継承-法$secに述べるように —
+混在~内容の読込ngは防止されることになる。
+◎
+Note: Strict mixed content checking is inherited by embedded content; if a page opts into strict mode, framed pages will be prevented from loading mixed content, as described in § 4.4 Inheriting an opt-in.
+</p>
+
+
+
+		<section id="strict-effects">
+<h3 title="Effects">4.1. 効果</h3>
+
+<p>
+［
+`文書$の`厳密~検査~flag$ ~EQ ~T
+］の場合、~UAには，次が要求される：
+◎
+If a Document's strict mixed content checking flag is set to true, the user agent MUST:
+</p>
+
+<ol>
+	<li>
+`随意に阻止-可能$な混在~内容を，`阻止-可能$であったかのように扱う。
+◎
+treat optionally-blockable mixed content as though it were blockable.
+</li>
+	<li>
+<p>
+利用者には、`阻止-可能$な混在~内容の読込ngを強制する仕組みを供さない。
+◎
+NOT provide users with a mechanism for forcing blockable mixed content to load.
+</p>
+
+<p class="note">注記：
+この要件は、`利用者による制御$secにおける示唆を上書きする。
+◎
+Note: This requirement overrides the suggestion in § 7.4 User Controls.
+</p>
+
+	</li>
+<li>
+<p>
+混在~内容が在ることについて，いかなる指示も利用者~向けに供さない。
+◎
+NOT provide any user-facing indication that mixed content is present.
+</p>
+
+<p class="note">注記：
+この要件は、`~UIに課される要件$secにおける示唆を上書きする。
+上の 1 番目と 2 番目の要件の組合nにより，［
+当の~pageの文脈~下では，混在~内容は決して読込まれない
+］ことが確保され、そうしても安全なので。
+◎
+Note: This requirement overrides the suggestion in § 7.3 UI Requirements, which is safe to do since the combination of the first and second requirements above ensure that mixed content will never load in this page’s context.
+</p>
+
+<p class="note">注記：
+この要件には、~console-messageなどの，開発者~向けの指示子は含まれない。
+◎
+Note: This requirement does not include developer-facing indicators such as console messages.
+</p>
+	</li>
+	<li>
+これらの要件が、［
+`入子の閲覧文脈$に属するどの`文書$にも適用される
+］ことを
+— `~opt-inの継承-法$secに述べるように —
+確保する。
+◎
+ensure that these requirements are applied to any Document in a nested browsing context, as described in § 4.4 Inheriting an opt-in.
+</li>
+</ol>
+
+		</section>
+		<section id="strict-opt-in">
+<h3 title="Opting-in">4.2. ~opt-in法</h3>
+
+<p>
+作者は、~CSP指令 `CSP3$r
+`block-all-mixed-content@dir
+を介して，`文書$の中に 混在~内容の厳密な検査-法を~opt-inしてもヨイ。
+この指令は次の ABNF 文法を介して定義される。
+◎
+Authors may opt a Document into strict mixed content checking via a block-all-mixed-content Content Security Policy directive [CSP3], defined via the following ABNF grammar.
+</p>
+
+<pre class="bnf">
+`directive-name$P  = "block-all-mixed-content"
+`directive-value$P = ""
+</pre>
+
+<p>
+この指令は、~page上の混在~内容に対する違反~報告を誘発することになる。
+詳細は、`要請の~fetchingは混在~内容として阻止されるべきか？$に。
+◎
+This directive will trigger violation reports for mixed content on a page. Details are found in § 5.2 Should fetching request be blocked as mixed content?.
+</p>
+
+<p class="note">注記：
+個々の指令を設定すれば、類似する効果を より細かい~levelで達成できる。
+例えば
+<samp>`img-src$dir https:</samp>
+は、~secureでない画像の読込ngを防止することになる。
+◎
+Note: A similar effect may be achieved on a more granular level by setting individual directives. For example img-src https: would prevent insecure images from loading.
+</p>
+
+		</section>
+		<section id="directive-initialization">
+<h3 title="block-all-mixed-content Initialization">4.3. `block-all-mixed-content^dir の初期化</h3>
+
+<p>
+`block-all-mixed-content$dir の`初期化~algo$は、所与の
+( `文書$または`大域~obj$ %文脈, `応答$ %応答, `~CSP施策$ %施策 )
+に対し，次に従う：
+◎
+block-all-mixed-content's initialization algorithm is as follows:
+◎
+Given a Document or global object (context), a response (response), and a Content Security Policy object (policy):
+</p>
+
+<ol>
+	<li>
+~Assert：
+%応答 は利用されない。
+◎
+Assert: response is unused.
+</li>
+	<li>
+~IF［
+%施策 の`処置先$ ~NEQ `enforce^l
+］
+⇒
+~RET
+◎
+If policy’s disposition is not "enforce", then abort this algorithm.
+</li>
+	<li>
+%文脈 の`厳密~検査~flag$ ~SET ~T
+◎
+Set context’s strict mixed content checking flag to true.
+</li>
+</ol>
+
+		</section>
+		<section id="strict-nesting">
+<h3 title="Inheriting an opt-in">4.4. ~opt-inの継承-法</h3>
+
+<p>
+~UAは、すべての`入子の閲覧文脈$に対し，次に従って`厳密~検査~flag$を継承させるモノトスル：
+◎
+If a Document's strict mixed content checking flag is set, the user agent MUST ensure that all nested browsing contexts inherit the setting in the following ways:
+</p>
+
+<ul>
+	<li>
+`入子の閲覧文脈$ %文脈 の作成-時には
+⇒
+~IF［
+%文脈 の`容器~文書$の`厳密~検査~flag$ ~EQ ~T
+］
+⇒
+%文脈 の`厳密~検査~flag$ ~SET ~T
+◎
+When a nested browsing context context is created, set its strict mixed content checking flag to true if context’s embedding document’s strict mixed content checking flag is set to true.
+</li>
+	<li>
+`新たな文書の初期化-時$には
+⇒
+~IF［
+その`文書$ %文書 が`属する閲覧文脈$の`厳密~検査~flag$ ~EQ ~T
+］
+⇒
+%文書 の`厳密~検査~flag$ ~SET ~T
+◎
+When creating a new Document object, set its strict mixed content checking flag to true if its browsing context’s strict mixed content checking flag is true.
+</li>
+</ul>
+
+		</section>
+	</section>
+	<section id="algorithms">
+<h2 title="Insecure Content in Secure Contexts">5. ~secureな文脈における~secureでない内容</h2>
+
+<p>
+高~levelからは、次の~algoにより，特定0の要請が［
+成功するべきか,
+~network~errorになるべき
+］かどうか，~UAは決定できるようになる：
+◎
+At a high level, the following algorithms allow user agents to determine whether particular requests should succeed, or should result in network errors.
+</p>
+
+<ul>
+	<li>
+~algo［
+`要請の~fetchingは混在~内容として阻止されるべきか？$
+］は、
+~fetch `FETCH$r ~algoの最初の方で，［
+`先天的に認証-済み$でない`~URL$rqへの~network流通を阻止する
+］ために~callされる。
+この~hookは、初期~要請のみならず，すべての~redirectも捕えれることを確保する。
+◎
+Fetch calls the algorithm defined in § 5.2 Should fetching request be blocked as mixed content? at the top of the fetching algorithm in order to block network traffic to URLs which are not a priori authenticated [FETCH]. Hooking into Fetch here ensures that we catch not only the initial request, but all redirects as well.
+</li>
+	<li>
+<p>
+~algo［
+`要請に対する応答は混在~内容として阻止されるべきか？$
+］もまた、~fetch~algoの最後の方で，［
+`未認証な応答$を阻止する
+］ために~callされる。
+この~hookは、次のために必要とされる：
+</p>
+<ul><li>`ServiceWorker$I により［
+改変-／合成-
+］された資源を検出する
+</li><li>~TLS~handshakeを終えた後に，応答が`未認証な応答$であるかどうか決定する
+</li></ul>
+<p>
+詳細は、［
+`要請に対する応答は混在~内容として阻止されるべきか？$
+］の段 4.1, 4.2 を見よ。
+【この段~番号はおそらく誤り】
+</p>
+◎
+Further, Fetch calls the algorithm defined in § 5.3 Should response to request be blocked as mixed content? at the bottom of the fetching algorithm in order to block unauthenticated responses. This hook is necessary to detect resources modified or synthesized by a ServiceWorker, as well as to determine whether a response is unauthenticated once the TLS-handshake has finished. See steps 4.1 and 4.2 of the algorithm defined in § 5.3 Should response to request be blocked as mixed content? for detail.
+</li>
+	<li>
+<p>
+~algo［
+`設定群は混在~security文脈を禁制するか？$
+］は、［
+~secureでない要請は阻止されるべきかどうか決定する
+］ために，次の箇所から利用される：
+</p>
+
+<ul><li>`要請の~fetchingは混在~内容として阻止されるべきか？$
+</li><li>`要請に対する応答は混在~内容として阻止されるべきか？$
+</li><li><a href="#websockets-integration">§ ~WebSocketに対する改変</a>
+</li></ul>
+
+◎
+The algorithm defined in § 5.1 Does settings prohibit mixed security contexts? is used by both § 5.2 Should fetching request be blocked as mixed content? and § 5.3 Should response to request be blocked as mixed content?, as well as § 6 Modifications to WebSockets in order to determine whether an insecure request ought to be blocked.
+</li>
+</ul>
+
+
+
+		<section id="categorize-settings-object">
+<h3 title="Does settings prohibit mixed security contexts?">5.1. %設定群 は混在~security文脈を禁制するか？</h3>
+
+<p>
+`文書$, ~worker
+のいずれも，`環境~設定群~obj$を有する。
+この %設定群 は、［
+混在~内容を制約するかどうか
+］を決定するために，次の~algoに則って精査され得る。
+この~algoは、［
+`禁制する^i, `禁制しない^i
+］のいずれかを返す：
+◎
+Both documents and workers have environment settings objects which may be examined according to the following algorithm in order to determine whether they restrict mixed content. This algorithm returns "Prohibits Mixed Security Contexts" or "Does Not Prohibit Mixed Security Contexts", as appropriate.
+◎
+Given an environment settings object (settings):
+</p>
+
+<!-- 
+<p class="trans-note">【
+原文によるこの返り値の記述は一貫していないので、この訳では
+Prohibits Mixed Security Contexts
+Restricts Mixed Content
+Restricts Mixed Security Context
+Does Not Prohibit Mixed Security Contexts
+Does Not Restrict Mixed Security Contexts
+】</p>
+ -->
+
+<ol>
+	<li>
+~IF［
+%設定群 の`生成元$enVは、`先天的に認証-済み$である
+］
+⇒
+~RET `禁制する^i
+◎
+If settings’ origin is a priori authenticated., then return "Prohibits Mixed Security Contexts".
+</li>
+	<li>
+<p>
+~IF［
+%設定群 の`担当の文書$enV %文書 は在る
+］：
+◎
+If settings has a responsible document document, then:
+</p>
+
+		<ol>
+			<li>
+<p>
+~WHILE 無条件：
+</p>
+
+				<ol>
+					<li>
+%B ~LET %文書 が`属する閲覧文脈$
+</li>
+					<li>
+~IF［
+%B ~EQ ~NULL
+］
+⇒
+~BREAK
+</li>
+					<li>
+%文書 ~SET %B の`容器~文書$
+</li>
+					<li>
+~IF［
+%文書 ~EQ ~NULL
+］
+⇒
+~BREAK
+</li>
+					<li>
+%埋込元~設定群 ~LET %文書 の`大域~obj$に`関連な設定群~obj$
+</li>
+	<li>
+~IF［
+%埋込元~設定群 の`生成元$enVは、`先天的に認証-済み$である
+］
+⇒
+~RET `禁制する^i
+</li>
+				</ol>
+◎
+While document has an embedding document:
+• Set document to document’s embedding document.
+• Let embedder settings be document’s global object's relevant settings object.
+• If embedder settings’ origin is a priori authenticated., then return "Prohibits Mixed Security Contexts".
+</li>
+		</ol>
+	</li>
+	<li>
+~RET `禁制しない^i
+◎
+Return "Does Not Restrict Mixed Security Contexts".
+</li>
+</ol>
+
+<div class="note">
+
+<p>注記：
+文書を`埋込んでいる文書$が在る場合、~UAは，文書~自身のみならず，文書を入子にしている`~top-level閲覧文脈$も検査する必要がある
+— それが、［［
+利用者が読込んだ資源の~security状態s
+］に関する利用者の期待
+］を制御する文脈なので。
+例えば：
+◎
+If a document has an embedding document, a user agent needs to check not only the document itself, but also the top-level browsing context in which the document is nested, as that is the context which controls the user’s expectations regarding the security status of the resource she’s loaded. For example:
+</p>
+
+<ul class="example">
+	<li>
+`http://a.com^s が `http://evil.com^s を読込む場合
+⇒
+`evil.com^s への~secureでない要請は、許容されることになる
+— `a.com^s は ~secureな接続~越しに読込まれていないので。
+◎
+http://a.com loads http://evil.com. The insecure request will be allowed, as a.com was not loaded over a secure connection.
+</li>
+	<li>
+`https://a.com^s が `http://evil.com^s を読込む場合
+⇒
+`evil.com^s への~secureでない要請は、阻止されることになる
+— `a.com^s は ~secureな接続~越しに読込まれたので。
+◎
+https://a.com loads http://evil.com. The insecure request will be blocked, as a.com was loaded over a secure connection.
+</li>
+	<li>
+`http://a.com^s が~frame内に `https://b.com^s を入子にしていて，
+`b.com^s は `http://evil.com^s を読込む場合
+⇒
+`evil.com^s への~secureでない要請は阻止されることになる
+— `a.com^s は そうでなくても， `b.com^s は ~secureな接続~越しに読込まれたので。
+◎
+http://a.com frames https://b.com, which loads http://evil.com. In this case, the insecure request to evil.com will be blocked, as b.com was loaded over a secure connection, even though a.com was not.
+</li>
+	<li>
+`https://a.com^s が~frame内に ~data_scheme ~URLを入子にしていて，その ~data_scheme ~URLは `http://evil.com^s を読込む場合
+⇒
+`evil.com^s への~secureでない要請は阻止されることになる
+— ~top-level文脈における ~data_scheme ~URLは 混在~内容を阻止しないが，
+`a.com^s は ~secureな接続~越しに読込まれたので。
+◎
+https://a.com frames a data: URL, which loads http://evil.com. In this case, the insecure request to evil.com will be blocked, as a.com was loaded over a secure connection, even though the framed data: URL would not block mixed content if loaded in a top-level context.
+
+data: URL is not a priori authenticated.
+</li>
+</ul>
+
+</div>
+
+		</section>
+		<section id="should-block-fetch">
+<h3 title="Should fetching request be blocked as mixed content?">5.2. %要請 の~fetchingは混在~内容として阻止されるべきか？</h3>
+
+<p class="note">注記：
+~Fetch仕様は、要請をまるごと阻止する†べきかどうか決定するために，この~algoの中へ~hookする。
+† 例えば 当の要請は、`阻止-可能$な内容に対するものであり，~secureな接続~越しに読込まれることは ないと`見做せる^emことから。
+◎
+Note: The Fetch specification hooks into this algorithm to determine whether a request should be entirely blocked (e.g. because the request is for blockable content, and we can assume that it won’t be loaded over a secure connection).
+</p>
+
+
+<p>
+~UAは、次の~algoを介して，所与の`要請$ %要請 を続行するべきかどうかを決定する：
+◎
+Given a Request request, a user agent determines whether the Request request should proceed or not via the following algorithm:
+</p>
+
+<ol>
+	<li>
+<p>
+~IF［
+次のいずれかが満たされる
+］
+⇒
+~RET `阻止される^i：
+◎
+Return allowed if one or more of the following conditions are met:
+</p>
+		<ul>
+			<li>
+`設定群は混在~security文脈を禁制するか？$( %要請 の`~client$rq )
+の結果 ~EQ `禁制しない^i
+◎
+§ 5.1 Does settings prohibit mixed security contexts? returns "Does Not Restrict Mixed Security Contexts" when applied to request’s client.
+</li>
+			<li>
+%要請 の`~URL$rqは`先天的に認証-済み$である
+◎
+request’s url is a priori authenticated.
+</li>
+			<li>
+~UAは
+— `利用者による制御$secに述べるように —
+`混在~内容$を許容するよう指図されている
+◎
+The user agent has been instructed to allow mixed content, as described in § 7.4 User Controls).
+</li>
+			<li>
+<p>
+［
+%要請 の`行先$rq ~EQ `document^l
+］~AND［
+%要請 の【`予約-済み~client$rqの】`~target閲覧文脈$enVの`親~閲覧文脈$ ~EQ ~NULL
+］
+◎
+request’s destination is "document", and request’s target browsing context has no parent browsing context.
+</p>
+
+<p class="note">注記：
+~top-level~naviは，混在~内容~検査からは除外されるが、~UAは，~secureでない~form提出に対しては 混在~内容~検査を施行することを選んでもヨイ（`更なる動作$secを見よ）。
+◎
+Note: We exclude top-level navigations from mixed content checks, but user agents MAY choose to enforce mixed content checks on insecure form submissions (see § 7.5 Further Action).
+</p>
+			</li>
+		</ul>
+	</li>
+	<li>
+<p>
+%要請 の`~client$rqの`~CSP~list$内の ~EACH( %施策 ) に対し：
+◎
+For each policy in request’s client’s CSP list:
+</p>
+		<ol>
+			<li>
+<p>
+~IF［
+%施策 の`指令~集合$内に［
+`指令~名$ ~EQ `block-all-mixed-content$dir
+］なる`指令$がある
+］：
+◎
+If policy’s directive set contains a directive whose name is "block-all-mixed-content":
+</p>
+				<ol>
+					<li>
+%違反 ~LET `新たな違反~obj$( %要請 の`~client$rqの`大域~obj$enV, %施策, `block-all-mixed-content^l )
+◎
+Let violation be the result of executing the algorithm defined in Content Security Policy §2.4.1 Create a violation object for global, policy, and directive on request’s client’s global object, policy, and "block-all-mixed-content".
+</li>
+					<li>
+%違反 の`資源$ ~SET %要請 の`~URL$rq
+◎
+Set violation’s resource to request’s url.
+</li>
+					<li>
+`違反を報告する$( %違反 )
+◎
+Execute the algorithm defined in Content Security Policy §5.3 Report a violation on violation.
+</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+	<li>
+<p>
+~IF［
+次のいずれかが満たされる
+］
+⇒
+~RET `阻止d^i：
+◎
+Return blocked if one or more of the following conditions are met:
+</p>
+		<ul>
+			<li>
+~UAは
+— `利用者による制御$secに述べるように —
+`随意に阻止-可能$な混在~内容を阻止するよう環境設定されている
+◎
+The user agent is configured to block optionally-blockable mixed content, as described in § 7.4 User Controls.
+</li>
+			<li>
+%要請 の`~client$rqの`厳密~検査~flag$ ~EQ ~T
+◎
+request’s client's strict mixed content checking flag is true.
+</li>
+			<li>
+%要請 の`~mode$rq ~EQ `CORS^l
+◎
+request’s mode is CORS.
+</li>
+		</ul>
+	</li>
+	<li>
+<p>
+~IF［
+次のいずれかが満たされる
+］
+⇒
+~RET `阻止される^i：
+◎
+Return allowed if one or more of the following conditions are met:
+</p>
+		<ul>
+			<li>
+［
+%要請 の`行先$rq ~EQ `image^l
+］~AND［
+%要請 の`起動元$rq ~NEQ `imageset^l
+］
+◎
+request’s destination is "image", and initiator is not "imageset".
+</li>
+			<li>
+%要請 の`行先$rq ~EQ `video^l
+◎
+request’s destination is "video".
+</li>
+			<li>
+%要請 の`行先$rq ~EQ `audio^l
+◎
+request’s destination is "audio".
+</li>
+		</ul>
+	</li>
+	<li>
+~RET `阻止d^i
+◎
+Return blocked.
+</li>
+</ol>
+
+		</section>
+		<section id="should-block-response">
+<h3 title="Should response to request be blocked as mixed content?">5.3. %要請 に対する %応答 は混在~内容として阻止されるべきか？</h3>
+
+<p class="note">注記：
+<a href="#should-block-fetch">要請が続行される</a>
+場合でも，依然として、対する応答を，それを生成した接続の状態に基づいて 阻止するよう求まれることがある（例：
+要請は`阻止-可能$であるが，接続は`未認証$であるためなど）。
+加えて，［
+~Service-Workerが、`阻止-可能$な要請に対し，不用意に`未認証な応答$を返さない
+］ことも確保する必要がある。
+この~algoは、これらを決定するために利用される。
+◎
+Note: If a request proceeds, we still might want to block the response based on the state of the connection that generated the response (e.g. because the request is blockable, but the connection is unauthenticated), and we also need to ensure that a Service Worker doesn’t accidentally return an unauthenticated response for a blockable request. This algorithm is used to make that determination.
+</p>
+
+<p>
+~UAは、次の~algoに従って，所与の
+( `要請$ %要請, `応答$ %応答 )
+に対し，応答を返すべきかどうかを決定する：
+◎
+Given a request request and response response, the user agent determines what response should be returned via the following algorithm:
+</p>
+
+<ol>
+	<li>
+<p>
+~IF［
+次のいずれかが満たされる
+］
+⇒
+~RET `阻止される^i：
+◎
+Return allowed if one or more of the following conditions are met:
+</p>
+		<ol>
+			<li>
+`設定群は混在~security文脈を禁制するか？$( %要請 の`~client$rq )
+の結果 ~EQ `禁制しない^i
+◎
+§ 5.1 Does settings prohibit mixed security contexts? returns Does Not Restrict Mixed Content when applied to request’s client.
+</li>
+			<li>
+%応答 の`~URL$rsは、`先天的に認証-済み$である
+◎
+response’s url is a priori authenticated
+</li>
+			<li>
+~UAは
+— `利用者による制御$secに述べるように —
+`混在~内容$を許容するよう指図されている。
+◎
+The user agent has been instructed to allow mixed content, as described in § 7.4 User Controls).
+</li>
+			<li>
+<p>
+［
+%要請 の`行先$rq ~EQ `document^l
+］~AND［
+%要請 の【`予約-済み~client$rqの】`~target閲覧文脈$enVの`親~閲覧文脈$ ~EQ ~NULL
+］
+◎
+request’s destination is "document", and request’s target browsing context has no parent browsing context.
+</p>
+
+<p class="note">注記：
+~top-level~naviは，混在~内容~検査からは除外されるが、~UAは，~secureでない~form提出に対しては 混在~内容~検査を施行することを選んでもヨイ（`更なる動作$secを見よ）。
+◎
+Note: We exclude top-level navigations from mixed content checks, but user agents MAY choose to enforce mixed content checks on insecure form submissions (see § 7.5 Further Action).
+</p>
+			</li>
+		</ol>
+	</li>
+	<li>
+<p>
+~IF［
+次のいずれかが満たされる
+］
+⇒
+~RET `阻止d^i：
+◎
+Return blocked if one or more of the following conditions are met:
+</p>
+		<ol>
+			<li>
+~UAは
+— `利用者による制御$secに述べるように —
+`随意に阻止-可能$な混在~内容を阻止するよう環境設定されている
+◎
+The user agent is configured to block optionally-blockable mixed content, as described in § 7.4 User Controls.
+</li>
+			<li>
+%要請 の`~client$rqの`厳密~検査~flag$ ~EQ ~T
+◎
+request’s client's strict mixed content checking flag is true.
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+~IF［
+%応答 は`不透明な絞込み応答$である
+］~AND［
+次のいずれかが満たされる
+］
+⇒
+~RET `阻止される^i：
+◎
+Return allowed if response is an opaque filtered response and one or more of the following conditions are met:
+</p>
+		<ol>
+			<li>
+［
+%要請 の`行先$rq ~EQ `image^l
+］~AND［
+%要請 の`起動元$rq ~NEQ `imageset^l
+］
+◎
+request’s destination is "image", and initiator is not "imageset".
+</li>
+			<li>
+%要請 の`行先$rq ~EQ `video^l
+◎
+request’s destination is "video".
+</li>
+			<li>
+%要請 の`行先$rq ~EQ `audio^l。
+◎
+request’s destination is "audio".
+</li>
+		</ol>
+	</li>
+	<li>
+~RET `阻止d^i
+◎
+Return blocked.
+</li>
+</ol>
+
+
+		</section>
+	</section>
+	<section id="websockets-integration">
+<h2 title="Modifications to WebSockets">6. ~WebSocketに対する改変</h2>
+
+<p>
+`WebSocket()$m 構築子~algo
+`WEBSOCKETS$r
+は、次に従って改変される：
+◎
+The WebSocket() constructor algorithm [WEBSOCKETS] is modified as follows:
+</p>
+
+<ul>
+	<li>
+現在の段 2 を除去する
+◎
+Remove the current step 2.
+</li>
+</ul>
+
+<p class="note">注記：
+この示唆は
+<a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=28841">bug #28841</a>
+に対し申請されたものである。
+`WEBSOCKETS$r
+◎
+Note: This suggestion is filed as bug #28841 against [WEBSOCKETS].
+</p>
+
+<p>
+`~WebSocket接続を確立する~algo$
+`RFC6455$r
+は、次に従って改変される：
+◎
+The Establish a WebSocket Connection algorithm [RFC6455] is modified as follows:
+</p>
+<ul>
+	<li>
+<p>
+現在の段 1 の後に，次の段を遂行する：
+◎
+After the current step 1, perform the following step:
+</p>
+		<ol>
+			<li>
+［
+%secure ~EQ ~F
+］~AND［
+`設定群は混在~security文脈を禁制するか？$( %~client の`大域~obj$enVに`関連な設定群~obj$ )
+の結果 ~EQ `禁制する^i
+］ならば
+⇒
+~clientは、`~WebSocket接続を失敗させ$た上で，接続を中止するモノトスル
+`RFC6455$r
+◎
+If secure is false, and the algorithm in § 5.1 Does settings prohibit mixed security contexts? returns "Restricts Mixed Security Context" when applied to client’s global object’s relevant settings object, then the client MUST fail the WebSocket connection and abort the connection [RFC6455].
+</li>
+		</ol>
+	</li>
+</ul>
+
+<p class="note">注記：
+これは、 `RFC6455$r に対する
+<a href="http://www.rfc-editor.org/errata_search.php?rfc=6455&amp;eid=4398">正誤表 #4398</a>
+として申請されている。
+◎
+Note: Filed as errata #4398 against [RFC6455].
+</p>
+
+<p>
+これらの変更点により、
+`WebSocket$I ~objの構築-時に `SecurityError^E 例外が直に投出されることはなくなり、それに代わって，［
+接続を阻止して`~WebSocket接続を失敗させ$る
+］ことに依拠することになる
+— 開発者は、 `WebSocket$I ~objの `onerror$m ~handlerを通して，それを捕えれる。
+これにより、［
+`XMLHttpRequest$I ／ `EventSource$I ／ `fetch()$m
+］と 挙動が一貫するようになる。
+◎
+These changes together mean that we’ll no longer throw a SecurityError exception directly upon constructing a WebSocket object, but will instead rely upon blocking the connection and triggering the fail the WebSocket connection algorithm, which developers can catch by hooking a WebSocket object’s onerror handler. This is consistent with the behavior of XMLHttpRequest, EventSource, and fetch().
+</p>
+
+	</section>
+	<section id="security-considerations">
+<h2 title="Security and Privacy Considerations">7. ~securityと~privacyの考慮点</h2>
+
+		<section id="limitations">
+<h3 title="Limitations">7.1. 制限</h3>
+
+<p>
+混在~内容の阻止-法は、<a href="#intro">§ 序論</a>にて論じた保証を確保してくれる。
+しかしながら，その保証は、［
+能動的な~network攻撃者が，伝送路を流れる［
+~code／内容
+］の~criticalな~bitを置換する
+］ことに抗して，開発者や利用者を保護することに`限られる^emことに注意。
+それは、［
+弱体化され，改ざんされた資源を送信するよう強要された~server
+］に抗する保護は~~供さない。
+◎
+Blocking mixed content allows us to ensure that the guarantees discussed in § 1 Introduction are upheld. Note, however, that those guarantees only protect developers and users against active network attackers who would otherwise be able to replace critical bits of code or content on the wire as it flows past. They do not protect against a compromised server that itself is coerced into sending corrupted resources.
+</p>
+
+<p>
+Subresource Integrity （ “下位資源の完全性” ）
+`SRI$r などの仕組みは、この種の脅威に~~対処するために設計されている。
+~web開発者には、アリなときは，それを用立てることを推奨する。
+◎
+Mechanisms such as Subresource Integrity [SRI] are designed to deal with this kind of threat, and we recommend that web developers make use of them whenever possible.
+</p>
+
+		</section>
+		<section id="requirements-forms">
+<h3 title="Form Submission">7.2. ~form提出</h3>
+
+<p>
+`文書$ %文書 に対し，［
+`設定群は混在~security文脈を禁制するか？$( %文書 に`関連な設定群~obj$ )
+の結果 ~EQ `禁制する^i
+］の場合、~UAは， %文書 内に［
+値が`先天的に認証-済み$な~URLでない `action$a 属性
+］を有する `form$e 要素が在るときには，そのことを利用者に警告してもヨイ。
+◎
+If § 5.1 Does settings prohibit mixed security contexts? returns Restricts Mixed Content when applied to a Document's relevant settings object, then a user agent MAY choose to warn users of the presence of one or more form elements with action attributes whose values are not a priori authenticated URLs.
+</p>
+
+<p class="note">注記：
+例えば現在の Chrome は、~secureでない~form動作を伴う~pageの~UIを，~secureでない画像を表示する~pageに対するときと同じに扱う。
+◎
+Note: Chrome, for example, currently gives the same UI treatment to a page with an insecure form action as it does for a page that displays an insecure image.
+</p>
+
+<p>
+~UAは更に、そのような`文書$からの~form提出を
+— 文書が`~top-level閲覧文脈$に属する場合でも —
+`阻止-可能$な要請と扱ってもヨイ。
+◎
+Further, a user agent MAY treat form submissions from such a Document as a blockable request, even if the submission occurs in the top-level browsing context.
+</p>
+
+		</section>
+		<section id="requirements-ux">
+<h3 title="UI Requirements">7.3. ~UIに課される要件</h3>
+
+<p>
+~UAは、通常時は［
+`~top-level閲覧文脈$が~secureであるときには，そのことを利用者に指示する
+］のであれば：
+◎
+If a user agent would normally indicate to the user that the top-level browsing context is secure, then:
+</p>
+
+<ul>
+	<li>
+<p>
+`混在~内容$への`要請$に対する応答として資源を返すことにより，当の文脈を`混在~security文脈$に降格するときは（`要請$は `随意に阻止-可能$である，あるいは `阻止-可能$な`要請$を許容するよう環境設定されていることにより）：
+</p>
+		<ul>
+			<li>
+同じ［
+~secureであることの指示
+］は、利用者に供さないモノトスル。
+</li>
+			<li>
+代わりに，`混在~内容$が在ることを指示するベキである。
+</li>
+		</ul>
+
+◎
+When the user agent downgrades a context to a mixed security context by returning a resource in response to a mixed content request (either because the request is optionally-blockable, or because the user agent is configured to allow blockable requests), the user agent MUST NOT provide the user with that same indication.
+◎
+The user agent SHOULD instead give an indication that mixed content is present.
+</li>
+</ul>
+
+<p>
+~UAは，混在~内容が在ることを指示するときは、支援技術の利用者にも，~accessibility~APIを通して それを可用にするモノトスル。
+◎
+If a mixed content indication is present, it MUST be made available through accessibility APIs for users of assistive technologies.
+</p>
+
+<p class="note">注記：
+この節の要件は、
+<a href="https://cabforum.org/about-ev-ssl/">EV 状態s</a>
+`CAB$r の文脈においても保持される。
+EV 証明書の指示子により，［
+混在~内容に対する違反を，利用者~向けに通知する必要性
+］が上書きされることはない。
+◎
+Note: This requirement holds even in the context of an EV status [CAB]. An EV certificate’s indicator does not override the necessity to notify users of mixed content violations.
+</p>
+
+		</section>
+		<section id="requirements-user-controls">
+<h3 title="User Controls">7.4. 利用者による制御</h3>
+
+<p>
+~UAは、<strong>すべて</strong>の`混在~内容$を`阻止-可能$として扱う（すなわち，`随意に阻止-可能$な混在~内容であっても阻止する）かどうかについて，利用者が直に裁定する能を提供してもヨイ。
+◎
+A user agent MAY offer users the ability to directly decide whether or not to treat all mixed content as blockable (meaning that even optionally-blockable mixed content would be blocked).
+</p>
+
+<p class="note">注記：
+供された場合、利用者には，そのような~optionの利点を採ることが`強く推奨される^em。
+◎
+Note: It is strongly recommended that users take advantage of such an option if provided.
+</p>
+
+<p>
+~UAは、特定0の~page上で［
+`阻止-可能$な混在~内容を阻止する裁定
+］を上書きする
+【阻止しなくする】
+能を，利用者に提供してもヨイ。
+◎
+A user agent MAY offer users the ability to override its decision to block blockable mixed content on a particular page.
+</p>
+
+<p class="note">注記：
+実施上は、~UAはおそらく，そのような裏口を提供したままで済ますわけにはいかない。
+すなわち、混在~scriptを許容する~optionは，特に危険である。
+~UAは，そのような選択肢を
+— 熟慮の下で［
+孕まれる~riskについて利用者に伝え, やりとりする
+］ことなく —
+呈示することは，~~本当はやってはいけない（
+<a href="~RFCx/rfc6919#section-3">REALLY SHOULD NOT</a>
+`RFC6919$r
+）
+。
+◎
+Note: Practically, a user agent probably can’t get away with not offering such a back door. That said, allowing mixed script is in particular a very dangerous option, and each user agent REALLY SHOULD NOT [RFC6919] present such a choice to users without careful consideration and communication of the risk involved.
+</p>
+
+<p>
+そのような制御を提供する~UAは、支援技術の利用者に対しても，~accessibility~APIを通して提供するモノトスル。
+◎
+Any such controls offered by a user agent MUST also be offered through accessibility APIs for users of assistive technologies.
+</p>
+
+		</section>
+		<section id="further-action">
+<h3 title="Further Action">7.5. 更なる動作</h3>
+
+<p>
+~UAには、開発者に混在~内容を埋込まないことを奨励するため，この文書に要旨した要件~以上の，更なる動作を採ることが奨励される。
+◎
+A user agent is encouraged to take further action above and beyond the requirements this document outlines in order to discourage developers from embedding mixed content.
+</p>
+
+<p>
+一例として、~UAは次を採ることもできる：
+◎
+For instance, a user agent could:
+</p>
+
+<ol>
+	<li>
+`Strict-Transport-Security^h ~header~fieldが在ることを，［
+すべての内容を`阻止-可能$に分類するよう強制する `RFC6797$r
+］, あるいは［
+混在~内容の検査-時に`厳密~mode$を可能化する
+］ものとして解釈する。
+◎
+Interpret the presence of a Strict-Transport-Security header field as forcing all content into the blockable category [RFC6797], or as a signal to enable strict mode for mixed content checking.
+</li>
+	<li>
+`混在~内容$であって`随意に阻止-可能$な資源に対する要請を，利用者の~riskが抑制されるように改変する
+— ~cookieその他の認証~tokenを要請から剥取ったり，~schemeの自動的な昇格を試みる，等々。
+<!-- 
+http: URL に対する要請に先立って，~schemeを https: に違えて要請する？
+ -->
+◎
+Modify requests for optionally-blockable resources which are mixed content in order to reduce the risk to users: cookies and other authentication tokens could be stripped from the requests, automatic scheme upgrades could be attempted, and so on.
+</li>
+	<li>
+`入子の閲覧文脈$の内側にある`随意に阻止-可能$な資源を，`阻止-可能$として扱って、~siteが，混在~内容が導入されるおそれなく資源を埋込めるようにする。
+◎
+Treat optionally-blockable resources inside nested browsing contexts as blockable, to allow sites to embed resources without fear of introducing mixed content.
+</li>
+</ol>
+
+		</section>
+	</section>
+	<section id="iana-considerations">
+<h2 title="IANA Considerations">8. IANA 考慮点</h2>
+
+<p>
+~CSP指令~registry `RFC7762$r は、次の指令および参照先で更新されるべきである：
+◎
+The Content Security Policy Directive registry should be updated with the following directives and references [RFC7762]:
+</p>
+
+<dl>
+	<dt>`block-all-mixed-content$dir</dt>
+	<dd>
+この文書（ <a href="#strict-opt-in">§ ~opt-in法</a> ）
+◎
+This document (see § 4.2 Opting-in)
+</dd>
+</dl>
+
+	</section>
+	<section id="acknowledgements">
+<h2 title="Acknowledgements">9. 謝辞</h2>
+
+<p>
+WebAppSec WG から集められた，賞賛すべき~feedbackに加えて、
+Chrome の~security~teamは，この仕様の準備に計り知れなく~~寄与された。
+特に、早期に多数の~feedbackを寄せられた
+`Chris Palmer, Chris Evans, Ryan Sleevi, Michal Zalewski, Ken Buchanan, Tom Sepez^en
+各~氏。
+Fetch を説明され、この仕様への~interfaceを定義することに助力された
+`Anne van Kesteren^en 氏。
+この仕様を注目させ, 手入れし, 健全に保つことに助力された
+`Brian Smith^en 氏。
+◎
+In addition to the wonderful feedback gathered from the WebAppSec WG, the Chrome security team was invaluable in preparing this specification. In particular, Chris Palmer, Chris Evans, Ryan Sleevi, Michal Zalewski, Ken Buchanan, and Tom Sepez gave lots of early feedback. Anne van Kesteren explained Fetch and helped define the interface to this specification. Brian Smith helped keep the spec focused, trim, and sane.
+</p>
+
+
+	</section>
+</main></div>

@@ -1,0 +1,1780 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>CSS プロパティ一覧</title>
+
+<link rel="stylesheet" href="common.css" type="text/css">
+<link rel="icon" href="common/3underscore.png">
+
+<style>
+
+body {
+	padding: 1em;
+}
+
+abbr {
+	font-family: sans-serif;
+	font-weight: bold;
+}
+
+.ED {
+	color: black;
+}
+
+.FPWD {
+	background: hsl(10, 55%, 55%);
+	color: white;
+}
+.WD {
+	background: hsl(20, 77%, 55%);
+	color: white;
+}
+.LC {
+	background: hsl(30, 68%, 65%);
+	color: black;
+}
+.CR {
+	background: hsl(62, 86%, 45%);
+	color: black;
+}
+.PR {
+	background: hsl(89, 53%, 44%);
+	color: white;
+}
+.REC, .CSS {
+	background: hsl(129, 54%, 40%);
+	color: white;
+}
+.LS {
+	background: #3c790a;
+	color: white;
+}
+
+.NOTE {
+	background: hsl(129, 54%, 40%);
+	color: white;
+}
+
+.JA {
+	color: green;
+}
+
+#legend td {
+	padding: 0.1em 0.5em;
+}
+
+</style>
+
+
+<script type="module">
+'use strict';
+
+const E = (id) => {
+	return document.getElementById(id);
+}
+
+const sorters = {
+	by_prop0: (item1, item2) => {
+		if(item1.prop === item2.prop){
+			return (item1.module > item2.module) ? 1:-1;
+		}
+		return (item1.prop > item2.prop) ? 1:-1;
+	},
+	by_prop1: (item1, item2) => {
+		if(item1.prop === item2.prop){
+			return (item1.module > item2.module) ? 1:-1;
+		}
+		return (item1.prop > item2.prop) ? -1:1;
+	},
+	by_module0: (item1, item2) => {
+		if(item1.module === item2.module){
+			return (item1.prop > item2.prop) ? 1:-1;
+		}
+		return (item1.module > item2.module) ? 1:-1;
+	},
+	by_module1: (item1, item2) => {
+		if(item1.module === item2.module){
+			return (item1.prop > item2.prop) ? 1:-1;
+		}
+		return (item1.module > item2.module) ? -1:1;
+	}
+};
+const sort_list = (key_dir, data) => {
+	const tbody = E('prop-list');
+	data.forEach((item, index) => {
+		item.row = tbody.rows[index];
+	})
+	data.sort(sorters[key_dir] || sorters.by_prop0);
+	data.forEach((item) => {
+		tbody.appendChild(item.row);
+		item.row = null;
+	})
+	return key_dir;
+}
+
+const parse = (data) => {
+	const list = [];
+	let module = '';
+	let is_camel_cased = false;
+	const map = {};
+
+	data.replace(/^●.+|^■?(\S+?):\s*(.+)/mg,
+	(match, m1, m2) => {
+		switch(match[0]){
+		case '●':
+			module = match.slice(1);
+			is_camel_cased = (module.slice(0,3) === 'SVG');
+			break;
+		case '■':
+			map[m1] = m2;
+			break;
+		default:
+			const item = {
+				prop:   m1,
+				module: module,
+				urls:   [],
+			};
+			list.push(item);
+			for( let t of m2.split(',') ){
+				let fragment = item.prop;
+				if( t.indexOf('=') >= 0 ){
+					const t1 = t.split('=');
+					t = t1[0];
+					fragment = t1[1];
+				} else {
+					if(is_camel_cased){
+						fragment =
+( '-' + fragment ).replace( /-\w/g, (m) => { return m[1].toUpperCase();} )
++ 'Property';
+					}
+				}
+				item.urls.push( `${t}:${map[t]}${fragment}` );
+			}
+		}
+		return '';
+	});
+	return list;
+}
+
+
+const create_html = (data) => {
+	const mapping = {
+CSSWG: 'https://drafts.csswg.org',
+SVGWG: 'https://svgwg.org/specs',
+TR: 'https://www.w3.org/TR',
+FXTF: 'https://drafts.fxtf.org',
+//	FXTF: 'http://dev.w3.org/fxtf',
+MOMDO: 'https://momdo.github.io/css2',
+MOMDOUI: 'https://momdo.github.io/css-ui/',
+MOMDODEC: 'https://momdo.github.io/css-text-decor-3/',
+MITSUE: 'http://standards.mitsue.co.jp/resources/w3c/TR',
+	};
+
+	const html = [];
+	for( const item of data ){
+		html.push(
+			'<tr><td><code class="property">',
+			item.prop,
+			'</code><td>'
+		);
+		for( const url of item.urls){
+			html.push(
+				url.replace(
+/^([A-Z]+)(\d?)\w?:(.+)$/g,
+'<a href="$3"><abbr class="$1">$1$2</abbr></a>'
+				)
+			);
+		}
+		html.push(
+			'<td>',
+			item.module
+		);
+	}
+
+	return html.join('')
+	.replace(/<\/a>\s*<a/g, '<\/a>, <a')
+	.replace(/~(\w+)/g, (s, t) => { return mapping[t] || s; });
+}
+
+
+{
+	const data = parse(E('prop_data').textContent);
+
+	let sort_by = 'by_prop0';
+	data.sort(sorters[sort_by]);
+
+	E('prop-list').innerHTML = create_html(data);
+
+	document.body.classList.add('_expanded');
+
+	E('prop-header').addEventListener('click', (event) => {
+		const e = event.target;
+		if(e.tagName === 'BUTTON' && e.id){
+			sort_by = sort_list(e.id, data);
+		}
+	});
+}
+
+</script>
+
+
+<script type="text/plain" id="prop_data">
+
+●CSS Custom Properties for Cascading Variables Module
+■CR1:~TR/css-variables-1/#
+■ED1:~CSSWG/css-variables/#
+■JA1:css-variables-ja.html#
+--*: CR1=propdef-,ED1=propdef-,JA1=propdef-
+
+●CSS Box Alignment Module
+■WD3:~TR/css-align-3/#propdef-
+■ED3:~CSSWG/css-align/#propdef-
+■JA3:css-align-ja.html#propdef-
+align-content: WD3,ED3,JA3
+align-items: WD3,ED3,JA3
+align-self: WD3,ED3,JA3
+justify-content: WD3,ED3,JA3
+justify-items: WD3,ED3,JA3
+justify-self: WD3,ED3,JA3
+place-content: WD3,ED3,JA3
+place-items: WD3,ED3,JA3
+place-self: WD3,ED3,JA3
+gap: WD3,ED3,JA3
+row-gap: WD3,ED3,JA3
+column-gap: WD3,ED3,JA3
+
+
+●CSS Flexible Box Layout Module
+■CR1:~TR/css-flexbox-1/#propdef-
+■ED1:~CSSWG/css-flexbox-1/#propdef-
+■JA1:css-flexbox-ja.html#propdef-
+align-content: CR1,ED1,JA1
+align-items: CR1,ED1,JA1
+align-self: CR1,ED1,JA1
+flex: CR1,ED1,JA1
+flex-basis: CR1,ED1,JA1
+flex-direction: CR1,ED1,JA1
+flex-flow: CR1,ED1,JA1
+flex-grow: CR1,ED1,JA1
+flex-shrink: CR1,ED1,JA1
+flex-wrap: CR1,ED1,JA1
+justify-content: CR1,ED1,JA1
+order: CR1,ED1,JA1
+
+●CSS Fill and Stroke Module
+■FPWD3:~TR/fill-stroke-3/#propdef-
+■ED3:~FXTF/fill-stroke/#propdef-
+fill-break: FPWD3,ED3
+fill-color: FPWD3,ED3
+fill-image: FPWD3,ED3
+fill-opacity: FPWD3,ED3
+fill-origin: FPWD3,ED3
+fill-position: FPWD3,ED3
+fill-repeat: FPWD3,ED3
+fill-rule: FPWD3,ED3
+fill-size: FPWD3,ED3
+fill: FPWD3,ED3
+stroke-align: FPWD3,ED3
+stroke-break: FPWD3,ED3
+stroke-color: FPWD3,ED3
+stroke-dash-corner: FPWD3,ED3
+stroke-dash-justify: FPWD3,ED3
+stroke-dasharray: FPWD3,ED3
+stroke-dashoffset: FPWD3,ED3
+stroke-image: FPWD3,ED3
+stroke-linecap: FPWD3,ED3
+stroke-linejoin: FPWD3,ED3
+stroke-miterlimit: FPWD3,ED3
+stroke-opacity: FPWD3,ED3
+stroke-origin: FPWD3,ED3
+stroke-position: FPWD3,ED3
+stroke-repeat: FPWD3,ED3
+stroke-size: FPWD3,ED3
+stroke-width: FPWD3,ED3
+stroke: FPWD3,ED3
+
+
+●CSS Box Model Module
+■WD3:~TR/css-box-3/#propdef-
+■ED3:~CSSWG/css-box-3/#propdef-
+■WD4:~TR/css-box-4/#propdef-
+■ED4:~CSSWG/css-box-4/#propdef-
+■JA4:css-box-ja.html#propdef-
+margin: WD3,ED3,WD4,ED4,JA4
+margin-bottom: WD3,ED3,WD4,ED4,JA4
+margin-left: WD3,ED3,WD4,ED4,JA4
+margin-right: WD3,ED3,WD4,ED4,JA4
+margin-top: WD3,ED3,WD4,ED4,JA4
+margin-trim: WD4,ED4,JA4
+padding: WD3,ED3,WD4,ED4,JA4
+padding-bottom: WD3,ED3,WD4,ED4,JA4
+padding-left: WD3,ED3,WD4,ED4,JA4
+padding-right: WD3,ED3,WD4,ED4,JA4
+padding-top: WD3,ED3,WD4,ED4,JA4
+
+●CSS Inline Layout Module
+■WD3:~TR/css-inline-3/#propdef-
+■ED3:~CSSWG/css-inline-3/#propdef-
+■JA3:css-inline-ja.html#propdef-
+alignment-baseline: WD3,ED3,JA3
+baseline-shift: WD3,ED3,JA3
+baseline-source: WD3,ED3,JA3
+dominant-baseline: WD3,ED3,JA3
+initial-letter: WD3,ED3,JA3
+initial-letter-align: WD3,ED3,JA3
+initial-letter-wrap: WD3,ED3,JA3
+inline-sizing: WD3,ED3,JA3
+leading-trim: WD3,ED3,JA3
+line-height: WD3,ED3,JA3
+text-edge: WD3,ED3,JA3
+vertical-align: WD3,ED3,JA3
+
+●CSS Cascading and Inheritance
+■CR3:~TR/css-cascade-3/#propdef-
+■ED3:~CSSWG/css-cascade-3/#propdef-
+■CR4:~TR/css-cascade-4/#propdef-
+■ED4:~CSSWG/css-cascade-4/#propdef-
+■JA4:css-cascade-ja.html#propdef-
+all: CR3,ED3,CR4,ED4,JA4
+
+●CSS Containment Module
+■REC1:~TR/css-contain-1/#propdef-
+■ED1:~CSSWG/css-contain-1/#propdef-
+■WD2:~TR/css-contain-2/#propdef-
+■ED2:~CSSWG/css-contain-2/#propdef-
+■JA2:css-contain-ja.html#propdef-
+contain: REC1,ED1,WD2,ED2,JA2
+content-visibility: WD2,ED2,JA2
+
+●CSS Generated Content for Paged Media Module
+■WD3:~TR/css-gcpm-3/#propdef-
+■ED3:~CSSWG/css-gcpm-3/#propdef-
+■ED4:~CSSWG/css-gcpm-4/#propdef-
+bookmark-label: WD3
+bookmark-level: WD3
+bookmark-state: WD3
+footnote-display: WD3,ED3
+footnote-policy: WD3,ED3
+running: WD3,ED3
+string-set: WD3,ED3
+copy-into: ED4
+
+●CSS Generated Content Module
+■WD3:~TR/css-content-3/#propdef-
+■ED3:~CSSWG/css-content-3/#propdef-
+■JA3:css-content-ja.html#propdef-
+bookmark-label: WD3,ED3,JA3
+bookmark-level: WD3,ED3,JA3
+bookmark-state: WD3,ED3,JA3
+content: WD3,ED3,JA3
+quotes: WD3,ED3,JA3
+string-set: WD3,ED3,JA3
+
+●CSS Animations
+■WD1:~TR/css-animations-1/#propdef-
+■ED1:~CSSWG/css-animations-1/#propdef-
+■JA1:css-animations-ja.html#propdef-
+■ED2:~CSSWG/css-animations-2/#propdef-
+■JA2:css-animations2-ja.html#propdef-
+animation: WD1,ED1,JA1
+animation-delay: WD1,ED1,JA1
+animation-direction: WD1,ED1,JA1
+animation-duration: WD1,ED1,JA1
+animation-fill-mode: WD1,ED1,JA1
+animation-iteration-count: WD1,ED1,JA1
+animation-name: WD1,ED1,JA1
+animation-play-state: WD1,ED1,JA1
+animation-timing-function: WD1,ED1,JA1
+animation-composition: ED2,JA2
+animation-timeline: ED2,JA2
+
+●CSS Basic User Interface Module
+■REC3:~TR/css-ui-3/#propdef-
+■ED3:~CSSWG/css-ui-3/#propdef-
+■JA3:~MOMDOUI#propdef-
+■WD4:~TR/css-ui-4/#propdef-
+■ED4:~CSSWG/css-ui-4/#propdef-
+■JA4:css-ui-ja.html#propdef-
+box-sizing: REC3,JA3
+caret-color: REC3,ED3,JA3,WD4,ED4,JA4
+cursor: REC3,ED3,JA3,WD4,ED4,JA4
+outline: REC3,ED3,JA3,WD4,ED4,JA4
+outline-color: REC3,ED3,JA3,WD4,ED4,JA4
+outline-offset: REC3,ED3,JA3,WD4,ED4,JA4
+outline-style: REC3,ED3,JA3,WD4,ED4,JA4
+outline-width: REC3,ED3,JA3,WD4,ED4,JA4
+resize: REC3,ED3,JA3,WD4,ED4,JA4
+text-overflow: REC3,JA3
+nav-down: WD4,ED4,JA4
+nav-left: WD4,ED4,JA4
+nav-right: WD4,ED4,JA4
+nav-up: WD4,ED4,JA4
+appearance: WD4,ED4,JA4
+-webkit-appearance: ED4,JA4
+caret: WD4,ED4,JA4
+caret-shape: WD4,ED4,JA4
+user-select: WD4,ED4,JA4
+
+●CSS Backgrounds and Borders Module
+■CR3:~TR/css-backgrounds-3/#propdef-
+■ED3:~CSSWG/css-backgrounds/#propdef-
+■JA3:css-backgrounds-ja.html#propdef-
+■ED4:~CSSWG/css-backgrounds-4/#propdef-
+background: CR3,ED3,JA3
+background-attachment: CR3,ED3,JA3
+background-clip: CR3,ED3,JA3
+background-color: CR3,ED3,JA3
+background-image: CR3,ED3,JA3
+background-origin: CR3,ED3,JA3
+background-position: CR3,ED3,JA3,ED4
+background-position-block: ED4
+background-position-inline: ED4
+background-position-x: ED4
+background-position-y: ED4
+background-repeat: CR3,ED3,JA3
+background-size: CR3,ED3,JA3
+border: CR3,ED3,JA3
+border-bottom: CR3,ED3,JA3
+border-bottom-color: CR3,ED3,JA3
+border-bottom-left-radius: CR3,ED3,JA3
+border-bottom-right-radius: CR3,ED3,JA3
+border-bottom-style: CR3,ED3,JA3
+border-bottom-width: CR3,ED3,JA3
+border-clip: ED4
+border-clip-bottom: ED4
+border-clip-left: ED4
+border-clip-right: ED4
+border-clip-top: ED4
+border-color: CR3,ED3,JA3
+border-image: CR3,ED3,JA3
+border-image-outset: CR3,ED3,JA3
+border-image-repeat: CR3,ED3,JA3
+border-image-slice: CR3,ED3,JA3
+border-image-source: CR3,ED3,JA3
+border-image-width: CR3,ED3,JA3
+border-left: CR3,ED3,JA3
+border-left-color: CR3,ED3,JA3
+border-left-style: CR3,ED3,JA3
+border-left-width: CR3,ED3,JA3
+border-limit: ED4
+border-radius: CR3,ED3,JA3,ED4
+border-right: CR3,ED3,JA3
+border-right-color: CR3,ED3,JA3
+border-right-style: CR3,ED3,JA3
+border-right-width: CR3,ED3,JA3
+border-style: CR3,ED3,JA3
+border-top: CR3,ED3,JA3
+border-top-color: CR3,ED3,JA3
+border-top-left-radius: CR3,ED3,JA3
+border-top-right-radius: CR3,ED3,JA3
+border-top-style: CR3,ED3,JA3
+border-top-width: CR3,ED3,JA3
+border-width: CR3,ED3,JA3
+box-shadow: CR3,ED3,JA3
+corner-shape: ED4
+corners: ED4
+
+
+●CSS Round Display
+■WD1:~TR/css-round-display-1/#propdef-
+■ED1:~CSSWG/css-round-display-1/#propdef-
+border-boundary: WD1,ED1
+shape-inside: WD1,ED1
+
+●CSS Rhythmic Sizing
+■FPWD1:~TR/css-rhythm-1/#propdef-
+■ED1:~CSSWG/css-rhythm/#propdef-
+block-step-align: FPWD1,ED1
+block-step-insert: FPWD1,ED1
+block-step-round: FPWD1,ED1
+block-step-size: FPWD1,ED1
+block-step: FPWD1,ED1
+line-height-step: FPWD1,ED1
+
+●CSS Box Sizing Module
+■WD3:~TR/css-sizing-3/#propdef-
+■ED3:~CSSWG/css-sizing-3/#propdef-
+■JA3:css-sizing-ja.html#propdef-
+■FPWD4:~TR/css-sizing-4/#propdef-
+■ED4:~CSSWG/css-sizing-4/#propdef-
+box-sizing: WD3,ED3,JA3
+height: WD3,ED3,JA3
+max-height: WD3,ED3,JA3
+max-width: WD3,ED3,JA3
+min-height: WD3,ED3,JA3
+min-width: WD3,ED3,JA3
+width: WD3,ED3,JA3
+aspect-ratio: FPWD4,ED4
+contain-intrinsic-size: FPWD4,ED4
+
+●CSS Table Module
+■WD3:~TR/css-tables-3/#propdef-
+■ED3:~CSSWG/css-tables-3/#propdef-
+border-collapse: WD3,ED3
+border-spacing: WD3,ED3
+caption-side: WD3,ED3
+empty-cells: WD3,ED3
+table-layout: WD3,ED3
+
+
+●CSS Positioned Layout Module
+■WD3:~TR/css-position-3/#propdef-
+■ED3:~CSSWG/css-position-3/#propdef-
+■JA3:css-position-ja.html#propdef-
+bottom: WD3,ED3,JA3
+left: WD3,ED3,JA3
+inset: WD3,ED3,JA3
+inset-block: WD3,ED3,JA3
+inset-block-end: WD3,ED3,JA3
+inset-block-start: WD3,ED3,JA3
+inset-inline: WD3,ED3,JA3
+inset-inline-end: WD3,ED3,JA3
+inset-inline-start: WD3,ED3,JA3
+position: WD3,ED3,JA3
+right: WD3,ED3,JA3
+top: WD3,ED3,JA3
+
+●CSS Fragmentation Module
+■CR3:~TR/css-break-3/#propdef-
+■ED3:~CSSWG/css-break-3/#propdef-
+■JA4:css-break-ja.html#propdef-
+■FPWD4:~TR/css-break-4/#propdef-
+■ED4:~CSSWG/css-break-4/#propdef-
+box-decoration-break: CR3,ED3,FPWD4,ED4,JA4
+break-after: CR3,ED3,FPWD4,ED4,JA4
+break-before: CR3,ED3,FPWD4,ED4,JA4
+break-inside: CR3,ED3,FPWD4,ED4,JA4
+margin-break: FPWD4,ED4,JA4
+orphans: CR3,ED3,FPWD4,ED4,JA4
+widows: CR3,ED3,FPWD4,ED4,JA4
+
+●CSS Line Grid Module
+■WD1:~TR/css-line-grid-1/#propdef-
+■ED1:~CSSWG/css-line-grid/#propdef-
+box-snap: WD1,ED1
+line-grid: WD1,ED1
+line-snap: WD1,ED1
+
+●CSS Display Module
+■CR3:~TR/css-display-3/#propdef-
+■ED3:~CSSWG/css-display/#propdef-
+■JA3:css-display-ja.html#propdef-
+display: CR3,ED3,JA3
+
+●CSS Regions Module
+■WD1:~TR/css-regions-1/#propdef-
+■ED1:~CSSWG/css-regions-1/#propdef-
+break-after: WD1
+break-before: WD1
+break-inside: WD1
+flow-from: WD1,ED1
+flow-into: WD1,ED1
+region-fragment: WD1,ED1
+
+●CSS Multi-column Layout Module
+■WD1:~TR/css-multicol-1/#propdef-
+■ED1:~CSSWG/css-multicol-1/#propdef-
+■JA1:css-multicol-ja.html#propdef-
+■ED2:~CSSWG/css-multicol-2/#propdef-
+column-count: WD1,ED1,JA1
+column-fill: WD1,ED1,JA1
+column-gap: ED1,JA1
+column-rule: WD1,ED1,JA1
+column-rule-color: WD1,ED1,JA1
+column-rule-style: WD1,ED1,JA1
+column-rule-width: WD1,ED1,JA1
+column-span: WD1,ED1,JA1,ED2
+column-width: WD1,ED1,JA1
+columns: WD1,ED1,JA1
+
+
+●CSS Page Floats
+■FPWD3:~TR/css-page-floats-3/#propdef-
+■ED3:~CSSWG/css-page-floats/#propdef-
+clear: FPWD3,ED3
+float: FPWD3,ED3
+float-defer: FPWD3,ED3
+float-offset: FPWD3,ED3
+float-reference: FPWD3,ED3
+
+●CSS Masking Module
+■CR1:~TR/css-masking-1/#propdef-
+■ED1:~FXTF/css-masking-1/#propdef-
+■JA1:css-masking-ja.html#propdef-
+clip: CR1,ED1,JA1
+clip-path: CR1,ED1,JA1
+clip-rule: CR1,ED1,JA1
+mask: CR1,ED1,JA1
+mask-border: CR1,ED1,JA1
+mask-border-mode: CR1,ED1,JA1
+mask-border-outset: CR1,ED1,JA1
+mask-border-repeat: CR1,ED1,JA1
+mask-border-slice: CR1,ED1,JA1
+mask-border-source: CR1,ED1,JA1
+mask-border-width: CR1,ED1,JA1
+mask-clip: CR1,ED1,JA1
+mask-composite: CR1,ED1,JA1
+mask-image: CR1,ED1,JA1
+mask-mode: CR1,ED1,JA1
+mask-origin: CR1,ED1,JA1
+mask-position: CR1,ED1,JA1
+mask-repeat: CR1,ED1,JA1
+mask-size: CR1,ED1,JA1
+mask-type: CR1,ED1,JA1
+
+
+●CSS Color Module
+■WD4:~TR/css-color-4/#propdef-
+■ED4:~CSSWG/css-color/#propdef-
+■JA4:css-color-ja.html#propdef-
+■REC3:~TR/css-color-3/#
+■ED3:~CSSWG/css-color-3/#
+■JA3:~MITSUE/css3-color#
+color: REC3=color0,ED3=color0,JA3=color0,WD4,ED4,JA4
+opacity: REC3,ED3,JA3,WD4,ED4,JA4
+
+●CSS Color Adjustment Module Level 1
+■WD1:~TR/css-color-adjust-1/#propdef-
+■ED1:~CSSWG/css-color-adjust-1/#propdef-
+■JA1:css-color-adjust-ja.html#propdef-
+color-adjust: WD1,ED1,JA1
+color-scheme: WD1,ED1,JA1
+forced-color-adjust: WD1,ED1,JA1
+
+●CSS Overflow Module
+■WD3:~TR/css-overflow-3/#propdef-
+■ED3:~CSSWG/css-overflow-3/#propdef-
+■JA3:css-overflow3-ja.html#propdef-
+■ED4:~CSSWG/css-overflow-4/#propdef-
+■WD4:~TR/css-overflow-4/#propdef-
+overflow: WD3,ED3,JA3
+overflow-x: WD3,ED3,JA3
+overflow-y: WD3,ED3,JA3
+overflow-inline: WD3,ED3,JA3
+overflow-block: WD3,ED3,JA3
+overflow-clip-margin: WD3,ED3,JA3
+block-ellipsis: WD3,ED3,JA3
+continue: WD3,ED3,JA3,WD4,ED4
+line-clamp: WD3,ED3,JA3
+max-lines: WD3,ED3,JA3,WD4,ED4
+scrollbar-gutter: WD4,ED4
+text-overflow: WD3,ED3,JA3,ED4
+
+
+●CSS Lists and Counters Module
+■WD3:~TR/css-lists-3/#propdef-
+■ED3:~CSSWG/css-lists-3/#propdef-
+■JA3:css-lists-ja.html#propdef-
+counter-increment: WD3,ED3,JA3
+counter-reset: WD3,ED3,JA3
+counter-set: WD3,ED3,JA3
+list-style: WD3,ED3,JA3
+list-style-image: WD3,ED3,JA3
+list-style-position: WD3,ED3,JA3
+list-style-type: WD3,ED3,JA3
+marker-side: WD3,ED3,JA3
+
+●CSS Writing Modes
+■REC3:~TR/css-writing-modes-3/#propdef-
+■ED3:~CSSWG/css-writing-modes-3/#propdef-
+■JA3:css-writing-modes3-ja.html#propdef-
+■CR4:~TR/css-writing-modes-4/#propdef-
+■ED4:~CSSWG/css-writing-modes/#propdef-
+■JA4:css-writing-modes-ja.html#propdef-
+direction: REC3,ED3,JA3,CR4,ED4,JA4
+glyph-orientation-vertical: REC3,ED3,JA3,CR4,ED4,JA4
+text-combine-upright: REC3,ED3,JA3,CR4,ED4,JA4
+text-orientation: REC3,ED3,JA3,CR4,ED4,JA4
+unicode-bidi: REC3,ED3,JA3,CR4,ED4,JA4
+writing-mode: REC3,ED3,JA3,CR4,ED4,JA4
+
+●CSS Ruby Layout Module
+■WD1:~TR/css-ruby-1/#propdef-
+■ED1:~CSSWG/css-ruby-1/#propdef-
+■JA1:css-ruby-ja.html#propdef-
+ruby-align: WD1,ED1,JA1
+ruby-merge: WD1,ED1,JA1
+ruby-overhang: WD1,ED1,JA1
+ruby-position: WD1,ED1,JA1
+
+●CSS Fonts Module
+■REC3:~TR/css-fonts-3/#propdef-
+■ED3:~CSSWG/css-fonts-3/#propdef-
+■JA3:css-fonts-ja.html#propdef-
+■WD4:~TR/css-fonts-4/#propdef-
+■ED4:~CSSWG/css-fonts-4/#propdef-
+■JA4:css-fonts4-ja.html#propdef-
+font-family: REC3,ED3,JA3,WD4,ED4,JA4
+font-feature-settings: REC3,ED3,JA3,WD4,ED4,JA4
+font-kerning: REC3,ED3,JA3,WD4,ED4,JA4
+font-language-override: WD4,ED4,JA4
+font-optical-sizing: WD4,ED4,JA4
+font-palette: WD4,ED4,JA4
+font-size-adjust: REC3,ED3,JA3,WD4,ED4,JA4
+font-size: REC3,ED3,JA3,WD4,ED4,JA4
+font-stretch: REC3,ED3,JA3,WD4,ED4,JA4
+font-style: REC3,ED3,JA3,WD4,ED4,JA4
+font-synthesis-small-caps: WD4,ED4,JA4
+font-synthesis-style: WD4,ED4,JA4
+font-synthesis-weight: WD4,ED4,JA4
+font-synthesis: REC3,ED3,JA3,WD4,ED4,JA4
+font-variant-alternates: WD4,ED4,JA4
+font-variant-caps: REC3,ED3,JA3,WD4,ED4,JA4
+font-variant-east-asian: REC3,ED3,JA3,WD4,ED4,JA4
+font-variant-emoji: WD4,ED4,JA4
+font-variant-ligatures: REC3,ED3,JA3,WD4,ED4,JA4
+font-variant-numeric: REC3,ED3,JA3,WD4,ED4,JA4
+font-variant-position: REC3,ED3,JA3,WD4,ED4,JA4
+font-variant: REC3,ED3,JA3,WD4,ED4,JA4
+font-variation-settings: WD4,ED4,JA4
+font-weight: REC3,ED3,JA3,WD4,ED4,JA4
+font: REC3,ED3,JA3,WD4,ED4,JA4
+
+●CSS Grid Layout Module
+■CR1:~TR/css-grid-1/#propdef-
+■ED1:~CSSWG/css-grid-1/#propdef-
+■JA1:css-grid-ja.html#propdef-
+■ED2:~CSSWG/css-grid-2/#propdef-
+grid: CR1,ED1,JA1,ED2
+grid-area: CR1,ED1,JA1,ED2
+grid-auto-columns: CR1,ED1,JA1,ED2
+grid-auto-flow: CR1,ED1,JA1,ED2
+grid-auto-rows: CR1,ED1,JA1,ED2
+grid-column: CR1,ED1,JA1,ED2
+grid-column-end: CR1,ED1,JA1,ED2
+grid-column-start: CR1,ED1,JA1,ED2
+grid-row: CR1,ED1,JA1,ED2
+grid-row-end: CR1,ED1,JA1,ED2
+grid-row-start: CR1,ED1,JA1,ED2
+grid-template: CR1,ED1,JA1,ED2
+grid-template-areas: CR1,ED1,JA1,ED2
+grid-template-columns: CR1,ED1,JA1,ED2
+grid-template-rows: CR1,ED1,JA1,ED2
+
+●CSS Text Module
+■WD3:~TR/css-text-3/#propdef-
+■ED3:~CSSWG/css-text-3/#propdef-
+■JA3:css-text-ja.html#propdef-
+■WD4:~TR/css-text-4/#propdef-
+■ED4:~CSSWG/css-text-4/#propdef-
+hanging-punctuation: WD3,ED3,JA3
+hyphenate-character: WD4,ED4
+hyphenate-limit-chars: WD4,ED4
+hyphenate-limit-last: WD4,ED4
+hyphenate-limit-lines: WD4,ED4
+hyphenate-limit-zone: WD4,ED4
+hyphens: WD3,ED3,JA3
+letter-spacing: WD3,ED3,JA3
+line-break: WD3,ED3,JA3
+line-padding: WD4,ED4
+overflow-wrap: WD3,ED3,JA3
+tab-size: WD3,ED3,JA3
+text-align: WD3,ED3,JA3
+text-align-all: WD3,ED3,JA3
+text-align-last: WD3,ED3,JA3
+text-group-align: WD4,ED4
+text-indent: WD3,ED3,JA3
+text-justify: WD3,ED3,JA3
+text-space-collapse: WD4,ED4
+text-space-trim: WD4,ED4
+text-spacing: WD4,ED4
+text-transform: WD3,ED3,JA3
+text-wrap: WD4,ED4
+white-space: WD3,ED3,JA3,WD4,ED4
+word-boundary-detection: WD4,ED4
+word-boundary-expansion: WD4,ED4
+word-break: WD3,ED3,JA3
+word-spacing: WD3,ED3,JA3
+word-wrap: WD3,ED3,JA3
+wrap-after: WD4,ED4
+wrap-before: WD4,ED4
+wrap-inside: WD4,ED4
+
+●CSS Images Module
+■CR3:~TR/css-images-3/#propdef-
+■ED3:~CSSWG/css-images-3/#propdef-
+■JA3:css-images-ja.html#propdef-
+■WD4:~TR/css-images-4/#propdef-
+■ED4:~CSSWG/css-images-4/#propdef-
+■JA4:css-images4-ja.html#propdef-
+image-orientation: CR3,ED3,JA3
+image-rendering: CR3,ED3,JA3
+image-resolution: WD4,ED4,JA4
+object-fit: CR3,ED3,JA3,ED4,JA4
+object-position: CR3,ED3,JA3
+
+●CSS Paged Media Module
+■WD3:~TR/css-page-3/#propdef-
+■ED3:~CSSWG/css-page-3/#propdef-
+■JA3:css-page-ja.html#propdef-
+page: WD3,ED3,JA3
+
+●CSSOM View Module
+■WD1:~TR/cssom-view-1/#propdef-
+■ED1:~CSSWG/cssom-view/#propdef-
+■JA1:cssom-view-ja.html#propdef-
+scroll-behavior: WD1,ED1,JA1
+
+●CSS Scroll Anchoring Module
+■FPWD1:~TR/css-scroll-anchoring-1/#propdef-
+■ED1:~CSSWG/css-scroll-anchoring-1/#propdef-
+■JA1:css-scroll-anchoring-ja.html#propdef-
+overflow-anchor: FPWD1,ED1,JA1
+
+●CSS Scroll Snap Module
+■CR1:~TR/css-scroll-snap-1/#propdef-
+■ED1:~CSSWG/css-scroll-snap-1/#propdef-
+■JA1:css-scroll-snap-ja.html#propdef-
+scroll-margin-block-end: CR1,ED1,JA1
+scroll-margin-block-start: CR1,ED1,JA1
+scroll-margin-block: CR1,ED1,JA1
+scroll-margin-bottom: CR1,ED1,JA1
+scroll-margin-inline-end: CR1,ED1,JA1
+scroll-margin-inline-start: CR1,ED1,JA1
+scroll-margin-inline: CR1,ED1,JA1
+scroll-margin-left: CR1,ED1,JA1
+scroll-margin-right: CR1,ED1,JA1
+scroll-margin-top: CR1,ED1,JA1
+scroll-margin: CR1,ED1,JA1
+scroll-padding-block-end: CR1,ED1,JA1
+scroll-padding-block-start: CR1,ED1,JA1
+scroll-padding-block: CR1,ED1,JA1
+scroll-padding-bottom: CR1,ED1,JA1
+scroll-padding-inline-end: CR1,ED1,JA1
+scroll-padding-inline-start: CR1,ED1,JA1
+scroll-padding-inline: CR1,ED1,JA1
+scroll-padding-left: CR1,ED1,JA1
+scroll-padding-right: CR1,ED1,JA1
+scroll-padding-top: CR1,ED1,JA1
+scroll-padding: CR1,ED1,JA1
+scroll-snap-align: CR1,ED1,JA1
+scroll-snap-stop: CR1,ED1,JA1
+scroll-snap-type: CR1,ED1,JA1
+
+●CSS Scrollbars Module
+■FPWD1:~TR/css-scrollbars-1/#propdef-
+■ED1:~CSSWG/css-scrollbars-1/#propdef-
+■JA1:css-scrollbars-ja.html#propdef-
+scrollbar-color: FPWD1,ED1,JA1
+scrollbar-width: FPWD1,ED1,JA1
+
+●CSS Spatial Navigation Module
+■ED1:~CSSWG/css-nav-1/#propdef-
+■WD1:~TR/css-nav-1/#propdef-
+■JA1:css-nav-ja.html#propdef-
+spatial-navigation-contain: WD1,ED1,JA1
+spatial-navigation-action: WD1,ED1,JA1
+spatial-navigation-function: WD1,ED1,JA1
+
+●CSS Overscroll Behavior Module
+■ED1:~CSSWG/css-overscroll-1/#propdef-
+■JA1:css-overscroll-ja.html#propdef-
+overscroll-behavior: ED1,JA1
+overscroll-behavior-x: ED1,JA1
+overscroll-behavior-y: ED1,JA1
+overscroll-behavior-block: ED1,JA1
+overscroll-behavior-inline: ED1,JA1
+
+●CSS Shapes Module
+■CR1:~TR/css-shapes-1/#propdef-
+■ED1:~CSSWG/css-shapes/#propdef-
+■JA1:css-shapes-ja.html#propdef-
+■ED2:~CSSWG/css-shapes-2/#propdef-
+shape-image-threshold: CR1,ED1,JA1
+shape-margin: CR1,ED1,JA1
+shape-outside: CR1,ED1,JA1
+shape-inside: ED2
+shape-padding: ED2
+
+●CSS Text Decoration Module
+■CR3:~TR/css-text-decor-3/#propdef-
+■ED3:~CSSWG/css-text-decor-3/#propdef-
+■JA3:css-text-decor-ja.html#propdef-
+■JA3a:~MOMDODEC#propdef-
+■WD4:~TR/css-text-decor-4/#propdef-
+■ED4:~CSSWG/css-text-decor-4/#propdef-
+text-decoration: CR3,ED3,JA3,JA3a,WD4,ED4
+text-decoration-color: CR3,ED3,JA3,JA3a,WD4,ED4
+text-decoration-line: CR3,ED3,JA3,JA3a,WD4,ED4
+text-decoration-skip: WD4,ED4
+text-decoration-skip-box: WD4,ED4
+text-decoration-skip-ink: WD4,ED4
+text-decoration-skip-inset: WD4,ED4
+text-decoration-skip-self: WD4,ED4
+text-decoration-skip-spaces: WD4,ED4
+text-decoration-style: CR3,ED3,JA3,JA3a,WD4,ED4
+text-decoration-thickness: WD4,ED4
+text-emphasis: CR3,ED3,JA3,JA3a,WD4,ED4
+text-emphasis-color: CR3,ED3,JA3,JA3a,WD4,ED4
+text-emphasis-position: CR3,ED3,JA3,JA3a,WD4,ED4
+text-emphasis-skip: WD4,ED4
+text-emphasis-style: CR3,ED3,JA3,JA3a,WD4,ED4
+text-shadow: CR3,ED3,JA3,JA3a,WD4,ED4
+text-underline-offset: WD4,ED4
+text-underline-position: CR3,ED3,JA3,JA3a,WD4,ED4
+
+●CSS Transitions
+■WD1:~TR/css-transitions-1/#propdef-
+■ED1:~CSSWG/css-transitions-1/#propdef-
+■JA1:css-transitions-ja.html#propdef-
+transition: WD1,ED1,JA1
+transition-delay: WD1,ED1,JA1
+transition-duration: WD1,ED1,JA1
+transition-property: WD1,ED1,JA1
+transition-timing-function: WD1,ED1,JA1
+
+●CSS Will Change Module
+■CR1:~TR/css-will-change-1/#propdef-
+■ED1:~CSSWG/css-will-change/#propdef-
+■JA1:css-will-change-ja.html#propdef-
+will-change: CR1,ED1,JA1
+
+●CSS Exclusions Module
+■WD1:~TR/css3-exclusions/#propdef-
+■ED1:~CSSWG/css-exclusions-1/#propdef-
+■JA1:css-exclusions-ja.html#propdef-
+wrap-flow: WD1,ED1,JA1
+wrap-through: WD1,ED1,JA1
+
+●CSS Logical Properties
+■WD1:~TR/css-logical-1/#propdef-
+■ED1:~CSSWG/css-logical-1/#propdef-
+■JA1:css-logical-ja.html#propdef-
+block-size: WD1,ED1,JA1
+max-block-size: WD1,ED1,JA1
+min-block-size: WD1,ED1,JA1
+inline-size: WD1,ED1,JA1
+max-inline-size: WD1,ED1,JA1
+min-inline-size: WD1,ED1,JA1
+border-block: WD1,ED1,JA1
+border-block-color: WD1,ED1,JA1
+border-block-style: WD1,ED1,JA1
+border-block-width: WD1,ED1,JA1
+border-block-end: WD1,ED1,JA1
+border-block-end-color: WD1,ED1,JA1
+border-block-end-style: WD1,ED1,JA1
+border-block-end-width: WD1,ED1,JA1
+border-block-start: WD1,ED1,JA1
+border-block-start-color: WD1,ED1,JA1
+border-block-start-style: WD1,ED1,JA1
+border-block-start-width: WD1,ED1,JA1
+border-inline: WD1,ED1,JA1
+border-inline-color: WD1,ED1,JA1
+border-inline-style: WD1,ED1,JA1
+border-inline-width: WD1,ED1,JA1
+border-inline-end: WD1,ED1,JA1
+border-inline-end-color: WD1,ED1,JA1
+border-inline-end-style: WD1,ED1,JA1
+border-inline-end-width: WD1,ED1,JA1
+border-inline-start: WD1,ED1,JA1
+border-inline-start-color: WD1,ED1,JA1
+border-inline-start-style: WD1,ED1,JA1
+border-inline-start-width: WD1,ED1,JA1
+border-start-start-radius: WD1,ED1,JA1
+border-start-end-radius: WD1,ED1,JA1
+border-end-start-radius: WD1,ED1,JA1
+border-end-end-radius: WD1,ED1,JA1
+inset: WD1,ED1,JA1
+inset-block: WD1,ED1,JA1
+inset-block-end: WD1,ED1,JA1
+inset-block-start: WD1,ED1,JA1
+inset-inline: WD1,ED1,JA1
+inset-inline-end: WD1,ED1,JA1
+inset-inline-start: WD1,ED1,JA1
+margin-block: WD1,ED1,JA1
+margin-block-end: WD1,ED1,JA1
+margin-block-start: WD1,ED1,JA1
+margin-inline: WD1,ED1,JA1
+margin-inline-end: WD1,ED1,JA1
+margin-inline-start: WD1,ED1,JA1
+padding-block: WD1,ED1,JA1
+padding-block-end: WD1,ED1,JA1
+padding-block-start: WD1,ED1,JA1
+padding-inline: WD1,ED1,JA1
+padding-inline-end: WD1,ED1,JA1
+padding-inline-start: WD1,ED1,JA1
+
+●CSS Mobile Text Size Adjustment
+■ED1:~CSSWG/css-size-adjust/#propdef-
+■JA1:css-size-adjust-ja.html#propdef-
+text-size-adjust: ED1,JA1
+
+●CSS Transforms Module
+■CR1:~TR/css-transforms-1/#propdef-
+■ED1:~CSSWG/css-transforms-1/#propdef-
+■JA1:css-transforms-ja.html#propdef-
+■FPWD2:~TR/css-transforms-2/#propdef-
+■ED2:~CSSWG/css-transforms-2/#propdef-
+■JA2:css-transforms2-ja.html#propdef-
+backface-visibility: FPWD2,ED2,JA2
+perspective: FPWD2,ED2,JA2
+perspective-origin: FPWD2,ED2,JA2
+transform: CR1,ED1,JA1
+transform-box: CR1,ED1,JA1
+transform-origin: CR1,ED1,JA1
+transform-style: FPWD2,ED2,JA2
+rotate: FPWD2,ED2,JA2
+scale: FPWD2,ED2,JA2
+translate: FPWD2,ED2,JA2
+
+●CSS Speech Module
+■CR1:~TR/css-speech-1/#
+■ED1:~CSSWG/css-speech-1/#propdef-
+■JA1:css-speech-ja.html#propdef-
+cue-after: CR1,ED1,JA1
+cue-before: CR1,ED1,JA1
+cue: CR1,ED1,JA1
+pause-after: CR1,ED1,JA1
+pause-before: CR1,ED1,JA1
+pause: CR1,ED1,JA1
+rest-after: CR1,ED1,JA1
+rest-before: CR1,ED1,JA1
+rest: CR1,ED1,JA1
+speak-as: CR1,ED1,JA1
+speak: CR1,ED1,JA1
+voice-balance: CR1,ED1,JA1
+voice-duration: CR1,ED1,JA1
+voice-family: CR1,ED1,JA1
+voice-pitch: CR1,ED1,JA1
+voice-range: CR1,ED1,JA1
+voice-rate: CR1,ED1,JA1
+voice-stress: CR1,ED1,JA1
+voice-volume: CR1,ED1,JA1
+
+●CSS2 (Colors and Backgrounds)
+■REC:~TR/CSS2/colors.html#propdef-
+■WD:~TR/CSS22/colors.html#propdef-
+■ED:~CSSWG/css2/#propdef-
+■JA:~MOMDO/colors.html#propdef-
+background: REC,WD,ED,JA
+background-attachment: REC,WD,ED,JA
+background-color: REC,WD,ED,JA
+background-image: REC,WD,ED,JA
+background-position: REC,WD,ED,JA
+background-repeat: REC,WD,ED,JA
+color: REC,WD,ED,JA
+
+●CSS2 (Box model)
+■REC:~TR/CSS2/box.html#propdef-
+■WD:~TR/CSS22/box.html#propdef-
+■ED:~CSSWG/css2/#propdef-
+■JA:~MOMDO/box.html#propdef-
+border: REC,WD,ED,JA
+border-bottom: REC,WD,ED,JA
+border-bottom-color: REC,WD,ED,JA
+border-bottom-style: REC,WD,ED,JA
+border-bottom-width: REC,WD,ED,JA
+border-color: REC,WD,ED,JA
+border-left: REC,WD,ED,JA
+border-left-color: REC,WD,ED,JA
+border-left-style: REC,WD,ED,JA
+border-left-width: REC,WD,ED,JA
+border-right: REC,WD,ED,JA
+border-right-color: REC,WD,ED,JA
+border-right-style: REC,WD,ED,JA
+border-right-width: REC,WD,ED,JA
+border-style: REC,WD,ED,JA
+border-top: REC,WD,ED,JA
+border-top-color: REC,WD,ED,JA
+border-top-style: REC,WD,ED,JA
+border-top-width: REC,WD,ED,JA
+border-width: REC,WD,ED,JA
+margin: REC,WD,ED,JA
+margin-bottom: REC,WD,ED,JA
+margin-left: REC,WD,ED,JA
+margin-right: REC,WD,ED,JA
+margin-top: REC,WD,ED,JA
+padding: REC,WD,ED,JA
+padding-bottom: REC,WD,ED,JA
+padding-left: REC,WD,ED,JA
+padding-right: REC,WD,ED,JA
+padding-top: REC,WD,ED,JA
+
+●CSS2 (Tables)
+■REC:~TR/CSS2/tables.html#propdef-
+■WD:~TR/CSS22/tables.html#propdef-
+■ED:~CSSWG/css2/#propdef-
+■JA:~MOMDO/tables.html#propdef-
+border-collapse: REC,WD,ED,JA
+border-spacing: REC,WD,ED,JA
+caption-side: REC,WD,ED,JA
+empty-cells: REC,WD,ED,JA
+table-layout: REC,WD,ED,JA
+
+●CSS2 (Visual formatting model)
+■REC:~TR/CSS2/visuren.html#propdef-
+■WD:~TR/CSS22/visuren.html#propdef-
+■ED:~CSSWG/css2/#propdef-
+■JA:~MOMDO/visuren.html#propdef-
+■JAa:css22-visuren-ja.html#propdef-
+bottom: REC,WD,ED,JA
+clear: REC,WD,ED,JA,JAa
+direction: REC,WD,ED,JA
+display: REC,WD,ED,JA,JAa
+float: REC,WD,ED,JA,JAa
+left: REC,WD,ED,JA
+position: REC,WD,ED,JA
+right: REC,WD,ED,JA
+top: REC,WD,ED,JA
+unicode-bidi: REC,WD,ED,JA
+z-index: REC,WD,ED,JA,JAa
+
+●CSS2 (Visual formatting model details)
+■REC:~TR/CSS2/visudet.html#propdef-
+■WD:~TR/CSS22/visudet.html#propdef-
+■ED:~CSSWG/css2/#propdef-
+■JA:~MOMDO/visudet.html#propdef-
+■JAa:css22-visudet-ja.html#propdef-
+height: REC,WD,ED,JA,JAa
+line-height: REC,WD,ED,JA,JAa
+max-height: REC,WD,ED,JA,JAa
+max-width: REC,WD,ED,JA,JAa
+min-height: REC,WD,ED,JA,JAa
+min-width: REC,WD,ED,JA,JAa
+vertical-align: REC,WD,ED,JA,JAa
+width: REC,WD,ED,JA,JAa
+
+●CSS2 (Visual effects)
+■REC:~TR/CSS2/visufx.html#propdef-
+■WD:~TR/CSS22/visufx.html#propdef-
+■ED:~CSSWG/css2/#propdef-
+■JA:~MOMDO/visufx.html#propdef-
+■JAa:css22-visufx-ja.html#propdef-
+clip: REC,WD,ED,JA,JAa
+overflow: REC,WD,ED,JA,JAa
+visibility: REC,WD,ED,JA,JAa
+
+●CSS2 (Generated content)
+■REC:~TR/CSS2/generate.html#propdef-
+■WD:~TR/CSS22/generate.html#propdef-
+■ED:~CSSWG/css2/#propdef-
+■JA:~MOMDO/generate.html#propdef-
+content: REC,WD,ED,JA
+counter-increment: REC,WD,ED,JA
+counter-reset: REC,WD,ED,JA
+list-style: REC,WD,ED,JA
+list-style-image: REC,WD,ED,JA
+list-style-position: REC,WD,ED,JA
+list-style-type: REC,WD,ED,JA
+quotes: REC,WD,ED,JA
+
+●CSS2 (User interface)
+■REC:~TR/CSS2/ui.html#propdef-
+■WD:~TR/CSS22/ui.html#propdef-
+■ED:~CSSWG/css2/#propdef-
+■JA:~MOMDO/ui.html#propdef-
+cursor: REC,WD,ED,JA
+outline: REC,WD,ED,JA
+outline-color: REC,WD,ED,JA
+outline-style: REC,WD,ED,JA
+outline-width: REC,WD,ED,JA
+
+●CSS2 (Fonts)
+■REC:~TR/CSS2/fonts.html#propdef-
+■WD:~TR/CSS22/fonts.html#propdef-
+■ED:~CSSWG/css2/#propdef-
+■JA:~MOMDO/fonts.html#propdef-
+font: REC,WD,ED,JA
+font-family: REC,WD,ED,JA
+font-size: REC,WD,ED,JA
+font-style: REC,WD,ED,JA
+font-variant: REC,WD,ED,JA
+font-weight: REC,WD,ED,JA
+
+●CSS2 (Text)
+■REC:~TR/CSS2/text.html#propdef-
+■WD:~TR/CSS22/text.html#propdef-
+■ED:~CSSWG/css2/#propdef-
+■JA:~MOMDO/text.html#propdef-
+letter-spacing: REC,WD,ED,JA
+text-align: REC,WD,ED,JA
+text-decoration: REC,WD,ED,JA
+text-indent: REC,WD,ED,JA
+text-transform: REC,WD,ED,JA
+white-space: REC,WD,ED,JA
+word-spacing: REC,WD,ED,JA
+
+●CSS2 (Paged media)
+■REC:~TR/CSS2/page.html#propdef-
+■WD:~TR/CSS22/page.html#propdef-
+■ED:~CSSWG/css2/#propdef-
+■JA:~MOMDO/page.html#propdef-
+orphans: REC,WD,ED,JA
+page-break-after: REC,WD,ED,JA
+page-break-before: REC,WD,ED,JA
+page-break-inside: REC,WD,ED,JA
+widows: REC,WD,ED,JA
+
+●Compositing and Blending
+■CR1:~TR/compositing-1/#propdef-
+■ED1:~FXTF/compositing-1/#propdef-
+■JA1:compositing-ja.html#propdef-
+background-blend-mode: CR1,ED1,JA1
+isolation: CR1,ED1,JA1
+mix-blend-mode: CR1,ED1,JA1
+
+●Filter Effects Module
+■WD1:~TR/filter-effects-1/#propdef-
+■ED1:~FXTF/filter-effects-1/#propdef-
+■JA1:filter-effects-ja.html#propdef-
+■ED2:~FXTF/filter-effects-2/#propdef-
+color-interpolation-filters: WD1,ED1,JA1
+filter: WD1,ED1,JA1
+flood-color: WD1,ED1,JA1
+flood-opacity: WD1,ED1,JA1
+lighting-color: WD1,ED1,JA1
+backdrop-filter: ED2
+
+●Motion Path Module
+■WD1:~TR/motion-1/#propdef-
+■ED1:~FXTF/motion-1/#propdef-
+offset-anchor: WD1,ED1
+offset-distance: WD1,ED1
+offset-path: WD1,ED1
+offset-position: WD1,ED1
+offset-rotate: WD1,ED1
+offset: WD1,ED1
+
+●SVG Markers
+■FPWD:~TR/svg-markers/#
+■ED:~SVGWG/markers/#
+marker-end: FPWD,ED
+marker-knockout-left: FPWD,ED
+marker-knockout-right: FPWD,ED
+marker-mid: FPWD,ED
+marker-pattern: FPWD,ED
+marker: FPWD,ED
+marker-segment: FPWD,ED
+marker-start: FPWD,ED
+
+●SVG Strokes
+■FPWD:~TR/svg-strokes/#
+■ED:~SVGWG/strokes/#
+stroke-alignment: FPWD,ED
+stroke-dashadjust: FPWD,ED
+stroke-dasharray: FPWD,ED
+stroke-dashcorner: FPWD,ED
+stroke-dashoffset: FPWD,ED
+stroke-linecap: FPWD,ED
+stroke-linejoin: FPWD,ED
+stroke-miterlimit: FPWD,ED
+stroke-opacity: FPWD,ED
+stroke: FPWD,ED
+stroke-width: FPWD,ED
+
+●SVG (Geometry Properties)
+■CR2:https://www.w3.org/TR/SVG2/geometry.html#
+■ED2:https://svgwg.org/svg2-draft/geometry.html#
+■JA2:svg-geometry-ja.html#
+cx: CR2,ED2,JA2
+cy: CR2,ED2,JA2
+r: CR2,ED2,JA2
+rx: CR2,ED2,JA2
+ry: CR2,ED2,JA2
+x: CR2,ED2,JA2
+y: CR2,ED2,JA2
+
+●SVG (Painting)
+■REC1:~TR/SVG11/painting.html#
+■JA1:SVG11/painting.html#
+■CR2:https://www.w3.org/TR/SVG2/painting.html#
+■ED2:https://svgwg.org/svg2-draft/painting.html#
+■JA2:svg-painting-ja.html#
+color-interpolation: REC1,JA1,CR2,ED2,JA2
+color-rendering: REC1,JA1,CR2
+fill-opacity: REC1,JA1,CR2,ED2,JA2
+fill-rule: REC1,JA1,CR2,ED2,JA2
+fill: REC1,JA1,CR2,ED2,JA2
+image-rendering: REC1,JA1,CR2,ED2,JA2
+marker-end: REC1,JA1,CR2,ED2,JA2
+marker-mid: REC1,JA1,CR2,ED2,JA2
+marker-start: REC1,JA1,CR2,ED2,JA2
+marker: REC1,JA1,CR2,ED2,JA2
+paint-order: CR2,ED2,JA2
+shape-rendering: REC1,JA1,CR2,ED2,JA2
+stroke-dasharray: REC1,JA1,CR2,ED2,JA2
+stroke-dashoffset: REC1,JA1,CR2,ED2,JA2
+stroke-linecap: REC1,JA1,CR2,ED2,JA2
+stroke-linejoin: REC1,JA1,CR2,ED2,JA2
+stroke-miterlimit: REC1,JA1,CR2,ED2,JA2
+stroke-opacity: REC1,JA1,CR2,ED2,JA2
+stroke-width: REC1,JA1,CR2,ED2,JA2
+stroke: REC1,JA1,CR2,ED2,JA2
+text-rendering: REC1,JA1,CR2,ED2,JA2
+
+●SVG (Text)
+■REC1:~TR/SVG11/text.html#
+■JA1:SVG11/text.html#
+■CR2:https://www.w3.org/TR/SVG2/text.html#
+■ED2:https://svgwg.org/svg2-draft/text.html#
+■JA2:svg-text-ja.html#
+inline-size: CR2,ED2,JA2
+shape-inside: CR2,ED2,JA2
+shape-margin: CR2,ED2,JA2
+shape-subtract: CR2=ShapesubtractProperty,ED2=ShapesubtractProperty,JA2=ShapesubtractProperty
+text-anchor: REC1,JA1,CR2,ED2,JA2
+text-decoration-fill: CR2
+text-decoration-stroke: CR2
+
+●SVG (Paint Servers)
+■REC1:~TR/SVG11/pservers.html#
+■JA1:SVG11/pservers.html#
+■CR2:https://www.w3.org/TR/SVG2/pservers.html#
+■ED2:https://svgwg.org/svg2-draft/pservers.html#
+■JA2:svg-pservers-ja.html#
+stop-color: REC1,JA1,CR2,ED2,JA2
+stop-opacity: REC1,JA1,CR2,ED2,JA2
+
+●SVG (Scripting and Interactivity)
+■REC1:~TR/SVG11/interact.html#
+■JA1:SVG11/interact.html#
+■CR2:https://www.w3.org/TR/SVG2/interact.html#
+■ED2:https://svgwg.org/svg2-draft/interact.html#
+■JA2:svg-interact-ja.html#
+pointer-events: REC1,JA1,CR2,ED2,JA2
+
+●SVG (Paths)
+■CR2:https://www.w3.org/TR/SVG2/paths.html#
+■ED2:https://svgwg.org/svg2-draft/paths.html#
+■JA2:svg-paths-ja.html#
+d: CR2,ED2,JA2
+
+●SVG (Coordinate Systems)
+■CR2:https://www.w3.org/TR/SVG2/coords.html#
+■ED2:https://svgwg.org/svg2-draft/coords.html#
+■JA2:svg-coords-ja.html#
+vector-effect: CR2,ED2,JA2
+
+●Compatibility
+■LS:https://compat.spec.whatwg.org/#propdef-
+■JA:compat-ja.html#propdef-
+-webkit-background-clip: LS,JA
+-webkit-text-fill-color: LS,JA
+-webkit-text-stroke-color: LS,JA
+-webkit-text-stroke-width: LS,JA
+-webkit-text-stroke: LS,JA
+
+●Pointer Events
+■REC2:https://www.w3.org/TR/pointerevents2/#dfn-
+■ED2:https://w3c.github.io/pointerevents/#dfn-
+■JA2:pointerevents-ja.html#propdef-
+touch-action: REC2,ED2,JA2
+
+</script>
+<!-- 
+
+／ = no props
+
+	CSS Box Alignment 3
+	CSS Animations 1(Current Work)
+	CSS Animations 2
+	CSS Backgrounds 3(Current Work)
+	CSS Backgrounds 4
+	CSS Box Model
+	CSS Fragmentation 3
+	CSS Cascading 3
+	CSS Cascading 4(Current Work)
+	CSS Color 3
+	CSS Color 4(Current Work)
+	／CSS Conditional 3
+	CSS Containment 1
+	CSS Generated Content 3
+	／CSS Counter Styles 3
+	／CSS Device Adaptation 1
+	CSS Display 3
+	／CSS Expressive Generalizations and Gadgetry 1
+	CSS Exclusions 1
+	／CSS Extensions 1
+	CSS Flexbox 1
+	／CSS Font Loading 3
+	CSS Fonts 3(Current Work)
+	CSS Fonts 4
+
+	CSS GCPM 3(Current Work)
+	CSS GCPM 4
+
+	CSS Grid Layout 1
+	CSS Images 3(Current Work)
+	CSS Images 4
+	CSS Inline Layout 3
+	CSS Line Grid 1
+	CSS Lists 3
+	CSS Logical Properties 1
+	／CSS Mobile Profile 2.0
+	CSS Multicol 1(Current Work)
+	CSS Multicol 2
+	／CSS Namespaces 3
+	CSS Overflow 3
+	CSS Overflow 4(Current Work)
+	CSS Paged Media 3(Current Work)
+	CSS Paged Media 4
+	CSS Page Floats 3
+CSS Pagination Templates 1
+	CSS Positioned Layout 3
+	CSS Presentation Levels 1
+	／CSS Print Profile
+	／CSS Pseudo-Elements 4
+	CSS Regions 1
+	CSS Rhythmic Sizing
+	CSS Round Display 1
+	CSS Ruby 1
+	／CSS Scoping 1
+	CSS Scroll Snap 1
+	CSS Scrollbars 1
+	CSS Shapes 1(Current Work)
+	CSS Shapes 2
+	CSS Sizing 3
+	／CSS Sizing 4(Current Work)
+	／CSS 2007
+	／CSS 2010
+	／CSS 2015
+	／CSS 2017(Current Work)
+	退CSS Speech 1
+
+	／CSS Style Attributes 1
+	／CSS Syntax 3
+	CSS Tables 3
+	CSS Template Layout 1
+	CSS Text 3(Current Work)
+	CSS Text 4
+	CSS Text Decoration 3(Current Work)
+	CSS Text Decoration 4
+	／CSS Timing 1
+	CSS Transforms 1(Current Work)
+	CSS Transforms 2
+	CSS Transitions 1(Current Work)
+	／CSS Transitions 2
+	／CSS TV 1
+	CSS User Interface 3(Current Work)
+	CSS User Interface 4
+	／CSS Values 3
+	／CSS Values 4(Current Work)
+	CSS Variables 1
+	CSS Will Change 1
+	CSS Writing Modes 3
+	CSS Writing Modes 4(Current Work)
+	CSS 2.1
+	CSS 2.2(Current Work)
+	／CSSOM 1
+	CSSOM View Module 1
+	／Media Queries 3
+	／Media Queries 4(Current Work)
+	／Selectors 3
+	／Selectors 4(Current Work)
+	／Non-element Selectors 1
+
+
+
+SVG2:
+	color-interpolation
+	color-rendering
+	cx
+	cy
+	d
+	x
+	y
+	paint-order
+	pointer-events
+	r
+	rx
+	ry
+	shape-rendering
+	shape-subtract
+	solid-color
+	solid-opacity
+	text-anchor
+	text-decoration-fill
+	text-decoration-stroke
+	text-rendering
+	vector-effect
+
+-->
+
+</head>
+
+<body>
+
+<h1>CSS のプロパティ一覧</h1>
+
+<p>
+<a href="https://triple-underscore.github.io/css-all-properties.html">このページ</a>
+は、 CSS の各種プロパティと，それらを定義する各 仕様, およびその和訳への参照先リンクを集約したものです。
+（更新： <time>2020-08-15</time> ）
+（<a href="index.html#spec-list-css">このサイトの CSS 仕様和訳の一覧</a>）
+</p>
+
+<ul>
+	<li>
+<p>
+プロパティ一覧における参照先は、次の表に示すような，当のプロパティを定義する各 仕様の
+<a href="css-snapshot-ja.html#w3c-process">安定度</a>を表す略称, その色分けで表しています。
+</p>
+
+<table id="legend">
+<caption>略称／色分けの凡例</caption>
+
+<thead><tr><th>略称
+<th>全部的な名前
+</thead>
+
+<tbody><tr><td><abbr class="ED">ED</abbr>
+<td>編集者草案（ Editors' Draft ）
+
+<tr><td><abbr class="FPWD">FPWD</abbr>
+<td>最初の公な作業草案（ First Public Working Draft ）
+
+<tr><td><abbr class="WD">WD</abbr>
+<td>作業草案（ Working Draft ）
+
+<tr><td><abbr class="LC">LC</abbr>
+<td>最終作業草案（ Last Call Working Draft ）
+
+<tr><td><abbr class="CR">CR</abbr>
+<td>勧告候補（ Candidate Recommendation ）
+
+<!-- PR は CSS からは廃されたが、他の W3C 仕様からは廃されていない -->
+<tr><td><abbr class="PR">PR</abbr>
+<td>勧告案（ Proposed Recommendation ）
+
+<tr><td><abbr class="REC">REC</abbr>
+<td>勧告（ Recommendation ）
+
+<!-- 
+（ W3C Technical Report ではない）
+<tr><td><abbr class="ED">CSS2.2</abbr>
+<td>CSS Level 2 Revision 2 編集者草案
+
+<tr><td><abbr class="REC">CSS2.1</abbr>
+<td>CSS Level 2 Revision 1 勧告
+ -->
+
+<tr><td><abbr class="NOTE">NOTE</abbr>
+<td>WG ノート（ Working Group Note ）
+
+<tr><td><abbr class="LS">LS</abbr>
+<td>Living Standard（ 非 W3C ）
+
+<tr><td><abbr class="JA">JA</abbr>
+<td>日本語訳
+
+</tbody></table>
+
+	</li>
+	<li>
+各 略称の末尾の数字は、当のモジュールのレベルを表します。
+（ “レベル 1” は CSS Level 2 より前を意味するのではなく， CSS 2 には無かった特能を定義する仕様を表していることに注意。
+特に CSS 2 には、この数字は付与されない。）
+</li>
+</ul>
+
+<p>
+この一覧は，
+<a href="https://www.w3.org/Style/CSS/all-properties">List of CSS properties, both proposed and standard</a>
+から得られたデータを元にしていますが、追加しているプロパティもあります（ CSS モジュール以外の仕様（ SVG など）や W3C 以外の仕様に定義されるものもある）。
+また、省略している［
+仕様／その仕様にしか定義されていないプロパティ
+］もあります（ CSS2 は別として、何年も更新されておらず，他の仕様に取って代わられた／退役した／およそ実装されそうにないものなど）。
+</p>
+
+<table>
+<thead id="prop-header"><tr><th>プロパティ
+<button id="by_prop0" type="button">△</button>
+<button id="by_prop1" type="button">▽</button>
+
+<th>参照先
+<th>モジュール／仕様名
+<button id="by_module0" type="button">△</button>
+<button id="by_module1" type="button">▽</button>
+
+</thead>
+<tbody id="prop-list"></tbody>
+</table>
+
+<!-- 
+
+●●省略
+
+
+●CSS Template Layout Module (Note)
+■NOTE:~TR/css-template-3/#
+■ED:~CSSWG/css-template/#
+chains: NOTE=chains0,ED=chains0
+flow: NOTE=flow0,ED=flow0
+grid: NOTE=grid,ED=grid
+grid-template: NOTE=grid-template0,ED=grid-template0
+grid-template-areas: NOTE,ED
+grid-template-columns: NOTE,ED
+grid-template-rows: NOTE,ED
+
+●●廃
+
+●廃 CSS3 Generated and Replaced Content Module
+■WD:~TR/2003/WD-css3-content-20030514/#
+
+●廃 CSS Scroll Snap Points Module
+■FPWD1:~TR/2015/WD-css-snappoints-1-20150326/#propdef-
+
+●廃 CSS Presentation Levels Module
+■NOTE:~TR/css3-preslev/#
+presentation-level: NOTE
+
+●廃 CSS3 module: line 
+■WD:~TR/2002/WD-css3-linebox-20020515/#
+alignment-adjust
+alignment-baseline
+baseline-shift
+dominant-baseline
+drop-initial-after-adjust
+drop-initial-after-align
+drop-initial-before-adjust
+drop-initial-before-align
+drop-initial-size
+drop-initial-value
+inline-box-align
+line-height
+line-stacking-ruby
+line-stacking-shift
+line-stacking-strategy
+line-stacking
+text-height
+vertical-align
+
+●廃 CSS3 module: Border
+■WD:~TR/2002/WD-css3-border-20021107/#
+border-bottom-color
+border-bottom-fit-length
+border-bottom-fit-width
+border-bottom-image
+border-bottom-left-fit-length
+border-bottom-left-fit-width
+border-bottom-left-image
+border-bottom-left-radius
+border-bottom-right-fit-length
+border-bottom-right-fit-width
+border-bottom-right-image
+border-bottom-right-radius
+border-bottom-style
+border-break
+border-color
+border-corner-fit
+border-corner-image-transform
+border-corner-image
+border-fit-length
+border-fit-width
+border-fit
+border-image-transform
+border-image
+border-left-color
+border-left-fit-length
+border-left-fit-width
+border-left-image
+border-left-style
+border-radius
+border-right-color
+border-right-fit-length
+border-right-fit-width
+border-right-image
+border-right-style
+border-shorthands
+border-style
+border-top-color
+border-top-fit-length
+border-top-fit-width
+border-top-image
+border-top-left-fit-length
+border-top-left-fit-width
+border-top-left-image
+border-top-left-radius
+border-top-right-fit-length
+border-top-right-fit-width
+border-top-right-image
+border-top-right-radius
+border-top-style
+border-x-shorthands
+box-shadow
+
+●廃 CSS 2D Transforms
+■WD:~TR/2011/WD-css3-2d-transforms-20111215/#
+effects
+transform-origin
+
+●廃 CSS 3D Transforms Module Level 3
+■WD:~TR/2009/WD-css3-3d-transforms-20090320/
+backface-visibility
+effects
+perspective-origin
+perspective
+transform-origin
+transform-style
+
+
+●SVG 1.1 (廃／他の CSS module へ移行)
+■REC1:~TR/SVG11/text.html#
+alignment-baseline: REC1
+baseline-shift: REC1
+direction: REC1
+dominant-baseline: REC1
+font-family: REC1
+font-size-adjust: REC1
+font-size: REC1
+font-stretch: REC1
+font-style: REC1
+font-variant: REC1
+font-weight: REC1
+font: REC1
+glyph-orientation-horizontal: REC1
+glyph-orientation-vertical: REC1
+kerning: REC1
+letter-spacing: REC1
+text-decoration: REC1
+unicode-bidi: REC1
+word-spacing: REC1
+writing-mode: REC1
+■REC1:~TR/SVG11/masking.html#
+clip-path: REC1
+clip-rule: REC1
+clip: REC1
+mask: REC1
+opacity: REC1
+overflow: REC1
+■REC1:~TR/SVG11/filters.html#
+enable-background: REC1=
+filter: REC1=
+flood-color: REC1=
+flood-opacity: REC1=
+lighting-color: REC1=
+■REC1:~TR/SVG11/painting.html#
+color-interpolation-filters: REC1
+display: REC1
+visibility: REC1
+■REC1:~TR/SVG11/
+color-profile: REC1=color.html#ColorProfileProperty
+color: REC1=color.html#ColorProperty
+cursor: REC1=interact.html#CursorProperty
+
+●●退役
+
+●CSS2 (Aural style sheets)
+■REC:~TR/CSS2/aural.html#propdef-
+■WD:~TR/CSS22/aural.html#propdef-
+■ED:~CSSWG/css2/#propdef-
+■JA:~MOMDO/aural.html#propdef-
+azimuth: REC,WD,ED,JA
+cue: REC,WD,ED,JA
+cue-after: REC,WD,ED,JA
+cue-before: REC,WD,ED,JA
+elevation: REC,WD,ED,JA
+pause: REC,WD,ED,JA
+pause-after: REC,WD,ED,JA
+pause-before: REC,WD,ED,JA
+pitch: REC,WD,ED,JA
+pitch-range: REC,WD,ED,JA
+play-during: REC,WD,ED,JA
+richness: REC,WD,ED,JA
+speak: REC,WD,ED,JA
+speak-header: REC,WD,ED,JA
+speak-numeral: REC,WD,ED,JA
+speak-punctuation: REC,WD,ED,JA
+speech-rate: REC,WD,ED,JA
+stress: REC,WD,ED,JA
+voice-family: REC,WD,ED,JA
+volume: REC,WD,ED,JA
+-->

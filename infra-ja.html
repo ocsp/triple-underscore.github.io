@@ -1,0 +1,5914 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8">
+<title>Infra（日本語訳）</title>
+
+<link rel="stylesheet" href="common.css" type="text/css" />
+<link rel="stylesheet" href="common-whatwg.css" type="text/css" />
+<style>
+.exemplary {
+	background: var(--bg-color);
+	border: dashed thin gray;
+}
+</style>
+
+<script src="common0.js" ></script>
+<script src="common1.js" async></script>
+
+
+<script>
+Util.ready = function(){
+	const source_data = {
+		toc_main: 'MAIN0',
+		generate: expand,
+	};
+	Util.switchWordsInit(source_data);
+}
+
+function expand(){
+	const class_map = this.class_map;
+	const tag_map = this.tag_map;
+	const link_map = this.link_map;
+
+	return this.html.replace(
+		/%[\w\-~一-鿆あ-ん]+|`(.+?)([$@\^])(\w*)/g,
+		create_html
+	);
+
+	function create_html(match, key, indicator, klass){
+
+if(!key) {//%
+	return `<var>${match.slice(1)}</var>`;
+}
+
+let text = key;
+let href = '';
+
+switch(klass){
+case 'r':
+	text = `[${key}]`;
+	href = `#biblio-${key.toLowerCase()}`;
+	break;
+case 'l':
+	text = `"<code class="literal">${text}</code>"`;
+	break;
+case 'bl': // byte literal
+	text = `\`<code class="literal">${text}</code>\``;
+	break;
+case 'jI':
+	text = `%${text}%`;
+	break;
+case 'sl':
+	text = `[[${text}]]`;
+	break;
+case 'U':
+	text = `U+${text}`;
+	break;
+case 'X': // byte value
+	text = `0x${text}`;
+	break;
+case 'en':
+	return `<span lang="en-x-a0">${key}</span>`;
+	break;
+case 'smb':
+	text = `(<span class="char-symbol">${text}</span>)`;
+	break;
+}
+
+let tag = tag_map[klass];
+if(tag) {
+	let classname = class_map[klass];
+	classname = classname ? ` class="${classname}"` : '';
+	text = `<${tag}${classname}>${text}</${tag}>`;
+}
+
+
+if(indicator !== '^'){
+	href = link_map[klass ? (klass + '.' + key) : key] || href;
+	if(!href){
+		console.log(match); // check error
+		return match;
+	}
+
+	switch(indicator){
+	case '$':
+		text = `<a href="${href}">${text}</a>`;
+		break;
+	case '@':
+		text = `<dfn id="${href.slice(1)}">${text}</dfn>`;
+		break;
+	}
+}
+
+return text;
+
+
+	}
+}
+
+</script>
+
+<script type="text/plain" id="_source_data">
+
+
+●●options
+
+spec_date:2020-08-06
+trans_update:2020-08-08
+source_checked:200115
+spec_status:LS
+original_url:https://infra.spec.whatwg.org/
+ref_id_prefix:biblio-
+ref_id_lowercase:true
+copyright:,whatwg
+trans_1st_pub:2016-11-25
+
+
+●●class_map
+U:code-point
+X:hex-value
+A:abstract
+E:error
+jv:js-value
+jI:js-intrinsic
+jT:js-type
+sl:js-slot
+cn:cp-name
+op:op
+2119:rfc2119
+
+●●tag_map
+c:code
+U:span
+X:span
+i:i
+V:var
+A:span
+E:code
+jv:code
+jT:code
+jI:code
+cn:span
+sl:span
+op:span
+2119:em
+sub:sub
+cite:cite
+em:em
+dfn:dfn
+
+●●original_id_map
+
+
+●●link_map
+
+~UA:#user-agent
+実装:#user-agent
+実装定義:#implementation-defined
+追跡~行路:#tracking-vector
+
+	●制御
+継続-:#iteration-continue
+~WHILE:#iteration-while
+~CONTINUE:#iteration-continue
+~BREAK:#iteration-break
+~Assert:#assert
+
+ときは中止する:#abort-when
+中止されたときは:#if-aborted
+
+反復する:#list-iterate
+~EACH:#list-iterate
+
+
+	●byte／string
+真偽値:#boolean
+
+~byte:#byte
+byte.値:#byte-value
+~ASCII~byte:#ascii-byte
+~byte列:#byte-sequence
+byte.長さ:#byte-sequence-length
+~byte大小無視:#byte-case-insensitive
+~byte大文字~化する:#byte-uppercase
+~byte小文字~化する:#byte-lowercase
+byte.接頭辞:#byte-sequence-prefix
+byte.から開始して:#byte-sequence-starts-with
+未満の~byte列:#byte-less-than
+
+sub.符号単位:#code-unit-less-than
+未満の符号単位~列:#code-unit-less-than
+符号単位~接頭辞:#code-unit-prefix
+から開始して:#string-starts-with
+
+同型に復号する:#isomorphic-decode
+同型に符号化する:#isomorphic-encode
+
+符号単位:#code-unit
+符号位置:#code-point
+文字:#code-point
+cp.値:#code-point-value
+
+文字列:#string
+長さ:#string-length
+符号位置~長さ:#string-code-point-length
+一致する:#string-is
+一致-:#string-is
+~scalar値~文字列:#scalar-value-string
+	~JS文字列:#javascript-string
+~scalar値~文字列に変換する:#javascript-string-convert
+
+	~TC39#sec-ecmascript-language-types-string-type
+
+~surrogate:#surrogate
+~scalar値:#scalar-value
+非文字:#noncharacter
+制御文字:#control
+~ASCII符号位置:#ascii-code-point
+~ASCII英字:#ascii-alpha
+~ASCII英数字:#ascii-alphanumeric
+~ASCII英大文字:#ascii-upper-alpha
+~ASCII英小文字:#ascii-lower-alpha
+
+~ASCII数字:#ascii-digit
+~ASCII空白:#ascii-whitespace
+~ASCII~tabや~ASCII改行文字:#ascii-tab-or-newline
+~C0制御文字:#c0-control
+~C0制御文字や~space:#c0-control-or-space
+~ASCII~hex数字:#ascii-hex-digit
+~ASCII~hex数字（大文字）:#ascii-upper-hex-digit
+~ASCII~hex数字（小文字）:#ascii-lower-hex-digit
+
+~ASCII文字列:#ascii-string
+~ASCII大小無視:#ascii-case-insensitive
+~ASCII大文字~化:#ascii-uppercase
+~ASCII大文字~化する:#ascii-uppercase
+~ASCII小文字~化する:#ascii-lowercase
+
+位置~変数:#string-position-variable
+符号位置~並びを収集する:#collect-a-sequence-of-code-points
+連結する:#string-concatenate
+~ASCII空白を読飛ばす:#skip-ascii-whitespace
+~ASCII空白で分割する:#split-on-ascii-whitespace
+~commaで分割する:#split-on-commas
+区切子で厳密に分割する:#strictly-split
+改行文字を剥ぐ:#strip-newlines
+改行文字を正規化する:#normalize-newlines
+前後の~ASCII空白~列を剥ぐ:#strip-leading-and-trailing-ascii-whitespace
+~ASCII空白を剥いで縮約する:#strip-and-collapse-ascii-whitespace
+
+~ASCII符号化する:#ascii-encode
+~ASCII復号する:#ascii-decode
+
+	●JSON
+~byte列を~JSONとして構文解析する:#parse-json-from-bytes
+~JSONを~byte列に直列化する:#serialize-json-to-bytes
+
+~forgiving-base64復号する:#forgiving-base64-decode
+~forgiving-base64符号化する:#forgiving-base64-encode
+
+小なり~algo:#_less-than-algorithm
+
+	●list
+
+~list:#list
+~size:#list-size
+~item:#list-item
+存在-:#list-contain
+包含して:#list-contain
+~IN:#list-contain
+空:#list-is-empty
+空にする:#list-empty
+除去-:#list-remove
+除去する:#list-remove
+付加する:#list-append
+前付加する:#list-prepend
+拡張する:#list-extend
+挿入する:#list-insert
+置換する:#list-replace
+~clone:#list-clone
+~cloneする:#list-clone
+~listを昇順に~sortする:#list-sort-in-ascending-order
+~listを降順に~sortする:#list-sort-in-descending-order
+
+有順序~集合:#ordered-set
+set.付加する:#set-append
+set.前付加する:#set-prepend
+set.置換-:#set-replace
+set.置換する:#set-replace
+交差集合:#set-intersection
+下位集合:#set-subset
+上位集合:#set-superset
+和集合:#set-union
+
+範囲:#the-range
+
+~stack:#stack
+~pushする:#stack-push
+~popする:#stack-pop
+
+~queue:#queue
+~dequeueする:#queue-dequeue
+~enqueueする:#queue-enqueue
+
+有順序~map:#ordered-map
+~entry:#map-entry
+map.~key:#map-key
+map.値:#map-value
+map.~size:#map-size
+map.空:#map-is-empty
+map.反復する:#map-iterate
+~key~listを取得する:#map-getting-the-keys
+値~listを取得する:#map-getting-the-values
+~entryを包含して:#map-exists
+	map.包含して:#map-exists
+	map.存在-:#map-exists
+	~map内に存在する:#map-exists
+値を取得する:#map-get
+	map.取得する:#map-get
+値を設定する:#map-set
+	map.設定する:#map-set
+map.除去する:#map-remove
+~entryを除去する:#map-remove
+map.~clearする:#map-clear
+map.~cloneする:#map-clone
+~mapを昇順に~sortする:#map-sort-in-ascending-order
+~mapを降順に~sortする:#map-sort-in-descending-order
+
+map.~EACH:#map-iterate
+
+構造体:#struct
+~pair:#pair
+~tuple:#tuple
+sct.~item:#struct-item
+sct.名前:#struct-name
+	#structs
+
+
+~HTML名前空間:#html-namespace
+~MathML名前空間:#mathml-namespace
+~SVG名前空間:#svg-namespace
+~XLink名前空間:#xlink-namespace
+~XML名前空間:#xml-namespace
+~XMLNS名前空間:#xmlns-namespace
+
+E.TypeError:~WEBIDL#exceptiondef-typeerror
+
+~JSONから導出された~JS値を~Infra値に変換する:#convert-a-json-derived-javascript-value-to-an-infra-value
+~JSONを~Infra値に構文解析する:#parse-json-into-infra-values
+
+~UTF-8符号化する:~ENCODING#utf-8-encode
+~UTF-8復号する:~ENCODING#utf-8-decode
+
+故意的な違反:#willful-violation
+
+~JS~realm:~TC39#realm
+List:~TC39#sec-list-and-record-specification-type
+A.Call:~TC39#sec-call
+A.Type:~TC39#sec-ecmascript-data-types-and-values
+A.Get:~TC39#sec-get-o-p
+A.IsArray:~TC39#sec-isarray
+A.ToLength:~TC39#sec-tolength
+A.ToString:~TC39#sec-tostring
+jI.JSON.parse:~TC39#sec-json.parse
+jI.JSON.stringify:~TC39#sec-json.stringify
+c.sort():~TC39#sec-array.prototype.sort
+c.DOMString:~WEBIDL#idl-DOMString
+c.USVString:~WEBIDL#idl-USVString
+c.ByteString:~WEBIDL#idl-ByteString
+
+連列~型:~WEBIDL#idl-sequence
+辞書~型:~WEBIDL#idl-dictionaries
+
+
+●●words_table1
+
+
+●●words_table
+
+
+
+	●制御
+演算子:operator::~
+	~call元:caller
+	~call元~の:calling
+終了-:terminate:~
+再投出-:rethrow::~
+条件付きの:conditionalな::~
+	満たされる:evaluates to true
+	渡され:passされ／
+
+	●表記
+二重引用符:double quote:~
+等幅:monospace::~
+backtick::::バッククォート
+引用符:quotation mark::~
+丸括弧:parentheses:~
+接頭-:prefix:~
+角括弧:square brackets:~
+comma::::カンマ
+slash::::スラッシュ
+具現化形:rendered form:~
+表記法:notation:~
+	表記:say／denote／...
+	括って:surrounding
+	区切った／区切って:separated
+指示書き:instruction:~
+	余分な:extra
+	少し短い:slightly shorter
+	3 桁:three-digit
+	前置する:precede
+	0 番から数える:zero-based
+	書き:write
+	〜:inclusive
+
+	●文字／文字列／byte列
+C0:
+space:
+	byte列:bytes
+16-bit::::16ビット
+hex:16 進
+非文字:noncharacter::~
+制御文字:control::~
+数字:digit::~
+tab:
+scalar::::スカラー
+surrogate::::サロゲート
+英字:alpha::~
+英大文字:upper alpha::~
+英小文字:lower alpha::~
+英数字:alphanumeric::~
+改行文字:newline::~
+	~~大文字化:capitalize
+
+読飛ばす:skipする:読み飛ばす
+縮約-:collapse::~
+剥ぐ:stripする::~
+剥いで:stripして::~
+区切子:delimiter::~
+分離子:separator::~
+連結-:concatenate::~
+緩く:lenientに:~
+散在-:intersperse:~
+分割-:split::~
+入出力:I/O:~
+孤立した:isolated:~
+同型に:isomorphicに::~
+forgiving-base64:
+base64:
+alphabet::::アルファベット
+字句-:lexicographic:~
+結合符:combining mark::~
+	大文字か小文字か:UPPER and lower case
+
+	●data 構造
+無符号:unsigned::~
+number::数
+	個数:number
+和集合:union::~
+indexing::::index アクセス
+派生型:derivative::~
+全順序:total order::~
+昇順:ascending order::~
+	~~昇順:consecutively increasing order
+	順序:relative order
+降順:descending order::~
+検索-:look up::~
+浅い:shallowな::~
+束ねら:tieさ:~
+clear::::クリア
+
+	変異-不能:immutable
+	〜番の:th
+	真:true
+	偽:false
+
+	●sort
+小なり:less-than:~
+
+	●§ privacy
+HSTS:
+NAT:
+IP:
+onion:
+routing::::ルート法:
+account::::アカウント
+digital::::デジタル
+forum::::フォーラム
+install::::インストール
+internet::::インターネット
+log-in:log in:::ログイン
+	~log-in:log into
+packet::::パケット
+指紋:fingerprint::~
+指紋収集-:fingerprint::~
+悪意ある:malevolentな:~
+地域時間帯:time zone:~
+全然異なる:disparateな:~
+参加-:participate:~
+微妙:subtle:~
+探索:search:~
+妨げる:preventする:~
+投函-:post:~
+支持政党:political affiliation:~
+政府:government:~
+選挙投票:election voting:~
+邪悪:evil:~
+濫用-:abuse:~
+現住所:home address:~
+突止める:ascertainする:突き止める
+総当たり:brute force::~
+深さ:depth:~
+境界線:border:~
+描く:drawする:~
+現在地:address:~
+外見上の:apparentな:~
+保護策:measure:~
+個人:person:~
+再帰:recursion:~
+黙示-:imply:~
+引換えに:trade:~
+種類:kind:~
+識別情報:identity:~
+仕分ける:groupする:~
+仕分け:grouping:~
+派生する:deriveされる:~
+運転方向:driving directions::カーナビ情報
+関係付ける:relateする:~
+基礎:basis:~
+
+	群:group
+	匿名~化:anonymize
+	またがって:across
+
+	~~完全:perfectly
+	~~有意に:considerably
+	〜その他による／に限らず:including but not limited to
+	あらゆる:all possible
+	ある:one
+	ときどき:sometime
+	より勝る:better
+	互いの:form another#1
+	他にもある:not only
+	印が付与され~marked:#1
+	同じ:single
+	周り:around
+	多大な:great
+	多少なりとも:more or less
+	幅:wide
+	当然のように〜され得る:can and ought
+	得る:potentially
+	微妙な:subtly
+	来ている:come
+	箇所:parts
+	著しく:remarkably
+	変わり:vary
+	現れる:appearする
+
+	●仕様
+命令的:imperative:~
+排他的:exclusive:~
+相互参照:cross-reference:~
+読易い:readableな:読み易い
+読易く:readableに:読み易く
+	より読易く:improve readability
+判読能:legibility:判読し易さ
+際どい:edge:~
+変種:variant:~
+事実:fact:~
+指名-:designate:~
+曖昧:vague:~
+理解:understanding:~
+上手く:wellに:~
+慣例的:conventional:~
+慣例:conventional:~
+土台:ground:~
+定型文:boilerplate:~
+集約-:deduplicate:~
+	confusion
+揃える:alignする:~
+由来-:originate:~
+目指す:aimする:~
+基礎的:fundamental:~
+	~~非互換:breaking
+冗長:verbose:~
+	applicable
+網羅的:exhaustive:~
+分野:field:~
+生産的:productive:~
+競う:competeする:~
+柔軟性:flexibility:~
+壊す:breakする:~
+競合-:conflict:~
+準拠性:compliance:~
+破戒:transgression:~
+commit:
+発行-:publish:~
+長年の:long-standing:~
+対称:symmetric:~
+	symmetry
+稀:rare:まれ
+交換-:interchange:~
+公式化:formulation:~
+事前条件:precondition:~
+同義語:synonym:~
+高効率:highly efficient:~
+決定的:deterministic:~
+拡げる:expandする:~
+文書化-:document:~
+申請-:file:~
+末端:end:~
+手助け:facilitate:~
+助け:help:~
+文言:language:~
+比較的:relativeに:~
+省略可能:optional:~
+読者:reader:~
+成句的:idiomatic:~
+部類:category:~
+推定-:infer:~
+進行中の:ongoingな:~
+参照r:refer:参照
+自立的:standalone:~
+動詞:verb:~
+
+	この標準:Infra Standard
+	-:implies
+		処理能を高める:performant／performance 〜 to get 
+	依存する他の仕様:dependencies
+	考えられる:considered
+	動機にある:motivated by
+	観測し得ない:not observable
+	簡便にする:convenience
+	標準:Standard
+	し得ない:possible
+	判別-可能にならない:indistinguishable
+	記されたとおり:as written
+	必要性:needs
+	見込みが高い:likely
+	無理な注文:insurmountable task
+	ここに記したように:As illustrated,
+	挙げられている:outlined
+	年月に耐え得る:stand the test of time
+	対して，:as opposed to
+	-:editors
+	-:ensure
+	はっきりさせる:emphasize
+	働きかける:working with
+	言い回し:phrasing
+	句され:phraseされ
+	句:phrase／-
+	-:titled
+	-:statement
+	item
+	導き:lead to
+
+	置き場:place
+	帰属させるには そぐわない:without a good home
+	様々にしている:divergent
+	-:mark
+	普及度:how common
+	分枝する／分枝:code path
+	残して:left over
+	称される:known
+	ためだけの:nonsense 〜 for the purpose of
+	限り:as long as
+	満たされ:met
+	こともある:sometimes
+	help／-:易くする
+	扱い難い代物:tricky
+	後で〜ことになる:comes into play
+	もよくある:It is even fairly typical for
+	-:kind
+	meant
+	per
+	れることも:sometimes
+	指す／称する:refer
+	-:conversely
+	を満たす:meet
+	より平素な:plainer
+	~~対象:in play
+	利する:on behalf of
+	〜と記され:said to be
+	〜の~~詳細:particulars of
+	委ねられ:up to
+	~~指示され:laid out
+	種:type
+	称されていた:known as
+	以前は:formerly
+	違い:variation
+	選ばれた〜:choice
+	単文で:using a single sentence
+
+	●未分類
+js:
+MathML:
+XLink:
+XMLNS:
+Infra:
+知覚:perception:~
+速度:speed:~
+memory::::メモリ
+消費:consumption:~
+欠いて:lackして:~
+形:form:~
+多重定義:overload::~
+スゴイ:awesome::~
+古典:classic::~
+内部手続き:internal procedure:~
+
+	現れ:appear
+	:activation behavior
+	になる:become
+	行え:done
+	~~範囲を超え:out-of-bounds
+	`取り消しボタン^i:"Cancel" button
+	未完:Didn’t finish!
+	-:become
+	百万桁:million digits
+	変化しない:leave 〜 unchanged
+	指す:point to
+	包装するだけの:simple wrapper
+	~script読込ng:script-loading
+	返り値の形:return type
+	~callする所:call site
+	より短い:shorter
+	短い:short
+
+	●変数
+	%L:list
+	%M:map
+	%~map
+	%入力:input
+	%値:value
+	%target
+	%activationTarget
+	%isActivationEvent
+	%π:π
+	%ℯ:ℯ
+	%φ:φ 
+	%結果:result
+	%演算:operation
+	%x:x
+	%例:example
+	%item
+	ghostbusters
+	%要素:element
+	%要素は見つかった:elementSeen
+	%位置:position
+	%条件:condition
+	%区切子:delimiter
+	%~token:token
+	%~token~list:tokens
+	%index:index
+	%集合:set
+	%A:set
+	%B:superset
+	%S:stack
+	%L:list
+	%Q:queue
+	%S:set
+	%M:map
+	%K:key
+	%V:value
+	%~clone:clone
+	%Ai:aCodeUnit
+	%Bi:bCodeUnit
+	%a:a
+	%b:b
+	%小なり:lessThanAlgo
+	%~target文字列:targetString
+	%利用者~入力:userInput
+	%~index名:indexName
+	%~JSON~text:jsonText
+	%~js値:%jsValue
+	-:jsValueAtIndex
+	-:jsValueAtKey
+	%N 個:width
+
+	●指示語
+	様々な:different
+	多様な:wide variety of
+	ほとんど:almost
+	必ず:only ever be
+	先行する:preceding
+	-:preceding
+	後続の:subsequent
+	種々の:variety of
+	〜元:original
+	種々の:variety
+	重ねて現れ:twice
+	末尾:the end of
+	先頭:the beginning of
+	そのまま:leaving 〜 as-is
+	成す／からなる:consist
+	逆に:the reverse holds
+	無い下:in the absence of
+	end-up
+	前:previous
+	〜以前の:pre-
+	最終結果:end result
+	:sometimes
+	連続する:consecutiveな／
+	-:second
+	先頭の文字を指している pointing at the start of 
+	-:remaining
+	最~小:smallest
+
+●●ref_normative
+
+[ECMA-262]
+    ECMAScript Language Specification. URL: https://tc39.es/ecma262/ 
+[ENCODING]
+    Anne van Kesteren. Encoding Standard. Living Standard. URL: https://encoding.spec.whatwg.org/ 
+[RFC20]
+    V.G. Cerf. ASCII format for network interchange. October 1969. Internet Standard. URL: https://tools.ietf.org/html/rfc20 
+[RFC2119]
+    S. Bradner. Key words for use in RFCs to Indicate Requirement Levels. March 1997. Best Current Practice. URL: https://tools.ietf.org/html/rfc2119 
+[RFC4648]
+    S. Josefsson. The Base16, Base32, and Base64 Data Encodings. October 2006. Proposed Standard. URL: https://tools.ietf.org/html/rfc4648 
+[UNICODE]
+    The Unicode Standard. URL: https://www.unicode.org/versions/latest/ 
+[WebIDL]
+    Boris Zbarsky. Web IDL. URL: https://heycam.github.io/webidl/ 
+
+●●ref_informative
+
+[COOKIES]
+    A. Barth. HTTP State Management Mechanism. April 2011. Proposed Standard. URL: https://httpwg.org/specs/rfc6265.html 
+[HTML]
+    Anne van Kesteren; et al. HTML Standard. Living Standard. URL: https://html.spec.whatwg.org/multipage/ 
+[RFC6797]
+    J. Hodges; C. Jackson; A. Barth. HTTP Strict Transport Security (HSTS). November 2012. Proposed Standard. URL: https://tools.ietf.org/html/rfc6797 
+[RFC791]
+    J. Postel. Internet Protocol. September 1981. Internet Standard. URL: https://tools.ietf.org/html/rfc791 
+[RFC8174]
+    B. Leiba. Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words. May 2017. Best Current Practice. URL: https://tools.ietf.org/html/rfc8174 
+[STORAGE]
+    Anne van Kesteren. Storage Standard. Living Standard. URL: https://storage.spec.whatwg.org/ 
+
+●●trans_metadata
+<p>
+~THIS_PAGEは、~WHATWGによる
+<a href="~SPEC_URL">Infra Standard</a>
+を日本語に翻訳したものです。
+~PUB
+</p>
+
+●●spec_metadata
+Participate:
+	<a href="https://github.com/whatwg/infra">GitHub whatwg/infra</a>(<a href="https://github.com/whatwg/infra/issues/new">new issue</a>, <a href="https://github.com/whatwg/infra/issues">open issues</a>)
+	<a href="https://wiki.whatwg.org/wiki/IRC">IRC: #whatwg on Freenode</a>
+
+Commits:
+	<a href="https://github.com/whatwg/infra/commits">GitHub whatwg/infra/commits</a>
+	<a href="https://infra.spec.whatwg.org/commit-snapshots/3093c9bd7768777c3663923db71b941e0c601b1b/" id="commit-snapshot-link">Snapshot as of this commit</a>
+	<a href="https://twitter.com/infrastandard">@infrastandard</a>
+
+Tests:
+	<a href="https://github.com/web-platform-tests/wpt/tree/master/infra">web-platform-tests infra/</a> (<a href="https://github.com/web-platform-tests/wpt/labels/infra">ongoing work</a>)
+
+各国語翻訳（規範的ではない）
+	日本語（このページ）
+
+</script>
+
+
+</head>
+<body>
+
+<header id="head">
+
+<a
+	href="https://whatwg.org/"><img
+	style="float: right;"
+	alt="WHATWG"
+	height="100"
+	src="data:image/svg+xml;base64,PHN2ZwoJeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIKCXN0cm9rZT0iIzNjNzkwYSIKPgo8c3R5bGU+CmNpcmNsZSB7CglmaWxsOiB3aGl0ZTsKCXN0cm9rZS13aWR0aDogMTA7Cn0KcGF0aCB7CglmaWxsOiB0cmFuc3BhcmVudDsKfQpwYXRoLmRhc2hlZCB7CglzdHJva2UtZGFzaGFycmF5OiAzLDE7Cn0KPC9zdHlsZT4KCjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjQ1Ii8+Cgo8cGF0aCBkPSJNNTAsMTUgTDE1LDUwIEw1MCw4NSBMODUsNTAgWiIvPgo8cGF0aCBkPSJNMTUsNTAgTDQ1LDU1IEw4NSw1MCIvPgo8cGF0aCBkPSJNNTAsMTUgTDQ1LDU1IEw1MCw4NSIvPgoKPHBhdGggZD0iTTE1LDUwIEw1NSw0NSBMODUsNTAiIGNsYXNzPSJkYXNoZWQiLz4KPHBhdGggZD0iTTUwLDE1IEw1NSw0NSBMNTAsODUiIGNsYXNzPSJkYXNoZWQiLz4KPC9zdmc+Cg=="
+></a>
+
+	<hgroup>
+<h1 id="title">基盤 — Infra</h1>
+	</hgroup>
+</header>
+
+<div id="MAIN" hidden>
+
+	<section id="abstract">
+~ABSTRACT
+
+<p>
+この標準
+— Infra Standard —
+は、それを基に築かれる標準な基礎的な概念を定義することを目指す。
+◎
+The Infra Standard aims to define the fundamental concepts upon which standards are built.
+</p>
+
+	</section>
+
+<main id="MAIN0">
+
+	<section id="goals">
+<h2 title="Goals">目標</h2>
+
+<ul>
+	<li>
+各種 標準における定型文を集約する。
+◎
+Deduplicate boilerplate in standards.
+</li>
+	<li>
+各種 標準における
+規約, 各種用語, ~data構造
+を揃える。
+◎
+Align standards on conventions, terminology, and data structures.
+</li>
+	<li>
+複数の標準から利用されている概念のうち，それらの標準に帰属させるには そぐわないものの置き場とする。
+◎
+Be a place for concepts used by multiple standards without a good home.
+</li>
+	<li>
+多義的になる概念を明確化して，明瞭かつ読易い~algo的~注釈文を書き易くする。
+◎
+Help write clear and readable algorithmic prose by clarifying otherwise ambiguous concepts.
+</li>
+</ul>
+
+<p>
+他にも目標の示唆があれば歓迎する。
+◎
+Suggestions for more goals welcome.
+</p>
+
+	</section>
+	<section id="usage">
+<h2 title="Usage">1. 用法</h2>
+
+<p>
+文書 %X にてこの仕様を用立てるときは、
+<q>%X は Infra Standard に依存する。</q>
+等と記す。
+加えて，多義性を避けるため、各種用語を相互参照することも奨励される。
+◎
+To make use of the Infra Standard in a document titled X, use X depends on the Infra Standard. Additionally, cross-referencing terminology is encouraged to avoid ambiguity.
+</p>
+
+<p>
+仕様の策定者には、自身の仕様を
+<a href="https://github.com/whatwg/infra/wiki/Dependent-specs">この仕様に依存している仕様の~list</a>
+に追加しておくことも奨励される。
+そうしておけば、将来~~非互換になる変更が この仕様に加えられても，依存する他の仕様が それを正しく反映する助けになるので。
+◎
+Specification authors are also encouraged to add their specification to the list of dependent specifications in order to help the editors ensure that any future breaking changes to the Infra Standard are correctly reflected by any such dependencies.
+</p>
+
+	</section>
+	<section id="conventions">
+<h2 title="Conventions">2. 表記規約</h2>
+
+<p class="trans-note">【
+この仕様~全体を通して、 “和訳” とは
+“<a href="index.html#page-list">この~site内の各種~仕様の日本語訳</a>”
+の略記である。
+】</p>
+
+		<section id="conformance">
+<h3 title="Conformance">2.1. 適合性</h3>
+
+<p>
+規範的でないものと明示的に記された節に加え，すべての表明, 図式, 例, 注記は、規範的ではない。
+他のすべては規範的である。
+◎
+All assertions, diagrams, examples, and notes are non-normative, as are all sections explicitly marked non-normative. Everything else is normative.
+</p>
+
+<div class="p">
+<p>
+次の各種~keywordは、 `RFC2119$r に則って解釈することになる：
+</p>
+
+<table>
+<thead><tr><th>原語
+<th>和訳表記
+</thead><tbody>
+
+<tr><td>`MUST^en
+<td>〜する`モノトスル^2119（~UA要件） ／ 〜しなければ`ナラナイ^2119
+
+<tr><td>`MUST NOT^en
+<td>〜しない`モノトスル^2119（~UA要件） ／ 〜しては`ナラナイ^2119
+
+<tr><td>`REQUIRED^en
+<td>`要求され^2119る
+
+<tr><td>`SHALL^en
+<td>（ `MUST^en のときと同じ）
+
+<tr><td>`SHALL NOT^en
+<td>（ `MUST NOT^en のときと同じ）
+
+<tr><td>`SHOULD^en
+<td>〜する`ベキ^2119である
+
+<tr><td>`SHOULD NOT^en
+<td>〜する`ベキ^2119でない ／ 〜しない`ベキ^2119である
+
+<tr><td>`RECOMMENDED^en
+<td>`推奨される^2119
+
+<tr><td>`NOT RECOMMENDED^en
+<td>`推奨されない^2119 ／ 〜しないことが`推奨される^2119
+
+<tr><td>`MAY^en
+<td>〜しても`ヨイ^2119
+
+<tr><td>`OPTIONAL^en
+<td>`任意選択で^2119〜
+
+</tbody></table>
+
+<p class="trans-note">【
+“モノトスル” は、ほぼ，~UA（その実装）に課される要件を述べるときに限り用いられる。
+他に、~web内容を消費する応用（適合性~検査器など）に対しても用いられる。
+（多くの仕様は，~UA要件が大部分を占めるので、頻度としては “ナラナイ” よりずっと多いが、表現上の都合により，少数の~UA要件には “ナラナイ” も用いている。）
+】【
+事実上、 `SHALL^en が利用されている箇所は，皆無に近い（この仕様を参照しない仕様も含め）。
+実質的に `MUST^en と同義なので、現れたとしても，和訳では `MUST^en と同じ表記を用いることにする（ `SHALL NOT^en についても同様）。
+】</p>
+
+◎
+The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" are to be interpreted as described in RFC 2119. [RFC2119]
+</div>
+
+<p>
+これらの~keywordは，小文字で記されても等価な意味になり、規範的でない内容に現れることはない†。
+◎
+These keywords have equivalent meaning when written in lowercase and cannot appear in non-normative content.
+</p>
+
+<p class="trans-note">【†
+また、現れたとしても，その内容が規範的とされるわけではない。
+】</p>
+
+<p class="note">注記：
+これは RFC 8174 に対する`故意的な違反$であり、判読能, および［
+RFC 8174 以前の， IETF 以外から発行された多くの文書における、長年の実施
+］を保全するよう欲されていることが，動機にある。
+`RFC8174$r
+◎
+This is a willful violation of RFC 8174, motivated by legibility and a desire to preserve long-standing practice in many non-IETF-published pre-RFC 8174 documents. [RFC8174]
+</p>
+
+<p>
+上のすべては、この標準, および この標準を利用する文書に適用-可能になる。
+この標準を利用する文書は、~keywordの利用を［
+"`must^en", "`must not^en", "`should^en", "`may^en"
+］のみに制限すること, および それらを小文字で記す†ことが奨励される
+— その方が一般に読易くなると考えられるので。
+◎
+All of the above is applicable to both this standard and any document that uses this standard. Documents using this standard are encouraged to limit themselves to "must", "must not", "should", and "may", and to use these in their lowercase form as that is generally considered to be more readable.
+</p>
+
+<p class="trans-note">【†
+和訳では、これらに対応する和訳表記は ~mark-upされずに記される。
+】【
+和訳に特有な詳細は、
+<a href="index.html#rfc2119-phrase">RFC 2119 が規定する句に利用される対訳</a>
+も参照されたし。
+】</p>
+
+<div class="p">
+<p>
+規範的でない内容には、代わりに，次を利用できる（括弧内は否定形）：
+</p>
+
+<table>
+<thead><tr><th>原語
+<th>和訳表記
+</thead><tbody>
+
+<tr><td>`strongly encouraged^en （ `strongly discouraged^en ）
+<td>
+（〜しないことが）強く奨励される, （強く忌避される）
+
+<tr><td>`encouraged^en （ `discouraged^en ）
+<td>
+（〜しないことが）奨励される, （忌避される）
+
+<tr><td>`can^en （ `cannot^en ）
+<td>
+〜できる（できない）,
+〜し得る（得ない）,
+〜になり得る（得ない）,
+〜になる（ならない）［
+こと／場合／とき
+］がある,
+（〜［
+する／になる
+］ことはない）,
+等々
+
+<tr><td>`could^en （ `could not^en ）
+<td>
+〜する（しない）こともできる,
+〜になる（ならない）こともある,
+〜も〜できる,
+〜にもなり得る,
+等々
+
+<tr><td>`might^en （ `might not^en ）
+<td>
+〜（しない／ でない／にならない）かもしれない,
+（同）であろう,
+（同）こともあろう,
+（同）ときもある,
+等々
+
+</tbody></table>
+
+◎
+For non-normative content "strongly encouraged", "strongly discouraged", "encouraged", "discouraged", "can", "cannot", "could", "could not", "might", and "might not" can be used instead.
+</div>
+
+		</section>
+		<section id="other-specs">
+<h3 title="Compliance with other specifications">2.2. 他の仕様への準拠性</h3>
+
+<p>
+一般に，仕様は、他の多様な仕様とヤリトリしたり, それらに依拠する。
+あいにく，ある種の状況下では、互いに競合する必要性により，仕様が他の仕様による要件に違反することが要求される。
+これが生じたときは、この仕様を利用している文書は，そのような破戒を
+`故意的な違反@
+（ `willful violation^en ）として表記して，その違反の理由を注記するベキである。
+◎
+In general, specifications interact with and rely on a wide variety of other specifications. In certain circumstances, unfortunately, conflicting needs require a specification to violate the requirements of other specifications. When this occurs, a document using the Infra Standard should denote such transgressions as a willful violation, and note the reason for that violation.
+</p>
+
+<p class="example" id="example-willful-violation">
+前述の
+<a href="#conformance">§ 適合性</a>では、［
+この標準により~commitされた RFC 8174 への`故意的な違反$
+］を文書化している。
+◎
+The previous section, § 2.1 Conformance, documents a willful violation of RFC 8174 committed by the Infra Standard.
+</p>
+
+		</section>
+		<section id="terminology">
+<h3 title="Terminology">2.3. 各種用語</h3>
+
+<p>
+“または”, “いずれか”
+などの句（ “`or^en” ）は、特に断らない限り，あるいは排他的としか解釈し得ない場合を除き、排他的でないとする。
+排他的になるときは、
+“片方”, “いずれかのみ”
+等々の句でそう記される。
+◎
+The word "or", in cases where both inclusive "or" and exclusive "or" are possible (e.g., "if either width or height is zero"), means an inclusive "or" (implying "or both"), unless it is called out as being exclusive (with "but not both").
+</p>
+
+<p>
+`~UA@
+（ `user agent^en ）とは、利用者に利するように動作する任意の~softwareである
+— 例えば、~web内容を検索取得して, 具現化して，末端~利用者が そのような内容とヤリトリするのを手助けするような。
+この標準を利用している仕様における~UAは、一般に，その仕様を実装する~client~softwareを指す。
+`~UA$の同義語として，`実装$も利用できる／され得る。
+◎
+A user agent is any software that acts on behalf of a user, for example by retrieving and rendering web content and facilitating end user interaction with it. In specifications using the Infra Standard, the user agent is generally the client software that implements the specification. Implementation can be used as a synonym for user agent.
+</p>
+
+<p class="trans-note">【
+和訳では、一貫して略称 “UA” を用いる。
+】</p>
+
+<p>
+何かが
+`実装定義@
+（ `implementation-defined^en ）であると記されている場合、何が実装により定義されるものの~~詳細を成すかは，`~UA$に委ねられる。
+逆に，そのような文言が無い下では、`~UA$は，この標準を利用している文書~内に~~指示された規則に従う必要がある。
+◎
+If something is said to be implementation-defined, the particulars of what is said to be implementation-defined are up to the user agent. In the absence of such language, the reverse holds: user agents have to follow the rules laid out in documents using this standard.
+</p>
+
+<p class="trans-note">【
+または、
+“〜は実装により定義される” ／
+形容詞として “実装定義な〜”
+とも記される。
+】【
+実装定義であるとしても、ほとんどの場合，挙動は一貫する（アリな選択肢のうち一つを選んだ実装は，一貫してその挙動に従う）ことになろう
+— そこまで述べてはいないので、字義通り解釈するなら，それは保証されないことになるが（同じ入力に対し、毎回~異なる結果が出力されるなど）。
+】</p>
+
+<p class="example">
+“`実装定義$な方式で、結果の各~行lには %N 個を超える符号位置は無いように，
+%入力 の中に `000A^U `LF^cn を挿入する”
+と記されているなら、この要件の目的においては，［
+%入力 の始端, %入力 の終端, `000A^U `LF^cn
+］が各~行lの区切りを成す
+【どの行lも`長さ$ ~LTE %N にすること以外、どこに `LF^cn を挿入するかは，実装に委ねられる】
+ことになる。
+◎
+Insert U+000A (LF) code points into input in an implementation-defined manner such that each resulting line has no more than width code points. For the purposes of this requirement, lines are delimited by the start of input, the end of input, and U+000A (LF).
+</p>
+
+		</section>
+		<section id="privacy">
+<h3 title="Privacy concerns">2.4. ~privacyの懸念</h3>
+
+<p>
+この標準を利用している文書にて定義される特能には、利用者の便利を利用者の~privacy保護策と引換えにしているものもあるかもしれない。
+◎
+Some features that are defined in documents using the Infra Standard might trade user convenience for a measure of user privacy.
+</p>
+
+<p>
+一般に，~internetの~architectureに因り、互いの利用者は，~IP~addressにより判別され得る。
+~IP~addressは、利用者が［
+機器から機器へ, あるいは~networkから~networkへ
+］移動するに伴い変化するので，利用者と~~完全には合致しない。
+同様に，［
+~NAT~routing, ~proxy~server, 共用~computer
+］は、実際には複数の利用者に対応付けられ，すべての~packetが同じ~IP~addressから来ているかのように現れることを可能化する。
+~onion~routingなどの技術を利用すれば、~HTTP要請を更に匿名~化できる
+— 同じ利用者による~internet上のある~nodeからの要請が，~network上の多数の全然異なる箇所から来ているかのように現れるように。
+`RFC791$r
+◎
+In general, due to the internet’s architecture, a user can be distinguished from another by the user’s IP address. IP addresses do not perfectly match to a user; as a user moves from device to device, or from network to network, their IP address will change; similarly, NAT routing, proxy servers, and shared computers enable packets that appear to all come from a single IP address to actually map to multiple users. Technologies such as onion routing can be used to further anonymize requests so that requests from a single user at one node on the internet appear to come from many disparate parts of the network. [RFC791]
+</p>
+
+<p>
+しかしながら，同じ利用者からの各~要請を互いに関係付けることもできる仕組みには、~IP~addressの他にもある。
+例えば~cookieは、これを可能化するよう特定的に設計されている
+— ほとんどの~webは、それを基礎に置く~session特能により，~siteに~accountを有する利用者の~log-inを可能化している。
+より一般には、どの種類の［
+~cacheの仕組み／
+~HSTSその他により共有される状態／
+~HTTP~cache／
+接続の仕分け／
+格納~API
+］も，当然のように濫用され得るものと予期される。
+`COOKIES$r
+`RFC6797$r
+`STORAGE$r
+◎
+However, the IP address used for a user’s requests is not the only mechanism by which a user’s requests could be related to each other. Cookies, for example, are designed specifically to enable this, and are the basis of most of the web’s session features that enable you to log into a site with which you have an account. More generally, any kind of cache mechanism or shared state, including but not limited to HSTS, the HTTP cache, grouping of connections, storage APIs, can and ought to be expected to be abused. [COOKIES] [RFC6797] [STORAGE]
+</p>
+
+<p>
+他にも，もっと微妙な仕組みがある。
+利用者の~systemを成す ある種の特徴は、互いの利用者~群を判別するために利用し得る。
+そのような情報を十分に収集すれば、個々の利用者の~browserの “~digital指紋” を算出できる。
+それは、どの要請が同じ利用者から来ているか突止める点において，~IP~addressより勝ることもある。
+◎
+There are other mechanisms that are more subtle. Certain characteristics of a user’s system can be used to distinguish groups of users from each other. By collecting enough such information, an individual user’s browser’s "digital fingerprint" can be computed, which can be better than an IP address in ascertaining which requests are from the same user.
+</p>
+
+<p>
+この方式で
+— とりわけ 複数の~siteにまたがって —
+要請を仕分けることは、悪意ある目的にも利用できる。
+例えば、ある政府が 2 つの情報
+— 個人の現住所（ある~siteから運転方向を取得するとき利用した現在地から決定される）と，その者の外見上の支持政党（その者が参加している~forum~siteを精査することから決定される） —
+を組合せて，その個人の選挙投票を妨げるべきかどうかを決定することが挙げられる。
+◎
+Grouping requests in this manner, especially across multiple sites, can be used for malevolent purposes, e.g., governments combining information such as the person’s home address (determined from the addresses they use when getting driving directions on one site) with their apparent political affiliations (determined by examining the forum sites that they participate in) to determine whether the person should be prevented from voting in an election.
+</p>
+
+<p>
+悪意ある目的は，著しく邪悪にもなり得るので、［
+~UAの実装者／仕様の策定者
+］には，［
+利用者を指紋収集したり追跡するためにも利用され得るような情報
+］の漏洩ngを最小限にすることが強く奨励される。
+◎
+Since the malevolent purposes can be remarkably evil, user agent implementors and specification authors are strongly encouraged to minimize leaking information that could be used to fingerprint or track a user.
+</p>
+
+<p>
+この節の最初の段落に黙示したように、あいにく，指紋収集や追跡~目的にも濫用できる~APIを公開することで，多大な便益が派生することも ときどき あり、あらゆる漏洩を阻止するだけで済むほど容易ではない。
+一例として、何かを投函するために，特定の識別情報の下で ~siteに~log-inする能には、定義により，当の利用者による要請すべてが同じ利用者から来ていることが，多少なりとも識別-可能になることが要求される。
+もっと微妙な例として、~text幅などの情報もある
+— それは、~canvas上に~textを描くことを孕むような，多くの効果に必要とされる（例：~textの周りに境界線を描くことを孕むような任意の効果）。
+それもまた，利用者の要請を仕分けるために利用できる情報を漏洩する（この事例では、利用者は どの~fontを~installしたかが，総当たり探索を介して公開され得る
+— それは、利用者ごとに~~有意に変わり得る情報になる）。
+◎
+Unfortunately, as the first paragraph in this section implies, sometimes there is great benefit to be derived from exposing APIs that can also be abused for fingerprinting and tracking purposes, so it’s not as easy as blocking all possible leaks. For instance, the ability to log into a site to post under a specific identity requires that the user’s requests be identifiable as all being from the same user, more or less by definition. More subtly, though, information such as how wide text is, which is necessary for many effects that involve drawing text onto a canvas (e.g., any effect that involves drawing a border around the text) also leaks information that can be used to group a user’s requests. (In this case, by potentially exposing, via a brute force search, which fonts a user has installed, information which can vary considerably from user to user.)
+</p>
+
+
+<p>
+~FINGERPRINTING
+この標準を利用している文書~内で定義される特能のうち，
+`追跡~行路@
+（ `tracking vector^en ）として利用され得るものには、この段落に示される印が付与される。
+◎
+(This is a tracking vector.)
+Features that are defined in documents using the Infra Standard that can be used as a tracking vector are marked as this paragraph is.
+</p>
+
+<p>
+~platformにおける他の特能も
+— 次に挙げるものに限らず —
+同じ目的に利用され得る：
+◎
+Other features in the platform can be used for the same purpose, including, but not limited to:
+</p>
+
+<ul>
+	<li>
+~UAがどの特能を~supportしているかの，正確な~list。
+◎
+The exact list of which features a user agents supports.
+</li>
+	<li>
+~scriptの再帰に許容される，~stackの最大~深さ。
+◎
+The maximum allowed stack depth for recursion in script.
+</li>
+	<li>
+利用者の環境を述べるような特能。
+◎
+Features that describe the user’s environment.
+</li>
+	<li>
+利用者の地域時間帯。
+◎
+The user’s time zone.
+</li>
+	<li>
+~HTTP要請~header。
+◎
+HTTP request headers.
+</li>
+</ul>
+
+		</section>
+	</section>
+	<section id="algorithms">
+<h2 title="Algorithms">3. ~algo</h2>
+
+<p class="trans-note">【
+この節の内容は、和訳における ~SYMBOL_DEF_REFと重複する。
+その表記規約は，この仕様が作成される以前からあり、この仕様を参照する仕様のみならず，このサイトの大多数の和訳に利用されている。
+そのため、この節に定義される一部の原文~keywordは，その表記規約に整合するように違えている。
+】</p>
+
+		<section id="algorithm-conformance">
+<h3 title="Conformance">3.1. 適合性</h3>
+
+<p>
+~algo, あるいは ~algoの一部として命令的†に句される要件（
+“頭部の空白~並びを取り除く”, “~F を返す”
+など）は、当の~algoや手続きを導入するときに利用された~keyword（ “
+〜するモノトスル”, 等）を意味するものと解釈することになる。
+そのような~keywordが利用されていない所では “モノトスル” が含意される。
+◎
+Algorithms, and requirements phrased in the imperative as part of algorithms (such as "strip any leading spaces" or "return false") are to be interpreted with the meaning of the keyword (e.g., "must") used in introducing the algorithm or step. If no such keyword is used, must is implied.
+</p>
+
+<p class="trans-note">【†
+原文の英語では命令形であるが、和訳では終止形（ “現在形” ）。
+】</p>
+
+<div class="example" id="example-algorithms">
+<p>
+例えば、仕様にて，次のように記されている所では…：
+◎
+For example, were the spec to say:
+</p>
+
+<div class="exemplary algo">
+<p>
+`オレンジを食べる^dfn
+ときは、次を行うモノトスル：
+◎
+To eat an orange, the user must:
+</p>
+<ol>
+	<li>
+オレンジの皮を剥く
+◎
+Peel the orange.
+</li>
+	<li>
+オレンジを切り分ける
+◎
+Separate each slice of the orange.
+</li>
+	<li>
+切り分けたオレンジを食べる
+◎
+Eat the orange slices.
+</li>
+</ol>
+</div>
+
+<p>
+…次に等価になる：
+◎
+it would be equivalent to the following:
+</p>
+
+<div class="exemplary algo">
+<p>
+`オレンジを食べる^dfn
+ときは：
+◎
+To eat an orange:
+</p>
+<ol>
+	<li>
+オレンジの皮を剥くモノトスル
+◎
+The user must peel the orange.
+</li>
+	<li>
+オレンジを切り分けるモノトスル
+◎
+The user must separate each slice of the orange.
+</li>
+	<li>
+切り分けたオレンジを食べるモノトスル
+◎
+The user must eat the orange slices.
+</li>
+</ol>
+</div>
+
+<p>
+ここでの~keywordは “モノトスル” である。
+◎
+Here the key word is "must".
+</p>
+
+<p>
+上の例で ~algoの導入-時に，単に
+“オレンジを食べるときは、次を行う”
+等と記されたときも、同じく “モノトスル” が含意される。
+◎
+Modifying the above example, if the algorithm was introduced only with "To eat an orange:", it would still have the same meaning, as "must" is implied.
+</p>
+
+<p class="trans-note">【
+“次をするベキである／してもヨイ…”
+と記されていても，個々の段には “モノトスル” が含意される
+— そのような “ベキ／ヨイ” は、その句の視野に入る `手続き全体^emを “するかしないか” にかかる。
+】</p>
+
+</div>
+
+<p class="trans-note">【
+~algoに限らず，和訳では、同様の規約を，要件の箇条書き等にも利用している
+— 例：
+“次に従うモノトスル： （…箇条書き…）”
+】</p>
+
+<p>
+~algoや特定の手続きとして句されている適合性~要件は、~~最終的な結果が等価になる限り，どのような方式で実装されてもヨイ（特に、各種~algoは，追い易いように意図されており、処理能を高めることは意図されていない。）
+◎
+Conformance requirements phrased as algorithms or specific steps may be implemented in any manner, so long as the end result is equivalent. (In particular, the algorithms are intended to be easy to follow, and not intended to be performant.)
+</p>
+
+<p class="note">注記：
+処理能を正しく高めることは扱い難い代物である
+— ［
+利用者の知覚,
+~computer~architecture,
+様々な型の入力
+］がそれに波及し、これらの普及度も 時を経れば変化し得るので。
+一例として，［
+単独の~algoとして標準~化されたもの
+］用の［
+~JS~engineにおける~code
+］は、速度や~memory消費を最適化するため，多数に分枝する見込みが高い。
+それらの~code分枝すべてを標準~化するのは 無理な注文であり，生産的でない
+— 単独の~algoほどに年月に耐え得るものではないので。
+したがって、処理能については互いに競う分野に残しておくのが最善である。
+◎
+Performance is tricky to get correct as it is influenced by user perception, computer architectures, and different types of input that can change over time in how common they are. For instance, a JavaScript engine likely has many different code paths for what is standardized as a single algorithm, in order to optimize for speed or memory consumption. Standardizing all those code paths would be an insurmountable task and not productive as they would not stand the test of time as well as the single algorithm would. Therefore performance is best left as a field to compete over.
+</p>
+		</section>
+		<section id="declaration">
+<h3 title="Declaration">3.2. 宣言</h3>
+
+<p>
+~algo名は，通例的には動詞~句で記されるが、標準や読者が当の~algoを より成句的に参照rできるよう，その自立的~存在をはっきりさせる名前が与えられることもある。
+◎
+Algorithm names are usually verb phrases, but sometimes are given names that emphasize their standalone existence, so that standards and readers can refer to the algorithm more idiomatically.
+</p>
+
+<p class="trans-note">【
+言い換えれば、
+“~algoであること”
+を表す語が付加された名前
+— 次の例に示すような。
+】【
+動詞~句による~algo名 “[〜する]” を参照rする所では、
+“[〜する] ~algoは…”
+の様に記されることが多い。
+】</p>
+
+<p class="example">
+後者の部類に入る~algo名の例
+⇒＃
+“属性~変更-時の手続き”,
+“~module~script~graphを~fetchする内部手続き”,
+“多重定義~解決~algo”。
+◎
+Some algorithm names in the latter category include "attribute change steps", "internal module script graph fetching procedure", and "overload resolution algorithm".
+</p>
+
+<p>
+~algoは、その［
+名前,
+各~parameter,
+返り値の型
+］を次の形で言明することにより宣言する：
+◎
+Declare algorithms by stating their name, parameters, and return type, in the following form:
+</p>
+
+<div class="example">
+<p class="exemplary algo">
+`[~algo名（〜する）]^dfn
+ときは、
+所与の
+( [型 1] `[~parameter 1]^V, [型 2] `[~parameter 2]^V, …, )
+に対し，次の手続きを遂行する
+— それは、 [返り値の型] を返す
+⇒
+…
+◎
+To [algorithm name], given a [type1] [parameter1], a [type2] [parameter2], …, perform the following steps. They return a [return type].
+</p>
+</div>
+
+<p>
+（~algo名が動詞~句でない場合【名詞~句である場合】、
+“`[~algo名]^dfn は…を遂行する”
+を利用する。）
+◎
+(For non-verb phrase algorithm names, use "To perform the [algorithm name]…".)
+</p>
+
+<div class="example">
+<p class="exemplary algo">
+`スゴイ形式を構文解析する^dfn
+ときは、所与の
+( `~byte列$ %~byte列 )
+に対し，次の手続きを遂行する
+— それは、［
+`文字列$ ／ ~NULL
+］を返す
+⇒
+…
+◎
+To parse an awesome format given a byte sequence bytes, perform the following steps. They return a string or null.
+</p>
+
+<p class="trans-note">【
+和訳においては、返り値の型が複数ある場合、この例のように “／” で区切って記すことが多い（この例では、［
+文字列または ~NULL
+］を返すことを意味する）。
+】</p>
+</div>
+
+<p>
+値を返さない~algoは、より短い形を利用する。
+値を返す~algoであっても，同じ形を利用できる
+— 返り値の型は、~algoを成す手続きや それを~callする所から比較的~容易に推定できるので：
+◎
+Algorithms which do not return a value use a shorter form. This same shorter form can be used even for algorithms that do return a value, since the return type is relatively easy to infer from the algorithm steps and call sites:
+</p>
+
+<div class="example">
+<p class="exemplary algo">
+`[~algo名（〜する）]^dfn
+ときは、所与の
+( [型 1] `[~parameter 1]^V, [型 2] `[~parameter 2]^V, …, )
+に対し
+⇒
+…
+◎
+To [algorithm name], given a [type1] [parameter1], a [type2] [parameter2], …:
+</p>
+</div>
+
+<div class="example">
+<p class="exemplary algo">
+`スゴイ形式を構文解析する^dfn
+ときは、所与の
+( `~byte列$ %~byte列 )
+に対し
+⇒
+…
+◎
+To parse an awesome format given a byte sequence bytes:
+</p>
+</div>
+
+<p>
+ごく短い~algoは、単文で【和訳においては、 1 個の段落で】［
+宣言する／指定する
+］こともできる：
+◎
+Very short algorithms can be declared and specified using a single sentence:
+</p>
+
+<div class="example">
+<p class="exemplary algo">
+`スゴイ形式を構文解析する^dfn
+ときは、所与の
+( `~byte列$ %~byte列 )
+に対し，次の結果を返す
+⇒
+`~ASCII大文字~化する$( `同型に復号する$( %~byte列 ) )
+◎
+To parse an awesome format given a byte sequence bytes, return the result of ASCII uppercasing the ismorphic decoding of bytes.
+</p>
+</div>
+
+<p>
+~algoの宣言には型を含めるベキであるが、~parameter名から, あるいは文脈から十分~明瞭ならば，省略してもヨイ（例えば、別の~algoを包装するだけの~algoなど）。
+◎
+Types should be included in algorithm declarations, but may be omitted if the parameter name is clear enough, or if they are otherwise clear from context. (For example, because the algorithm is a simple wrapper around another one.)
+</p>
+
+<div class="example">
+<p class="exemplary algo">
+`古典~scriptを読込む^dfn
+ときは、所与の
+( %~url )
+に対し，次を遂行した結果を返す
+⇒
+内部~script読込ng~algo( %~url, `classic^l )
+◎
+To load a classic script given url, return the result of performing the internal script-loading algorithm given url and "classic".
+</p>
+</div>
+
+<p class="XXX">
+［
+名前を持つ~parameter／
+省略可能な~parameter
+］についての指導も与えたい所
+—
+<a href="https://github.com/whatwg/infra/issues/320">課題 #320</a>
+にて進行中の論点を見よ。
+◎
+We would also like to give guidance on named and optional parameters; see issue #320 for ongoing discussion.
+</p>
+
+		</section>
+		<section id="variables">
+<h3 title="Variables">3.3. 変数</h3>
+
+<p>
+変数は、
+"~LET"
+【原文では “`let … be …^en”】
+で宣言され，
+"~SET"
+【原文では “`set … to …^en”】
+で変更される。
+◎
+A variable is declared with "let" and changed with "set".
+</p>
+
+<div class="example" id="example-variable">
+<ol class="exemplary">
+	<li>
+%L ~LET 新たな`~list$
+◎
+Let list be a new list.
+</li>
+</ol>
+</div>
+
+<div class="example" id="example-variable-null">
+
+<ol class="exemplary">
+	<li>
+%値 ~LET ~NULL
+◎
+Let value be null.
+</li>
+	<li>
+~IF［
+%入力 は`文字列$である
+］
+⇒
+%値 ~SET %入力
+◎
+If input is a string, then set value to input.
+</li>
+	<li>
+~ELSE
+⇒
+%値 ~SET `~UTF-8復号する$( %入力 )
+◎
+Otherwise, set value to input, UTF-8 decoded.
+</li>
+	<li>
+`~Assert$：
+%値 は`文字列$である
+◎
+Assert: value is a string.
+</li>
+</ol>
+</div>
+
+<div class="example">
+<ol class="exemplary">
+	<li>
+%activationTarget ~LET ［
+次が満たされるならば %target ／
+~ELSE_ ~NULL
+］
+⇒
+［
+%isActivationEvent ~EQ ~T
+］~AND［
+%target には `activation behavior^en が定義されている
+］
+◎
+Let activationTarget be target if isActivationEvent is true and target has activation behavior; otherwise null.
+</li>
+</ol>
+</div>
+
+<p>
+変数は、宣言される前に利用されてはナラナイ。
+変数の
+<a href="https://en.wikipedia.org/wiki/Scope_(computer_science)#Block_scope">視野は~block</a>である†。
+変数は、複数~回 宣言されてはナラナイ。
+◎
+Variables must not be used before they are declared. Variables are block scoped. Variables must not be declared more than once per algorithm.
+</p>
+
+<p class="trans-note">【†
+とは言え，実際の仕様では、当の変数が，［
+それを宣言した~algoが~callしている，他所の下位手続き
+］からも参照されるように記されていることもときどきある。
+】</p>
+
+		</section>
+		<section id="algorithm-control-flow">
+<h3 title="Control flow">3.4. 制御~flow</h3>
+
+<p>
+~algoの制御~flowにて
+“~RET” ／ “~THROW （例外の投出）”
+【原文では “`return^en” ／ “`throw^en”】
+として記される要件は、それが記されている~algoを終了させる。
+“~RET” に値が与えられている場合、その値が~call元に渡される。
+“~THROW” は，~call元でも自動的に所与の値を再投出させ，~call元~の~algoも終了させる。
+~call元においては、注釈文により，例外を “~catchして” 別の動作を遂行することもある。
+◎
+The control flow of algorithms is such that a requirement to "return" or "throw" terminates the algorithm the statement was in. "Return" will hand the given value, if any, to its caller. "Throw" will make the caller automatically rethrow the given value, if any, and thereby terminate the caller’s algorithm. Using prose the caller has the ability to "catch" the exception and perform another action.
+</p>
+
+<p class="trans-note">【
+和訳においては、
+“下位手続き” と記された~algo
+— ある~algoの中に入子にされた手続き —
+の中の ~RET は，その下位手続きのみを終了させる。
+他が指定されない限り、入子にしている~algoは終了されない。
+<small>
+（原文では “`abort these steps^en” と記されることが多いが、表記を一貫させるため，和訳では ~RET に統一している。）</small>
+】</p>
+
+		</section>
+		<section id="algorithm-conditional-abort">
+<h3 title="Conditional abort">3.5. 条件付きの中止-</h3>
+
+<p>
+ときには、［
+一連の段を遂行-中に，ある条件が満たされたときには停止する
+］ことが有用になることもある。
+◎
+Sometimes it is useful to stop performing a series of steps once a condition becomes true.
+</p>
+
+<p>
+これを行うためには、所与の［
+手続き／一連の段
+］ %段たち に対し，［
+特定の %条件 に達した
+`ときは中止する@
+（ `abort^en ）
+］と言明する。
+これは、 %段たち は
+— 記されたとおりではなく，それに加えて —
+%段たち を成す各~段の前に［
+%条件 を評価して、 %条件 が満たされたならば，残りの段は飛ばす
+］段を挿入した下で，評価するモノトスルことを指示する。
+◎
+To do this, state that a given series of steps will abort when a specific condition is reached. This indicates that the specified steps must be evaluated, not as-written, but by additionally inserting a step before each of them that evaluates condition, and if condition evaluates to true, skips the remaining steps.
+</p>
+
+<p>
+そのような~algoにおいては、後続の段にて，［
+`中止されたときは@
+別の一連の段を走らす
+］ように注釈できる
+— そのような一連の段は、［
+前述の %条件 が満たされたことに因り， %段たち の残りの段が飛ばされた
+］場合, その場合に限り，走らすモノトスル。
+◎
+In such algorithms, the subsequent step can be annotated to run if aborted, in which case it must run if any of the preceding steps were skipped due to the condition of the preceding abort when step evaluated to true.
+</p>
+
+<div class="example">
+
+<p>
+次の~algoは：
+◎
+The following algorithm
+</p>
+
+<ol class="exemplary">
+	<li>
+%結果 ~LET 空`~list$
+◎
+Let result be an empty list.
+</li>
+	<li>
+<p>
+この段（を成す一連の段 %段たち ）は、利用者が `取り消しボタン^i を~clickした`ときは中止する$：
+◎
+Run these steps, but abort when the user clicks the "Cancel" button:
+</p>
+		<ol>
+			<li>
+%結果 に次の結果を`付加する$
+⇒
+`π^V の最初の百万桁を算出する
+◎
+Compute the first million digits of π, and append the result to result.
+</li>
+			<li>
+%結果 に次の結果を`付加する$
+⇒
+`ℯ^V の最初の百万桁を算出する
+◎
+Compute the first million digits of e, and append the result to result.
+</li>
+			<li>
+%結果 に次の結果を`付加する$
+⇒
+`φ^V の最初の百万桁を算出する
+◎
+Compute the first million digits of φ, and append the result to result.
+</li>
+		</ol>
+	</li>
+	<li>
+（前~段が）`中止されたときは$
+⇒
+%結果 に `未完^l を`付加する$
+◎
+If aborted, append "Didn’t finish!" to result.
+</li>
+</ol>
+
+<p>
+次のような より冗長な公式化と等価になる：
+◎
+is equivalent to the more verbose formulation
+</p>
+
+<ol class="exemplary">
+	<li>
+%結果 ~LET 空`~list$
+◎
+Let result be an empty list.
+</li>
+	<li>
+<p>
+~IF［
+利用者は `取り消しボタン^i をまだ~clickしていない
+］：
+◎
+If the user has not clicked the "Cancel" button, then:
+</p>
+		<ol>
+			<li>
+%結果 に次の結果を`付加する$
+⇒
+`π^V の最初の百万桁を算出する
+◎
+Compute the first million digits of π, and append the result to result.
+</li>
+			<li>
+<p>
+~IF［
+利用者は `取り消しボタン^i をまだ~clickしていない
+］：
+◎
+If the user has not clicked the "Cancel" button, then:
+</p>
+				<ol>
+					<li>
+%結果 に次の結果を`付加する$
+⇒
+`ℯ^V の最初の百万桁を算出する
+◎
+Compute the first million digits of e, and append the result to result.
+</li>
+					<li>
+~IF［
+利用者は `取り消しボタン^i をまだ~clickしていない
+］
+⇒
+%結果 に次の結果を`付加する$
+⇒
+`φ^V の最初の百万桁を算出する
+◎
+If the user has not clicked the "Cancel" button, then compute the first million digits of φ, and append the result to result.
+</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+	<li>
+~IF［
+利用者は `取り消しボタン^i を~clickした
+］
+⇒
+%結果 に `未完^l を`付加する$
+◎
+If the user clicked the "Cancel" button, then append "Didn’t finish!" to result.
+</li>
+</ol>
+
+</div>
+
+<p class="note">注記：
+この構成子が利用される所では、実装には
+%段たち を成す各~段の［［
+前／後
+］ではなく，その間
+【例えば、段が呼出した手続きを遂行している間】
+］で %条件 を評価することも
+— 最終結果が判別-可能にならないならば —
+許容される。
+一例として，上の例における %結果 が算出-演算の間に変異されないならば、~UAはその演算を停止することもできる。
+◎
+Whenever this construct is used, implementations are allowed to evaluate condition during the specified steps rather than before and after each step, as long as the end result is indistinguishable. For instance, as long as result in the above example is not mutated during a compute operation, the user agent could stop the computation.
+</p>
+
+		</section>
+		<section id="algorithm-iteration">
+<h3 title="Iteration">3.6. 反復</h3>
+
+<p>
+一連の段を，ある条件に達するまで繰返す種々の仕方がある。
+◎
+There’s a variety of ways to repeat a set of steps until a condition is reached.
+</p>
+
+<p class="note">注記：
+この標準は，これについて（まだ）網羅的でない。
+何か必要であれば，課題を申請されたし。
+◎
+The Infra Standard is not (yet) exhaustive on this; please file an issue if you need something.
+</p>
+
+<dl>
+	<dt>…を成す ~EACH ( … ) に対し… 【原文では “`For each … of …^en”】</dt>
+	<dd>
+［
+~list（およびその派生型）の`反復する$ ／
+~mapの`反復する$map
+］に定義されるものと同様。
+◎
+For each
+◎
+As defined for lists (and derivatives) and maps.
+</dd>
+	<dd class="trans-note">【
+`of …^en （…を成す）の部分を
+`in …^en （…内の）と記している仕様もある（現時点では、後者の方が多い）。
+前者は、~JSの `for … of^c 構文に倣ったものとも思われる（その方が `for … in^c 構文より意味論的に近いなどの理由で）。
+】</dd>
+	<dd class="trans-note">【
+和訳では、`~list$や`有順序~map$に限らず，順序が定義される何であれ ~EACH( … ) の表記を利用している（他が指定されない限り，先頭から順に反復する）。
+例：
+“文字列 %S を成す ~EACH( %文字 ) に対し…”
+】</dd>
+
+	<dt>`~WHILE@ 【原文では “`While …^en”】</dt>
+	<dd>
+条件が満たされる限り，一連の段を繰返す指示書き。
+◎
+While
+◎
+An instruction to repeat a set of steps as long as a condition is met.
+</dd>
+	<dd class="example" id="example-while">
+<ol class="exemplary">
+	<li>
+<p>
+~WHILE %条件 ~EQ `満たされる^l ：
+◎
+While condition is "met":
+</p>
+		<ol>
+			<li>
+…
+</li>
+		</ol>
+	</li>
+</ol>
+	</dd>
+</dl>
+
+<p>
+反復の~flowは、
+`~CONTINUE@
+／
+`~BREAK@
+【原文では “`continue^en” ／ “`break^en”】
+と記される要件を介して制御できる。
+`~CONTINUE$は、反復における残りの手続きを飛ばして，次の~itemの~~処理に~~移行する
+— 次の~itemがなければ，そこで反復は停止する。
+`~BREAK$は、反復における残りの手続きを飛ばすことに加えて，反復も停止する。
+◎
+An iteration’s flow can be controlled via requirements to continue or break. Continue will skip over any remaining steps in an iteration, proceeding to the next item. If no further items remain, the iteration will stop. Break will skip over any remaining steps in an iteration, and skip over any remaining items as well, stopping the iteration.
+</p>
+
+<div class="example" id="example-break-continue">
+
+<p>
+`~list$ « 1, 2, 3, 4 » 
+— 以下 %L  と記す —
+が与えられた下では、次の注釈文は［
+1, 2, 3, 4
+］の順に %演算 を遂行することになる：
+◎
+Let example be the list « 1, 2, 3, 4 ». The following prose would perform operation upon 1, then 2, then 3, then 4:
+</p>
+<ol class="exemplary">
+	<li>
+<p>
+%L を成す
+`~EACH$( %item )
+に対し：
+◎
+For each item of example:
+</p>
+		<ol>
+			<li>
+%item 上で %演算 を遂行する
+◎
+Perform operation on item.
+</li>
+		</ol>
+	</li>
+</ol>
+
+<p>
+次の注釈文は、［
+1, 2, 4
+］の順に %演算 を遂行し， 3 は飛ばすことになる：
+◎
+The following prose would perform operation upon 1, then 2, then 4. 3 would be skipped.
+</p>
+
+<ol class="exemplary">
+	<li>
+<p>
+%L を成す
+`~EACH$( %item )
+に対し：
+◎
+For each item of example:
+</p>
+		<ol>
+			<li>
+~IF［
+%item ~EQ 3
+］
+⇒
+`~CONTINUE$
+◎
+If item is 3, then continue.
+</li>
+			<li>
+%item 上で %演算 を遂行する
+◎
+Perform operation on item.
+</li>
+		</ol>
+	</li>
+</ol>
+
+<p>
+次の注釈文は、［
+1, 2
+］の順に %演算 を遂行し，［
+3, 4
+］は飛ばすことになる：
+◎
+The following prose would perform operation upon 1, then 2. 3 and 4 would be skipped.
+</p>
+
+<ol class="exemplary">
+	<li>
+<p>
+%L を成す
+`~EACH$( %item )
+に対し：
+◎
+For each item of example:
+</p>
+		<ol>
+			<li>
+~IF［
+%item ~EQ 3
+］
+⇒
+`~BREAK$
+◎
+If item is 3, then break.
+</li>
+			<li>
+%item 上で %演算 を遂行する
+◎
+Perform operation on item.
+</li>
+		</ol>
+	</li>
+</ol>
+
+</div>
+
+		</section>
+		<section id="assertions">
+<h3 title="Assertions">3.7. 表明</h3>
+
+<p>
+~algoに不変則を言明している表明（ `assertion^en ）を追加すると、より読易くなることもある。
+そのためには、
+"`~Assert@："
+【原文では “`Assert:^en”】
+に続けて，真になる筈の言明（ `statement^en ）を記す。
+言明が偽になる場合、この標準を利用している当の文書における課題であることを指示するので，報告され, 取組まれるベキである。
+◎
+To improve readability, it can sometimes help to add assertions to algorithms, stating invariants. To do this, write "Assert:", followed by a statement that must be true. If the statement ends up being false that indicates an issue with the document using the Infra Standard that should be reported and addressed.
+</p>
+
+<p class="note">注記：
+言明は必ず真になるので、実装にとっての含意はない。
+◎
+Since the statement can only ever be true, it has no implications for implementations.
+</p>
+
+<div class="example" id="example-assert">
+
+<ol class="exemplary">
+	<li>
+%x ~LET `Aperture Science^l
+◎
+Let x be "Aperture Science".
+</li>
+	<li>
+`~Assert$：
+%x ~EQ `Aperture Science^l
+◎
+Assert: x is "Aperture Science".
+</li>
+</ol>
+
+</div>
+
+		</section>
+	</section>
+	<section id="primitive-data-types">
+<h2 title="Primitive data types">4. ~primitive~data型</h2>
+
+		<section id="nulls">
+<h3 title="Nulls">4.1. ~NULL</h3>
+
+<p>
+値 ~NULL は、値を欠いていることを指示するために利用される。
+~NULL は、~JS `null^jv 値 `ECMA-262$r と交換-可能に利用され得る。
+◎
+The value null is used to indicate the lack of a value. It can be used interchangeably with the JavaScript null value. [ECMA-262]
+</p>
+
+<p class="trans-note">【
+したがって、表記上も区別されない。
+和訳では、［
+~JS `null^jv ／ ~IDL ~NULL
+］値と区別する
+— 仕様~levelの値であることを明確化する —
+ため，
+~NULL に代えて特殊~値 ε を用いることもある。
+】</p>
+
+<div class="example">
+<ol class="exemplary">
+	<li>
+%要素 ~LET ~NULL
+◎
+Let element be null.
+</li>
+</ol>
+</div>
+
+<div class="example">
+<ol class="exemplary">
+	<li>
+~IF［
+%入力 ~EQ 空~文字列
+］
+⇒
+~RET ~NULL
+◎
+If input is the empty string, then return null.
+</li>
+</ol>
+</div>
+
+		</section>
+		<section id="booleans">
+<h3 title="Booleans">4.2. 真偽値</h3>
+
+<p>
+`真偽値@
+（ `boolean^en ）は、［
+~T または ~F
+］をとるとする。
+◎
+A boolean is either true or false.
+</p>
+
+<div class="example">
+<ol class="exemplary">
+	<li>
+%要素は見つかった ~LET ~F
+◎
+Let elementSeen be false.
+</li>
+</ol>
+</div>
+		</section>
+		<section id="bytes">
+<h3 title="Bytes">4.3. ~byte</h3>
+
+<p>
+`~byte@
+（ `byte^en ）は［
+8 個の~bitが成す並び
+］であり、その
+`値@byte
+と称される下層の~numberを表す，範囲 { `00^X 〜 `FF^X }† に入る［
+`0x^l と後続する
+2 個の`~ASCII~hex数字（大文字）$
+］として表現される。
+◎
+A byte is a sequence of eight bits and is represented as "0x" followed by two ASCII upper hex digits, in the range 0x00 to 0xFF, inclusive. A byte’s value is its underlying number.
+</p>
+
+<p class="trans-note">【†
+この範囲は、原文からは，表記上の範囲しか意味しないように解釈できそうだが、他所の記述から（`値$byteは無符号な~numberとして扱われている），数量的な範囲と両義的と見受けられる。
+】</p>
+
+<p class="example">
+`40^X は、`~byte$ であり，その`値$byteは 64 である。
+◎
+0x40 is a byte whose value is 64.
+</p>
+
+<p>
+`~ASCII~byte@
+は、範囲 { `00^X (NUL) 〜 `7F^X (DEL) } に入る`~byte$である。
+ここに記したように、`~ASCII~byte$には，［
+`ASCII format for Network Interchange^cite
+`RFC20$r の
+<a href="~RFCx/rfc20#section-2">§ Standard Code</a>
+に挙げられている表現
+］が丸括弧で括られて後続してもヨイ
+— ただし， `28^X, `29^X は除く。
+それらに対しては、順に，
+"`(left parenthesis)^en",
+"`(right parenthesis)^en"
+が後続してもヨイ†。
+◎
+An ASCII byte is a byte in the range 0x00 (NUL) to 0x7F (DEL), inclusive. As illustrated, an ASCII byte, excluding 0x28 and 0x29, may be followed by the representation outlined in the Standard Code section of ASCII format for Network Interchange, between parentheses. [RFC20]
+◎
+0x28 may be followed by "(left parenthesis)" and 0x29 by "(right parenthesis)".
+</p>
+
+<p class="trans-note">【†
+和訳では、例外なく `28^X `(^smb, 等々と記すことにする。
+】</p>
+
+<p class="example" id="example-byte-notation">
+次の結果は、`符号位置$ `0049^U `I^smb になる
+⇒
+`~UTF-8復号する$( `49^X `I^smb )
+◎
+0x49 (I) when UTF-8 decoded becomes the code point U+0049 (I).
+</p>
+
+		</section>
+		<section id="byte-sequences">
+<h3 title="Byte sequences">4.4. ~byte列</h3>
+
+<p>
+`~byte列@
+（ `byte sequence / bytes^en ）は、 0 個~以上の`~byte$からなる連列であり，一連の~byteを~spaceで区切って表現される。
+どの~byteも範囲 { `20^X (SP) 〜 `7E^X `~^smb } 内に入る~byte列は，文字列としても記され得るが、実際の`文字列$と混同されないよう，引用符に代えて ~backtick（ `backtick^en, "`" ）で括られる。
+◎
+A byte sequence is a sequence of bytes, represented as a space-separated sequence of bytes. Byte sequences with bytes in the range 0x20 (SP) to 0x7E (~), inclusive, can alternately be written as a string, but using backticks instead of quotation marks, to avoid confusion with an actual string.
+</p>
+
+<p class="trans-note">【
+（参考） ~byte列による値は、~IDLにおいては `ByteString$c 型で表現される。
+】</p>
+
+<div class="example" id="example-byte-sequence-notation">
+
+<p>
+~byte列［
+`48^X `49^X
+］は、 `HI^bl とも表現される。
+◎
+0x48 0x49 can also be represented as `HI`.
+</p>
+
+<p>
+`Content-Type^bl などの~HTTP~headerは、`~byte列$である。
+◎
+Headers, such as `Content-Type`, are byte sequences.
+</p>
+
+<p class="trans-note">【
+和訳では，~HTTP~header名のような~keywordに対しては、`文字列$との区別が~~不要な所では，~backtickは省略することもある。
+】</p>
+
+</div>
+
+<p class="note">注記：
+`文字列$から`~byte列$を取得するときは、`~UTF-8符号化する$ `ENCODING$r の利用が奨励される。
+稀な状況下では、`同型に符号化する$必要があるかもしれない。
+◎
+To get a byte sequence out of a string, using UTF-8 encode from the Encoding Standard is encouraged. In rare circumstances isomorphic encode might be needed. [ENCODING] 
+</p>
+
+<p>
+`~byte列$の
+`長さ@byte
+（ `length^en ）は、それが包含する`~byte$の個数である。
+◎
+A byte sequence’s length is the number of bytes it contains.
+</p>
+
+<p>
+所与の`~byte列$ %B, 負でない整数 %N に対し，
+“%B を成す %N 番の`~byte$”
+という句は、 %B を成す［
+%N ~PLUS 1
+］個目のそれを指すとする（すなわち， 0 番から数える）。
+【この規約は、この訳による追加（原文では、 “%N`-th^en ／ `at index^en %N” などと記されることが多い）。】
+</p>
+
+<div class="algo">
+<p>
+`~byte小文字~化する@
+ときは、所与の
+( `~byte列$ %入力 )
+に対し，次を返す
+⇒
+%入力 を成す各［
+%~byte ~IN { `41^X `A^smb 〜 `5A^X `Z^smb }
+］を［
+%~byte ~PLUS `20^X
+］に置換して得られる`~byte列$
+◎
+To byte-lowercase a byte sequence, increase each byte it contains, in the range 0x41 (A) to 0x5A (Z), inclusive, by 0x20.
+</p>
+</div>
+
+<p class="trans-note">【
+他に解釈しようがない場合を除き， %入力 を改変することはない
+— 単に
+“%何か を~byte小文字~化する”
+と記された場合に限り、
+“%何か ~SET `~byte小文字~化する$( %何か )”
+の略記を表す。
+（次の “~byte大文字~化する” も同様。）
+】</p>
+
+<div class="algo">
+<p>
+`~byte大文字~化する@
+ときは、所与の
+( `~byte列$ %入力 )
+に対し，次を返す
+⇒
+%入力 を成す各［
+%~byte ~IN { `61^X `a^smb 〜 `7A^X `z^smb }
+］を［
+%~byte ~MINUS `20^X
+］に置換して得られる`~byte列$
+◎
+To byte-uppercase a byte sequence, subtract each byte it contains, in the range 0x61 (a) to 0x7A (z), inclusive, by 0x20.
+</p>
+</div>
+
+<div class="algo">
+<p>
+2 つの`~byte列$ %A, %B が
+`~byte大小無視@
+で合致するとは、次が満たされることをいう
+⇒
+`~byte小文字~化する$( %A ) ~EQ `~byte小文字~化する$( %B )
+◎
+A byte sequence A is a byte-case-insensitive match for a byte sequence B, if the byte-lowercase of A is the byte-lowercase of B.
+</p>
+</div>
+
+<hr>
+
+<div class="algo">
+<p>
+`~byte列$ %B は`~byte列$ %A の
+`接頭辞@byte
+であるとは、次の手続きが ~T を返すことをいう：
+◎
+A byte sequence potentialPrefix is a prefix of a byte sequence input if the following steps return true:
+</p>
+
+<ol>
+	<li>
+%i ~LET 0
+◎
+Let i be 0.
+</li>
+	<li>
+<p>
+`~WHILE$ 無条件：
+◎
+While true:
+</p>
+		<ol>
+			<li>
+%Bi ~LET ［
+%i ~LT %B の`長さ$byteならば %B を成す %i 番の`~byte$ ／
+~ELSE_ ~NULL
+］
+◎
+Let potentialPrefixByte be the ith byte of potentialPrefix if i is less than potentialPrefix’s length; otherwise null.
+</li>
+			<li>
+%Ai ~LET ［
+%i ~LT %A の`長さ$byteならば %A を成す %i 番の`~byte$ ／
+~ELSE_ ~NULL
+］
+◎
+Let inputByte be the ith byte of input if i is less than input’s length; otherwise null.
+</li>
+			<li>
+~IF［
+%Bi ~EQ ~NULL
+］
+⇒
+~RET ~T
+◎
+If potentialPrefixByte is null, then return true.
+</li>
+			<li>
+~IF［
+%Bi ~NEQ %Ai
+］
+⇒
+~RET ~F
+◎
+Return false if potentialPrefixByte is not inputByte.
+</li>
+			<li>
+%i ~INCBY 1
+◎
+Set i to i + 1.
+</li>
+		</ol>
+	</li>
+</ol>
+
+<p>
+“%B は %A の`接頭辞$byteである”
+の同義語として，
+“%A は %B
+`から開始して@byte
+いる”
+も利用できる。
+◎
+"input starts with potentialPrefix can be used as a synonym for "potentialPrefix is a prefix of input".
+</p>
+</div>
+
+<div class="algo">
+<p>
+`~byte列$ %A は`~byte列$ %B 
+`未満の~byte列@
+であるとは、次の手続きが ~T を返すことをいう：
+◎
+A byte sequence a is byte less than a byte sequence b if the following steps return true:
+</p>
+
+<p class="trans-note">【
+和訳では、
+“ %A ~LT`~byte^sub %B ”
+とも表記する。
+】【
+この~algoは、［
+`~listを昇順に~sortする$／`~listを降順に~sortする$
+］~algoの`小なり~algo$を与える引数としても利用され得る。
+】</p>
+
+<ol>
+	<li>
+~IF［
+%B は %A の`接頭辞$byteである
+］
+⇒
+~RET ~F
+◎
+If b is a prefix of a, then return false.
+</li>
+	<li>
+~IF［
+%A は %B の`接頭辞$byteである
+］
+⇒
+~RET ~T
+◎
+If a is a prefix of b, then return true.
+</li>
+	<li>
+<p>
+%n ~LET 次を満たす最~小な~index
+⇒
+%A を成す %n 番の`~byte$ ~NEQ %B を成す %n 番の~byte
+</p>
+<p>
+（両~byte列とも他方の`接頭辞$byteでないので、そのような~indexは常に在る。）
+</p>
+◎
+Let n be the smallest index such that the nth byte of a is different from the nth byte of b. (There has to be such an index, since neither byte sequence starts with the other.)
+</li>
+	<li>
+~IF［
+%A を成す %n 番の~byte ~LT %B を成す %n 番の~byte
+］
+⇒
+~RET ~T
+◎
+If the nth byte of a is less than the nth byte of b, then return true.
+</li>
+	<li>
+~RET ~F
+◎
+Return false.
+</li>
+</ol>
+</div>
+
+<hr>
+
+<div class="algo">
+<p>
+`同型に復号する@
+ときは、所与の
+( `~byte列$ %入力 )
+に対し，次をいずれも満たす`文字列$ %出力 を返す：
+</p>
+
+<ul>
+	<li>
+%出力 の`符号位置~長さ$ ~EQ %入力 の`長さ$byte
+</li>
+	<li>
+任意の %N `~IN$ { 0 〜 %入力 の`長さ$byte ~MINUS 1 } に対し
+⇒
+%出力 を成す %N 番の`符号位置$の`値$cp ~EQ %入力 を成す %N 番の`~byte$の`値$byte
+</li>
+</ul>
+
+◎
+To isomorphic decode a byte sequence input, return a string whose code point length is equal to input’s length and whose code points have the same values as the values of input’s bytes, in the same order.
+</div>
+
+		</section>
+		<section id="code-points">
+<h3 title="Code points">4.5. 符号位置</h3>
+
+<p>
+`符号位置@
+（ `code point^en ）†は~Unicode符号位置であり、その
+`値@cp
+と称される下層の~numberを表す，範囲 { `0000^U 〜 `10FFFF^U }† に入る［
+`U+^l と後続する
+4 〜 6 個の`~ASCII~hex数字（大文字）$
+］として表現される。
+◎
+A code point is a Unicode code point and is represented as "U+" followed by four-to-six ASCII upper hex digits, in the range U+0000 to U+10FFFF, inclusive. A code point’s value is its underlying number.
+</p>
+
+<p class="trans-note">【
+訳語の “~~符号位置” は~Unicodeに特有であり，他の符号化法の “符号点” に相当する。
+】【†
+`~byte$のときと同じく、この範囲も［
+表記上の範囲, 数量的な範囲
+］を両義的に意味すると見受けられる。
+】</p>
+
+<p>
+`符号位置$には，［
+その名前／丸括弧で括られたその具現化形
+］, あるいはこの両者が後続してもヨイ。
+判読能を得るため，この標準を利用している文書には、［［
+具現化できない`符号位置$, および
+`0028^U, `0029^U†
+］には その名前 ／
+他の場合は丸括弧で括られた具現化形
+］を後続させることが奨励される。
+◎
+A code point may be followed by its name, by its rendered form between parentheses when it is not U+0028 or U+0029, or by both. Documents using the Infra Standard are encouraged to follow code points by their name when they cannot be rendered or are U+0028 or U+0029; otherwise, follow them by their rendered form between parentheses, for legibility.
+</p>
+
+<p class="trans-note">【†
+和訳では、 `0028^U, `0029^U に対しても，
+`0028^U `(^smb, 
+`0029^U `)^smb
+と記すことにする。
+】</p>
+
+<p>
+`符号位置$の名前は、~Unicode標準にて定義され，`~ASCII大文字~化$されて表現される。
+`UNICODE$r
+◎
+A code point’s name is defined in the Unicode Standard and represented in ASCII uppercase. [UNICODE]
+</p>
+
+<div class="example" id="example-code-point-notation">
+<p>
+🤔 に具現化される`符号位置$は、 `1F914^U として表現される。
+◎
+The code point rendered as 🤔 is represented as U+1F914.
+</p>
+
+<p>
+この`符号位置$を指すときは、
+"`1F914^U `🤔^smb"
+と表記して，余分な内容を供することもある。
+文書は、いくぶん冗長に
+"`1F914^U `THINKING FACE^cn `🤔^smb"
+と表記することも許容される。
+◎
+When referring to that code point, we might say "U+1F914 (🤔)", to provide extra context. Documents are allowed to use "U+1F914 THINKING FACE (🤔)" as well, though this is somewhat verbose.
+</p>
+</div>
+
+<p class="example" id="example-code-point-notation-hard-to-render">
+`000A^U などの一義的に具現化するのは困難な`符号位置$は、
+“`000A^U `LF^cn”
+のように表記できる。
+`0029^U は，具現化できるが丸括弧の括りが揃わなくなるので
+“`0029^U `RIGHT PARENTHESIS^cn”
+のように表記できる。
+【が，和訳では、上述したように，他と同様に記すことにする。】
+◎
+Code points that are difficult to render unambigiously, such as U+000A, can be referred to as "U+000A LF". U+0029 can be referred to as "U+0029 RIGHT PARENTHESIS", because even though it renders, this avoids unmatched parentheses.
+</p>
+
+<p>
+`符号位置$は、`文字$（ `character^en ）と称されることもあり，ある種の文脈では "U+" に代えて "0x" が接頭される。
+【 "0x" は、主に，数量としての値が念頭に置かれている場合に利用される。】
+◎
+Code points are sometimes referred to as characters and in certain contexts are prefixed with "0x" rather than "U+".
+</p>
+
+<p>
+次の各種 `符号位置$の集合が定義される：
+◎
+↓</p>
+
+<dl class="def-list">
+	<dt>
+`~surrogate@
+◎
+A surrogate＼
+</dt>
+	<dd>
+{ `D800^U 〜 `DFFF^U }
+◎
+is a code point that is in the range U+D800 to U+DFFF, inclusive.
+</dd>
+	<dd class="trans-note">【
+すなわち，代用対（ `surrogate pair^en ）を成し得る`符号位置$
+】</dd>
+
+	<dt>
+`~scalar値@
+◎
+A scalar value＼
+</dt>
+	<dd>
+`~surrogate$でない`符号位置$
+◎
+is a code point that is not a surrogate.
+</dd>
+
+	<dt>
+`非文字@
+◎
+A noncharacter＼
+</dt>
+	<dd>
+{
+`FDD0^U 〜 `FDEF^U,
+`FFFE^U, `FFFF^U,
+`1FFFE^U, `1FFFF^U,
+`2FFFE^U, `2FFFF^U,
+`3FFFE^U, `3FFFF^U,
+`4FFFE^U, `4FFFF^U,
+`5FFFE^U, `5FFFF^U,
+`6FFFE^U, `6FFFF^U,
+`7FFFE^U, `7FFFF^U,
+`8FFFE^U, `8FFFF^U,
+`9FFFE^U, `9FFFF^U,
+`AFFFE^U, `AFFFF^U,
+`BFFFE^U, `BFFFF^U,
+`CFFFE^U, `CFFFF^U,
+`DFFFE^U, `DFFFF^U,
+`EFFFE^U, `EFFFF^U,
+`FFFFE^U, `FFFFF^U,
+`10FFFE^U, `10FFFF^U
+}
+◎
+is a code point that is in the range U+FDD0 to U+FDEF, inclusive, or U+FFFE, U+FFFF, U+1FFFE, U+1FFFF, U+2FFFE, U+2FFFF, U+3FFFE, U+3FFFF, U+4FFFE, U+4FFFF, U+5FFFE, U+5FFFF, U+6FFFE, U+6FFFF, U+7FFFE, U+7FFFF, U+8FFFE, U+8FFFF, U+9FFFE, U+9FFFF, U+AFFFE, U+AFFFF, U+BFFFE, U+BFFFF, U+CFFFE, U+CFFFF, U+DFFFE, U+DFFFF, U+EFFFE, U+EFFFF, U+FFFFE, U+FFFFF, U+10FFFE, or U+10FFFF.
+</dd>
+	<dd class="trans-note">【
+~Unicodeにて
+<a href="https://www.unicode.org/faq/private_use.html#noncharacters">恒久的に予約済み</a>
+（未定義）とされている符号位置。
+ここに挙げられたものは、
+<a href="https://www.unicode.org/faq/private_use.html#nonchar4">そこに挙げられているもの</a>
+と一致する。
+】【
+その名に反して，これらも`文字$である。
+】</dd>
+
+	<dt>
+`~ASCII符号位置@
+◎
+An ASCII code point＼
+</dt>
+	<dd>
+{ `0000^U `NULL^cn 〜 `007F^U `DELETE^cn }
+◎
+is a code point in the range U+0000 NULL to U+007F DELETE, inclusive.
+</dd>
+
+	<dt>
+`~ASCII~tabや~ASCII改行文字@
+◎
+An ASCII tab or newline＼
+</dt>
+	<dd>
+{ `0009^U `TAB^cn, `000A^U `LF^cn, `000D^U `CR^cn }
+◎
+is U+0009 TAB, U+000A LF, or U+000D CR.
+</dd>
+
+	<dt>
+`~ASCII空白@
+◎
+ASCII whitespace＼
+</dt>
+	<dd>
+{ `0009^U `TAB^cn, `000A^U `LF^cn, `000C^U `FF^cn, `000D^U `CR^cn, `0020^U `SPACE^cn }
+◎
+is U+0009 TAB, U+000A LF, U+000C FF, U+000D CR, or U+0020 SPACE.
+</dd>
+	<dd class="note">注記：
+空白（ `whitespace^en ）は数えられない名詞（ mass noun ）である。
+【したがって、複数個あり得る場合でも原文では単数形で記される。】
+◎
+"Whitespace" is a mass noun.
+</dd>
+
+	<dt>
+`~C0制御文字@
+◎
+A C0 control＼
+</dt>
+	<dd>
+{ `0000^U `NULL^cn 〜 `001F^U `INFORMATION SEPARATOR ONE^cn }
+◎
+is a code point in the range U+0000 NULL to U+001F INFORMATION SEPARATOR ONE, inclusive.
+</dd>
+
+	<dt>
+`~C0制御文字や~space@
+◎
+A C0 control or space＼
+</dt>
+	<dd>
+{ `~C0制御文字$, `0020^U `SPACE^cn }
+◎
+is a C0 control or U+0020 SPACE.
+</dd>
+
+	<dt>
+`制御文字@
+◎
+A control＼
+</dt>
+	<dd>
+{
+`~C0制御文字$,
+`007F^U `DELETE^cn 〜 `009F^U `APPLICATION PROGRAM COMMAND^cn
+}
+◎
+is a C0 control or a code point in the range U+007F DELETE to U+009F APPLICATION PROGRAM COMMAND, inclusive.
+</dd>
+
+	<dt>
+`~ASCII数字@
+◎
+An ASCII digit＼
+</dt>
+	<dd>
+{ `0030^U `0^smb 〜 `0039^U `9^smb }
+◎
+is a code point in the range U+0030 (0) to U+0039 (9), inclusive.
+</dd>
+
+	<dt>
+`~ASCII~hex数字（大文字）@
+◎
+An ASCII upper hex digit＼
+</dt>
+	<dd>
+{ `~ASCII数字$, `0061^U `A^smb 〜 `0066^U `F^smb }
+◎
+is an ASCII digit or a code point in the range U+0041 (A) to U+0046 (F), inclusive.
+</dd>
+
+	<dt>
+`~ASCII~hex数字（小文字）@
+◎
+An ASCII lower hex digit＼
+</dt>
+	<dd>
+{ `~ASCII数字$, `0061^U `a^smb 〜 `0066^U `f^smb }
+◎
+is an ASCII digit or a code point in the range U+0061 (a) to U+0066 (f), inclusive.
+</dd>
+
+	<dt>
+`~ASCII~hex数字@
+◎
+An ASCII hex digit＼
+</dt>
+	<dd>
+{ `~ASCII数字$, `0041^U 〜 `0046^U , `0061^U 〜 `0066^U }
+◎
+is an ASCII upper hex digit or ASCII lower hex digit.
+</dd>
+
+	<dt>
+`~ASCII英大文字@
+◎
+An ASCII upper alpha＼
+</dt>
+	<dd>
+{ `0041^U `A^smb 〜 `0046^U `Z^smb }
+◎
+is a code point in the range U+0041 (A) to U+005A (Z), inclusive.
+</dd>
+
+	<dt>
+`~ASCII英小文字@
+◎
+An ASCII lower alpha＼
+</dt>
+	<dd>
+{ `0061^U `a^smb 〜 `0066^U `Z^smb }
+◎
+is a code point in the range U+0061 (a) to U+007A (z), inclusive.
+</dd>
+
+	<dt>
+`~ASCII英字@
+◎
+An ASCII alpha＼
+</dt>
+	<dd>
+{ `~ASCII英小文字$, `~ASCII英大文字$ }
+◎
+is an ASCII upper alpha or ASCII lower alpha.
+</dd>
+
+	<dt>
+`~ASCII英数字@
+◎
+An ASCII alphanumeric＼
+</dt>
+	<dd>
+{ `~ASCII数字$, `~ASCII英字$ }
+◎
+is an ASCII digit or ASCII alpha.
+</dd>
+</dl>
+
+		</section>
+		<section id="strings">
+<h3 title="Strings">4.6. 文字列</h3>
+
+<p>
+`文字列@
+は、 0 個以上の［
+`符号単位@
+（ `code unit^en ）とも称される，無符号~16-bit整数
+］からなる連列である。
+`文字列$は、
+<a href="#string" id="javascript-string">~JS文字列</a>
+とも称される。
+`文字列$は、二重引用符で括られ，等幅~fontで表記される。
+◎
+A string is a sequence of unsigned 16-bit integers, also known as code units. A string is also known as a JavaScript string. Strings are denoted by double quotes and monospace font.
+</p>
+
+<p class="example">
+`Hello, world!^l は文字列を表す。
+◎
+"Hello, world!" is a string.
+</p>
+
+<p class="note">注記：
+これは、~Unicode標準による “符号単位” の定義-法†と異なる
+— 特に，~Unicode標準が定義する~Unicode~16-bit文字列を排他的に指す。
+`UNICODE$r
+【† <a href="https://www.unicode.org/versions/Unicode9.0.0/ch03.pdf#G7404">参照先</a>：~Unicodeが定義する符号単位は、~16-bitに限られない。】
+◎
+This is different from how the Unicode Standard defines "code unit". In particular it refers exclusively to how the Unicode Standard defines it for Unicode 16-bit strings. [UNICODE]
+</p>
+
+<p>
+`文字列$は、~JS仕様の
+<a href="~TC39#sec-ecmascript-language-types-string-type">§ String 型</a>
+に定義される変換を施すことにより，`符号位置$を包含しているものとも解釈できる。
+`ECMA-262$r
+◎
+A string can also be interpreted as containing code points, per the conversion defined in The String Type section of the JavaScript specification. [ECMA-262]
+</p>
+
+<p class="note">注記：
+この変換~処理-は、各~surrogate~pairは 対応する`~scalar値$に変換し，各 孤立した~surrogateは 対応する`符号位置$
+— 実質的にはそのまま —
+に対応付ける。
+◎
+This conversion process converts surrogate pairs into their corresponding scalar value and maps isolated surrogates to their corresponding code point, leaving them effectively as-is.
+</p>
+
+<p class="example">
+`符号単位$列［
+`D83D^X, `DCA9^X, `D800^X
+］が成す`文字列$は、`符号位置$を包含するものと解釈されるときは，`符号位置$列［
+`1F4A9^U, `D800^U
+］になる。
+◎
+A string consisting of the code units 0xD83D, 0xDCA9, and 0xD800, when interpreted as containing code points, would consist of the code points U+1F4A9 and U+D800.
+</p>
+
+<p>
+`文字列$の
+`長さ@
+（ `length^en ）は、それが包含する`符号単位$の個数とする。
+◎
+A string’s length is the number of code units it contains.
+</p>
+
+<p>
+`文字列$の
+`符号位置~長さ@
+は、それが包含する`符号位置$の個数とする。
+◎
+A string’s code point length is the number of code points it contains.
+</p>
+
+<p>
+`~scalar値~文字列@
+は、次を満たす`文字列$である
+⇒
+それを成す すべての`符号位置$は`~scalar値$である
+◎
+A scalar value string is a string whose code points are all scalar values.
+</p>
+
+<p class="note">注記：
+`~scalar値~文字列$は、後で`~UTF-8符号化する$ことになるような，入出力その他の演算に有用になる。
+◎
+A scalar value string is useful for any kind of I/O or other kind of operation where UTF-8 encode comes into play.
+</p>
+
+<p class="trans-note">【（参考）
+~IDLにおいては、`文字列$は `DOMString$c 型の値,
+`~scalar値~文字列$は `USVString$c 型の値で表現される。
+】</p>
+
+<div class="algo">
+<p>
+所与の`文字列$ %S を
+`~scalar値~文字列に変換する@
+ときは、次を返す
+⇒
+%S の中の各`~surrogate$を `FFFD^U に置換して得られる`~scalar値~文字列$
+◎
+To convert a string into a scalar value string, replace any surrogates with U+FFFD.
+</p>
+</div>
+
+<div class="note">
+<p>注記：
+ここで置換されるのは、常に，孤立した~surrogateになる
+— 文字列は，変換するに先立って`符号位置$を包含しているものと解釈され、~surrogate~pairは，その時点ですでに`~scalar値$に変換されているので。
+◎
+The replaced surrogates are always isolated surrogates, since the process of interpreting the string as containing code points will have converted surrogate pairs into scalar values.
+</p>
+
+<p>
+`~scalar値~文字列$は、常に，暗黙的に`文字列$として利用できる／され得る
+— どの`~scalar値~文字列$も`文字列$であるので。
+他方，`文字列$を暗黙的に`~scalar値~文字列$として利用できるのは、`~surrogate$を包含しないことが既知である場合に限られる
+— さもなければ、`~scalar値~文字列に変換する$ことになる。
+◎
+A scalar value string can always be used as a string implicitly since every scalar value string is a string. On the other hand, a string can only be implicitly used as a scalar value string if it is known to not contain surrogates; otherwise a conversion is to be performed.
+</p>
+
+<p>
+実装は、実際に表現している結果が［
+`文字列$, `~scalar値~文字列$
+］どちらになるかに依存して，明示的な変換を要する見込みが高い。
+処理能と~memoryの理由から、`文字列$のみに複数の実装を備わせる実装もよくある。
+◎
+An implementation likely has to perform explicit conversion, depending on how it actually ends up representing strings and scalar value strings. It is fairly typical for implementations to have multiple implementations of strings alone for performance and memory reasons.
+</p>
+</div>
+
+<hr>
+
+<p>
+`文字列$ %a, %b が
+`一致する@
+（ `identical^en ／ `is^en ）とは、互いに同じ`符号単位$たちからなる連列である
+【すなわち、順序, 個数も含めて一致する】
+ことをいう。
+◎
+A string a is or is identical to a string b if it consists of the same sequence of code units.
+</p>
+
+<p>
+他が言明される所を除き、文字列の比較には，`一致する$が利用される。
+◎
+Except where otherwise stated, all string comparisons use is.
+</p>
+
+<p class="note">注記：
+`文字列$に対する この種の比較は、
+`HTML^cite においては，以前は “文字大小区別” による比較と称されていた。
+2 個の文字列が`一致する$かどうかの比較には、文字大小（大文字か小文字か）のみならず，正規化~形や結合符の順序など, 符号位置に対し選ばれた他の符号化法の違いも含まれる。
+2 個の文字列は、~Unicodeに則って視覚的に, さらには正準的に等価であっても，`一致-$しないかもしれない。
+`HTML$r
+`UNICODE$r
+◎
+This type of string comparison was formerly known as a "case-sensitive" comparison in HTML. Strings that compare as identical to one another are not only sensitive to case variation (such as UPPER and lower case), but also to other code point encoding choices, such as normalization form or the order of combining marks. Two strings that are visually or even canonically equivalent according to Unicode might still not be identical to each other. [HTML] [UNICODE]
+</p>
+
+<p>
+所与の`文字列$ %S, 負でない整数 %N に対し，
+“%S を成す %N 番の［
+`符号位置$／`符号単位$
+］”
+という句は、 %S を成す［
+%N ~PLUS 1
+］個目のそれを指すとする（すなわち， 0 番から数える）。
+【この規約は、この訳による追加（原文では、 “%N`-th^en ／ `at index^en %N” などと記されることが多い）。】
+</p>
+
+<div class="algo">
+<p>
+`文字列$ %B は`文字列$ %A の
+`符号単位~接頭辞@
+であるとは、次の手続きが ~T を返すことをいう：
+◎
+A string potentialPrefix is a code unit prefix of a string input if the following steps return true:
+</p>
+<ol>
+	<li>
+%i ~LET 0
+◎
+Let i be 0.
+</li>
+	<li>
+<p>
+`~WHILE$ 無条件：
+◎
+While true:
+</p>
+		<ol>
+			<li>
+%Bi ~LET ［
+%i ~LT %B の`長さ$ならば
+%B を成す %i 番の`符号単位$ ／
+~ELSE_ ~NULL
+］
+◎
+Let potentialPrefixCodeUnit be the ith code unit of potentialPrefix if i is less than potentialPrefix’s length; otherwise null.
+</li>
+			<li>
+%Ai ~LET ［
+%i ~LT %A の`長さ$ならば
+%A を成す %i 番の`符号単位$ ／
+~ELSE_ ~NULL
+］
+◎
+Let inputCodeUnit be the ith code unit of input if i is less than input’s length; otherwise null.
+</li>
+			<li>
+~IF［
+%Bi ~EQ ~NULL
+］
+⇒
+~RET ~T
+◎
+If potentialPrefixCodeUnit is null, then return true.
+</li>
+			<li>
+~IF［
+%Bi ~NEQ %Ai
+］
+⇒
+~RET ~F
+◎
+Return false if potentialPrefixCodeUnit is not inputCodeUnit.
+</li>
+			<li>
+%i ~INCBY 1
+◎
+Set i to i + 1.
+</li>
+		</ol>
+	</li>
+</ol>
+</div>
+
+<p>
+~~対象が`符号単位$であることが文脈から明瞭であるときは
+— 例：一方の文字列は、~literalであり，範囲 { `0020^U `SPACE^cn 〜 `007E^U `~^smb } 内の文字のみからなるなど —
+“%B は %A の`符号単位~接頭辞$である”
+の同義語として，
+“%A は %B
+`から開始して@
+いる”
+も利用できる。
+◎
+When it is clear from context that code units are in play, e.g., because one of the strings is a literal containing only characters that are in the range U+0020 SPACE to U+007E (~), "input starts with potentialPrefix" can be used as a synonym for "potentialPrefix is a code unit prefix of input".
+</p>
+
+<p class="example" id="code-unit-prefix-example">
+未知な値に対しては、明示的にした方が良い
+— 例：
+“%~target文字列 は %利用者~入力 の`符号単位~接頭辞$である”
+。
+一方で~literalに対しては、より平素な文言を利用できる
+— 例：
+“%利用者~入力 は `!^l `から開始して$いる”
+。
+◎
+With unknown values, it is good to be explicit: targetString is a code unit prefix of userInput. But with a literal, we can use plainer language: userInput starts with "!".
+</p>
+
+<div class="algo">
+<p>
+`文字列$ %A は`文字列$ %B
+`未満の符号単位~列@
+であるとは、次の手続きが ~T を返すことをいう：
+◎
+A string a is code unit less than a string b if the following steps return true:
+</p>
+
+<p class="trans-note">【
+和訳では、
+“ %A ~LT`符号単位^sub %B ”
+とも表記する。
+】【
+この~algoは、［
+`~listを昇順に~sortする$／`~listを降順に~sortする$
+］~algoの`小なり~algo$を与える引数としても利用され得る。
+】</p>
+
+<ol>
+	<li>
+~IF［
+%B は %A の`符号単位~接頭辞$である
+］
+⇒
+~RET ~F
+◎
+If b is a code unit prefix of a, then return false.
+</li>
+	<li>
+~IF［
+%A は %B の`符号単位~接頭辞$である
+］
+⇒
+~RET ~T
+◎
+If a is a code unit prefix of b, then return true.
+</li>
+	<li>
+<p>
+%N ~LET 次を満たす最~小な~index
+⇒
+%A を成す~index番の`符号単位$ ~NEQ %B を成す~index番の`符号単位$
+</p>
+<p>
+（両~文字列とも他方の接頭辞でないので、そのような~indexは常に在る。）
+</p>
+◎
+Let n be the smallest index such that the nth code unit of a is different from the nth code unit of b. (There has to be such an index, since neither string is a prefix of the other.)
+</li>
+	<li>
+~IF［
+%A を成す %N 番の`符号単位$ ~LT %B を成す %N 番の`符号単位$
+］
+⇒
+~RET ~T
+◎
+If the nth code unit of a is less than the nth code unit of b, then return true.
+</li>
+	<li>
+~RET ~F
+◎
+Return false.
+</li>
+</ol>
+
+<p class="note">注記：
+これは、~JSの［
+`&lt;^c 演算子 ／
+文字列たちが成す配列~上の `sort()$c ~method
+］が利用している順序付けに合致する。
+この順序付けは、各~文字列を成す 16-bit 符号単位どうしを比較する［
+高効率で, 一貫した, 決定的な
+］~sort順序を生産する。
+結果の順序付けは、特定0のどの［
+~alphabet／字句-
+］順序
+— 特に，~surrogate~pairにより表現される`文字$用のもの —
+にも合致しない。
+`ECMA-262$r
+◎
+This matches the ordering used by JavaScript’s &lt; operator, and its sort() method on an array of strings. This ordering compares the 16-bit code units in each string, producing a highly efficient, consistent, and deterministic sort order. The resulting ordering will not match any particular alphabet or lexicographic order, particularly for code points represented by a surrogate pair. [ECMA-262]
+</p>
+</div>
+
+<hr>
+
+<div class="algo">
+<p>
+`同型に符号化する@
+ときは、所与の
+( `文字列$ %入力 )
+に対し，次を走らす：
+◎
+To isomorphic encode a string input, run these steps:
+</p>
+
+<ol>
+	<li>
+`~Assert$：
+%入力 内に `00FF^U より大きい`符号位置$は無い。
+◎
+Assert: input contains no code points greater than U+00FF.
+</li>
+	<li>
+<p>
+~RET 次をいずれも満たす`~byte列$ %出力：
+</p>
+		<ul>
+			<li>
+%出力 の`長さ$byte ~EQ %入力 の`符号位置~長さ$
+</li>
+			<li>
+任意の %N `~IN$ { 0 〜 %入力 の`符号位置~長さ$ ~MINUS 1 } に対し
+⇒
+%出力 を成す %N 番の`~byte$の`値$byte ~EQ %入力 を成す %N 番の`符号位置$の`値$cp
+</li>
+		</ul>
+◎
+Return a byte sequence whose length is equal to input’s code point length and whose bytes have the same values as the values of input’s code points, in the same order.
+</li>
+</ol>
+</div>
+
+<hr>
+
+<p>
+`~ASCII文字列@
+は、`~ASCII符号位置$のみからなる`文字列$である。
+◎
+An ASCII string is a string whose code points are all ASCII code points.
+</p>
+
+<div class="algo">
+<p>
+`~ASCII小文字~化する@
+ときは、所与の
+( `文字列$ %入力 )
+に対し，次を返す
+⇒
+%入力 を成す各`~ASCII英大文字$を，それぞれに対応する`~ASCII英小文字$に置換して得られる`文字列$
+◎
+To ASCII lowercase a string, replace all ASCII upper alphas in the string with their corresponding code point in ASCII lower alpha.
+</p>
+
+<p class="trans-note">【
+他に解釈しようがない場合を除き， %入力 を改変することはない
+— 単に
+“%何か を~ASCII小文字~化する”
+と記された場合に限り、
+“%何か ~SET `~ASCII小文字~化する$( %何か )”
+の略記を表す（が、特に~algoの中では，この種の略記はアリな限り避けている）。
+この節に現れる，文字列を返す他の~algoも同様。
+】</p>
+</div>
+
+<div class="algo">
+<p>
+`~ASCII大文字~化する@
+ときは、所与の
+( `文字列$ %入力 )
+に対し，次を返す
+⇒
+%入力 を成す各`~ASCII英小文字$を，それぞれに対応する`~ASCII英大文字$に置換して得られる`文字列$
+◎
+To ASCII uppercase a string, replace all ASCII lower alphas in the string with their corresponding code point in ASCII upper alpha.
+</p>
+</div>
+
+<div class="algo">
+<p>
+2 つの`文字列$ %A, %B が
+`~ASCII大小無視@
+で合致するとは、次が満たされることをいう
+⇒
+`~ASCII小文字~化する$( %A ) ~EQ `~ASCII小文字~化する$( %B )
+◎
+A string A is an ASCII case-insensitive match for a string B, if the ASCII lowercase of A is the ASCII lowercase of B.
+</p>
+
+<p class="trans-note">【
+和訳では、`文字列$ %A, %B が`~ASCII大小無視$で合致することを，
+“ %A ~EQ`大小無視^sub %B ”
+とも表記する。
+】【
+和訳では、`~ASCII大小無視$の代わりに`~ASCII小文字~化する$（または大文字~化する）を利用して，等価な記述に変形することもある（そうした方が簡潔になる所など）。
+】</p>
+
+</div>
+
+<div class="algo">
+<p>
+`~ASCII符号化する@
+ときは、所与の
+( `文字列$ %入力 )
+に対し，次を走らす：
+◎
+To ASCII encode a string input, run these steps:
+</p>
+
+<ol>
+	<li>
+<p>
+`~Assert$：
+%入力 は`~ASCII文字列$である
+◎
+Assert: input is an ASCII string.
+</p>
+
+<p class="note">注記：
+この事前条件は、［
+`同型に符号化する$(%入力) ~EQ `~UTF-8符号化する$( %入力 )
+］になることを確保する。
+◎
+Note: This precondition ensures that isomorphic encode and UTF-8 encode return the same byte sequence for this input.
+</p>
+	</li>
+	<li>
+~RET `同型に符号化する$( %入力 )
+◎
+Return the isomorphic encoding of input.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`~ASCII復号する@
+ときは、所与の
+( `~byte列$ %入力 )
+に対し，次を走らす：
+◎
+To ASCII decode a byte sequence input, run these steps:
+</p>
+
+<ol>
+	<li>
+<p>
+`~Assert$：
+%入力 を成すどの~byteも`~ASCII~byte$である
+◎
+Assert: All bytes in input are ASCII bytes.
+</p>
+
+<p class="note">注記：
+この事前条件は、［
+`同型に復号する$( %入力 ) ~EQ `~UTF-8復号する$( %入力 )
+］になることを確保する。
+◎
+Note: This precondition ensures that isomorphic decode and UTF-8 decode return the same string for this input.
+</p>
+	</li>
+	<li>
+~RET `同型に復号する$( %入力 )
+◎
+Return the isomorphic decoding of input.
+</li>
+</ol>
+</div>
+
+<hr>
+
+<div class="algo">
+<p>
+`改行文字を剥ぐ@
+ときは、所与の
+( `文字列$ %S )
+に対し，次を走らす
+⇒
+~RET %S を成す各 `符号位置$［
+`000A^U `LF^cn ／ `000D^U `CR^cn
+］を %S から除去した結果
+◎
+To strip newlines from a string, remove any U+000A LF and U+000D CR code points from the string.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`改行文字を正規化する@
+ときは、所与の
+( `文字列$ %S )
+に対し，次を走らす：
+</p>
+
+<ol>
+	<li>
+%S ~SET %S を成す各［［
+`文字$ `000D^U `CR^cn,
+`文字$ `000A^U `LF^cn
+］並び
+］を［
+`文字$ `000A^U `LF^cn
+］に置換した結果
+</li>
+	<li>
+~RET %S を成す各［
+`文字$ `000D^U `CR^cn
+］を［
+`文字$ `000A^U `LF^cn
+］に置換した結果
+</li>
+</ol>
+◎
+To normalize newlines in a string, replace every U+000D CR U+000A LF code point pair with a single U+000A LF code point, and then replace every remaining U+000D CR code point with a U+000A LF code point.
+</div>
+
+<div class="algo">
+<p>
+`前後の~ASCII空白~列を剥ぐ@
+ときは、所与の
+( `文字列$ %S )
+に対し，次を返す
+⇒
+%S の［
+先頭, 末尾
+］から連続する最長の`~ASCII空白$並びを，それぞれ %S から除去した結果
+◎
+To strip leading and trailing ASCII whitespace from a string, remove all ASCII whitespace that are at the start or the end of the string.
+</p>
+</div>
+
+<div class="algo">
+<p>
+`~ASCII空白を剥いで縮約する@
+ときは、所与の
+( `文字列$ %S )
+に対し，次を走らす：
+</p>
+
+<ol>
+	<li>
+%S ~SET `前後の~ASCII空白~列を剥ぐ$( %S )
+</li>
+	<li>
+~RET %S を成す各［
+1 個~以上~連続する`~ASCII空白$並び
+］を［
+`符号位置$ `0020^U `SPACE^cn
+］に置換した結果
+</li>
+</ol>
+
+◎
+To strip and collapse ASCII whitespace in a string, replace any sequence of one or more consecutive code points that are ASCII whitespace in the string with a single U+0020 SPACE code point, and then remove any leading and trailing ASCII whitespace from that string.
+</div>
+
+<hr>
+
+<div>
+<p>
+この仕様, および
+この仕様を参照する仕様が定義する，文字列を構文解析する いくつかの~algoは、次の変数を利用する：
+</p>
+
+<ul>
+	<li>
+通例的に %入力 と命名される，構文解析される文字列を保持する変数。
+</li>
+	<li>
+<p>
+通例的に %位置 と命名される
+`位置~変数@
+（ `position variable^en ）は、 %入力 の中の位置を追跡し，次に構文解析する文字†を指す。
+</p>
+
+<p class="trans-note">【†
+“次”, “文字” の意味は、通例的には
+— %入力 が`文字列$であっても —
+`符号単位$ではなく`符号位置$に基づく
+— この節の冒頭に述べたように解釈する下で。
+`符号単位$に基づく必要がある場合、その旨が付記されることになる。
+<small>（
+他の仕様も含め、`位置~変数$を利用している どの構文解析も，（特に指定されない限り）`符号位置$に基づいて比較を行なっている。
+ほとんどの構文解析~algoは，~ASCII範囲の文字に基づいて分岐している
+— したがって，`~surrogate$は関わらない —
+ので、この違いが有意になるのは，およそ［
+`長さ$／`符号位置~長さ$
+］が関わる場合に限られるであろう。
+）</small>
+】</p>
+	</li>
+</ul>
+
+<p>
+【加えて、和訳では次の規約／表記も利用する：】
+</p>
+
+<ul>
+	<li>
+`位置~変数$は，内部的には整数であり、増減操作を通して，構文解析する文字を追跡するとする
+— 正~整数 %N を加算すれば、現在の文字から %N 個先の文字を指すように移動することになる。
+（通例，初期~時には %入力 内のある文字~位置に相対的に与えられるので（例： “最初の符号位置を指す位置~変数”, 等々）、どの数から数えるかが有意になることは，（およそ）ない。
+また、減算されることも（およそ）ない。）
+</li>
+	<li>
+`位置~変数$ %位置 に対する %位置↗ という表記は、 %位置 が指している文字を表すとする。
+( %位置 ~PLUS %N )↗ という表記は、 %位置 から %N 個先の文字を表すことになる（
+( %位置 ~PLUS 0 )↗ ~EQ %位置 ↗ 。
+まず現れないが、 %N が負ならば %位置 より前になる）。
+</li>
+	<li>
+%位置 が %入力 の外を指している場合の %位置↗ は、特殊~値 ε をとるモノトスル（特に， %入力 が空~文字列の場合、常に ε になる）。
+</li>
+</ul>
+
+◎
+↓</div>
+
+<div class="algo">
+<p>
+`文字列$ %入力 内の［
+~call元~algoの`位置~変数$ %位置
+］から条件 %条件 を満たす
+`符号位置~並びを収集する@
+ときは：
+◎
+To collect a sequence of code points meeting a condition condition from a string input, given a position variable position tracking the position of the calling algorithm within input:
+</p>
+
+<ol>
+	<li>
+%結果 ~LET 空`文字列$
+◎
+Let result be the empty string.
+</li>
+	<li>
+<p>
+~WHILE［
+%位置↗ ~NEQ ε
+］~AND［
+%位置↗ は %条件 を満たす
+］：
+◎
+While position doesn’t point past the end of input and the code point at position within input meets the condition condition:
+</p>
+		<ol>
+			<li>
+%結果 の末尾に %位置↗ を付加する
+◎
+Append that code point to the end of result.
+</li>
+			<li>
+%位置 ~INCBY 1
+◎
+Advance position by 1.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %結果
+◎
+Return result.
+</li>
+</ol>
+
+<p class="note">注記：
+収集された`符号位置$を返すことに加え、この~algoは，~call元~algoの`位置~変数$を更新する。
+◎
+In addition to returning the collected code points, this algorithm updates the position variable in the calling algorithm.
+</p>
+
+<p class="trans-note">【
+この~algoは、 %入力, %位置 を省略して~callされることもある。
+その場合、~call元~の同じ名前の変数を暗黙的に指すことになる。
+次の`~ASCII空白を読飛ばす$についても同様。
+】</p>
+
+</div>
+
+<div class="algo">
+<p>
+`文字列$ %入力 内の［
+~call元~algoの`位置~変数$ %位置
+］から
+`~ASCII空白を読飛ばす@
+ときは
+⇒
+%入力 内の %位置 から
+`~ASCII空白$からなる`符号位置~並びを収集する$
+— 収集された結果は利用されないが、 %位置 は更新される。
+◎
+To skip ASCII whitespace within a string input given a position variable position, collect a sequence of code points that are ASCII whitespace from input given position. The collected code points are not used, but position is still updated.
+</p>
+</div>
+
+<hr>
+
+<div class="algo">
+<p>
+`区切子で厳密に分割する@
+ときは、所与の
+( `文字列$ %入力, `符号位置$ %区切子 )
+に対し，次を走らす：
+◎
+To strictly split a string input on a particular delimiter code point delimiter:
+</p>
+
+<ol>
+	<li>
+%位置 ~LET %入力 の先頭を指している`位置~変数$
+◎
+Let position be a position variable for input, initially pointing at the start of input.
+</li>
+	<li>
+%~token~list ~LET 新たな空`~list$（`文字列$からなる）
+◎
+Let tokens be a list of strings, initially empty.
+</li>
+	<li>
+%~token ~LET 
+%入力 内の %位置 から
+%区切子 以外の`符号位置~並びを収集する$
+◎
+Let token be the result of collecting a sequence of code points that are not equal to delimiter from input, given position.
+</li>
+	<li>
+%~token~list に %~token を`付加する$
+◎
+Append token to tokens.
+</li>
+	<li>
+<p>
+~WHILE［
+%位置↗ ~NEQ ε
+］：
+◎
+While position is not past the end of input:
+</p>
+		<ol>
+			<li>
+~Assert：
+%位置↗ ~EQ %区切子
+◎
+Assert: the code point at position within input is delimiter.
+</li>
+			<li>
+%位置 ~INCBY 1
+◎
+Advance position by 1.
+</li>
+			<li>
+%~token ~LET
+%入力 内の %位置 から
+%区切子 以外の`符号位置~並びを収集する$
+◎
+Let token be the result of collecting a sequence of code points that are not equal to delimiter from input, given position.
+</li>
+			<li>
+%~token~list に %~token を`付加する$
+◎
+Append token to tokens.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %~token~list
+◎
+Return tokens.
+</li>
+</ol>
+
+<p class="note">注記：
+この~algoは、 “厳密に” 分割する
+— 対して，後述の共通的に利用される変種［
+`~ASCII空白で分割する$,
+`~commaで分割する$
+］は いずれも、散在する`~ASCII空白$を種々の仕方で孕むように，より “緩く” 分割する。
+◎
+This algorithm is a "strict" split, as opposed to the commonly-used variants for ASCII whitespace and for commas below, which are both more lenient in various ways involving interspersed ASCII whitespace.
+</p>
+
+<p class="trans-note">【
+%入力 が空~文字列でも，空~文字列のみからなる~listを返すことになる（結果の~listの`~size$は常に， %入力 内の区切子の個数 ~PLUS 1 になる）。
+】</p>
+
+</div>
+
+<div class="algo">
+<p>
+`~ASCII空白で分割する@
+ときは、所与の
+( `文字列$ %入力 )
+に対し，次を走らす：
+◎
+To split a string input on ASCII whitespace:
+</p>
+
+<ol>
+	<li>
+%位置 ~LET %入力 の先頭を指している`位置~変数$
+◎
+Let position be a position variable for input, initially pointing at the start of input.
+</li>
+	<li>
+%~token~list ~LET 新たな空`~list$（`文字列$からなる）
+◎
+Let tokens be a list of strings, initially empty.
+</li>
+	<li>
+%入力 内の %位置 から`~ASCII空白を読飛ばす$
+◎
+Skip ASCII whitespace within input given position.
+</li>
+	<li>
+<p>
+~WHILE［
+%位置↗ ~NEQ ε
+］：
+◎
+While position is not past the end of input:
+</p>
+		<ol>
+			<li>
+%~token ~LET 
+%入力 内の %位置 から
+`~ASCII空白$以外の`符号位置~並びを収集する$
+◎
+Let token be the result of collecting a sequence of code points that are not ASCII whitespace from input, given position.
+</li>
+			<li>
+%~token~list に %~token を`付加する$
+◎
+Append token to tokens.
+</li>
+			<li>
+%入力 内の %位置 から`~ASCII空白を読飛ばす$
+◎
+Skip ASCII whitespace within input given position.
+</li>
+		</ol>
+	</li>
+	<li>
+~RET %~token~list
+◎
+Return tokens.
+</li>
+</ol>
+
+<p class="trans-note">【
+%入力 が`~ASCII空白$のみからなる場合に限り，結果は空~listになる。
+】</p>
+</div>
+
+<div class="algo">
+<p>
+`~commaで分割する@
+ときは、所与の
+( `文字列$ %入力 )
+に対し，次を走らす：
+◎
+To split a string input on commas:
+</p>
+
+<ol>
+	<li>
+%位置 ~LET %入力 の先頭を指している`位置~変数$
+◎
+Let position be a position variable for input, initially pointing at the start of input.
+</li>
+	<li>
+%~token~list ~LET 新たな空`~list$（`文字列$からなる）
+◎
+Let tokens be a list of strings, initially empty.
+</li>
+	<li>
+<p>
+~WHILE［
+%位置↗ ~NEQ ε
+］：
+◎
+While position is not past the end of input:
+</p>
+		<ol>
+			<li>
+
+<p>
+%~token ~LET 
+%入力 内の %位置 から
+`002C^U `,^smb でない
+`符号位置~並びを収集する$
+◎
+Let token be the result of collecting a sequence of code points that are not U+002C (,) from input, given position.
+</p>
+
+<p class="note">注記：
+%~token は、空~文字列にもなり得る。
+◎
+token might be the empty string.
+</li>
+			<li>
+%~token から`前後の~ASCII空白~列を剥ぐ$
+◎
+Strip leading and trailing ASCII whitespace from token.
+</li>
+			<li>
+%~token~list に %~token を`付加する$
+◎
+Append token to tokens.
+</li>
+			<li>
+<p>
+~IF［
+%位置↗ ~NEQ ε
+］：
+◎
+If position is not past the end of input, then:
+</p>
+				<ol>
+					<li>
+`~Assert$：
+%位置↗ ~EQ `002C^U `,^smb
+◎
+Assert: the code point at position within input is U+002C (,).
+</li>
+					<li>
+%位置 ~INCBY 1
+◎
+Advance position by 1.
+</li>
+				</ol>
+			</li>
+		</ol>
+	</li>
+	<li>
+~RET %~token~list
+◎
+Return tokens.
+</li>
+</ol>
+
+<p class="trans-note">【
+%入力 が空~文字列の場合に限り，結果は空~listになる。
+】</p>
+</div>
+
+<div class="algo">
+<p>
+`文字列$の`~list$ %L を
+文字列 %分離子 （省略時は空~文字列）で
+`連結する@
+ときは、次を走らす：
+◎
+To concatenate a list of strings list, using an optional separator string separator, run these steps:
+</p>
+
+<ol>
+	<li>
+~IF［
+%L は`空$である
+］
+⇒
+~RET 空~文字列
+◎
+If list is empty, then return the empty string.
+◎
+If separator is not given, then set separator to the empty string.
+</li>
+	<li>
+%結果 ~LET %L[ 0 ]
+◎
+↓</li>
+	<li>
+~EACH( %index ~IN { 1 〜 ( %L の`~size$ − 1 ) } )
+に対し，昇順に
+⇒
+%結果 に次を順に付加する
+⇒＃
+%分離子,
+%L[ %index ]
+◎
+Return a string whose contents are list’s items, in order, separated from each other by separator.
+</li>
+	<li>
+~RET %結果
+◎
+↑</li>
+</ol>
+
+<div class="example">
+<p class="exemplary">
+（例）
+集合 %集合 を直列化するときは
+⇒
+~RET %集合 を `0020^U `SPACE^cn で`連結する$
+◎
+To serialize a set set, return the concatenation of set using U+0020 SPACE.
+</p>
+</div>
+
+</div>
+
+		</section>
+	</section>
+
+	<section id="data-structures">
+<h2 title="Data structures">5. ~data構造</h2>
+
+<p class="trans-note">【
+<a href="#algorithms">~algo</a>
+節の冒頭に述べたのと同じ理由で、この節に現れる記号［
+ε, 〜 , ~EACH( … ), ~IN, ~NIN, ~SET
+］は，和訳に特有な表記である。
+】</p>
+
+<p>
+仕様は、慣例的に，共有されている意味論の理解に基づいて
+種々の曖昧な仕様~levelの~data構造に対し演算していた。
+これは，一般に上手く働いているが、際どい事例では多義性を導き得る
+— 反復の順序，あるいは
+~itemを`有順序~集合$に`付加する$setとき，その集合が`~item$をすでに`包含して$いた場合に何が起こるかなど。
+それはまた、表記法や言い回しを様々にしている
+— とりわけ，`有順序~map$のような より複階的な~data構造の周りで。
+◎
+Conventionally, specifications have operated on a variety of vague specification-level data structures, based on shared understanding of their semantics. This generally works well, but can lead to ambiguities around edge cases, such as iteration order or what happens when you append an item to an ordered set that the set already contains. It has also led to a variety of divergent notation and phrasing, especially around more complex data structures such as maps.
+</p>
+
+<p>
+この標準は、共通な土台を作成するため，少数の共通的な~data構造，および それらに働きかけるための 表記法や言い回しを供する。
+◎
+This standard provides a small set of common data structures, along with notation and phrasing for working with them, in order to create common ground.
+</p>
+
+		<section id="lists">
+<h3 title="Lists">5.1. ~list</h3>
+
+<p>
+`~list@
+（ `list^en ）は、仕様~levelの型である。
+その各~instanceは、有限~個の
+`~item@
+（ `item^en ）からなる有順序~連列である。
+◎
+A list is a specification type consisting of a finite ordered sequence of items.
+</p>
+
+<p class="trans-note">【
+~IDL`連列~型$の値は、`~list$として扱われ，~list用の各種［
+演算／定義／表記
+］が利用されることもある。
+逆に，一定の条件を満たす`~list$は、~IDL連列~型の値として扱えるものとされている。
+】</p>
+
+<p>
+表記を簡便にするため、`~list$を表出する~literal構文も利用できる
+— そのためには、~list内の各`~item$どうしを~commaで区切った上で, 全体を文字 «, » で括る。
+~list用の~indexing構文も利用できる
+— そのためには，角括弧（ [, ] ）の内側に 0 番から数える~indexを与える。
+~indexは，`存在-$について~~述べる場合を除いて，~~範囲を超えられない。
+◎
+For notational convenience, a literal syntax can be used to express lists, by surrounding the list by « » characters and separating its items with a comma. An indexing syntax can be used by providing a zero-based index into a list inside square brackets. The index cannot be out-of-bounds, except when used with exists.
+</p>
+
+<p class="example" id="example-list-notation">
+%例 として`~list$
+« `a^l, `b^l, `c^l, `a^l »
+が与えられた下では、
+%例[1] は `文字列$ `b^l を表す。
+◎
+Let example be the list « "a", "b", "c", "a" ». Then example[1] is the string "b".
+</p>
+
+<p>
+単に
+“新たな`~list$”
+と記されたときは、他が指定されない限り，
+0 個の`~item$からなる新たな`~list$を作成することを表す（すなわち，`空$／ « » ）。
+したがって、`~list$でもある他の仕様~levelの型も同様になる（例： “新たな`有順序~集合$” ）。
+【この規約は、この訳による追加。】
+</p>
+
+<hr>
+
+<ul>
+	<li>
+`有順序~集合$でない`~list$ %L に所与の`~item$ %item を
+`付加する@
+ときは
+⇒
+%item を %L の末尾に追加する
+◎
+To append to a list that is not an ordered set is to add the given item to the end of the list.
+</li>
+	<li>
+<p>
+`~list$ %A を`~list$ %B で
+`拡張する@
+ときは、
+%B を成す
+`~EACH$( %~item )
+に対し
+⇒
+%A に %~item を`付加する$
+◎
+To extend a list A with a list B, for each item of B, append item to A.
+</p>
+
+<div class="example">
+
+<ol class="exemplary">
+	<li>
+%ghostbusters ~LET « `Erin Gilbert^l, `Abby Yates^l »
+◎
+Let ghostbusters be « "Erin Gilbert", "Abby Yates" ».
+</li>
+	<li>
+%ghostbusters を « `Jillian Holtzmann^l, `Patty Tolan^l » で`拡張する$
+◎
+Extend ghostbusters with « "Jillian Holtzmann", "Patty Tolan" ».
+</li>
+	<li>
+`~Assert$：
+%ghostbusters の`~size$ ~EQ 4
+◎
+Assert: ghostbusters’s size is 4.
+</li>
+	<li>
+`~Assert$：
+%ghostbusters[ 2 ] ~EQ `Jillian Holtzmann^l
+◎
+Assert: ghostbusters[2] is "Jillian Holtzmann".
+</li>
+</ol>
+</div>
+
+	</li>
+	<li>
+<p>
+`有順序~集合$でない`~list$ %L に所与の`~item$ %item を
+`前付加する@
+ときは
+⇒
+%item を %L の先頭に追加する
+◎
+To prepend to a list that is not an ordered set is to add the given item to the beginning of the list.
+</p>
+
+</li>
+	<li>
+<p>
+`有順序~集合$でない`~list$ %L の中で
+`置換する@
+ときは、
+%L 内の［
+所与の %条件 に合致する`~item$
+］すべてを，所与の`~item$ %item に置換する（合致するものが無ければ何もしない）。
+◎
+To replace within a list that is not an ordered set is to replace all items from the list that match a given condition with the given item, or do nothing if none do.
+</p>
+
+<p class="note">注記：
+`~list$が`有順序~集合$でもあるときには、上の定義は改変される
+— 下に与える［
+`付加する$set ／ `前付加する$set ／ `置換する$set
+］を見よ。
+◎
+The above definitions are modified when the list is an ordered set; see below for ordered set append, prepend, and replace.
+</p>
+	</li>
+	<li>
+<p>
+`~list$ %L の中に所与の`~item$ %item を %index の前に
+`挿入する@
+ときは：
+</p>
+		<ol>
+			<li>
+`~Assert$：
+0 ~LTE %index ~LT ( %L の`~size$ )
+</li>
+			<li>
+~IF［
+%index ~EQ 0
+］
+⇒
+%L に %item を`前付加する$
+</li>
+			<li>
+~ELSE
+⇒
+%L 内の %L[%index − 1] と %L[%index ] の合間に %item を追加する
+</li>
+		</ol>
+◎
+To insert an item into a list before an index is to add the given item to the list between the given index − 1 and the given index. If the given index is 0, then prepend the given item to the list.
+</li>
+
+	<li>
+<p>
+`~list$ %L から所与の %条件 に合致する`~item$を
+`除去する@
+ときは
+⇒
+［
+%条件 に合致する %L 内の`~item$
+］すべてを %L から除去する（合致するものが無ければ何もしない）
+◎
+To remove zero or more items from a list is to remove all items from the list that match a given condition, or do nothing if none do.
+</p>
+
+<div class="example" id="example-list-remove">
+<p>
+%L ~EQ `~list$ « %x, %y, %z, %x »
+から %x を`除去する$ときは、
+%L から %x に等しいすべての~itemを除去する。
+結果の %L は、 « %y, %z » に等価になる。
+◎
+Removing x from the list « x, y, z, x » is to remove all items from the list that are equal to x. The list now is equivalent to « y, z ».
+</p>
+
+<p>
+%L ~EQ `~list$ « `a^l, `b^l, `ab^l, `ba^l »
+から［
+`文字列$ `a^l で開始する~item
+］すべてを`除去する$ときは、~item［
+`a^l,  `ab^l
+］を除去する。
+結果の %L は、 « `b^l, `ba^l » に等価になる。
+◎
+Removing all items that start with the string "a" from the list « "a", "b", "ab", "ba" » is to remove the items "a" and "ab". The list is now equivalent to « "b", "ba" ».
+</p>
+</div>
+
+	 </li>
+	<li>
+`~list$ %L を
+`空にする@
+ときは
+⇒
+%L 内のすべての`~item$
+【すなわち，条件 “無条件” に合致する~item】
+を`除去する$
+◎
+To empty a list is to remove all of its items.
+</li>
+	<li>
+<p>
+`~list$ %L が`~item$ %item を
+`包含して@
+いるとは、 %L 内に %item が現れることをいう。
+（ “`包含して$いない” は、その否定を表す。）
+</p>
+
+<p>
+“ %item ~IN %L ” とも表記される。
+（ “ %item ~NIN %L ” は、その否定を表す。）
+</p>
+
+<p>
+`~list$ %L が~index %index 番の`~item$を`包含して$いることを
+“%L[ %index ] は`存在-$する”
+ともいう。
+（ “`存在-$しない” は、その否定を表す。）
+</p>
+
+<!-- 
+“ %L[ %index ] ~NEQ ε” とも表記される。
+（ “ %L[ %index ] ~EQ ε” は、その否定を表す。）
+-->
+
+◎
+A list contains an item if it appears in the list. We can also denote this by saying that, for a list list and an index index, "list[index] exists".
+</li>
+	<li>
+`~list$ %L の
+`~size@
+（ `size^en ）とは、 %L が`包含して$いる`~item$の個数をいう。
+【重複する~instanceも別々に数える。】
+◎
+A list’s size is the number of items the list contains.
+</li>
+	<li>
+`~list$ %L が
+`空@
+（ `empty^en ）であるとは、［
+%L の`~size$ ~EQ 0
+］であることをいう。
+◎
+A list is empty if its size is zero.
+</li>
+	<li>
+<p>
+`~list$ %L 内の各`~item$に対し~list順に，一連の段を遂行するように
+`反復する@
+（ `iterate over^en ）ときは、
+“ %L を成す`~EACH$( %item ) に対し：”
+という句の下で，後続の注釈文にて %item に対し演算する。
+</p>
+
+<p class="trans-note">【
+和訳では、 “反復する” は利用せず，もっぱら “~EACH(…)” を表記に利用している。
+】【
+仕様には、逆順の~listに変換するなどにより，実質的に逆順に反復している箇所もたまにある。
+そのような箇所は，和訳では、
+“~EACH( %item ) に対し，`逆順に^em”
+のような句により，表記を簡約することもある。
+】</p>
+
+◎
+To iterate over a list, performing a set of steps on each item in order, use phrasing of the form "For each item of list", and then operate on item in the subsequent prose.
+</li>
+	<li>
+<div class="p">
+<p>
+`~list$ %L を
+`~cloneする@
+ときは：
+</p>
+
+		<ol>
+			<li>
+%~clone ~LET %L と同じ型の
+<!-- of the same designation -->
+新たな`~list$
+【すなわち、 %L が`~stack$なら 新たな`~stack$，等々】
+</li>
+			<li>
+%L を成す
+`~EACH$( %~item )
+に対し
+⇒
+%~clone に %~item を`付加する$
+</li>
+			<li>
+~RET %~clone
+</li>
+		</ol>
+
+<p>
+結果の %~clone は、 %L と同じ`~item$たちを同じ順序で`包含して$いることになる。
+</p>
+◎
+To clone a list list is to create a new list clone, of the same designation, and, for each item of list, append item to clone, so that clone contains the same items, in the same order as list.
+</div>
+
+<p class="note">注記：
+`~item$自身は~cloneされないので、これは “浅い~clone” である。
+◎
+This is a "shallow clone", as the items themselves are not cloned in any way.
+</p>
+
+<p class="example">
+%L が`有順序~集合$
+« `a^l, `b^l, `c^l »
+であったなら，
+%L を`~clone$して作成される新たな`有順序~集合$ %~clone において、
+%~clone 内の`文字列$ `a^l を `foo^l で`置換-$setした結果は
+« `foo^l, `b^l, `c^l »
+になるが，
+%L[ 0 ] は `a^l のまま変わらない。
+◎
+Let original be the ordered set « "a", "b", "c" ». Cloning original creates a new ordered set clone, so that replacing "a" with "foo" in clone gives « "foo", "b", "c" », while original[0] is still the string "a".
+</p>
+	</li>
+</ul>
+
+<div class="algo">
+<p>
+`~listを昇順に~sortする@
+ときは、所与の
+( `~list$ %L, `小なり~algo$ %小なり )
+に対し，次をすべて満たす新たな`~list$を返すモノトスル：
+</p>
+
+<ul>
+	<li>
+%L と同じ`~item$たちからなる
+</li>
+	<li>
+`~item$たちは、 %小なり に則って~sortされている
+— すなわち，どの`~item$ %A, %B に対しても
+⇒
+［
+%小なり( %A, %B ) ~EQ ~T
+］ならば
+%A は %B より前に~sortされている
+</li>
+	<li>
+前項により順序が定まらない`~item$どうしの順序は、
+%L における順序に従う
+— すなわち，どの`~item$ %A, %B に対しても
+⇒
+［
+%小なり( %A, %B ) ~EQ %小なり( %B, %A ) ~EQ ~F
+］ならば、
+%A, %B の順序は %L における順序と同じである
+</li>
+</ul>
+
+◎
+To sort in ascending order a list list, with a less than algorithm lessThanAlgo, is to create a new list sorted, containing the same items as list but sorted so that according to lessThanAlgo, each item is less than the one following it, if any. For items that sort the same (i.e., for which lessThanAlgo returns false for both comparisons), their relative order in sorted must be the same as it was in list.
+</div>
+
+<div class="algo">
+<p>
+`~listを降順に~sortする@
+ときは、所与の
+( `~list$ %L, `小なり~algo$ %小なり )
+に対し，次をすべて満たす新たな`~list$を返すモノトスル：
+</p>
+
+<ul>
+	<li>
+%L と同じ`~item$たちからなる
+</li>
+	<li>
+`~item$たちは、 %小なり に則って~sortされている
+— すなわち，どの`~item$ %A, %B に対しても
+⇒
+［
+%小なり( %A, %B ) ~EQ ~T
+］ならば
+%A は %B より後に~sortされている
+</li>
+	<li>
+前項により順序が定まらない`~item$どうしの順序は、
+%L における順序に従う
+— すなわち，どの`~item$ %A, %B に対しても
+⇒
+［
+%小なり( %A, %B ) ~EQ %小なり( %B, %A ) ~EQ ~F
+］ならば、
+%A, %B の順序は %L における順序と同じである
+</li>
+</ul>
+
+<p class="trans-note">【
+最後の条項（昇順のときと同じ）から、昇順の正確な逆順になるとは限らない。
+】</p>
+
+◎
+To sort in descending order a list list, with a less than algorithm lessThanAlgo, is to create a new list sorted, containing the same items as list but sorted so that according to lessThanAlgo, each item is less than the one preceding it, if any. For items that sort the same (i.e., for which lessThanAlgo returns false for both comparisons), their relative order in sorted must be the same as it was in list.
+</div>
+
+<p class="example">
+［
+%L は，`~pair$( 整数 / 文字列 ) たちが成す`~list$
+« ( 200 / `OK^l ), ( 404 / `Not Found^l ), ( ~NULL / `OK^l ) »
+］，［
+`小なり~algo$ %小なり( %A, %B ) は，［
+%A を成す文字列 ~LT`符号単位$sub %B を成す文字列ならば ~T ／
+~ELSE_ ~F
+］を返す
+］とするとき、
+`~listを昇順に~sortする$( %L, %小なり )
+の結果は
+⇒
+« ( 404 / `Not Found^l ), ( 200 / `OK^l ), ( ~NULL / `OK^l ) »
+◎
+Let original be the list « (200, "OK"), (404, "Not Found"), (null, "OK") ». Sorting original in ascending order, with a being less than b if a’s second item is code unit less than b’s second item, gives the result « (404, "Not Found"), (200, "OK"), (null, "OK") ».
+</p>
+
+<hr>
+
+<div class="trans-note">
+<p>
+上に現れる
+`小なり~algo@
+%小なり は，［
+2 個の引数をとり，`真偽値$を返すもの
+］として与えられるが、受容する値が成す集合 %S に対し “厳密かつ弱い順序付け”（
+<a href="https://en.wikipedia.org/wiki/Weak_ordering#Strict_weak_orderings">`strict weak ordering^en</a>
+【！狭義の前順序】
+）が可能になる必要がある。
+すなわち， %S 内の任意の値［
+%x, %y, %z
+］に対し，次の性質を満たす必要がある：
+</p>
+
+<ul>
+	<li>
+非反射性（ `irreflexivity^en ）
+⇒
+%小なり( %x, %x ) ~EQ ~F
+</li>
+	<li>
+非対称（ `asymmetric^en ）
+⇒
+［
+%小なり( %x, %y ) ~EQ ~T
+］ならば［
+%小なり( %y, %x ) ~EQ ~F
+］
+</li>
+	<li>
+推移的（ `transitive^en ）
+⇒
+［
+%小なり( %x, %y ) ~EQ ~T
+］~AND［
+%小なり( %y, %z ) ~EQ ~T
+］ならば［
+%小なり( %x, %z ) ~EQ ~T
+］
+</li>
+	<li>
+比較-不能の推移性（ `transitivity of incomparability^en）
+⇒
+比較-不能であるという関係を［
+%小なり( %x, %y ) ~EQ %小なり( %y, %x ) ~EQ ~F
+］として定義するとき
+⇒
+［
+%x, %y は比較-不能
+］~AND［
+%y, %z は比較-不能
+］ならば［
+%x, %z は比較-不能
+］
+</li>
+</ul>
+
+<p>
+言い換えれば、 %S 内の比較-不能な関係を満たす値どうしは同値であると定義するとき（これは同値律を満たす）、それによる商集合（同値類たちが成す集合）は，全順序になることを意味する。
+</p>
+
+</div>
+
+<hr>
+
+<p>
+`~list$型は、~JS仕様に由来する（その仕様では、 "`List$" と~~大文字化されている）。
+ここでは、参照し易くするため，その定義を再掲して、`~list$を操作するための語彙を拡げる。
+~JSが`List$を期待する所では、ここに定義される`~list$を利用できる
+— それらは同じ型である。
+`ECMA-262$r
+◎
+The list type originates from the JavaScript specification (where it is capitalized, as List); we repeat some elements of its definition here for ease of reference, and provide an expanded vocabulary for manipulating lists. Whenever JavaScript expects a List, a list as defined here can be used; they are the same type. [ECMA-262]
+</p>
+
+			<section id="stacks">
+<h4 title="Stacks">5.1.1. ~stack</h4>
+
+<p>
+`~list$は，
+`~stack@
+（ `stack^en ）であると指名されることもある。
+~stackは`~list$であるが、［
+`付加する$ ／ `前付加する$ ／ `除去する$
+］を利用する代わりに，以下に定義する句を利用して演算するのが慣例である。
+◎
+Some lists are designated as stacks. A stack is a list, but conventionally, the following operations are used to operate on it, instead of using append, prepend, or remove.
+</p>
+
+<ul>
+	<li>
+`~stack$ %S に %item を
+`~pushする@
+ときは
+⇒
+%S に %item を`付加する$
+◎
+To push onto a stack is to append to it.
+</li>
+	<li>
+<p>
+`~stack$ %S から
+`~popする@
+ときは：
+</p>
+		<ol>
+			<li>
+<p>
+~IF［
+%S は`空$である
+］
+⇒
+~RET ε
+</p>
+
+<p class="trans-note">【
+原文では “`return nothing^en” 。
+通例的には “何も~~返さない” と訳される所であるが、あたかも， “ε（ `nothing^en ）”
+という何もないことを表現する特別な定数があって，それを返すものと解釈しても矛盾することはなく、そうした方が表記するに都合が良いので，そのようにしている。
+】</p>
+			</li>
+			<li>
+%S から最後の`~item$を`除去する$
+</li>
+			<li>
+~RET 前~段で除去した`~item$
+</li>
+		</ol>
+
+◎
+To pop from a stack: if the stack is not empty, then remove its last item and return it; otherwise, return nothing.
+</li>
+</ul>
+
+<p>
+`~stack$は`~list$であるが、
+“`~EACH$(…) に対し…”
+は利用されてはナラナイ
+— 代わりに［
+`~WHILE$, `~popする$
+］の組合nの方が適切である。
+◎
+Although stacks are lists, for each must not be used with them; instead, a combination of while and pop is more appropriate.
+</p>
+
+<p class="trans-note">【
+しかしながら、ときには，`~popする$ことなく反復することも必要になり得る
+— その様な場合、和訳では “~EACH(…)” を利用することもある。
+そこでは、（ “逆順に”, 等の句が付記されない限り，）`~list$と同じく先頭から順に`反復する$ことを意味する。
+】</p>
+
+			</section>
+			<section id="queues">
+<h4 title="Queues">5.1.2. ~queue</h4>
+
+<p>
+`~list$は
+`~queue@
+（ `queue^en, ~~待ち~~行列）であると指名されることもある。
+~queueは`~list$であるが、［
+`付加する$ ／ `前付加する$ ／ `除去する$
+］を利用する代わりに，以下に定義する句を利用して演算するのが慣例である。
+◎
+Some lists are designated as queues. A queue is a list, but conventionally, the following operations are used to operate on it, instead of using append, prepend, or remove.
+</p>
+
+<ul>
+	<li>
+`~queue$ %Q に %item を
+`~enqueueする@
+ときは
+⇒
+%Q に %item を`付加する$
+◎
+To enqueue in a queue is to append to it.
+</li>
+	<li>
+
+<p>
+`~queue$ %Q から
+`~dequeueする@
+ときは：
+</p>
+		<ol>
+			<li>
+~IF［
+%Q は`空$である
+］
+⇒
+~RET ε
+【`~popする$ときと同様に】
+</li>
+			<li>
+%Q から最初の`~item$を`除去する$
+</li>
+			<li>
+~RET 前~段で除去した`~item$
+</li>
+		</ol>
+◎
+To dequeue from a queue is to remove its first item and return it, if the queue is not empty, or to return nothing if it is.
+</li>
+</ul>
+
+<p>
+`~queue$は`~list$であるが、
+“`~EACH$(…) に対し…”
+は利用されてはナラナイ
+— 代わりに［
+`~WHILE$, `~dequeueする$
+］の組合nの方が適切である。
+◎
+Although queues are lists, for each must not be used with them; instead, a combination of while and dequeue is more appropriate.
+</p>
+
+<p class="trans-note">【
+しかしながら，`~stack$に対するときと同様に、和訳では，`~dequeueする$ことなく`反復する$必要がある場合には “~EACH(…)” を利用することもある。
+】</p>
+
+			</section>
+			<section id="sets">
+<h4 title="Sets">5.1.3. 集合</h4>
+
+<p>
+`~list$は
+`有順序~集合@
+（ `ordered set^en ）であると指名されることもある。
+有順序~集合は、`~list$であって，かつ［
+同じ`~item$が重ねて現れてはナラナイとする，追加的な意味論
+］を伴う。
+◎
+Some lists are designated as ordered sets. An ordered set is a list with the additional semantic that it must not contain the same item twice.
+</p>
+
+<p class="note">注記：
+~web~platformにおける ほとんどすべての事例では、無順序ではなく`有順序^emな集合が要求される
+— 相互運用能を得るため、集合の内容が開発者に公開されるときの列挙~順序は，各~browser間で一貫することが要求されるので。
+また，順序が重要でない事例でも、有順序~集合が利用される
+— その場合、実装は，順序が観測され得ない事実に基づいて最適化できる。
+◎
+Almost all cases on the web platform require an ordered set, instead of an unordered one, since interoperability requires that any developer-exposed enumeration of the set’s contents be consistent between browsers. In those cases where order is not important, we still use ordered sets; implementations can optimize based on the fact that the order is not observable.
+</p>
+
+<ul>
+	<li>
+`有順序~集合$ %S に 所与の `~item$ %item を
+`付加する@set
+ときは
+⇒
+%S が %item を`包含して$いない場合に限り
+⇒
+`~list$用の通常の`付加する$演算を遂行する
+◎
+To append to an ordered set: if the set contains the given item, then do nothing; otherwise, perform the normal list append operation.
+</li>
+	<li>
+`有順序~集合$ %S に 所与の`~item$ %item を
+`前付加する@set
+ときは
+⇒
+%S が %item を`包含して$いない場合に限り
+⇒
+`~list$用の通常の`前付加する$演算を遂行する
+◎
+To prepend to an ordered set: if the set contains the given item, then do nothing; otherwise, perform the normal list prepend operation.
+</li>
+	<li>
+<p>
+`有順序~集合$ %S の中で，所与の
+%item を %replacement に
+`置換する@set
+ときは
+⇒
+%S が［
+%item, %replacement
+］のいずれかを`包含して$いる場合に限り
+⇒
+それらのうち最初のものは %replacement に置換した上で，他のものはすべて %S から除去する
+◎
+To replace within an ordered set set, given item and replacement: if set contains item or replacement, then replace the first instance of either with replacement and remove all other instances.
+</p>
+
+<div class="example" id="example-set-replace">
+<p>
+`有順序~集合$ %S の中で、 `a^l を `c^l に`置換-$setした結果は：
+</p>
+<ul><li>%S ~EQ « `a^l, `b^l, `c^l » ならば， « `c^l, `b^l » になる。
+</li><li>%S ~EQ « `c^l, `b^l, `a^l » ならば， « `c^l, `b^l » になる。
+</li></ul>
+◎
+Replacing "a" with "c" within the ordered set « "a", "b", "c" » gives « "c", "b" ». Within « "c", "b", "a" » it gives « "c", "b" » as well.
+</div>
+
+	</li>
+	<li>
+<p>
+( `有順序~集合$ %A, `有順序~集合$ %B )
+は、次を満たすならば，［
+%A は %B の
+`下位集合@
+（ `subset^en, “部分集合” ）である／
+%B は %A の
+`上位集合@
+である
+］とされる
+⇒
+%B は、 %A が`包含して$いるどの`~item$も `包含して$いる
+◎
+An ordered set set is a subset of another ordered set superset (and conversely, superset is a superset of set) if, for each item of set, superset contains item.
+</p>
+
+<p class="note">注記：
+`有順序~集合$は、自身の`下位集合$であり, `上位集合$でもあることになる。
+◎
+This implies that an ordered set is both a subset and a superset of itself.
+</p>
+
+<p class="trans-note">【
+［
+%A ／ %B
+］を成す~itemたちの順序は、織り込まれない。
+】</p>
+
+	</li>
+	<li>
+<p>
+( `有順序~集合$ %A, `有順序~集合$ %B )
+の
+`交差集合@
+（ `intersection^en ）は、次の結果で与えられる：
+</p>
+		<ol>
+			<li>
+%S ~LET 新たな`有順序~集合$
+</li>
+			<li>
+`~EACH$( %~item `~IN$ %A )
+に対し
+⇒
+~IF［
+%~item `~IN$ %B
+］
+⇒
+%S に %~item を`付加する$set
+</li>
+			<li>
+~RET %S
+</li>
+		</ol>
+
+<p class="trans-note">【
+%A を成す~itemたちの順序に加えて、
+%A, %B の順序も，結果の %S を成す~itemたちの順序に有意になる。
+一方で、 %B を成す~itemたちの順序は関わらない。
+】</p>
+
+◎
+The intersection of ordered sets A and B, is the result of creating a new ordered set set and, for each item of A, if B contains item, appending item to set.
+</li>
+	<li>
+<p>
+( `有順序~集合$ %A, `有順序~集合$ %B )
+の
+`和集合@
+（ `union^en ）は、次の結果で与えられる：
+</p>
+
+		<ol>
+			<li>
+%S ~LET %A を`~cloneする$
+</li>
+			<li>
+`~EACH$( %~item `~IN$ %B )
+に対し
+⇒
+%S に %~item を`付加する$set
+</li>
+			<li>
+~RET %S
+</li>
+		</ol>
+
+<p class="trans-note">【
+［
+%A ／ %B
+］を成す~itemたちの順序に加えて、
+%A, %B の順序も，結果の %S を成す~itemたちの順序に有意になる 。
+】</p>
+
+◎
+The union of ordered sets A and B, is the result of cloning A as set and, for each item of B, appending item to set.
+</li>
+</ul>
+
+<hr>
+
+<p>
+`範囲@
+{ %n 〜 %m }
+という表記†は、［
+%n 以上 %m 以下（ %n ~LTE %m とする††）
+］の整数すべてからなる，~~昇順による, 新たな`有順序~集合$を作成する。
+◎
+The range n to m, inclusive, creates a new ordered set containing all of the integers from n up to and including m in consecutively increasing order, as long as m is greater than or equal to n.
+</p>
+
+<p class="trans-note">【†
+原文では “`range n to m, inclusive^en”
+】【††
+和訳では、（この仕様が作成される以前から，）［
+%n ~GT %m
+］の場合にも この表記を利用している（空~集合を作成することになる）。
+】</p>
+
+<div class="example" id="example-the-range">
+<p class="exemplary">
+`~EACH$( %n `~IN$ `範囲$ { 1 〜 4 } )
+に対し…
+◎
+For each n of the range 1 to 4, inclusive, …
+</p>
+</div>
+
+			</section>
+		</section>
+		<section id="maps">
+<h3 title="Maps">5.2. ~map</h3>
+
+<p>
+`有順序~map@
+（ `ordered map^en ）は、仕様~levelの型である。
+その各~instanceは、有限~個の［
+`~key@map
+（ `key^en ）/
+`値@map
+（ `value^en ）
+］~pairからなる有順序~連列であり, かつ
+同じ`~key$mapが重ねて現れないものである。
+これらの各~pairは、
+`~entry@
+（ `entry^en ）と呼ばれる。
+【順序が重要でない場合は】 単に “~map” と称されることもある。
+◎
+An ordered map, or sometimes just "map", is a specification type consisting of a finite ordered sequence of key/value pairs, with no key appearing twice. Each key/value pair is called an entry.
+</p>
+
+<p class="note">注記：
+`有順序~集合$と同様に，実装~間での相互運用能を得るため、~mapも既定で有順序であるものと見做す必要がある。
+◎
+As with ordered sets, by default we assume that maps need to be ordered for interoperability among implementations.
+</p>
+
+<p class="trans-note">【
+~IDL`辞書~型$の値は、`有順序~map$として扱われ，~map用の各種［
+演算／定義／表記
+］が利用されることもある。
+逆に，一定の条件を満たす`有順序~map$は、~IDL辞書~型の値として扱えるものとされている。
+（辞書~型の~keyの集合は固定的~なので、意味論的には，`構造体$の方が近いが。）
+】</p>
+
+<p>
+`有順序~map$は、~literal構文を利用して表出することもできる
+— そのためには、各 `~entry$を
+"%~key → %値"
+の~~形で記し, 各~entryどうしを~commaで区切った上で, 全体を文字 «[, ]» で括る。
+`値$mapを［
+検索する／設定する
+］ための~indexing構文も利用できる
+— そのためには，角括弧の内側に`~key$mapを与える。
+~indexは，`~entryを包含して$いるかどうかを~~述べる場合を除いて，~~範囲を超えられない
+【とされているが、和訳では，これに意図的に従わず、下に述べる ε を利用する。】。
+◎
+A literal syntax can be used to express ordered maps, by surrounding the ordered map with «[ ]» characters, denoting each of its entries as key → value, and separating its entries with a comma. An indexing syntax can be used to look up and set values by providing a key inside square brackets. The index cannot be out-of-bounds, except when used with exists.
+</p>
+
+<p class="example" id="example-map-notation">
+%M ~EQ `有順序~map$ «[ `a^l → `x^bl, `b^l → `y^bl ]»
+が与えられた下では、
+%M[`a^l] は `~byte列$ `x^bl を表す。
+◎
+Let example be the ordered map «[ "a" → `x`, "b" → `y` ]». Then example["a"] is the byte sequence `x`.
+</p>
+
+<p>
+単に
+“新たな`有順序~map$”
+と記されたときは、他が指定されない限り，
+0 個の`~entry$からなる新たな`有順序~map$を作成することを表す（すなわち，`空$map ／ «[ ]» ）。
+【この規約は、この訳による追加。】
+</p>
+
+<hr>
+
+<ul>
+	<li>
+<p>
+`有順序~map$ %M 内の`~key$map %K に対応する
+`値を取得する@
+ときは、次を返す
+⇒
+%M は［
+%K を`~key$mapとする`~entryを包含して$いる
+］ならば その`値$map ／
+~ELSE_ ε
+◎
+To get the value of an entry in an ordered map given a key, return the value of the entry whose key is the given key.＼
+</p>
+
+<p class="trans-note">【
+原文では，［
+%K を`~key$mapとする`~entryを包含して$いない場合
+］を（意図的に）取扱っていないが（すなわち、この演算を遂行する前に，該当する`~entryを包含して$いることを確保することが前提にある）、和訳では， ε を返すものと定義を改める。
+】</p>
+
+<p>
+これには、上に述べた~indexing構文も利用できる。
+【すなわち、 “ %M[ %K ] ” とも表記される。和訳では、もっぱら，この表記を利用している。】
+◎
+We can also use the indexing syntax explained above.
+</p>
+
+	</li>
+	<li>
+<p>
+`有順序~map$ %M 内の `~key$map %K に対応する
+`値を設定する@
+ときは、所与の値 %V に対し：
+</p>
+		<ol>
+			<li>
+~IF［
+%M[ %K ] ~NEQ ε
+］
+⇒
+%M 内の［
+%K を`~key$mapとする`~entry$
+］の`値$map ~SET %V
+</li>
+			<li>
+~ELSE
+⇒
+%M の末尾に新たな`~entry$ ( %K → %V ) を追加する
+</li>
+		</ol>
+
+<p>
+この演算は、
+“ %M[ %K ] ~SET %V ”
+とも表記される。
+【和訳では、もっぱら，この表記を利用している。】
+</p>
+◎
+To set the value of an entry in an ordered map to a given value is to update the value of any existing entry if the map contains an entry with the given key, or if none such exists, to add a new entry with the given key/value to the end of the map. We can also denote this by saying, for an ordered map map, key key, and value value, "set map[key] to value".
+</li>
+	<li>
+<p>
+`有順序~map$ %M から
+所与の %条件 に合致する
+`~entryを除去する@
+ときは
+⇒
+%M 内の［
+%条件 に合致する`~entry$
+］すべてを %M から除去する（合致するものが無ければ何もしない）
+</p>
+
+<p>
+“ %M[ %K ] ~SET ε ”
+という表記は、
+%M から条件［
+%K を`~key$mapとする
+］に合致する`~entryを除去する$ことを~~意味する。
+【これは、和訳に特有な表記である。】
+</p>
+◎
+To remove an entry from an ordered map is to remove all entries from the map that match a given condition, or do nothing if none do. If the condition is having a certain key, then we can also denote this by saying, for an ordered map map and key key, "remove map[key]".
+</li>
+	<li>
+`有順序~map$ %M を
+`~clearする@map
+ときは
+⇒
+%M からすべての`~entry$を除去する
+◎
+To clear an ordered map is to remove all entries from the map. 
+</li>
+	<li>
+<p>
+`有順序~map$ %M が
+`~key$map %K を伴う
+`~entryを包含して@
+いるとは、［
+%K を`~key$mapとする`~entry$
+］が %M 内に存在することをいう。
+</p>
+
+<p>
+この条件は、`値を取得する$ときの表記を利用して
+“ %M[ %K ] ~NEQ ε ”
+と記しても同じなので，そう表記されることもある（
+“ %M[ %K ] ~EQ ε ”
+は、その否定を表すことになる）。
+【和訳では、もっぱら，この表記を利用している。】
+</p>
+◎
+An ordered map contains an entry with a given key if there exists an entry with that key. We can also denote this by saying that, for an ordered map map and key key, "map[key] exists".
+</li>
+	<li>
+<p>
+`有順序~map$ %M の
+`~key~listを取得する@
+ときは：
+</p>
+		<ol>
+			<li>
+%S ~LET 新たな`有順序~集合$
+</li>
+			<li>
+%M を成す
+`~EACH$map( `~entry$ %K → %V )
+に対し
+⇒
+%S に %K を`付加する$set
+</li>
+			<li>
+~RET %S
+</li>
+		</ol>
+◎
+To get the keys of an ordered map, return a new ordered set whose items are each of the keys in the map’s entries.
+</li>
+	<li>
+<p>
+`有順序~map$ %M の
+`値~listを取得する@
+ときは：
+</p>
+		<ol>
+			<li>
+%L ~LET 新たな`~list$
+</li>
+			<li>
+%M を成す
+`~EACH$map( `~entry$ %K → %V )
+に対し
+⇒
+%L に %V を`付加する$
+</li>
+			<li>
+~RET %L
+</li>
+		</ol>
+◎
+To get the values of an ordered map, return a new list whose items are each of the values in the map’s entries.
+</li>
+	<li>
+`有順序~map$ %M の
+`~size@map
+（ `size^en ）は、次の結果の`~size$とする
+⇒
+%M の`~key~listを取得する$
+◎
+An ordered map’s size is the size of the result of running get the keys on the map.
+</li>
+	<li>
+`有順序~map$ %M が
+`空@map
+（ `empty^en ）であるとは、［
+%M の`~size$map ~EQ 0
+］であることをいう。
+◎
+An ordered map is empty if its size is zero.
+</li>
+	<li>
+`有順序~map$ %M を順に
+`反復する@map
+ときは、
+“ %M を成す`~EACH$map( `~entry$ %K → %V ) に対し：”
+という句の下で，後続の注釈文にて［
+%K, %V
+］に対し演算する。
+【和訳に特有な規約は、~list用の`反復する$を見よ。】
+◎
+To iterate over an ordered map, performing a set of steps on each entry in order, use phrasing of the form "For each key → value of map", and then operate on key and value in the subsequent prose.
+</li>
+	<li>
+<div class="p">
+<p>
+`有順序~map$ %M を
+`~cloneする@map
+ときは：
+</p>
+		<ol>
+			<li>
+%~clone ~LET 新たな`有順序~map$
+</li>
+			<li>
+%M を成す
+`~EACH$map( %~key → %値 )
+に対し
+⇒
+%~clone[ %~key ] ~SET %値
+</li>
+			<li>
+~RET %~clone
+</li>
+		</ol>
+◎
+To clone an ordered map map is to create a new ordered map clone, and, for each key → value of map, set clone[key] to value.
+</div>
+
+<p class="note">注記：
+［
+`~key$map, `値$map
+］自身は~cloneされないので、これは “浅い~clone” である。
+◎
+This is a "shallow clone", as the keys and values themselves are not cloned in any way.
+</p>
+
+
+<p class="example">
+%M は`有順序~map$
+«[ `a^l → « 1, 2, 3 », `b^l → «» ]»
+とする。
+%M を`~cloneする$と，新たな`有順序~map$ %~clone が作成される。
+%~clone[ `a^l ] ~SET « −1, −2, −3 »
+とした場合、
+%~clone は
+«[ `a^l → « −1, −2, −3 », `b^l → «» ]»
+になるが，
+%M は変化しない。
+しかしながら，
+%~clone[ `b^l ] に 4 を`付加する$と、
+%~clone, %M
+両者とも対応する`値$mapは
+— 同じ`~list$を指しているので —
+改変されることになる。
+◎
+Let original be the ordered map «[ "a" → «1, 2, 3», "b" → «» ]». Cloning original creates a new ordered map clone, so that setting clone["a"] to «-1, -2, -3» gives «[ "a" → «-1, -2, -3», "b" → «» ]» and leaves original unchanged. However, appending 4 to clone["b"] will modify the corresponding value in both clone and original, as they both point to the same list.
+</p>
+	</li>
+</ul>
+
+<div class="algo">
+<p>
+`~mapを昇順に~sortする@
+ときは、所与の
+( `有順序~map$ %M, `小なり~algo$ %小なり )
+に対し，次をすべて満たす新たな`有順序~map$を返すモノトスル：
+</p>
+
+<ul>
+	<li>
+%M と同じ`~entry$たちからなる
+</li>
+	<li>
+`~entry$たちは、 %小なり に則って~sortされている
+— すなわち，どの`~entry$ %A, %B に対しても
+⇒
+［
+%小なり( %A, %B ) ~EQ ~T
+］ならば
+%A は %B より前に~sortされている
+</li>
+	<li>
+前項により順序が定まらない`~entry$どうしの順序は、
+%M における順序に従う
+— すなわち，どの`~entry$ %A, %B に対しても
+⇒
+［
+%小なり( %A, %B ) ~EQ %小なり( %B, %A ) ~EQ ~F
+］ならば、
+%A, %B の順序は %M における順序と同じである
+</li>
+</ul>
+
+◎
+To sort in ascending order a map map, with a less than algorithm lessThanAlgo, is to create a new map sorted, containing the same entries as map but sorted so that according to lessThanAlgo, each entry is less than the one following it, if any. For entries that sort the same (i.e., for which lessThanAlgo returns false for both comparisons), their relative order in sorted must be the same as it was in map.
+</div>
+
+<div class="algo">
+<p>
+`~mapを降順に~sortする@
+ときは、所与の
+( `有順序~map$ %M, `小なり~algo$ %小なり )
+に対し，次をすべて満たす新たな`有順序~map$を返すモノトスル：
+</p>
+
+<ul>
+	<li>
+%M と同じ`~entry$たちからなる
+</li>
+	<li>
+`~entry$たちは、 %小なり に則って~sortされている
+— すなわち，どの`~entry$ %A, %B に対しても
+⇒
+［
+%小なり( %A, %B ) ~EQ ~T
+］ならば
+%A は %B より後に~sortされている
+</li>
+	<li>
+前項により順序が定まらない`~entry$どうしの順序は、
+%M における順序に従う
+— すなわち，どの`~entry$ %A, %B に対しても
+⇒
+［
+%小なり( %A, %B ) ~EQ %小なり( %B, %A ) ~EQ ~F
+］ならば、
+%A, %B の順序は %M における順序と同じである
+</li>
+</ul>
+
+<p class="trans-note">【
+最後の条項（昇順のときと同じ）から、昇順の正確な逆順になるとは限らない。
+】</p>
+
+◎
+To sort in descending order a map map, with a less than algorithm lessThanAlgo, is to create a new map sorted, containing the same entries as map but sorted so that according to lessThanAlgo, each entry is less than the one preceding it, if any. For entries that sort the same (i.e., for which lessThanAlgo returns false for both comparisons), their relative order in sorted must be the same as it was in map.
+</div>
+
+		</section>
+		<section id="structs">
+<h3 title="Structs">5.3. 構造体</h3>
+
+<p>
+`構造体@
+（ `struct^en ）は、仕様~levelの型である。
+その各~instanceは、有限~個の
+`~item@sct
+（ `item^en ）からなる集合であって，各`~item$sctには［
+一意, かつ変異-不能
+］である
+`名前@sct
+（ `name^en ）がある。
+◎
+A struct is a specification type consisting of a finite set of items, each of which has a unique and immutable name.
+</p>
+
+<p class="trans-note">【
+各`~item$sctには、暗黙的に “値” もある
+— すなわち、`~item$sct自身が，`名前$sctに対応する “値” と同一視されている。
+その点で`有順序~map$に似るが、`~key$mapにあたる`名前$sctの集合は固定的になる。
+】</p>
+
+<hr>
+
+<p>
+`名前$sctの順序が定義されている`構造体$は、
+`~tuple@
+（ `tuple^en, “組” ）とも称される。
+表記の便利~用に、`~tuple$を表出するための~literal構文も利用できる
+— そのためには、~tuple内の各`~item$sctどうしを~commaで区切った上で, 全体を丸括弧で括る。
+この表記法を利用するときは、各`名前$sctが何であるか
+【~literal内の各~値がどの名前に対応するか】
+が，文脈から明瞭になる必要がある。
+これは、当の`~tuple$の最初の~instanceに名前を前置することにより行える。
+◎
+Structs with a defined order are also known as tuples. For notational convenience, a literal syntax can be used to express tuples, by surrounding the tuple with parenthesis and separating its items with a comma. To use this notation, the names need to be clear from context. This can be done by preceding the first instance with the name given to the tuple.
+</p>
+
+<div class="example" id="example-tuple">
+<p>
+~HTTP状態sは、［
+~code（ 3 桁の数 ）, ~text（ ~byte列 ）
+］からなる`~tuple$の例である。
+◎
+A status is an example tuple consisting of a code (a three-digit number) and text (a byte sequence).
+</p>
+
+<p>
+その用法をデモるためだけの，状態s~tupleを操作する~algoを示す：
+◎
+A nonsense algorithm that manipulates status tuples for the purpose of demonstrating their usage is then:
+</p>
+
+<ol class="exemplary">
+	<li>
+%状態s例 ~LET 状態s ( 200, `OK^bl )
+◎
+Let statusInstance be the status (200, `OK`).
+</li>
+	<li>
+%状態s例 ~SET ( 301, `FOO BAR^bl )
+◎
+Set statusInstance to (301, `FOO BAR`).
+</li>
+	<li>
+~IF［
+%状態s例 の~code ~EQ 404
+］
+⇒
+…
+◎
+If statusInstance’s code is 404, then …
+</li>
+</ol>
+
+</div>
+
+<p class="note">注記：
+`構造体$が`~tuple$に限られないのは、意図的である。
+この標準を利用する文書は、依存する他の仕様に利用されている~literal構文を壊すことなく，自身の構造体に新たな`名前$sctを追加する柔軟性も必要になるかもしれず、そのような事例では~tupleは適切にならないので。
+◎
+It is intentional that not all structs are tuples. Documents using the Infra Standard might need the flexibility to add new names to their struct without breaking literal syntax used by their dependencies. In that case a tuple is not appropriate.
+</p>
+
+<hr>
+<p>
+2 個の `~item$sctからなる`~tuple$は
+`~pair@
+（ `pair^en ）とも称される。
+`~pair$に対しては、少し短い~literal構文も利用できる
+— そのためには
+2 個の `~item$sct を~slash（ "/" ）で区切って表記する。
+◎
+Tuples with two items are also known as pairs. For pairs, a slightly shorter literal syntax can be used, separating the two items with a / character.
+</p>
+
+<p class="example" id="example-pair">
+上の~tuple %状態s例 を別の仕方で表出するならば，
+200/`OK^bl
+になる。
+◎
+Another way of expressing our statusInstance tuple above would be as 200/`OK`.
+</p>
+
+<p class="trans-note">【
+~pairは、原文では（ "/" の前後に~spaceを挟まずに）括弧で括らずに記されるのが通例だが、和訳では原則的に括って表記する（ "/" の前後に~spaceも挟んだ上で
+— 上の例では、 "( 200 / `OK^bl )" ）。
+】</p>
+
+		</section>
+	</section>
+	<section id="json">
+<h2 title="JSON">6. ~JSON</h2>
+
+<p class="note">注記：
+この節における各種~algoには、~JS仕様の表記規約が利用される。
+`ECMA-262$r
+◎
+The conventions used in the algorithms in this section are those of the JavaScript specification. [ECMA-262]
+</p>
+
+<div class="algo">
+<p>
+`~byte列を~JSONとして構文解析する@
+ときは、所与の
+( %~byte列 )
+に対し，次の手続きを走らす：
+◎
+To parse JSON from bytes given bytes, run these steps:
+</p>
+
+<ol>
+	<li>
+%~JSON~text ~LET `~UTF-8復号する$( %~byte列 )
+`ENCODING$r
+◎
+Let jsonText be the result of running UTF-8 decode on bytes. [ENCODING]
+</li>
+	<li>
+~RET
+~ABRUPT `Call$A( `JSON.parse$jI, `undefined^jv, « %~JSON~text » )
+◎
+Return ? Call(%JSON.parse%, undefined, « jsonText »).
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`~JSONを~byte列に直列化する@
+ときは、所与の
+( ~JS値 %値 )
+に対し，次の手続きを走らす：
+◎
+To serialize JSON to bytes a given JavaScript value value, run these steps:
+</p>
+
+<ol>
+	<li>
+<p>
+%結果 ~LET
+~ABRUPT `Call$A( `JSON.stringify$jI, `undefined^jv, « %値 » )
+`ECMA-262$r
+◎
+Let result be ? Call(%JSON.stringify%, undefined, « value »).
+</p>
+
+<p class="note">注記：
+`JSON.stringify$jI には追加的な引数は渡されないので、結果の文字列には，空白は挿入されない。
+◎
+Since no additional arguments are passed to %JSON.stringify%, the resulting string will have no whitespace inserted.
+</p>
+	</li>
+	<li>
+<p>
+~IF［
+%結果 ~EQ `undefined^jv
+］
+⇒
+~THROW `TypeError$E
+◎
+If result is undefined, then throw a TypeError.
+</p>
+
+<p class="note">注記：
+これは、 %値 に対応する~JSON表現は無い場合に起こり得る
+— 例： %値 は［
+`undefined^jv ／関数
+］である場合。
+◎
+This can happen if value does not have a JSON representation, e.g., if it is undefined or a function.
+</p>
+	</li>
+	<li>
+`~Assert$：
+%結果 は`文字列$である
+◎
+Assert: result is a string.
+</li>
+	<li>
+~RET `~UTF-8符号化する$( %結果 )
+`ENCODING$r
+◎
+Return the result of running UTF-8 encode on result. [ENCODING]
+</li>
+</ol>
+</div>
+
+<hr>
+
+<p>
+上の 2 つの演算は、~JS値に対し，直に演算する
+— 特に，それが孕む~objや配列は、特定0の`~JS~realm$に束ねられることを意味する。
+標準においては、~JSONを，~realmに依存しない［
+`有順序~map$／`~list$／`文字列$／`真偽値$／~number／~NULL
+］に構文解析した方が簡便になることが多い。
+◎
+The above two operations operate on JavaScript values directly; in particular, this means that the involved objects or arrays are tied to a particular JavaScript realm. In standards, it is often more convenient to parse JSON into realm-independent maps, lists, strings, booleans, numbers, and nulls.
+</p>
+
+<div class="algo">
+<p>
+`~JSONを~Infra値に構文解析する@
+ときは、所与の
+( `文字列$ %~JSON~text )
+に対し：
+◎
+To parse JSON into Infra values, given a string jsonText:
+</p>
+
+<ol>
+	<li>
+%~js値 ~LET
+~ABRUPT `Call$A( `JSON.parse$jI, `undefined^jv, « %~JSON~text » )
+◎
+Let jsValue be ? Call(%JSON.parse%, undefined, « jsonText »).
+</li>
+	<li>
+~RET `~JSONから導出された~JS値を~Infra値に変換する$( %~js値 )
+◎
+Return the result of converting a JSON-derived JavaScript value to an Infra value, given jsValue.
+</li>
+</ol>
+</div>
+
+<div class="algo">
+<p>
+`~JSONから導出された~JS値を~Infra値に変換する@
+ときは、所与の
+( ~JS値 %~js値 )
+に対し：
+◎
+To convert a JSON-derived JavaScript value to an Infra value, given a JavaScript value jsValue:
+</p>
+
+<ol>
+	<li>
+~IF［
+`Type$A( %~js値 ) ~IN { `Null^jT, `Boolean^jT, `String^jT, `Number^jT }
+］
+⇒
+~RET %~js値
+◎
+If Type(jsValue) is Null, Boolean, String, or Number, then return jsValue.
+</li>
+	<li>
+<p>
+~IF［
+`IsArray$A( %~js値 ) ~EQ ~T
+］：
+◎
+If IsArray(jsValue) is true, then:
+</p>
+		<ol>
+			<li>
+%結果 ~LET 新たな`~list$
+◎
+Let result be an empty list.
+</li>
+			<li>
+%長さ ~LET
+~NOABRUPT `ToLength$A( ~NOABRUPT `Get$A( %~js値, `length^l ) )
+◎
+Let length be ! ToLength(! Get(jsValue, "length")).
+</li>
+			<li>
+`~EACH$( %~index ~IN `範囲$ { 0 〜 %長さ − 1 } )
+に対し
+⇒
+%結果 に次の結果を`付加する$
+⇒
+`~JSONから導出された~JS値を~Infra値に変換する$( 
+	~NOABRUPT `Get$A( %~js値, 
+		~NOABRUPT `ToString$A( %~index )
+	)
+)
+◎
+For each index of the range 0 to length − 1, inclusive:
+• Let indexName be ! ToString(index).
+• Let jsValueAtIndex be ! Get(jsValue, indexName).
+• Let infraValueAtIndex be the result of converting a JSON-derived JavaScript value to an Infra value, given jsValueAtIndex.
+• Append infraValueAtIndex to result.
+</li>
+			<li>
+~RET %結果
+◎
+Return result.
+</li>
+		</ol>
+	</li>
+	<li>
+%結果 ~LET 新たな`有順序~map$
+◎
+Let result be an empty ordered map.
+</li>
+	<li>
+~NOABRUPT %~js値.`OwnPropertyKeys^sl()
+の結果を成す
+`~EACH$( %~key )
+に対し
+⇒
+%結果[ %~key ] ~SET `~JSONから導出された~JS値を~Infra値に変換する$(
+	~NOABRUPT `Get$A( %~js値, %~key )
+)
+◎
+For each key of ! jsValue.[[OwnPropertyKeys]]():
+• Let jsValueAtKey be ! Get(jsValue, key).
+• Let infraValueAtKey be the result of converting a JSON-derived JavaScript value to an Infra value, given jsValueAtKey.
+• Set result[key] to infraValueAtKey.
+</li>
+	<li>
+~RET %結果
+◎
+Return result.
+</li>
+</ol>
+</div>
+
+	</section>
+	<section id="forgiving-base64">
+<h2 title="Forgiving base64">7. ~forgiving-base64</h2>
+
+<div class="algo">
+<p>
+`~forgiving-base64符号化する@
+ときは、所与の
+( `~byte列$ %~data )
+に対し，［
+`RFC4648$r, § 4 に定義される~base64~algo
+］を %~data に適用した結果の文字列を返す。
+◎
+To forgiving-base64 encode given a byte sequence data, apply the base64 algorithm defined in section 4 of RFC 4648 to data and return the result. [RFC4648]
+</p>
+
+<p class="note">注記：
+これが，
+“`~forgiving-base64符号化する$”
+と命名されているのは、
+“`~forgiving-base64復号する$”
+と対称にするためである
+— 後者は、ある種の入力~用に~errorの取扱いを定義するので， RFC によるものと異なる。
+◎
+This is named forgiving-base64 encode for symmetry with forgiving-base64 decode, which is different from the RFC as it defines error handling for certain inputs.
+</p>
+
+</div>
+
+<p class="trans-note">【
+“符号化-”, “復号-”
+の命名は、~byte列の方が “元の~dataである” ことに基づく。
+】</p>
+
+<div class="algo">
+<p>
+`~forgiving-base64復号する@
+ときは、所与の
+( 文字列 %~data )
+に対し，次を走らす：
+◎
+To forgiving-base64 decode given a string data, run these steps:
+</p>
+
+<ol>
+	<li>
+%~data からすべての`~ASCII空白$を除去する
+◎
+Remove all ASCII whitespace from data.
+</li>
+	<li>
+~IF［
+%~data の`符号位置~長さ$は 4 の倍数である
+］
+⇒
+次を 2 回 繰返す
+⇒
+~IF［
+%~data の最後の`符号位置$ ~EQ `003D^U `=^smb
+］
+⇒
+%~data から最後の`符号位置$を除去する
+◎
+If data’s code point length divides by 4 leaving no remainder, then:
+• If data ends with one or two U+003D (=) code points, then remove them from data.
+</li>
+	<li>
+%不足個数 ~LET 
+( %~data の`符号位置~長さ$を 4 の倍数に切り上げた結果 ) − %~data の`符号位置~長さ$
+◎
+↓</li>
+	<li>
+~IF［
+%不足個数 ~EQ 3
+］
+⇒
+~RET `失敗^i
+◎
+If data’s code point length divides by 4 leaving a remainder of 1, then return failure.
+</li>
+	<li>
+%~data を成す
+~EACH( `符号位置$ %C )
+に対し
+⇒
+~IF［
+%C ~NIN { `002B^U `+^smb, `002F^U `/^smb, `~ASCII英数字$ }
+］
+⇒
+~RET `失敗^i
+◎
+If data contains a code point that is not one of
+• U+002B (+)
+• U+002F (/)
+• ASCII alphanumeric 
+then return failure.
+</li>
+	<li>
+%出力 ~LET 空`~byte列$
+◎
+Let output be an empty byte sequence.
+◎
+Let buffer be an empty buffer that can have bits appended to it.
+</li>
+	<li>
+%~data の末尾に %不足個数 個の `0041^U `A^smb を付加する
+◎
+↓↓</li>
+	<li>
+%位置 ~LET %~data の先頭を指している`位置~変数$
+◎
+Let position be a position variable for data, initially pointing at the start of data.
+</li>
+	<li>
+<p>
+~WHILE［
+%位置↗ ~NEQ ε
+］：
+◎
+While position does not point past the end of data:
+</p>
+		<ol>
+			<li>
+%buffer ~LET 0
+◎
+↓</li>
+			<li>
+<p>
+次を 4 回 繰返す：
+</p>
+				<ol>
+					<li>
+%行 ~LET `RFC4648$r の表［
+<a href="~RFCx/rfc4648#section-4">Table 1: The Base 64 Alphabet</a>
+］内の，次を満たす行
+⇒
+行の 2 列目に与えられている`符号位置$ ~EQ %位置↗
+</li>
+					<li>
+%buffer ~SET ( %buffer ~MUL 64 ) ~PLUS ( %行 の 1 列目に与えられる整数 )
+</li>
+					<li>
+%位置 ~INCBY 1
+</li>
+				</ol>
+◎
+Find the code point pointed to by position in the second column of Table 1: The Base 64 Alphabet of RFC 4648. Let n be the number given in the first cell of the same row. [RFC4648]
+◎
+Append the six bits corresponding to n, most significant bit first, to buffer.
+</li>
+			<li>
+( %m1, %m2, %m3 ) ~LET 次の等式を満たす，範囲 { 0 〜 255 } に入る 3 個の整数
+⇒
+( %m1 ~MUL 256 ~MUL 256 ) ~PLUS ( %m2 ~MUL 256 ) ~PLUS %m3 ~EQ %buffer
+◎
+If buffer has accumulated 24 bits, interpret them as three 8-bit big-endian numbers.＼
+</li>
+			<li>
+%出力 に［
+%m1, %m2, %m3
+］を値にとる`~byte$たちを順に付加する
+◎
+Append three bytes with values equal to those numbers to output, in the same order, and then empty buffer.
+◎
+Advance position by 1.
+</li>
+		</ol>
+	</li>
+	<li>
+<p>
+%出力 の末尾から %不足個数 個の`~byte$を除去する
+◎
+If buffer is not empty, it contains either 12 or 18 bits. If it contains 12 bits, then discard the last four and interpret the remaining eight as an 8-bit big-endian number. If it contains 18 bits, then discard the last two and interpret the remaining 16 as two 8-bit big-endian numbers. Append the one or two bytes with values equal to those one or two numbers to output, in the same order.
+</p>
+
+<p class="note">注記：
+入力 %~data は 1 文字あたり 6 ~bit, %出力 は 1 ~byteあたり 8 ~bit の~dataを表現するので、( %不足個数 × 2 ) 個の~bitが，入力の末尾から切り捨てられることになる。
+例えば 2 つの入力
+`YQ^l （ 6 ~bit表現 24, 16 ）, `YR^l （ 6 ~bit表現 24, 17 ）
+に対する結果はいずれも `a^bl になる。
+◎
+The discarded bits mean that, for instance, "YQ" and "YR" both return `a`.
+</p>
+	</li>
+	<li>
+~RET %出力
+◎
+Return output.
+</li>
+</ol>
+</div>
+
+	</section>
+	<section id="namespaces">
+<h2 title="Namespaces">8. 名前空間</h2>
+
+<div>
+<p>
+次の名前空間（ `namespace^en ）が定義される：
+</p>
+
+<table><tbody><tr><th>`~HTML名前空間@
+<td>`http://www.w3.org/1999/xhtml^l
+
+<tr><th>`~MathML名前空間@
+<td>`http://www.w3.org/1998/Math/MathML^l
+
+<tr><th>`~SVG名前空間@
+<td>`http://www.w3.org/2000/svg^l
+
+<tr><th>`~XLink名前空間@
+<td>`http://www.w3.org/1999/xlink^l
+
+<tr><th>`~XML名前空間@
+<td>`http://www.w3.org/XML/1998/namespace^l
+
+<tr><th>`~XMLNS名前空間@
+<td>`http://www.w3.org/2000/xmlns/^l
+
+</tbody></table>
+
+◎
+The HTML namespace is "http://www.w3.org/1999/xhtml".
+◎
+The MathML namespace is "http://www.w3.org/1998/Math/MathML".
+◎
+The SVG namespace is "http://www.w3.org/2000/svg".
+◎
+The XLink namespace is "http://www.w3.org/1999/xlink".
+◎
+The XML namespace is "http://www.w3.org/XML/1998/namespace".
+◎
+The XMLNS namespace is "http://www.w3.org/2000/xmlns/".
+</div>
+	</section>
+	<section id="acknowledgments">
+<h2 title="Acknowledgments">謝辞</h2>
+
+<p>
+次の方々に感謝する：
+</p>
+
+<div lang="en-x-a0">
+
+<p>
+Many thanks to
+
+Addison Phillips,
+Andreu Botella,
+Aryeh Gregor,
+Chris Rebert,
+Daniel Ehrenberg,
+Dominic Farolino,
+Gabriel Pivovarov,
+Jake Archibald,
+Jeff Hodges,
+Jungkee Song,
+Leonid Vasilyev,
+Maciej Stachowiak,
+Malika Aubakirova,
+Michael™ Smith,
+Mike West,
+Ms2ger,
+Pavel "Al Arz" Kurochkin,
+Philip Jägenstedt,
+Rashaun "Snuggs" Stovall,
+Sergey Shekyan,
+Simon Pieters,
+Tab Atkins,
+Tobie Langel,
+triple-underscore,
+and Xue Fuqiao
+
+for being awesome!
+</p>
+
+<p>
+This standard is written by
+<a href="https://annevankesteren.nl/" lang="nl">Anne van Kesteren</a>(
+<a href="https://www.mozilla.org/">Mozilla</a>,
+<a href="mailto:annevk@annevk.nl">annevk@annevk.nl</a>
+)
+and
+<a href="https://domenic.me/">Domenic Denicola</a>(
+<a href="https://www.google.com/">Google</a>,
+<a href="mailto:d@domenic.me">d@domenic.me</a>
+).
+</p>
+
+<p>
+Copyright © WHATWG (Apple, Google, Mozilla, Microsoft). This work is licensed under a <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">Creative Commons Attribution
+4.0 International License</a>.
+</p>
+
+</div>
+
+	</section>
+</main></div>
